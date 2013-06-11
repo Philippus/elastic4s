@@ -103,6 +103,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>0.90.1</version>
+            </dependency>
             <!-- TESTING -->
             <dependency>
                 <groupId>junit</groupId>
@@ -258,6 +263,10 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
