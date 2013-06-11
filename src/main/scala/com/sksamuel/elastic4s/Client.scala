@@ -4,7 +4,7 @@ import scala.concurrent.Future
 import org.elasticsearch.node.NodeBuilder._
 
 /** @author Stephen Samuel */
-class Client(client: org.elasticsearch.client.Client) {
+class Client(val client: org.elasticsearch.client.Client) {
     def index(req: IndexReq): Future[IndexRes] = null
 }
 
