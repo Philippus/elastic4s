@@ -23,6 +23,7 @@ class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerT
           .analyzer(WhitespaceAnalyzer)
           .mapping("tweets")
           .source(false)
+          .mapping("locations")
           .id
           .fieldType(StringType)
           .analyzer(KeywordAnalyzer)
@@ -33,7 +34,7 @@ class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerT
           .build
 
         assert(
-            """{"mappings":{"tweets":{"_source":{"enabled":false},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}}}}""" === req
+            """{"mappings":{"users":{"_source":{"enabled":true},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}},"tweets":{"_source":{"enabled":false},"properties":{}},"locations":{"_source":{"enabled":true},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}}}}""" === req
               ._source
               .string)
     }

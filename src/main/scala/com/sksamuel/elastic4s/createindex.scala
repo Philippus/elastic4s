@@ -64,66 +64,76 @@ class CreateIndexReqBuilder(name: String) {
         settings = settings.copy(replicas = replicas)
         this
     }
-    def mapping(name: String) = new MappingBuilder(name, this)
+
+    def mapping(name: String) = new MappingBuilder(name)
     def build: CreateIndexReq = CreateIndexReq(name, settings, mappings.toSeq)
-}
 
-class MappingBuilder(name: String, val parent: CreateIndexReqBuilder) {
+    class MappingBuilder(name: String) {
 
-    var _source: Boolean = true
-    val fields = ListBuffer[FieldMapping]()
+        var _source: Boolean = true
+        val fields = ListBuffer[FieldMapping]()
 
-    def source(enable: Boolean) = {
-        _source = enable
-        this
-    }
+        def source(enable: Boolean) = {
+            _source = enable
+            this
+        }
 
-    def id = field("_id")
-    def field(name: String) = new FieldMappingBuilder(name, this)
+        def mapping(name: String) = {
+            _end()
+            CreateIndexReqBuilder.this.mapping(name)
+        }
 
-    def build: CreateIndexReq = {
-        val mapping = Mapping(name, fields, _source)
-        parent.mappings.append(mapping)
-        parent.build
-    }
-}
+        def id = field("_id")
+        def field(name: String) = new FieldMappingBuilder(name)
 
-class FieldMappingBuilder(name: String, parent: MappingBuilder) {
+        def _end() {
+            val mapping = Mapping(name, fields, _source)
+            CreateIndexReqBuilder.this.mappings.append(mapping)
+        }
 
-    var field = new FieldMapping(name)
+        def build: CreateIndexReq = {
+            _end()
+            CreateIndexReqBuilder.this.build
+        }
 
-    def fieldType(t: FieldType) = {
-        field = field.copy(`type` = Option(t))
-        this
-    }
+        class FieldMappingBuilder(name: String) {
 
-    def analyzer(a: Analyzer) = {
-        field = field.copy(analyzer = Option(a))
-        this
-    }
+            var field = new FieldMapping(name)
 
-    def store = {
-        field = field.copy(store = true)
-        this
-    }
+            def fieldType(t: FieldType) = {
+                field = field.copy(`type` = Option(t))
+                this
+            }
 
-    def field(name: String) = {
-        _end()
-        parent.field(name)
-    }
+            def analyzer(a: Analyzer) = {
+                field = field.copy(analyzer = Option(a))
+                this
+            }
 
-    def mapping(name: String) = {
-        _end()
-        parent.parent.mapping(name)
-    }
+            def store = {
+                field = field.copy(store = true)
+                this
+            }
 
-    def build: CreateIndexReq = {
-        _end()
-        parent.build
-    }
+            def field(name: String) = {
+                _end()
+                MappingBuilder.this.field(name)
+            }
 
-    def _end() {
-        parent.fields.append(field)
+            def mapping(name: String) = {
+                _end()
+                MappingBuilder.this.mapping(name)
+            }
+
+            def build: CreateIndexReq = {
+                _end()
+                MappingBuilder.this.build
+            }
+
+            def _end() {
+                MappingBuilder.this.fields.append(field)
+            }
+        }
     }
 }
 
