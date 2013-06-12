@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import scala.util.DynamicVariable
 import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
@@ -13,6 +14,11 @@ case class CreateIndexReq(name: String, settings: IndexSettings, mappings: Seq[M
 
     def _source: XContentBuilder = {
         val source = XContentFactory.jsonBuilder().startObject()
+
+        source.startObject("settings")
+        source.field("number_of_shards", settings.shards)
+        source.field("number_of_replicas", settings.replicas)
+        source.endObject()
 
         if (mappings.size > 0)
             source.startObject("mappings")
@@ -47,93 +53,93 @@ case class IndexSettings(shards: Int = 1, replicas: Int = 1)
 case class Mapping(name: String, fields: Seq[FieldMapping] = Nil, source: Boolean = true)
 case class FieldMapping(name: String, `type`: Option[FieldType] = None, analyzer: Option[Analyzer] = None, store: Boolean = false)
 
-object CreateIndexReq {
-    def apply(name: String) = new CreateIndexReqBuilder(name)
+trait CreateIndexDsl {
 
+    private val createIndexBuilderContext = new DynamicVariable[Option[CreateIndexBuilder]](None)
+    private val mappingBuilderContext = new DynamicVariable[Option[MappingBuilder]](None)
+
+    def createIndex(name: String)(block: => Unit): CreateIndexReq = {
+        val builder = new CreateIndexBuilder(name)
+        createIndexBuilderContext.withValue(Some(builder)) {
+            block
+        }
+        builder.build
+    }
+
+    def shards(shards: Int) {
+        createIndexBuilderContext.value.foreach(_.shards = shards)
+    }
+
+    def replicas(replicas: Int) {
+        createIndexBuilderContext.value.foreach(_.replicas = replicas)
+    }
+
+    def mappings(block: => Unit) {
+        block
+    }
+
+    def mapping(name: String)(block: => Unit) {
+        val mb = new MappingBuilder(name)
+        createIndexBuilderContext.value.foreach(_.mappingBuilders.append(mb))
+        mappingBuilderContext.withValue(Some(mb)) {
+            block
+        }
+    }
+
+    def source(enabled: Boolean) {
+        mappingBuilderContext.value.foreach(_.source = enabled)
+    }
+
+    def id: FieldBuilder = field("_id")
+    def field(name: String): FieldBuilder = {
+        val fb = new FieldBuilder(name)
+        mappingBuilderContext.value.foreach(_.fieldBuilders.append(fb))
+        fb
+    }
 }
-class CreateIndexReqBuilder(name: String) {
 
-    val mappings = ListBuffer[Mapping]()
-    var settings = IndexSettings()
+class MappingBuilder(name: String) {
+    var source: Boolean = false
+    val fieldBuilders = ListBuffer[FieldBuilder]()
+    def build: Mapping = {
+        val fields = fieldBuilders.map(_.build).toSeq
+        Mapping(name, fields, source)
+    }
+}
 
-    def shards(shards: Int) = {
-        settings = settings.copy(shards = shards)
+class FieldBuilder(name: String) {
+
+    var _fieldType: Option[FieldType] = None
+    var _analyzer: Option[Analyzer] = None
+    var _store: Boolean = false
+
+    def fieldType(ft: FieldType) = {
+        _fieldType = Option(ft)
         this
     }
-    def replicas(replicas: Int) = {
-        settings = settings.copy(replicas = replicas)
+
+    def analyzer(a: Analyzer) = {
+        _analyzer = Option(a)
         this
     }
 
-    def mapping(name: String) = new MappingBuilder(name)
-    def build: CreateIndexReq = CreateIndexReq(name, settings, mappings.toSeq)
+    def store = {
+        _store = true
+        this
+    }
 
-    class MappingBuilder(name: String) {
+    def build = FieldMapping(name, _fieldType, _analyzer, _store)
+}
 
-        var _source: Boolean = true
-        val fields = ListBuffer[FieldMapping]()
+class CreateIndexBuilder(name: String) {
 
-        def source(enable: Boolean) = {
-            _source = enable
-            this
-        }
+    var shards: Int = 0
+    var replicas: Int = 0
+    val mappingBuilders = ListBuffer[MappingBuilder]()
 
-        def mapping(name: String) = {
-            _end()
-            CreateIndexReqBuilder.this.mapping(name)
-        }
-
-        def id = field("_id")
-        def field(name: String) = new FieldMappingBuilder(name)
-
-        def _end() {
-            val mapping = Mapping(name, fields, _source)
-            CreateIndexReqBuilder.this.mappings.append(mapping)
-        }
-
-        def build: CreateIndexReq = {
-            _end()
-            CreateIndexReqBuilder.this.build
-        }
-
-        class FieldMappingBuilder(name: String) {
-
-            var field = new FieldMapping(name)
-
-            def fieldType(t: FieldType) = {
-                field = field.copy(`type` = Option(t))
-                this
-            }
-
-            def analyzer(a: Analyzer) = {
-                field = field.copy(analyzer = Option(a))
-                this
-            }
-
-            def store = {
-                field = field.copy(store = true)
-                this
-            }
-
-            def field(name: String) = {
-                _end()
-                MappingBuilder.this.field(name)
-            }
-
-            def mapping(name: String) = {
-                _end()
-                MappingBuilder.this.mapping(name)
-            }
-
-            def build: CreateIndexReq = {
-                _end()
-                MappingBuilder.this.build
-            }
-
-            def _end() {
-                MappingBuilder.this.fields.append(field)
-            }
-        }
+    def build: CreateIndexReq = {
+        val mappings = mappingBuilders.map(_.build)
+        CreateIndexReq(name, IndexSettings(shards, replicas), mappings)
     }
 }
 

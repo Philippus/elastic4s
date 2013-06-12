@@ -3,38 +3,33 @@ package com.sksamuel.elastic4s
 import org.scalatest.{OneInstancePerTest, FunSuite}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.FieldType.StringType
-import com.sksamuel.elastic4s.Analyzer.{WhitespaceAnalyzer, KeywordAnalyzer}
+import com.sksamuel.elastic4s.Analyzer.{KeywordAnalyzer, WhitespaceAnalyzer}
 
 /** @author Stephen Samuel */
-class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest {
+class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest with CreateIndexDsl {
 
-    test("create index json is generated to spec") {
+    test("create index dsl is generated to json spec") {
 
-        val req = CreateIndexReq("users")
-          .shards(3)
-          .replicas(4)
-          .mapping("users")
-          .id
-          .fieldType(StringType)
-          .analyzer(KeywordAnalyzer)
-          .store
-          .field("name")
-          .fieldType(StringType)
-          .analyzer(WhitespaceAnalyzer)
-          .mapping("tweets")
-          .source(false)
-          .mapping("locations")
-          .id
-          .fieldType(StringType)
-          .analyzer(KeywordAnalyzer)
-          .store
-          .field("name")
-          .fieldType(StringType)
-          .analyzer(WhitespaceAnalyzer)
-          .build
+        val req = createIndex("users") {
+            shards(3)
+            replicas(4)
+            mappings {
+                mapping("users") {
+                    id.fieldType(StringType).analyzer(KeywordAnalyzer).store
+                    field("name").fieldType(StringType).analyzer(WhitespaceAnalyzer)
+                }
+                mapping("tweets") {
+                    source(true)
+                }
+                mapping("locations") {
+                    id.fieldType(StringType).analyzer(KeywordAnalyzer).store
+                    field("name").fieldType(StringType).analyzer(WhitespaceAnalyzer)
+                }
+            }
+        }
 
         assert(
-            """{"mappings":{"users":{"_source":{"enabled":true},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}},"tweets":{"_source":{"enabled":false},"properties":{}},"locations":{"_source":{"enabled":true},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}}}}""" === req
+            """{"settings":{"number_of_shards":3,"number_of_replicas":4},"mappings":{"users":{"_source":{"enabled":false},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}},"tweets":{"_source":{"enabled":true},"properties":{}},"locations":{"_source":{"enabled":false},"properties":{"_id":{"type":"StringType","index":"KeywordAnalyzer","store":"true"},"name":{"type":"StringType","index":"WhitespaceAnalyzer","store":"false"}}}}}""" === req
               ._source
               .string)
     }
