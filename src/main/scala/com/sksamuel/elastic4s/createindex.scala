@@ -143,22 +143,4 @@ class CreateIndexBuilder(name: String) {
     }
 }
 
-sealed trait Analyzer
-object Analyzer {
-    case object NotAnalyzed extends Analyzer
-    case object WhitespaceAnalyzer extends Analyzer
-    case object StandardAnalyzer extends Analyzer
-    case object SimpleAnalyzer extends Analyzer
-    case object StopAnalyzer extends Analyzer
-    case object KeywordAnalyzer extends Analyzer
-    case object PatternAnalyzer extends Analyzer
-    case object SnowballAnalyzer extends Analyzer
-}
 
-sealed trait Tokenizer
-object Tokenizer {
-    case object KeywordTokenizer extends Tokenizer
-    case object WhitespaceTokenizer extends Tokenizer
-    case object StandardTokenizer extends Tokenizer
-    case object LetterTokenizer extends Tokenizer
-}
