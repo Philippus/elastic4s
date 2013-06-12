@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.Analyzer.{KeywordAnalyzer, WhitespaceAnalyzer}
 /** @author Stephen Samuel */
 class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest with CreateIndexDsl {
 
-    test("create index dsl is generated to json spec") {
+    test("create index dsl generates request to json spec") {
 
         val req = createIndex("users") {
             shards(3)
