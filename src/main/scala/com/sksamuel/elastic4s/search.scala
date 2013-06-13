@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import scala.util.DynamicVariable
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import com.sksamuel.elastic4s.MultiMode.Min
 import scala.collection.mutable.ListBuffer
 import org.elasticsearch.search.facet.FacetBuilders
 
@@ -37,8 +36,6 @@ case class SearchResp(hits: Hits, facets: Seq[Facet])
 
 case class Hits(total: Long, hits: Seq[Hit])
 case class Hit(index: String, id: String, `type`: String, source: Option[String] = None)
-
-case class Sort(field: String, asc: Boolean = true, mode: MultiMode = Min)
 
 sealed trait MultiMode
 case object MultiMode {

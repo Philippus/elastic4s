@@ -79,7 +79,7 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .setTrackScores(req.trackScores)
 
         for ( sort <- req.sorts )
-            search.addSort(sort.field, if (sort.asc) SortOrder.ASC else SortOrder.DESC)
+            search.addSort(sort.builder)
 
         for ( facet <- req.facets )
             search.addFacet(facet.builder)
