@@ -78,7 +78,8 @@ case class MatchAllQuery(boost: Double = 0) extends Query
 
 case class FieldQuery(field: String, value: String, boost: Double = 0, enablePositionIncrements: Boolean) extends Query
 case class TermQuery(field: String, value: String, boost: Double = 0) extends Query
-
+case class RangeQuery(field: String, from: Any, to: Any, includeUpper: Boolean = true, includeLower: Boolean = true, boost: Double = 0)
+  extends Query
 case class TermsQuery(field: String, values: Seq[String], boost: Double = 0) extends Query
 case class BoolQuery(must: Seq[Any], mustNot: Seq[Any], should: Seq[Any], minimumShouldMatch: Int = 0, boost: Double = 0)
   extends Query
@@ -241,6 +242,22 @@ class StringQueryBuilder(q: String) extends BoostableQueryBuilder[StringQueryBui
     }
 
     override def build = StringQuery(q, defaultOperator = _defaultOperator, analyzer = _analyzer, boost = _boost)
+}
+class RangeQueryBuilder(field: String, from: Any, to: Any) extends BoostableQueryBuilder[RangeQueryBuilder] with QueryBuilder {
+    var _includeLower = true
+    var _includeUpper = true
+
+    def includeLower(includeLower: Boolean) = {
+        _includeLower = includeLower
+        this
+    }
+
+    def includeUpper(includeUpper: Boolean) = {
+        _includeUpper = includeUpper
+        this
+    }
+
+    override def build = RangeQuery(field, from, to, _includeLower, _includeUpper, _boost)
 }
 class MatchQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[MatchQueryBuilder] with QueryBuilder {
 
