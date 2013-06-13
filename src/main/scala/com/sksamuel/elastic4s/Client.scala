@@ -12,7 +12,9 @@ import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 
 /** @author Stephen Samuel */
-class ScalaClient(val client: org.elasticsearch.client.Client, timeout: Long = 5000) {
+class ScalaClient(val client: org.elasticsearch.client.Client,
+                  timeout: Long = 5000)
+                 (implicit executionContext: ExecutionContext = ExecutionContext.global) {
 
     def index(req: IndexReq): Future[IndexResponse] = future {
 
@@ -20,7 +22,7 @@ class ScalaClient(val client: org.elasticsearch.client.Client, timeout: Long = 5
           .prepareIndex()
           .setIndex(req.index)
           .setType(req.`type`)
-          .setId(req.id)
+          .setId(req.id.orNull)
           .setOpType(req.opType)
           .setParent(req.parent.orNull)
           .setTimestamp(req.timestamp.orNull)

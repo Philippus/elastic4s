@@ -8,7 +8,7 @@ class IndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest wi
 
     test("index dsl generates a request to json spec") {
 
-        val req = index("twitter", "tweets") {
+        val req = index("twitter", "tweets", "34") {
 
             routing("kusers")
             version(4)

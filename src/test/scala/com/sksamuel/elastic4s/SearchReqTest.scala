@@ -22,9 +22,7 @@ class SearchReqTest extends FunSuite with MockitoSugar with OneInstancePerTest w
             }
 
             facets {
-                "sammy" {
 
-                }
             }
 
             highlight {

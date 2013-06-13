@@ -10,7 +10,7 @@ import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 case class IndexedField(name: String, value: Any)
 case class IndexReq(index: String,
                     `type`: String,
-                    id: String,
+                    id: Option[String],
                     parent: Option[String] = None,
                     refresh: Boolean = false, // careful
                     routing: Option[String] = None,
@@ -36,8 +36,9 @@ trait IndexDsl {
 
     private val indexBuilderContext = new DynamicVariable[Option[IndexBuilder]](None)
 
-    def index(index: String, `type`: String, id: String)(block: => Unit): IndexReq = {
-        val builder = new IndexBuilder(index, `type`, id)
+    def index(idx: String, `type`: String)(block: => Unit): IndexReq = index(idx, `type`, null)(block)
+    def index(idx: String, `type`: String, id: String)(block: => Unit): IndexReq = {
+        val builder = new IndexBuilder(idx, `type`, Option(id))
         indexBuilderContext.withValue(Some(builder)) {
             block
         }
@@ -93,7 +94,7 @@ trait IndexDsl {
     }
 }
 
-class IndexBuilder(index: String, `type`: String, id: String) {
+class IndexBuilder(index: String, `type`: String, id: Option[String]) {
 
     var _routing: Option[String] = None
     var _parent: Option[String] = None
