@@ -2,19 +2,25 @@ package com.sksamuel.elastic4s
 
 import scala.util.DynamicVariable
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
+import com.sksamuel.elastic4s.MultiMode.Min
+import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
 case class SearchReq(query: Query,
                      filter: Option[Filter] = None,
+                     facets: Seq[Facet] = Nil,
+                     fields: Seq[String] = Nil,
                      timeout: Long = 0,
                      from: Long = 0,
                      size: Long = 0,
+                     scroll: Option[String] = None,
+                     scrollId: Option[String] = None,
                      explain: Boolean = false,
-                     sort: Option[Sort] = None,
+                     sort: Seq[Sort] = Nil,
                      routing: Option[String],
                      version: Boolean = false,
                      minScore: Double = 0,
-                     fields: Seq[String] = Nil,
+                     highlight: Option[Highlight] = None,
                      searchType: SearchType = SearchType.QueryThenFetch) {
 
     def _source: XContentBuilder = {
@@ -27,15 +33,46 @@ case class SearchResp(hits: Hits, facets: Seq[Facet])
 case class Hits(total: Long, hits: Seq[Hit])
 case class Hit(index: String, id: String, `type`: String, source: Option[String] = None)
 
-case class Sort
-case class Highlight
-case class Facet
-case class FacetTerm
-case class FacetTermValue
-case class IndexBoost
+case class Sort(field: String, asc: Boolean = true, mode: MultiMode = Min)
+
+sealed trait MultiMode
+case object MultiMode {
+    case object Min extends MultiMode
+    case object Max extends MultiMode
+    case object Sum extends MultiMode
+    case object Avg extends MultiMode
+}
+
+case class Highlight(fields: Seq[HighlightField] = Nil,
+                     preTags: Seq[String] = Nil,
+                     postTags: Seq[String] = Nil)
+case class HighlightField(name: String, fragmentSize: Int = 100, numberOfFragments: Int = 5)
 
 trait Filter
 trait Query
+trait Facet
+
+case class TermsFacet(name: String,
+                      fields: Seq[String],
+                      order: TermsFacetOrder = TermsFacetOrder.Count,
+                      size: Int = 10,
+                      allTerms: Boolean = false,
+                      excludeTerms: Seq[String] = Nil,
+                      script: Option[String] = None,
+                      regex: Option[String] = None,
+                      regexFlags: Seq[String] = Nil,
+                      script_field: Option[String] = None) extends Facet
+case class RangeFacet(name: String, ranges: Seq[Range], keyField: Option[String] = None, valueField: Option[String] = None) extends Facet
+case class QueryFacet(name: String, query: Query) extends Facet
+case class FitlerFacet(name: String, query: Query) extends Facet
+
+sealed trait TermsFacetOrder
+case object TermsFacetOrder {
+    case object Count extends TermsFacetOrder
+    case object Term extends TermsFacetOrder
+    case object ReverseCount extends TermsFacetOrder
+    case object ReverseTerm extends TermsFacetOrder
+}
 
 sealed trait SearchType
 case object SearchType {
@@ -83,14 +120,15 @@ case class RangeQuery(field: String, from: Any, to: Any, includeUpper: Boolean =
 case class TermsQuery(field: String, values: Seq[String], boost: Double = 0) extends Query
 case class BoolQuery(must: Seq[Any], mustNot: Seq[Any], should: Seq[Any], minimumShouldMatch: Int = 0, boost: Double = 0)
   extends Query
-case class PrefixQuery(field: String, prefix: String, boost: Double = 0) extends Query
+case class PrefixQuery(field: String, prefix: Any, boost: Double = 0) extends Query
 case class BoostingQuery(positive: Query, positiveBoost: Double, negative: Query, negativeBoost: Double) extends Query
-case class RegexQuery(field: String, regex: String, boost: Double = 0, flags: Seq[Int]) extends Query
+case class RegexQuery(field: String, regex: Any, boost: Double = 0, flags: Seq[Int] = Nil) extends Query
 
 trait SearchDsl {
 
     private val searchBuilderContext = new DynamicVariable[Option[SearchBuilder]](None)
-    private val queryContext = new DynamicVariable[Option[QueryBuilderContainer]](None)
+    private val queryContext = new DynamicVariable[Option[CompoundQuery]](None)
+    private val highlightContext = new DynamicVariable[Option[HighlightBuilder]](None)
 
     def search(index: String, `type`: String)(block: => Unit): SearchReq = {
         val builder = new SearchBuilder(Seq(index), Seq(`type`))
@@ -100,25 +138,12 @@ trait SearchDsl {
         builder.build
     }
 
-    def routing(r: String) {
-        searchBuilderContext.value foreach (_._routing = Option(r))
-    }
+    def routing(r: String): Unit = searchBuilderContext.value foreach (_._routing = Option(r))
+    def from(i: Int): Unit = searchBuilderContext.value foreach (_._from = i)
+    def size(i: Int): Unit = searchBuilderContext.value foreach (_._size = i)
 
-    def from(i: Int) {
-        searchBuilderContext.value foreach (_._from = i)
-    }
-
-    def size(i: Int) {
-        searchBuilderContext.value foreach (_._size = i)
-    }
-
-    def searchType(searchType: SearchType) {
-        searchBuilderContext.value foreach (_._searchType = searchType)
-    }
-
-    def version(enabled: Boolean) {
-        searchBuilderContext.value foreach (_._version = enabled)
-    }
+    def searchType(searchType: SearchType): Unit = searchBuilderContext.value foreach (_._searchType = searchType)
+    def version(enabled: Boolean): Unit = searchBuilderContext.value foreach (_._version = enabled)
 
     def query(q: String): StringQueryBuilder = {
         val builder = new StringQueryBuilder(q)
@@ -146,8 +171,8 @@ trait SearchDsl {
     }
 
     def bool(block: => Unit) {
-        val container = new BoolQueryContainer
-        queryContext.withValue(Some(container)) {
+        val compound = new BoolCompoundQuery
+        queryContext.withValue(Some(compound)) {
             block
         }
     }
@@ -164,27 +189,28 @@ trait SearchDsl {
         builder
     }
 
-    def _setQuery(builder: QueryBuilder) {
-        queryContext.value match {
-            case None => searchBuilderContext.value foreach (_._queryBuilder = Option(builder))
-            case Some(q) => q.attach(builder)
+    // -- highlight methods --
+
+    def highlight(block: => Unit) {
+        val builder = new HighlightBuilder()
+        highlightContext.withValue(Some(builder)) {
+            block
         }
     }
-}
 
-trait QueryBuilderContainer {
-    def attach(builder: QueryBuilder)
-}
-
-class BoolQueryContainer extends QueryBuilderContainer {
-    def attach(builder: QueryBuilder) {
-
+    def highlightField(name: String): HighlightFieldBuilder = {
+        val builder = new HighlightFieldBuilder(name)
+        highlightContext.value foreach (_._fields.append(builder))
+        builder
     }
-}
 
-class BoolQueryBuilder extends BoostableQueryBuilder with QueryBuilder {
+    def preTags(tag: String): Unit = preTags(Seq(tag))
+    def preTags(tags: Seq[String]): Unit = highlightContext.value foreach (_._preTags = tags)
 
-    var minimum_number_should_match = 1
+    def postTags(tag: String): Unit = postTags(Seq(tag))
+    def postTags(tags: Seq[String]): Unit = highlightContext.value foreach (_._postTags = tags)
+
+    // -- boolean query clauses --
 
     def must(block: => Unit) {
 
@@ -197,6 +223,28 @@ class BoolQueryBuilder extends BoostableQueryBuilder with QueryBuilder {
     def should(block: => Unit) {
 
     }
+
+    def _setQuery(builder: QueryBuilder) {
+        queryContext.value match {
+            case None => searchBuilderContext.value foreach (_._queryBuilder = Option(builder))
+            case Some(q) => q.attach(builder)
+        }
+    }
+}
+
+trait CompoundQuery {
+    def attach(builder: QueryBuilder)
+}
+
+class BoolCompoundQuery extends CompoundQuery {
+    def attach(builder: QueryBuilder) {
+
+    }
+}
+
+class BoolQueryBuilder extends BoostableQueryBuilder with QueryBuilder {
+
+    var minimumNumberShouldMatch = 1
 
     def build = null
 }
@@ -212,7 +260,10 @@ abstract class BoostableQueryBuilder[T] {
     }
 }
 class PrefixQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[PrefixQueryBuilder] with QueryBuilder {
-    override def build = PrefixQuery(field, value.toString, _boost)
+    override def build = PrefixQuery(field, value, _boost)
+}
+class RegexQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[RegexQueryBuilder] with QueryBuilder {
+    override def build = RegexQuery(field, value, _boost)
 }
 class TermQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[TermQueryBuilder] with QueryBuilder {
     override def build = TermQuery(field, value.toString, _boost)
@@ -285,4 +336,33 @@ class SearchBuilder(indexes: Seq[String], types: Seq[String]) {
     var _queryBuilder: Option[QueryBuilder] = None
     var _searchType: SearchType = SearchType.DfsQueryThenFetch
     def build: SearchReq = null
+}
+
+class HighlightBuilder {
+
+    val _fields = ListBuffer[HighlightFieldBuilder]()
+    var _preTags: Seq[String] = Nil
+    var _postTags: Seq[String] = Nil
+
+    def build: Highlight = {
+        Highlight(_fields.map(_.build), _preTags, _postTags)
+    }
+}
+
+class HighlightFieldBuilder(name: String) {
+
+    private var _fragmentSize = 100
+    private var _numberOfFragments = 5
+
+    def fragmentSize(f: Int) = {
+        _fragmentSize = f
+        this
+    }
+
+    def numberOfFragments(n: Int) = {
+        _numberOfFragments = n
+        this
+    }
+
+    def build: HighlightField = HighlightField(name, fragmentSize = _fragmentSize, numberOfFragments = _numberOfFragments)
 }

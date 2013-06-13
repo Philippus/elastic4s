@@ -20,6 +20,17 @@ class SearchReqTest extends FunSuite with MockitoSugar with OneInstancePerTest w
                 term("location", "London").boost(1.0)
                 matches("job", "developer").operator("OR")
             }
+
+            facets {
+
+            }
+
+            highlight {
+                preTags("<strong>")
+                postTags("</strong>")
+                highlightField("users").fragmentSize(150).numberOfFragments(3)
+                highlightField("location").fragmentSize(150).numberOfFragments(3)
+            }
         }
 
         assert(
