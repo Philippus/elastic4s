@@ -5,6 +5,8 @@ Elastic4s is a Scala DSL for ElasticSearch. This gives you the full power of a t
 
 Currently elastic4s does not cover all the functionality of the java client, but it covers enough for most use cases. We are continually adding more coverage too - why not fork and contribute?
 
+[![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
+
 ### Create Index Example
 
 To create an index you need to mixin the CreateIndexDsl trait. Then you are able to use the dsl to create create-index requests as such
