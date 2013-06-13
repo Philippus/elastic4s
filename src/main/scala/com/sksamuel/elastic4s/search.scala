@@ -242,7 +242,24 @@ trait SearchDsl {
     def postTags(tags: Seq[String]): Unit = highlightContext.value foreach (_._postTags = tags)
 
     // -- boolean query clauses --
+}
+class PrefixQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[PrefixQueryBuilder] with QueryBuilder {
+    override def build = PrefixQuery(field, value, _boost)
+}
+class RegexQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[RegexQueryBuilder] with QueryBuilder {
+    override def build = RegexQuery(field, value, _boost)
+}
+class TermQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[TermQueryBuilder] with QueryBuilder {
+    override def build = TermQuery(field, value.toString, _boost)
+}
+class MatchAllQueryBuilder extends BoostableQueryBuilder[MatchAllQueryBuilder] with QueryBuilder {
+    override def build = MatchAllQuery(_boost)
+}
+class StringQueryBuilder(q: String) extends BoostableQueryBuilder[StringQueryBuilder] with QueryBuilder {
 
+    var _defaultOperator: String = "AND"
+    var _analyzer: Option[Analyzer] = None
+    var _defaultField: Optio
     def must(block: => Unit) {
 
     }
