@@ -1,16 +1,11 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import scala.util.DynamicVariable
 import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
 case class CreateIndexReq(name: String, settings: IndexSettings, mappings: Seq[Mapping] = Nil) {
-
-    def build(client: Client): CreateIndexRequestBuilder = {
-        client.client.admin().indices().prepareCreate(name).setSource(_source)
-    }
 
     def _source: XContentBuilder = {
         val source = XContentFactory.jsonBuilder().startObject()
@@ -49,6 +44,7 @@ case class CreateIndexReq(name: String, settings: IndexSettings, mappings: Seq[M
     }
 }
 
+case class CreateIndexResp
 case class IndexSettings(shards: Int = 1, replicas: Int = 1)
 case class Mapping(name: String, fields: Seq[FieldMapping] = Nil, source: Boolean = true)
 case class FieldMapping(name: String, `type`: Option[FieldType] = None, analyzer: Option[Analyzer] = None, store: Boolean = false)

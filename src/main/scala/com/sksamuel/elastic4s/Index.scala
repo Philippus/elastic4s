@@ -7,7 +7,9 @@ import scala.collection.mutable.ListBuffer
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 /** @author Stephen Samuel */
-case class IndexReq(`type`: String,
+case class IndexedField(name: String, value: Any)
+case class IndexReq(index: String,
+                    `type`: String,
                     id: String,
                     parent: Option[String] = None,
                     refresh: Boolean = false, // careful
@@ -21,33 +23,21 @@ case class IndexReq(`type`: String,
 
     def _source: XContentBuilder = {
         val source = XContentFactory.jsonBuilder().startObject()
-
-        if (ttl > 0)
-            source.field("_ttl", ttl)
-        timestamp.foreach(source.field("_timstamp", _))
-        if (version > 0)
-            source.field("_version", version)
-        if (ttl > 0)
-            source.field("_ttl", ttl)
-
-
         for ( field <- fields ) {
             source.field(field.name, field.value.toString)
         }
-
         source.endObject()
     }
 }
 
-case class IndexedField(name: String, value: Any)
-case class IndexRes(ok: Boolean, index: String, `type`: String, id: String, version: Long)
+case class IndexResp(ok: Boolean, index: String, `type`: String, id: String, version: Long)
 
 trait IndexDsl {
 
     private val indexBuilderContext = new DynamicVariable[Option[IndexBuilder]](None)
 
-    def index(`type`: String, id: String)(block: => Unit): IndexReq = {
-        val builder = new IndexBuilder(`type`, id)
+    def index(index: String, `type`: String, id: String)(block: => Unit): IndexReq = {
+        val builder = new IndexBuilder(index, `type`, id)
         indexBuilderContext.withValue(Some(builder)) {
             block
         }
@@ -103,7 +93,7 @@ trait IndexDsl {
     }
 }
 
-class IndexBuilder(`type`: String, id: String) {
+class IndexBuilder(index: String, `type`: String, id: String) {
 
     var _routing: Option[String] = None
     var _parent: Option[String] = None
@@ -115,7 +105,8 @@ class IndexBuilder(`type`: String, id: String) {
     val _fields = new ListBuffer[IndexedField]()
 
     def build: IndexReq = {
-        IndexReq(`type`,
+        IndexReq(index,
+            `type`,
             id,
             _parent,
             false,

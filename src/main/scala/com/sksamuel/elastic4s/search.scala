@@ -4,20 +4,24 @@ import scala.util.DynamicVariable
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import com.sksamuel.elastic4s.MultiMode.Min
 import scala.collection.mutable.ListBuffer
+import org.elasticsearch.search.facet.FacetBuilders
 
 /** @author Stephen Samuel */
-case class SearchReq(query: Query,
+case class SearchReq(indexes: Seq[String],
+                     query: Query,
                      filter: Option[Filter] = None,
                      facets: Seq[Facet] = Nil,
                      fields: Seq[String] = Nil,
                      timeout: Long = 0,
                      from: Long = 0,
                      size: Long = 0,
+                     lowercaseExpandedTerms: Boolean = true,
+                     trackScores: Boolean = false,
                      scroll: Option[String] = None,
                      scrollId: Option[String] = None,
                      explain: Boolean = false,
-                     sort: Seq[Sort] = Nil,
-                     routing: Option[String],
+                     sorts: Seq[Sort] = Nil,
+                     routing: Seq[String] = Nil,
                      version: Boolean = false,
                      minScore: Double = 0,
                      highlight: Option[Highlight] = None,
@@ -28,6 +32,7 @@ case class SearchReq(query: Query,
         source.endObject()
     }
 }
+
 case class SearchResp(hits: Hits, facets: Seq[Facet])
 
 case class Hits(total: Long, hits: Seq[Hit])
@@ -50,7 +55,10 @@ case class HighlightField(name: String, fragmentSize: Int = 100, numberOfFragmen
 
 trait Filter
 trait Query
-trait Facet
+abstract class Facet(name: String) {
+    val global: Boolean = false
+    def builder: org.elasticsearch.search.facet.FacetBuilder
+}
 
 case class TermsFacet(name: String,
                       fields: Seq[String],
@@ -61,27 +69,53 @@ case class TermsFacet(name: String,
                       script: Option[String] = None,
                       regex: Option[String] = None,
                       regexFlags: Seq[String] = Nil,
-                      script_field: Option[String] = None) extends Facet
-case class RangeFacet(name: String, ranges: Seq[Range], keyField: Option[String] = None, valueField: Option[String] = None) extends Facet
-case class QueryFacet(name: String, query: Query) extends Facet
-case class FitlerFacet(name: String, query: Query) extends Facet
-
-sealed trait TermsFacetOrder
-case object TermsFacetOrder {
-    case object Count extends TermsFacetOrder
-    case object Term extends TermsFacetOrder
-    case object ReverseCount extends TermsFacetOrder
-    case object ReverseTerm extends TermsFacetOrder
+                      script_field: Option[String] = None) extends Facet(name) {
+    def builder = FacetBuilders
+      .termsFacet(name)
+      .allTerms(allTerms)
+      .order(order.elasticType)
+      .regex(regex.orNull)
+      .script(script.orNull)
+      .global(global)
+      .scriptField(script_field.orNull)
+      .fields(fields: _ *)
+      .size(size)
 }
 
-sealed trait SearchType
+case class RangeFacet(name: String, field: String, ranges: Seq[Range], keyField: Option[String] = None, valueField: Option[String] = None)
+  extends Facet(name) {
+    def builder = {
+        val builder = FacetBuilders.rangeFacet(name).field(field).keyField(keyField.orNull).valueField(valueField.orNull)
+        for ( range <- ranges )
+            builder.addRange(range.start, range.end)
+        builder
+    }
+}
+
+case class QueryFacet(name: String, query: Query) extends Facet(name) {
+    def builder = FacetBuilders.queryFacet(name, null)
+}
+
+case class FilterFacet(name: String, query: Query) extends Facet(name) {
+    def builder = FacetBuilders.filterFacet(name, null)
+}
+
+abstract class TermsFacetOrder(val elasticType: org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType)
+case object TermsFacetOrder {
+    case object Count extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.COUNT)
+    case object Term extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.TERM)
+    case object ReverseCount extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.REVERSE_COUNT)
+    case object ReverseTerm extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.REVERSE_TERM)
+}
+
+abstract class SearchType(val elasticType: org.elasticsearch.action.search.SearchType)
 case object SearchType {
-    case object DfsQueryThenFetch extends SearchType
-    case object QueryThenFetch extends SearchType
-    case object DfsQueryAndFetch extends SearchType
-    case object QueryAndFetch extends SearchType
-    case object Scan extends SearchType
-    case object Count extends SearchType
+    case object DfsQueryThenFetch extends SearchType(org.elasticsearch.action.search.SearchType.DFS_QUERY_THEN_FETCH)
+    case object QueryThenFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_THEN_FETCH)
+    case object DfsQueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
+    case object QueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
+    case object Scan extends SearchType(org.elasticsearch.action.search.SearchType.SCAN)
+    case object Count extends SearchType(org.elasticsearch.action.search.SearchType.COUNT)
 }
 
 case class StringQuery(queryString: String,
@@ -224,6 +258,11 @@ trait SearchDsl {
 
     }
 
+    // -- facet dsl --
+
+    def facets(block: => Unit) {
+    }
+
     def _setQuery(builder: QueryBuilder) {
         queryContext.value match {
             case None => searchBuilderContext.value foreach (_._queryBuilder = Option(builder))
@@ -247,6 +286,10 @@ class BoolQueryBuilder extends BoostableQueryBuilder with QueryBuilder {
     var minimumNumberShouldMatch = 1
 
     def build = null
+}
+
+trait FacetBuilder {
+    def build: Facet
 }
 
 trait QueryBuilder {
