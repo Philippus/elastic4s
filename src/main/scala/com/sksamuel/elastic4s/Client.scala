@@ -3,13 +3,16 @@ package com.sksamuel.elastic4s
 import scala.concurrent._
 import org.elasticsearch.client.Client
 import java.util.concurrent.TimeUnit
-import org.elasticsearch.action.index.IndexResponse
+import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.CountResponse
-import org.elasticsearch.search.sort.SortOrder
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
+import org.elasticsearch.action.percolate.PercolateResponse
+import org.elasticsearch.action.bulk.BulkResponse
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
+import org.elasticsearch.action.mlt.MoreLikeThisRequest
 
 /** @author Stephen Samuel */
 class ScalaClient(val client: org.elasticsearch.client.Client,
@@ -32,6 +35,22 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .setSource(req._source)
           .execute()
           .actionGet(timeout, TimeUnit.MILLISECONDS)
+    }
+
+    def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {
+        val bulk = client.prepareBulk()
+        indexRequests.foreach(arg => bulk.add(arg))
+        bulk.execute().actionGet(timeout)
+    }
+
+    def exists(indexes: Iterable[String]) = future {
+        client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
+    }
+
+    def register(idx: String, `type`: String, req: IndexReq): Future[IndexResponse] = index(req)
+
+    def percolate(index: String, `type`: String): Future[PercolateResponse] = future {
+        client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)
     }
 
     def count(req: CountReq): Future[CountResponse] = future {
@@ -66,7 +85,7 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
 
     def search(req: SearchReq): Future[SearchResponse] = future {
 
-        val search = client.prepareSearch(req.indexes: _*)
+        val search = client.prepareSearch(req.indexes.toSeq: _*)
           .addFields(req.fields: _*)
           .setExplain(req.explain)
           .setSearchType(req.searchType.elasticType)
@@ -88,6 +107,10 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
 
+    def searchScroll(scrollId: String): Future[SearchResponse] = future {
+        client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
+    }
+
     def createIndex(req: CreateIndexReq): Future[CreateIndexResponse] = future {
         client
           .admin()
@@ -97,8 +120,26 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .execute()
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
+
+    def validate(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
+        client.admin().indices().prepareValidateQuery("").execute().actionGet(timeout) // todo
+    }
+
+    def moreLikeThis(req: MoreLikeThisRequest): Future[SearchResponse] = future {
+        client.prepareMoreLikeThis("", "", "").execute().actionGet(timeout)
+    }
+
+    def close(): Unit = client.close()
 }
 
 object ScalaClient {
     def apply(client: Client, timeout: Long = 5000): ScalaClient = new ScalaClient(client, timeout)
 }
+
+sealed abstract class SearchOperationThreading(elastic: org.elasticsearch.action.search.SearchOperationThreading)
+object SearchOperationThreading {
+    case object NoThreads extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.NO_THREADS)
+    case object SingleThread extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.SINGLE_THREAD)
+    case object ThreadPerShard extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.THREAD_PER_SHARD)
+}
+

@@ -21,10 +21,6 @@ class SearchReqTest extends FunSuite with MockitoSugar with OneInstancePerTest w
                 matches("job", "developer").operator("OR")
             }
 
-            facets {
-
-            }
-
             highlight {
                 preTags("<strong>")
                 postTags("</strong>")
