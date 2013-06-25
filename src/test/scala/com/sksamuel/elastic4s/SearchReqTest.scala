@@ -3,35 +3,33 @@ package com.sksamuel.elastic4s
 import org.scalatest.{OneInstancePerTest, FunSuite}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.Analyzer.WhitespaceAnalyzer
+import SearchDsl._
 
 /** @author Stephen Samuel */
-class SearchReqTest extends FunSuite with MockitoSugar with OneInstancePerTest with SearchDsl {
+class SearchReqTest extends FunSuite with MockitoSugar with OneInstancePerTest {
+
+    val client: ScalaClient = null
 
     test("search dsl generates a request to json spec") {
 
-        val req = search("twitter", "tweets") {
+        "twitter/tweets" query "singer:chris" limit 5
 
-            routing("allusers")
-            searchType(SearchType.QueryThenFetch)
+        client search "twitter/tweets" query "bands:coldplay" limit 5
 
-            bool {
-                query("I love searching").boost(2.5).operator("AND").analyzer(WhitespaceAnalyzer)
-                prefix("users", "sam").boost(4.0)
-                term("location", "London").boost(1.0)
-                matches("job", "developer").operator("OR")
-            }
+        client search "twitter/tweets" limit 10 start 3 routing "allusers" searchType SearchType.QueryThenFetch query {
 
-            highlight {
-                preTags("<strong>")
-                postTags("</strong>")
-                highlightField("users").fragmentSize(150).numberOfFragments(3)
-                highlightField("location").fragmentSize(150).numberOfFragments(3)
-            }
+            string query "I love searching" boost 2.5 operator "and" anaylyzer WhitespaceAnalyzer
+            prefix query "users:sam" boost 4.5
+            term query "location" -> "london" boost 4
+            matches query "job" -> "developer" operator "OR"
+            range query "age" from 12 to 4
+            regex query "name" -> "sam.*"
+
+        } highlighting {
+
+            highlight field "user" fragmentSize 150 numberOfFragments 3
+            highlight field "location" size 150 number 3
+
         }
-
-        assert(
-            """""" === req
-              ._source
-              .string)
     }
 }

@@ -32,9 +32,30 @@ case class IndexReq(index: String,
 
 case class IndexResp(ok: Boolean, index: String, `type`: String, id: String, version: Long)
 
+class IndexBuilder2 {
+    def into(index: String) = this
+    def id(id: Any) = this
+    def mapping(`type`: String) = this
+    def routing(routing: String) = this
+    def parent(parent: String) = this
+    def timestamp(timestamp: String) = this
+    def version(version: Int) = this
+    def opType(opType: OpType) = this
+    def ttl(ttl: Long) = this
+    def fields(block: => Unit) = this
+    def update(update: Boolean) = opType(OpType.CREATE)
+    def noupdate = this
+}
+
 trait IndexDsl {
 
     private val indexBuilderContext = new DynamicVariable[Option[IndexBuilder]](None)
+
+    def insert = new IndexBuilder2
+    def insert(block: => Unit) = new IndexBuilder2
+
+    def index = new IndexBuilder2
+    def index(block: => Unit) = new IndexBuilder2
 
     def index(idx: String, `type`: String)(block: => Unit): IndexReq = index(idx, `type`, null)(block)
     def index(idx: String, `type`: String, id: String)(block: => Unit): IndexReq = {

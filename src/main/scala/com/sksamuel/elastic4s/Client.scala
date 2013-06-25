@@ -83,6 +83,9 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
 
+    def search(index: String) = new SearchBuilder(Seq(index))
+    def search(indexes: Seq[String]) = new SearchBuilder(indexes)
+
     def search(req: SearchReq): Future[SearchResponse] = future {
 
         val search = client.prepareSearch(req.indexes.toSeq: _*)
@@ -133,6 +136,7 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
 }
 
 object ScalaClient {
+    implicit def client2scala(client: Client) = apply(client)
     def apply(client: Client, timeout: Long = 5000): ScalaClient = new ScalaClient(client, timeout)
 }
 

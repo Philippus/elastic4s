@@ -8,7 +8,7 @@ class IndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest wi
 
     test("index dsl generates a request to json spec") {
 
-        val req = index("twitter", "tweets", "34") {
+        index("twitter", "tweets", "34") {
 
             routing("kusers")
             version(4)
@@ -19,9 +19,20 @@ class IndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest wi
             "message" -> "trying out Elastic Search Scala DSL"
         }
 
-        assert(
-            """{"_timstamp":"2009-11-15T14:12:12","_version":4,"user":"sammy","post_date":"2009-11-15T14:12:12","message":"trying out Elastic Search Scala DSL"}""" === req
-              ._source
-              .string)
+
+
+        index.into("twitter").mapping("tweet").id("thisid")
+
+        index into "twitter/tweet" id 1234 routing "superusers" fields {
+            "user" -> "sammy"
+            "post_date" -> "2009-11-15T14:12:12"
+            "message" -> "trying out Elastic Search Scala DSL"
+        }
+
+        insert {
+            "user" -> "sammy"
+            "post_date" -> "2009-11-15T14:12:12"
+            "message" -> "trying out Elastic Search Scala DSL"
+        } into "twitter/tweet" id 12345 routing "superusers" version 4 ttl 45
     }
 }
