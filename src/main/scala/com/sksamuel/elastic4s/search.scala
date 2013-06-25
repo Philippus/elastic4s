@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import scala.util.DynamicVariable
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.search.highlight.HighlightBuilder
 import org.elasticsearch.action.search.SearchRequestBuilder
 
 /** @author Stephen Samuel */
@@ -54,72 +53,81 @@ abstract class Facet(name: String) {
     def builder: org.elasticsearch.search.facet.FacetBuilder
 }
 
-class SearchBuilder(indexes: Seq[String]) {
-
-    val highlightingContext = new DynamicVariable[Option[HighlightBuilder]](None)
-    val request = new SearchRequestBuilder(null)
-    request.setIndices(indexes: _*)
-
-    def query(block: => Any) = {
-        this
-    }
-
-    def query(string: String) = {
-        val builder = new StringQueryBuilder(string)
-        request.setQuery(builder.builder.buildAsBytes)
-        this
-    }
-
-    def highlighting(block: => Unit) {
-        val context = new HighlightBuilder()
-        highlightingContext.withValue(Some(context)) {
-            block
-        }
-    }
-
-    def routing(r: String) = {
-        request.setRouting(r)
-        this
-    }
-
-    def start(i: Int) = from(i)
-    def from(i: Int) = {
-        request.setFrom(i)
-        this
-    }
-
-    def limit(i: Int) = size(i)
-    def size(i: Int) = {
-        request.setSize(i)
-        this
-    }
-
-    def searchType(searchType: SearchType) = {
-        request.setSearchType(searchType.elasticType)
-        this
-    }
-
-    def version(enabled: Boolean) = {
-        request.setVersion(enabled)
-        this
-    }
-}
-
 object SearchDsl {
+
+    private val searchBuilderContext = new DynamicVariable[Option[SearchBuilder]](None)
 
     def preTag(tag: String): Unit = this
     def postTag(tag: String): Unit = this
 
-    def highlight = new PrepareHighlightFieldBuilder
-    def highlight(field: String) = new HighlightFieldBuilder(field)
+    def highlight = new HighlightBuilder
+    def highlight(field: String) = new HighlightBuilder
 
-    private val searchBuilderContext = new DynamicVariable[Option[SearchBuilder]](None)
-    implicit def string2search(index: String) = new SearchBuilder(Seq(index))
+    class SearchBuilder(request: SearchRequestBuilder) {
+
+        def query(block: => Any): SearchBuilder = {
+            this
+        }
+
+        def query(string: String) = {
+            val builder = new StringQueryBuilder(string)
+            request.setQuery(builder.builder.buildAsBytes)
+            this
+        }
+
+        def highlight(field: String) = new HighlightBuilder
+
+        def highlighting(block: => Unit) {
+
+        }
+
+        def routing(r: String) = {
+            request.setRouting(r)
+            this
+        }
+
+        def start(i: Int) = from(i)
+        def from(i: Int) = {
+            request.setFrom(i)
+            this
+        }
+
+        def limit(i: Int) = size(i)
+        def size(i: Int) = {
+            request.setSize(i)
+            this
+        }
+
+        def searchType(searchType: SearchType) = {
+            request.setSearchType(searchType.elasticType)
+            this
+        }
+
+        def version(enabled: Boolean) = {
+            request.setVersion(enabled)
+            this
+        }
+    }
+
+    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(request) {
+        def fields(any: HighlightBuilder*) = {
+            //        val builder = block
+            //      builder.buffer.foreach(field => request.addHighlightedField(field))
+            this
+        }
+    }
+
+    implicit def string2search(index: String) = new SearchBuilder(new SearchRequestBuilder(null).setIndices(index))
+    implicit def string2highlightField(field: String) = {
+        val builder = new HighlightBuilder
+        builder.field(field)
+        builder
+    }
 
     def search = new SearchBuilderExpectsIndex
     class SearchBuilderExpectsIndex {
-        def index(index: String) = new SearchBuilder(Seq(index))
-        def index(indexes: Seq[String]) = new SearchBuilder(indexes)
+        def in(index: String): SearchBuilder = in(Seq(index))
+        def in(indexes: Seq[String]): SearchBuilder = new SearchBuilder(new SearchRequestBuilder(null).setIndices(indexes: _*))
     }
 
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {

@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.CountResponse
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 import org.elasticsearch.action.percolate.PercolateResponse
@@ -83,9 +82,6 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
 
-    def search(index: String) = new SearchBuilder(Seq(index))
-    def search(indexes: Seq[String]) = new SearchBuilder(indexes)
-
     def search(req: SearchReq): Future[SearchResponse] = future {
 
         val search = client.prepareSearch(req.indexes.toSeq: _*)
@@ -114,15 +110,15 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
         client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
     }
 
-    def createIndex(req: CreateIndexReq): Future[CreateIndexResponse] = future {
-        client
-          .admin()
-          .indices()
-          .prepareCreate(req.name)
-          .setSettings(req._source)
-          .execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    }
+    //    def createIndex(req: CreateIndexReq): Future[CreateIndexResponse] = future {
+    //        client
+    //          .admin()
+    //          .indices()
+    //          .prepareCreate(req.name)
+    //          .setSettings(req._source)
+    //          .execute()
+    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
+    //    }
 
     def validate(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
         client.admin().indices().prepareValidateQuery("").execute().actionGet(timeout) // todo
