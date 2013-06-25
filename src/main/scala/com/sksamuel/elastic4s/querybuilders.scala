@@ -99,6 +99,36 @@ class StringQueryBuilder(query: String) extends BoostableQueryBuilder[StringQuer
         this
     }
 
+    def fuzzyMaxExpansions(fuzzyMaxExpansions: Int) = {
+        builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
+        this
+    }
+
+    def lenient(lenient: Boolean) = {
+        builder.lenient(lenient)
+        this
+    }
+
+    def phraseSlop(phraseSlop: Int) = {
+        builder.phraseSlop(phraseSlop)
+        this
+    }
+
+    def tieBreaker(tieBreaker: Double) = {
+        builder.tieBreaker(tieBreaker.toFloat)
+        this
+    }
+
+    def fuzzyPrefixLength(fuzzyPrefixLength: Int) = {
+        builder.fuzzyPrefixLength(fuzzyPrefixLength)
+        this
+    }
+
+    def fuzzyMinSim(fuzzyMinSim: Double) = {
+        builder.fuzzyMinSim(fuzzyMinSim.toFloat)
+        this
+    }
+
     def anaylyzer(analyzer: Analyzer) = {
         builder.analyzer(analyzer.elastic)
         this

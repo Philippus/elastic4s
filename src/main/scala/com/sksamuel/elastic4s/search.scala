@@ -2,10 +2,8 @@ package com.sksamuel.elastic4s
 
 import scala.util.DynamicVariable
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.search.facet.FacetBuilders
 import org.elasticsearch.search.highlight.HighlightBuilder
 import org.elasticsearch.action.search.SearchRequestBuilder
-import org.elasticsearch.index.query.{RegexpFlag, QueryStringQueryBuilder, QueryBuilders}
 
 /** @author Stephen Samuel */
 case class SearchReq(indexes: Iterable[String] = Nil,
@@ -49,125 +47,12 @@ case object MultiMode {
     case object Avg extends MultiMode
 }
 
-sealed trait HighlightOrder
-case object HighlightOrder {
-    case object Score extends HighlightOrder
-}
-
-sealed trait TagSchema
-case object TagSchema {
-    case object Styled extends TagSchema
-}
-
-sealed trait HighlightEncoder
-case object HighlightEncoder {
-    case object Default extends HighlightEncoder
-    case object Html extends HighlightEncoder
-}
-
-case class Highlight(fields: Iterable[HighlightField] = Nil,
-                     preTags: Seq[String] = Nil,
-                     postTags: Seq[String] = Nil,
-                     encoder: Option[HighlightEncoder] = None,
-                     order: Option[HighlightOrder] = None,
-                     tagSchema: Option[TagSchema] = None,
-                     requireFieldMatch: Boolean = false,
-                     boundary_chars: Option[String] = None,
-                     boundary_max_scan: Int = 20) {
-    def builder: org.elasticsearch.search.highlight.HighlightBuilder = {
-        val builder = new org.elasticsearch.search.highlight.HighlightBuilder()
-          .postTags(postTags: _*)
-          .preTags(preTags: _*)
-          .requireFieldMatch(requireFieldMatch)
-        encoder.foreach(arg => builder.encoder(arg.toString.toLowerCase))
-        order.foreach(arg => builder.order(arg.toString.toLowerCase))
-        tagSchema.foreach(arg => builder.tagsSchema(arg.toString.toLowerCase))
-        builder
-    }
-}
-case class HighlightField(name: String, fragmentSize: Int = 100, numberOfFragments: Int = 5)
-
 trait Filter
 trait Query
 abstract class Facet(name: String) {
     val global: Boolean = false
     def builder: org.elasticsearch.search.facet.FacetBuilder
 }
-
-case class TermsFacet(name: String,
-                      fields: Seq[String],
-                      order: TermsFacetOrder = TermsFacetOrder.Count,
-                      size: Int = 10,
-                      allTerms: Boolean = false,
-                      excludeTerms: Seq[String] = Nil,
-                      script: Option[String] = None,
-                      regex: Option[String] = None,
-                      regexFlags: Seq[String] = Nil,
-                      script_field: Option[String] = None) extends Facet(name) {
-    def builder = FacetBuilders
-      .termsFacet(name)
-      .allTerms(allTerms)
-      .order(order.elasticType)
-      .regex(regex.orNull)
-      .script(script.orNull)
-      .global(global)
-      .scriptField(script_field.orNull)
-      .fields(fields: _ *)
-      .size(size)
-}
-
-case class RangeFacet(name: String, field: String, ranges: Seq[Range], keyField: Option[String] = None, valueField: Option[String] = None)
-  extends Facet(name) {
-    def builder = {
-        val builder = FacetBuilders.rangeFacet(name).field(field).keyField(keyField.orNull).valueField(valueField.orNull)
-        for ( range <- ranges )
-            builder.addRange(range.start, range.end)
-        builder
-    }
-}
-
-case class QueryFacet(name: String, query: Query) extends Facet(name) {
-    def builder = FacetBuilders.queryFacet(name, null)
-}
-
-case class FilterFacet(name: String, query: Query) extends Facet(name) {
-    def builder = FacetBuilders.filterFacet(name, null)
-}
-
-abstract class TermsFacetOrder(val elasticType: org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType)
-case object TermsFacetOrder {
-    case object Count extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.COUNT)
-    case object Term extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.TERM)
-    case object ReverseCount extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.REVERSE_COUNT)
-    case object ReverseTerm extends TermsFacetOrder(org.elasticsearch.search.facet.terms.TermsFacet.ComparatorType.REVERSE_TERM)
-}
-
-abstract class SearchType(val elasticType: org.elasticsearch.action.search.SearchType)
-case object SearchType {
-    case object DfsQueryThenFetch extends SearchType(org.elasticsearch.action.search.SearchType.DFS_QUERY_THEN_FETCH)
-    case object QueryThenFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_THEN_FETCH)
-    case object DfsQueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
-    case object QueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
-    case object Scan extends SearchType(org.elasticsearch.action.search.SearchType.SCAN)
-    case object Count extends SearchType(org.elasticsearch.action.search.SearchType.COUNT)
-}
-
-//case class StringQuery(queryString: String,
-//                       defaultField: Option[String] = None,
-//                       defaultOperator: String = "AND",
-//                       analyzer: Option[Analyzer] = None,
-//                       allowLeadingWildcard: Boolean = true,
-//                       lowercaseExpandedTerms: Boolean = true,
-//                       enablePositionIncrements: Boolean = true,
-//                       boost: Double = 0,
-//                       fuzzyMaxExpansions: Int = 50,
-//                       fuzzyMinSim: Double = 0.5,
-//                       fuzzyPrefixLength: Int = 0,
-//                       phraseSlop: Int = 0,
-//                       lenient: Boolean = true,
-//                       minimumShouldMatch: Int = 0,
-//                       exists: Option[String] = None,
-//                       missing: Option[String] = None) extends Query
 
 class SearchBuilder(indexes: Seq[String]) {
 
@@ -222,35 +107,6 @@ class SearchBuilder(indexes: Seq[String]) {
     def execute() = {
         null
     }
-}
-
-class HighlightFieldBuilderInitial {
-    def field(field: String) = new HighlightFieldBuilder(field)
-}
-
-class HighlightFieldBuilder(field: String) {
-
-    val builder = new org.elasticsearch.search.highlight.HighlightBuilder.Field(field)
-
-    def size(s: Int) = fragmentSize(s)
-
-    def fragmentSize(f: Int) = {
-        builder.fragmentSize(f)
-        this
-    }
-
-    def number(n: Int) = numberOfFragments(n)
-    def numberOfFragments(n: Int) = {
-        builder.numOfFragments(n)
-        this
-    }
-
-    def highlighterType(`type`: String) = {
-        builder.highlighterType(`type`)
-        this
-    }
-
-    def and(field: String) = new HighlightFieldBuilder(field: String)
 }
 
 object SearchDsl {
