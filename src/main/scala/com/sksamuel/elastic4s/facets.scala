@@ -3,6 +3,9 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.search.facet.FacetBuilders
 
 /** @author Stephen Samuel */
+trait FacetBuilder {
+    def build: Facet
+}
 
 case class TermsFacet(name: String,
                       fields: Seq[String],

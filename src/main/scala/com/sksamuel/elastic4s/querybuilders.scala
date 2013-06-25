@@ -1,28 +1,24 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{QueryStringQueryBuilder, RegexpFlag, QueryBuilders}
+import org.elasticsearch.index.query.{BoostableQueryBuilder, QueryStringQueryBuilder, RegexpFlag, QueryBuilders}
 
 /** @author Stephen Samuel */
-trait QueryBuilder[T] {
+trait QueryBuilder {
     val builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-abstract class BoostableQueryBuilder[T] extends QueryBuilder[T] {
-    val builder: org.elasticsearch.index.query.BoostableQueryBuilder
-    def boost(boost: Double): T = {
-        builder.boost(boost.toFloat)
-        this.asInstanceOf[T]
-    }
-}
-
-class PrefixQueryBuilder(field: String, prefix: Any) extends BoostableQueryBuilder[PrefixQueryBuilder] with QueryBuilder {
+class PrefixQueryBuilder(field: String, prefix: Any) extends QueryBuilder {
     val builder = QueryBuilders.prefixQuery(field, prefix.toString)
     def rewrite(rewrite: String) = {
         builder.rewrite(rewrite)
         this
     }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
-class RegexQueryBuilder(field: String, regex: Any) extends BoostableQueryBuilder[RegexQueryBuilder] with QueryBuilder {
+class RegexQueryBuilder(field: String, regex: Any) extends QueryBuilder {
     val builder = QueryBuilders.regexpQuery(field, regex.toString)
     def flags(flags: RegexpFlag*) {
         builder.flags(flags: _*)
@@ -31,20 +27,32 @@ class RegexQueryBuilder(field: String, regex: Any) extends BoostableQueryBuilder
         builder.rewrite(rewrite)
         this
     }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
-class TermQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[TermQueryBuilder] with QueryBuilder {
+class TermQueryBuilder(field: String, value: Any) extends QueryBuilder {
     val builder = QueryBuilders.termQuery(field, value.toString)
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
-class MatchAllQueryBuilder extends BoostableQueryBuilder[MatchAllQueryBuilder] with QueryBuilder {
+class MatchAllQueryBuilder extends QueryBuilder {
 
     val builder = QueryBuilders.matchAllQuery
 
     def normsField(normsField: String) = {
         builder.normsField(normsField)
     }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
 
-class RangeQueryBuilder(field: String) extends BoostableQueryBuilder[RangeQueryBuilder] with QueryBuilder {
+class RangeQueryBuilder(field: String) extends QueryBuilder {
 
     val builder = QueryBuilders.rangeQuery(field)
 
@@ -67,9 +75,14 @@ class RangeQueryBuilder(field: String) extends BoostableQueryBuilder[RangeQueryB
         builder.includeUpper(includeUpper)
         this
     }
+
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
 
-class MatchQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder[MatchQueryBuilder] with QueryBuilder {
+class MatchQueryBuilder(field: String, value: Any) extends QueryBuilder {
 
     val builder = QueryBuilders.matchQuery(field, value)
 
@@ -85,9 +98,14 @@ class MatchQueryBuilder(field: String, value: Any) extends BoostableQueryBuilder
         builder.analyzer(a.elastic)
         this
     }
+
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
 }
 
-class StringQueryBuilder(query: String) extends BoostableQueryBuilder[StringQueryBuilder] {
+class StringQueryBuilder(query: String) extends QueryBuilder {
 
     val builder = QueryBuilders.queryString(query)
 
@@ -161,6 +179,11 @@ class StringQueryBuilder(query: String) extends BoostableQueryBuilder[StringQuer
 
     def enablePositionIncrements(enablePositionIncrements: Boolean) = {
         builder.enablePositionIncrements(enablePositionIncrements)
+        this
+    }
+
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
         this
     }
 }

@@ -39,7 +39,7 @@ case class Highlight(fields: Iterable[HighlightField] = Nil,
 }
 case class HighlightField(name: String, fragmentSize: Int = 100, numberOfFragments: Int = 5)
 
-class HighlightFieldBuilderInitial {
+class PrepareHighlightFieldBuilder {
     def field(field: String) = new HighlightFieldBuilder(field)
 }
 

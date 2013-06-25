@@ -56,7 +56,7 @@ abstract class Facet(name: String) {
 
 class SearchBuilder(indexes: Seq[String]) {
 
-    private val highlightingContext = new DynamicVariable[Option[HighlightBuilder]](None)
+    val highlightingContext = new DynamicVariable[Option[HighlightBuilder]](None)
     val request = new SearchRequestBuilder(null)
     request.setIndices(indexes: _*)
 
@@ -65,8 +65,8 @@ class SearchBuilder(indexes: Seq[String]) {
     }
 
     def query(string: String) = {
-        val query = new StringQueryBuilder(query)
-        request.setQuery(query.builder.buildAsBytes)
+        val builder = new StringQueryBuilder(string)
+        request.setQuery(builder.builder.buildAsBytes)
         this
     }
 
@@ -103,10 +103,6 @@ class SearchBuilder(indexes: Seq[String]) {
         request.setVersion(enabled)
         this
     }
-
-    def execute() = {
-        null
-    }
 }
 
 object SearchDsl {
@@ -114,7 +110,7 @@ object SearchDsl {
     def preTag(tag: String): Unit = this
     def postTag(tag: String): Unit = this
 
-    def highlight = new HighlightFieldBuilderInitial
+    def highlight = new PrepareHighlightFieldBuilder
     def highlight(field: String) = new HighlightFieldBuilder(field)
 
     private val searchBuilderContext = new DynamicVariable[Option[SearchBuilder]](None)
@@ -124,14 +120,6 @@ object SearchDsl {
     class SearchBuilderExpectsIndex {
         def index(index: String) = new SearchBuilder(Seq(index))
         def index(indexes: Seq[String]) = new SearchBuilder(indexes)
-    }
-
-    def search2(index: String, `type`: String)(block: => Unit): SearchReq = {
-        val builder = null
-        searchBuilderContext.withValue(Some(builder)) {
-            block
-        }
-        builder
     }
 
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {
@@ -146,27 +134,22 @@ object SearchDsl {
         def query(field: String, value: Any): QueryBuilder
     }
 
-    def string = new StringExpectsQueryOrFilter
-    class StringExpectsQueryOrFilter {
-        def query(q: String) = new StringQueryBuilder(q)
+    def matches = new MatchExpectsQueryOrFilter
+    class MatchExpectsQueryOrFilter extends PairQuery {
+        type QueryBuilder = MatchQueryBuilder
+        def query(field: String, value: Any): MatchQueryBuilder = new MatchQueryBuilder(field, value)
+    }
+
+    def all = matchAll()
+    def matchAll() = {
+        val builder = new MatchAllQueryBuilder()
+        builder
     }
 
     def prefix = new PrefixExpectsQueryOrFilter
     class PrefixExpectsQueryOrFilter extends PairQuery {
         type QueryBuilder = PrefixQueryBuilder
         def query(field: String, value: Any): PrefixQueryBuilder = new PrefixQueryBuilder(field, value)
-    }
-
-    def term = new TermExpectsQueryOrFilter
-    class TermExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = TermQueryBuilder
-        def query(field: String, value: Any): TermQueryBuilder = new TermQueryBuilder(field, value)
-    }
-
-    def matches = new MatchExpectsQueryOrFilter
-    class MatchExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = MatchQueryBuilder
-        def query(field: String, value: Any): MatchQueryBuilder = new MatchQueryBuilder(field, value)
     }
 
     def range = new RangeExpectsQueryOrFilter
@@ -176,7 +159,19 @@ object SearchDsl {
 
     def regex = new RegexExpectsQueryOrFilter
     class RegexExpectsQueryOrFilter extends PairQuery {
+        type QueryBuilder = RegexQueryBuilder
         def query(field: String, value: Any): RegexQueryBuilder = new RegexQueryBuilder(field, value)
+    }
+
+    def string = new StringExpectsQueryOrFilter
+    class StringExpectsQueryOrFilter {
+        def query(q: String) = new StringQueryBuilder(q)
+    }
+
+    def term = new TermExpectsQueryOrFilter
+    class TermExpectsQueryOrFilter extends PairQuery {
+        type QueryBuilder = TermQueryBuilder
+        def query(field: String, value: Any): TermQueryBuilder = new TermQueryBuilder(field, value)
     }
 
     def term(field: String, value: Any): TermQueryBuilder = {
@@ -184,12 +179,5 @@ object SearchDsl {
         builder
     }
 
-    def matchAll() = {
-        val builder = new MatchAllQueryBuilder()
-        builder
-    }
 }
 
-trait FacetBuilder {
-    def build: Facet
-}
