@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
 /** @author Stephen Samuel */
-sealed trait FieldType
+abstract class FieldType(val elastic: String)
 object FieldType {
-    case object StringType extends FieldType
-    case object GeoPointType extends FieldType
-    case object IntegerType extends FieldType
+    case object StringType extends FieldType("string")
+    case object GeoPointType extends FieldType("geopoint")
+    case object IntegerType extends FieldType("integer")
 }

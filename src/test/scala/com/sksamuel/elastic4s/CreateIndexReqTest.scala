@@ -1,17 +1,21 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{OneInstancePerTest, FunSuite}
+import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.FieldType.{GeoPointType, StringType}
 import com.sksamuel.elastic4s.Analyzer.{StopAnalyzer, KeywordAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.CreateIndexDsl._
+import com.fasterxml.jackson.databind.ObjectMapper
 
 /** @author Stephen Samuel */
-class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerTest {
+class CreateIndexReqTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
-    test("create index dsl generates request to json spec") {
+    val mapper = new ObjectMapper()
 
-        create index "users" shards 3 replicas 4 mappings {
+    "the index dsl" should "generate json to include mapping properties" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_mappings.json"))
+        val req = create index "users" mappings {
 
             "tweets" source true as {
 
@@ -25,5 +29,16 @@ class CreateIndexReqTest extends FunSuite with MockitoSugar with OneInstancePerT
                   "location" fieldType GeoPointType
             }
         }
+
+        println(req._source.string)
+        assert(json === mapper.readTree(req._source.string))
+    }
+
+    "the index dsl" should "generate json to override index settings when set" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_settings.json"))
+        val req = create index "users" shards 3 replicas 4
+
+        assert(json === mapper.readTree(req._source.string))
     }
 }

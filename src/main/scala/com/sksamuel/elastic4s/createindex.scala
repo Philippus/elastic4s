@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-import scala.collection.immutable.Stack
 import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
@@ -13,28 +12,24 @@ object CreateIndexDsl {
         def index(name: String) = new CreateIndexBuilder(name)
     }
 
-    implicit def map(name: String) = new MappingTypeExpectsDefinition(name, false, Stack())
+    implicit def map(name: String) = new MappingTypeExpectsDefinition(name, false, Nil)
 
     def id: FieldsBuilder = field("_id")
-    implicit def field(name: String): FieldsBuilder = new FieldsBuilder(Stack(new FieldMapping(name)))
+    implicit def field(name: String): FieldsBuilder = new FieldsBuilder(List(new FieldMapping(name)))
 }
 
-class MappingTypeExpectsDefinition(`type`: String, source: Boolean, mappings: Stack[Mapping]) {
+class MappingTypeExpectsDefinition(`type`: String, source: Boolean, mappings: List[Mapping]) {
     def source(source: Boolean) = new MappingTypeExpectsDefinition(`type`, source, mappings)
-    def as(block: => FieldsBuilder): MappingsBuilder = new MappingsBuilder(mappings push new Mapping(`type`, source))
+    def as(block: => FieldsBuilder): MappingsBuilder = {
+        new MappingsBuilder(mappings :+ new Mapping(`type`, source, block.fields))
+    }
 }
 
-class MappingsBuilder(mappings: Stack[Mapping]) {
-    def as(block: => FieldsBuilder): MappingsBuilder = {
-        block.fields.foreach(field => {
-            mappings.last.fields.append(field)
-        })
-        this
-    }
+class MappingsBuilder(val mappings: List[Mapping]) {
     def and(`type`: String) = new MappingTypeExpectsDefinition(`type`, false, mappings)
 }
 
-class FieldsBuilder(val fields: Stack[FieldMapping]) {
+class FieldsBuilder(val fields: List[FieldMapping]) {
 
     def fieldType(ft: FieldType) = {
         fields.last.`type` = Option(ft)
@@ -60,44 +55,42 @@ class FieldMapping(val name: String) {
     var store: Boolean = false
 }
 
-class Mapping(val name: String, var source: Boolean) {
-    val fields = new ListBuffer[FieldMapping]
-}
+class Mapping(val name: String, var source: Boolean, val fields: List[FieldMapping])
+
+class IndexSettings(var shards: Int = 1, var replicas: Int = 1)
 
 class CreateIndexBuilder(name: String) {
 
-    var req = new CreateIndexReq(name, settings = IndexSettings())
+    val _mappings = new ListBuffer[Mapping]
+    val _settings = new IndexSettings
 
     def shards(shards: Int) = {
-        req = req.copy(settings = req.settings.copy(shards = shards))
+        _settings.shards = shards
         this
     }
 
     def replicas(replicas: Int) = {
-        req = req.copy(settings = req.settings.copy(replicas = replicas))
+        _settings.replicas = replicas
         this
     }
 
     def mappings(block: => MappingsBuilder) = {
+        _mappings ++= block.mappings
         this
     }
-}
-
-case class IndexSettings(shards: Int = 1, replicas: Int = 1)
-
-case class CreateIndexReq(name: String, settings: IndexSettings = IndexSettings(), mappings: Seq[Mapping] = Nil) {
 
     def _source: XContentBuilder = {
         val source = XContentFactory.jsonBuilder().startObject()
 
         source.startObject("settings")
-        source.field("number_of_shards", settings.shards)
-        source.field("number_of_replicas", settings.replicas)
+        source.field("number_of_shards", _settings.shards)
+        source.field("number_of_replicas", _settings.replicas)
         source.endObject()
 
-        if (mappings.size > 0)
+        if (_mappings.size > 0)
             source.startObject("mappings")
-        for ( mapping <- mappings ) {
+
+        for ( mapping <- _mappings ) {
 
             source.startObject(mapping.name)
             source.startObject("_source").field("enabled", mapping.source).endObject()
@@ -105,10 +98,8 @@ case class CreateIndexReq(name: String, settings: IndexSettings = IndexSettings(
 
             for ( field <- mapping.fields ) {
                 source.startObject(field.name)
-                if (field.`type`.isDefined)
-                    source.field("type", field.`type`.get.toString)
-                if (field.analyzer.isDefined)
-                    source.field("index", field.analyzer.get.toString)
+                field.`type`.foreach(arg => source.field("type", arg.elastic))
+                field.analyzer.foreach(arg => source.field("index", arg.elastic))
                 source.field("store", field.store.toString)
                 source.endObject()
             }
@@ -117,11 +108,12 @@ case class CreateIndexReq(name: String, settings: IndexSettings = IndexSettings(
             source.endObject() // end mapping name
         }
 
-        if (mappings.size > 0)
+        if (_mappings.size > 0)
             source.endObject() // end mappings
 
         source.endObject()
     }
 }
+
 
 
