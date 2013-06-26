@@ -71,12 +71,26 @@ object SearchDsl {
             this
         }
 
+        /**
+         * Adds a single prefix query to this search
+         *
+         * @param tuple - the field and prefix value
+         *
+         * @return this
+         */
         def prefix(tuple: (String, Any)) = {
             val q = new PrefixQueryBuilder(tuple._1, tuple._2)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
+        /**
+         * Adds a single regex query to this search
+         *
+         * @param tuple - the field and regex value
+         *
+         * @return this
+         */
         def regex(tuple: (String, Any)) = {
             val q = new RegexQueryBuilder(tuple._1, tuple._2)
             builder.setQuery(q.builder.buildAsBytes)
