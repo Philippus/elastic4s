@@ -33,13 +33,18 @@ trait QueryDsl {
     def ids(ids: String*) = new IdQueryDefinition(ids: _*)
     def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
 
-    def bool(block: => QueryBuilders): QueryDefinition = {
-        null
-    }
+    def bool(block: => BoolQueryDefinition): QueryDefinition = block
 
-    def must(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().must(queries: _*)
-    def should(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().should(queries: _*)
-    def not(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().not(queries: _*)
+    def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
+    def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
+    def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
+}
+
+class BoolQueryDefinition extends QueryDefinition {
+    val builder = QueryBuilders.boolQuery()
+    def must(queries: QueryDefinition*) = this
+    def should(queries: QueryDefinition*) = this
+    def not(queries: QueryDefinition*) = this
 }
 
 trait QueryDefinition {
@@ -324,16 +329,3 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
     }
 }
 
-class BoolDefinition {
-
-    val builder = QueryBuilders.boolQuery()
-
-    def minimumNumberShouldMatch(minimumNumberShouldMatch: Int) = {
-        builder.minimumNumberShouldMatch(minimumNumberShouldMatch)
-        this
-    }
-
-    def must(queries: QueryDefinition*) = this
-    def should(queries: QueryDefinition*) = this
-    def not(queries: QueryDefinition*) = this
-}

@@ -17,6 +17,15 @@ trait FilterDsl {
     def typeFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
     def missingFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
     def idsFilter(ids: String*): IdFilterDefinition = new IdFilterDefinition(ids: _*)
+
+    def bool(block: => BoolFilterDefinition): FilterDefinition = block
+}
+
+class BoolFilterDefinition extends FilterDefinition {
+    val builder = FilterBuilders.boolFilter()
+    def must(filters: FilterDefinition*) = this
+    def should(filters: FilterDefinition*) = this
+    def not(filters: FilterDefinition*) = this
 }
 
 trait FilterDefinition {

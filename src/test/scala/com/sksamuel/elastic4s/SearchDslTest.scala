@@ -83,10 +83,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                 must(
                     regex("drummmer" -> "will*") boost 5,
                     term("singer" -> "chris")
-                ) should (
-                  regex("drummmer" -> "will*") boost 5,
-                  term("singer" -> "chris")
-                  )
+                ) should {
+                    term("singer" -> "chris")
+                } not {
+                    term("singer" -> "chris")
+                }
             }
         }
 
