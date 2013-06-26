@@ -1,0 +1,11 @@
+{
+    "sort": [
+        {
+            "_script": {
+                "script": "document.score",
+                "type": "java",
+                "reverse": true
+            }
+        }
+    ]
+}

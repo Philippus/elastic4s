@@ -4,6 +4,7 @@ import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.SearchDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.elasticsearch.search.sort.SortOrder
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -89,7 +90,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
             termFilter("singer", "chris martin")
         }
 
-        println(req.builder.toString)
+        //  println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -101,34 +102,62 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
             regexFilter("singer", "chris martin")
         }
 
+        //   println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate json for missing filter" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
+
+        val req = search in "music" types "bands" filter {
+            missingFilter("producer")
+        }
+
+        //  println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate json for field sort" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_field.json"))
+
+        val req = search in "music" types "bands" sort {
+            by field "singer"
+        }
         println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
-    //    search in "twitter" types "tweets" limit 10 start 3 query {
-    //
-    //        string query "I love searching" boost 2.5 operator "and" anaylyzer WhitespaceAnalyzer
-    //        prefix query "users:sam" boost 4.5
-    //        term query "location" -> "london" boost 4
-    //        matches query "job" -> "developer" operator "OR"
-    //        range query "age" from 12 to 4
-    //        regex query "name" -> "sam.*"
-    //
-    //    }
+    it should "generate correct json for score sort" in {
 
-    //            fields("user" fragmentSize 150 numberOfFragments 3,
-    //                "location" fragmentSize 150 numberOfFragments 3,
-    //                "age")
-    //        }
-    //
-    //
-    //        qqqqq.fields("user" fragmentSize 150 numberOfFragments 3,
-    //            "location" fragmentSize 150 numberOfFragments 3,
-    //            "age")
-    //
-    //        fields(
-    //            "user" fragmentSize 150 numberOfFragments 3,
-    //            "location" fragmentSize 150 numberOfFragments 3,
-    //            "age"
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_score.json"))
 
+        val req = search in "music" types "bands" sort {
+            by score
+        }
+
+        println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate correct json for script sort" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_script.json"))
+        val req = search in "music" types "bands" sort {
+            by script "document.score" as "java" order SortOrder.DESC
+        }
+        println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate correct json for mutliple sorts" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_multiple.json"))
+        val req = search in "music" types "bands" sort (
+          by script "document.score" as "java" order SortOrder.ASC,
+          by.score order SortOrder.DESC,
+          by field "dancer" order SortOrder.DESC
+          )
+        println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
 }
