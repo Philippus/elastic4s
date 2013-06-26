@@ -39,38 +39,27 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "generate json for a prefix query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
-
         val req = search in "*" types ("users", "tweets") limit 5 prefix "bands" -> "coldplay"
-
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for a term query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term.json"))
-
         val req = search in "*" types ("users", "tweets") limit 5 term "singer" -> "chris martin"
-
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for a range query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_range.json"))
-
         val req = search in "*" types ("users", "tweets") limit 5 range "coldplay"
-
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for a regex query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
-
         val req = search in "*" types ("users", "tweets") limit 5 query {
             regex("drummmer" -> "will*") boost 5
         }
-
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -89,11 +78,32 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                 }
             }
         }
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate json for term filter" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term_filter.json"))
+
+        val req = search in "music" types "bands" filter {
+            termFilter("singer", "chris martin")
+        }
 
         println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
+    it should "generate json for regex filter" in {
+
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex_filter.json"))
+
+        val req = search in "music" types "bands" filter {
+            regexFilter("singer", "chris martin")
+        }
+
+        println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
 
     //    search in "twitter" types "tweets" limit 10 start 3 query {
     //

@@ -1,0 +1,7 @@
+{
+    "filter": {
+        "term": {
+            "singer": "chris martin"
+        }
+    }
+}

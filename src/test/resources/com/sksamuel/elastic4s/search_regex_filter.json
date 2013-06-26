@@ -1,0 +1,7 @@
+{
+    "filter": {
+        "regexp": {
+            "singer": "chris martin"
+        }
+    }
+}

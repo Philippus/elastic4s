@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search.SearchRequestBuilder
 
 /** @author Stephen Samuel */
-object SearchDsl extends QueryDsl {
+object SearchDsl extends QueryDsl with FilterDsl {
 
     abstract class Facet(name: String) {
         val global: Boolean = false
@@ -22,6 +22,11 @@ object SearchDsl extends QueryDsl {
 
         def query(block: => QueryDefinition): SearchBuilder = {
             builder.setQuery(block.builder)
+            this
+        }
+
+        def filter(block: => FilterDefinition): SearchBuilder = {
+            builder.setFilter(block.builder)
             this
         }
 
