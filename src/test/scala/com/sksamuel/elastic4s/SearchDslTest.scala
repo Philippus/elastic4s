@@ -5,6 +5,9 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.SearchDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
+import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
+import com.sksamuel.elastic4s.Analyzer.WhitespaceAnalyzer
+import scala.Predef._
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -84,16 +87,27 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate json for term filter" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term_filter.json"))
         val req = search in "music" types "bands" filter {
-            termFilter("singer", "chris martin")
+            termFilter("singer", "chris martin") cacheKey "band-singers" name "my-filter"
         }
+        println (req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for regex filter" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex_filter.json"))
         val req = search in "music" types "bands" filter {
-            regexFilter("singer", "chris martin")
+            regexFilter("singer", "chris martin") cache false name "my-filter2"
         }
+        println (req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
+
+    it should "generate json for prefix filter" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_prefix_filter.json"))
+        val req = search in "music" types "bands" filter {
+            prefixFilter("singer", "chris martin") cache true cacheKey "band-singers" name "my-filter3"
+        }
+        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -141,17 +155,17 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req.builder.toString))
     }
 
-    // -- disabled due to bug in elastic search
-    //    it should "generate correct json for multiple suggestions" in {
-    //        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
-    //        val req = search in "music" types "bands" query "coldplay" suggestions (
-    //          suggest as "my-suggestion-1" on "clocks by coldpaly" from "names" maxEdits 4,
-    //          suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5
-    //          )
-    //
-    //        println(req.builder.toString)
-    //        assert(json === mapper.readTree(req.builder.toString))
-    //    }
+
+    it should "generate correct json for multiple suggestions" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
+        val req = search in "music" types "bands" query "coldplay" suggestions (
+          suggest as "my-suggestion-1" on "clocks by coldpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
+          suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
+          suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer WhitespaceAnalyzer maxInspections 3 stringDistance "levenstein"
+          )
+        //-- disabled due to bug in elastic search
+        //    assert(json === mapper.readTree(req.builder.toString))
+    }
 }
 
 
