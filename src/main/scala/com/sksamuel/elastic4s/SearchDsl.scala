@@ -108,6 +108,34 @@ object SearchDsl extends QueryDsl {
             builder.setVersion(enabled)
             this
         }
+
+        def preference(pref: String) = {
+            builder.setPreference(pref)
+            this
+        }
+
+        def preference(pref: Preference) = {
+            builder.setPreference(pref.elastic)
+            this
+        }
+
+        def scroll(keepAlive: String) = {
+            builder.setScroll(keepAlive)
+            this
+        }
+
+        def indexBoost(tuples: (String, Double)*) = this
+        def indexBoost(map: Map[String, Double]) = this
+
+        def explain(enabled: Boolean) = {
+            builder.setExplain(enabled)
+            this
+        }
+
+        def minStore(score: Double) = {
+            builder.setMinScore(score.toFloat)
+            this
+        }
     }
 
     class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(null, null) {
@@ -136,41 +164,5 @@ object SearchDsl extends QueryDsl {
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {
         def q(args: String*): StringQueryDefinition = new StringQueryDefinition(args.head)
     }
-
-    trait PairQuery {
-        type QueryBuilder
-        def query(q: String): QueryBuilder = _query(q.split(":").toSeq)
-        def _query(q: Seq[String]): QueryBuilder = query(q(0), q(1))
-        def query(kv: (String, Any)): QueryBuilder = query(kv._1, kv._2)
-        def query(field: String, value: Any): QueryBuilder
-    }
-
-    def matches = new MatchExpectsQueryOrFilter
-    class MatchExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = MatchQueryDefinition
-        def query(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
-    }
-
-    def prefix = new PrefixExpectsQueryOrFilter
-    class PrefixExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = PrefixQueryDefinition
-        def query(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
-    }
-
-    def range = new RangeExpectsQueryOrFilter
-    class RangeExpectsQueryOrFilter {
-        def query(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
-    }
-
-    def regex = new RegexExpectsQueryOrFilter
-    class RegexExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = RegexQueryDefinition
-        def query(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
-    }
-
-    class ExpectsQuery {
-        def regex(tuple: (String, Any)) = new RegexQueryDefinition(tuple._1, tuple._2)
-    }
-
 }
 
