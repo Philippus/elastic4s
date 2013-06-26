@@ -18,20 +18,20 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
                   timeout: Long = 5000)
                  (implicit executionContext: ExecutionContext = ExecutionContext.global) {
 
-    def index(req: IndexReq): Future[IndexResponse] = future {
+    def index(req: IndexRequest): Future[IndexResponse] = future {
 
         client
           .prepareIndex()
           .setIndex(req.index)
           .setType(req.`type`)
-          .setId(req.id.orNull)
+          .setId(req.id)
           .setOpType(req.opType)
-          .setParent(req.parent.orNull)
-          .setTimestamp(req.timestamp.orNull)
+          .setParent(req.parent)
+          .setTimestamp(req.timestamp)
           .setRefresh(req.refresh)
           .setVersion(req.version)
           .setVersionType(req.versionType)
-          .setSource(req._source)
+          .setSource(req.source)
           .execute()
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
@@ -46,7 +46,7 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
 
-    def register(idx: String, `type`: String, req: IndexReq): Future[IndexResponse] = index(req)
+    def register(idx: String, `type`: String, req: IndexRequest): Future[IndexResponse] = index(req)
 
     def percolate(index: String, `type`: String): Future[PercolateResponse] = future {
         client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)
