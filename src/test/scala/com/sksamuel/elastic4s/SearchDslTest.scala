@@ -66,7 +66,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "generate json for a boolean compound query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boolean.json"))
-
         val req = search in "*" types ("bands", "artists") limit 5 query {
             bool {
                 must(
@@ -83,38 +82,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     }
 
     it should "generate json for term filter" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term_filter.json"))
-
         val req = search in "music" types "bands" filter {
             termFilter("singer", "chris martin")
         }
-
-        //  println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for regex filter" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex_filter.json"))
-
         val req = search in "music" types "bands" filter {
             regexFilter("singer", "chris martin")
         }
-
-        //   println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate json for missing filter" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
-
         val req = search in "music" types "bands" filter {
             missingFilter("producer")
         }
-
-        //  println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -125,19 +112,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" sort {
             by field "singer"
         }
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
     it should "generate correct json for score sort" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_score.json"))
-
         val req = search in "music" types "bands" sort {
             by score
         }
-
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -146,7 +128,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" sort {
             by script "document.score" as "java" order SortOrder.DESC
         }
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
@@ -157,7 +138,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           by.score order SortOrder.DESC,
           by field "dancer" order SortOrder.DESC
           )
-        println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
+
+    // -- disabled due to bug in elastic search
+    //    it should "generate correct json for multiple suggestions" in {
+    //        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
+    //        val req = search in "music" types "bands" query "coldplay" suggestions (
+    //          suggest as "my-suggestion-1" on "clocks by coldpaly" from "names" maxEdits 4,
+    //          suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5
+    //          )
+    //
+    //        println(req.builder.toString)
+    //        assert(json === mapper.readTree(req.builder.toString))
+    //    }
 }
+
+

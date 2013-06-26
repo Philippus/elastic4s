@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search.SearchRequestBuilder
 
 /** @author Stephen Samuel */
-object SearchDsl extends QueryDsl with FilterDsl with SortDsl {
+object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
 
     abstract class Facet(name: String) {
         val global: Boolean = false
@@ -32,6 +32,11 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl {
 
         def sort(sorts: SortDefinition*): SearchBuilder = {
             sorts.foreach(builder addSort _.builder)
+            this
+        }
+
+        def suggestions(suggestions: SuggestionDefinition*): SearchBuilder = {
+            suggestions.foreach(builder addSuggestion _.builder)
             this
         }
 
