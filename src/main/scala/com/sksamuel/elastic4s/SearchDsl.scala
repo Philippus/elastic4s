@@ -3,41 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search.SearchRequestBuilder
 
 /** @author Stephen Samuel */
-//case class SearchReq(indexes: Iterable[String] = Nil,
-//                     types: Iterable[String] = Nil,
-//                     query: Option[Query] = None,
-//                     filter: Option[Filter] = None,
-//                     facets: Seq[Facet] = Nil,
-//                     fields: Seq[String] = Nil,
-//                     from: Long = 0,
-//                     explain: Boolean = false,
-//                     highlight: Option[Highlight] = None,
-//                     lowercaseExpandedTerms: Boolean = true,
-//                     minScore: Double = 0,
-//                     queryHint: Option[String] = None,
-//                     routing: Seq[String] = Nil,
-//                     size: Long = 0,
-//                     source: Option[String] = None,
-//                     scroll: Option[String] = None,
-//                     scrollId: Option[String] = None,
-//                     sorts: Seq[Sort] = Nil,
-//                     timeout: Long = 0,
-//                     trackScores: Boolean = false,
-//                     version: Boolean = false,
-//                     searchType: SearchType = SearchType.QueryThenFetch) {
-//
-//    def builder: org.elasticsearch.action.search.SearchRequestBuilder = {
-//        null
-//    }
-//
-//    def _source: XContentBuilder = {
-//        val source = XContentFactory.jsonBuilder().startObject()
-//        source.endObject()
-//    }
-//}
-
-
-object SearchDsl {
+object SearchDsl extends QueryDsl {
 
     abstract class Facet(name: String) {
         val global: Boolean = false
@@ -54,7 +20,7 @@ object SearchDsl {
 
         val builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
 
-        def query(block: => Any): SearchBuilder = {
+        def query(block: => QueryDefinition): SearchBuilder = {
             this
         }
 
@@ -66,7 +32,7 @@ object SearchDsl {
          * @return this
          */
         def query(string: String) = {
-            val q = new StringQueryBuilder(string)
+            val q = new StringQueryDefinition(string)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
@@ -79,7 +45,7 @@ object SearchDsl {
          * @return this
          */
         def prefix(tuple: (String, Any)) = {
-            val q = new PrefixQueryBuilder(tuple._1, tuple._2)
+            val q = new PrefixQueryDefinition(tuple._1, tuple._2)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
@@ -92,13 +58,13 @@ object SearchDsl {
          * @return this
          */
         def regex(tuple: (String, Any)) = {
-            val q = new RegexQueryBuilder(tuple._1, tuple._2)
+            val q = new RegexQueryDefinition(tuple._1, tuple._2)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
         def term(tuple: (String, Any)) = {
-            val q = new TermQueryBuilder(tuple._1, tuple._2)
+            val q = new TermQueryDefinition(tuple._1, tuple._2)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
@@ -167,7 +133,7 @@ object SearchDsl {
     }
 
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {
-        def q(args: String*): StringQueryBuilder = new StringQueryBuilder(args.head)
+        def q(args: String*): StringQueryDefinition = new StringQueryDefinition(args.head)
     }
 
     trait PairQuery {
@@ -180,20 +146,20 @@ object SearchDsl {
 
     def matches = new MatchExpectsQueryOrFilter
     class MatchExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = MatchQueryBuilder
-        def query(field: String, value: Any): MatchQueryBuilder = new MatchQueryBuilder(field, value)
+        type QueryBuilder = MatchQueryDefinition
+        def query(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
     }
 
     def all = matchAll()
     def matchAll() = {
-        val builder = new MatchAllQueryBuilder()
+        val builder = new MatchAllQueryDefinition()
         builder
     }
 
     def prefix = new PrefixExpectsQueryOrFilter
     class PrefixExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = PrefixQueryBuilder
-        def query(field: String, value: Any): PrefixQueryBuilder = new PrefixQueryBuilder(field, value)
+        type QueryBuilder = PrefixQueryDefinition
+        def query(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
     }
 
     def range = new RangeExpectsQueryOrFilter
@@ -203,24 +169,63 @@ object SearchDsl {
 
     def regex = new RegexExpectsQueryOrFilter
     class RegexExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = RegexQueryBuilder
-        def query(field: String, value: Any): RegexQueryBuilder = new RegexQueryBuilder(field, value)
+        type QueryBuilder = RegexQueryDefinition
+        def query(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
+    }
+
+    def bool(block: => QueryBuilders): QueryDefinition = {
+        null
+    }
+
+    def must(builders: QueryDefinition*): BoolQueryDefinition = {
+        null
+    }
+
+    class BoolQueryDefinition {
+        def and(minShould: Int) = {
+            this
+        }
+    }
+
+    def should(block: => QueryBuilders): QueryBuilders = {
+        null
+    }
+
+    def not(block: => QueryBuilders): QueryBuilders = {
+        null
+    }
+
+    class QueryBuilders {
+        def should(block: => QueryBuilders): QueryBuilders = {
+            null
+        }
+
+        def not(block: => QueryBuilders): QueryBuilders = {
+            null
+        }
+
+        def and(builder: QueryDefinition) {
+
+        }
+    }
+
+    class CompoundQueryBuilder {
+
+    }
+
+    class ExpectsQuery {
+        def regex(tuple: (String, Any)) = new RegexQueryDefinition(tuple._1, tuple._2)
     }
 
     def string = new StringExpectsQueryOrFilter
     class StringExpectsQueryOrFilter {
-        def query(q: String) = new StringQueryBuilder(q)
+        def query(q: String) = new StringQueryDefinition(q)
     }
 
     def term = new TermExpectsQueryOrFilter
     class TermExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = TermQueryBuilder
-        def query(field: String, value: Any): TermQueryBuilder = new TermQueryBuilder(field, value)
-    }
-
-    def term(field: String, value: Any): TermQueryBuilder = {
-        val builder = new TermQueryBuilder(field, value)
-        builder
+        type QueryBuilder = TermQueryDefinition
+        def query(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
     }
 
 }

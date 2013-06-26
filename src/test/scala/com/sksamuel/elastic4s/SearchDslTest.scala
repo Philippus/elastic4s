@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
-import SearchDsl._
+import com.sksamuel.elastic4s.SearchDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 
 /** @author Stephen Samuel */
@@ -67,13 +67,32 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate json for a regex query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
 
-        val req = search in "*" types ("users", "tweets") limit 5 regex "drummmer" -> "will*"
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            regex("drummmer" -> "will*") boost 5
+        }
 
         println(req.builder.toString)
         assert(json === mapper.readTree(req.builder.toString))
     }
 
+    it should "generate json for a boolean compound query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
 
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            bool {
+                must(
+                    regex("drummmer" -> "will*") boost 5,
+                    term("singer" -> "chris")
+                ) and 5 of (
+                  regex("drummmer" -> "will*") boost 5,
+                  term("singer" -> "chris")
+                  )
+            }
+        }
+
+        println(req.builder.toString)
+        assert(json === mapper.readTree(req.builder.toString))
+    }
 
 
     //    search in "twitter" types "tweets" limit 10 start 3 query {

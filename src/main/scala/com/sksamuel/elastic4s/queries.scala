@@ -1,13 +1,34 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{BoostableQueryBuilder, QueryStringQueryBuilder, RegexpFlag, QueryBuilders}
+import org.elasticsearch.index.query.{QueryStringQueryBuilder, RegexpFlag, QueryBuilders}
 
 /** @author Stephen Samuel */
-trait QueryBuilder {
+
+trait QueryDsl {
+
+    def regex(tuple: (String, Any)): RegexQueryDefinition = regex(tuple._1, tuple._2)
+    def regex(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
+
+    def term(tuple: (String, Any)): TermQueryDefinition = term(tuple._1, tuple._2)
+    def term(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
+
+    def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
+    def prefix(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
+
+    def matches(tuple: (String, Any)): MatchQueryDefinition = matches(tuple._1, tuple._2)
+    def matches(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
+
+    def query(tuple: (String, Any)): StringQueryDefinition = query(tuple._1, tuple._2)
+    def query(field: String, value: Any): StringQueryDefinition = new StringQueryDefinition(field)
+
+    def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
+}
+
+trait QueryDefinition {
     val builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-class PrefixQueryBuilder(field: String, prefix: Any) extends QueryBuilder {
+class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition {
     val builder = QueryBuilders.prefixQuery(field, prefix.toString)
     def rewrite(rewrite: String) = {
         builder.rewrite(rewrite)
@@ -18,7 +39,8 @@ class PrefixQueryBuilder(field: String, prefix: Any) extends QueryBuilder {
         this
     }
 }
-class RegexQueryBuilder(field: String, regex: Any) extends QueryBuilder {
+class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition {
+
     val builder = QueryBuilders.regexpQuery(field, regex.toString)
     def flags(flags: RegexpFlag*) {
         builder.flags(flags: _*)
@@ -31,15 +53,17 @@ class RegexQueryBuilder(field: String, regex: Any) extends QueryBuilder {
         builder.boost(boost.toFloat)
         this
     }
+
+    def and(builder: QueryDefinition) = builder
 }
-class TermQueryBuilder(field: String, value: Any) extends QueryBuilder {
+class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
     val builder = QueryBuilders.termQuery(field, value.toString)
     def boost(boost: Double) = {
         builder.boost(boost.toFloat)
         this
     }
 }
-class MatchAllQueryBuilder extends QueryBuilder {
+class MatchAllQueryDefinition extends QueryDefinition {
 
     val builder = QueryBuilders.matchAllQuery
 
@@ -52,7 +76,7 @@ class MatchAllQueryBuilder extends QueryBuilder {
     }
 }
 
-class RangeQueryBuilder(field: String) extends QueryBuilder {
+class RangeQueryBuilder(field: String) extends QueryDefinition {
 
     val builder = QueryBuilders.rangeQuery(field)
 
@@ -82,7 +106,7 @@ class RangeQueryBuilder(field: String) extends QueryBuilder {
     }
 }
 
-class MatchQueryBuilder(field: String, value: Any) extends QueryBuilder {
+class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
     val builder = QueryBuilders.matchQuery(field, value)
 
@@ -105,7 +129,7 @@ class MatchQueryBuilder(field: String, value: Any) extends QueryBuilder {
     }
 }
 
-class StringQueryBuilder(query: String) extends QueryBuilder {
+class StringQueryDefinition(query: String) extends QueryDefinition {
 
     val builder = QueryBuilders.queryString(query)
 
@@ -185,5 +209,18 @@ class StringQueryBuilder(query: String) extends QueryBuilder {
     def boost(boost: Double) = {
         builder.boost(boost.toFloat)
         this
+    }
+}
+class BoolQueryBuilder extends QueryDefinition {
+
+    val builder = QueryBuilders.boolQuery()
+
+    def minimumNumberShouldMatch(minimumNumberShouldMatch: Int) = {
+        builder.minimumNumberShouldMatch(minimumNumberShouldMatch)
+        this
+    }
+
+    def must(builder: QueryDefinition) {
+
     }
 }
