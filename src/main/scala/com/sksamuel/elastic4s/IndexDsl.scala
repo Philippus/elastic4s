@@ -83,14 +83,8 @@ object IndexDsl {
         }
     }
 
-    class FieldsBuilder(val fields: List[(String, Any)]) {
-        def and(tuple: (String, Any)) = new FieldsBuilder(fields :+ tuple)
-    }
-
     implicit def string2index(indx: String) = new IndexExpectsType(indx)
     class IndexExpectsType(index: String) {
         def /(`type`: String) = (index, `type`)
     }
-
-    implicit def tuple2fields(tuple: (String, Any)) = new FieldsBuilder(List(tuple))
 }
