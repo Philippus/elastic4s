@@ -6,8 +6,6 @@ import java.util.concurrent.TimeUnit
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.CountResponse
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.action.delete.DeleteResponse
-import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
@@ -61,50 +59,50 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
           .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
 
-    def delete(req: DeleteReq): Future[DeleteResponse] = future {
-        client
-          .prepareDelete(req.index, req.`type`, req.id)
-          .setRouting(req.routing.orNull)
-          .setVersion(req.version)
-          .setParent(req.parent.orNull)
-          .setRefresh(req.refresh)
-          .execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    }
+    //    def delete(req: DeleteReq): Future[DeleteResponse] = future {
+    //        client
+    //          .prepareDelete(req.index, req.`type`, req.id)
+    //          .setRouting(req.routing.orNull)
+    //          .setVersion(req.version)
+    //          .setParent(req.parent.orNull)
+    //          .setRefresh(req.refresh)
+    //          .execute()
+    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
+    //    }
+    //
+    //    def deleteByQuery(req: DeleteByQueryReq): Future[DeleteByQueryResponse] = future {
+    //        client
+    //          .prepareDeleteByQuery(req.indexes: _*)
+    //          .setRouting(req.routing.mkString(","))
+    //          .setTypes(req.types: _*)
+    //          .setQuery("todo") //to do
+    //          .execute()
+    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
+    //    }
 
-    def deleteByQuery(req: DeleteByQueryReq): Future[DeleteByQueryResponse] = future {
-        client
-          .prepareDeleteByQuery(req.indexes: _*)
-          .setRouting(req.routing.mkString(","))
-          .setTypes(req.types: _*)
-          .setQuery("todo") //to do
-          .execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    }
-
-    def search(req: SearchReq): Future[SearchResponse] = future {
-
-        val search = client.prepareSearch(req.indexes.toSeq: _*)
-          .addFields(req.fields: _*)
-          .setExplain(req.explain)
-          .setSearchType(req.searchType.elasticType)
-          .setHighlighterPreTags(req.highlight.map(_.preTags).orNull: _*)
-          .setHighlighterPostTags(req.highlight.map(_.postTags).orNull: _*)
-          .setRouting(req.routing.mkString(","))
-          .setSize(req.size.toInt)
-          .setFrom(req.from.toInt)
-          .setScroll(req.scroll.orNull)
-          .setTrackScores(req.trackScores)
-
-        for ( sort <- req.sorts )
-            search.addSort(sort.builder)
-
-        for ( facet <- req.facets )
-            search.addFacet(facet.builder)
-
-        search.execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    }
+    //    def search(req: SearchReq): Future[SearchResponse] = future {
+    //
+    //        val search = client.prepareSearch(req.indexes.toSeq: _*)
+    //          .addFields(req.fields: _*)
+    //          .setExplain(req.explain)
+    //          .setSearchType(req.searchType.elasticType)
+    //          .setHighlighterPreTags(req.highlight.map(_.preTags).orNull: _*)
+    //          .setHighlighterPostTags(req.highlight.map(_.postTags).orNull: _*)
+    //          .setRouting(req.routing.mkString(","))
+    //          .setSize(req.size.toInt)
+    //          .setFrom(req.from.toInt)
+    //          .setScroll(req.scroll.orNull)
+    //          .setTrackScores(req.trackScores)
+    //
+    //        for ( sort <- req.sorts )
+    //            search.addSort(sort.builder)
+    //
+    //        for ( facet <- req.facets )
+    //            search.addFacet(facet.builder)
+    //
+    //        search.execute()
+    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
+    //    }
 
     def searchScroll(scrollId: String): Future[SearchResponse] = future {
         client.prepareSearchScroll(scrollId).execute().actionGet(timeout)

@@ -7,6 +7,9 @@ trait FacetBuilder {
     def build: Facet
 }
 
+abstract class Facet(name: String)
+trait Query
+
 case class TermsFacet(name: String,
                       fields: Seq[String],
                       order: TermsFacetOrder = TermsFacetOrder.Count,
@@ -23,7 +26,6 @@ case class TermsFacet(name: String,
       .order(order.elasticType)
       .regex(regex.orNull)
       .script(script.orNull)
-      .global(global)
       .scriptField(script_field.orNull)
       .fields(fields: _ *)
       .size(size)

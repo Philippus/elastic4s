@@ -7,7 +7,10 @@ Currently elastic4s does not cover all the functionality of the java client, but
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 
-### Create Index Example
+
+## Quick Examples
+
+#### Create Index Example
 
 To create an index you need to import the CreateIndexDsl object. Then you are able to use the dsl to build create-index requests like:
 
@@ -32,7 +35,7 @@ class CreateIndexReqExample extends CreateIndexDsl {
 }
 ```
 
-### Index Example
+#### Index Example
 
 To index you need to import the IndexDsl object. Then you are able to use the dsl to build index requests like :
 

@@ -1,61 +1,48 @@
 package com.sksamuel.elastic4s
 
-import scala.util.DynamicVariable
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.search.SearchRequestBuilder
 
 /** @author Stephen Samuel */
-case class SearchReq(indexes: Iterable[String] = Nil,
-                     types: Iterable[String] = Nil,
-                     query: Option[Query] = None,
-                     filter: Option[Filter] = None,
-                     facets: Seq[Facet] = Nil,
-                     fields: Seq[String] = Nil,
-                     from: Long = 0,
-                     explain: Boolean = false,
-                     highlight: Option[Highlight] = None,
-                     lowercaseExpandedTerms: Boolean = true,
-                     minScore: Double = 0,
-                     queryHint: Option[String] = None,
-                     routing: Seq[String] = Nil,
-                     size: Long = 0,
-                     source: Option[String] = None,
-                     scroll: Option[String] = None,
-                     scrollId: Option[String] = None,
-                     sorts: Seq[Sort] = Nil,
-                     timeout: Long = 0,
-                     trackScores: Boolean = false,
-                     version: Boolean = false,
-                     searchType: SearchType = SearchType.QueryThenFetch) {
+//case class SearchReq(indexes: Iterable[String] = Nil,
+//                     types: Iterable[String] = Nil,
+//                     query: Option[Query] = None,
+//                     filter: Option[Filter] = None,
+//                     facets: Seq[Facet] = Nil,
+//                     fields: Seq[String] = Nil,
+//                     from: Long = 0,
+//                     explain: Boolean = false,
+//                     highlight: Option[Highlight] = None,
+//                     lowercaseExpandedTerms: Boolean = true,
+//                     minScore: Double = 0,
+//                     queryHint: Option[String] = None,
+//                     routing: Seq[String] = Nil,
+//                     size: Long = 0,
+//                     source: Option[String] = None,
+//                     scroll: Option[String] = None,
+//                     scrollId: Option[String] = None,
+//                     sorts: Seq[Sort] = Nil,
+//                     timeout: Long = 0,
+//                     trackScores: Boolean = false,
+//                     version: Boolean = false,
+//                     searchType: SearchType = SearchType.QueryThenFetch) {
+//
+//    def builder: org.elasticsearch.action.search.SearchRequestBuilder = {
+//        null
+//    }
+//
+//    def _source: XContentBuilder = {
+//        val source = XContentFactory.jsonBuilder().startObject()
+//        source.endObject()
+//    }
+//}
 
-    def builder: org.elasticsearch.action.search.SearchRequestBuilder = {
-        null
-    }
-
-    def _source: XContentBuilder = {
-        val source = XContentFactory.jsonBuilder().startObject()
-        source.endObject()
-    }
-}
-
-sealed trait MultiMode
-case object MultiMode {
-    case object Min extends MultiMode
-    case object Max extends MultiMode
-    case object Sum extends MultiMode
-    case object Avg extends MultiMode
-}
-
-trait Filter
-trait Query
-abstract class Facet(name: String) {
-    val global: Boolean = false
-    def builder: org.elasticsearch.search.facet.FacetBuilder
-}
 
 object SearchDsl {
 
-    private val searchBuilderContext = new DynamicVariable[Option[SearchBuilder]](None)
+    abstract class Facet(name: String) {
+        val global: Boolean = false
+        def builder: org.elasticsearch.search.facet.FacetBuilder
+    }
 
     def preTag(tag: String): Unit = this
     def postTag(tag: String): Unit = this
@@ -63,15 +50,48 @@ object SearchDsl {
     def highlight = new HighlightBuilder
     def highlight(field: String) = new HighlightBuilder
 
-    class SearchBuilder(request: SearchRequestBuilder) {
+    class SearchBuilder(indexes: Seq[String], types: Seq[String]) {
+
+        val builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
 
         def query(block: => Any): SearchBuilder = {
             this
         }
 
+        /**
+         * Adds a single string query to this search
+         *
+         * @param string the query string
+         *
+         * @return this
+         */
         def query(string: String) = {
-            val builder = new StringQueryBuilder(string)
-            request.setQuery(builder.builder.buildAsBytes)
+            val q = new StringQueryBuilder(string)
+            builder.setQuery(q.builder.buildAsBytes)
+            this
+        }
+
+        def prefix(tuple: (String, Any)) = {
+            val q = new PrefixQueryBuilder(tuple._1, tuple._2)
+            builder.setQuery(q.builder.buildAsBytes)
+            this
+        }
+
+        def regex(tuple: (String, Any)) = {
+            val q = new RegexQueryBuilder(tuple._1, tuple._2)
+            builder.setQuery(q.builder.buildAsBytes)
+            this
+        }
+
+        def term(tuple: (String, Any)) = {
+            val q = new TermQueryBuilder(tuple._1, tuple._2)
+            builder.setQuery(q.builder.buildAsBytes)
+            this
+        }
+
+        def range(field: String) = {
+            val q = new RangeQueryBuilder(field)
+            builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
@@ -82,34 +102,34 @@ object SearchDsl {
         }
 
         def routing(r: String) = {
-            request.setRouting(r)
+            builder.setRouting(r)
             this
         }
 
         def start(i: Int) = from(i)
         def from(i: Int) = {
-            request.setFrom(i)
+            builder.setFrom(i)
             this
         }
 
         def limit(i: Int) = size(i)
         def size(i: Int) = {
-            request.setSize(i)
+            builder.setSize(i)
             this
         }
 
         def searchType(searchType: SearchType) = {
-            request.setSearchType(searchType.elasticType)
+            builder.setSearchType(searchType.elasticType)
             this
         }
 
         def version(enabled: Boolean) = {
-            request.setVersion(enabled)
+            builder.setVersion(enabled)
             this
         }
     }
 
-    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(request) {
+    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(null, null) {
         def fields(any: HighlightBuilder*) = {
             //        val builder = block
             //      builder.buffer.foreach(field => request.addHighlightedField(field))
@@ -117,17 +137,19 @@ object SearchDsl {
         }
     }
 
-    implicit def string2search(index: String) = new SearchBuilder(new SearchRequestBuilder(null).setIndices(index))
     implicit def string2highlightField(field: String) = {
         val builder = new HighlightBuilder
         builder.field(field)
         builder
     }
 
-    def search = new SearchBuilderExpectsIndex
-    class SearchBuilderExpectsIndex {
-        def in(index: String): SearchBuilder = in(Seq(index))
-        def in(indexes: Seq[String]): SearchBuilder = new SearchBuilder(new SearchRequestBuilder(null).setIndices(indexes: _*))
+    def search = new SearchExpectsIndex
+    class SearchExpectsIndex {
+        def in(indexes: String*): IndexExpectsType = new IndexExpectsType(indexes)
+    }
+
+    class IndexExpectsType(indexes: Seq[String]) {
+        def types(types: String*): SearchBuilder = new SearchBuilder(indexes, types)
     }
 
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {

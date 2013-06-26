@@ -1,0 +1,8 @@
+{
+    "size": 5,
+    "query": {
+        "prefix": {
+            "bands": "coldplay"
+        }
+    }
+}

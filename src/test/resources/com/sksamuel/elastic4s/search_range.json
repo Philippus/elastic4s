@@ -1,0 +1,13 @@
+{
+    "size": 5,
+    "query": {
+        "range": {
+            "coldplay": {
+                "from": null,
+                "to": null,
+                "include_lower": true,
+                "include_upper": true
+            }
+        }
+    }
+}

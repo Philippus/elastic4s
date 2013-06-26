@@ -1,0 +1,8 @@
+{
+    "size": 5,
+    "query": {
+        "query_string": {
+            "query": "coldplay"
+        }
+    }
+}

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import CreateIndexDsl._
 
 /** @author Stephen Samuel */
-class CreateIndexReqTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
+class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     val mapper = new ObjectMapper()
 
