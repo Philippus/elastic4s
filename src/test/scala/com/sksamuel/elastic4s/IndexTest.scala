@@ -82,7 +82,7 @@ class IndexTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           "user" -> "sammy",
           "post_date" -> "2011-11-15T14:12:12",
           "message" -> "I have an ID"
-          )
+          ) routing "users" ttl 100000
 
         println(req._source.string)
         assert(json === mapper.readTree(req._source.string))

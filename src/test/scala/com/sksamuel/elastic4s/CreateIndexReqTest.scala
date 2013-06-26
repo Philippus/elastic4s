@@ -4,8 +4,8 @@ import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.FieldType.{GeoPointType, StringType}
 import com.sksamuel.elastic4s.Analyzer.{StopAnalyzer, KeywordAnalyzer, WhitespaceAnalyzer}
-import com.sksamuel.elastic4s.CreateIndexDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
+import CreateIndexDsl._
 
 /** @author Stephen Samuel */
 class CreateIndexReqTest extends FlatSpec with MockitoSugar with OneInstancePerTest {

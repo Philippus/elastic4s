@@ -9,47 +9,41 @@ Currently elastic4s does not cover all the functionality of the java client, but
 
 ### Create Index Example
 
-To create an index you need to mixin the CreateIndexDsl trait. Then you are able to use the dsl to create create-index requests as such
+To create an index you need to import the CreateIndexDsl object. Then you are able to use the dsl to build create-index requests like:
 
 ```scala
 class CreateIndexReqExample extends CreateIndexDsl {
 
-    val req = createIndex("users") {
-        shards(5) // optional of course
-        replicas(2) // optional of course
-        mappings { // all mappings are optional as elastic will create dynamically
-            mapping("users") {
-                id.fieldType(StringType).analyzer(KeywordAnalyzer).store
-                field("name").fieldType(StringType).analyzer(WhitespaceAnalyzer)
-            }
-            mapping("tweets") {
-                source(true)
-            }
-            mapping("locations") {
-                id.fieldType(StringType).analyzer(KeywordAnalyzer).store
-                field("name").fieldType(StringType).analyzer(WhitespaceAnalyzer)
+        import CreateIndexDsl._
+        val req = create index "users" shards 3 replicas 4 mappings {
+
+            "tweets" source true as {
+
+                id fieldType StringType analyzer KeywordAnalyzer store true and
+                  "name" fieldType StringType analyzer WhitespaceAnalyzer and
+                  "content" fieldType StringType analyzer StopAnalyzer
+
+            } and "users" source false as {
+
+                "name" fieldType StringType analyzer WhitespaceAnalyzer and
+                  "location" fieldType GeoPointType
             }
         }
-    }
 }
 ```
 
 ### Index Example
 
-To index you need to mixin the IndexDsl trait. Then you are able to use the dsl to create index requests as such
+To index you need to import the IndexDsl object. Then you are able to use the dsl to build index requests like :
 
 ```scala
-class IndexReqExample extends IndexDsl {
+class IndexReqExample {
 
-    val req = index("twitter", "tweets") {
-
-        routing("kusers")
-        version(4)
-        timestamp("2009-11-15T14:12:12")
-
-        "user" -> "sammy"
-        "post_date" -> "2009-11-15T14:12:12"
-        "message" -> "trying out Elastic Search Scala DSL"
-    }
+      import IndexDsl._
+      val req = index into "twitter/tweet" id 9999 fields (
+          "user" -> "sammy",
+          "post_date" -> "2011-11-15T14:12:12",
+          "message" -> "I have an ID"
+          ) routing "users" ttl 100000
 }
 ```
