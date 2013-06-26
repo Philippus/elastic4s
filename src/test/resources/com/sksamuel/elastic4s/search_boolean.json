@@ -1,0 +1,32 @@
+{
+    "size": 5,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "regexp": {
+                        "drummmer": {
+                            "value": "will*",
+                            "boost": 5.0
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "singer": "chris"
+                    }
+                }
+            ],
+            "must_not": {
+                "term": {
+                    "singer": "anderson"
+                }
+            },
+            "should": {
+                "term": {
+                    "bassist": "berryman"
+                }
+            }
+        }
+    }
+}

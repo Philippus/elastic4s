@@ -42,9 +42,18 @@ trait QueryDsl {
 
 class BoolQueryDefinition extends QueryDefinition {
     val builder = QueryBuilders.boolQuery()
-    def must(queries: QueryDefinition*) = this
-    def should(queries: QueryDefinition*) = this
-    def not(queries: QueryDefinition*) = this
+    def must(queries: QueryDefinition*) = {
+        queries.foreach(builder must _.builder)
+        this
+    }
+    def should(queries: QueryDefinition*) = {
+        queries.foreach(builder should _.builder)
+        this
+    }
+    def not(queries: QueryDefinition*) = {
+        queries.foreach(builder mustNot _.builder)
+        this
+    }
 }
 
 trait QueryDefinition {
@@ -59,16 +68,15 @@ class FilteredQueryDefinition extends QueryDefinition {
     }
 }
 
-class IdQueryDefinition(ids: String*) extends FilterDefinition {
-    var builder = QueryBuilders.idsQuery().addIds(ids: _*)
-    var boost: Double = -1
+class IdQueryDefinition(ids: String*) extends QueryDefinition {
+    val builder = QueryBuilders.idsQuery().addIds(ids: _*)
+    var _boost: Double = -1
     def types(types: String*) = {
-        builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*).boost(boost.toFloat)
         this
     }
     def boost(boost: Double) = {
         builder.boost(boost.toFloat)
-        this.boost = boost
+        _boost = boost
         this
     }
 }

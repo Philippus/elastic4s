@@ -10,8 +10,8 @@ object SearchDsl extends QueryDsl {
         def builder: org.elasticsearch.search.facet.FacetBuilder
     }
 
-    def preTag(tag: String): Unit = this
-    def postTag(tag: String): Unit = this
+    def preTag(tag: String) = this
+    def postTag(tag: String) = this
 
     def highlight = new HighlightBuilder
     def highlight(field: String) = new HighlightBuilder
@@ -21,6 +21,7 @@ object SearchDsl extends QueryDsl {
         val builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
 
         def query(block: => QueryDefinition): SearchBuilder = {
+            builder.setQuery(block.builder)
             this
         }
 

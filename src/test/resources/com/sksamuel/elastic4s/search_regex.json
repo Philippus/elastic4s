@@ -2,7 +2,10 @@
     "size": 5,
     "query": {
         "regexp": {
-            "drummmer": "will*"
+            "drummmer": {
+                "value": "will*",
+                "boost": 5.0
+            }
         }
     }
 }

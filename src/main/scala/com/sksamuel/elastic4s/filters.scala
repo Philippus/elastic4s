@@ -5,8 +5,8 @@ import org.elasticsearch.index.query.FilterBuilders
 /** @author Stephen Samuel */
 trait FilterDsl {
 
-    def prefixFilter(field: String, prefix: Any) = new PrefixFilterDefinition(field, prefix)
-    def prefixFilter(tuple: (String, Any)) = prefixFilter(tuple._1, tuple._2)
+    def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
+    def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
 
     def termFilter(field: String, prefix: Any): TermFilterDefinition = new TermFilterDefinition(field, prefix)
     def termFilter(tuple: (String, Any)): TermFilterDefinition = termFilter(tuple._1, tuple._2)
