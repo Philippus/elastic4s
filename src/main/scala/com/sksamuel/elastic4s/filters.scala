@@ -13,10 +13,26 @@ trait FilterDsl {
 
     def regexFilter(field: String, prefix: Any): RegexFilterDefinition = new RegexFilterDefinition(field, prefix)
     def regexFilter(tuple: (String, Any)): RegexFilterDefinition = regexFilter(tuple._1, tuple._2)
+
+    def typeFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
+    def missingFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
+    def idsFilter(ids: String*): IdFilterDefinition = new IdFilterDefinition(ids: _*)
 }
 
 trait FilterDefinition {
     val builder: org.elasticsearch.index.query.FilterBuilder
+}
+
+class IdFilterDefinition(ids: String*) extends FilterDefinition {
+    val builder = FilterBuilders.idsFilter().addIds(ids: _*)
+}
+
+class TypeFilterDefinition(`type`: String) extends FilterDefinition {
+    val builder = FilterBuilders.typeFilter(`type`)
+}
+
+class MissingFilterDefinition(field: String) extends FilterDefinition {
+    val builder = FilterBuilders.missingFilter(field)
 }
 
 class PrefixFilterDefinition(field: String, prefix: Any) extends FilterDefinition {

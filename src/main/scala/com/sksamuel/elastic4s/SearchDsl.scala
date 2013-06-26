@@ -70,7 +70,7 @@ object SearchDsl extends QueryDsl {
         }
 
         def range(field: String) = {
-            val q = new RangeQueryBuilder(field)
+            val q = new RangeQueryDefinition(field)
             builder.setQuery(q.builder.buildAsBytes)
             this
         }
@@ -150,12 +150,6 @@ object SearchDsl extends QueryDsl {
         def query(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
     }
 
-    def all = matchAll()
-    def matchAll() = {
-        val builder = new MatchAllQueryDefinition()
-        builder
-    }
-
     def prefix = new PrefixExpectsQueryOrFilter
     class PrefixExpectsQueryOrFilter extends PairQuery {
         type QueryBuilder = PrefixQueryDefinition
@@ -164,7 +158,7 @@ object SearchDsl extends QueryDsl {
 
     def range = new RangeExpectsQueryOrFilter
     class RangeExpectsQueryOrFilter {
-        def query(field: String): RangeQueryBuilder = new RangeQueryBuilder(field)
+        def query(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
     }
 
     def regex = new RegexExpectsQueryOrFilter
@@ -173,59 +167,8 @@ object SearchDsl extends QueryDsl {
         def query(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
     }
 
-    def bool(block: => QueryBuilders): QueryDefinition = {
-        null
-    }
-
-    def must(builders: QueryDefinition*): BoolQueryDefinition = {
-        null
-    }
-
-    class BoolQueryDefinition {
-        def and(minShould: Int) = {
-            this
-        }
-    }
-
-    def should(block: => QueryBuilders): QueryBuilders = {
-        null
-    }
-
-    def not(block: => QueryBuilders): QueryBuilders = {
-        null
-    }
-
-    class QueryBuilders {
-        def should(block: => QueryBuilders): QueryBuilders = {
-            null
-        }
-
-        def not(block: => QueryBuilders): QueryBuilders = {
-            null
-        }
-
-        def and(builder: QueryDefinition) {
-
-        }
-    }
-
-    class CompoundQueryBuilder {
-
-    }
-
     class ExpectsQuery {
         def regex(tuple: (String, Any)) = new RegexQueryDefinition(tuple._1, tuple._2)
-    }
-
-    def string = new StringExpectsQueryOrFilter
-    class StringExpectsQueryOrFilter {
-        def query(q: String) = new StringQueryDefinition(q)
-    }
-
-    def term = new TermExpectsQueryOrFilter
-    class TermExpectsQueryOrFilter extends PairQuery {
-        type QueryBuilder = TermQueryDefinition
-        def query(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
     }
 
 }

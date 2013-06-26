@@ -6,8 +6,12 @@ import org.elasticsearch.index.query.{QueryStringQueryBuilder, RegexpFlag, Query
 
 trait QueryDsl {
 
+    def query = this
+
     def regex(tuple: (String, Any)): RegexQueryDefinition = regex(tuple._1, tuple._2)
     def regex(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
+
+    def range(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
     def term(tuple: (String, Any)): TermQueryDefinition = term(tuple._1, tuple._2)
     def term(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
@@ -18,14 +22,122 @@ trait QueryDsl {
     def matches(tuple: (String, Any)): MatchQueryDefinition = matches(tuple._1, tuple._2)
     def matches(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
 
-    def query(tuple: (String, Any)): StringQueryDefinition = query(tuple._1, tuple._2)
-    def query(field: String, value: Any): StringQueryDefinition = new StringQueryDefinition(field)
+    def query(value: String): StringQueryDefinition = new StringQueryDefinition(value)
 
+    def field(tuple: (String, Any)): FieldQueryDefinition = field(tuple._1, tuple._2)
+    def field(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
+
+    def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcard(tuple._1, tuple._2)
+    def wildcard(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
+
+    def ids(ids: String*) = new IdQueryDefinition(ids: _*)
     def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
+
+    def bool(block: => QueryBuilders): QueryDefinition = {
+        null
+    }
+
+    def must(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().must(queries: _*)
+    def should(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().should(queries: _*)
+    def not(queries: QueryDefinition*): BoolDefinition = new BoolDefinition().not(queries: _*)
 }
 
 trait QueryDefinition {
     val builder: org.elasticsearch.index.query.QueryBuilder
+}
+
+class FilteredQueryDefinition extends QueryDefinition {
+    val builder = QueryBuilders.filteredQuery(null, null)
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
+}
+
+class IdQueryDefinition(ids: String*) extends FilterDefinition {
+    var builder = QueryBuilders.idsQuery().addIds(ids: _*)
+    var boost: Double = -1
+    def types(types: String*) = {
+        builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*).boost(boost.toFloat)
+        this
+    }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this.boost = boost
+        this
+    }
+}
+
+class BoostingQueryDefinition extends QueryDefinition {
+    val builder = QueryBuilders.boostingQuery()
+}
+
+class WildcardQueryDefinition(field: String, query: Any) extends QueryDefinition {
+    val builder = QueryBuilders.wildcardQuery(field, query.toString)
+    def rewrite(rewrite: String) = {
+        builder.rewrite(rewrite)
+        this
+    }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
+}
+
+class FieldQueryDefinition(field: String, query: Any) extends QueryDefinition {
+    val builder = QueryBuilders.fieldQuery(field, query)
+    def rewrite(rewrite: String) = {
+        builder.rewrite(rewrite)
+        this
+    }
+    def boost(boost: Double) = {
+        builder.boost(boost.toFloat)
+        this
+    }
+    def fuzzyMaxExpansions(fuzzyMaxExpansions: Int) = {
+        builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
+        this
+    }
+
+    def phraseSlop(phraseSlop: Int) = {
+        builder.phraseSlop(phraseSlop)
+        this
+    }
+
+    def fuzzyPrefixLength(fuzzyPrefixLength: Int) = {
+        builder.fuzzyPrefixLength(fuzzyPrefixLength)
+        this
+    }
+
+    def fuzzyMinSim(fuzzyMinSim: Double) = {
+        builder.fuzzyMinSim(fuzzyMinSim.toFloat)
+        this
+    }
+
+    def anaylyzer(analyzer: Analyzer) = {
+        builder.analyzer(analyzer.elastic)
+        this
+    }
+
+    def analyzeWildcard(analyzeWildcard: Boolean) = {
+        builder.analyzeWildcard(analyzeWildcard)
+        this
+    }
+
+    def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean) = {
+        builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
+        this
+    }
+
+    def allowLeadingWildcard(allowLeadingWildcard: Boolean) = {
+        builder.allowLeadingWildcard(allowLeadingWildcard)
+        this
+    }
+
+    def enablePositionIncrements(enablePositionIncrements: Boolean) = {
+        builder.enablePositionIncrements(enablePositionIncrements)
+        this
+    }
 }
 
 class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition {
@@ -76,7 +188,7 @@ class MatchAllQueryDefinition extends QueryDefinition {
     }
 }
 
-class RangeQueryBuilder(field: String) extends QueryDefinition {
+class RangeQueryDefinition(field: String) extends QueryDefinition {
 
     val builder = QueryBuilders.rangeQuery(field)
 
@@ -211,7 +323,8 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
         this
     }
 }
-class BoolQueryBuilder extends QueryDefinition {
+
+class BoolDefinition {
 
     val builder = QueryBuilders.boolQuery()
 
@@ -220,7 +333,7 @@ class BoolQueryBuilder extends QueryDefinition {
         this
     }
 
-    def must(builder: QueryDefinition) {
-
-    }
+    def must(queries: QueryDefinition*) = this
+    def should(queries: QueryDefinition*) = this
+    def not(queries: QueryDefinition*) = this
 }
