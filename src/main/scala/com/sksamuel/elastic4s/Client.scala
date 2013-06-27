@@ -28,7 +28,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an IndexResponse
      */
-    def index(req: IndexRequest): Future[IndexResponse] = future {
+    def execute(req: IndexRequest): Future[IndexResponse] = future {
         client.index(req).actionGet(timeout)
     }
 
@@ -39,7 +39,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an IndexResponse
      */
-    def index(builder: IndexBuilder): Future[IndexResponse] = future {
+    def execute(builder: IndexBuilder): Future[IndexResponse] = future {
         client.index(builder.java).actionGet(timeout)
     }
 
@@ -50,7 +50,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an SearchResponse
      */
-    def search(req: SearchRequest): Future[SearchResponse] = future {
+    def execute(req: SearchRequest): Future[SearchResponse] = future {
         client.search(req).actionGet(timeout)
     }
 
@@ -61,7 +61,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an SearchResponse
      */
-    def search(builder: SearchBuilder): Future[SearchResponse] = future {
+    def execute(builder: SearchBuilder): Future[SearchResponse] = future {
         client.search(builder.build).actionGet(timeout)
     }
 
@@ -72,7 +72,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an CountResponse
      */
-    def count(req: CountRequest): Future[CountResponse] = future {
+    def execute(req: CountRequest): Future[CountResponse] = future {
         client.count(req).actionGet(timeout)
     }
 
@@ -83,7 +83,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an CountResponse
      */
-    def count(builder: CountBuilder): Future[CountResponse] = future {
+    def execute(builder: CountBuilder): Future[CountResponse] = future {
         client.count(builder.build).actionGet(timeout)
     }
 
@@ -97,7 +97,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
 
-    def register(idx: String, `type`: String, req: IndexRequest): Future[IndexResponse] = index(req)
+    def register(idx: String, `type`: String, req: IndexRequest): Future[IndexResponse] = execute(req)
 
     def percolate(index: String, `type`: String): Future[PercolateResponse] = future {
         client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)

@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.IndexRequest
+import org.elasticsearch.action.index.{IndexResponse, IndexRequest}
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 object IndexDsl {
@@ -82,11 +83,8 @@ object IndexDsl {
             source.endObject()
         }
 
-        def java = _request.source(_source)
-    }
+        def execute(implicit client: ElasticClient): Future[IndexResponse] = client.execute(this)
 
-    implicit def string2index(indx: String) = new IndexExpectsType(indx)
-    class IndexExpectsType(index: String) {
-        def /(`type`: String) = (index, `type`)
+        def java = _request.source(_source)
     }
 }

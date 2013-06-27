@@ -23,7 +23,7 @@ trait ElasticSugar extends Logging {
       .put("index.number_of_shards", 1)
       .put("index.number_of_replicas", 0)
 
-    val client = ElasticClient.local(settings.build)
+    implicit val client = ElasticClient.local(settings.build)
 
     def refresh(indexes: String*) {
         val i = indexes.size match {
@@ -39,12 +39,12 @@ trait ElasticSugar extends Logging {
 
         val query = count from index types `type`
         var backoff = 1
-        var actualCount = Await.result(client.count(query), 5 seconds).getCount
+        var actualCount = Await.result(client.execute(query), 5 seconds).getCount
 
         while (backoff <= 64 && actualCount != expectedCount) {
             Thread.sleep(backoff * 100)
             backoff = backoff * 2
-            actualCount = Await.result(client.count(query), 5 seconds).getCount
+            actualCount = Await.result(client.execute(query), 5 seconds).getCount
         }
     }
 }
