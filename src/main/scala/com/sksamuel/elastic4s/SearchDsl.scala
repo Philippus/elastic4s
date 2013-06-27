@@ -16,9 +16,9 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
     def highlight = new HighlightBuilder
     def highlight(field: String) = new HighlightBuilder
 
-    class SearchBuilder(indexes: Seq[String], types: Seq[String]) {
+    class SearchBuilder(indexes: Seq[String]) {
 
-        val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
+        val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
         def build = _builder.request()
 
         def query(block: => QueryDefinition): SearchBuilder = {
@@ -152,9 +152,14 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
             _builder.setMinScore(score.toFloat)
             this
         }
+
+        def types(types: String*): SearchBuilder = {
+            _builder.setTypes(types: _*)
+            this
+        }
     }
 
-    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(null, null) {
+    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(null) {
         def fields(any: HighlightBuilder*) = {
             //        val builder = block
             //      builder.buffer.foreach(field => request.addHighlightedField(field))
@@ -170,11 +175,7 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
 
     def search = new SearchExpectsIndex
     class SearchExpectsIndex {
-        def in(indexes: String*): IndexExpectsType = new IndexExpectsType(indexes)
-    }
-
-    class IndexExpectsType(indexes: Seq[String]) {
-        def types(types: String*): SearchBuilder = new SearchBuilder(indexes, types)
+        def in(indexes: String*): SearchBuilder = new SearchBuilder(indexes)
     }
 
     implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {

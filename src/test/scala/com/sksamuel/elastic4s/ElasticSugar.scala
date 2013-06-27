@@ -6,6 +6,7 @@ import CountDsl._
 import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import org.elasticsearch.indices.IndexMissingException
 
 /** @author Stephen Samuel */
 trait ElasticSugar extends Logging {
@@ -33,18 +34,26 @@ trait ElasticSugar extends Logging {
         client.client.admin().indices().prepareRefresh(i: _*).setWaitForOperations(true).execute()
     }
 
-    def blockUntil(expectedCount: Long,
-                   index: String,
-                   `type`: String) {
+    def blockUntilCount(expected: Long,
+                        index: String,
+                        types: Seq[String] = Nil) {
 
-        val query = count from index types `type`
-        var backoff = 1
-        var actualCount = Await.result(client.execute(query), 5 seconds).getCount
+        var backoff = 0
+        var actual = 0l
 
-        while (backoff <= 64 && actualCount != expectedCount) {
-            Thread.sleep(backoff * 100)
-            backoff = backoff * 2
-            actualCount = Await.result(client.execute(query), 5 seconds).getCount
+        while (backoff <= 64 && actual != expected) {
+            if (backoff > 0)
+                Thread.sleep(backoff * 100)
+            backoff = if (backoff == 0) 1 else backoff * 2
+            try {
+                actual = Await.result(client execute {
+                    count from index types types
+                }, 5 seconds).getCount
+            } catch {
+                case e: IndexMissingException => 0
+            }
         }
+
+        require(expected == actual, s"Block failed waiting on count: Expected was $expected but actual was $actual")
     }
 }
