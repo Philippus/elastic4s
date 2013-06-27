@@ -18,6 +18,9 @@ import com.sksamuel.elastic4s.SearchDsl.SearchBuilder
 import com.sksamuel.elastic4s.CountDsl.CountBuilder
 import org.elasticsearch.action.get.{GetResponse, GetRequest}
 import com.sksamuel.elastic4s.GetDsl.GetBuilder
+import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
+import com.sksamuel.elastic4s.DeleteDsl.{DeleteByQueryDefinition, DeleteByIdDefinition}
+import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -85,9 +88,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an CountResponse
      */
-    def execute(builder: CountBuilder): Future[CountResponse] = future {
-        client.count(builder.build).actionGet(timeout)
-    }
+    def execute(builder: CountBuilder): Future[CountResponse] = execute(builder.build)
 
     /**
      * Executes a Java API GetRequest and returns a scala Future with the GetResponse.
@@ -107,8 +108,18 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an GetResponse
      */
-    def execute(builder: GetBuilder): Future[GetResponse] = future {
-        client.get(builder.build).actionGet(timeout)
+    def execute(builder: GetBuilder): Future[GetResponse] = execute(builder.build)
+
+    def execute(req: DeleteRequest): Future[DeleteResponse] = future {
+        client.delete(req).actionGet(timeout)
+    }
+
+    def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = future {
+        client.delete(d.builder).actionGet(timeout)
+    }
+
+    def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = future {
+        client.deleteByQuery(d.builder).actionGet(timeout)
     }
 
     def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {

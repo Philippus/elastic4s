@@ -10,6 +10,16 @@ Currently elastic4s does not cover all the functionality of the java client, but
 
 ## Quick Examples
 
+#### DSL Syntax
+
+| Operation | General Syntax |
+|-----------|----------------|
+| Index | ```index into <index/type> fields { <fieldblock> } [routing <routing> version <version> parent <parent>.....]``` |
+| Get | ```get id <id> from <index/type>``` |
+| Delete |  To delete by id ```delete id <id> in <index/type> [routing <routing> version <version> parent <parent>.....]```
+            To delete by query ```delete query { <queryblock> } [routing <routing> version <version> parent <parent>.....]```
+| Search | To search ```search in <index/type> query { <queryblock> } filter { <filterblock> } sort { <sortblock> } ....``` |
+
 #### Create Index Example
 
 To create an index you need to import the CreateIndexDsl object. Then you are able to use the dsl to build create-index requests like:
