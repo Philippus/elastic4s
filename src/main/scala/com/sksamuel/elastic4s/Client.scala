@@ -1,37 +1,90 @@
 package com.sksamuel.elastic4s
 
 import scala.concurrent._
-import org.elasticsearch.client.Client
-import java.util.concurrent.TimeUnit
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
-import org.elasticsearch.action.count.CountResponse
-import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.action.count.{CountRequest, CountResponse}
+import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
 import org.elasticsearch.action.percolate.PercolateResponse
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
+import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
+import org.elasticsearch.common.transport.InetSocketTransportAddress
+import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.client.Client
+import com.sksamuel.elastic4s.IndexDsl.IndexBuilder
+import com.sksamuel.elastic4s.SearchDsl.SearchBuilder
+import com.sksamuel.elastic4s.CountDsl.CountBuilder
 
 /** @author Stephen Samuel */
-class ScalaClient(val client: org.elasticsearch.client.Client,
-                  timeout: Long = 5000)
-                 (implicit executionContext: ExecutionContext = ExecutionContext.global) {
+class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
+                   (implicit executionContext: ExecutionContext = ExecutionContext.global) {
 
+    /**
+     * Indexes a Java IndexRequest and returns a scala Future with the IndexResponse.
+     *
+     * @param req an IndexRequest from the Java client
+     *
+     * @return a Future providing an IndexResponse
+     */
     def index(req: IndexRequest): Future[IndexResponse] = future {
+        client.index(req).actionGet(timeout)
+    }
 
-        client
-          .prepareIndex()
-          .setIndex(req.index)
-          .setType(req.`type`)
-          .setId(req.id)
-          .setOpType(req.opType)
-          .setParent(req.parent)
-          .setTimestamp(req.timestamp)
-          .setRefresh(req.refresh)
-          .setVersion(req.version)
-          .setVersionType(req.versionType)
-          .setSource(req.source)
-          .execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
+    /**
+     * Indexes a Scala DSL IndexBuilder and returns a scala Future with the IndexResponse.
+     *
+     * @param builder an IndexBuilder from the Scala DSL
+     *
+     * @return a Future providing an IndexResponse
+     */
+    def index(builder: IndexBuilder): Future[IndexResponse] = future {
+        client.index(builder.java).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Java API SearchRequest and returns a scala Future with the SearchResponse.
+     *
+     * @param req a SearchRequest from the Java client
+     *
+     * @return a Future providing an SearchResponse
+     */
+    def search(req: SearchRequest): Future[SearchResponse] = future {
+        client.search(req).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Scala DSL search and returns a scala Future with the SearchResponse.
+     *
+     * @param builder a SearchBuilder from the Scala DSL
+     *
+     * @return a Future providing an SearchResponse
+     */
+    def search(builder: SearchBuilder): Future[SearchResponse] = future {
+        client.search(builder.build).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Java API CountRequest and returns a scala Future with the CountResponse.
+     *
+     * @param req a CountRequest from the Java client
+     *
+     * @return a Future providing an CountResponse
+     */
+    def count(req: CountRequest): Future[CountResponse] = future {
+        client.count(req).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Scala DSL search and returns a scala Future with the CountResponse.
+     *
+     * @param builder a CountBuilder from the Scala DSL
+     *
+     * @return a Future providing an CountResponse
+     */
+    def count(builder: CountBuilder): Future[CountResponse] = future {
+        client.count(builder.build).actionGet(timeout)
     }
 
     def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {
@@ -48,15 +101,6 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
 
     def percolate(index: String, `type`: String): Future[PercolateResponse] = future {
         client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)
-    }
-
-    def count(req: CountReq): Future[CountResponse] = future {
-        client
-          .prepareCount(req.indexes: _*)
-          .setTypes(req.types: _*)
-          .setRouting(req.routing.mkString(","))
-          .execute()
-          .actionGet(timeout, TimeUnit.MILLISECONDS)
     }
 
     //    def delete(req: DeleteReq): Future[DeleteResponse] = future {
@@ -77,30 +121,6 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
     //          .setTypes(req.types: _*)
     //          .setQuery("todo") //to do
     //          .execute()
-    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    //    }
-
-    //    def search(req: SearchReq): Future[SearchResponse] = future {
-    //
-    //        val search = client.prepareSearch(req.indexes.toSeq: _*)
-    //          .addFields(req.fields: _*)
-    //          .setExplain(req.explain)
-    //          .setSearchType(req.searchType.elasticType)
-    //          .setHighlighterPreTags(req.highlight.map(_.preTags).orNull: _*)
-    //          .setHighlighterPostTags(req.highlight.map(_.postTags).orNull: _*)
-    //          .setRouting(req.routing.mkString(","))
-    //          .setSize(req.size.toInt)
-    //          .setFrom(req.from.toInt)
-    //          .setScroll(req.scroll.orNull)
-    //          .setTrackScores(req.trackScores)
-    //
-    //        for ( sort <- req.sorts )
-    //            search.addSort(sort.builder)
-    //
-    //        for ( facet <- req.facets )
-    //            search.addFacet(facet.builder)
-    //
-    //        search.execute()
     //          .actionGet(timeout, TimeUnit.MILLISECONDS)
     //    }
 
@@ -129,9 +149,29 @@ class ScalaClient(val client: org.elasticsearch.client.Client,
     def close(): Unit = client.close()
 }
 
-object ScalaClient {
-    implicit def client2scala(client: Client) = apply(client)
-    def apply(client: Client, timeout: Long = 5000): ScalaClient = new ScalaClient(client, timeout)
+object ElasticClient {
+
+    val DefaultTimeout = 5000
+
+    def fromClient(client: Client): ElasticClient = fromClient(client, DefaultTimeout)
+    def fromClient(client: Client, timeout: Long = DefaultTimeout): ElasticClient = new ElasticClient(client, timeout)
+    def fromNode(node: Node): ElasticClient = fromNode(node, DefaultTimeout)
+    def fromNode(node: Node, timeout: Long = DefaultTimeout): ElasticClient = fromClient(node.client, timeout)
+
+    def remote(settings: Settings,
+               host: String = "localhost",
+               ports: Seq[Int] = Seq(9300),
+               timeout: Long = DefaultTimeout): ElasticClient = {
+        require(settings.getAsMap.containsKey("cluster.name"))
+        val client = new TransportClient(settings)
+        for ( port <- ports ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+        fromClient(client, timeout)
+    }
+
+    def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
+    def local(settings: Settings, timeout: Long = DefaultTimeout): ElasticClient =
+        fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
+
 }
 
 sealed abstract class SearchOperationThreading(elastic: org.elasticsearch.action.search.SearchOperationThreading)

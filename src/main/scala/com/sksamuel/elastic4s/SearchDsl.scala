@@ -18,25 +18,26 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
 
     class SearchBuilder(indexes: Seq[String], types: Seq[String]) {
 
-        val builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
+        val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*).setTypes(types: _*)
+        def build = _builder.request()
 
         def query(block: => QueryDefinition): SearchBuilder = {
-            builder.setQuery(block.builder)
+            _builder.setQuery(block.builder)
             this
         }
 
         def filter(block: => FilterDefinition): SearchBuilder = {
-            builder.setFilter(block.builder)
+            _builder.setFilter(block.builder)
             this
         }
 
         def sort(sorts: SortDefinition*): SearchBuilder = {
-            sorts.foreach(builder addSort _.builder)
+            sorts.foreach(_builder addSort _.builder)
             this
         }
 
         def suggestions(suggestions: SuggestionDefinition*): SearchBuilder = {
-            suggestions.foreach(builder addSuggestion _.builder)
+            suggestions.foreach(_builder addSuggestion _.builder)
             this
         }
 
@@ -49,7 +50,7 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
          */
         def query(string: String) = {
             val q = new StringQueryDefinition(string)
-            builder.setQuery(q.builder.buildAsBytes)
+            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
@@ -62,7 +63,7 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
          */
         def prefix(tuple: (String, Any)) = {
             val q = new PrefixQueryDefinition(tuple._1, tuple._2)
-            builder.setQuery(q.builder.buildAsBytes)
+            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
@@ -75,19 +76,19 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
          */
         def regex(tuple: (String, Any)) = {
             val q = new RegexQueryDefinition(tuple._1, tuple._2)
-            builder.setQuery(q.builder.buildAsBytes)
+            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
         def term(tuple: (String, Any)) = {
             val q = new TermQueryDefinition(tuple._1, tuple._2)
-            builder.setQuery(q.builder.buildAsBytes)
+            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
         def range(field: String) = {
             val q = new RangeQueryDefinition(field)
-            builder.setQuery(q.builder.buildAsBytes)
+            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
@@ -98,44 +99,44 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
         }
 
         def routing(r: String) = {
-            builder.setRouting(r)
+            _builder.setRouting(r)
             this
         }
 
         def start(i: Int) = from(i)
         def from(i: Int) = {
-            builder.setFrom(i)
+            _builder.setFrom(i)
             this
         }
 
         def limit(i: Int) = size(i)
         def size(i: Int) = {
-            builder.setSize(i)
+            _builder.setSize(i)
             this
         }
 
         def searchType(searchType: SearchType) = {
-            builder.setSearchType(searchType.elasticType)
+            _builder.setSearchType(searchType.elasticType)
             this
         }
 
         def version(enabled: Boolean) = {
-            builder.setVersion(enabled)
+            _builder.setVersion(enabled)
             this
         }
 
         def preference(pref: String) = {
-            builder.setPreference(pref)
+            _builder.setPreference(pref)
             this
         }
 
         def preference(pref: Preference) = {
-            builder.setPreference(pref.elastic)
+            _builder.setPreference(pref.elastic)
             this
         }
 
         def scroll(keepAlive: String) = {
-            builder.setScroll(keepAlive)
+            _builder.setScroll(keepAlive)
             this
         }
 
@@ -143,12 +144,12 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
         def indexBoost(map: Map[String, Double]) = this
 
         def explain(enabled: Boolean) = {
-            builder.setExplain(enabled)
+            _builder.setExplain(enabled)
             this
         }
 
         def minStore(score: Double) = {
-            builder.setMinScore(score.toFloat)
+            _builder.setMinScore(score.toFloat)
             this
         }
     }

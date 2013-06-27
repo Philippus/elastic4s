@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.{IndexRequest, IndexRequestBuilder}
+import org.elasticsearch.action.index.IndexRequest
 import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
@@ -21,46 +21,46 @@ object IndexDsl {
 
     class IndexBuilder(index: String, `type`: String) {
 
-        val builder = new IndexRequestBuilder(null).setIndex(index).setType(`type`)
-        val _fields = new ListBuffer[(String, Any)]
+        private val _request = new IndexRequest(index, `type`)
+        private val _fields = new ListBuffer[(String, Any)]
 
         def id(id: Any) = {
-            builder.setId(id.toString)
+            _request.id(id.toString)
             this
         }
         def routing(routing: String) = {
-            builder.setRouting(routing)
+            _request.routing(routing)
             this
         }
 
         def parent(parent: String) = {
-            builder.setParent(parent)
+            _request.parent(parent)
             this
         }
 
         def timestamp(timestamp: String) = {
-            builder.setTimestamp(timestamp)
+            _request.timestamp(timestamp)
             this
         }
 
         def ttl(ttl: Long) = {
-            builder.setTTL(ttl)
+            _request.ttl(ttl)
             this
         }
 
         def update(update: Boolean) = opType(OpType.CREATE)
         def opType(opType: IndexRequest.OpType) = {
-            builder.setOpType(opType)
+            _request.opType(opType)
             this
         }
 
         def version(version: Int) = {
-            builder.setVersion(version)
+            _request.version(version)
             this
         }
 
         def versionType(versionType: VersionType) = {
-            builder.setVersionType(versionType)
+            _request.versionType(versionType)
             this
         }
 
@@ -81,6 +81,8 @@ object IndexDsl {
             }
             source.endObject()
         }
+
+        def java = _request.source(_source)
     }
 
     implicit def string2index(indx: String) = new IndexExpectsType(indx)

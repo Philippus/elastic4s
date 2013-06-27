@@ -2,12 +2,15 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.settings.ImmutableSettings
 import java.io.File
+import CountDsl._
 import java.util.UUID
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 trait ElasticSugar extends Logging {
 
-    val tempDir = File.createTempFile("anything", "tmp").getParent
+    val tempDir = File.createTempFile("elasticsearchtests", "tmp").getParent
     val dataDir = new File(tempDir + "/" + UUID.randomUUID().toString)
     dataDir.mkdir()
     dataDir.deleteOnExit()
@@ -16,14 +19,32 @@ trait ElasticSugar extends Logging {
     val settings = ImmutableSettings.settingsBuilder()
       .put("node.http.enabled", false)
       .put("http.enabled", false)
-      .put("indices.cache.filter.size", "8mb")
-      //  .put("index.gateway.type", "none")
-      //    .put("gateway.type", "none")
-      //   .put("index.store.type", "memory")
       .put("path.data", dataDir.getAbsolutePath)
       .put("index.number_of_shards", 1)
       .put("index.number_of_replicas", 0)
-      .put("indices.memory.min_shard_index_buffer_size", "1mb")
-      .put("indices.memory.index_buffer_size", "10%")
-      .put("min_index_buffer_size", "4mb")
+
+    val client = ElasticClient.local(settings.build)
+
+    def refresh(indexes: String*) {
+        val i = indexes.size match {
+            case 0 => Seq("*")
+            case _ => indexes
+        }
+        client.client.admin().indices().prepareRefresh(i: _*).setWaitForOperations(true).execute()
+    }
+
+    def blockUntil(expectedCount: Long,
+                   index: String,
+                   `type`: String) {
+
+        val query = count from index types `type`
+        var backoff = 1
+        var actualCount = Await.result(client.count(query), 5 seconds).getCount
+
+        while (backoff <= 64 && actualCount != expectedCount) {
+            Thread.sleep(backoff * 100)
+            backoff = backoff * 2
+            actualCount = Await.result(client.count(query), 5 seconds).getCount
+        }
+    }
 }
