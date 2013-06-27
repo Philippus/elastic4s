@@ -13,7 +13,6 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val mapper = new ObjectMapper()
 
     "the index dsl" should "generate json to include mapping properties" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_mappings.json"))
         val req = create index "users" mappings {
 
@@ -29,16 +28,12 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
                   "location" fieldType GeoPointType
             }
         }
-
-        println(req._source.string)
         assert(json === mapper.readTree(req._source.string))
     }
 
     "the index dsl" should "generate json to override index settings when set" in {
-
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_settings.json"))
         val req = create index "users" shards 3 replicas 4
-
         assert(json === mapper.readTree(req._source.string))
     }
 }
