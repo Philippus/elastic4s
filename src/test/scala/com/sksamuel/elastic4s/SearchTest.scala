@@ -5,6 +5,7 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.IndexDsl._
 import SearchDsl._
 import CountDsl._
+import GetDsl._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -31,7 +32,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "singer" -> "ian anderson",
           "guitar" -> "martin barre",
           "keyboards" -> "johnny smith"
-          )
+          ) id 45
     }
     refresh("music")
     blockUntilCount(3, "music")
@@ -52,5 +53,14 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
         }
         val resp = Await.result(future, 10 seconds)
         assert(2 === resp.getCount)
+    }
+
+    "a search index" should "retrieve a document by id" in {
+
+        val future = client execute {
+            get id 45 from "music/band"
+        }
+        val resp = Await.result(future, 10 seconds)
+        assert("45" === resp.getId)
     }
 }

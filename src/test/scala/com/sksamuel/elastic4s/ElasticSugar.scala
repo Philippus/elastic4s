@@ -28,7 +28,7 @@ trait ElasticSugar extends Logging {
 
     def refresh(indexes: String*) {
         val i = indexes.size match {
-            case 0 => Seq("*")
+            case 0 => Seq("_all")
             case _ => indexes
         }
         client.client.admin().indices().prepareRefresh(i: _*).setWaitForOperations(true).execute()

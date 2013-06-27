@@ -16,6 +16,8 @@ import org.elasticsearch.client.Client
 import com.sksamuel.elastic4s.IndexDsl.IndexBuilder
 import com.sksamuel.elastic4s.SearchDsl.SearchBuilder
 import com.sksamuel.elastic4s.CountDsl.CountBuilder
+import org.elasticsearch.action.get.{GetResponse, GetRequest}
+import com.sksamuel.elastic4s.GetDsl.GetBuilder
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -85,6 +87,28 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      */
     def execute(builder: CountBuilder): Future[CountResponse] = future {
         client.count(builder.build).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Java API GetRequest and returns a scala Future with the GetResponse.
+     *
+     * @param req a GetRequest from the Java client
+     *
+     * @return a Future providing an GetResponse
+     */
+    def execute(req: GetRequest): Future[GetResponse] = future {
+        client.get(req).actionGet(timeout)
+    }
+
+    /**
+     * Executes a Scala DSL get and returns a scala Future with the GetResponse.
+     *
+     * @param builder a GetBuilder from the Scala DSL
+     *
+     * @return a Future providing an GetResponse
+     */
+    def execute(builder: GetBuilder): Future[GetResponse] = future {
+        client.get(builder.build).actionGet(timeout)
     }
 
     def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {
