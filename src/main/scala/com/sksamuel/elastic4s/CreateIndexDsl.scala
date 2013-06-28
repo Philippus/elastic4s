@@ -76,6 +76,7 @@ trait CreateIndexDsl {
         }
 
         def and(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
+        def ~(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
     }
 
     class FieldMapping(val name: String) {

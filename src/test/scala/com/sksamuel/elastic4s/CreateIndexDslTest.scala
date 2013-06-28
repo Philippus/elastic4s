@@ -16,7 +16,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_mappings.json"))
         val req = create index "users" mappings {
 
-            "tweets" source true as {
+            map("tweets") source true as {
 
                 id fieldType StringType analyzer KeywordAnalyzer store true includeInAll true and
                   "name" fieldType GeoPointType analyzer SimpleAnalyzer boost 4 and

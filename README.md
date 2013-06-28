@@ -10,26 +10,42 @@ Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This g
 
 ## Introduction to the DSL
 
-The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. All the request methods exist in the ElasticDsl object; to import simply add ```import com.sksamuel.elastic4s.ElasticDsl._``` to your source. 
+The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. 
+All requests on the standard client are asynchronous. These methods return a standard Scala 2.10 Future object. Eg, a search request will return a Future[SearchResponse]. The response objects are the same as for the Java API.
 
-The basic Scala client is called ElasticClient. To create the client use the constructor methods on the companion object, eg ```ElasticClient.local()``` which would return a locally configured client.
+All the request methods exist in the ElasticDsl object. The standard client is a class called ElasticClient. To create a client use the constructor methods on the ElasticClient companion object. 
 
-All requests on the standard client are asynchronous. These methods return a standard Scala 2.10 Future object. Eg, a search request will return a Future[SearchResponse]. The response objects are the same as for the Java API due to the fact they already are concise and convenient in Scala code.
+An example is worth 1000 characters so here is a quick example of how to create a client and index a one field doucment:
+
+```scala
+import com.sksamuel.elastic4s.ElasticDsl._
+
+object Test extends App {
+
+  val client = ElasticClient.local()
+  client execute { index into "bands/singers" fields "name"->"chris martin" }
+
+}
+```
+For more in depth examples keep reading.
+
 
 #### DSL Syntax
 
+Here is a list of the common operations and the syntax used to create requests. For full examples read the following sections. Most operations have many optional settings. For those you should consult the elastic search document for the particular operation. The DSL keyword is usually called exactly what the option is called in the json request.
+
 | Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
-| Create Index | ```create index <name> mappings { mappings block> } [optional settings]```|
-| Index | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
-| Get | ```get id <id> from <index/type> [optional settings]```|
-| Delete by id |  ```delete id <id> in <index/type> [optional settings]```
-| Delete by query |```delete from <index/type> query { <queryblock> } [optional settings]```
-| Search | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
-| More like this | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
-| Update | ```update id <id> in <index/type> script <script> [optional settings]``` |
-| Register Query| ```<id> into <index> query { <queryblock> }``` |
-| Percolate Doc | ```percolate in <index> { fields <fieldsblock> }``` |
+| Create Index     | ```create index <name> mappings { mappings block> } [optional settings]```|
+| Index            | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
+| Get              | ```get id <id> from <index/type> [optional settings]```|
+| Delete by id     | ```delete id <id> in <index/type> [optional settings]```
+| Delete by query  | ```delete from <index/type> query { <queryblock> } [optional settings]```
+| Search           | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
+| More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
+| Update           | ```update id <id> in <index/type> script <script> [optional settings]``` |
+| Register Query   | ```<id> into <index> query { <queryblock> }``` |
+| Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
 
 #### Client
 
@@ -68,47 +84,94 @@ val client = ElasticClient.fromNode(node)
  To create an index that is fully dynamic we can simply use
 
 ```scala
-class CreateIndexReqExample extends CreateIndexDsl {
+client.execute { create index "places" }
+```
 
-        import CreateIndexDsl._
-        val req = create index "users" shards 3 replicas 4 mappings {
+This will create an index called places. We can optionally set the number of shards and / or replicas
 
-            "tweets" source true as {
+```scala
+client.execute { create index "places" shards 3 replicas 2 }
+```
 
-                id fieldType StringType analyzer KeywordAnalyzer store true and
-                  "name" fieldType StringType analyzer WhitespaceAnalyzer and
-                  "content" fieldType StringType analyzer StopAnalyzer
+Sometimes we want to specify the details of the fields in the index. To do this we add mappings
 
-            } and "users" source false as {
-
-                "name" fieldType StringType analyzer WhitespaceAnalyzer and
-                  "location" fieldType GeoPointType
-            }
-        }
+```scala
+client.execute { 
+    create index "places" map "cities" as {
+    
+	    "id" fieldType IntegerType and
+          "name" analyzer SimpleAnalyzer boost 4 and
+          "content" analyzer StopAnalyzer nullValue "no content"
+          
+    } map countries as {
+        
+	    "id" fieldType IntegerType and
+          "name" analyzer SimpleAnalyzer boost 4 and
+          "continent" analyzer KeywordAnalyzer
+    }
 }
 ```
+
+Then ElasticSearch is configured with those mappings for those fields only. It is still fully dynamic and other fields will be created as needed with default options. See [this section](http://www.elasticsearch.org/guide/reference/mapping) in the official documentation.
 
 #### Indexing
 
-To index a document
+To index a document we need to specify the index and type and optionally the id. We must also include at least one field.
 
 ```scala
-class IndexReqExample {
+client.execute {
+    index into "places/cities" id "uk" fields (
+        "name" -> "London",
+        "country" -> "United Kingdom",
+        "continent" -> "Europe",
+        "status" -> "Awesome"
+    )
+}```
 
-      import IndexDsl._
-      val req = index into "twitter/tweet" id 9999 fields (
-          "user" -> "sammy",
-          "post_date" -> "2011-11-15T14:12:12",
-          "message" -> "I have an ID"
-          ) routing "users" ttl 100000
-}
-```
+Again there are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
 
 #### Searching
 
-Searching is naturally the most involved operation. There are many ways to do searching in elastic search and that is reflected
+Searching is naturally the most involved operation. There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the search DSL.
 
+To do a simple string query search, where the search query is parsed from a single string
+```scala
+search in "places/cities" query "London"
+```
+
+We can search for everything by not specifying a query at all.
+```scala
+search in "places/cities"
+```
+
+We might want to limit the number of results and / or set the offset.
+```scala
+search in "places/cities" query "paris" start 5 limit 10
+```
+
+One of the great features of ElasticSearch is the number of queries it provides. Here we can use the term query to limit the search to just the state of Georgia rather than the country of Georgia.
+```scala
+search in "places/cities" { term("state", "georgia") }
+```
+
+We wouldn't be able to do very much if we couldn't combine queries. So here we combine three queries, 2 "musts" that must match the documents and 1 "not" that must not match the documents. This is what ElasticSearch calls a [boolean query](http://www.elasticsearch.org/guide/reference/query-dsl/bool-query/). You'll see in this example that I don't like to vacation anywhere that is too hot, and I want to only vacation somewhere that is awesome and that where the name ends with 'cester' like Gloucester or Leicester.
+```scala
+search in "places/cities" query { 
+   bool {
+       must(
+           regex("name", ".*cester"),
+           term("status", "Awesome")
+       ) not (
+            term("weather", "hot")
+       )
+   }
+}
+```
+We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and fantastic pubs.
+```
+search in "places/cities" query "london" facets ("landmarks", "pubs")
+```
 
 
 #### Percolate
