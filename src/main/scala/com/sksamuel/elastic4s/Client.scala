@@ -187,6 +187,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
 
     def close(): Unit = client.close()
 
+    def java = client
     def admin = client.admin
 
     def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
@@ -213,12 +214,12 @@ object ElasticClient {
     def fromNode(node: Node): ElasticClient = fromNode(node, DefaultTimeout)
     def fromNode(node: Node, timeout: Long = DefaultTimeout): ElasticClient = fromClient(node.client, timeout)
 
-    def remote(host: String = "localhost", ports: Int*)(timeout: Long = DefaultTimeout): ElasticClient =
-        remote(ImmutableSettings.builder().build(), host, ports: _*)(timeout)
-    def remote(settings: Settings, host: String = "localhost", ports: Int*)(timeout: Long = DefaultTimeout): ElasticClient = {
+    def remote(addresses: (String, Int)*): ElasticClient =
+        remote(ImmutableSettings.builder().build(), addresses: _*)(DefaultTimeout)
+    def remote(settings: Settings, addresses: (String, Int)*)(timeout: Long = DefaultTimeout): ElasticClient = {
         require(settings.getAsMap.containsKey("cluster.name"))
         val client = new TransportClient(settings)
-        for ( port <- ports ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+        for ( address <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
         fromClient(client, timeout)
     }
 

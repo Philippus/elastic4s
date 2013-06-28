@@ -63,12 +63,12 @@ To specify settings for the local node you can pass in a settings object like th
 val client = ElasticClient.local(settings.build)
  ```
 
-To connect to a remote elastic cluster then you need to use the remote() call specifying the hostname and ports:
+To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports:
 ```scala
-// single port
-val client = ElastiClient.remote("1.2.3.4", 9300)
-// or for multiple ports
-val client = ElastiClient.remote("1.2.3.4", 9100, 9200, 9300, 9400)
+// single node
+val client = ElastiClient.remote("host1", 9300)
+// or for multiple nodes
+val client = ElastiClient.remote("host1" -> 9300, "host2" -> 9300)
 ```
 
 
@@ -126,7 +126,8 @@ client.execute {
         "continent" -> "Europe",
         "status" -> "Awesome"
     )
-}```
+}
+```
 
 Again there are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
 
@@ -168,31 +169,79 @@ search in "places/cities" query {
    }
 }
 ```
-We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and fantastic pubs.
+We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and fantastic pubs and so we'd offer these as selectable facets to our lovely users.
 ```
 search in "places/cities" query "london" facets ("landmarks", "pubs")
 ```
 
+Elasticsearch provides [sorting](http://www.elasticsearch.org/guide/reference/api/search/facets/) of course. So does elastic4s. You can even include multiple sorts - rather like multiple order clauses in an SQL query.
 
-#### Percolate
+```scala
+search in "places/cities" query "europe" sort (
+    by field "name",
+    by field "status"
+)
+```
+Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
+
 
 #### Get
+
+Sometimes we don't want to search and want to retrieve a document directly from the index by id. In this example we are retrieving the document with id 'coldplay' from the bands/rock index and type.
+```scala
+client.execute {
+    get "coldplay" from "bands/rock"
+}
+```
 
 #### Deleting
 
+In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead. We think they're a little past their best (controversial).
+```scala
+client.execute {
+    delete id "u2" from "bands/rock"
+}
+```
+
+We can take this a step further by deleting by a query rather than id. In this sense the delete is very similar to an SQL delete statement. In this example we're deleting all bands where their debut date is before 2000.
+
+```scala
+client.execute {
+    delete from "bands/rock" query {
+        range("debut_year") to 2000
+    }
+}
+```
+
+You'll notice that the format for the query construct is exactly the same as for the search operation. In fact the same constructs can be used by any operation that requires a query - search, delete, percolate.
+
 #### Bulk Operations
+
+ElasticSearch is fast. HTTP is not. Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations. Elastic has predicted our wishes and created the bulk API. To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
+
+```scala
+client.bulk {
+   index into "bands/rock" fields "name"->"coldplay",
+   index into "bands/rock" fields "name"->"kings of leon",
+   index into "bands/pop" fields ( 
+      "name"->"elton john",
+      "best_album"-"goodbye yellow brick road"
+   ),
+   delete id "taylor swift" from "bands/pop"
+}
+```
+A single HTTP request is now needed for 4 operations. The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 
 #### Other
 
-There are other DSLs in play. Validate, update, and explain all have a DSL that is very easy to understand and can be understood from the source.
-
-#### Get
+There are other DSLs in play. Validate, update, percolate, more like this, and explain all have a DSL that is very easy to understand and can be understood from the source. They work in similar ways to the others. Examples will be added in due course.
 
 #### Synchronous Operations
 
 All operations are normally async. To switch to a sync client called .sync on the client object. Then all requests will block until the operations has completed. Eg,
-```
-val resp = client.sync.index { index into "bands" fields ("name"->"coldplay", "debut"->"parachutes") }
+```scala
+val resp = client.sync.index { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }
+resp.isInstanceOf[IndexResponse] // true
 ```
 
 #### DSL Completeness
@@ -201,11 +250,25 @@ As it stands the Scala DSL covers all of the common operations - index, create, 
 
 However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!). In these cases it is necessary to drop back to the Java API. This can be done by calling .java on the client object to get the underlying java elastic client, or .admin to get the admin based client, eg, the following request is a Java API request.
 
-```
+```scala
 client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 ```
 
-This way you can still access everything the normal Java client covers in the cases where the Scala DSL has no coverage.
+This way you can still access everything the normal Java client covers in the cases where the Scala DSL is missing a construct, or where there is no need to provide a DSL.
+
+## Using Elastic4s in your project
+
+For SBT users simply add:
+
+```scala
+tbc
+```
+
+For Maven users simply add:
+
+```xml
+tbc
+```
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
