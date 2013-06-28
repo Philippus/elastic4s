@@ -60,11 +60,21 @@ class IndexReqExample {
           ) routing "users" ttl 100000
 }
 ```
+### DSL Completeness
 
+As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations. There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner. 
+
+However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!). In these cases it is necessary to drop back to the Java API. This can be done by calling .java on the client object to get the underlying java elastic client, or .admin to get the admin based client, eg, the following request is a Java API request.
+
+```
+client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+```
+
+This way you can still access everything the normal Java client covers in the cases where the Scala DSL has no coverage.
 
 ### Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
 
 * Raising bugs and feature requests
-* Fixing bugs and developing new features (I will attempt to merge in pull requests ASAP)
-* Improving the performance of scala-uri. See the Performance Tests project for details of how to run the scala-uri performance benchmarks.
+* Fixing bugs and enhancing the DSL
+* Improving the performance of elastic4s
