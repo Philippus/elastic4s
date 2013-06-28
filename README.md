@@ -1,26 +1,35 @@
 elastic4s
 =========
 
-Elastic4s is a Scala DSL for ElasticSearch. This gives you the full power of a type safe DSL to construct your queries, indexing, etc.
+Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This gives you the full power of a DSL to construct your queries, indexes, etc without needing to generate JSON. Sometimes you have data in JSON and its easy to use that straight in requests. Other times you want to create your requests programatically and a DSL is more convenient. Elastic4s is designed for that latter scenario.
 
-Currently elastic4s does not cover all the functionality of the java client, but it covers enough for most use cases. We are continually adding more coverage too - why not fork and contribute?
+
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 
 
-## Quick Examples
+## Introduction to the DSL
+
+The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. 
+
+All requests on the standard client are asynchronous. These methods return a standard Scala 2.10 Future object. Eg, a search request will return a Future[SearchResponse]. The response objects are the same as for the Java API due to the fact they already are concise and convenient in Scala code.
 
 #### DSL Syntax
 
-| Operation | General Syntax |
+| Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
-| Index | ```index into <index/type> fields { <fieldblock> } [routing <routing> version <version> parent <parent>.....]``` |
-| Get | ```get id <id> from <index/type>``` |
-| Delete |  To delete by id ```delete id <id> in <index/type> [routing <routing> version <version> parent <parent>.....]```
-            To delete by query ```delete query { <queryblock> } [routing <routing> version <version> parent <parent>.....]```
-| Search | To search ```search in <index/type> query { <queryblock> } filter { <filterblock> } sort { <sortblock> } ....``` |
+| Create Index | ```create index <name> mappings { mappings block> } [optional settings]```|
+| Index | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
+| Get | ```get id <id> from <index/type> [optional settings]```|
+| Delete by id |  ```delete id <id> in <index/type> [optional settings]```
+| Delete by query |```delete from <index/type> query { <queryblock> } [optional settings]```
+| Search | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
+| More like this | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
+| Update | ```update id <id> in <index/type> script <script> [optional settings]``` |
+| Register Query| ```<id> into <index> query { <queryblock> }``` |
+| Percolate Doc | ```percolate in <index> { fields <fieldsblock> }``` |
 
-#### Create Index Example
+#### Create Index
 
 To create an index you need to import the CreateIndexDsl object. Then you are able to use the dsl to build create-index requests like:
 
@@ -45,7 +54,7 @@ class CreateIndexReqExample extends CreateIndexDsl {
 }
 ```
 
-#### Index Example
+#### Indexing
 
 To index you need to import the IndexDsl object. Then you are able to use the dsl to build index requests like :
 
@@ -60,7 +69,31 @@ class IndexReqExample {
           ) routing "users" ttl 100000
 }
 ```
-### DSL Completeness
+
+#### Searching
+
+#### Percolate
+
+#### Get
+
+#### Deleting
+
+#### Bulk Operations
+
+#### Other
+
+There are other DSLs in play. Validate, update, and explain all have a DSL that is very easy to understand and can be understood from the source.
+
+#### Get
+
+#### Synchronous Operations
+
+All operations are normally async. To switch to a sync client called .sync on the client object. Then all requests will block until the operations has completed. Eg,
+```
+val resp = client.sync.index { index into "bands" fields ("name"->"coldplay", "debut"->"parachutes") }
+```
+
+#### DSL Completeness
 
 As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations. There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner. 
 
@@ -72,7 +105,7 @@ client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitF
 
 This way you can still access everything the normal Java client covers in the cases where the Scala DSL has no coverage.
 
-### Contributions
+## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
 
 * Raising bugs and feature requests
