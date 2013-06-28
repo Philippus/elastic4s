@@ -21,6 +21,7 @@ trait ElasticSugar extends Logging {
       .put("node.http.enabled", false)
       .put("http.enabled", false)
       .put("path.data", dataDir.getAbsolutePath)
+      .put("path.work", dataDir.getAbsolutePath)
       .put("index.number_of_shards", 1)
       .put("index.number_of_replicas", 0)
 

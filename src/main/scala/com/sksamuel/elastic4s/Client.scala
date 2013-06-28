@@ -6,7 +6,7 @@ import org.elasticsearch.action.count.{CountRequest, CountResponse}
 import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
 import org.elasticsearch.action.percolate.PercolateResponse
 import org.elasticsearch.action.bulk.BulkResponse
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
 import org.elasticsearch.common.transport.InetSocketTransportAddress
@@ -21,6 +21,7 @@ import com.sksamuel.elastic4s.GetDsl.GetBuilder
 import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
 import com.sksamuel.elastic4s.DeleteDsl.{DeleteByQueryDefinition, DeleteByIdDefinition}
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
+import com.sksamuel.elastic4s.ValidateDsl.ValidateDefinition
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -122,6 +123,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.deleteByQuery(d.builder).actionGet(timeout)
     }
 
+    def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
+        client.admin.indices().validateQuery(req).actionGet(timeout)
+    }
+
+    def execute(validateDef: ValidateDefinition): Future[ValidateQueryResponse] = execute(validateDef.build)
+
+    // old
+
     def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {
         val bulk = client.prepareBulk()
         indexRequests.foreach(arg => bulk.add(arg))
@@ -172,10 +181,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     //          .execute()
     //          .actionGet(timeout, TimeUnit.MILLISECONDS)
     //    }
-
-    def validate(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
-        client.admin().indices().prepareValidateQuery("").execute().actionGet(timeout) // todo
-    }
 
     def moreLikeThis(req: MoreLikeThisRequest): Future[SearchResponse] = future {
         client.prepareMoreLikeThis("", "", "").execute().actionGet(timeout)

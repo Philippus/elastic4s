@@ -15,6 +15,7 @@ object MoreLikeThisDsl {
         def in(in: String) = in.split("/").toList match {
             case idx :: Nil => new MoreLikeThisDefinition(idx, null, id)
             case idx :: t :: Nil => new MoreLikeThisDefinition(idx, t, id)
+            case _ => throw new RuntimeException
         }
     }
 
