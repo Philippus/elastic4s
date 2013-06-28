@@ -4,7 +4,6 @@ import scala.concurrent._
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.{CountRequest, CountResponse}
 import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
-import org.elasticsearch.action.percolate.PercolateResponse
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
@@ -26,6 +25,9 @@ import com.sksamuel.elastic4s.UpdateDsl.UpdateDefinition
 import scala.concurrent.duration._
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.bulk.BulkResponse
+import com.sksamuel.elastic4s.PercolateDsl.{PercolateDefinition, RegisterDefinition}
+import com.sksamuel.elastic4s.MoreLikeThisDsl.MoreLikeThisDefinition
+import org.elasticsearch.action.percolate.PercolateResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -149,6 +151,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def result(updateDef: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
         Await.result(execute(updateDef.build), duration)
 
+    def execute(req: MoreLikeThisRequest): Future[SearchResponse] = future {
+        client.moreLikeThis(req).actionGet(5000)
+    }
+    def execute(mltDef: MoreLikeThisDefinition): Future[SearchResponse] = execute(mltDef._builder)
+    def result(mltDef: MoreLikeThisDefinition)(implicit duration: Duration): SearchResponse =
+        Await.result(execute(mltDef), duration)
+
     def execute(requests: BulkCompatibleRequest*): Future[BulkResponse] = {
         val bulk = client.prepareBulk()
         requests.foreach(req => req match {
@@ -167,20 +176,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
 
-    // -- old
-
-    def register(idx: String, `type`: String, req: IndexRequest): Future[IndexResponse] = execute(req)
-
-    def percolate(index: String, `type`: String): Future[PercolateResponse] = future {
-        client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)
+    def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef.build)
+    def execute(percolate: PercolateDefinition): Future[PercolateResponse] = future {
+        client.percolate(percolate.build).actionGet(timeout)
     }
+    def result(percolate: PercolateDefinition)(implicit duration: Duration): PercolateResponse = Await.result(execute(percolate), duration)
 
     def searchScroll(scrollId: String): Future[SearchResponse] = future {
         client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
-    }
-
-    def moreLikeThis(req: MoreLikeThisRequest): Future[SearchResponse] = future {
-        client.prepareMoreLikeThis("", "", "").execute().actionGet(timeout)
     }
 
     def close(): Unit = client.close()

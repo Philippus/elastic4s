@@ -60,3 +60,11 @@ class IndexReqExample {
           ) routing "users" ttl 100000
 }
 ```
+
+
+### Contributions
+Contributions to elastic4s are always welcome. Good ways to contribute include:
+
+* Raising bugs and feature requests
+* Fixing bugs and developing new features (I will attempt to merge in pull requests ASAP)
+* Improving the performance of scala-uri. See the Performance Tests project for details of how to run the scala-uri performance benchmarks.

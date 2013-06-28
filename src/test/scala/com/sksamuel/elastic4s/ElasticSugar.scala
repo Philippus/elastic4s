@@ -7,9 +7,12 @@ import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import org.elasticsearch.indices.IndexMissingException
+import org.scalatest.{Suite, BeforeAndAfterAll}
 
 /** @author Stephen Samuel */
-trait ElasticSugar extends Logging {
+trait ElasticSugar extends BeforeAndAfterAll with Logging {
+
+    this: Suite =>
 
     val tempDir = File.createTempFile("elasticsearchtests", "tmp").getParent
     val dataDir = new File(tempDir + "/" + UUID.randomUUID().toString)
