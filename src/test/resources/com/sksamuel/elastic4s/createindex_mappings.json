@@ -6,38 +6,50 @@
     "mappings": {
         "tweets": {
             "_source": {
-                "enabled": true
+                "enabled": true,
+                "numeric_detection": true
             },
             "properties": {
                 "_id": {
                     "type": "string",
-                    "index": "keyword",
+                    "analyzer": "keyword",
+                    "index": 100,
+                    "include_in_all": true,
                     "store": "true"
                 },
                 "name": {
-                    "type": "string",
-                    "index": "whitespace",
+                    "type": "geo_point",
+                    "analyzer": "simple",
+                    "index": 100,
+                    "boost": 4.0,
                     "store": "false"
                 },
                 "content": {
-                    "type": "string",
-                    "index": "stop",
+                    "type": "date",
+                    "analyzer": "stop",
+                    "index": 100,
+                    "null_value": "no content",
                     "store": "false"
                 }
             }
         },
         "users": {
             "_source": {
-                "enabled": false
+                "enabled": false,
+                "numeric_detection": true
             },
             "properties": {
                 "name": {
-                    "type": "string",
-                    "index": "whitespace",
+                    "type": "ip",
+                    "analyzer": "whitespace",
+                    "index": 100,
+                    "omit_norms": true,
                     "store": "false"
                 },
                 "location": {
-                    "type": "geopoint",
+                    "type": "integer",
+                    "analyzer": "snowball",
+                    "index": 100,
                     "store": "false"
                 }
             }

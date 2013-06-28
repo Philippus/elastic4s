@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.FieldType.{GeoPointType, StringType}
-import com.sksamuel.elastic4s.Analyzer.{StopAnalyzer, KeywordAnalyzer, WhitespaceAnalyzer}
+import com.sksamuel.elastic4s.FieldType._
+import com.sksamuel.elastic4s.Analyzer._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
 
@@ -18,14 +18,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
 
             "tweets" source true as {
 
-                id fieldType StringType analyzer KeywordAnalyzer store true and
-                  "name" fieldType StringType analyzer WhitespaceAnalyzer and
-                  "content" fieldType StringType analyzer StopAnalyzer
+                id fieldType StringType analyzer KeywordAnalyzer store true includeInAll true and
+                  "name" fieldType GeoPointType analyzer SimpleAnalyzer boost 4 and
+                  "content" fieldType DateType analyzer StopAnalyzer nullValue "no content"
 
             } and "users" source false as {
 
-                "name" fieldType StringType analyzer WhitespaceAnalyzer and
-                  "location" fieldType GeoPointType
+                "name" fieldType IpType analyzer WhitespaceAnalyzer omitNorms true and
+                  "location" fieldType IntegerType analyzer SnowballAnalyzer ignoreAbove 50
             }
         }
         assert(json === mapper.readTree(req._source.string))
