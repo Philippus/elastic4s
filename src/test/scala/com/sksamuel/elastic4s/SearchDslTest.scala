@@ -74,11 +74,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                 must(
                     regex("drummmer" -> "will*") boost 5,
                     term("singer" -> "chris")
-                ) should {
-                    term("bassist" -> "berryman")
-                } not {
-                    term("singer" -> "anderson")
-                }
+                ) should term("bassist" -> "berryman") not term("singer" -> "anderson")
             }
         }
         assert(json === mapper.readTree(req._builder.toString))

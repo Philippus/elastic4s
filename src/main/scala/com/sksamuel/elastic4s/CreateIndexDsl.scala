@@ -45,17 +45,56 @@ trait CreateIndexDsl {
             this
         }
 
+        def ignoreAbove(ignoreAbove: Int) = {
+            fields.last.ignoreAbove = Option(ignoreAbove)
+            this
+        }
+
+        def boost(boost: Double) = {
+            fields.last.boost = boost
+            this
+        }
+
+        def omitNorms(omitNorms: Boolean) = {
+            fields.last.omitNorms = Option(omitNorms)
+            this
+        }
+
+        def includeInAll(includeInAll: Boolean) = {
+            fields.last.includeInAll = Option(includeInAll)
+            this
+        }
+
+        def nullValue(nullValue: String) = {
+            fields.last.nullValue = Option(nullValue)
+            this
+        }
+
+        def index(index: String) = {
+            fields.last.index = index
+            this
+        }
+
         def and(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
     }
 
     class FieldMapping(val name: String) {
         var `type`: Option[FieldType] = None
         var analyzer: Option[Analyzer] = None
+        var index: String = "analyzed"
         var store: Boolean = false
+        var boost: Double = 0
+        var nullValue: Option[String] = None
+        var omitNorms: Option[Boolean] = None
+        var position_offset_gap: Int = 0
+        var ignoreAbove: Option[Int] = None
+        var includeInAll: Option[Boolean] = None
     }
 
     class Mapping(val name: String, var source: Boolean, val fields: List[FieldMapping]) {
-
+        var date_detection = false
+        var numeric_detection = true
+        var dynamic_date_formats: Iterable[String] = Nil
     }
 
     class IndexSettings(var shards: Int = 1, var replicas: Int = 1)
@@ -96,13 +135,26 @@ trait CreateIndexDsl {
             for ( mapping <- _mappings ) {
 
                 source.startObject(mapping.name)
-                source.startObject("_source").field("enabled", mapping.source).endObject()
+                source.startObject("_source").field("enabled", mapping.source)
+                if (mapping.dynamic_date_formats.size > 0)
+                    source.field("dynamic_date_formats", mapping.dynamic_date_formats.toArray)
+                if (mapping.date_detection)
+                    source.field("date_detection", mapping.date_detection)
+                if (mapping.numeric_detection)
+                    source.field("numeric_detection", mapping.numeric_detection)
+                source.endObject()
                 source.startObject("properties")
 
                 for ( field <- mapping.fields ) {
                     source.startObject(field.name)
                     field.`type`.foreach(arg => source.field("type", arg.elastic))
-                    field.analyzer.foreach(arg => source.field("index", arg.elastic))
+                    field.analyzer.foreach(arg => source.field("analyzer", arg.elastic))
+                    field.index.foreach(index => source.field("index", index))
+                    field.omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
+                    field.nullValue.foreach(nullValue => source.field("null_value", nullValue))
+                    field.includeInAll.foreach(includeInAll => source.field("include_in_all", includeInAll))
+                    if (field.boost > 0)
+                        source.field("boost", field.boost)
                     source.field("store", field.store.toString)
                     source.endObject()
                 }
