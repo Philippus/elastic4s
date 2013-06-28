@@ -28,6 +28,8 @@ import org.elasticsearch.action.bulk.BulkResponse
 import com.sksamuel.elastic4s.PercolateDsl.{PercolateDefinition, RegisterDefinition}
 import com.sksamuel.elastic4s.MoreLikeThisDsl.MoreLikeThisDefinition
 import org.elasticsearch.action.percolate.PercolateResponse
+import com.sksamuel.elastic4s.CreateIndexDsl.CreateIndexDefinition
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -124,6 +126,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.delete(req).actionGet(timeout)
     }
 
+    def execute(create: CreateIndexDefinition): Future[CreateIndexResponse] = future {
+        client.admin.indices.create(create.build).actionGet(timeout)
+    }
+
     def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = future {
         client.delete(d.builder).actionGet(timeout)
     }
@@ -176,17 +182,30 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
 
-    def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef.build)
-    def execute(percolate: PercolateDefinition): Future[PercolateResponse] = future {
+    def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef.build.request)
+    def registerSync(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
+        Await.result(register(registerDef), duration)
+
+    def percolate(percolate: PercolateDefinition): Future[PercolateResponse] = future {
         client.percolate(percolate.build).actionGet(timeout)
     }
-    def result(percolate: PercolateDefinition)(implicit duration: Duration): PercolateResponse = Await.result(execute(percolate), duration)
 
     def searchScroll(scrollId: String): Future[SearchResponse] = future {
         client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
     }
 
     def close(): Unit = client.close()
+
+    def admin = client.admin
+
+    def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
+
+    class SyncClient(client: ElasticClient)(implicit duration: Duration) {
+        def percolate(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
+            Await.result(client.percolate(percolateDef), duration)
+        def registerSync(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
+            Await.result(client.register(registerDef), duration)
+    }
 }
 
 object ElasticClient {

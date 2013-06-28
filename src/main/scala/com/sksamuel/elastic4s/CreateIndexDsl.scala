@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import scala.collection.mutable.ListBuffer
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 
 /** @author Stephen Samuel */
 
@@ -9,7 +10,7 @@ object CreateIndexDsl {
 
     def create = new CreateIndexExpectsName
     class CreateIndexExpectsName {
-        def index(name: String) = new CreateIndexBuilder(name)
+        def index(name: String) = new CreateIndexDefinition(name)
     }
 
     implicit def map(name: String) = new MappingTypeExpectsDefinition(name, false, Nil)
@@ -54,14 +55,18 @@ object CreateIndexDsl {
         var store: Boolean = false
     }
 
-    class Mapping(val name: String, var source: Boolean, val fields: List[FieldMapping])
+    class Mapping(val name: String, var source: Boolean, val fields: List[FieldMapping]) {
+
+    }
 
     class IndexSettings(var shards: Int = 1, var replicas: Int = 1)
 
-    class CreateIndexBuilder(name: String) {
+    class CreateIndexDefinition(name: String) {
 
         val _mappings = new ListBuffer[Mapping]
         val _settings = new IndexSettings
+
+        def build = new CreateIndexRequest(name).source(_source)
 
         def shards(shards: Int) = {
             _settings.shards = shards

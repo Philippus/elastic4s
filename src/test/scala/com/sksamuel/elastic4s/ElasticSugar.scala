@@ -15,16 +15,15 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     this: Suite =>
 
     val tempDir = File.createTempFile("elasticsearchtests", "tmp").getParent
-    val dataDir = new File(tempDir + "/" + UUID.randomUUID().toString)
-    dataDir.mkdir()
-    dataDir.deleteOnExit()
-    logger.info("Setting ES data dir [{}]", dataDir)
+    val homeDir = new File(tempDir + "/" + UUID.randomUUID().toString)
+    homeDir.mkdir()
+    homeDir.deleteOnExit()
+    logger.info("Setting ES home dir [{}]", homeDir)
 
     val settings = ImmutableSettings.settingsBuilder()
       .put("node.http.enabled", false)
       .put("http.enabled", false)
-      .put("path.data", dataDir.getAbsolutePath)
-      .put("path.work", dataDir.getAbsolutePath)
+      .put("path.home", homeDir.getAbsolutePath)
       .put("index.number_of_shards", 1)
       .put("index.number_of_replicas", 0)
 

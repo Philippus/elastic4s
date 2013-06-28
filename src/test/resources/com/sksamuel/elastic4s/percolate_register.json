@@ -1,5 +1,7 @@
 {
-    "query_string": {
-        "query": "cook"
+    "query": {
+        "term": {
+            "field1": "value1"
+        }
     }
 }
