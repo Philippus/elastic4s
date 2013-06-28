@@ -75,6 +75,7 @@ trait CreateIndexDsl {
             this
         }
 
+        def ++(that: Seq[FieldMapping]) = new FieldsBuilder(fields ++ that)
         def and(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
         def ~(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
     }
