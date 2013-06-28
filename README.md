@@ -270,7 +270,7 @@ For Maven users simply add:
 tbc
 ```
 
-## Testing
+## Building and Testing
 
 Sorry SBT folks but this project is built with maven. To run the unit and integration tests
 ```
@@ -278,6 +278,10 @@ mvn clean test
 ```
 Integration tests run on a locally built elastic that is brought up and torn down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
 
+To build and deploy into your local repo
+```
+mvn clean install
+```
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
