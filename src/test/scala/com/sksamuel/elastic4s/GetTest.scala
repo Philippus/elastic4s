@@ -19,8 +19,8 @@ class GetTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "brand" -> "bud"
           ) id 8
     }
-    refresh("music")
-    blockUntilCount(2, "music")
+    refresh("beer")
+    blockUntilCount(2, "beer")
 
     "a search index" should "retrieve a document by id" in {
 
