@@ -89,7 +89,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" filter {
             termFilter("singer", "chris martin") cacheKey "band-singers" name "my-filter"
         }
-        println (req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -98,7 +97,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" filter {
             regexFilter("singer", "chris martin") cache false name "my-filter2"
         }
-        println (req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -107,7 +105,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" filter {
             prefixFilter("singer", "chris martin") cache true cacheKey "band-singers" name "my-filter3"
         }
-        println(req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 

@@ -11,26 +11,18 @@ import scala.concurrent.duration._
 class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     client.execute {
-        index into "music/bands" fields (
-          "name" -> "coldplay",
-          "singer" -> "chris martin",
-          "drummer" -> "will champion",
-          "guitar" -> "johnny buckland"
+        index into "food/pasta" fields (
+          "name" -> "maccaroni",
+          "color" -> "yellow"
           )
     }
-    client.execute {
-        index into "music/artists" fields (
-          "name" -> "kate bush",
-          "singer" -> "kate bush"
-          )
-    }
-    refresh("music")
-    blockUntilCount(2, "music")
+    refresh("food")
+    blockUntilCount(1, "food")
 
     "a validate query" should "return valid when the query is valid" in {
 
         val future = client execute {
-            validate in "music/bands" query "coldplay"
+            validate in "food/pasta" query "maccaroni"
         }
         val resp = Await.result(future, 10 seconds)
         assert(true === resp.isValid)
