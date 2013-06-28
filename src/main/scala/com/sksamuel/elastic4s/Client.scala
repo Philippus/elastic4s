@@ -20,8 +20,11 @@ import org.elasticsearch.action.get.{GetResponse, GetRequest}
 import com.sksamuel.elastic4s.GetDsl.GetBuilder
 import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
 import com.sksamuel.elastic4s.DeleteDsl.{DeleteByQueryDefinition, DeleteByIdDefinition}
-import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
 import com.sksamuel.elastic4s.ValidateDsl.ValidateDefinition
+import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
+import com.sksamuel.elastic4s.UpdateDsl.UpdateDefinition
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -71,6 +74,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.search(builder.build).actionGet(timeout)
     }
 
+    def result(builder: SearchBuilder)(implicit duration: Duration): SearchResponse =
+        Await.result(execute(builder), duration)
+
     /**
      * Executes a Java API CountRequest and returns a scala Future with the CountResponse.
      *
@@ -119,15 +125,28 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.delete(d.builder).actionGet(timeout)
     }
 
-    def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = future {
-        client.deleteByQuery(d.builder).actionGet(timeout)
+    def execute(req: DeleteByQueryRequest): Future[DeleteByQueryResponse] = future {
+        client.deleteByQuery(req).actionGet(timeout)
     }
+    def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d.builder)
+    def result(d: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
+        Await.result(execute(d), duration)
 
     def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
         client.admin.indices().validateQuery(req).actionGet(timeout)
     }
 
     def execute(validateDef: ValidateDefinition): Future[ValidateQueryResponse] = execute(validateDef.build)
+    def result(validateDef: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
+        Await.result(execute(validateDef.build), duration)
+
+    def execute(req: UpdateRequest): Future[UpdateResponse] = future {
+        client.update(req).actionGet(timeout)
+    }
+
+    def execute(updateDef: UpdateDefinition): Future[UpdateResponse] = execute(updateDef.build)
+    def result(updateDef: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
+        Await.result(execute(updateDef.build), duration)
 
     // old
 

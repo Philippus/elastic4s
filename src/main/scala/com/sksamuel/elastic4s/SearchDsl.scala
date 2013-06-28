@@ -1,9 +1,12 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchRequestBuilder
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
+
+    implicit val duration: Duration = 10.seconds
 
     abstract class Facet(name: String) {
         val global: Boolean = false
