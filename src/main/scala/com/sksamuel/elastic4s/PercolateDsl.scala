@@ -6,7 +6,7 @@ import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.index.IndexRequestBuilder
 
 /** @author Stephen Samuel */
-object PercolateDsl extends QueryDsl {
+trait PercolateDsl extends QueryDsl {
 
     implicit def any2register(id: AnyVal) = new RegisterExpectsIndex(id.toString)
     implicit def string2register(id: String) = new RegisterExpectsIndex(id)

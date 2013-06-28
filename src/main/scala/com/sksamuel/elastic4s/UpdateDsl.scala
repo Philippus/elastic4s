@@ -7,9 +7,7 @@ import org.elasticsearch.common.xcontent.XContentFactory
 import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
-object UpdateDsl {
-
-    implicit val duration: Duration = 10.seconds
+trait UpdateDsl {
 
     def update = new UpdateExpectsId
     class UpdateExpectsId {

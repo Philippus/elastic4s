@@ -4,9 +4,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder
 import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
-object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
-
-    implicit val duration: Duration = 10.seconds
+trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
 
     abstract class Facet(name: String) {
         val global: Boolean = false
@@ -179,10 +177,6 @@ object SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl
     def search = new SearchExpectsIndex
     class SearchExpectsIndex {
         def in(indexes: String*): SearchBuilder = new SearchBuilder(indexes)
-    }
-
-    implicit class StringQueryHelper(val sc: StringContext) extends AnyVal {
-        def q(args: String*): StringQueryDefinition = new StringQueryDefinition(args.head)
     }
 }
 

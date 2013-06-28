@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
-import PercolateDsl._
+import ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 
 /** @author Stephen Samuel */

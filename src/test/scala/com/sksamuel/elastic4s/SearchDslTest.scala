@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.SearchDsl._
+import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}

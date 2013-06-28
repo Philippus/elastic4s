@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.client.Requests
 
 /** @author Stephen Samuel */
-object MoreLikeThisDsl {
+trait MoreLikeThisDsl {
 
     def mlt = new MltExpectingId
     def morelike = new MltExpectingId

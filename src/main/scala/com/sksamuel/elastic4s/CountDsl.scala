@@ -4,7 +4,7 @@ import org.elasticsearch.action.count.CountRequestBuilder
 import org.elasticsearch.index.query.QueryBuilders
 
 /** @author Stephen Samuel */
-object CountDsl {
+trait CountDsl {
 
     class CountBuilder(indexes: Seq[String]) {
 

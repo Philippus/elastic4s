@@ -2,8 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.IndexDsl._
-import DeleteDsl._
+import ElasticDsl._
 
 /** @author Stephen Samuel */
 class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {

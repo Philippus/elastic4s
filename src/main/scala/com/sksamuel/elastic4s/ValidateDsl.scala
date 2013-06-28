@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryRequestBuilder
 
 /** @author Stephen Samuel */
-object ValidateDsl extends QueryDsl {
+trait ValidateDsl extends QueryDsl {
 
     def validate = new ValidateExpectsIn
     class ValidateExpectsIn {

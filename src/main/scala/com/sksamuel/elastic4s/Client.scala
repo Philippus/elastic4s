@@ -11,24 +11,15 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.node.{Node, NodeBuilder}
 import org.elasticsearch.client.Client
-import com.sksamuel.elastic4s.IndexDsl.IndexBuilder
-import com.sksamuel.elastic4s.SearchDsl.SearchBuilder
-import com.sksamuel.elastic4s.CountDsl.CountBuilder
 import org.elasticsearch.action.get.{GetResponse, GetRequest}
-import com.sksamuel.elastic4s.GetDsl.GetBuilder
 import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
-import com.sksamuel.elastic4s.DeleteDsl.{DeleteByQueryDefinition, DeleteByIdDefinition}
 import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
-import com.sksamuel.elastic4s.ValidateDsl.ValidateDefinition
 import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
-import com.sksamuel.elastic4s.UpdateDsl.UpdateDefinition
 import scala.concurrent.duration._
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.bulk.BulkResponse
-import com.sksamuel.elastic4s.PercolateDsl.{PercolateDefinition, RegisterDefinition}
-import com.sksamuel.elastic4s.MoreLikeThisDsl.MoreLikeThisDefinition
 import org.elasticsearch.action.percolate.PercolateResponse
-import com.sksamuel.elastic4s.CreateIndexDsl.CreateIndexDefinition
+import ElasticDsl._
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 
 /** @author Stephen Samuel */
@@ -116,11 +107,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     /**
      * Executes a Scala DSL get and returns a scala Future with the GetResponse.
      *
-     * @param builder a GetBuilder from the Scala DSL
+     * @param builder a GetDefinition from the Scala DSL
      *
      * @return a Future providing an GetResponse
      */
-    def execute(builder: GetBuilder): Future[GetResponse] = execute(builder.build)
+    def execute(builder: GetDefinition): Future[GetResponse] = execute(builder.build)
 
     def execute(req: DeleteRequest): Future[DeleteResponse] = future {
         client.delete(req).actionGet(timeout)
@@ -201,10 +192,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
 
     class SyncClient(client: ElasticClient)(implicit duration: Duration) {
+
         def percolate(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
             Await.result(client.percolate(percolateDef), duration)
-        def registerSync(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
+
+        def register(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
             Await.result(client.register(registerDef), duration)
+
+        def execute(getDef: GetDefinition)(implicit duration: Duration): GetResponse =
+            Await.result(client.execute(getDef), duration)
     }
 }
 

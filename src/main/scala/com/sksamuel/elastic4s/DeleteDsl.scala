@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.client.Requests
 
 /** @author Stephen Samuel */
-object DeleteDsl extends QueryDsl {
+trait DeleteDsl extends QueryDsl {
 
     def delete = new DeleteExpectsIdOrFrom
     class DeleteExpectsIdOrFrom {

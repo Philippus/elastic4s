@@ -2,8 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import PercolateDsl._
-import CreateIndexDsl._
+import ElasticDsl._
 import scala.concurrent.duration._
 import org.elasticsearch.common.Priority
 

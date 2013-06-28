@@ -2,9 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.IndexDsl._
-import UpdateDsl._
-import SearchDsl._
+import ElasticDsl._
 import scala.concurrent.duration._
 
 /** @author Stephen Samuel */

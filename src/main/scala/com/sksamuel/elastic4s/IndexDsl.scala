@@ -3,12 +3,11 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.{IndexResponse, IndexRequest}
+import org.elasticsearch.action.index.IndexRequest
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
 
 /** @author Stephen Samuel */
-object IndexDsl {
+trait IndexDsl {
 
     def insert: IndexExpectsInto = new IndexExpectsInto
     def index: IndexExpectsInto = new IndexExpectsInto
@@ -82,8 +81,6 @@ object IndexDsl {
             }
             source.endObject()
         }
-
-        def execute(implicit client: ElasticClient): Future[IndexResponse] = client.execute(this)
 
         def java = _request.source(_source)
     }

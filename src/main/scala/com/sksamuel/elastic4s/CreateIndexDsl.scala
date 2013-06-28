@@ -5,8 +5,7 @@ import scala.collection.mutable.ListBuffer
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 
 /** @author Stephen Samuel */
-
-object CreateIndexDsl {
+trait CreateIndexDsl {
 
     def create = new CreateIndexExpectsName
     class CreateIndexExpectsName {

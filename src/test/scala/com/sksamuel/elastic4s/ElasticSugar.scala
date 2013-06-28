@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.settings.ImmutableSettings
 import java.io.File
-import CountDsl._
+import ElasticDsl._
 import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration._
