@@ -10,7 +10,9 @@ Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This g
 
 ## Introduction to the DSL
 
-The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. 
+The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. All the request methods exist in the ElasticDsl object; to import simply add ```import com.sksamuel.elastic4s.ElasticDsl._``` to your source. 
+
+The basic Scala client is called ElasticClient. To create the client use the constructor methods on the companion object, eg ```ElasticClient.local()``` which would return a locally configured client.
 
 All requests on the standard client are asynchronous. These methods return a standard Scala 2.10 Future object. Eg, a search request will return a Future[SearchResponse]. The response objects are the same as for the Java API due to the fact they already are concise and convenient in Scala code.
 
@@ -29,9 +31,41 @@ All requests on the standard client are asynchronous. These methods return a sta
 | Register Query| ```<id> into <index> query { <queryblock> }``` |
 | Percolate Doc | ```percolate in <index> { fields <fieldsblock> }``` |
 
+#### Client
+
+A locally configured node and client can be created simply by:
+
+```scala
+val client = ElasticClient.local()
+```
+
+To specify settings for the local node you can pass in a settings object like this:
+```scala
+ val settings = ImmutableSettings.settingsBuilder() 
+      .put("http.enabled", false)
+      .put("path.home", "/var/elastic/")
+val client = ElasticClient.local(settings.build)
+ ```
+
+To connect to a remote elastic cluster then you need to use the remote() call specifying the hostname and ports:
+```scala
+// single port
+val client = ElastiClient.remote("1.2.3.4", 9300)
+// or for multiple ports
+val client = ElastiClient.remote("1.2.3.4", 9100, 9200, 9300, 9400)
+```
+
+
+If you already have a handle to a Node then you can create a client from it easily:
+```scala
+val node = ... // node from java somewhere
+val client = ElasticClient.fromNode(node)
+```
+
+
 #### Create Index
 
-To create an index you need to import the CreateIndexDsl object. Then you are able to use the dsl to build create-index requests like:
+ To create an index that is fully dynamic we can simply use
 
 ```scala
 class CreateIndexReqExample extends CreateIndexDsl {
@@ -56,7 +90,7 @@ class CreateIndexReqExample extends CreateIndexDsl {
 
 #### Indexing
 
-To index you need to import the IndexDsl object. Then you are able to use the dsl to build index requests like :
+To index a document
 
 ```scala
 class IndexReqExample {
@@ -71,6 +105,11 @@ class IndexReqExample {
 ```
 
 #### Searching
+
+Searching is naturally the most involved operation. There are many ways to do searching in elastic search and that is reflected
+in the higher complexity of the search DSL.
+
+
 
 #### Percolate
 

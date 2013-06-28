@@ -64,7 +64,6 @@
 
         <commons.io.version>2.4</commons.io.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
-        <commons.sanselan.version>0.97-incubator</commons.sanselan.version>
 
         <elasticsearch.version>0.90.2</elasticsearch.version>
 

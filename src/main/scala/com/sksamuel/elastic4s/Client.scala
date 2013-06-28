@@ -213,10 +213,9 @@ object ElasticClient {
     def fromNode(node: Node): ElasticClient = fromNode(node, DefaultTimeout)
     def fromNode(node: Node, timeout: Long = DefaultTimeout): ElasticClient = fromClient(node.client, timeout)
 
-    def remote(settings: Settings,
-               host: String = "localhost",
-               ports: Seq[Int] = Seq(9300),
-               timeout: Long = DefaultTimeout): ElasticClient = {
+    def remote(host: String = "localhost", ports: Int*)(timeout: Long = DefaultTimeout): ElasticClient =
+        remote(ImmutableSettings.builder().build(), host, ports: _*)(timeout)
+    def remote(settings: Settings, host: String = "localhost", ports: Int*)(timeout: Long = DefaultTimeout): ElasticClient = {
         require(settings.getAsMap.containsKey("cluster.name"))
         val client = new TransportClient(settings)
         for ( port <- ports ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
