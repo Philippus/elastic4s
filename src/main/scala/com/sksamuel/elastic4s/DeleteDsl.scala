@@ -26,7 +26,7 @@ object DeleteDsl extends QueryDsl {
         }
     }
 
-    class DeleteByQueryDefinition(indexes: String*) {
+    class DeleteByQueryDefinition(indexes: String*) extends BulkCompatibleRequest {
         val builder = Requests.deleteByQueryRequest(indexes: _*)
         def where(query: String) = {
             val queryStringDef = new StringQueryDefinition(query)

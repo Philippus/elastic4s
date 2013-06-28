@@ -19,7 +19,7 @@ object UpdateDsl {
         def in(index: String) = new UpdateDefinition(index, id)
     }
 
-    class UpdateDefinition(index: String, id: String) {
+    class UpdateDefinition(index: String, id: String) extends BulkCompatibleRequest {
         val _builder = new UpdateRequestBuilder(null).setIndex(index.split("/").head).setType(index.split("/").last).setId(id)
         def build = _builder.request
 

@@ -37,7 +37,7 @@ trait ElasticSugar extends Logging {
 
     def blockUntilCount(expected: Long,
                         index: String,
-                        types: Seq[String] = Nil) {
+                        types: String*) {
 
         var backoff = 0
         var actual = 0l

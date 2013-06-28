@@ -20,7 +20,7 @@ object IndexDsl {
         def into(kv: (String, String)): IndexBuilder = into(kv._1, kv._2)
     }
 
-    class IndexBuilder(index: String, `type`: String) {
+    class IndexBuilder(index: String, `type`: String) extends BulkCompatibleRequest {
 
         private val _request = new IndexRequest(index, `type`)
         private val _fields = new ListBuffer[(String, Any)]

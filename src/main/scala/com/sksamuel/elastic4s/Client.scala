@@ -5,7 +5,6 @@ import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.{CountRequest, CountResponse}
 import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
 import org.elasticsearch.action.percolate.PercolateResponse
-import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
@@ -25,6 +24,8 @@ import com.sksamuel.elastic4s.ValidateDsl.ValidateDefinition
 import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
 import com.sksamuel.elastic4s.UpdateDsl.UpdateDefinition
 import scala.concurrent.duration._
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
+import org.elasticsearch.action.bulk.BulkResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -148,17 +149,25 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def result(updateDef: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
         Await.result(execute(updateDef.build), duration)
 
-    // old
-
-    def bulk(indexRequests: Seq[IndexRequest]): Future[BulkResponse] = future {
+    def execute(requests: BulkCompatibleRequest*): Future[BulkResponse] = {
         val bulk = client.prepareBulk()
-        indexRequests.foreach(arg => bulk.add(arg))
-        bulk.execute().actionGet(timeout)
+        requests.foreach(req => req match {
+            case index: IndexBuilder => bulk.add(index.java)
+            case delete: DeleteByIdDefinition => bulk.add(delete.builder)
+            case update: UpdateDefinition => bulk.add(update.build)
+        })
+        future {
+            bulk.execute().actionGet(timeout)
+        }
     }
+    def result(requests: BulkCompatibleRequest*)(implicit duration: Duration): BulkResponse =
+        Await.result(execute(requests: _*), duration)
 
-    def exists(indexes: Iterable[String]) = future {
+    def exists(indexes: Iterable[String]): Future[IndicesExistsResponse] = future {
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
+
+    // -- old
 
     def register(idx: String, `type`: String, req: IndexRequest): Future[IndexResponse] = execute(req)
 
@@ -166,40 +175,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.preparePercolate(index, `type`).setSource("").execute().actionGet(timeout)
     }
 
-    //    def delete(req: DeleteReq): Future[DeleteResponse] = future {
-    //        client
-    //          .prepareDelete(req.index, req.`type`, req.id)
-    //          .setRouting(req.routing.orNull)
-    //          .setVersion(req.version)
-    //          .setParent(req.parent.orNull)
-    //          .setRefresh(req.refresh)
-    //          .execute()
-    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    //    }
-    //
-    //    def deleteByQuery(req: DeleteByQueryReq): Future[DeleteByQueryResponse] = future {
-    //        client
-    //          .prepareDeleteByQuery(req.indexes: _*)
-    //          .setRouting(req.routing.mkString(","))
-    //          .setTypes(req.types: _*)
-    //          .setQuery("todo") //to do
-    //          .execute()
-    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    //    }
-
     def searchScroll(scrollId: String): Future[SearchResponse] = future {
         client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
     }
-
-    //    def createIndex(req: CreateIndexReq): Future[CreateIndexResponse] = future {
-    //        client
-    //          .admin()
-    //          .indices()
-    //          .prepareCreate(req.name)
-    //          .setSettings(req._source)
-    //          .execute()
-    //          .actionGet(timeout, TimeUnit.MILLISECONDS)
-    //    }
 
     def moreLikeThis(req: MoreLikeThisRequest): Future[SearchResponse] = future {
         client.prepareMoreLikeThis("", "", "").execute().actionGet(timeout)
