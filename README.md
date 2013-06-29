@@ -169,10 +169,16 @@ search in "places/cities" query {
    }
 }
 ```
-We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and fantastic pubs and so we'd offer these as selectable facets to our lovely users.
+
+We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and the age of those attractions and so we'd offer these as selectable facets to our lovely users.
 ```
-search in "places/cities" query "london" facets ("landmarks", "pubs")
+search in "places/cities" query "london" facets (
+    facet terms "landmark" field "type",
+    facet range "age" field "year" range (1000->1200, 1200->1400, 1600->1800, 1800->2000)
+)
 ```
+
+Other facet types include geo distance, query, filter, range, date, histogram. The full documentation is [here](http://www.elasticsearch.org/guide/reference/api/search/facets/).
 
 Elasticsearch provides [sorting](http://www.elasticsearch.org/guide/reference/api/search/facets/) of course. So does elastic4s. You can even include multiple sorts - rather like multiple order clauses in an SQL query.
 
