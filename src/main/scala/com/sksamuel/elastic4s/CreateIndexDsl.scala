@@ -25,7 +25,7 @@ trait CreateIndexDsl {
     }
 
     class MappingsBuilder(val mappings: List[Mapping]) {
-        def and(`type`: String) = new MappingTypeExpectsDefinition(`type`, false, mappings)
+        def and(`type`: String) = new MappingTypeExpectsDefinition(`type`, true, mappings)
     }
 
     class FieldsBuilder(val fields: List[FieldMapping]) {
