@@ -93,22 +93,22 @@ This will create an index called places. We can optionally set the number of sha
 client.execute { create index "places" shards 3 replicas 2 }
 ```
 
-Sometimes we want to specify the details of the fields in the index. To do this we add mappings
+Sometimes we want to specify the properties of the types in the index. This allows us to override a fields type, the analyzer used, whether we should store that field, etc. To do this we add mappings
 
 ```scala
 client.execute { 
-    create index "places" map "cities" as {
-    
-	    "id" fieldType IntegerType and
-          "name" analyzer SimpleAnalyzer boost 4 and
-          "content" analyzer StopAnalyzer nullValue "no content"
-          
-    } map countries as {
-        
-	    "id" fieldType IntegerType and
-          "name" analyzer SimpleAnalyzer boost 4 and
-          "continent" analyzer KeywordAnalyzer
-    }
+    create index "places" mappings (
+        "cities" as (      
+	        "id" typed IntegerType,
+            "name" boost 4,
+            "content" analyzer StopAnalyzer
+        ),
+        "countries" as (
+ 		    "id" typed IntegerType,
+             "name" analyzer SimpleAnalyzer,
+             "continent" analyzer KeywordAnalyzer          
+         )
+     )
 }
 ```
 
