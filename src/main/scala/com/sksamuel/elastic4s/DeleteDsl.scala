@@ -11,19 +11,17 @@ trait DeleteDsl extends QueryDsl {
         def id(id: Any) = new DeleteByIdExpectsFrom(id.toString)
     }
 
-    class DeleteWithIndexExpectsIdOrQuery(from: String) {
-    }
-
     class DeleteByIdExpectsFrom(id: String) {
-        def from(from: String) = new DeleteByIdDefinition(id, from)
+        def from(tuple: (String, String)) = new DeleteByIdDefinition(tuple._1, tuple._2, id)
+        def from(from: String) = from.split("/").toList match {
+            case index :: Nil => new DeleteByIdDefinition(index, null, id)
+            case index :: t :: Nil => new DeleteByIdDefinition(index, t, id)
+            case _ => throw new IllegalArgumentException("from must be in the form index->type or index/type")
+        }
     }
 
-    class DeleteByIdDefinition(id: String, from: String) {
-        val builder = from.split("/").toList match {
-            case i :: Nil => Requests.deleteRequest(i).id(id)
-            case i :: t :: Nil => Requests.deleteRequest(i).`type`(t).id(id)
-            case _ => throw new IllegalArgumentException("from must be in the form index or index/type")
-        }
+    class DeleteByIdDefinition(index: String, `type`: String, id: String) {
+        val builder = Requests.deleteRequest(index).`type`(`type`).id(id)
     }
 
     class DeleteByQueryDefinition(indexes: String*) extends BulkCompatibleRequest {
