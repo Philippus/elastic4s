@@ -1,10 +1,16 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchRequestBuilder
-import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
+
+    def find = new SearchExpectsIndex
+    def select = new SearchExpectsIndex
+    def search = new SearchExpectsIndex
+    class SearchExpectsIndex {
+        def in(indexes: String*): SearchBuilder = new SearchBuilder(indexes)
+    }
 
     abstract class Facet(name: String) {
         val global: Boolean = false
@@ -174,9 +180,5 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
         builder
     }
 
-    def search = new SearchExpectsIndex
-    class SearchExpectsIndex {
-        def in(indexes: String*): SearchBuilder = new SearchBuilder(indexes)
-    }
 }
 
