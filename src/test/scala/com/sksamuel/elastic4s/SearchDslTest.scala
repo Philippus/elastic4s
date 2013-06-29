@@ -163,7 +163,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
-    it should "generate correct json for mutliple sorts" in {
+    it should "generate correct json for multiple sorts" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_multiple.json"))
         val req = search in "music" types "bands" sort (
           by script "document.score" as "java" order SortOrder.ASC,
@@ -173,6 +173,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate correct json for facets" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets.json"))
+        val req = search in "music" types "bands" facets (
+          facet terms "type" allTerms true exclude "pop" fields "type",
+          facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
+          facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) facetFilter {
+              termFilter("location", "europe") cache true cacheKey "cache-key"
+          })
+        assert(json === mapper.readTree(req._builder.toString))
+    }
 
     it should "generate correct json for multiple suggestions" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
@@ -181,8 +191,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
           suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer WhitespaceAnalyzer maxInspections 3 stringDistance "levenstein"
           )
-        //-- disabled due to bug in elastic search
-        //    assert(json === mapper.readTree(req.builder.toString))
+        // -- disabled due to bug in elastic search
+        //   assert(json === mapper.readTree(req.builder.toString))
     }
 }
 

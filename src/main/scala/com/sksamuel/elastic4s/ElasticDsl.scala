@@ -8,6 +8,7 @@ object ElasticDsl
   with CountDsl
   with CreateIndexDsl
   with DeleteDsl
+  with FacetDsl
   with GetDsl
   with MoreLikeThisDsl
   with PercolateDsl

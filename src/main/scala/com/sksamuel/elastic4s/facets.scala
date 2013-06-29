@@ -7,17 +7,14 @@ import org.elasticsearch.common.geo.GeoDistance
 
 /** @author Stephen Samuel */
 trait FacetDsl {
-    def facet = new FacetExpectingName
-    class FacetExpectingName {
-        def name(name: String) = new FacetExpectingType(name)
-    }
-    class FacetExpectingType(name: String) {
-        def terms = new TermFacetDefinition(name)
-        def range = new RangeFacetDefinition(name)
-        def histogram = new HistogramFacetDefinition(name)
-        def filter = new FilterFacetDefinition(name)
-        def query = new QueryFacetDefinition(name)
-        def geodistance = new GeoDistanceDefinition(name)
+    def facet = new FacetExpectingType
+    class FacetExpectingType {
+        def terms(name: String) = new TermFacetDefinition(name)
+        def range(name: String) = new RangeFacetDefinition(name)
+        def histogram(name: String) = new HistogramFacetDefinition(name)
+        def filter(name: String) = new FilterFacetDefinition(name)
+        def query(name: String) = new QueryFacetDefinition(name)
+        def geodistance(name: String) = new GeoDistanceDefinition(name)
     }
 }
 
@@ -52,7 +49,7 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
         this
     }
     def exclude(exclude: String*): TermFacetDefinition = {
-        builder.exclude(exclude)
+        builder.exclude(exclude: _*)
         this
     }
     def nested(nested: String): TermFacetDefinition = {
@@ -75,11 +72,12 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
 
 class RangeFacetDefinition(name: String) extends FacetDefinition {
     val builder = FacetBuilders.rangeFacet(name)
-    def addRange(from: Double, to: Double): RangeFacetDefinition = {
+    def range(from: Double, to: Double): RangeFacetDefinition = {
         builder.addRange(from, to)
         this
     }
-    def addRange(from: String, to: String): RangeFacetDefinition = {
+    def range(r: (Any, Any)): RangeFacetDefinition = range(r._1.toString, r._2.toString)
+    def range(from: String, to: String): RangeFacetDefinition = {
         builder.addRange(from, to)
         this
     }
@@ -147,7 +145,7 @@ class FilterFacetDefinition(name: String) extends FacetDefinition {
         builder.facetFilter(block.builder)
         this
     }
-    def lang(block: => FilterDefinition): FilterFacetDefinition = {
+    def filter(block: => FilterDefinition): FilterFacetDefinition = {
         builder.filter(block.builder)
         this
     }
@@ -163,11 +161,11 @@ class QueryFacetDefinition(name: String) extends FacetDefinition {
         builder.nested(nested)
         this
     }
-    def script(block: => QueryDefinition): QueryFacetDefinition = {
+    def query(block: => QueryDefinition): QueryFacetDefinition = {
         builder.query(block.builder)
         this
     }
-    def exclude(block: => FilterDefinition): QueryFacetDefinition = {
+    def facetFilter(block: => FilterDefinition): QueryFacetDefinition = {
         builder.facetFilter(block.builder)
         this
     }
@@ -179,8 +177,17 @@ class GeoDistanceDefinition(name: String) extends FacetDefinition {
         builder.global(global)
         this
     }
-    def addRange(from: Double, to: Double): GeoDistanceDefinition = {
+    def range(tuple: (Double, Double)): GeoDistanceDefinition = range(tuple._1, tuple._2)
+    def range(from: Double, to: Double): GeoDistanceDefinition = {
         builder.addRange(from, to)
+        this
+    }
+    def field(field: String): GeoDistanceDefinition = {
+        builder.field(field)
+        this
+    }
+    def facetFilter(block: => FilterDefinition): GeoDistanceDefinition = {
+        builder.facetFilter(block.builder)
         this
     }
     def valueField(valueField: String): GeoDistanceDefinition = {
@@ -203,7 +210,7 @@ class GeoDistanceDefinition(name: String) extends FacetDefinition {
         builder.lang(lang)
         this
     }
-    def lang(lat: Double, long: Double): GeoDistanceDefinition = {
+    def point(lat: Double, long: Double): GeoDistanceDefinition = {
         builder.point(lat, long)
         this
     }
