@@ -261,13 +261,17 @@ This way you can still access everything the normal Java client covers in the ca
 For SBT users simply add:
 
 ```scala
-tbc
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s" % "0.90.2.0"
 ```
 
 For Maven users simply add:
 
 ```xml
-tbc
+<dependency>
+    <groupId>com.sksamuel.elastic4s</groupId>
+    <artifactId>elastic4s</artifactId>
+    <version>0.90.2.0</version>
+</dependency>
 ```
 
 ## Building and Testing
