@@ -9,7 +9,8 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
     def select = new SearchExpectsIndex
     def search = new SearchExpectsIndex
     class SearchExpectsIndex {
-        def in(indexes: String*): SearchBuilder = new SearchBuilder(indexes)
+        def in(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
+        def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
     }
 
     abstract class Facet(name: String) {
@@ -23,27 +24,27 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
     def highlight = new HighlightBuilder
     def highlight(field: String) = new HighlightBuilder
 
-    class SearchBuilder(indexes: Seq[String]) {
+    class SearchDefinition(indexes: Seq[String]) {
 
         val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
         def build = _builder.request()
 
-        def query(block: => QueryDefinition): SearchBuilder = {
+        def query(block: => QueryDefinition): SearchDefinition = {
             _builder.setQuery(block.builder)
             this
         }
 
-        def filter(block: => FilterDefinition): SearchBuilder = {
+        def filter(block: => FilterDefinition): SearchDefinition = {
             _builder.setFilter(block.builder)
             this
         }
 
-        def sort(sorts: SortDefinition*): SearchBuilder = {
+        def sort(sorts: SortDefinition*): SearchDefinition = {
             sorts.foreach(_builder addSort _.builder)
             this
         }
 
-        def suggestions(suggestions: SuggestionDefinition*): SearchBuilder = {
+        def suggestions(suggestions: SuggestionDefinition*): SearchDefinition = {
             suggestions.foreach(_builder addSuggestion _.builder)
             this
         }
@@ -160,13 +161,13 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
 
-        def types(types: String*): SearchBuilder = {
+        def types(types: String*): SearchDefinition = {
             _builder.setTypes(types: _*)
             this
         }
     }
 
-    class Highlighter(request: SearchRequestBuilder) extends SearchBuilder(null) {
+    class Highlighter(request: SearchRequestBuilder) extends SearchDefinition(null) {
         def fields(any: HighlightBuilder*) = {
             //        val builder = block
             //      builder.buffer.foreach(field => request.addHighlightedField(field))

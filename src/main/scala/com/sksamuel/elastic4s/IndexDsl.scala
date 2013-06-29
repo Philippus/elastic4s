@@ -13,13 +13,13 @@ trait IndexDsl {
     def index: IndexExpectsInto = new IndexExpectsInto
 
     class IndexExpectsInto {
-        def into(index: String): IndexBuilder = into(index.split("/").toSeq)
-        private def into(seq: Seq[String]): IndexBuilder = into(seq(0), seq(1))
-        def into(index: String, `type`: String): IndexBuilder = new IndexBuilder(index, `type`)
-        def into(kv: (String, String)): IndexBuilder = into(kv._1, kv._2)
+        def into(index: String): IndexDefinition = into(index.split("/").toSeq)
+        private def into(seq: Seq[String]): IndexDefinition = into(seq(0), seq(1))
+        def into(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
+        def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
     }
 
-    class IndexBuilder(index: String, `type`: String) extends BulkCompatibleRequest {
+    class IndexDefinition(index: String, `type`: String) extends BulkCompatibleRequest {
 
         private val _request = new IndexRequest(index, `type`)
         private val _fields = new ListBuffer[(String, Any)]

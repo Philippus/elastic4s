@@ -38,13 +38,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     }
 
     /**
-     * Indexes a Scala DSL IndexBuilder and returns a scala Future with the IndexResponse.
+     * Indexes a Scala DSL IndexDefinition and returns a scala Future with the IndexResponse.
      *
-     * @param builder an IndexBuilder from the Scala DSL
+     * @param builder an IndexDefinition from the Scala DSL
      *
      * @return a Future providing an IndexResponse
      */
-    def execute(builder: IndexBuilder): Future[IndexResponse] = future {
+    def execute(builder: IndexDefinition): Future[IndexResponse] = future {
         client.index(builder.java).actionGet(timeout)
     }
 
@@ -62,15 +62,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     /**
      * Executes a Scala DSL search and returns a scala Future with the SearchResponse.
      *
-     * @param builder a SearchBuilder from the Scala DSL
+     * @param builder a SearchDefinition from the Scala DSL
      *
      * @return a Future providing an SearchResponse
      */
-    def execute(builder: SearchBuilder): Future[SearchResponse] = future {
+    def execute(builder: SearchDefinition): Future[SearchResponse] = future {
         client.search(builder.build).actionGet(timeout)
     }
 
-    def result(builder: SearchBuilder)(implicit duration: Duration): SearchResponse =
+    def result(builder: SearchDefinition)(implicit duration: Duration): SearchResponse =
         Await.result(execute(builder), duration)
 
     /**
@@ -87,11 +87,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     /**
      * Executes a Scala DSL search and returns a scala Future with the CountResponse.
      *
-     * @param builder a CountBuilder from the Scala DSL
+     * @param builder a CountDefinition from the Scala DSL
      *
      * @return a Future providing an CountResponse
      */
-    def execute(builder: CountBuilder): Future[CountResponse] = execute(builder.build)
+    def execute(builder: CountDefinition): Future[CountResponse] = execute(builder.build)
 
     /**
      * Executes a Java API GetRequest and returns a scala Future with the GetResponse.
@@ -158,7 +158,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def execute(requests: BulkCompatibleRequest*): Future[BulkResponse] = {
         val bulk = client.prepareBulk()
         requests.foreach(req => req match {
-            case index: IndexBuilder => bulk.add(index.java)
+            case index: IndexDefinition => bulk.add(index.java)
             case delete: DeleteByIdDefinition => bulk.add(delete.builder)
             case update: UpdateDefinition => bulk.add(update.build)
         })
@@ -200,8 +200,17 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         def register(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
             Await.result(client.register(registerDef), duration)
 
-        def execute(getDef: GetDefinition)(implicit duration: Duration): GetResponse =
-            Await.result(client.execute(getDef), duration)
+        def execute(get: GetDefinition)(implicit duration: Duration): GetResponse =
+            Await.result(client.execute(get), duration)
+
+        def execute(count: CountDefinition)(implicit duration: Duration): CountResponse =
+            Await.result(client.execute(count), duration)
+
+        def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
+            Await.result(client.execute(search), duration)
+
+        def execute(index: IndexDefinition)(implicit duration: Duration): IndexResponse =
+            Await.result(client.execute(index), duration)
     }
 }
 
