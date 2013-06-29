@@ -12,99 +12,129 @@ trait CreateIndexDsl {
         def index(name: String) = new CreateIndexDefinition(name)
     }
 
-    implicit def map(name: String) = new MappingTypeExpectsDefinition(name, false, Nil)
+    implicit def map(`type`: String) = new MappingDefinition(`type`)
+    def id: FieldDefinition = field("_id")
+    implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
 
-    def id: FieldsBuilder = field("_id")
-    implicit def field(name: String): FieldsBuilder = new FieldsBuilder(List(new FieldMapping(name)))
+    class MappingDefinition(val `type`: String) {
+        var source = false
+        var date_detection = false
+        var numeric_detection = true
+        var _size = false
+        var dynamic_date_formats: Iterable[String] = Nil
+        val _fields = new ListBuffer[FieldDefinition]
+        var _analyzer: Option[String] = None
+        var _boostName: Option[String] = None
+        var _boostValue: Double = 0
+        var _meta: Map[String, Any] = Map.empty
 
-    class MappingTypeExpectsDefinition(`type`: String, source: Boolean, mappings: List[Mapping]) {
-        def source(source: Boolean) = new MappingTypeExpectsDefinition(`type`, source, mappings)
-        def as(block: => FieldsBuilder): MappingsBuilder = {
-            new MappingsBuilder(mappings :+ new Mapping(`type`, source, block.fields))
+        def source(source: Boolean): MappingDefinition = {
+            this.source = source
+            this
+        }
+        def meta(map: Map[String, Any]): MappingDefinition = {
+            this._meta = map
+            this
+        }
+        def dateDetection(date_detection: Boolean): MappingDefinition = {
+            this.date_detection = date_detection
+            this
+        }
+        def analyzer(analyzer: String): MappingDefinition = {
+            _analyzer = Option(analyzer)
+            this
+        }
+        def boost(name: String): MappingDefinition = {
+            _boostName = Option(name)
+            this
+        }
+        def boostNullValue(value: Double): MappingDefinition = {
+            _boostValue = value
+            this
+        }
+        def numericDetection(numeric_detection: Boolean): MappingDefinition = {
+            this.numeric_detection = numeric_detection
+            this
+        }
+        def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition = {
+            this.dynamic_date_formats = dynamic_date_formats
+            this
+        }
+        def as(fields: FieldDefinition*): MappingDefinition = {
+            _fields ++= fields
+            this
+        }
+        def size(size: Boolean) = {
+            _size = size
+            this
         }
     }
 
-    class MappingsBuilder(val mappings: List[Mapping]) {
-        def and(`type`: String) = new MappingTypeExpectsDefinition(`type`, true, mappings)
-    }
+    class FieldDefinition(val name: String) {
 
-    class FieldsBuilder(val fields: List[FieldMapping]) {
+        var _type: Option[FieldType] = None
+        var _analyzer: Option[Analyzer] = None
+        var _index: Option[String] = None
+        var _store: Boolean = false
+        var _boost: Double = 0
+        var _nullValue: Option[String] = None
+        var _omitNorms: Option[Boolean] = None
+        var _position_offset_gap: Int = 0
+        var _ignoreAbove: Option[Int] = None
+        var _includeInAll: Option[Boolean] = None
 
         def typed(ft: FieldType) = fieldType(ft)
         def fieldType(ft: FieldType) = {
-            fields.last.`type` = Option(ft)
+            _type = Option(ft)
             this
         }
 
         def analyzer(a: Analyzer) = {
-            fields.last.analyzer = Option(a)
+            _analyzer = Option(a)
             this
         }
 
         def store(store: Boolean) = {
-            fields.last.store = true
+            _store = store
             this
         }
 
         def ignoreAbove(ignoreAbove: Int) = {
-            fields.last.ignoreAbove = Option(ignoreAbove)
+            _ignoreAbove = Option(ignoreAbove)
             this
         }
 
         def boost(boost: Double) = {
-            fields.last.boost = boost
+            _boost = boost
             this
         }
 
         def omitNorms(omitNorms: Boolean) = {
-            fields.last.omitNorms = Option(omitNorms)
+            _omitNorms = Option(omitNorms)
             this
         }
 
         def includeInAll(includeInAll: Boolean) = {
-            fields.last.includeInAll = Option(includeInAll)
+            _includeInAll = Option(includeInAll)
             this
         }
 
         def nullValue(nullValue: String) = {
-            fields.last.nullValue = Option(nullValue)
+            _nullValue = Option(nullValue)
             this
         }
 
         def index(index: String) = {
-            fields.last.index = Option(index)
+            _index = Option(index)
             this
         }
-
-        def ++(that: Seq[FieldMapping]) = new FieldsBuilder(fields ++ that)
-        def and(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
-        def ~(name: String) = new FieldsBuilder(fields :+ new FieldMapping(name))
-    }
-
-    class FieldMapping(val name: String) {
-        var `type`: Option[FieldType] = None
-        var analyzer: Option[Analyzer] = None
-        var index: Option[String] = None
-        var store: Boolean = false
-        var boost: Double = 0
-        var nullValue: Option[String] = None
-        var omitNorms: Option[Boolean] = None
-        var position_offset_gap: Int = 0
-        var ignoreAbove: Option[Int] = None
-        var includeInAll: Option[Boolean] = None
-    }
-
-    class Mapping(val name: String, var source: Boolean, val fields: List[FieldMapping]) {
-        var date_detection = false
-        var numeric_detection = true
-        var dynamic_date_formats: Iterable[String] = Nil
     }
 
     class IndexSettings(var shards: Int = 1, var replicas: Int = 1)
 
     class CreateIndexDefinition(name: String) {
 
-        val _mappings = new ListBuffer[Mapping]
+        val _mappings = new ListBuffer[MappingDefinition]
         val _settings = new IndexSettings
 
         def build = new CreateIndexRequest(name).source(_source)
@@ -119,8 +149,8 @@ trait CreateIndexDsl {
             this
         }
 
-        def mappings(block: => MappingsBuilder) = {
-            _mappings ++= block.mappings
+        def mappings(mappings: MappingDefinition*) = {
+            _mappings ++= mappings
             this
         }
 
@@ -137,7 +167,7 @@ trait CreateIndexDsl {
 
             for ( mapping <- _mappings ) {
 
-                source.startObject(mapping.name)
+                source.startObject(mapping.`type`)
                 source.startObject("_source").field("enabled", mapping.source)
                 if (mapping.dynamic_date_formats.size > 0)
                     source.field("dynamic_date_formats", mapping.dynamic_date_formats.toArray)
@@ -146,23 +176,37 @@ trait CreateIndexDsl {
                 if (mapping.numeric_detection)
                     source.field("numeric_detection", mapping.numeric_detection)
                 source.endObject()
-                source.startObject("properties")
 
-                for ( field <- mapping.fields ) {
+                mapping._boostName
+                  .foreach(arg => source.startObject("_boost").field("name", arg).field("null_value", mapping._boostValue).endObject())
+                mapping._analyzer.foreach(arg => source.startObject("_analyzer").field("path", arg).endObject())
+                if (mapping._size)
+                    source.startObject("_size").field("enabled", true).endObject()
+
+                source.startObject("properties")
+                for ( field <- mapping._fields ) {
                     source.startObject(field.name)
-                    field.`type`.foreach(arg => source.field("type", arg.elastic))
-                    field.analyzer.foreach(arg => source.field("analyzer", arg.elastic))
-                    field.index.foreach(index => source.field("index", index))
-                    field.omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
-                    field.nullValue.foreach(nullValue => source.field("null_value", nullValue))
-                    field.includeInAll.foreach(includeInAll => source.field("include_in_all", includeInAll))
-                    if (field.boost > 0)
-                        source.field("boost", field.boost)
-                    source.field("store", field.store.toString)
+                    field._type.foreach(arg => source.field("type", arg.elastic))
+                    field._analyzer.foreach(arg => source.field("analyzer", arg.elastic))
+                    field._index.foreach(index => source.field("index", index))
+                    field._omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
+                    field._nullValue.foreach(nullValue => source.field("null_value", nullValue))
+                    field._includeInAll.foreach(includeInAll => source.field("include_in_all", includeInAll))
+                    if (field._boost > 0)
+                        source.field("boost", field._boost)
+                    source.field("store", field._store.toString)
+                    source.endObject()
+                }
+                source.endObject() // end properties
+
+                if (mapping._meta.size > 0) {
+                    source.startObject("_meta")
+                    for ( meta <- mapping._meta ) {
+                        source.field(meta._1, meta._2)
+                    }
                     source.endObject()
                 }
 
-                source.endObject() // end properties
                 source.endObject() // end mapping name
             }
 

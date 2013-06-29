@@ -1,13 +1,16 @@
 {
     "settings": {
-        "number_of_shards": 1,
+        "number_of_shards": 2,
         "number_of_replicas": 1
     },
     "mappings": {
         "tweets": {
             "_source": {
-                "enabled": true,
+                "enabled": false,
                 "numeric_detection": true
+            },
+            "_size": {
+                "enabled": true
             },
             "properties": {
                 "_id": {
@@ -36,6 +39,9 @@
                 "enabled": false,
                 "numeric_detection": true
             },
+            "_analyzer": {
+                "path": "somefield"
+            },
             "properties": {
                 "name": {
                     "type": "ip",
@@ -48,7 +54,9 @@
                     "analyzer": "snowball",
                     "store": "false"
                 }
+            },
+            "_meta": {
+                "class": "com.sksamuel.User"
             }
         }
-    }
-}
+    }}
