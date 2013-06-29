@@ -50,10 +50,11 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
 
-        def facets(facets: FacetDefinition*): SearchDefinition = {
-            facets.foreach(facet => _builder.addFacet(facet.builder))
+        def facets(iterable: Iterable[FacetDefinition]): SearchDefinition = {
+            iterable.foreach(facet => _builder.addFacet(facet.builder))
             this
         }
+        def facets(f: FacetDefinition*): SearchDefinition = facets(f.toIterable)
 
         def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
         def sort2(sorts: SortBuilder*): SearchDefinition = {
