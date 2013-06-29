@@ -4,7 +4,8 @@
         "regexp": {
             "drummmer": {
                 "value": "will*",
-                "boost": 5.0
+                "flags_value": 1,
+                "boost": 4.0
             }
         }
     }

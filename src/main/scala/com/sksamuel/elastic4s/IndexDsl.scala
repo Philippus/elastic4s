@@ -23,6 +23,7 @@ trait IndexDsl {
 
         private val _request = new IndexRequest(index, `type`)
         private val _fields = new ListBuffer[(String, Any)]
+        def build = _request.source(_source)
 
         def id(id: Any) = {
             _request.id(id.toString)
@@ -64,18 +65,10 @@ trait IndexDsl {
             this
         }
 
-        def fields(iterable: Iterable[(String, Any)]) = {
+        def fields(map: Map[String, Any]): IndexDefinition = fields(map.toList)
+        def fields(_fields: (String, Any) *): IndexDefinition = fields(_fields.toIterable)
+        def fields(iterable: Iterable[(String, Any)]): IndexDefinition = {
             this._fields ++= iterable
-            this
-        }
-
-        def fields(fields: (String, Any)*) = {
-            this._fields ++= fields
-            this
-        }
-
-        def fields(map: Map[String, Any]) = {
-            _fields ++= map.toList
             this
         }
 
@@ -87,6 +80,5 @@ trait IndexDsl {
             source.endObject()
         }
 
-        def java = _request.source(_source)
     }
 }

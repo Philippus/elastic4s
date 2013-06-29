@@ -167,14 +167,15 @@ class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition 
 class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition {
 
     val builder = QueryBuilders.regexpQuery(field, regex.toString)
-    def flags(flags: RegexpFlag*) {
+    def flags(flags: RegexpFlag*): RegexQueryDefinition = {
         builder.flags(flags: _*)
+        this
     }
-    def rewrite(rewrite: String) = {
+    def rewrite(rewrite: String): RegexQueryDefinition = {
         builder.rewrite(rewrite)
         this
     }
-    def boost(boost: Double) = {
+    def boost(boost: Double): RegexQueryDefinition = {
         builder.boost(boost.toFloat)
         this
     }
@@ -205,13 +206,13 @@ class RangeQueryDefinition(field: String) extends QueryDefinition {
 
     val builder = QueryBuilders.rangeQuery(field)
 
-    def from(from: Any) = {
-        builder.from(from)
+    def from(f: Any) = {
+        builder.from(f)
         this
     }
 
-    def to(to: Any) = {
-        builder.to(to)
+    def to(t: Any) = {
+        builder.to(t)
         this
     }
 

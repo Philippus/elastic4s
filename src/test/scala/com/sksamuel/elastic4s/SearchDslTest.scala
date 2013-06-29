@@ -8,6 +8,7 @@ import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
 import com.sksamuel.elastic4s.Analyzer.WhitespaceAnalyzer
 import scala.Predef._
+import org.elasticsearch.index.query.RegexpFlag
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -34,16 +35,30 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "use limit and and offset when specified" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test4.json"))
-
         val req = search in "*" types ("users", "tweets") limit 6 from 9 query "coldplay"
+        println(req._builder.toString)
+        assert(json === mapper.readTree(req._builder.toString))
+    }
 
+    it should "use preference when specified" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_primary_first.json"))
+        val req = search in "*" types ("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
+        println(req._builder.toString)
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "use custom preference when specified" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_custom.json"))
+        val req = search in "*" types ("users", "tweets") query "coldplay" preference new Preference.Custom("custom")
         println(req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
     it should "generate json for a prefix query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
-        val req = search in "*" types ("users", "tweets") limit 5 prefix "bands" -> "coldplay"
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            prefix("bands" -> "coldplay") boost 5 rewrite "yes"
+        }
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -55,14 +70,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "generate json for a range query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_range.json"))
-        val req = search in "*" types ("users", "tweets") limit 5 range "coldplay"
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            range("coldplay") includeLower true includeUpper true from 4 to 10
+        }
         assert(json === mapper.readTree(req._builder.toString))
     }
 
     it should "generate json for a regex query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
-            regex("drummmer" -> "will*") boost 5
+            regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -76,6 +93,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                     term("singer" -> "chris")
                 ) should term("bassist" -> "berryman") not term("singer" -> "anderson")
             }
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for a field query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_field.json"))
+        val req = search in "*" types ("bands", "artists") limit 5 query {
+            field("name", "coldplay") allowLeadingWildcard true analyzeWildcard false boost 5 fuzzyPrefixLength 5 phraseSlop 9
         }
         assert(json === mapper.readTree(req._builder.toString))
     }

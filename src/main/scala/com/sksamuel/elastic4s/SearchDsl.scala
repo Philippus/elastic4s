@@ -132,13 +132,9 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
 
-        def preference(pref: String) = {
+        def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
+        def preference(pref: String): SearchDefinition = {
             _builder.setPreference(pref)
-            this
-        }
-
-        def preference(pref: Preference) = {
-            _builder.setPreference(pref.elastic)
             this
         }
 

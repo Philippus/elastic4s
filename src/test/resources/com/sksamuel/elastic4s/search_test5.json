@@ -2,7 +2,11 @@
     "size": 5,
     "query": {
         "prefix": {
-            "bands": "coldplay"
+            "bands": {
+                "prefix": "coldplay",
+                "boost": 5.0,
+                "rewrite": "yes"
+            }
         }
     }
 }

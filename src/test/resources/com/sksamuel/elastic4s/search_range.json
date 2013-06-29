@@ -3,8 +3,8 @@
     "query": {
         "range": {
             "coldplay": {
-                "from": null,
-                "to": null,
+                "from": 4,
+                "to": 10,
                 "include_lower": true,
                 "include_upper": true
             }

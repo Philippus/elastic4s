@@ -46,7 +46,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      * @return a Future providing an IndexResponse
      */
     def execute(builder: IndexDefinition): Future[IndexResponse] = future {
-        client.index(builder.java).actionGet(timeout)
+        client.index(builder.build).actionGet(timeout)
     }
 
     /**
@@ -160,7 +160,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def execute(requests: BulkCompatibleRequest*): Future[BulkResponse] = {
         val bulk = client.prepareBulk()
         requests.foreach(req => req match {
-            case index: IndexDefinition => bulk.add(index.java)
+            case index: IndexDefinition => bulk.add(index.build)
             case delete: DeleteByIdDefinition => bulk.add(delete.builder)
             case update: UpdateDefinition => bulk.add(update.build)
         })
@@ -213,6 +213,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
 
         def execute(index: IndexDefinition)(implicit duration: Duration): IndexResponse =
             Await.result(client.execute(index), duration)
+
+        def execute(create: CreateIndexDefinition)(implicit duration: Duration): CreateIndexResponse =
+            Await.result(client.execute(create), duration)
     }
 }
 
