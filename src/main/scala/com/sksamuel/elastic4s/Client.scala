@@ -21,6 +21,7 @@ import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
+import org.elasticsearch.common.io.stream.OutputStreamStreamOutput
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
@@ -118,6 +119,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     }
 
     def execute(create: CreateIndexDefinition): Future[CreateIndexResponse] = future {
+        create.build.writeTo(new OutputStreamStreamOutput(System.out))
         client.admin.indices.create(create.build).actionGet(timeout)
     }
 

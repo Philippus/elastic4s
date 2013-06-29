@@ -30,6 +30,7 @@ trait CreateIndexDsl {
 
     class FieldsBuilder(val fields: List[FieldMapping]) {
 
+        def typed(ft: FieldType) = fieldType(ft)
         def fieldType(ft: FieldType) = {
             fields.last.`type` = Option(ft)
             this
