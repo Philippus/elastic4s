@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.count.CountRequestBuilder
-import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 /** @author Stephen Samuel */
 trait CountDsl {
@@ -19,14 +19,10 @@ trait CountDsl {
         val _builder = new CountRequestBuilder(null).setIndices(indexes: _*).setQuery(QueryBuilders.matchAllQuery())
         def build = _builder.request()
 
-        def query(string: String): CountDefinition = {
-            val q = new StringQueryDefinition(string)
-            _builder.setQuery(q.builder.buildAsBytes)
-            this
-        }
-
-        def query(block: => QueryDefinition): CountDefinition = {
-            _builder.setQuery(block.builder)
+        def query(string: String): CountDefinition = query(new StringQueryDefinition(string))
+        def query(block: => QueryDefinition): CountDefinition = query2(block.builder)
+        def query2(block: => QueryBuilder): CountDefinition = {
+            _builder.setQuery(block)
             this
         }
 

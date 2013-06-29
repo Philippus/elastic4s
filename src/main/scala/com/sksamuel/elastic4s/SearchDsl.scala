@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchRequestBuilder
+import org.elasticsearch.index.query.QueryBuilder
 
 /** @author Stephen Samuel */
 trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
@@ -29,8 +30,17 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
         val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
         def build = _builder.request()
 
-        def query(block: => QueryDefinition): SearchDefinition = {
-            _builder.setQuery(block.builder)
+        /**
+         * Adds a single string query to this search
+         *
+         * @param string the query string
+         *
+         * @return this
+         */
+        def query(string: String): SearchDefinition = query(new StringQueryDefinition(string))
+        def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
+        def query2(block: => QueryBuilder): SearchDefinition = {
+            _builder.setQuery(block)
             this
         }
 
@@ -46,19 +56,6 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
 
         def suggestions(suggestions: SuggestionDefinition*): SearchDefinition = {
             suggestions.foreach(_builder addSuggestion _.builder)
-            this
-        }
-
-        /**
-         * Adds a single string query to this search
-         *
-         * @param string the query string
-         *
-         * @return this
-         */
-        def query(string: String) = {
-            val q = new StringQueryDefinition(string)
-            _builder.setQuery(q.builder.buildAsBytes)
             this
         }
 
