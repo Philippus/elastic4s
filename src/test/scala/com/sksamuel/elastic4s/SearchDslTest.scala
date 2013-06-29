@@ -142,7 +142,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_field.json"))
 
         val req = search in "music" types "bands" sort {
-            by field "singer"
+            by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode.Sum
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -181,6 +181,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
           })
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for highlighting" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
+        val req = search in "music" types "bands" highlighting (
+          highlight field "name" fragmentSize 100 number 3 offset 4,
+          highlight field "type" size 100
+          )
         assert(json === mapper.readTree(req._builder.toString))
     }
 

@@ -5,7 +5,7 @@ import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Stephen Samuel */
-trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
+trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl {
 
     def find = new SearchExpectsIndex
     def select = new SearchExpectsIndex
@@ -14,17 +14,6 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
         def in(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
         def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
     }
-
-    abstract class Facet(name: String) {
-        val global: Boolean = false
-        def builder: org.elasticsearch.search.facet.FacetBuilder
-    }
-
-    def preTag(tag: String) = this
-    def postTag(tag: String) = this
-
-    def highlight = new HighlightBuilder
-    def highlight(field: String) = new HighlightBuilder
 
     class SearchDefinition(indexes: Seq[String]) {
 
@@ -105,10 +94,8 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
 
-        def highlight(field: String) = new HighlightBuilder
-
-        def highlighting(block: => Unit) {
-
+        def highlighting(highlights: HighlightDefinition*) = {
+            this
         }
 
         def routing(r: String) = {
@@ -167,20 +154,5 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
     }
-
-    class Highlighter(request: SearchRequestBuilder) extends SearchDefinition(null) {
-        def fields(any: HighlightBuilder*) = {
-            //        val builder = block
-            //      builder.buffer.foreach(field => request.addHighlightedField(field))
-            this
-        }
-    }
-
-    implicit def string2highlightField(field: String) = {
-        val builder = new HighlightBuilder
-        builder.field(field)
-        builder
-    }
-
 }
 

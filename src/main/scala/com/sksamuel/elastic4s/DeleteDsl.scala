@@ -20,11 +20,11 @@ trait DeleteDsl extends QueryDsl {
         }
     }
 
-    class DeleteByIdDefinition(index: String, `type`: String, id: String) {
+    class DeleteByIdDefinition(index: String, `type`: String, id: String) extends BulkCompatibleRequest {
         val builder = Requests.deleteRequest(index).`type`(`type`).id(id)
     }
 
-    class DeleteByQueryDefinition(indexes: String*) extends BulkCompatibleRequest {
+    class DeleteByQueryDefinition(indexes: String*) {
         val builder = Requests.deleteByQueryRequest(indexes: _*)
         def where(query: String) = {
             val queryStringDef = new StringQueryDefinition(query)
