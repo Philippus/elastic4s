@@ -13,21 +13,19 @@
                 "_id": {
                     "type": "string",
                     "analyzer": "keyword",
-                    "index": 100,
                     "include_in_all": true,
                     "store": "true"
                 },
                 "name": {
                     "type": "geo_point",
                     "analyzer": "simple",
-                    "index": 100,
+                    "index": "not_analyzed",
                     "boost": 4.0,
                     "store": "false"
                 },
                 "content": {
                     "type": "date",
                     "analyzer": "stop",
-                    "index": 100,
                     "null_value": "no content",
                     "store": "false"
                 }
@@ -42,16 +40,15 @@
                 "name": {
                     "type": "ip",
                     "analyzer": "whitespace",
-                    "index": 100,
                     "omit_norms": true,
                     "store": "false"
                 },
                 "location": {
                     "type": "integer",
                     "analyzer": "snowball",
-                    "index": 100,
                     "store": "false"
                 }
             }
         }
-    }}
+    }
+}

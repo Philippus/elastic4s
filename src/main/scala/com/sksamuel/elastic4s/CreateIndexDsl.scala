@@ -72,7 +72,7 @@ trait CreateIndexDsl {
         }
 
         def index(index: String) = {
-            fields.last.index = index
+            fields.last.index = Option(index)
             this
         }
 
@@ -84,7 +84,7 @@ trait CreateIndexDsl {
     class FieldMapping(val name: String) {
         var `type`: Option[FieldType] = None
         var analyzer: Option[Analyzer] = None
-        var index: String = "analyzed"
+        var index: Option[String] = None
         var store: Boolean = false
         var boost: Double = 0
         var nullValue: Option[String] = None

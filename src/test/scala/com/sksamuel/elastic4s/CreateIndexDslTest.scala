@@ -19,7 +19,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
             map("tweets") source true as {
 
                 id fieldType StringType analyzer KeywordAnalyzer store true includeInAll true and
-                  "name" fieldType GeoPointType analyzer SimpleAnalyzer boost 4 and
+                  "name" fieldType GeoPointType analyzer SimpleAnalyzer boost 4 index "not_analyzed" and
                   "content" fieldType DateType analyzer StopAnalyzer nullValue "no content"
 
             } and "users" source false as {
