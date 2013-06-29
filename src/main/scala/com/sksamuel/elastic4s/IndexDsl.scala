@@ -64,6 +64,11 @@ trait IndexDsl {
             this
         }
 
+        def fields(iterable: Iterable[(String, Any)]) = {
+            this._fields ++= iterable
+            this
+        }
+
         def fields(fields: (String, Any)*) = {
             this._fields ++= fields
             this
