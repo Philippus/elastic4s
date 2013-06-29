@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.index.query.QueryBuilder
+import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Stephen Samuel */
 trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl {
@@ -49,8 +50,9 @@ trait SearchDsl extends QueryDsl with FilterDsl with SortDsl with SuggestionDsl 
             this
         }
 
-        def sort(sorts: SortDefinition*): SearchDefinition = {
-            sorts.foreach(_builder addSort _.builder)
+        def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
+        def sort2(sorts: SortBuilder*): SearchDefinition = {
+            sorts.foreach(_builder addSort _)
             this
         }
 
