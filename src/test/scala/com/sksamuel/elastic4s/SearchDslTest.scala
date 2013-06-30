@@ -99,6 +99,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate json for a min score" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_minscore.json"))
+        val req = search in "*" types ("users", "tweets") query "coldplay" minScore 0.5
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for an index boost" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_indexboost.json"))
+        val req = search in "*" types ("users", "tweets") query "coldplay" indexBoost ("index1" -> 1.4, "index2" -> 1.3)
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate json for a bpoosting query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boosting.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {

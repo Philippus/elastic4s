@@ -110,23 +110,23 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
             this
         }
 
-        def highlighting(highlights: HighlightDefinition*) = {
+        def highlighting(highlights: HighlightDefinition*): SearchDefinition = {
             this
         }
 
-        def routing(r: String) = {
+        def routing(r: String): SearchDefinition = {
             _builder.setRouting(r)
             this
         }
 
-        def start(i: Int) = from(i)
-        def from(i: Int) = {
+        def start(i: Int): SearchDefinition = from(i)
+        def from(i: Int): SearchDefinition = {
             _builder.setFrom(i)
             this
         }
 
-        def limit(i: Int) = size(i)
-        def size(i: Int) = {
+        def limit(i: Int): SearchDefinition = size(i)
+        def size(i: Int): SearchDefinition = {
             _builder.setSize(i)
             this
         }
@@ -136,7 +136,7 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
             this
         }
 
-        def version(enabled: Boolean) = {
+        def version(enabled: Boolean): SearchDefinition = {
             _builder.setVersion(enabled)
             this
         }
@@ -147,20 +147,23 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
             this
         }
 
-        def scroll(keepAlive: String) = {
+        def scroll(keepAlive: String): SearchDefinition = {
             _builder.setScroll(keepAlive)
             this
         }
 
-        def indexBoost(tuples: (String, Double)*) = this
-        def indexBoost(map: Map[String, Double]) = this
+        def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
+        def indexBoost(tuples: (String, Double)*): SearchDefinition = {
+            tuples.foreach(arg => _builder.addIndexBoost(arg._1, arg._2.toFloat))
+            this
+        }
 
-        def explain(enabled: Boolean) = {
+        def explain(enabled: Boolean): SearchDefinition = {
             _builder.setExplain(enabled)
             this
         }
 
-        def minStore(score: Double) = {
+        def minScore(score: Double): SearchDefinition = {
             _builder.setMinScore(score.toFloat)
             this
         }
