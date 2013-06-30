@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import com.sksamuel.elastic4s.Analyzer.WhitespaceAnalyzer
+import com.sksamuel.elastic4s.Analyzer.{PatternAnalyzer, WhitespaceAnalyzer}
 import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 
@@ -99,9 +99,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "generate json for a field query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_field.json"))
-        val req = search in "*" types ("bands", "artists") limit 5 query {
-            field("name", "coldplay") allowLeadingWildcard true analyzeWildcard false boost 5 fuzzyPrefixLength 5 phraseSlop 9
-        }
+        val req = search("*").types("bands", "artists").limit(5).bool(
+            must(
+                field("name", "coldplay") allowLeadingWildcard true analyzeWildcard false boost 5 fuzzyPrefixLength 5 phraseSlop 9,
+                field("status", "awesome") analyzer PatternAnalyzer autoGeneratePhraseQueries true enablePositionIncrements true,
+                field("location", "oxford") fuzzyMinSim 0.5 fuzzyMaxExpansions 7 rewrite "rewrite"
+            )
+        )
         assert(json === mapper.readTree(req._builder.toString))
     }
 

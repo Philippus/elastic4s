@@ -10,6 +10,7 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     def find = new SearchExpectsIndex
     def select = new SearchExpectsIndex
     def search = new SearchExpectsIndex
+    def search(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
     class SearchExpectsIndex {
         def in(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
         def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
@@ -31,6 +32,10 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
         def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
         def query2(block: => QueryBuilder): SearchDefinition = {
             _builder.setQuery(block)
+            this
+        }
+        def bool(block: => BoolQueryDefinition): SearchDefinition = {
+            _builder.setQuery(block.builder)
             this
         }
 

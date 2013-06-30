@@ -1,15 +1,1 @@
-{
-    "size": 5,
-    "query": {
-        "field": {
-            "name": {
-                "query": "coldplay",
-                "allow_leading_wildcard": true,
-                "boost": 5.0,
-                "fuzzy_prefix_length": 5,
-                "phrase_slop": 9,
-                "analyze_wildcard": false
-            }
-        }
-    }
-}
+{}

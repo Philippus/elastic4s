@@ -127,7 +127,7 @@ class FieldQueryDefinition(field: String, query: Any) extends QueryDefinition {
         this
     }
 
-    def anaylyzer(analyzer: Analyzer) = {
+    def analyzer(analyzer: Analyzer) = {
         builder.analyzer(analyzer.elastic)
         this
     }
