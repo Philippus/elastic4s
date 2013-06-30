@@ -7,6 +7,12 @@ trait HighlightDsl {
 
     implicit def string2highlightfield(name: String) = new HighlightDefinition(name)
 
+    def highlight = new HighlightExpectsField
+    class HighlightExpectsField {
+        def field(name: String) = new HighlightDefinition(name)
+    }
+    def highlight(field: String) = new HighlightDefinition(field)
+
     def options = new HighlightOptionsDefinition
     class HighlightOptionsDefinition {
 
@@ -52,11 +58,7 @@ trait HighlightDsl {
             this
         }
     }
-    def highlight = new HighlightExpectsField
-    class HighlightExpectsField {
-        def field(name: String) = new HighlightDefinition(name)
-    }
-    def highlight(field: String) = new HighlightDefinition(field)
+
 }
 abstract class HighlightOrder(val elastic: String)
 case object HighlightOrder {

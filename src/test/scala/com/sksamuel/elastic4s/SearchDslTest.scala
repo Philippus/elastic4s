@@ -11,6 +11,7 @@ import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
+import org.elasticsearch.common.geo.GeoDistance
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -120,6 +121,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                 query("jethro tull")
             } negativeBoost 5.6 positiveBoost 7.6
         } searchType SearchType.DfsQueryAndFetch
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for a id query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_id.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            ids("1", "2", "3") boost 1.6 types ("a", "b")
+        }
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -245,10 +254,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" facets (
           facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
             .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
-          facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
+          facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey" nested "some-nested",
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
-          } addUnboundedFrom 100 addUnboundedTo 900 geohash "ABC" valueScript "some.script" lang "java")
+          } addUnboundedFrom 100 addUnboundedTo 900 geohash "ABC" valueScript "some.script" lang "java" geoDistance GeoDistance.PLANE)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -260,7 +269,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
             } filter {
                 regexFilter("field", "value.*")
             } global true nested "some.path"
-        }
+        } preference new Preference.OnlyNode("a")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -288,9 +297,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for highlighting" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
         val req = search in "music" types "bands" highlighting (
-          options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder.Score preTags "<b>" postTags "</b>",
+          options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder
+            .Score preTags "<b>" postTags "</b>" encoder HighlightEncoder.Html,
           "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
-          "type" numberOfFragments 100 fragmentSize 44
+          "type" numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
           )
         assert(json === mapper.readTree(req._builder.toString))
     }

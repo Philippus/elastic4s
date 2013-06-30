@@ -61,7 +61,7 @@ class BoolQueryDefinition extends QueryDefinition {
 }
 
 trait QueryDefinition {
-    val builder: org.elasticsearch.index.query.QueryBuilder
+    def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
 class FilteredQueryDefinition extends QueryDefinition {
@@ -73,13 +73,17 @@ class FilteredQueryDefinition extends QueryDefinition {
 }
 
 class IdQueryDefinition(ids: String*) extends QueryDefinition {
-    val builder = QueryBuilders.idsQuery().addIds(ids: _*)
+
+    def builder = _builder
+    var _builder = QueryBuilders.idsQuery().addIds(ids: _*)
     var _boost: Double = -1
+
     def types(types: String*) = {
+        _builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*).boost(_boost.toFloat)
         this
     }
     def boost(boost: Double) = {
-        builder.boost(boost.toFloat)
+        _builder.boost(boost.toFloat)
         _boost = boost
         this
     }

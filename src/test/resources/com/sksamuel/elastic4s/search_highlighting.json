@@ -4,6 +4,7 @@
         "pre_tags": ["<b>"],
         "post_tags": ["</b>"],
         "order": "score",
+        "encoder": "html",
         "require_field_match": false,
         "fields": {
             "name": {
@@ -13,7 +14,8 @@
             },
             "type": {
                 "fragment_size": 44,
-                "number_of_fragments": 100
+                "number_of_fragments": 100,
+                "type": "some-type"
             }
         }
     }

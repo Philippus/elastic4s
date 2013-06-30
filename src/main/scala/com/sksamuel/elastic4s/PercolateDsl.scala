@@ -29,7 +29,6 @@ trait PercolateDsl extends QueryDsl {
                 source.field(tuple._1, tuple._2)
             }
             source.endObject().endObject()
-            println(source.string)
             source
         }
 
@@ -61,7 +60,6 @@ trait PercolateDsl extends QueryDsl {
             source.field("query", _query.builder)
             source.endObject()
             req.setSource(source)
-            println(req.request().sourceAsMap())
             req
         }
         def query(block: => QueryDefinition): RegisterDefinition = {
