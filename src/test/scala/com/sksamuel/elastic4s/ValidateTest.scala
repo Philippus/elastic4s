@@ -21,7 +21,7 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     "a validate query" should "return valid when the query is valid" in {
 
-        val resp = client result {
+        val resp = client.sync.execute {
             validate in "food/pasta" query "maccaroni"
         }
         assert(true === resp.isValid)

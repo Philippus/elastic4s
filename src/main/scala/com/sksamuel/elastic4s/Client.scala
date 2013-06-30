@@ -131,31 +131,23 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.deleteByQuery(req).actionGet(timeout)
     }
     def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d.builder)
-    def result(d: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
-        Await.result(execute(d), duration)
 
     def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
         client.admin.indices().validateQuery(req).actionGet(timeout)
     }
 
     def execute(validateDef: ValidateDefinition): Future[ValidateQueryResponse] = execute(validateDef.build)
-    def result(validateDef: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
-        Await.result(execute(validateDef.build), duration)
 
     def execute(req: UpdateRequest): Future[UpdateResponse] = future {
         client.update(req).actionGet(timeout)
     }
 
     def execute(updateDef: UpdateDefinition): Future[UpdateResponse] = execute(updateDef.build)
-    def result(updateDef: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
-        Await.result(execute(updateDef.build), duration)
 
     def execute(req: MoreLikeThisRequest): Future[SearchResponse] = future {
         client.moreLikeThis(req).actionGet(5000)
     }
     def execute(mltDef: MoreLikeThisDefinition): Future[SearchResponse] = execute(mltDef._builder)
-    def result(mltDef: MoreLikeThisDefinition)(implicit duration: Duration): SearchResponse =
-        Await.result(execute(mltDef), duration)
 
     def execute(requests: BulkCompatibleRequest*): Future[BulkResponse] = {
         val bulk = client.prepareBulk()
@@ -176,8 +168,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     }
 
     def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef.build.request)
-    def registerSync(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
-        Await.result(register(registerDef), duration)
 
     def percolate(percolate: PercolateDefinition): Future[PercolateResponse] = future {
         client.percolate(percolate.build).actionGet(timeout)
@@ -216,6 +206,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
 
         def execute(create: CreateIndexDefinition)(implicit duration: Duration): CreateIndexResponse =
             Await.result(client.execute(create), duration)
+
+        def execute(mlt: MoreLikeThisDefinition)(implicit duration: Duration): SearchResponse =
+            Await.result(client.execute(mlt), duration)
+
+        def execute(v: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
+            Await.result(client.execute(v), duration)
     }
 }
 

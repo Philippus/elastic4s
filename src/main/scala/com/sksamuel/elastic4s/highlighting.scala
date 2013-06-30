@@ -27,7 +27,6 @@ case object HighlightEncoder {
 }
 
 /*
-fields: Iterable[HighlightField] = Nil,
 preTags: Seq[String] = Nil,
 postTags: Seq[String] = Nil,
 encoder: Option[HighlightEncoder] = None,

@@ -12,7 +12,7 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     "a bulk request" should "execute all index queries" in {
 
-        client result (
+        client execute (
           index into "transport/air" id 1 fields "company" -> "ba",
           index into "transport/air" id 2 fields "company" -> "aeroflot",
           index into "transport/air" id 3 fields "company" -> "american air",
@@ -24,7 +24,7 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     "a bulk request" should "execute all delete queries" in {
 
-        client result (
+        client execute (
           delete id 1 from "transport/air",
           delete id 2 from "transport/air"
           )
