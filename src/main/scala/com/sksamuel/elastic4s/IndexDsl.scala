@@ -5,16 +5,16 @@ import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.index.IndexRequest
 import scala.collection.mutable.ListBuffer
+import com.sksamuel.elastic4s.source.Source
 
 /** @author Stephen Samuel */
 trait IndexDsl {
 
-    def insert: IndexExpectsInto = new IndexExpectsInto
+    def insert: IndexExpectsInto = index
     def index: IndexExpectsInto = new IndexExpectsInto
 
     class IndexExpectsInto {
-        def into(index: String): IndexDefinition = into(index.split("/").toSeq)
-        private def into(seq: Seq[String]): IndexDefinition = into(seq(0), seq(1))
+        def into(index: String): IndexDefinition = into(index.split("/").head, index.split("/").last)
         def into(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
         def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
     }
@@ -23,7 +23,19 @@ trait IndexDsl {
 
         private val _request = new IndexRequest(index, `type`)
         private val _fields = new ListBuffer[(String, Any)]
-        def build = _request.source(_source)
+        private var _source: Option[Source] = None
+        def build = _source match {
+            case None => _request.source(_fieldsAsXContent)
+            case Some(src) => _request.source(src.json)
+        }
+
+        def _fieldsAsXContent: XContentBuilder = {
+            val source = XContentFactory.jsonBuilder().startObject()
+            for ( tuple <- _fields ) {
+                source.field(tuple._1, tuple._2)
+            }
+            source.endObject()
+        }
 
         def id(id: Any) = {
             _request.id(id.toString)
@@ -66,19 +78,15 @@ trait IndexDsl {
         }
 
         def fields(map: Map[String, Any]): IndexDefinition = fields(map.toList)
-        def fields(_fields: (String, Any) *): IndexDefinition = fields(_fields.toIterable)
+        def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toIterable)
         def fields(iterable: Iterable[(String, Any)]): IndexDefinition = {
             this._fields ++= iterable
             this
         }
 
-        def _source: XContentBuilder = {
-            val source = XContentFactory.jsonBuilder().startObject()
-            for ( tuple <- _fields ) {
-                source.field(tuple._1, tuple._2)
-            }
-            source.endObject()
+        def doc(source: Source) = {
+            this._source = Option(source)
+            this
         }
-
     }
 }
