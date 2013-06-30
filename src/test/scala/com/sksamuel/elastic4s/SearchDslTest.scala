@@ -187,7 +187,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for geo sort" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_geo.json"))
         val req = search in "music" types "bands" sort {
-            by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode MultiMode.Sum
+            by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode MultiMode.Sum point (56.6, 78.8)
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -207,9 +207,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" facets (
           facet terms "type" allTerms true exclude "pop" fields "type",
           facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
-          facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) facetFilter {
+          facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
-          })
+          } addUnboundedFrom 100 addUnboundedTo 900)
         assert(json === mapper.readTree(req._builder.toString))
     }
 

@@ -17,7 +17,7 @@ trait FacetDsl {
         }
         def filter(name: String) = new FilterFacetDefinition(name)
         def query(name: String) = new QueryFacetDefinition(name)
-        def geodistance(name: String) = new GeoDistanceDefinition(name)
+        def geodistance(name: String) = new GeoDistanceFacetDefinition(name)
     }
 }
 
@@ -174,54 +174,54 @@ class QueryFacetDefinition(name: String) extends FacetDefinition {
     }
 }
 
-class GeoDistanceDefinition(name: String) extends FacetDefinition {
+class GeoDistanceFacetDefinition(name: String) extends FacetDefinition {
     val builder = FacetBuilders.geoDistanceFacet(name)
-    def global(global: Boolean): GeoDistanceDefinition = {
+    def global(global: Boolean): GeoDistanceFacetDefinition = {
         builder.global(global)
         this
     }
-    def range(tuple: (Double, Double)): GeoDistanceDefinition = range(tuple._1, tuple._2)
-    def range(from: Double, to: Double): GeoDistanceDefinition = {
+    def range(tuple: (Double, Double)): GeoDistanceFacetDefinition = range(tuple._1, tuple._2)
+    def range(from: Double, to: Double): GeoDistanceFacetDefinition = {
         builder.addRange(from, to)
         this
     }
-    def field(field: String): GeoDistanceDefinition = {
+    def field(field: String): GeoDistanceFacetDefinition = {
         builder.field(field)
         this
     }
-    def facetFilter(block: => FilterDefinition): GeoDistanceDefinition = {
+    def facetFilter(block: => FilterDefinition): GeoDistanceFacetDefinition = {
         builder.facetFilter(block.builder)
         this
     }
-    def valueField(valueField: String): GeoDistanceDefinition = {
+    def valueField(valueField: String): GeoDistanceFacetDefinition = {
         builder.valueField(valueField)
         this
     }
-    def valueScript(valueScript: String): GeoDistanceDefinition = {
+    def valueScript(valueScript: String): GeoDistanceFacetDefinition = {
         builder.valueScript(valueScript)
         this
     }
-    def geoDistance(geoDistance: GeoDistance): GeoDistanceDefinition = {
+    def geoDistance(geoDistance: GeoDistance): GeoDistanceFacetDefinition = {
         builder.geoDistance(geoDistance)
         this
     }
-    def geohash(geohash: String): GeoDistanceDefinition = {
+    def geohash(geohash: String): GeoDistanceFacetDefinition = {
         builder.geohash(geohash)
         this
     }
-    def lang(lang: String): GeoDistanceDefinition = {
+    def lang(lang: String): GeoDistanceFacetDefinition = {
         builder.lang(lang)
         this
     }
-    def point(lat: Double, long: Double): GeoDistanceDefinition = {
+    def point(lat: Double, long: Double): GeoDistanceFacetDefinition = {
         builder.point(lat, long)
         this
     }
-    def addUnboundedFrom(addUnboundedFrom: Double): GeoDistanceDefinition = {
+    def addUnboundedFrom(addUnboundedFrom: Double): GeoDistanceFacetDefinition = {
         builder.addUnboundedFrom(addUnboundedFrom)
         this
     }
-    def addUnboundedTo(addUnboundedTo: Double): GeoDistanceDefinition = {
+    def addUnboundedTo(addUnboundedTo: Double): GeoDistanceFacetDefinition = {
         builder.addUnboundedTo(addUnboundedTo)
         this
     }

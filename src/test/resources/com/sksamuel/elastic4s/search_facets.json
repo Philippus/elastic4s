@@ -1,47 +1,53 @@
-{
-    "facets": {
-        "type": {
-            "terms": {
-                "field": "type",
-                "size": 10,
-                "exclude": ["pop"],
-                "all_terms": true
-            }
-        },
-        "years-active": {
-            "range": {
-                "key_field": "mykey",
-                "value_field": "myvalue",
-                "ranges": [
-                    {
-                        "from": "10",
-                        "to": "20"
-                    }
-                ]
-            },
-            "global": true
-        },
-        "distance": {
-            "geo_distance": {
-                "location": [54.0, 45.4],
-                "ranges": [
-                    {
-                        "from": 20.0,
-                        "to": 30.0
-                    },
-                    {
-                        "from": 30.0,
-                        "to": 40.0
-                    }
-                ]
-            },
-            "facet_filter": {
-                "term": {
-                    "location": "europe",
-                    "_cache": true,
-                    "_cache_key": "cache-key"
-                }
-            }
+{"facets": {
+    "type": {
+        "terms": {
+            "field": "type",
+            "size": 10,
+            "exclude": ["pop"],
+            "all_terms": true
         }
+    },
+    "years-active": {
+        "range": {
+            "key_field": "mykey",
+            "value_field": "myvalue",
+            "ranges": [
+                {
+                    "from": "10",
+                    "to": "20"
+                }
+            ]
+        },
+        "global": true
+    },
+    "distance": {
+        "geo_distance": {
+            "location": [54.0, 45.4],
+            "value_field": "myvalue",
+            "ranges": [
+                {
+                    "from": 20.0,
+                    "to": 30.0
+                },
+                {
+                    "from": 30.0,
+                    "to": 40.0
+                },
+                {
+                    "to": 100.0
+                },
+                {
+                    "from": 900.0
+                }
+            ]
+        },
+        "facet_filter": {
+            "term": {
+                "location": "europe",
+                "_cache": true,
+                "_cache_key": "cache-key"
+            }
+        },
+        "global": true
     }
-}
+}}
