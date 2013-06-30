@@ -11,7 +11,6 @@ import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
-import com.sksamuel.elastic4s.TagSchema
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -248,8 +247,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for highlighting" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
         val req = search in "music" types "bands" highlighting (
-          highlight field "name" fragmentSize 100 number 3 offset 4,
-          highlight field "type" size 100
+          options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder.Score preTags "<b>" postTags "</b>",
+          "name" fragmentSize 100 numberOfFragments 3 fragmentOffset  4,
+          "type" numberOfFragments 100 fragmentSize 44
           )
         assert(json === mapper.readTree(req._builder.toString))
     }

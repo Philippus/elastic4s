@@ -1,1 +1,20 @@
-{}
+{
+    "highlight": {
+        "tags_schema": "styled",
+        "pre_tags": ["<b>"],
+        "post_tags": ["</b>"],
+        "order": "score",
+        "require_field_match": false,
+        "fields": {
+            "name": {
+                "fragment_size": 100,
+                "number_of_fragments": 3,
+                "fragment_offset": 4
+            },
+            "type": {
+                "fragment_size": 44,
+                "number_of_fragments": 100
+            }
+        }
+    }
+}

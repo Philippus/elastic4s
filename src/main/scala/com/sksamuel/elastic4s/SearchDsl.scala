@@ -100,6 +100,13 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
         }
 
         def highlighting(options: HighlightOptionsDefinition, highlights: HighlightDefinition*) = {
+            options._encoder.foreach(encoder => _builder.setHighlighterEncoder(encoder.elastic))
+            options._tagSchema.foreach(arg => _builder.setHighlighterTagsSchema(arg.elastic))
+            options._order.foreach(arg => _builder.setHighlighterOrder(arg.elastic))
+            _builder.setHighlighterPostTags(options._postTags: _*)
+            _builder.setHighlighterPreTags(options._preTags: _*)
+            _builder.setHighlighterRequireFieldMatch(options._requireFieldMatch)
+            highlights.foreach(highlight => _builder.addHighlightedField(highlight.builder))
             this
         }
 
