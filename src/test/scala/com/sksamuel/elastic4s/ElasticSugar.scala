@@ -29,6 +29,10 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
 
     implicit val client = ElasticClient.local(settings.build)
 
+    override protected def afterAll() {
+        client.close()
+    }
+
     def refresh(indexes: String*) {
         val i = indexes.size match {
             case 0 => Seq("_all")

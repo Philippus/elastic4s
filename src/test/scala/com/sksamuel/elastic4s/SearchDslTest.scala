@@ -37,21 +37,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "use limit and and offset when specified" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test4.json"))
         val req = search in "*" types ("users", "tweets") limit 6 from 9 query "coldplay"
-        println(req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
     it should "use preference when specified" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_primary_first.json"))
         val req = search in "*" types ("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
-        println(req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
     it should "use custom preference when specified" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_custom.json"))
         val req = search in "*" types ("users", "tweets") query "coldplay" preference new Preference.Custom("custom")
-        println(req._builder.toString)
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -59,13 +56,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             prefix("bands" -> "coldplay") boost 5 rewrite "yes"
-        }
+        } searchType SearchType.Scan
         assert(json === mapper.readTree(req._builder.toString))
     }
 
     it should "generate json for a term query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term.json"))
-        val req = search in "*" types ("users", "tweets") limit 5 term "singer" -> "chris martin"
+        val req = search in "*" types ("users", "tweets") limit 5 term "singer" -> "chris martin" searchType SearchType.DfsQueryAndFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -73,7 +70,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_range.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             range("coldplay") includeLower true includeUpper true from 4 to 10
-        }
+        } searchType SearchType.QueryThenFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -81,7 +78,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_string.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyMinSim 0.9 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5
-        }
+        } searchType SearchType.DfsQueryThenFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -89,7 +86,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION rewrite "rewrite-to"
-        }
+        } searchType SearchType.DfsQueryAndFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -97,7 +94,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             matches("drummmer" -> "will") boost 4 operator "AND" analyzer SnowballAnalyzer
-        }
+        } searchType SearchType.Count
         assert(json === mapper.readTree(req._builder.toString))
     }
 
