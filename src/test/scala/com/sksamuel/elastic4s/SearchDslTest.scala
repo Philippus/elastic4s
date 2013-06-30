@@ -12,6 +12,7 @@ import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
+import com.sksamuel.elastic4s.SearchType.DfsQueryAndFetch
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -64,7 +65,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
     it should "generate json for a term query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term.json"))
-        val req = search in "*" types ("users", "tweets") limit 5 term "singer" -> "chris martin" searchType SearchType.DfsQueryAndFetch
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            term("singer", "chris martin") boost 1.6
+        } searchType SearchType.DfsQueryAndFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -87,7 +90,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate json for a string query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_string.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
-            query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyMinSim 0.9 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5
+            query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyMinSim 0.9 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer"
         } searchType SearchType.DfsQueryThenFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
