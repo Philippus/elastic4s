@@ -236,11 +236,3 @@ object ElasticClient {
         fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
 
 }
-
-sealed abstract class SearchOperationThreading(elastic: org.elasticsearch.action.search.SearchOperationThreading)
-object SearchOperationThreading {
-    case object NoThreads extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.NO_THREADS)
-    case object SingleThread extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.SINGLE_THREAD)
-    case object ThreadPerShard extends SearchOperationThreading(org.elasticsearch.action.search.SearchOperationThreading.THREAD_PER_SHARD)
-}
-
