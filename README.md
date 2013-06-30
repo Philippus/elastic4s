@@ -39,6 +39,7 @@ Here is a list of the common operations and the syntax used to create requests. 
 | Create Index     | ```create index <name> mappings { mappings block> } [optional settings]```|
 | Index            | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
 | Get              | ```get id <id> from <index/type> [optional settings]```|
+| Count            | ```count from <indexes> [types <types> query <queryblock>]``` |
 | Delete by id     | ```delete id <id> in <index/type> [optional settings]```
 | Delete by query  | ```delete from <index/type> query { <queryblock> } [optional settings]```
 | Search           | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
@@ -131,19 +132,21 @@ client.execute {
 
 There are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
 
-If you want to index from a JSON document you already have, then elastic4s supports directly Jackson Nodes. 
+If you want to index directly from a Jackson JSON document, then elastic4s supports this directly.
 
 ```scala
 val myJsonDoc = ... // some jackson object
 client.execute { index into "electronics/phones" source JacksonSource(myJsonDoc) }
 ```
 
-Or you can even index objects natively and using Jackson the object will be converted to JSON. This uses the Scala support of Jackson and so supports scala collections, options, etc.
+Or you can even index objects natively and then by using Jackson the object will be marshalled into JSON. This uses the Scala extension in Jackson and so supports scala collections, options, etc.
 
 ```scala
 val anyOldObject = ... // anything that extends from AnyRef
 client.execute { index into "electronics/phones" source ObjectSource(anyOldObject) }
 ```
+
+In fact you can write your own "source" conversions by simply creating a class that mixes in the trait Source.
 
 #### Searching
 
