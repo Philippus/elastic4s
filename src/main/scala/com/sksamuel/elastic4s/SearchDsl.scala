@@ -99,6 +99,10 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
             this
         }
 
+        def highlighting(options: HighlightOptionsDefinition, highlights: HighlightDefinition*) = {
+            this
+        }
+
         def highlighting(highlights: HighlightDefinition*) = {
             this
         }

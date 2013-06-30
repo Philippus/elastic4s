@@ -10,6 +10,8 @@ import com.sksamuel.elastic4s.Analyzer._
 import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
+import org.elasticsearch.search.facet.terms.TermsFacet
+import com.sksamuel.elastic4s.TagSchema
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -202,7 +204,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for facets" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets.json"))
         val req = search in "music" types "bands" facets (
-          facet terms "type" allTerms true exclude "pop" fields "type",
+          facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
+            .ComparatorType.REVERSE_TERM size 10 regex "qwer",
           facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"

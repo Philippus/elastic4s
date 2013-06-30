@@ -1,7 +1,7 @@
 elastic4s
 =========
 
-Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This gives you the full power of a DSL to construct your queries, indexes, etc without needing to generate JSON. Sometimes you have data in JSON and its easy to use that straight in requests. Other times you want to create your requests programatically and a DSL is more convenient. Elastic4s is designed for that latter scenario.
+Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This gives you the full power of a DSL to construct your queries (hopefully!) reducing errors. Due to its typesafe nature Elastic4s is also a good way to learn the options available for any operation, as your IDE can use the type information to show you what methods are available. Elastic4s also allows you to index JSON documents from standard JSON libraries such as Jackson. 
 
 
 
@@ -129,7 +129,21 @@ client.execute {
 }
 ```
 
-Again there are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
+There are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
+
+If you want to index from a JSON document you already have, then elastic4s supports directly Jackson Nodes. 
+
+```scala
+val myJsonDoc = ... // some jackson object
+client.execute { index into "electronics/phones" source JacksonSource(myJsonDoc) }
+```
+
+Or you can even index objects natively and using Jackson the object will be converted to JSON. This uses the Scala support of Jackson and so supports scala collections, options, etc.
+
+```scala
+val anyOldObject = ... // anything that extends from AnyRef
+client.execute { index into "electronics/phones" source ObjectSource(anyOldObject) }
+```
 
 #### Searching
 

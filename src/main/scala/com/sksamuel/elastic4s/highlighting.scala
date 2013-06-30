@@ -4,6 +4,17 @@ import org.elasticsearch.search.highlight.HighlightBuilder
 
 /** @author Stephen Samuel */
 trait HighlightDsl {
+    def options = new HighlightOptionsDefinition
+    class HighlightOptionsDefinition {
+        var _preTags: Seq[String] = Nil
+        var _postTags: Seq[String] = Nil
+        var _encoder: Option[HighlightEncoder] = None
+        var _order: Option[HighlightOrder] = None
+        var _tagSchema: Option[TagSchema] = None
+        var _requireFieldMatch: Boolean = false
+        var _boundary_chars: Option[String] = None
+        var _boundary_max_scan: Int = 20
+    }
     def highlight = new HighlightExpectsField
     class HighlightExpectsField {
         def field(name: String) = new HighlightDefinition(name)
@@ -26,16 +37,6 @@ case object HighlightEncoder {
     case object Html extends HighlightEncoder
 }
 
-/*
-preTags: Seq[String] = Nil,
-postTags: Seq[String] = Nil,
-encoder: Option[HighlightEncoder] = None,
-order: Option[HighlightOrder] = None,
-tagSchema: Option[TagSchema] = None,
-requireFieldMatch: Boolean = false,
-boundary_chars: Option[String] = None,
-boundary_max_scan: Int = 20
-*/
 class HighlightDefinition(field: String) {
 
     val builder = new HighlightBuilder.Field(field)

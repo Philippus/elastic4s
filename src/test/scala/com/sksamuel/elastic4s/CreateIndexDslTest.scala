@@ -21,10 +21,12 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
               "content" typed DateType analyzer StopAnalyzer nullValue "no content"
               ) size true,
             map("users").as(
-                "name" fieldType IpType analyzer WhitespaceAnalyzer omitNorms true,
-                "location" fieldType IntegerType analyzer SnowballAnalyzer ignoreAbove 50,
-                "email" fieldType BinaryType analyzer StandardAnalyzer,
-                "picture" fieldType AttachmentType analyzer NotAnalyzed
+                "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true,
+                "location" typed IntegerType analyzer SnowballAnalyzer ignoreAbove 50,
+                "email" typed BinaryType analyzer StandardAnalyzer,
+                "picture" typed AttachmentType analyzer NotAnalyzed,
+                "age" typed FloatType,
+                "area" typed GeoShapeType
             ) analyzer "somefield" meta Map("class" -> "com.sksamuel.User")
         )
         assert(json === mapper.readTree(req._source.string))

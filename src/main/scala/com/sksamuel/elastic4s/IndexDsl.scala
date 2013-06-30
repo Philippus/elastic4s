@@ -84,7 +84,7 @@ trait IndexDsl {
             this
         }
 
-        def doc(source: Source) = {
+        def source(source: Source) = {
             this._source = Option(source)
             this
         }
