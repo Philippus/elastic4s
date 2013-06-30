@@ -11,6 +11,8 @@ trait QueryDsl {
     def regex(tuple: (String, Any)): RegexQueryDefinition = regex(tuple._1, tuple._2)
     def regex(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
 
+    def boosting = new BoostingQueryDefinition
+
     def range(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
     def term(tuple: (String, Any)): TermQueryDefinition = term(tuple._1, tuple._2)
@@ -85,6 +87,22 @@ class IdQueryDefinition(ids: String*) extends QueryDefinition {
 
 class BoostingQueryDefinition extends QueryDefinition {
     val builder = QueryBuilders.boostingQuery()
+    def positive(block: => QueryDefinition) = {
+        builder.positive(block.builder)
+        this
+    }
+    def negative(block: => QueryDefinition) = {
+        builder.negative(block.builder)
+        this
+    }
+    def positiveBoost(b: Double) = {
+        builder.boost(b.toFloat)
+        this
+    }
+    def negativeBoost(b: Double) = {
+        builder.negativeBoost(b.toFloat)
+        this
+    }
 }
 
 class WildcardQueryDefinition(field: String, query: Any) extends QueryDefinition {

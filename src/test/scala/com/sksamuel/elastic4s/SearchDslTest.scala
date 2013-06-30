@@ -75,6 +75,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate json for a wildcard query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_wildcard.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            wildcard("name", "*coldplay") boost 7.6 rewrite "no"
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate json for a string query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_string.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
@@ -87,6 +95,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION rewrite "rewrite-to"
+        } searchType SearchType.DfsQueryAndFetch
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for a bpoosting query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boosting.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            boosting positive {
+                query("coldplay")
+            } negative {
+                query("jethro tull")
+            } negativeBoost 5.6 positiveBoost 7.6
         } searchType SearchType.DfsQueryAndFetch
         assert(json === mapper.readTree(req._builder.toString))
     }
