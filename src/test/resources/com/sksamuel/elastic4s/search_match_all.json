@@ -1,0 +1,9 @@
+{
+    "size": 5,
+    "query": {
+        "match_all": {
+            "boost": 4.0,
+            "norms_field": "norm-field"
+        }
+    }
+}

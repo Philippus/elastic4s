@@ -99,6 +99,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate json for a match all query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match_all.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            matchall boost 4 normsField "norm-field"
+        } searchType SearchType.QueryAndFetch
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate json for a boolean compound query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boolean.json"))
         val req = search in "*" types ("bands", "artists") limit 5 query {
@@ -204,7 +212,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets.json"))
         val req = search in "music" types "bands" facets (
           facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
-            .ComparatorType.REVERSE_TERM size 10 regex "qwer",
+            .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
           facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
@@ -239,7 +247,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for histogram facet" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets_histogram.json"))
         val req = search in "music" types "bands" facets {
-            facet histogram "years" interval 100 comparator ComparatorType.COUNT valueField "myvalue" keyField "mykey" global true
+            facet histogram "years" interval 100 comparator
+              ComparatorType.COUNT valueField "myvalue" keyField "mykey" global true nested "nested-path"
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -248,7 +257,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
         val req = search in "music" types "bands" highlighting (
           options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder.Score preTags "<b>" postTags "</b>",
-          "name" fragmentSize 100 numberOfFragments 3 fragmentOffset  4,
+          "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
           "type" numberOfFragments 100 fragmentSize 44
           )
         assert(json === mapper.readTree(req._builder.toString))
@@ -259,7 +268,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val req = search in "music" types "bands" query "coldplay" suggestions (
           suggest as "my-suggestion-1" on "clocks by culdpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6 analyzer NotAnalyzed,
           suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
-          suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein"
+          suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein",
+          suggest as "my-suggestion-4" on "whatever some text" from "names" maxTermFreq 0.5 minWordLength 5 mode SuggestMode.Always
           )
         // -- disabled due to bug in elastic search
         //   assert(json === mapper.readTree(req.builder.toString))

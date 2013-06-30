@@ -22,6 +22,8 @@ trait QueryDsl {
     def matches(tuple: (String, Any)): MatchQueryDefinition = matches(tuple._1, tuple._2)
     def matches(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
 
+    def matchall = new MatchAllQueryDefinition
+
     def query(value: String): StringQueryDefinition = new StringQueryDefinition(value)
 
     def field(tuple: (String, Any)): FieldQueryDefinition = field(tuple._1, tuple._2)
@@ -191,10 +193,11 @@ class MatchAllQueryDefinition extends QueryDefinition {
 
     val builder = QueryBuilders.matchAllQuery
 
-    def normsField(normsField: String) = {
+    def normsField(normsField: String): MatchAllQueryDefinition = {
         builder.normsField(normsField)
+        this
     }
-    def boost(boost: Double) = {
+    def boost(boost: Double): MatchAllQueryDefinition = {
         builder.boost(boost.toFloat)
         this
     }

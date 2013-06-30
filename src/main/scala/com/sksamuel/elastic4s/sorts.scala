@@ -86,7 +86,7 @@ class GeoDistanceSortDefinition(field: String) extends SortDefinition {
         builder.missing(missing)
         this
     }
-    def nestedPath(nestedPath: String) = {
+    def nested(nestedPath: String) = {
         builder.setNestedPath(nestedPath)
         this
     }

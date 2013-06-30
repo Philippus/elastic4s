@@ -32,51 +32,48 @@ class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
         builder.maxEdits(maxEdits)
         this
     }
-    def minDocFreq(minDocFreq: Double) = {
+    def minDocFreq(minDocFreq: Double): TermSuggestionDefinition = {
         builder.minDocFreq(minDocFreq.toFloat)
         this
     }
-    def analyzer(analyzer: Analyzer) = {
+    def analyzer(analyzer: Analyzer): TermSuggestionDefinition = {
         builder.analyzer(analyzer.elastic)
         this
     }
-    def size(size: Int) = {
+    def size(size: Int): TermSuggestionDefinition = {
         builder.size(size)
         this
     }
-    def mode(suggestMode: String) = {
+    def mode(suggestMode: SuggestMode): TermSuggestionDefinition = mode(suggestMode.elastic)
+    def mode(suggestMode: String): TermSuggestionDefinition = {
         builder.suggestMode(suggestMode)
         this
     }
-    def mode(suggestMode: SuggestMode) = {
-        builder.suggestMode(suggestMode.elastic)
-        this
-    }
-    def minWordLength(minWordLength: Int) = {
+    def minWordLength(minWordLength: Int): TermSuggestionDefinition = {
         builder.minWordLength(minWordLength)
         this
     }
-    def shardSize(shardSize: Int) = {
+    def shardSize(shardSize: Int): TermSuggestionDefinition = {
         builder.shardSize(shardSize)
         this
     }
-    def accuracy(accuracy: Double) = {
+    def accuracy(accuracy: Double): TermSuggestionDefinition = {
         builder.setAccuracy(accuracy.toFloat)
         this
     }
-    def maxInspections(maxInspections: Int) = {
+    def maxInspections(maxInspections: Int): TermSuggestionDefinition = {
         builder.maxInspections(maxInspections)
         this
     }
-    def maxTermFreq(maxTermFreq: Double) = {
+    def maxTermFreq(maxTermFreq: Double): TermSuggestionDefinition = {
         builder.maxTermFreq(maxTermFreq.toFloat)
         this
     }
-    def stringDistance(stringDistance: String) = {
+    def stringDistance(stringDistance: String): TermSuggestionDefinition = {
         builder.stringDistance(stringDistance)
         this
     }
-    def prefixLength(prefixLength: Int) = {
+    def prefixLength(prefixLength: Int): TermSuggestionDefinition = {
         builder.prefixLength(prefixLength)
         this
     }
