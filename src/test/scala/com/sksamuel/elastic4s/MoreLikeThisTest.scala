@@ -10,37 +10,37 @@ import com.sksamuel.elastic4s.Analyzer.{KeywordAnalyzer, StandardAnalyzer}
 class MoreLikeThisTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     client.sync.execute {
-        create index "beer" mappings {
-            "lager" source true as (
+        create index "drinks" mappings {
+            "beer" source true as (
               "name" typed StringType store true analyzer StandardAnalyzer,
               "brand" typed StringType store true analyzer KeywordAnalyzer
               )
         }
     }
     client.sync.execute {
-        index into "beer/lager" fields (
+        index into "drinks/beer" fields (
           "name" -> "coors light",
           "brand" -> "coors"
           ) id 4
     }
     client.sync.execute {
-        index into "beer/lager" fields (
+        index into "drinks/beer" fields (
           "name" -> "bud lite",
           "brand" -> "bud"
           ) id 6
     }
     client.sync.execute {
-        index into "beer/lager" fields (
+        index into "drinks/beer" fields (
           "name" -> "coors regular",
           "brand" -> "coors"
           ) id 8
     }
-    refresh("beer")
-    blockUntilCount(3, "beer")
+    refresh("drinks")
+    blockUntilCount(3, "drinks")
 
     "a more like this query" should "return closest documents" in {
         val resp = client.sync.execute {
-            morelike id 4 in "beer/lager" minTermFreq 1 percentTermsToMatch 0.2 minDocFreq 1
+            morelike id 4 in "drinks/beer" minTermFreq 1 percentTermsToMatch 0.2 minDocFreq 1
         }
         assert("8" === resp.getHits.getAt(0).id)
     }

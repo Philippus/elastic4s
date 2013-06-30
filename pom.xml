@@ -227,7 +227,7 @@
                     <version>0.6.3.201306030806</version>
                     <executions>
                         <execution>
-                            <id>prepare-agent</id>
+                            <id>jacoco-initialize</id>
                             <phase>initialize</phase>
                             <goals>
                                 <goal>prepare-agent</goal>
@@ -235,6 +235,7 @@
                         </execution>
                         <execution>
                             <id>report</id>
+                            <phase>prepare-package</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>

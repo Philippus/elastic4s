@@ -6,7 +6,7 @@ Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This g
 
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
-[![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png)](https://coveralls.io/r/sksamuel/elastic4s)
+
 
 ## Introduction to the DSL
 
@@ -234,6 +234,18 @@ client.execute {
 ```
 
 You'll notice that the format for the query construct is exactly the same as for the search operation. In fact the same constructs can be used by any operation that requires a query - search, delete, percolate.
+
+#### More like this
+
+If you want to return documents that are "similar" to   a current document we can do that very easily with the more like this query.
+
+```scala
+client.execute {
+    morelike id 4 from "beers/lager" percentTermsToMatch 0.5
+}
+```
+
+For all the options see [here](http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/).
 
 #### Bulk Operations
 
