@@ -25,35 +25,37 @@ trait HighlightDsl {
         var _boundary_chars: Option[String] = None
         var _boundary_max_scan: Int = 20
 
-        def boundaryMaxScan(max: Int) = {
+        def boundaryMaxScan(max: Int): HighlightOptionsDefinition = {
             _boundary_max_scan = max
             this
         }
-        def boundaryChars(chars: String) = {
+        def boundaryChars(chars: String): HighlightOptionsDefinition = {
             _boundary_chars = Option(chars)
             this
         }
-        def requireFieldMatch(requireFieldMatch: Boolean) = {
+        def requireFieldMatch(requireFieldMatch: Boolean): HighlightOptionsDefinition = {
             _requireFieldMatch = requireFieldMatch
             this
         }
-        def tagSchema(tagSchema: TagSchema) = {
+        def tagSchema(tagSchema: TagSchema): HighlightOptionsDefinition = {
             _tagSchema = Option(tagSchema)
             this
         }
-        def order(order: HighlightOrder) = {
+        def order(order: HighlightOrder): HighlightOptionsDefinition = {
             _order = Option(order)
             this
         }
-        def encoder(encoder: HighlightEncoder) = {
+        def encoder(encoder: HighlightEncoder): HighlightOptionsDefinition = {
             this._encoder = Option(encoder)
             this
         }
-        def postTags(tags: String*) = {
+        def postTags(iterable: Iterable[String]): HighlightOptionsDefinition = postTags(iterable.toSeq: _*)
+        def postTags(tags: String*): HighlightOptionsDefinition = {
             this._postTags = tags
             this
         }
-        def preTags(tags: String*) = {
+        def preTags(iterable: Iterable[String]): HighlightOptionsDefinition = preTags(iterable.toSeq: _*)
+        def preTags(tags: String*): HighlightOptionsDefinition = {
             this._preTags = tags
             this
         }

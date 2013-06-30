@@ -39,7 +39,8 @@ trait QueryDsl {
     def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcard(tuple._1, tuple._2)
     def wildcard(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
 
-    def ids(ids: String*) = new IdQueryDefinition(ids: _*)
+    def ids(iterable: Iterable[String]): IdQueryDefinition = ids(iterable.toSeq: _*)
+    def ids(ids: String*): IdQueryDefinition = new IdQueryDefinition(ids: _*)
     def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
 
     def bool(block: => BoolQueryDefinition): QueryDefinition = block

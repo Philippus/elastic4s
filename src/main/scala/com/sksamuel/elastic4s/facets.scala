@@ -51,6 +51,7 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
         builder.size(size)
         this
     }
+    def exclude(iterable: Iterable[String]): TermFacetDefinition = exclude(iterable.toSeq: _*)
     def exclude(exclude: String*): TermFacetDefinition = {
         builder.exclude(exclude: _*)
         this
