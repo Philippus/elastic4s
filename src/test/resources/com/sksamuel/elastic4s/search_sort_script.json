@@ -4,7 +4,9 @@
             "_script": {
                 "script": "document.score",
                 "type": "java",
-                "reverse": true
+                "reverse": true,
+                "mode": "sum",
+                "nested_path": "nested.path"
             }
         }
     ]

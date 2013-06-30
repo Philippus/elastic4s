@@ -1,9 +1,11 @@
-{"sort": [
-    {
-        "_geo_distance": {
-            "location": "ABCDEFG",
-            "reverse": true,
-            "mode": "sum"
+{
+    "sort": [
+        {
+            "_geo_distance": {
+                "location": "ABCDEFG",
+                "reverse": true,
+                "mode": "sum"
+            }
         }
-    }
-]}
+    ]
+}

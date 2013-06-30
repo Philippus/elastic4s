@@ -171,7 +171,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for score sort" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_score.json"))
         val req = search in "music" types "bands" sort {
-            by score
+            by.score.missing("213").order(SortOrder.ASC)
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -179,8 +179,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for script sort" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_script.json"))
         val req = search in "music" types "bands" sort {
-            by script "document.score" as "java" order SortOrder.DESC
-        }
+            by script "document.score" as "java" order SortOrder.DESC nestedPath "nested.path" missing "missing-value" mode MultiMode.Sum
+        } preference new Preference.Custom("custom-node")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -210,6 +210,30 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
           } addUnboundedFrom 100 addUnboundedTo 900)
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for filter facets" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_facets.json"))
+        val req = search in "music" types "bands" facets {
+            facet filter "filter-facet" facetFilter {
+                prefixFilter("field", "prefixvalue")
+            } filter {
+                regexFilter("field", "value.*")
+            } global true nested "some.path"
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for query facets" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_facets.json"))
+        val req = search in "music" types "bands" facets {
+            facet query "query-facet" query {
+                query("coldplay")
+            } facetFilter {
+                termFilter("name", "coldplay")
+            } global true nested "path.nested"
+        }
         assert(json === mapper.readTree(req._builder.toString))
     }
 

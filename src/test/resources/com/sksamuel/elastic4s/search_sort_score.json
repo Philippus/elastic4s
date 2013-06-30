@@ -1,7 +1,7 @@
-{
-    "sort": [
-        {
-            "_score": { }
+{"sort": [
+    {
+        "_score": {
+            "reverse": true
         }
-    ]
-}
+    }
+]}
