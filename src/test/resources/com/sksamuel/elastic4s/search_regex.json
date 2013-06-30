@@ -5,7 +5,8 @@
             "drummmer": {
                 "value": "will*",
                 "flags_value": 1,
-                "boost": 4.0
+                "boost": 4.0,
+                "rewrite": "rewrite-to"
             }
         }
     }

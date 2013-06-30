@@ -53,10 +53,21 @@
                     "type": "integer",
                     "analyzer": "snowball",
                     "store": "false"
+                },
+                "email": {
+                    "type": "binary",
+                    "analyzer": "standard",
+                    "store": "false"
+                },
+                "picture": {
+                    "type": "attachment",
+                    "analyzer": "notindexed",
+                    "store": "false"
                 }
             },
             "_meta": {
                 "class": "com.sksamuel.User"
             }
         }
-    }}
+    }
+}

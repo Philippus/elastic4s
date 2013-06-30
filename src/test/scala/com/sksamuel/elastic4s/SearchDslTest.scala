@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import com.sksamuel.elastic4s.Analyzer.{SnowballAnalyzer, PatternAnalyzer, WhitespaceAnalyzer}
+import com.sksamuel.elastic4s.Analyzer._
 import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
@@ -88,7 +88,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate json for a regex query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
-            regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION
+            regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION rewrite "rewrite-to"
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -209,7 +209,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey",
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
-          } addUnboundedFrom 100 addUnboundedTo 900)
+          } addUnboundedFrom 100 addUnboundedTo 900 geohash "ABC" valueScript "some.script" lang "java")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -257,9 +257,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for multiple suggestions" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
         val req = search in "music" types "bands" query "coldplay" suggestions (
-          suggest as "my-suggestion-1" on "clocks by culdpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
+          suggest as "my-suggestion-1" on "clocks by culdpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6 analyzer NotAnalyzed,
           suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
-          suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer WhitespaceAnalyzer maxInspections 3 stringDistance "levenstein"
+          suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein"
           )
         // -- disabled due to bug in elastic search
         //   assert(json === mapper.readTree(req.builder.toString))

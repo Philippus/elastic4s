@@ -22,6 +22,7 @@ trait SuggestionDefinition {
 class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
 
     val builder = SuggestBuilder.termSuggestion(name)
+
     def from(f: String) = field(f)
     def field(f: String) = {
         builder.field(f)

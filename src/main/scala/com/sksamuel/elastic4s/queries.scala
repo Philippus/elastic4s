@@ -179,8 +179,6 @@ class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition {
         builder.boost(boost.toFloat)
         this
     }
-
-    def and(builder: QueryDefinition) = builder
 }
 class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
     val builder = QueryBuilders.termQuery(field, value.toString)
