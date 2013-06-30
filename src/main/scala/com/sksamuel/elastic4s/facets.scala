@@ -11,7 +11,10 @@ trait FacetDsl {
     class FacetExpectingType {
         def terms(name: String) = new TermFacetDefinition(name)
         def range(name: String) = new RangeFacetDefinition(name)
-        def histogram(name: String) = new HistogramFacetDefinition(name)
+        def histogram(name: String) = new HistogramExpectsInterval(name)
+        class HistogramExpectsInterval(name: String) {
+            def interval(interval: Long) = new HistogramFacetDefinition(name, interval)
+        }
         def filter(name: String) = new FilterFacetDefinition(name)
         def query(name: String) = new QueryFacetDefinition(name)
         def geodistance(name: String) = new GeoDistanceDefinition(name)
@@ -107,14 +110,10 @@ class RangeFacetDefinition(name: String) extends FacetDefinition {
     }
 }
 
-class HistogramFacetDefinition(name: String) extends FacetDefinition {
-    val builder = FacetBuilders.histogramFacet(name)
+class HistogramFacetDefinition(name: String, interval: Long) extends FacetDefinition {
+    val builder = FacetBuilders.histogramFacet(name).interval(interval)
     def global(global: Boolean): HistogramFacetDefinition = {
         builder.global(global)
-        this
-    }
-    def script(interval: Long): HistogramFacetDefinition = {
-        builder.interval(interval)
         this
     }
     def valueField(valueField: String): HistogramFacetDefinition = {

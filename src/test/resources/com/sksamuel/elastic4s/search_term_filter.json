@@ -1,9 +1,7 @@
-{
-    "filter": {
-        "term": {
-            "singer": "chris martin",
-            "_name": "my-filter",
-            "_cache_key": "band-singers"
-        }
+{"filter": {
+    "term": {
+        "singer": "chris martin",
+        "_name": "my-filter",
+        "_cache_key": "band-singers"
     }
-}
+}}

@@ -9,6 +9,7 @@ import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
 import com.sksamuel.elastic4s.Analyzer.{SnowballAnalyzer, PatternAnalyzer, WhitespaceAnalyzer}
 import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
+import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -76,6 +77,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate json for a string query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_string.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyMinSim 0.9 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate json for a regex query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
@@ -101,7 +110,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                     term("singer" -> "chris")
                 ) should term("bassist" -> "berryman") not term("singer" -> "anderson")
             }
-        }
+        } preference Preference.Local
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -113,7 +122,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
                 field("status", "awesome") analyzer PatternAnalyzer autoGeneratePhraseQueries true enablePositionIncrements true,
                 field("location", "oxford") fuzzyMinSim 0.5 fuzzyMaxExpansions 7 rewrite "rewrite"
             )
-        )
+        ) preference new Preference.OnlyNode("a")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -121,7 +130,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term_filter.json"))
         val req = search in "music" types "bands" filter {
             termFilter("singer", "chris martin") cacheKey "band-singers" name "my-filter"
-        }
+        } preference new Preference.Shards("a")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -129,7 +138,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex_filter.json"))
         val req = search in "music" types "bands" filter {
             regexFilter("singer", "chris martin") cache false name "my-filter2"
-        }
+        } preference new Preference.PreferNode("a")
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -137,7 +146,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_prefix_filter.json"))
         val req = search in "music" types "bands" filter {
             prefixFilter("singer", "chris martin") cache true cacheKey "band-singers" name "my-filter3"
-        }
+        } preference Preference.Primary
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -145,7 +154,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
         val req = search in "music" types "bands" filter {
             missingFilter("producer")
-        }
+        } preference Preference.PrimaryFirst
         assert(json === mapper.readTree(req._builder.toString))
     }
 
@@ -175,6 +184,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate correct json for geo sort" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_geo.json"))
+        val req = search in "music" types "bands" sort {
+            by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode MultiMode.Sum
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate correct json for multiple sorts" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_multiple.json"))
         val req = search in "music" types "bands" sort (
@@ -193,6 +210,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point (45.4, 54d) facetFilter {
               termFilter("location", "europe") cache true cacheKey "cache-key"
           })
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for histogram facet" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets_histogram.json"))
+        val req = search in "music" types "bands" facets {
+            facet histogram "years" interval 100 comparator ComparatorType.COUNT valueField "myvalue" keyField "mykey" global true
+        }
         assert(json === mapper.readTree(req._builder.toString))
     }
 

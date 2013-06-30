@@ -1,7 +1,5 @@
-{
-    "filter": {
-        "type": {
-            "value": "producer"
-        }
+{"filter": {
+    "type": {
+        "value": "producer"
     }
-}
+}}
