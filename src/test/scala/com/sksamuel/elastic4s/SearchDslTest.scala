@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import com.sksamuel.elastic4s.Analyzer.{PatternAnalyzer, WhitespaceAnalyzer}
+import com.sksamuel.elastic4s.Analyzer.{SnowballAnalyzer, PatternAnalyzer, WhitespaceAnalyzer}
 import scala.Predef._
 import org.elasticsearch.index.query.RegexpFlag
 
@@ -80,6 +80,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
             regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for a match query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            matches("drummmer" -> "will") boost 4 operator "AND" analyzer SnowballAnalyzer
         }
         assert(json === mapper.readTree(req._builder.toString))
     }

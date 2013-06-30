@@ -1,1 +1,40 @@
-{}
+{
+    "size": 5,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "field": {
+                        "name": {
+                            "query": "coldplay",
+                            "allow_leading_wildcard": true,
+                            "boost": 5.0,
+                            "fuzzy_prefix_length": 5,
+                            "phrase_slop": 9,
+                            "analyze_wildcard": false
+                        }
+                    }
+                },
+                {
+                    "field": {
+                        "status": {
+                            "query": "awesome",
+                            "analyzer": "pattern",
+                            "auto_generate_phrase_queries": true,
+                            "enable_position_increments": true
+                        }
+                    }
+                },
+                {
+                    "field": {
+                        "location": {
+                            "query": "oxford",
+                            "fuzzy_min_sim": 0.5,
+                            "fuzzy_max_expansions": 7,
+                            "rewrite": "rewrite"
+                        }
+                    }
+                }
+            ]
+        }
+    }}

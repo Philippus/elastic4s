@@ -1,0 +1,11 @@
+{"size": 5, "query": {
+    "match": {
+        "drummmer": {
+            "query": "will",
+            "type": "boolean",
+            "operator": "AND",
+            "analyzer": "snowball",
+            "boost": 4.0
+        }
+    }
+}}
