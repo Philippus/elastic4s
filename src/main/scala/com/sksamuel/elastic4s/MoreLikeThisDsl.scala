@@ -25,5 +25,41 @@ trait MoreLikeThisDsl {
             _builder.fields(fields: _*)
             this
         }
+        def minTermFreq(freq: Int) = {
+            _builder.minTermFreq(freq)
+            this
+        }
+        def stopWords(stopWords: String*) = {
+            _builder.stopWords(stopWords: _*)
+            this
+        }
+        def percentTermsToMatch(percentTermsToMatch: Double) = {
+            _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
+            this
+        }
+        def maxWordLen(maxWordLen: Int) = {
+            _builder.maxWordLen(maxWordLen)
+            this
+        }
+        def minWordLen(minWordLen: Int) = {
+            _builder.minWordLen(minWordLen)
+            this
+        }
+        def boostTerms(boostTerms: Double) = {
+            _builder.boostTerms(boostTerms.toFloat)
+            this
+        }
+        def maxQueryTerms(maxQueryTerms: Int) = {
+            _builder.maxQueryTerms(maxQueryTerms)
+            this
+        }
+        def minDocFreq(minDocFreq: Int) = {
+            _builder.minDocFreq(minDocFreq)
+            this
+        }
+        def maxDocFreq(maxDocFreq: Int) = {
+            _builder.maxDocFreq(maxDocFreq)
+            this
+        }
     }
 }
