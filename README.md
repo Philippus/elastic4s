@@ -15,7 +15,7 @@ All requests on the standard client are asynchronous. These methods return a sta
 
 All the request methods exist in the ElasticDsl object. The standard client is a class called ElasticClient. To create a client use the constructor methods on the ElasticClient companion object. 
 
-An example is worth 1000 characters so here is a quick example of how to create a client and index a one field doucment:
+An example is worth 1000 characters so here is a quick example of how to create a client and index a one field document:
 
 ```scala
 import com.sksamuel.elastic4s.ElasticDsl._
