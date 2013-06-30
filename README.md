@@ -3,7 +3,10 @@ elastic4s
 
 Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This gives you the full power of a DSL to construct your queries (hopefully!) reducing errors. Due to its typesafe nature Elastic4s is also a good way to learn the options available for any operation, as your IDE can use the type information to show you what methods are available. Elastic4s also allows you to index JSON documents from standard JSON libraries such as Jackson. 
 
+
+
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
+
 
 ## Introduction to the DSL
 
@@ -263,7 +266,7 @@ A single HTTP request is now needed for 4 operations. The example above uses sim
 
 #### Other
 
-There are other DSLs in play. Validate, update, percolate, more like this, and explain all have a DSL that is very easy to understand and can be understood from the source. They work in similar ways to the others. Examples will be added in due course.
+There are other DSLs in play. Validate, update, percolate, and explain all have a DSL that is very easy to understand and can be understood from the source. They work in similar ways to the others. Examples will be added in due course.
 
 #### Synchronous Operations
 
@@ -290,7 +293,7 @@ This way you can still access everything the normal Java client covers in the ca
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s" % "0.90.2.0"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s" % "0.90.2.1"
 ```
 
 For Maven users simply add:
@@ -299,7 +302,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s</artifactId>
-    <version>0.90.2.0</version>
+    <version>0.90.2.1</version>
 </dependency>
 ```
 
