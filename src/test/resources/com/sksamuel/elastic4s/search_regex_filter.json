@@ -1,9 +1,8 @@
-{
-    "filter": {
-        "regexp": {
-            "singer": "chris martin",
-            "_name": "my-filter2",
-            "_cache": false
-        }
+{"filter": {
+    "regexp": {
+        "singer": "chris martin",
+        "_name": "my-filter2",
+        "_cache": false,
+        "_cache_key": "mykey"
     }
-}
+}}

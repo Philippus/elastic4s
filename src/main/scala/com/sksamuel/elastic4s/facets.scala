@@ -67,10 +67,7 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
         builder.order(order)
         this
     }
-    def field(field: String): TermFacetDefinition = {
-        builder.field(field)
-        this
-    }
+    def field(field: String) = fields(field)
     def fields(fields: String*): TermFacetDefinition = {
         builder.fields(fields: _*)
         this

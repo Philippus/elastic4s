@@ -4,7 +4,7 @@
             "order": "desc",
             "missing": "no-singer",
             "ignore_unmapped": true,
-            "mode": "sum"
+            "mode": "avg"
         }
     }
 ]}

@@ -3,10 +3,7 @@ elastic4s
 
 Elastic4s is a concise, idiomatic, type safe Scala DSL for ElasticSearch. This gives you the full power of a DSL to construct your queries (hopefully!) reducing errors. Due to its typesafe nature Elastic4s is also a good way to learn the options available for any operation, as your IDE can use the type information to show you what methods are available. Elastic4s also allows you to index JSON documents from standard JSON libraries such as Jackson. 
 
-
-
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
-
 
 ## Introduction to the DSL
 

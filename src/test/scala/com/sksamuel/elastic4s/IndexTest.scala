@@ -31,4 +31,8 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
         )
         blockUntilCount(3, "electronics")
     }
+
+    "an index exists request" should "return true for an existing index" in {
+        assert(client.sync.exists("electronics").isExists)
+    }
 }

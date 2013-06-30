@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{QueryStringQueryBuilder, RegexpFlag, QueryBuilders}
+import org.elasticsearch.index.query._
 
 /** @author Stephen Samuel */
 
 trait QueryDsl {
+
+    implicit def string2query(string: String) = new StringQueryDefinition(string)
 
     def query = this
 
@@ -20,6 +22,9 @@ trait QueryDsl {
 
     def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
     def prefix(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
+
+    def filterQuery = new FilteredQueryDefinition
+    def fuzzy(name: String, value: Any) = new FuzzyDefinition(name, value)
 
     def matches(tuple: (String, Any)): MatchQueryDefinition = matches(tuple._1, tuple._2)
     def matches(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
@@ -64,10 +69,45 @@ trait QueryDefinition {
     def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-class FilteredQueryDefinition extends QueryDefinition {
-    val builder = QueryBuilders.filteredQuery(null, null)
+class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
+    val builder = QueryBuilders.fuzzyQuery(name, value.toString)
+    def minSimilarity(minSimilarity: Double) = {
+        builder.minSimilarity(minSimilarity.toString)
+        this
+    }
+    def maxExpansions(maxExpansions: Int) = {
+        builder.maxExpansions(maxExpansions)
+        this
+    }
     def boost(boost: Double) = {
         builder.boost(boost.toFloat)
+        this
+    }
+    def transpositions(transpositions: Boolean) = {
+        builder.transpositions(transpositions)
+        this
+    }
+    def prefixLength(prefixLength: Int) = {
+        builder.prefixLength(prefixLength)
+        this
+    }
+}
+
+class FilteredQueryDefinition extends QueryDefinition {
+    def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
+    var _query: QueryBuilder = null
+    var _filter: FilterBuilder = null
+    var _boost: Double = 0d
+    def boost(boost: Double): FilteredQueryDefinition = {
+        _boost = boost
+        this
+    }
+    def query(query: => QueryDefinition): FilteredQueryDefinition = {
+        _query = query.builder
+        this
+    }
+    def filter(filter: => FilterDefinition): FilteredQueryDefinition = {
+        _filter = filter.builder
         this
     }
 }
@@ -295,8 +335,8 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
         this
     }
 
-    def lenient(lenient: Boolean) = {
-        builder.lenient(lenient)
+    def lenient(l: Boolean) = {
+        builder.lenient(l)
         this
     }
 

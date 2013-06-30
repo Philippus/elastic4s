@@ -140,6 +140,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate json for a fuzzy query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_fuzzy.json"))
+        val req = search in "*" types ("users", "tweets") limit 5 query {
+            fuzzy("drummmer", "will") boost 4 maxExpansions 10 prefixLength 10 transpositions true minSimilarity 2.2
+        } searchType SearchType.Count
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate json for a filtered query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_filter.json"))
+        val req = search in "music" types "bands" query {
+            filterQuery query {
+                "coldplay"
+            } filter {
+                termFilter("location", "uk")
+            }
+        } preference Preference.Primary
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate json for a match all query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match_all.json"))
         val req = search in "*" types ("users", "tweets") limit 5 query {
@@ -184,7 +204,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate json for regex filter" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_regex_filter.json"))
         val req = search in "music" types "bands" filter {
-            regexFilter("singer", "chris martin") cache false name "my-filter2"
+            regexFilter("singer", "chris martin") cache false name "my-filter2" cacheKey "mykey"
         } preference new Preference.PreferNode("a")
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -210,7 +230,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_field.json"))
 
         val req = search in "music" types "bands" sort {
-            by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode.Sum
+            by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode.Avg
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
@@ -234,7 +254,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for geo sort" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_geo.json"))
         val req = search in "music" types "bands" sort {
-            by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode MultiMode.Sum point (56.6, 78.8)
+            by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode
+              MultiMode.Sum point (56.6, 78.8) nested "nested-path" mode MultiMode.Max
         }
         assert(json === mapper.readTree(req._builder.toString))
     }

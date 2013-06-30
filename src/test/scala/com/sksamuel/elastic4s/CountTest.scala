@@ -16,7 +16,7 @@ class CountTest extends FlatSpec with MockitoSugar with ElasticSugar {
     refresh("london")
     blockUntilCount(2, "london")
 
-    "a count request" should "return totla count when no query is specified" in {
+    "a count request" should "return total count when no query is specified" in {
         val resp = client.sync.execute {
             count from "london"
         }

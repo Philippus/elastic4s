@@ -45,10 +45,9 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     "a search index" should "return the correct count for a count with query" in {
 
-        val future = client execute {
+        val resp = client.sync.execute {
             count from "music" query "johnny buckland"
         }
-        val resp = Await.result(future, 10 seconds)
         assert(2 === resp.getCount)
     }
 }

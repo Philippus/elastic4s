@@ -67,9 +67,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
      *
      * @return a Future providing an SearchResponse
      */
-    def execute(builder: SearchDefinition): Future[SearchResponse] = future {
-        client.search(builder.build).actionGet(timeout)
-    }
+    def execute(builder: SearchDefinition): Future[SearchResponse] = execute(builder.build)
 
     def result(builder: SearchDefinition)(implicit duration: Duration): SearchResponse =
         Await.result(execute(builder), duration)
@@ -118,13 +116,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
         client.delete(req).actionGet(timeout)
     }
 
+    def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d.builder)
+
     def execute(create: CreateIndexDefinition): Future[CreateIndexResponse] = future {
         create.build.writeTo(new OutputStreamStreamOutput(System.out))
         client.admin.indices.create(create.build).actionGet(timeout)
-    }
-
-    def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = future {
-        client.delete(d.builder).actionGet(timeout)
     }
 
     def execute(req: DeleteByQueryRequest): Future[DeleteByQueryResponse] = future {
@@ -163,7 +159,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
     def result(requests: BulkCompatibleRequest*)(implicit duration: Duration): BulkResponse =
         Await.result(execute(requests: _*), duration)
 
-    def exists(indexes: Iterable[String]): Future[IndicesExistsResponse] = future {
+    def exists(indexes: String*): Future[IndicesExistsResponse] = future {
         client.admin().indices().prepareExists(indexes.toSeq: _*).execute().actionGet(timeout)
     }
 
@@ -212,6 +208,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
 
         def execute(v: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
             Await.result(client.execute(v), duration)
+
+        def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
     }
 }
 
