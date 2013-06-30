@@ -60,11 +60,12 @@ trait CreateIndexDsl {
             this.dynamic_date_formats = dynamic_date_formats
             this
         }
-        def as(fields: FieldDefinition*): MappingDefinition = {
-            _fields ++= fields
+        def as(iterable: Iterable[FieldDefinition]): MappingDefinition = {
+            _fields ++= iterable
             this
         }
-        def size(size: Boolean) = {
+        def as(fields: FieldDefinition*): MappingDefinition = as(fields.toIterable)
+        def size(size: Boolean): MappingDefinition = {
             _size = size
             this
         }
