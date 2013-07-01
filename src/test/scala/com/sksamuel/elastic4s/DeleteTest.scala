@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
+import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -19,8 +20,13 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "country" -> "USA"
           ) id 44
     }
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+
     refresh("places")
     blockUntilCount(2, "places")
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
     "a search index" should "do nothing when deleting a document where the id does not exist" in {
         client.execute {
