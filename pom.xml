@@ -59,8 +59,8 @@
         <maven.plugin.scalatest.version>1.0-M2</maven.plugin.scalatest.version>
         <maven.plugin.source.version>2.2.1</maven.plugin.source.version>
 
-        <compiler.version.source>1.7</compiler.version.source>
-        <compiler.version.target>1.7</compiler.version.target>
+        <compiler.version.source>1.6</compiler.version.source>
+        <compiler.version.target>1.6</compiler.version.target>
 
         <commons.io.version>2.4</commons.io.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
@@ -179,13 +179,6 @@
                             <goals>
                                 <goal>test</goal>
                             </goals>
-                            <configuration>
-                                <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                                <junitxml>.</junitxml>
-                                <parallel>true</parallel>
-                                <tagsToExclude>IntegrationTest</tagsToExclude>
-                                <filereports>ScalaTestSuite.txt</filereports>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -225,14 +218,6 @@
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
