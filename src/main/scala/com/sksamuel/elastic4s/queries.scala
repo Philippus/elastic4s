@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query._
+import scala.Predef.String
 
 /** @author Stephen Samuel */
 
@@ -30,6 +31,8 @@ trait QueryDsl {
     def prefix(field: String, value: Any): PrefixQueryDefinition = prefixQuery(field, value)
     def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
     def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
+
+    def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
 
     def filter = filterQuery
     def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
@@ -84,6 +87,64 @@ class BoolQueryDefinition extends QueryDefinition {
 
 trait QueryDefinition {
     def builder: org.elasticsearch.index.query.QueryBuilder
+}
+
+class MultiMatchQueryDefinition(text: String) extends QueryDefinition {
+    val builder = QueryBuilders.multiMatchQuery(text)
+    def maxExpansions(maxExpansions: Int): MultiMatchQueryDefinition = {
+        builder.maxExpansions(maxExpansions)
+        this
+    }
+    def fields(_fields: Iterable[String]) = {
+        for ( f <- _fields ) builder.field(f)
+        this
+    }
+    def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
+    def boost(boost: Double): MultiMatchQueryDefinition = {
+        builder.boost(boost.toFloat)
+        this
+    }
+    def analyzer(a: Analyzer): MultiMatchQueryDefinition = analyzer(a.elastic)
+    def analyzer(a: String): MultiMatchQueryDefinition = {
+        builder.analyzer(a)
+        this
+    }
+    def prefixLength(prefixLength: Int): MultiMatchQueryDefinition = {
+        builder.prefixLength(prefixLength)
+        this
+    }
+    def fuzziness(f: AnyRef): MultiMatchQueryDefinition = {
+        builder.fuzziness(f)
+        this
+    }
+    def fuzzyRewrite(fuzzyRewrite: String): MultiMatchQueryDefinition = {
+        builder.fuzzyRewrite(fuzzyRewrite)
+        this
+    }
+    def minimumShouldMatch(minimumShouldMatch: Int): MultiMatchQueryDefinition = {
+        builder.minimumShouldMatch(minimumShouldMatch.toString)
+        this
+    }
+    def useDisMax(useDisMax: Boolean): MultiMatchQueryDefinition = {
+        builder.useDisMax(java.lang.Boolean.valueOf(useDisMax))
+        this
+    }
+    def lenient(l: Boolean): MultiMatchQueryDefinition = {
+        builder.lenient(l)
+        this
+    }
+    def cutoffFrequency(cutoffFrequency: Double): MultiMatchQueryDefinition = {
+        builder.cutoffFrequency(cutoffFrequency.toFloat)
+        this
+    }
+    def zeroTermsQuery(q: MatchQueryBuilder.ZeroTermsQuery): MultiMatchQueryDefinition = {
+        builder.zeroTermsQuery(q)
+        this
+    }
+    def tieBreaker(tieBreaker: Double): MultiMatchQueryDefinition = {
+        builder.tieBreaker(java.lang.Float.valueOf(tieBreaker.toFloat))
+        this
+    }
 }
 
 class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
@@ -353,7 +414,7 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
     }
 
     def lenient(l: Boolean) = {
-        builder.lenient(l)
+        builder.lenient(java.lang.Boolean.valueOf(l))
         this
     }
 

@@ -8,10 +8,11 @@ import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
 import com.sksamuel.elastic4s.Analyzer._
 import scala.Predef._
-import org.elasticsearch.index.query.RegexpFlag
+import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag}
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -312,6 +313,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_boundingbox.json"))
         val req = search in "music" types "bands" filter {
             geoboxFilter("box") left 40.6 top 56.5 right 45.5 bottom 12.55
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for multi match query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_multi_match.json"))
+        val req = search in "music" types "bands" query {
+            multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery
+              MatchQueryBuilder.ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
