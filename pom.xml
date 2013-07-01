@@ -55,7 +55,7 @@
         <maven.plugin.javadoc.version>2.9</maven.plugin.javadoc.version>
         <maven.plugin.release.version>2.3.2</maven.plugin.release.version>
         <maven.plugin.surefire.version>2.14.1</maven.plugin.surefire.version>
-        <maven.plugin.scala.version>3.1.4</maven.plugin.scala.version>
+        <maven.plugin.scala.version>3.1.5</maven.plugin.scala.version>
         <maven.plugin.scalatest.version>1.0-M2</maven.plugin.scalatest.version>
         <maven.plugin.source.version>2.2.1</maven.plugin.source.version>
 
@@ -138,19 +138,21 @@
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
+                    <version>${maven.plugin.scala.version}</version>
+                    <configuration>
+                        <args>
+                            <arg>-g:vars</arg>
+                        </args>
+                        <jvmArgs>
+                            <jvmArg>-Xms64m</jvmArg>
+                            <jvmArg>-Xmx1024m</jvmArg>
+                        </jvmArgs>
+                    </configuration>
                     <executions>
                         <execution>
-                            <id>scala-compile-first</id>
-                            <phase>process-resources</phase>
                             <goals>
                                 <goal>add-source</goal>
                                 <goal>compile</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>scala-test-compile</id>
-                            <phase>process-test-resources</phase>
-                            <goals>
                                 <goal>testCompile</goal>
                             </goals>
                         </execution>
@@ -213,42 +215,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!--
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>1.1.0</version>
-                    <configuration>
-                        <repoToken>yourcoverallsprojectrepositorytoken</repoToken>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.6.3.201306030806</version>
-                    <executions>
-                        <execution>
-                            <id>jacoco-initialize</id>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <excludes>
-                                    <exclude>*Configuration*</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                -->
             </plugins>
         </pluginManagement>
         <plugins>
@@ -267,10 +233,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -349,5 +311,54 @@
         </dependency>
     </dependencies>
 
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eluder.coveralls</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <configuration>
+                            <sourceDirectory>src/main/scala</sourceDirectory>
+                            <repoToken>${coveralls.token}</repoToken>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>coveralls-jacoco</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jacoco</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.6.3.201306030806</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
