@@ -4,6 +4,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import scala.concurrent.duration._
+import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -16,8 +17,13 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "color" -> "yellow"
           )
     }
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+
     refresh("food")
     blockUntilCount(1, "food")
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
     "a validate query" should "return valid when the query is valid" in {
 

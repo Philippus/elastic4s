@@ -181,6 +181,9 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <argLine>-XX:MaxPermSize=512m -Xmx1024m</argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

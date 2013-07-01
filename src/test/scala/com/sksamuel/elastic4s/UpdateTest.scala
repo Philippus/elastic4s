@@ -4,6 +4,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import scala.concurrent.duration._
+import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -13,8 +14,13 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     client.execute {
         index into "scifi/trek" fields "character" -> "kirk" id 5
     }
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+
     refresh("scifi")
     blockUntilCount(1, "scifi")
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
     "an update request" should "add a field when a script assigns a value" in {
 
