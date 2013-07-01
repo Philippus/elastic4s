@@ -1,0 +1,10 @@
+{
+    "filter": {
+        "geo_distance": {
+            "distance": "120mi",
+            "distance_type": "factor",
+            "_cache": true,
+            "_cache_key": "mycache"
+        }
+    }
+}

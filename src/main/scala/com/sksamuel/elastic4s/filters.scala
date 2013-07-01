@@ -1,9 +1,15 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query.FilterBuilders
+import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.common.unit.DistanceUnit
 
 /** @author Stephen Samuel */
 trait FilterDsl {
+
+    def geoboxFilter(name: String) = new GeoBoundingBoxFilter(name)
+    def geoDistance(name: String) = new GeoDistanceFilter(name)
+    def geoPolygon(name: String) = new GeoPolygonFilter(name)
 
     def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
     def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
@@ -73,6 +79,107 @@ class TermFilterDefinition(field: String, value: Any) extends FilterDefinition {
     }
     def name(name: String) = {
         builder.filterName(name)
+        this
+    }
+}
+
+class GeoPolygonFilter(name: String) extends FilterDefinition {
+    val builder = FilterBuilders.geoPolygonFilter(name)
+    def cache(cache: Boolean): GeoPolygonFilter = {
+        builder.cache(cache)
+        this
+    }
+    def cacheKey(cacheKey: String): GeoPolygonFilter = {
+        builder.cacheKey(cacheKey)
+        this
+    }
+    def point(lat: Double, lon: Double): GeoPolygonFilter = {
+        builder.addPoint(lat, lon)
+        this
+    }
+    def point(geohash: String): GeoPolygonFilter = {
+        builder.addPoint(geohash)
+        this
+    }
+}
+
+class GeoDistanceFilter(name: String) extends FilterDefinition {
+    val builder = FilterBuilders.geoDistanceFilter(name)
+    def cache(cache: Boolean): GeoDistanceFilter = {
+        builder.cache(cache)
+        this
+    }
+    def cacheKey(cacheKey: String): GeoDistanceFilter = {
+        builder.cacheKey(cacheKey)
+        this
+    }
+    def geohash(geohash: String): GeoDistanceFilter = {
+        builder.geohash(geohash)
+        this
+    }
+    def lat(lat: Double): GeoDistanceFilter = {
+        builder.lat(lat)
+        this
+    }
+    def lon(long: Double): GeoDistanceFilter = {
+        builder.lon(long)
+        this
+    }
+    def method(method: GeoDistance): GeoDistanceFilter = geoDistance(method)
+    def geoDistance(geoDistance: GeoDistance): GeoDistanceFilter = {
+        builder.geoDistance(geoDistance)
+        this
+    }
+    def distance(distance: String): GeoDistanceFilter = {
+        builder.distance(distance)
+        this
+    }
+    def distance(distance: Double, unit: DistanceUnit): GeoDistanceFilter = {
+        builder.distance(distance, unit)
+        this
+    }
+    def point(lat: Double, long: Double): GeoDistanceFilter = {
+        builder.point(lat, long)
+        this
+    }
+    def point(point: (Double, Double)): GeoDistanceFilter = {
+        builder.point(point._1, point._2)
+        this
+    }
+}
+
+class GeoBoundingBoxFilter(name: String) extends FilterDefinition {
+    val builder = FilterBuilders.geoBoundingBoxFilter(name)
+    var _left: Double = _
+    var _top: Double = _
+    var _right: Double = _
+    var _bottom: Double = _
+    def cache(cache: Boolean): GeoBoundingBoxFilter = {
+        builder.cache(cache)
+        this
+    }
+    def cacheKey(cacheKey: String): GeoBoundingBoxFilter = {
+        builder.cacheKey(cacheKey)
+        this
+    }
+    def left(left: Double): GeoBoundingBoxFilter = {
+        _left = left
+        builder.topLeft(_left, _top)
+        this
+    }
+    def top(top: Double): GeoBoundingBoxFilter = {
+        _top = top
+        builder.topLeft(_left, _top)
+        this
+    }
+    def right(right: Double): GeoBoundingBoxFilter = {
+        _right = right
+        builder.bottomRight(_left, _top)
+        this
+    }
+    def bottom(bottom: Double): GeoBoundingBoxFilter = {
+        _bottom = bottom
+        builder.bottomRight(_right, _bottom)
         this
     }
 }

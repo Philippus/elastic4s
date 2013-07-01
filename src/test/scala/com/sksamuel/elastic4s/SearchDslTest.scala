@@ -12,7 +12,6 @@ import org.elasticsearch.index.query.RegexpFlag
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
-import com.sksamuel.elastic4s.SearchType.DfsQueryAndFetch
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -305,6 +304,31 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
             } facetFilter {
                 termFilter("name", "coldplay")
             } global true nested "path.nested"
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for geo bounding box filter" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_boundingbox.json"))
+        val req = search in "music" types "bands" filter {
+            geoboxFilter("box") left 40.6 top 56.5 right 45.5 bottom 12.55
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for geo distance filter" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_distance.json"))
+        val req = search in "music" types "bands" filter {
+            geoDistance("distance") point (10.5d, 35.0d) method GeoDistance
+              .FACTOR cache true cacheKey "mycache" geohash "geo1234" distance "120mi"
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for geo polygon filter" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_polygon.json"))
+        val req = search in "music" types "bands" filter {
+            geoPolygon("distance") point (10, 10) point (20, 20) point (30, 30)
         }
         assert(json === mapper.readTree(req._builder.toString))
     }
