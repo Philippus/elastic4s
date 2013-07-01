@@ -5,6 +5,7 @@ import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -31,8 +32,13 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "keyboards" -> "johnny smith"
           ) id 45
     }
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+
     refresh("music")
     blockUntilCount(3, "music")
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
     "a search index" should "find an indexed document that matches a string query" in {
 

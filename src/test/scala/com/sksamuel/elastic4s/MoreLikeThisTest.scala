@@ -5,6 +5,7 @@ import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import com.sksamuel.elastic4s.FieldType.StringType
 import com.sksamuel.elastic4s.Analyzer.{KeywordAnalyzer, StandardAnalyzer}
+import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class MoreLikeThisTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -35,8 +36,13 @@ class MoreLikeThisTest extends FlatSpec with MockitoSugar with ElasticSugar {
           "brand" -> "coors"
           ) id 8
     }
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+
     refresh("drinks")
     blockUntilCount(3, "drinks")
+
+    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
     "a more like this query" should "return closest documents" in {
         val resp = client.sync.execute {
