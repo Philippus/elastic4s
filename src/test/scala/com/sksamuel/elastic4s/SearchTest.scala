@@ -3,8 +3,6 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
-import scala.concurrent.Await
-import scala.concurrent.duration._
 import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
@@ -42,10 +40,9 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     "a search index" should "find an indexed document that matches a string query" in {
 
-        val future = client execute {
+        val resp = client.sync.execute {
             search in "music" types "bands" query "coldplay"
         }
-        val resp = Await.result(future, 10 seconds)
         assert(1 === resp.getHits.totalHits())
     }
 
