@@ -24,12 +24,12 @@ trait QueryDsl {
     def range(field: String): RangeQueryDefinition = rangeQuery(field)
     def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
-    def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
+    def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
     def term(field: String, value: Any): TermQueryDefinition = termQuery(field, value)
-    def termQuery(tuple: (String, Any)): TermQueryDefinition = term(tuple._1, tuple._2)
+    def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
     def termQuery(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
 
-    def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
+    def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple)
     def prefix(field: String, value: Any): PrefixQueryDefinition = prefixQuery(field, value)
     def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
     def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
@@ -41,7 +41,7 @@ trait QueryDsl {
     def filterQuery = new FilteredQueryDefinition
     def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
 
-    def matches(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
+    def matches(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple)
     def matches(field: String, value: Any): MatchQueryDefinition = matchQuery(field, value)
     def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
     def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
@@ -50,12 +50,12 @@ trait QueryDsl {
 
     def query(value: String): StringQueryDefinition = new StringQueryDefinition(value)
 
-    def field(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
+    def field(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple)
     def field(field: String, value: Any): FieldQueryDefinition = fieldQuery(field, value)
     def fieldQuery(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
     def fieldQuery(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
 
-    def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
+    def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple)
     def wildcard(field: String, value: Any): WildcardQueryDefinition = wildcardQuery(field, value)
     def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
     def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)

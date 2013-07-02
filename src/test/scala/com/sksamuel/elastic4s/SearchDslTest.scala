@@ -13,6 +13,7 @@ import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
+import org.elasticsearch.common.unit.DistanceUnit
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -345,8 +346,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for geo distance filter" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_distance.json"))
         val req = search in "music" types "bands" filter {
-            geoDistance("distance") point (10.5d, 35.0d) method GeoDistance
-              .FACTOR cache true cacheKey "mycache" geohash "geo1234" distance "120mi"
+            bool(
+                should(
+                    geoDistance("distance") point (10.5d, 35.0d) method GeoDistance
+                      .FACTOR cache true cacheKey "mycache" geohash "geo1234" distance "120mi"
+                ) not (
+                  geoDistance("distance") lat 45.4d lon 76.6d distance (45, DistanceUnit.YARD)
+                  )
+            )
         }
         assert(json === mapper.readTree(req._builder.toString))
     }

@@ -25,13 +25,25 @@ trait FilterDsl {
     def idsFilter(ids: String*): IdFilterDefinition = new IdFilterDefinition(ids: _*)
 
     def bool(block: => BoolFilterDefinition): FilterDefinition = block
+    def must(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().must(queries: _*)
+    def should(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().should(queries: _*)
+    def not(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().not(queries: _*)
 }
 
 class BoolFilterDefinition extends FilterDefinition {
     val builder = FilterBuilders.boolFilter()
-    def must(filters: FilterDefinition*) = this
-    def should(filters: FilterDefinition*) = this
-    def not(filters: FilterDefinition*) = this
+    def must(filters: FilterDefinition*) = {
+        filters.foreach(builder must _.builder)
+        this
+    }
+    def should(filters: FilterDefinition*) = {
+        filters.foreach(builder should _.builder)
+        this
+    }
+    def not(filters: FilterDefinition*) = {
+        filters.foreach(builder mustNot _.builder)
+        this
+    }
 }
 
 trait FilterDefinition {
