@@ -1,0 +1,18 @@
+{"query": {
+    "dis_max": {
+        "tie_breaker": 1.2,
+        "boost": 4.5,
+        "queries": [
+            {
+                "query_string": {
+                    "query": "coldplay"
+                }
+            },
+            {
+                "query_string": {
+                    "query": "london"
+                }
+            }
+        ]
+    }
+}}

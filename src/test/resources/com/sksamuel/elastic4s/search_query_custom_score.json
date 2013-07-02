@@ -1,0 +1,12 @@
+{"query": {
+    "custom_score": {
+        "query": {
+            "query_string": {
+                "query": "coldplay"
+            }
+        },
+        "script": "document.something",
+        "lang": "javascript",
+        "boost": 4.5
+    }
+}}

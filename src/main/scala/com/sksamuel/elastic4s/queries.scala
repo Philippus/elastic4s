@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query._
-import scala.Predef.String
 
 /** @author Stephen Samuel */
 
@@ -18,6 +17,9 @@ trait QueryDsl {
 
     def boosting = new BoostingQueryDefinition
     def boostinguery = new BoostingQueryDefinition
+
+    def dismax = new DisMaxDefinition
+    def customScoreQuery = new CustomScoreDefinition
 
     def range(field: String): RangeQueryDefinition = rangeQuery(field)
     def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
@@ -167,6 +169,49 @@ class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
     }
     def prefixLength(prefixLength: Int) = {
         builder.prefixLength(prefixLength)
+        this
+    }
+}
+
+class CustomScoreDefinition extends QueryDefinition {
+    var _query: QueryDefinition = _
+    var _boost: Double = _
+    var _lang: String = _
+    var _script: String = _
+    def builder = {
+        require(_query != null, "must specify query for custom score query")
+        QueryBuilders.customScoreQuery(_query.builder).script(_script).lang(_lang).boost(_boost.toFloat)
+    }
+    def query(query: QueryDefinition): CustomScoreDefinition = {
+        this._query = query
+        this
+    }
+    def boost(b: Double): CustomScoreDefinition = {
+        _boost = b
+        this
+    }
+    def script(script: String): CustomScoreDefinition = {
+        _script = script
+        this
+    }
+    def lang(lang: String): CustomScoreDefinition = {
+        _lang = lang
+        this
+    }
+}
+
+class DisMaxDefinition extends QueryDefinition {
+    val builder = QueryBuilders.disMaxQuery()
+    def query(queries: QueryDefinition*): DisMaxDefinition = {
+        queries.foreach(q => builder.add(q.builder))
+        this
+    }
+    def boost(b: Double): DisMaxDefinition = {
+        builder.boost(b.toFloat)
+        this
+    }
+    def tieBreaker(tieBreaker: Double): DisMaxDefinition = {
+        builder.tieBreaker(tieBreaker.toFloat)
         this
     }
 }

@@ -317,6 +317,22 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         assert(json === mapper.readTree(req._builder.toString))
     }
 
+    it should "generate correct json for dismax query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_dismax.json"))
+        val req = search in "music" types "bands" query {
+            dismax boost 4.5 query "coldplay" query "london" tieBreaker 1.2
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
+    it should "generate correct json for custom score query" in {
+        val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_custom_score.json"))
+        val req = search in "music" types "bands" query {
+            customScoreQuery boost 4.5 script "document.something" lang "javascript" query "coldplay"
+        }
+        assert(json === mapper.readTree(req._builder.toString))
+    }
+
     it should "generate correct json for multi match query" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_multi_match.json"))
         val req = search in "music" types "bands" query {
