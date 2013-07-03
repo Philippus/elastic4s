@@ -17,12 +17,7 @@ trait SortDsl {
         def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
         def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
 
-        def script(tuple: (String, String)): ScriptSortDefinition = script(tuple._1, tuple._2)
-        def script(field: String, lang: String): ScriptSortDefinition = new ScriptSortDefinition(field, lang)
-        def script(field: String): ExpectsScriptLang = new ExpectsScriptLang(field)
-        class ExpectsScriptLang(field: String) {
-            def as(lang: String): ScriptSortDefinition = new ScriptSortDefinition(field, lang)
-        }
+        def script(script: String) = new ScriptSortDefinition(script)
     }
 }
 
@@ -35,7 +30,7 @@ case object MultiMode {
 }
 
 trait SortDefinition {
-    val builder: SortBuilder
+    def builder: SortBuilder
 }
 
 class FieldSortDefinition(field: String) extends SortDefinition {
@@ -61,22 +56,33 @@ class FieldSortDefinition(field: String) extends SortDefinition {
         this
     }
 }
-class ScriptSortDefinition(script: String, `type`: String) extends SortDefinition {
-    val builder = SortBuilders.scriptSort(script, `type`)
-    def missing(missing: AnyRef) = {
-        builder.missing(missing)
+class ScriptSortDefinition(script: String) extends SortDefinition {
+    def builder = SortBuilders.scriptSort(script, _type).setNestedPath(_nestedPath).lang(_lang).order(_order).sortMode(_sortmode)
+    var _type = "string"
+    var _missing: AnyRef = null
+    var _nestedPath: String = null
+    var _order: SortOrder = null
+    var _sortmode: String = null
+    var _lang: String = null
+    def sortMode(sortmode: String): ScriptSortDefinition = {
+        _sortmode = sortmode
         this
     }
-    def nestedPath(nestedPath: String) = {
-        builder.setNestedPath(nestedPath)
+    def lang(lang: String): ScriptSortDefinition = {
+        _lang = lang
         this
     }
-    def mode(mode: MultiMode) = {
-        builder.sortMode(mode.elastic)
+    def as(`type`: String): ScriptSortDefinition = typed(`type`)
+    def typed(`type`: String): ScriptSortDefinition = {
+        _type = `type`
         this
     }
-    def order(order: SortOrder) = {
-        builder.order(order)
+    def nestedPath(nestedPath: String): ScriptSortDefinition = {
+        _nestedPath = nestedPath
+        this
+    }
+    def order(order: SortOrder): ScriptSortDefinition = {
+        _order = order
         this
     }
 }

@@ -250,7 +250,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     it should "generate correct json for script sort" in {
         val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_script.json"))
         val req = search in "music" types "bands" sort {
-            by script "document.score" as "java" order SortOrder.DESC nestedPath "nested.path" missing "missing-value" mode MultiMode.Sum
+            by script "document.score" typed "number" lang "java" order SortOrder.DESC nestedPath "nested.path" sortMode "min"
         } preference new Preference.Custom("custom-node")
         assert(json === mapper.readTree(req._builder.toString))
     }

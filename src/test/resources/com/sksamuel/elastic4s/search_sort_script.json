@@ -3,9 +3,10 @@
         {
             "_script": {
                 "script": "document.score",
-                "type": "java",
+                "type": "number",
                 "reverse": true,
-                "mode": "sum",
+                "lang": "java",
+                "mode": "min",
                 "nested_path": "nested.path"
             }
         }
