@@ -224,8 +224,8 @@ object ElasticClient {
 
     def remote(addresses: (String, Int)*): ElasticClient =
         remote(ImmutableSettings.builder().build(), addresses: _*)(DefaultTimeout)
+
     def remote(settings: Settings, addresses: (String, Int)*)(timeout: Long = DefaultTimeout): ElasticClient = {
-        require(settings.getAsMap.containsKey("cluster.name"))
         val client = new TransportClient(settings)
         for ( address <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
         fromClient(client, timeout)
