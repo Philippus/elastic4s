@@ -1,6 +1,8 @@
 *.class
 *.log
 .idea
+*.iml
+pom.xml.versionsBackup
 
 # sbt specific
 dist/*
