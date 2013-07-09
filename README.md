@@ -6,7 +6,7 @@ Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch. It 
 
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
-
+[![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
 ## Introduction to the DSL
 
