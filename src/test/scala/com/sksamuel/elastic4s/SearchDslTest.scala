@@ -12,7 +12,6 @@ import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag}
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
-import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 import org.elasticsearch.common.unit.DistanceUnit
 
 /** @author Stephen Samuel */
@@ -219,6 +218,46 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_prefix_filter.json"))
     val req = search in "music" types "bands" filter {
       prefixFilter("singer", "chris martin") cache true cacheKey "band-singers" name "my-filter3"
+    } preference Preference.Primary
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for has child filter with filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_haschild_filter.json"))
+    val req = search in "music" types "bands" filter {
+      hasChildFilter("singer") filter {
+        termFilter("name", "chris")
+      }
+    } preference Preference.Primary
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for has parent filter with filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_filter.json"))
+    val req = search in "music" types "bands" filter {
+      hasParentFilter("singer") filter {
+        termFilter("name", "chris")
+      }
+    } preference Preference.Primary
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for has child filter with query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_haschild_filter_query.json"))
+    val req = search in "music" types "bands" filter {
+      hasChildFilter("singer") query {
+        termQuery("name", "chris")
+      }
+    } preference Preference.Primary
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for has parent filter with query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_filter_query.json"))
+    val req = search in "music" types "bands" filter {
+      hasParentFilter("singer") query {
+        termQuery("name", "chris")
+      }
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }

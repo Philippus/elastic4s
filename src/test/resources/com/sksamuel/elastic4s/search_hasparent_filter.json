@@ -1,0 +1,10 @@
+{"filter": {
+    "has_parent": {
+        "filter": {
+            "term": {
+                "name": "chris"
+            }
+        },
+        "parent_type": "singer"
+    }
+}}

@@ -1,0 +1,1 @@
+{"filter":{"has_child":{"filter":{"term":{"name":"chris"}},"child_type":"singer"}}}
