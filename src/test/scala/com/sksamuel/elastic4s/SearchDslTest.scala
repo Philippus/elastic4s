@@ -226,7 +226,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_haschild_filter.json"))
     val req = search in "music" types "bands" filter {
       hasChildFilter("singer") filter {
-        termFilter("name", "chris")
+        termFilter("name", "chris") cache true cacheKey "band-singers" name "my-filter4"
       }
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
@@ -236,7 +236,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_filter.json"))
     val req = search in "music" types "bands" filter {
       hasParentFilter("singer") filter {
-        termFilter("name", "chris")
+        termFilter("name", "chris") cache true cacheKey "band-singers" name "my-filter5"
       }
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
@@ -364,7 +364,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate correct json for geo bounding box filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_boundingbox.json"))
     val req = search in "music" types "bands" filter {
-      geoboxFilter("box") left 40.6 top 56.5 right 45.5 bottom 12.55
+      geoboxFilter("box") left 40.6 top 56.5 right 45.5 bottom 12.55 cache true cacheKey "somecachekey"
     }
     assert(json === mapper.readTree(req._builder.toString))
   }

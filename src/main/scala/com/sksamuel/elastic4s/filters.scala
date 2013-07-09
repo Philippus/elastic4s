@@ -228,10 +228,10 @@ class GeoDistanceFilter(name: String) extends FilterDefinition {
 
 class GeoBoundingBoxFilter(name: String) extends FilterDefinition {
   val builder = FilterBuilders.geoBoundingBoxFilter(name)
-  var _left: Double = _
-  var _top: Double = _
-  var _right: Double = _
-  var _bottom: Double = _
+  private var _left: Double = _
+  private var _top: Double = _
+  private var _right: Double = _
+  private var _bottom: Double = _
   def cache(cache: Boolean): GeoBoundingBoxFilter = {
     builder.cache(cache)
     this

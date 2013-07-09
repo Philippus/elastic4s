@@ -1,1 +1,13 @@
-{"filter":{"has_child":{"filter":{"term":{"name":"chris"}},"child_type":"singer"}}}
+{"filter": {
+    "has_child": {
+        "filter": {
+            "term": {
+                "name": "chris",
+                "_name": "my-filter4",
+                "_cache": true,
+                "_cache_key": "band-singers"
+            }
+        },
+        "child_type": "singer"
+    }
+}}
