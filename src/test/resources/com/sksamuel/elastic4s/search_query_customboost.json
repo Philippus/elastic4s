@@ -1,0 +1,10 @@
+{"query": {
+    "custom_boost_factor": {
+        "query": {
+            "regexp": {
+                "place": "Lon.*"
+            }
+        },
+        "boost_factor": 10.0
+    }
+}}

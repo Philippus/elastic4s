@@ -5,8 +5,8 @@
                 "query": "coldplay"
             }
         },
-        "script": "document.something",
-        "lang": "javascript",
-        "boost": 4.5
+        "script": "somescript",
+        "lang": "java",
+        "boost": 45.4
     }
 }}

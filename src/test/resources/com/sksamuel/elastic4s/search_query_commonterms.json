@@ -1,0 +1,17 @@
+{
+    "query": {
+        "common": {
+            "name": {
+                "query": "some text here",
+                "high_freq_operator": "OR",
+                "low_freq_operator": "OR",
+                "analyzer": "whitespace",
+                "boost": 12.3,
+                "cutoff_frequency": 14.4,
+                "minimum_should_match": {
+                    "low_freq": "45.2",
+                    "high_freq": "1.2"
+                }
+            }
+        }
+    }}
