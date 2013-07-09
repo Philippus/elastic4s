@@ -72,7 +72,6 @@ class IdFilterDefinition(ids: String*) extends FilterDefinition {
     builder.filterName(filterName)
     this
   }
-  def withIds(iterable: Iterable[Any]): IdFilterDefinition = withIds(iterable.toSeq: _*)
   def withIds(any: Any*): IdFilterDefinition = {
     any.foreach(id => builder.addIds(id.toString))
     this

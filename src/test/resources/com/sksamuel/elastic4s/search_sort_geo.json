@@ -2,6 +2,7 @@
     {
         "_geo_distance": {
             "location": "ABCDEFG",
+            "distance_type": "arc",
             "reverse": true,
             "mode": "max",
             "nested_path": "nested-path"

@@ -2,12 +2,12 @@
     "has_parent": {
         "filter": {
             "term": {
-                "name": "chris",
-                "_name": "my-filter5",
-                "_cache": true,
-                "_cache_key": "band-singers"
+                "name": "chris"
             }
         },
-        "parent_type": "singer"
+        "parent_type": "singer",
+        "_name": "my-filter5",
+        "_cache": true,
+        "_cache_key": "band-singers"
     }
 }}

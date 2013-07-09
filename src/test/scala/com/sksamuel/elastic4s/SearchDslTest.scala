@@ -13,6 +13,7 @@ import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
+import com.sksamuel.elastic4s.Preference.Shards
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -74,7 +75,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate json for a range query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_range.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
-      range("coldplay") includeLower true includeUpper true from 4 to 10
+      range("coldplay") includeLower true includeUpper true from 4 to 10 boost 1.2
     } searchType SearchType.QueryThenFetch
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -226,8 +227,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_haschild_filter.json"))
     val req = search in "music" types "bands" filter {
       hasChildFilter("singer") filter {
-        termFilter("name", "chris") cache true cacheKey "band-singers" name "my-filter4"
-      }
+        termFilter("name", "chris")
+      } cache true cacheKey "band-singers" name "my-filter4"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -236,8 +237,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_filter.json"))
     val req = search in "music" types "bands" filter {
       hasParentFilter("singer") filter {
-        termFilter("name", "chris") cache true cacheKey "band-singers" name "my-filter5"
-      }
+        termFilter("name", "chris")
+      } cache true cacheKey "band-singers" name "my-filter5"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -270,6 +271,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for type filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_type_filter.json"))
+    val req = search in "music" types "bands" filter {
+      typeFilter("sometype")
+    } preference new Shards("5", "7")
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for missing filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
     val req = search in "music" types "bands" filter {
@@ -279,11 +288,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "generate json for field sort" in {
-
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_field.json"))
-
     val req = search in "music" types "bands" sort {
-      by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode.Avg
+      by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode
+        .Avg nestedPath "nest"
     }
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -308,7 +316,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_sort_geo.json"))
     val req = search in "music" types "bands" sort {
       by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode
-        MultiMode.Sum point(56.6, 78.8) nested "nested-path" mode MultiMode.Max
+        MultiMode.Sum point(56.6, 78.8) nested "nested-path" mode MultiMode.Max geoDistance GeoDistance.ARC
     }
     assert(json === mapper.readTree(req._builder.toString))
   }

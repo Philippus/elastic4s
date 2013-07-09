@@ -4,7 +4,8 @@
             "order": "desc",
             "missing": "no-singer",
             "ignore_unmapped": true,
-            "mode": "avg"
+            "mode": "avg",
+            "nested_path": "nest"
         }
     }
 ]}
