@@ -27,7 +27,7 @@ class PercolateTest extends FlatSpec with MockitoSugar with ElasticSugar {
             term("flavour", "earl")
         }
     }
-    client register {
+    client.sync.register {
         "c" into "teas" query {
             term("flavour", "darjeeling")
         }

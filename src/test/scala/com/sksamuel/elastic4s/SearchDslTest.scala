@@ -262,10 +262,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for id filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_id_filter.json"))
+    val req = search in "music" types "bands" filter {
+      idsFilter("a", "b", "c") withIds("q", "r") filterName "some-name"
+    } preference Preference.PrimaryFirst
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for missing filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
     val req = search in "music" types "bands" filter {
-      missingFilter("producer")
+      missingFilter("producer") existence true filterName "named" includeNull true
     } preference Preference.PrimaryFirst
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -321,7 +329,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
       facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
         .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
       facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey" nested "some-nested",
-      facet geodistance "distance" field "location" range 20d -> 30d range 30d -> 40d point(45.4, 54d) valueField "myvalue" global true facetFilter {
+      facet geodistance "distance" field "location" geoDistance GeoDistance
+        .FACTOR range 20d -> 30d range 30d -> 40d point(45.4, 54d) valueField "myvalue" global true facetFilter {
         termFilter("location", "europe") cache true cacheKey "cache-key"
       } addUnboundedFrom 100 addUnboundedTo 900 geohash "ABC" valueScript "some.script" lang "java" geoDistance GeoDistance
         .PLANE)
@@ -431,7 +440,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate correct json for geo polygon filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_polygon.json"))
     val req = search in "music" types "bands" filter {
-      geoPolygon("distance") point(10, 10) point(20, 20) point(30, 30)
+      geoPolygon("distance") point(10, 10) point(20, 20) point(30, 30) cache true cacheKey "key" point "123456"
     }
     assert(json === mapper.readTree(req._builder.toString))
   }

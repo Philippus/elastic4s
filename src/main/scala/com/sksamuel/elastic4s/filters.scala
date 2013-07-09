@@ -37,7 +37,7 @@ trait FilterDsl {
   def termFilter(tuple: (String, Any)): TermFilterDefinition = termFilter(tuple._1, tuple._2)
 
   def typeFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
-  def missingFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
+  def missingFilter(field: String): MissingFilterDefinition = new MissingFilterDefinition(field)
   def idsFilter(ids: String*): IdFilterDefinition = new IdFilterDefinition(ids: _*)
 
   def bool(block: => BoolFilterDefinition): FilterDefinition = block
@@ -68,6 +68,15 @@ trait FilterDefinition {
 
 class IdFilterDefinition(ids: String*) extends FilterDefinition {
   val builder = FilterBuilders.idsFilter().addIds(ids: _*)
+  def filterName(filterName: String): IdFilterDefinition = {
+    builder.filterName(filterName)
+    this
+  }
+  def withIds(iterable: Iterable[Any]): IdFilterDefinition = withIds(iterable.toSeq: _*)
+  def withIds(any: Any*): IdFilterDefinition = {
+    any.foreach(id => builder.addIds(id.toString))
+    this
+  }
 }
 
 class TypeFilterDefinition(`type`: String) extends FilterDefinition {
@@ -76,6 +85,18 @@ class TypeFilterDefinition(`type`: String) extends FilterDefinition {
 
 class MissingFilterDefinition(field: String) extends FilterDefinition {
   val builder = FilterBuilders.missingFilter(field)
+  def includeNull(nullValue: Boolean): MissingFilterDefinition = {
+    builder.nullValue(nullValue)
+    this
+  }
+  def filterName(filterName: String): MissingFilterDefinition = {
+    builder.filterName(filterName)
+    this
+  }
+  def existence(existence: Boolean): MissingFilterDefinition = {
+    builder.existence(existence)
+    this
+  }
 }
 
 class HasChildFilterDefinition(val builder: HasChildFilterBuilder) extends FilterDefinition {

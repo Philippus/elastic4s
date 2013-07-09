@@ -1,5 +1,1 @@
-{"filter": {
-    "type": {
-        "value": "producer"
-    }
-}}
+{"filter":{"missing":{"field":"producer","null_value":true,"existence":true,"_name":"named"}}}
