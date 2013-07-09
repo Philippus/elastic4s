@@ -117,7 +117,6 @@ class GeoDistanceSortDefinition(field: String) extends SortDefinition {
         this
     }
 }
-object Score
 class ScoreSortDefinition extends SortDefinition {
     val builder = SortBuilders.scoreSort()
     def missing(missing: AnyRef) = {

@@ -144,6 +144,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a match query with default as or" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match_or.json"))
+    val req = search in "*" types("users", "tweets") limit 5 query {
+      matches("drummmer" -> "will") boost 4 operator "OR"
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a fuzzy query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_fuzzy.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
@@ -159,7 +167,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         "coldplay"
       } filter {
         termFilter("location", "uk")
-      }
+      } boost 1.2
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
