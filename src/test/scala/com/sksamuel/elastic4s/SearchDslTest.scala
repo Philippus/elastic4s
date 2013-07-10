@@ -414,7 +414,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate correct json for flt query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_flt.json"))
     val req = search in "music" types "bands" query {
-      flt text "text like this one" fields("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 minSimilarity 0.4 boost 1.2
+      fuzzylikethis text "text like this one" fields("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 minSimilarity 0.4 boost 1.2
     }
     assert(json === mapper.readTree(req._builder.toString))
   }

@@ -11,8 +11,8 @@ trait QueryDsl {
 
   def query = this
 
-  def boosting = new BoostingQueryDefinition
-  def boostinguery = new BoostingQueryDefinition
+  def boosting: BoostingQueryDefinition = boostingQuery
+  def boostingQuery: BoostingQueryDefinition = new BoostingQueryDefinition
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
   def commonQuery = new CommonQueryExpectsField
@@ -41,7 +41,7 @@ trait QueryDsl {
   def fieldQuery(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
   def fieldQuery(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
 
-  def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
+  def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = flt
   def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
   def flt(text: String): FuzzyLikeThisExpectsField = new FuzzyLikeThisExpectsField(text)
   def fuzzylikethis(text: String): FuzzyLikeThisExpectsField = flt(text)
