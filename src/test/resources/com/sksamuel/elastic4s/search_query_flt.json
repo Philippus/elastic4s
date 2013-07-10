@@ -1,0 +1,12 @@
+{"query": {
+    "flt": {
+        "fields": ["name", "location"],
+        "like_text": "text like this one",
+        "max_query_terms": 2,
+        "min_similarity": 0.4,
+        "prefix_length": 4,
+        "ignore_tf": true,
+        "boost": 1.2,
+        "analyzer": "whitespace"
+    }
+}}

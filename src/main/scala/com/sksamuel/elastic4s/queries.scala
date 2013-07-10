@@ -41,6 +41,18 @@ trait QueryDsl {
   def fieldQuery(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
   def fieldQuery(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
 
+  def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
+  def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
+  def flt(text: String): FuzzyLikeThisExpectsField = new FuzzyLikeThisExpectsField(text)
+  def fuzzylikethis(text: String): FuzzyLikeThisExpectsField = flt(text)
+  class FuzzyLikeThisDefinitionExpectsText {
+    def text(q: String) = new FuzzyLikeThisExpectsField(q)
+  }
+  class FuzzyLikeThisExpectsField(text: String) {
+    def field(name: String): FuzzyLikeThisDefinition = fields(name)
+    def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
+  }
+
   def filter = filterQuery
   def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
   def filterQuery = new FilteredQueryDefinition
@@ -221,6 +233,37 @@ class CustomScoreDefinition extends QueryDefinition {
 class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
+    this
+  }
+}
+
+class FuzzyLikeThisDefinition(text: String, fields: Iterable[String]) extends QueryDefinition {
+  val builder = fields.size match {
+    case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
+    case _ => QueryBuilders.fuzzyLikeThisQuery(fields.toSeq: _*).likeText(text)
+  }
+  def boost(b: Double): FuzzyLikeThisDefinition = {
+    builder.boost(b.toFloat)
+    this
+  }
+  def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
+    builder.analyzer(a.elastic)
+    this
+  }
+  def ignoreTF(b: Boolean): FuzzyLikeThisDefinition = {
+    builder.ignoreTF(b)
+    this
+  }
+  def prefixLength(b: Int): FuzzyLikeThisDefinition = {
+    builder.prefixLength(b)
+    this
+  }
+  def maxQueryTerms(b: Int): FuzzyLikeThisDefinition = {
+    builder.maxQueryTerms(b)
+    this
+  }
+  def minSimilarity(b: Double): FuzzyLikeThisDefinition = {
+    builder.minSimilarity(b.toFloat)
     this
   }
 }
