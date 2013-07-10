@@ -1,0 +1,21 @@
+{
+    "filter": {
+        "bool": {
+            "must": {
+                "term": {
+                    "name": "sammy"
+                }
+            },
+            "must_not": {
+                "term": {
+                    "type": "rap"
+                }
+            },
+            "should": {
+                "term": {
+                    "location": "oxford"
+                }
+            }
+        }
+    }
+}

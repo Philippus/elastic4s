@@ -52,7 +52,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
   it should "use custom preference when specified" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_custom.json"))
-    val req = search in "*" types("users", "tweets") query "coldplay" preference new Preference.Custom("custom")
+    val req = search in "*" types("users", "tweets") query "coldplay" preference Preference.Custom("custom")
     assert(json === mapper.readTree(req._builder.toString))
   }
 
