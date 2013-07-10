@@ -219,10 +219,6 @@ class GeoDistanceFilter(name: String) extends FilterDefinition {
     builder.point(lat, long)
     this
   }
-  def point(point: (Double, Double)): GeoDistanceFilter = {
-    builder.point(point._1, point._2)
-    this
-  }
 }
 
 class GeoBoundingBoxFilter(name: String) extends FilterDefinition {
