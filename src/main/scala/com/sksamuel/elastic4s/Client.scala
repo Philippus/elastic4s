@@ -24,7 +24,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.common.io.stream.OutputStreamStreamOutput
 
 /** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client, timeout: Long)
+class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long)
                    (implicit executionContext: ExecutionContext = ExecutionContext.global) {
 
   /**
@@ -225,13 +225,14 @@ object ElasticClient {
   def fromNode(node: Node): ElasticClient = fromNode(node, DefaultTimeout)
   def fromNode(node: Node, timeout: Long = DefaultTimeout): ElasticClient = fromClient(node.client, timeout)
 
+  def remote(host: String, port: Int): ElasticClient = remote((host, port))
   def remote(addresses: (String, Int)*): ElasticClient =
-    remote(ImmutableSettings.builder().build(), addresses: _*)(DefaultTimeout)
+    remote(ImmutableSettings.builder().build(), addresses: _*)
 
-  def remote(settings: Settings, addresses: (String, Int)*)(timeout: Long = DefaultTimeout): ElasticClient = {
+  def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
     for ( address <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
-    fromClient(client, timeout)
+    fromClient(client, DefaultTimeout)
   }
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
