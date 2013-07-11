@@ -1,0 +1,10 @@
+{
+    "query": {
+        "terms": {
+            "name": ["chris", "will", "johnny", "guy"],
+            "minimum_should_match": "4",
+            "disable_coord": true,
+            "boost": 1.2
+        }
+    }
+}

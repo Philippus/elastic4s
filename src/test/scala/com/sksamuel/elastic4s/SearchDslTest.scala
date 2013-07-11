@@ -439,6 +439,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate correct json for terms query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_terms.json"))
+    val req = search in "music" types "bands" query {
+      termsQuery("name", "chris", "will", "johnny", "guy") boost 1.2 minimumShouldMatch 4 disableCoord true
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate correct json for custom boost query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_customboost.json"))
     val req = search in "music" types "bands" query {

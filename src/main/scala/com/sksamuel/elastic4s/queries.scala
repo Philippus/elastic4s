@@ -104,6 +104,9 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
 
+  def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition =
+    new TermsQueryDefinition(field, values.map(_.toString): _*)
+
   def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple)
   def wildcard(field: String, value: Any): WildcardQueryDefinition = wildcardQuery(field, value)
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
@@ -517,6 +520,7 @@ class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition {
     this
   }
 }
+
 class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
   val builder = QueryBuilders.termQuery(field, value.toString)
   def boost(boost: Double) = {
@@ -524,6 +528,23 @@ class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 }
+
+class TermsQueryDefinition(field: String, values: String*) extends QueryDefinition {
+  val builder = QueryBuilders.termsQuery(field, values: _*)
+  def boost(boost: Double): TermsQueryDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def minimumShouldMatch(minimumShouldMatch: Int): TermsQueryDefinition = {
+    builder.minimumMatch(minimumShouldMatch)
+    this
+  }
+  def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
+    builder.disableCoord(disableCoord)
+    this
+  }
+}
+
 class MatchAllQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.matchAllQuery
