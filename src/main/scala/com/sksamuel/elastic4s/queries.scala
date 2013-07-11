@@ -58,6 +58,24 @@ trait QueryDsl {
   def filterQuery = new FilteredQueryDefinition
   def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
 
+  def hasChildQuery = new HasChildExpectsType
+  def hasChildQuery(`type`: String) = new HasChildExpectsQuery(`type`)
+  class HasChildExpectsType {
+    def typed(`type`: String): HasChildExpectsQuery = new HasChildExpectsQuery(`type`)
+  }
+  class HasChildExpectsQuery(`type`: String) {
+    def query(q: QueryDefinition): HasChildQueryDefinition = new HasChildQueryDefinition(`type`, q)
+  }
+
+  def hasParentQuery = new HasParentExpectsType
+  def hasParentQuery(`type`: String) = new HasParentExpectsQuery(`type`)
+  class HasParentExpectsType {
+    def typed(`type`: String) = new HasParentExpectsQuery(`type`)
+  }
+  class HasParentExpectsQuery(`type`: String) {
+    def query(q: QueryDefinition) = new HasParentQueryDefinition(`type`, q)
+  }
+
   def matches(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple)
   def matches(field: String, value: Any): MatchQueryDefinition = matchQuery(field, value)
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
@@ -199,6 +217,30 @@ class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
   }
   def prefixLength(prefixLength: Int) = {
     builder.prefixLength(prefixLength)
+    this
+  }
+}
+
+class HasChildQueryDefinition(`type`: String, q: QueryDefinition) extends QueryDefinition {
+  val builder = QueryBuilders.hasChildQuery(`type`, q.builder)
+  def scoreType(scoreType: String): HasChildQueryDefinition = {
+    builder.scoreType(scoreType)
+    this
+  }
+  def boost(boost: Double) = {
+    builder.boost(boost.toFloat)
+    this
+  }
+}
+
+class HasParentQueryDefinition(`type`: String, q: QueryDefinition) extends QueryDefinition {
+  val builder = QueryBuilders.hasParentQuery(`type`, q.builder)
+  def boost(boost: Double) = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def scoreType(scoreType: String): HasParentQueryDefinition = {
+    builder.scoreType(scoreType)
     this
   }
 }

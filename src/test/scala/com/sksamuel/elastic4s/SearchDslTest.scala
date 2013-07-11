@@ -180,6 +180,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a hasChild query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_haschild_query.json"))
+    val req = search in "*" types("users", "tweets") limit 5 query {
+      hasChildQuery("sometype") query {
+        "coldplay"
+      } boost 1.2 scoreType "type"
+    } searchType SearchType.QueryThenFetch
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for a hasParent query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_query.json"))
+    val req = search in "*" types("users", "tweets") limit 5 query {
+      hasParentQuery("sometype") query {
+        "coldplay"
+      } boost 1.2 scoreType "type"
+    } searchType SearchType.Count preference new Preference.Custom("custompref")
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a boolean compound query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boolean.json"))
     val req = search in "*" types("bands", "artists") limit 5 query {

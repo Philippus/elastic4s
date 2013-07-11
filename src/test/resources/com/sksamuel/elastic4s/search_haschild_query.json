@@ -1,0 +1,13 @@
+{
+    "size": 5, "query": {
+    "has_child": {
+        "query": {
+            "query_string": {
+                "query": "coldplay"
+            }
+        },
+        "child_type": "sometype",
+        "boost": 1.2,
+        "score_type": "type"
+    }
+}}
