@@ -99,6 +99,9 @@ trait QueryDsl {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
+  def spanOrQuery = new SpanOrQueryDefinition
+  def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
+
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
   def term(field: String, value: Any): TermQueryDefinition = termQuery(field, value)
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
@@ -426,6 +429,28 @@ class BoostingQueryDefinition extends QueryDefinition {
   }
   def negativeBoost(b: Double) = {
     builder.negativeBoost(b.toFloat)
+    this
+  }
+}
+
+class SpanOrQueryDefinition extends QueryDefinition {
+  val builder = QueryBuilders.spanOrQuery
+  def boost(boost: Double): SpanOrQueryDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def clause(spans: SpanTermQueryDefinition*): SpanOrQueryDefinition = {
+    spans.foreach {
+      span => builder.clause(span.builder)
+    }
+    this
+  }
+}
+
+class SpanTermQueryDefinition(field: String, value: Any) extends QueryDefinition {
+  val builder = QueryBuilders.spanTermQuery(field, value.toString)
+  def boost(boost: Double) = {
+    builder.boost(boost.toFloat)
     this
   }
 }
