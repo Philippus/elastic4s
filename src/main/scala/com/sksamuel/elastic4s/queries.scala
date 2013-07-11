@@ -107,6 +107,11 @@ trait QueryDsl {
   def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition =
     new TermsQueryDefinition(field, values.map(_.toString): _*)
 
+  def topChildren(`type`: String) = new TopChildrenExpectsQuery(`type`)
+  class TopChildrenExpectsQuery(`type`: String) {
+    def query(q: QueryDefinition) = new TopChildrenQueryDefinition(`type`, q)
+  }
+
   def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple)
   def wildcard(field: String, value: Any): WildcardQueryDefinition = wildcardQuery(field, value)
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
@@ -541,6 +546,26 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
   }
   def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
     builder.disableCoord(disableCoord)
+    this
+  }
+}
+
+class TopChildrenQueryDefinition(`type`: String, q: QueryDefinition) extends QueryDefinition {
+  val builder = QueryBuilders.topChildrenQuery(`type`, q.builder)
+  def boost(boost: Double): TopChildrenQueryDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def factor(factor: Int): TopChildrenQueryDefinition = {
+    builder.factor(factor)
+    this
+  }
+  def incrementalFactor(incrementalFactor: Int): TopChildrenQueryDefinition = {
+    builder.incrementalFactor(incrementalFactor)
+    this
+  }
+  def score(score: String): TopChildrenQueryDefinition = {
+    builder.score(score)
     this
   }
 }

@@ -190,6 +190,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a topChildren query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_topchildren_query.json"))
+    val req = search in "*" types("users", "tweets") limit 5 query {
+      topChildren("sometype") query {
+        "coldplay"
+      } boost 1.2 factor 3 incrementalFactor 2 score "max"
+    } searchType SearchType.QueryThenFetch
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a hasParent query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_hasparent_query.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {

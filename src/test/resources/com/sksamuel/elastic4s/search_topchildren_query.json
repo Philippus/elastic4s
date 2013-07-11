@@ -1,0 +1,17 @@
+{
+    "size": 5,
+    "query": {
+        "top_children": {
+            "query": {
+                "query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "type": "sometype",
+            "score": "max",
+            "boost": 1.2,
+            "factor": 3,
+            "incremental_factor": 2
+        }
+    }
+}
