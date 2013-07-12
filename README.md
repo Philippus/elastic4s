@@ -309,6 +309,8 @@ For Maven users simply add:
 </dependency>
 ```
 
+You can always find the latest version on [maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s%22)
+
 ## Building and Testing
 
 Sorry SBT folks but this project is built with maven. To run the unit and integration tests
