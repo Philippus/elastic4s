@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import scala.concurrent._
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.count.{CountRequest, CountResponse}
-import org.elasticsearch.action.search.{MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse}
+import org.elasticsearch.action.search.{MultiSearchResponse, SearchRequest, SearchResponse}
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
@@ -63,20 +63,18 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   /**
    * Executes a Scala DSL search and returns a scala Future with the SearchResponse.
    *
-   * @param builder a SearchDefinition from the Scala DSL
+   * @param search a SearchDefinition from the Scala DSL
    *
    * @return a Future providing an SearchResponse
    */
-  def execute(builder: SearchDefinition): Future[SearchResponse] = execute(builder.build)
+  def execute(search: SearchDefinition): Future[SearchResponse] = execute(search.build)
 
-  def result(builder: SearchDefinition)(implicit duration: Duration): SearchResponse =
-    Await.result(execute(builder), duration)
+  def result(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
+    Await.result(execute(search), duration)
 
-  def execute(req: MultiSearchRequest): Future[MultiSearchResponse] = future {
-    client.multiSearch(req).actionGet(timeout)
+  def execute(searches: SearchDefinition*): Future[MultiSearchResponse] = future {
+    client.multiSearch(new MultiSearchDefinition(searches).build).actionGet(timeout)
   }
-  def execute(msearch: MultiSearchDefinition)(implicit duration: Duration): Future[MultiSearchResponse] =
-    execute(msearch.build)
 
   /**
    * Executes a Java API CountRequest and returns a scala Future with the CountResponse.
@@ -208,6 +206,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
       Await.result(client.execute(search), duration)
 
+    def execute(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
+      Await.result(client.execute(searches: _*), duration)
+
     def execute(update: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
       Await.result(client.execute(update), duration)
 
@@ -225,9 +226,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def execute(mget: MultiGetDefinition)(implicit duration: Duration): MultiGetResponse =
       Await.result(client.execute(mget), duration)
-
-    def execute(msearch: MultiSearchDefinition)(implicit duration: Duration): MultiSearchResponse =
-      Await.result(client.execute(msearch), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }

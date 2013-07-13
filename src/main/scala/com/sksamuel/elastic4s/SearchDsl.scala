@@ -16,8 +16,7 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
   }
 
-  def msearch(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches: _*)
-  class MultiSearchDefinition(searches: SearchDefinition*) {
+  class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
     def build = {
       val builder = new MultiSearchRequestBuilder(null)
       searches foreach (builder add _.build)

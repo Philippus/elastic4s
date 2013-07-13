@@ -299,12 +299,14 @@
     <profiles>
         <profile>
             <id>travis</id>
+            <!--
             <activation>
                 <property>
                     <name>env.TRAVIS</name>
                     <value>true</value>
                 </property>
             </activation>
+            -->
             <build>
                 <plugins>
                     <plugin>

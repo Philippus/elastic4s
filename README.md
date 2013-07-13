@@ -208,6 +208,7 @@ search in "places/cities" query "europe" sort (
 ```
 Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
 
+Read about [multisearch here](guide/multisearch.md)
 
 #### Get
 
