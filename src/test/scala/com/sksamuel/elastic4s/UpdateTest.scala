@@ -32,7 +32,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     var k = 0
     var hits = 0l
     while (k < 10 && hits == 0) {
-      val resp = client result {
+      val resp = client.sync.search {
         search in "scifi" types "trek" term "birthplace" -> "iowa"
       }
       hits = resp.getHits.totalHits()

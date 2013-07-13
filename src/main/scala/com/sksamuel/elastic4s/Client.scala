@@ -70,6 +70,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(sdef: SearchDefinition): Future[SearchResponse] = search(sdef)
   def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
 
+  @deprecated("use the sync client")
   def result(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
     Await.result(execute(search), duration)
 
@@ -168,6 +169,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       bulk.execute().actionGet(timeout)
     }
   }
+
+  @deprecated("use the sync client")
   def result(requests: BulkCompatibleRequest*)(implicit duration: Duration): BulkResponse =
     Await.result(execute(requests: _*), duration)
 
@@ -200,14 +203,16 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def register(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
       Await.result(client.register(registerDef), duration)
 
-    def execute(get: GetDefinition)(implicit duration: Duration): GetResponse =
-      Await.result(client.execute(get), duration)
+    @deprecated("use the get method")
+    def execute(get: GetDefinition)(implicit duration: Duration): GetResponse = Await.result(client.get(get), duration)
+    def get(get: GetDefinition)(implicit duration: Duration): GetResponse = execute(get)
 
     def execute(count: CountDefinition)(implicit duration: Duration): CountResponse =
       Await.result(client.execute(count), duration)
 
-    def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
-      Await.result(client.execute(search), duration)
+    def execute(sdef: SearchDefinition)(implicit duration: Duration): SearchResponse = search(sdef)
+    def search(sdef: SearchDefinition)(implicit duration: Duration): SearchResponse =
+      Await.result(client.search(sdef), duration)
 
     def search(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
       Await.result(client.search(searches: _*), duration)

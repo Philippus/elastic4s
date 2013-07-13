@@ -1,78 +1,88 @@
-{"settings": {
-    "number_of_shards": 2,
-    "number_of_replicas": 1
-}, "mappings": {
-    "tweets": {
-        "_source": {
-            "enabled": false,
-            "numeric_detection": true
-        },
-        "_size": {
-            "enabled": true
-        },
-        "properties": {
-            "_id": {
-                "type": "string",
-                "analyzer": "keyword",
-                "include_in_all": true,
-                "store": "true"
-            },
-            "name": {
-                "type": "geo_point",
-                "analyzer": "simple",
-                "index": "not_analyzed",
-                "boost": 4.0,
-                "store": "false"
-            },
-            "content": {
-                "type": "date",
-                "analyzer": "stop",
-                "null_value": "no content",
-                "store": "false"
-            }
-        }
+{
+    "settings": {
+        "number_of_shards": 2,
+        "number_of_replicas": 1
     },
-    "users": {
-        "_source": {
-            "enabled": false,
-            "numeric_detection": true
-        },
-        "_analyzer": {
-            "path": "somefield"
-        },
-        "properties": {
-            "name": {
-                "type": "ip",
-                "analyzer": "whitespace",
-                "omit_norms": true,
-                "store": "false"
+    "mappings": {
+        "tweets": {
+            "_source": {
+                "enabled": false,
+                "dynamic_date_formats": [],
+                "numeric_detection": true
             },
-            "location": {
-                "type": "integer",
-                "analyzer": "snowball",
-                "store": "false"
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
             },
-            "email": {
-                "type": "binary",
-                "analyzer": "standard",
-                "store": "false"
+            "_size": {
+                "enabled": true
             },
-            "picture": {
-                "type": "attachment",
-                "analyzer": "notindexed",
-                "store": "false"
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "analyzer": "keyword",
+                    "include_in_all": true,
+                    "store": "true"
+                },
+                "name": {
+                    "type": "geo_point",
+                    "analyzer": "simple",
+                    "index": "not_analyzed",
+                    "boost": 4.0,
+                    "store": "false"
+                },
+                "content": {
+                    "type": "date",
+                    "analyzer": "stop",
+                    "null_value": "no content",
+                    "store": "false"
+                }
             },
-            "age": {
-                "type": "float",
-                "store": "false"
-            },
-            "area": {
-                "type": "geo_shape",
-                "store": "false"
+            "_meta": {
+                "class": "com.sksamuel.User"
             }
         },
-        "_meta": {
-            "class": "com.sksamuel.User"
+        "users": {
+            "_source": {
+                "enabled": false,
+                "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
+                "date_detection": true,
+                "numeric_detection": true
+            },
+            "_analyzer": {
+                "path": "somefield"
+            },
+            "properties": {
+                "name": {
+                    "type": "ip",
+                    "analyzer": "whitespace",
+                    "omit_norms": true,
+                    "store": "false"
+                },
+                "location": {
+                    "type": "integer",
+                    "analyzer": "snowball",
+                    "store": "false"
+                },
+                "email": {
+                    "type": "binary",
+                    "analyzer": "standard",
+                    "store": "false"
+                },
+                "picture": {
+                    "type": "attachment",
+                    "analyzer": "notindexed",
+                    "store": "false"
+                },
+                "age": {
+                    "type": "float",
+                    "store": "false"
+                },
+                "area": {
+                    "type": "geo_shape",
+                    "store": "false"
+                }
+            }
         }
     }
-}}
+}
