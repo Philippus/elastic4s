@@ -11,7 +11,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.node.{Node, NodeBuilder}
 import org.elasticsearch.client.Client
-import org.elasticsearch.action.get.{GetResponse, GetRequest}
+import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse, GetResponse, GetRequest}
 import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
 import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
 import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
@@ -112,6 +112,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    */
   def execute(builder: GetDefinition): Future[GetResponse] = execute(builder.build)
 
+  def execute(req: MultiGetRequest): Future[MultiGetResponse] = future {
+    client.multiGet(req).actionGet(timeout)
+  }
+  def execute(mget: MultiGetDefinition): Future[MultiGetResponse] = execute(mget.build)
+
   def execute(req: DeleteRequest): Future[DeleteResponse] = future {
     client.delete(req).actionGet(timeout)
   }
@@ -211,6 +216,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def execute(v: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
       Await.result(client.execute(v), duration)
+
+    def execute(mget: MultiGetDefinition)(implicit duration: Duration): MultiGetResponse =
+      Await.result(client.execute(mget), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }
