@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 
 /** @author Stephen Samuel */
 class JacksonSource(root: JsonNode) extends Source {
-    def json = root.toString
+  def json = root.toString
 }
 object JacksonSource {
-    def apply(root: JsonNode) = new JacksonSource(root)
+  def apply(root: JsonNode) = new JacksonSource(root)
 }
