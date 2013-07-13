@@ -53,7 +53,8 @@ Here is a list of the common operations and the syntax used to create requests. 
 A locally configured node and client can be created simply by:
 
 ```scala
-val client = ElasticClient.local()
+import com.sksamuel.elastic4s.ElasticClient
+val client = ElasticClient.local
 ```
 
 To specify settings for the local node you can pass in a settings object like this:
