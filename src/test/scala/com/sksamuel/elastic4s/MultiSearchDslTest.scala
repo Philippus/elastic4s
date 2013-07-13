@@ -24,7 +24,7 @@ class MultiSearchDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a multi search request" should "find matching documents for all queries" in {
 
-    val resp = client.sync.execute(
+    val resp = client.sync.search(
       search in "jtull" query "aqualung",
       search in "jtull" query "passion"
     )

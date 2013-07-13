@@ -63,16 +63,17 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   /**
    * Executes a Scala DSL search and returns a scala Future with the SearchResponse.
    *
-   * @param search a SearchDefinition from the Scala DSL
+   * @param sdef a SearchDefinition from the Scala DSL
    *
    * @return a Future providing an SearchResponse
    */
-  def execute(search: SearchDefinition): Future[SearchResponse] = execute(search.build)
+  def execute(sdef: SearchDefinition): Future[SearchResponse] = search(sdef)
+  def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
 
   def result(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
     Await.result(execute(search), duration)
 
-  def execute(searches: SearchDefinition*): Future[MultiSearchResponse] = future {
+  def search(searches: SearchDefinition*): Future[MultiSearchResponse] = future {
     client.multiSearch(new MultiSearchDefinition(searches).build).actionGet(timeout)
   }
 
@@ -103,7 +104,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an GetResponse
    */
-  def execute(req: GetRequest): Future[GetResponse] = future {
+  def get(req: GetRequest): Future[GetResponse] = future {
     client.get(req).actionGet(timeout)
   }
 
@@ -114,12 +115,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an GetResponse
    */
-  def execute(builder: GetDefinition): Future[GetResponse] = execute(builder.build)
+  @deprecated
+  def execute(builder: GetDefinition): Future[GetResponse] = get(builder)
+  def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
 
-  def execute(req: MultiGetRequest): Future[MultiGetResponse] = future {
+  def get(req: MultiGetRequest): Future[MultiGetResponse] = future {
     client.multiGet(req).actionGet(timeout)
   }
-  def execute(mget: MultiGetDefinition): Future[MultiGetResponse] = execute(mget.build)
+  def get(gets: GetDefinition*): Future[MultiGetResponse] = get(new MultiGetDefinition(gets).build)
 
   def execute(req: DeleteRequest): Future[DeleteResponse] = future {
     client.delete(req).actionGet(timeout)
@@ -206,8 +209,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
       Await.result(client.execute(search), duration)
 
-    def execute(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
-      Await.result(client.execute(searches: _*), duration)
+    def search(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
+      Await.result(client.search(searches: _*), duration)
 
     def execute(update: UpdateDefinition)(implicit duration: Duration): UpdateResponse =
       Await.result(client.execute(update), duration)
@@ -224,8 +227,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute(v: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
       Await.result(client.execute(v), duration)
 
-    def execute(mget: MultiGetDefinition)(implicit duration: Duration): MultiGetResponse =
-      Await.result(client.execute(mget), duration)
+    def get(gets: GetDefinition*)(implicit duration: Duration): MultiGetResponse =
+      Await.result(client.get(gets: _*), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }

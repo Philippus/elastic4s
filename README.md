@@ -219,6 +219,8 @@ client.execute {
 }
 ```
 
+See more examples and multiget [here](guide/multiget.md)
+
 #### Deleting
 
 In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead. We think they're a little past their best (controversial).
@@ -238,7 +240,7 @@ client.execute {
 }
 ```
 
-You'll notice that the format for the query construct is exactly the same as for the search operation. In fact the same constructs can be used by any operation that requires a query - search, delete, percolate.
+You'll notice that the format for the query construct is exactly the same as for the search operation. In fact the same constructs can be used by any operation that requires a query - search, delete, percolate, explain, filters, etc.
 
 #### More like this
 

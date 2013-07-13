@@ -20,7 +20,7 @@ Lets create an index (using the bulk API to insert multiple documents at once) t
 Then to issue multiple search requests at once, we use
 
 ```scala
-  val resp = client.sync.execute(
+  val resp = client.sync.execute (
     search in "jtull" query "mylo", // note the trailing comma, we are invoking a var args method
     search in "jtull" query "viva"
   )

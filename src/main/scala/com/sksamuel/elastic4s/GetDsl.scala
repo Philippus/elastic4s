@@ -39,8 +39,7 @@ trait GetDsl {
     }
   }
 
-  def mget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets: _*)
-  class MultiGetDefinition(gets: GetDefinition*) {
+  class MultiGetDefinition(gets: Iterable[GetDefinition]) {
     def build: MultiGetRequest = {
       val builder = new MultiGetRequestBuilder(null)
       gets.foreach(get => builder.add(get.index, get.`type`, get.id))
