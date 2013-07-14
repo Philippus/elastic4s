@@ -49,4 +49,10 @@ Finally, if we want our query to execute across multiple indexes and types we ca
   client.delete {
     "places" types Seq("cities", "countries") where "continent:Europe"
   }
+
+  or
+
+  client.delete {
+    "places".types("cities", "countries").where("continent:Europe")
+  }
 ```
