@@ -224,7 +224,7 @@ In the rare case that we become tired of a band we might want to remove them. Na
 We think they're a little past their best (controversial). This operation assumes the id of the document is "u2".
 
 ```scala
-client.execute {
+client.delete {
     "bands/rock" -> "u2"
 }
 ```
@@ -234,7 +234,7 @@ In this sense the delete is very similar to an SQL delete statement.
 In this example we're deleting all bands where their type is rap.
 
 ```scala
-client.execute {
+client.delete {
     "bands" types "rock" where termQuery("type", "rap")
 }
 ```
