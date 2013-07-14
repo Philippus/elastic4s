@@ -317,6 +317,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for type numeric filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_numeric_filter.json"))
+    val req = search in "music" types "bands" filter {
+      numericRangeFilter("years") gte 1900 lte 2100
+    } preference new Shards("5", "7")
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for missing filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_missing_filter.json"))
     val req = search in "music" types "bands" filter {

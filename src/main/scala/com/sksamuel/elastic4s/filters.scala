@@ -27,6 +27,8 @@ trait FilterDsl {
       new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
   }
 
+  def numericRangeFilter(field: String) = new NumericRangeFilter(field)
+
   def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
   def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
 
@@ -94,6 +96,78 @@ class MissingFilterDefinition(field: String) extends FilterDefinition {
   }
   def existence(existence: Boolean): MissingFilterDefinition = {
     builder.existence(existence)
+    this
+  }
+}
+
+class NumericRangeFilter(field: String) extends FilterDefinition {
+  val builder = FilterBuilders.numericRangeFilter(field)
+  def filterName(filterName: String): NumericRangeFilter = {
+    builder.filterName(filterName)
+    this
+  }
+  def cache(cache: Boolean): NumericRangeFilter = {
+    builder.cache(cache)
+    this
+  }
+  def cacheKey(cacheKey: String): NumericRangeFilter = {
+    builder.cacheKey(cacheKey)
+    this
+  }
+  def includeLower(includeLower: Boolean): NumericRangeFilter = {
+    builder.includeLower(includeLower)
+    this
+  }
+  def includeUpper(includeUpper: Boolean): NumericRangeFilter = {
+    builder.includeUpper(includeUpper)
+    this
+  }
+  def from(from: Double): NumericRangeFilter = {
+    builder.from(from)
+    this
+  }
+  def from(from: Long): NumericRangeFilter = {
+    builder.from(from)
+    this
+  }
+  def to(to: Double): NumericRangeFilter = {
+    builder.to(to)
+    this
+  }
+  def to(to: Long): NumericRangeFilter = {
+    builder.to(to)
+    this
+  }
+  def lt(lt: Double): NumericRangeFilter = {
+    builder.lt(lt)
+    this
+  }
+  def lt(lt: Long): NumericRangeFilter = {
+    builder.lt(lt)
+    this
+  }
+  def gt(to: Double): NumericRangeFilter = {
+    builder.gt(to)
+    this
+  }
+  def gt(ge: Long): NumericRangeFilter = {
+    builder.gt(ge)
+    this
+  }
+  def lte(lte: Double): NumericRangeFilter = {
+    builder.lte(lte)
+    this
+  }
+  def lte(lte: Long): NumericRangeFilter = {
+    builder.lte(lte)
+    this
+  }
+  def gte(gte: Double): NumericRangeFilter = {
+    builder.gte(gte)
+    this
+  }
+  def gte(gte: Long): NumericRangeFilter = {
+    builder.gte(gte)
     this
   }
 }

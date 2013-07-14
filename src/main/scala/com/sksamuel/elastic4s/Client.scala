@@ -140,6 +140,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(req: DeleteByQueryRequest): Future[DeleteByQueryResponse] = future {
     client.deleteByQuery(req).actionGet(timeout)
   }
+  @deprecated("use delete()")
   def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = delete(d)
   def delete(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d.builder)
 
@@ -206,10 +207,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       Await.result(client.register(registerDef), duration)
 
     def delete(ddef: DeleteByIdDefinition)(implicit duration: Duration): DeleteResponse =
-      Await.result(client.execute(ddef), duration)
+      Await.result(client.delete(ddef), duration)
 
     def delete(ddef: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
-      Await.result(client.execute(ddef), duration)
+      Await.result(client.delete(ddef), duration)
 
     @deprecated("use the get method")
     def execute(get: GetDefinition)(implicit duration: Duration): GetResponse = Await.result(client.get(get), duration)

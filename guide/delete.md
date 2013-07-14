@@ -6,7 +6,7 @@ To delete a document by id, we need to know the type and the index. Then we can 
 
 ```scala
   client.delete {
-    4 from "places/cities"
+    "places/cities" -> 3
   }
 ```
 
@@ -14,9 +14,9 @@ Delete is bulk compatible so we can issue multiple requests at once
 
 ```scala
   client.delete {
-    4 from "places/cities",
-    12 from "places/cities",
-    24 from "music/bands"
+    "places/cities" -> 4,
+    "places/cities" -> 1,
+    "music/bands" -> 19
   }
 ```
 
@@ -27,7 +27,7 @@ Let's delete all London's from the cities index.
 
 ```scala
   client.delete {
-    "places/cities" where "name:london"
+    "places" types "cities" where "name:london"
   }
 ```
 
@@ -35,7 +35,7 @@ The query (the where clause) can be any type of query definition. Lets do someth
 
 ```scala
   client.delete {
-    "places/cities" where regexQuery("name", "Lond*")
+    "places" types "cities" where regexQuery("name", "Lond*")
   }
 ```
 
