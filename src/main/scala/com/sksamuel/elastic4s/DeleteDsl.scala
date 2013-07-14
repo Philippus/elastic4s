@@ -5,11 +5,19 @@ import org.elasticsearch.client.Requests
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl {
 
+  implicit def string2where(from: String): DeleteByQueryExpectsWhere = {
+    from.split("/").toList match {
+      case index :: Nil => new DeleteByQueryExpectsWhere(Seq(index), null)
+      case index :: t :: Nil => new DeleteByQueryExpectsWhere(Seq(index), Seq(t))
+      case _ => throw new IllegalArgumentException("from must be in the form index/type")
+    }
+  }
   implicit def string2indextype(index: String): IndexType = new IndexType(index)
   implicit def string2indextype(indexes: String*): IndexType = new IndexType(indexes: _*)
   class IndexType(indexes: String*) {
     def types(t: String): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexes, Seq(t))
     def types(types: String*): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexes, types)
+    def types(types: Iterable[String]): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexes, types.toSeq)
   }
   implicit def tuple2delete(tuple: (String, Any)) = {
     tuple._1.split("/").toList match {
