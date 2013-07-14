@@ -221,22 +221,21 @@ See more examples and multiget [here](guide/multiget.md)
 #### Deleting
 
 In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead.
-We think they're a little past their best (controversial).
+We think they're a little past their best (controversial). This operation assumes the id of the document is "u2".
+
 ```scala
 client.execute {
-    "bands/rock" -> "12"
+    "bands/rock" -> "u2"
 }
 ```
 
 We can take this a step further by deleting by a query rather than id.
 In this sense the delete is very similar to an SQL delete statement.
-In this example we're deleting all bands where their debut date is before 2000.
+In this example we're deleting all bands where their type is rap.
 
 ```scala
 client.execute {
-    "bands" types "rock" where {
-        range("debut_year") to 2000
-    }
+    "bands" types "rock" where termQuery("type", "rap")
 }
 ```
 
