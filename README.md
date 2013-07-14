@@ -224,7 +224,7 @@ In the rare case that we become tired of a band we might want to remove them. Na
 We think they're a little past their best (controversial).
 ```scala
 client.execute {
-    delete id "u2" from "bands/rock"
+    "bands/rock" -> "12"
 }
 ```
 
@@ -234,7 +234,7 @@ In this example we're deleting all bands where their debut date is before 2000.
 
 ```scala
 client.execute {
-    delete from "bands/rock" query {
+    "bands" types "rock" where {
         range("debut_year") to 2000
     }
 }
