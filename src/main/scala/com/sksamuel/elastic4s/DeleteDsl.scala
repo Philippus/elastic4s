@@ -6,6 +6,8 @@ import org.elasticsearch.client.Requests
 trait DeleteDsl extends QueryDsl {
 
   def delete = new DeleteExpectsIdOrFrom
+  implicit def string2delete(index: String) = new DeleteByQueryDefinition(index)
+  implicit def any2delete(any: Any) = new DeleteByIdExpectsFrom(any.toString)
   class DeleteExpectsIdOrFrom {
     def from(indexes: String*) = new DeleteByQueryDefinition(indexes: _*)
     def id(id: Any) = new DeleteByIdExpectsFrom(id.toString)

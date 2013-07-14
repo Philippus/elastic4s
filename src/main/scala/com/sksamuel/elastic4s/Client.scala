@@ -128,8 +128,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(req: DeleteRequest): Future[DeleteResponse] = future {
     client.delete(req).actionGet(timeout)
   }
-
-  def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d.builder)
+  @deprecated("use delete()")
+  def execute(d: DeleteByIdDefinition): Future[DeleteResponse] = delete(d)
+  def delete(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d.builder)
 
   def execute(create: CreateIndexDefinition): Future[CreateIndexResponse] = future {
     create.build.writeTo(new OutputStreamStreamOutput(System.out))
@@ -139,7 +140,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(req: DeleteByQueryRequest): Future[DeleteByQueryResponse] = future {
     client.deleteByQuery(req).actionGet(timeout)
   }
-  def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d.builder)
+  def execute(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = delete(d)
+  def delete(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d.builder)
 
   def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] = future {
     client.admin.indices().validateQuery(req).actionGet(timeout)
@@ -202,6 +204,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def register(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
       Await.result(client.register(registerDef), duration)
+
+    def delete(ddef: DeleteByIdDefinition)(implicit duration: Duration): DeleteResponse =
+      Await.result(client.execute(ddef), duration)
+
+    def delete(ddef: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
+      Await.result(client.execute(ddef), duration)
 
     @deprecated("use the get method")
     def execute(get: GetDefinition)(implicit duration: Duration): GetResponse = Await.result(client.get(get), duration)

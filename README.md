@@ -220,14 +220,17 @@ See more examples and multiget [here](guide/multiget.md)
 
 #### Deleting
 
-In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead. We think they're a little past their best (controversial).
+In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead.
+We think they're a little past their best (controversial).
 ```scala
 client.execute {
     delete id "u2" from "bands/rock"
 }
 ```
 
-We can take this a step further by deleting by a query rather than id. In this sense the delete is very similar to an SQL delete statement. In this example we're deleting all bands where their debut date is before 2000.
+We can take this a step further by deleting by a query rather than id.
+In this sense the delete is very similar to an SQL delete statement.
+In this example we're deleting all bands where their debut date is before 2000.
 
 ```scala
 client.execute {
@@ -237,7 +240,7 @@ client.execute {
 }
 ```
 
-You'll notice that the format for the query construct is exactly the same as for the search operation. In fact the same constructs can be used by any operation that requires a query - search, delete, percolate, explain, filters, etc.
+See more about delete on the [delete page](guide/delete.md)
 
 #### More like this
 
