@@ -1,10 +1,14 @@
-{"filter": {
-    "numeric_range": {
-        "years": {
-            "from": 1900,
-            "to": 2100,
-            "include_lower": true,
-            "include_upper": true
+{
+    "filter": {
+        "numeric_range": {
+            "years": {
+                "from": 1900,
+                "to": 2100,
+                "include_lower": true,
+                "include_upper": true
+            },
+            "_cache": true,
+            "_cache_key": "key"
         }
     }
-}}
+}
