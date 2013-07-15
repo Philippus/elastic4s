@@ -392,11 +392,11 @@ class FilteredQueryDefinition extends QueryDefinition {
     this
   }
   def query(query: => QueryDefinition): FilteredQueryDefinition = {
-    _query = query.builder
+    _query = Option(query).map(_.builder).orNull
     this
   }
   def filter(filter: => FilterDefinition): FilteredQueryDefinition = {
-    _filter = filter.builder
+    _filter = Option(filter).map(_.builder).orNull
     this
   }
 }
