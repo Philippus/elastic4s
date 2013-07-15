@@ -7,9 +7,12 @@ import org.elasticsearch.common.unit.DistanceUnit
 /** @author Stephen Samuel */
 trait FilterDsl {
 
-  def geoboxFilter(name: String) = new GeoBoundingBoxFilter(name)
-  def geoDistance(name: String) = new GeoDistanceFilter(name)
-  def geoPolygon(name: String) = new GeoPolygonFilter(name)
+  def existsFilter(field: String) = new ExistsFilter(field)
+
+  def geoboxFilter(field: String) = new GeoBoundingBoxFilter(field)
+  def geoDistance(field: String) = new GeoDistanceFilter(field)
+  def geoPolygon(field: String) = new GeoPolygonFilter(field)
+  def geoDistanceRangeFilter(field: String) = new GeoDistanceRangeFilterDefinition(field)
 
   def hasChildFilter(`type`: String) = new HasChildExpectsQueryOrFilter(`type`)
   class HasChildExpectsQueryOrFilter(`type`: String) {
@@ -27,13 +30,24 @@ trait FilterDsl {
       new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
   }
 
+  def matchAllFilter = new MatchAllFilter
+
+  def not = new NotExpectsFilter
+  def not(filter: FilterDefinition) = new NotFilterDefinition(filter)
+  class NotExpectsFilter {
+    def filter(filter: FilterDefinition) = new NotFilterDefinition(filter)
+  }
   def numericRangeFilter(field: String) = new NumericRangeFilter(field)
 
   def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
   def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
 
+  def queryFilter(query: QueryDefinition): QueryFilterDefinition = new QueryFilterDefinition(query)
+
   def regexFilter(field: String, prefix: Any): RegexFilterDefinition = new RegexFilterDefinition(field, prefix)
   def regexFilter(tuple: (String, Any)): RegexFilterDefinition = regexFilter(tuple._1, tuple._2)
+
+  def scriptFilter(script: String): ScriptFilterDefinition = new ScriptFilterDefinition(script)
 
   def termFilter(field: String, prefix: Any): TermFilterDefinition = new TermFilterDefinition(field, prefix)
   def termFilter(tuple: (String, Any)): TermFilterDefinition = termFilter(tuple._1, tuple._2)
@@ -46,6 +60,10 @@ trait FilterDsl {
   def must(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().must(queries: _*)
   def should(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().should(queries: _*)
   def not(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().not(queries: _*)
+}
+
+trait FilterDefinition {
+  def builder: org.elasticsearch.index.query.FilterBuilder
 }
 
 class BoolFilterDefinition extends FilterDefinition {
@@ -64,10 +82,6 @@ class BoolFilterDefinition extends FilterDefinition {
   }
 }
 
-trait FilterDefinition {
-  def builder: org.elasticsearch.index.query.FilterBuilder
-}
-
 class IdFilterDefinition(ids: String*) extends FilterDefinition {
   val builder = FilterBuilders.idsFilter().addIds(ids: _*)
   def filterName(filterName: String): IdFilterDefinition = {
@@ -84,6 +98,26 @@ class TypeFilterDefinition(`type`: String) extends FilterDefinition {
   val builder = FilterBuilders.typeFilter(`type`)
 }
 
+class ExistsFilter(field: String) extends FilterDefinition {
+  val builder = FilterBuilders.existsFilter(field)
+  def filterName(filterName: String): ExistsFilter = {
+    builder.filterName(filterName)
+    this
+  }
+}
+
+class QueryFilterDefinition(q: QueryDefinition) extends FilterDefinition {
+  val builder = FilterBuilders.queryFilter(q.builder)
+  def filterName(filterName: String): QueryFilterDefinition = {
+    builder.filterName(filterName)
+    this
+  }
+  def cache(cache: Boolean): QueryFilterDefinition = {
+    builder.cache(cache)
+    this
+  }
+}
+
 class MissingFilterDefinition(field: String) extends FilterDefinition {
   val builder = FilterBuilders.missingFilter(field)
   def includeNull(nullValue: Boolean): MissingFilterDefinition = {
@@ -98,6 +132,38 @@ class MissingFilterDefinition(field: String) extends FilterDefinition {
     builder.existence(existence)
     this
   }
+}
+
+class ScriptFilterDefinition(script: String) extends FilterDefinition {
+  val builder = FilterBuilders.scriptFilter(script)
+  def lang(lang: String): ScriptFilterDefinition = {
+    builder.lang(lang)
+    this
+  }
+  def filterName(filterName: String): ScriptFilterDefinition = {
+    builder.filterName(filterName)
+    this
+  }
+  def param(name: String, value: Any): ScriptFilterDefinition = {
+    builder.addParam(name, value)
+    this
+  }
+  def params(map: Map[String, Any]): ScriptFilterDefinition = {
+    for ( entry <- map ) param(entry._1, entry._2)
+    this
+  }
+  def cache(cache: Boolean): ScriptFilterDefinition = {
+    builder.cache(cache)
+    this
+  }
+  def cacheKey(cacheKey: String): ScriptFilterDefinition = {
+    builder.cacheKey(cacheKey)
+    this
+  }
+}
+
+class MatchAllFilter extends FilterDefinition {
+  val builder = FilterBuilders.matchAllFilter()
 }
 
 class NumericRangeFilter(field: String) extends FilterDefinition {
@@ -250,6 +316,86 @@ class GeoPolygonFilter(name: String) extends FilterDefinition {
   }
   def point(geohash: String): GeoPolygonFilter = {
     builder.addPoint(geohash)
+    this
+  }
+}
+
+class GeoDistanceRangeFilterDefinition(field: String) extends FilterDefinition {
+  val builder = FilterBuilders.geoDistanceRangeFilter(field)
+  def cache(cache: Boolean): GeoDistanceRangeFilterDefinition = {
+    builder.cache(cache)
+    this
+  }
+  def cacheKey(cacheKey: String): GeoDistanceRangeFilterDefinition = {
+    builder.cacheKey(cacheKey)
+    this
+  }
+  def point(lat: Double, lon: Double): GeoDistanceRangeFilterDefinition = {
+    builder.point(lat, lon)
+    this
+  }
+  def from(from: String): GeoDistanceRangeFilterDefinition = {
+    builder.from(from)
+    this
+  }
+  def lat(lat: Double): GeoDistanceRangeFilterDefinition = {
+    builder.lat(lat)
+    this
+  }
+  def lon(lon: Double): GeoDistanceRangeFilterDefinition = {
+    builder.lon(lon)
+    this
+  }
+  def geoDistance(geoDistance: GeoDistance): GeoDistanceRangeFilterDefinition = {
+    builder.geoDistance(geoDistance)
+    this
+  }
+  def geohash(geohash: String): GeoDistanceRangeFilterDefinition = {
+    builder.geohash(geohash)
+    this
+  }
+  def gt(gt: Any): GeoDistanceRangeFilterDefinition = {
+    builder.gt(gt)
+    this
+  }
+  def gte(gte: Any): GeoDistanceRangeFilterDefinition = {
+    builder.gte(gte)
+    this
+  }
+  def lt(lt: Any): GeoDistanceRangeFilterDefinition = {
+    builder.lt(lt)
+    this
+  }
+  def lte(lte: Any): GeoDistanceRangeFilterDefinition = {
+    builder.lte(lte)
+    this
+  }
+  def to(to: Any): GeoDistanceRangeFilterDefinition = {
+    builder.to(to)
+    this
+  }
+  def includeLower(includeLower: Boolean): GeoDistanceRangeFilterDefinition = {
+    builder.includeLower(includeLower)
+    this
+  }
+  def includeUpper(includeUpper: Boolean): GeoDistanceRangeFilterDefinition = {
+    builder.includeUpper(includeUpper)
+    this
+  }
+  def name(name: String): GeoDistanceRangeFilterDefinition = {
+    builder.filterName(name)
+    this
+  }
+}
+
+class NotFilterDefinition(filter: FilterDefinition) extends FilterDefinition {
+  val builder = FilterBuilders.notFilter(filter.builder)
+  def cache(cache: Boolean): NotFilterDefinition = {
+    builder.cache(cache)
+    this
+  }
+  def name(name: String): NotFilterDefinition = {
+    builder.filterName(name)
     this
   }
 }
