@@ -53,9 +53,12 @@ trait QueryDsl {
     def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
   }
 
+  @deprecated("ambigious")
   def filter = filterQuery
   def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
-  def filterQuery = new FilteredQueryDefinition
+  @deprecated("use filteredQuery")
+  def filterQuery = filteredQuery
+  def filteredQuery = new FilteredQueryDefinition
   def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
 
   def hasChildQuery = new HasChildExpectsType
@@ -84,7 +87,7 @@ trait QueryDsl {
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
 
-  def query(value: String): StringQueryDefinition = new StringQueryDefinition(value)
+  def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
 
   def range(field: String): RangeQueryDefinition = rangeQuery(field)
   def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
@@ -98,6 +101,8 @@ trait QueryDsl {
   def prefix(field: String, value: Any): PrefixQueryDefinition = prefixQuery(field, value)
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
+
+  def stringQuery(q: String) = new StringQueryDefinition(q)
 
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
