@@ -18,11 +18,12 @@ All the request methods exist in the ElasticDsl object. The standard client is a
 An example is worth 1000 characters so here is a quick example of how to create a client and index a one field document:
 
 ```scala
+import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.ElasticDsl._
 
 object Test extends App {
 
-  val client = ElasticClient.local()
+  val client = ElasticClient.local
   client execute { index into "bands/singers" fields "name"->"chris martin" }
 
 }
