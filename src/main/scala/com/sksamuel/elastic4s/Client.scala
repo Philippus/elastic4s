@@ -22,6 +22,7 @@ import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.common.io.stream.OutputStreamStreamOutput
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long)
@@ -187,6 +188,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     client.percolate(percolate.build).actionGet(timeout)
   }
 
+  def deleteIndex(d: DeleteIndexDefinition): Future[DeleteIndexResponse] = future {
+    client.admin().indices().delete(d.builder).actionGet(timeout)
+  }
+
   def searchScroll(scrollId: String): Future[SearchResponse] = future {
     client.prepareSearchScroll(scrollId).execute().actionGet(timeout)
   }
@@ -199,6 +204,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
 
   class SyncClient(client: ElasticClient)(implicit duration: Duration) {
+
+    def deleteIndex(deleteIndex: DeleteIndexDefinition)(implicit duration: Duration): DeleteIndexResponse =
+      Await.result(client.deleteIndex(deleteIndex), duration)
 
     def percolate(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
       Await.result(client.percolate(percolateDef), duration)

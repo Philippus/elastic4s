@@ -19,7 +19,7 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
     blockUntilCount(1, "electronics")
   }
 
-  "an index request" should "index from object source when used" in {
+  it should "index from object source when used" in {
 
     case class Phone(name: String, brand: String)
     val iPhone = new Phone("iPhone", "apple")
@@ -34,6 +34,12 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "an index exists request" should "return true for an existing index" in {
     assert(client.sync.exists("electronics").isExists)
+  }
+
+  "a delete index request" should "delete the index" in {
+    assert(client.sync.exists("electronics").isExists)
+    client.sync.deleteIndex("electronics")
+    assert(!client.sync.exists("electronics").isExists)
     client.close()
   }
 }

@@ -7,6 +7,7 @@ object ElasticDsl
   extends IndexDsl
   with CountDsl
   with CreateIndexDsl
+  with DeleteIndexDsl
   with DeleteDsl
   with FacetDsl
   with GetDsl
@@ -15,6 +16,6 @@ object ElasticDsl
   with SearchDsl
   with UpdateDsl
   with ValidateDsl {
-    implicit val duration: Duration = 10.seconds
+  implicit val duration: Duration = 10.seconds
 
 }
