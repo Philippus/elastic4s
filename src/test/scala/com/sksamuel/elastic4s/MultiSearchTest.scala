@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
-class MultiSearchDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class MultiSearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
     index into "jtull/albums" fields ("name" -> "aqualung") id 14

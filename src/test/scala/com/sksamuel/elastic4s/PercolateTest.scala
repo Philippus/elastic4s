@@ -9,40 +9,40 @@ import org.elasticsearch.common.Priority
 /** @author Stephen Samuel */
 class PercolateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
-    implicit val duration = 10.seconds
+  implicit val duration = 10.seconds
 
-    client execute {
-        create index "teas" shards 1
-    }
+  client execute {
+    create index "teas" shards 1
+  }
 
-    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-    client register {
-        "a" into "teas" query {
-            term("flavour", "assam")
-        }
+  client register {
+    "a" into "teas" query {
+      term("flavour", "assam")
     }
-    client register {
-        "b" into "teas" query {
-            term("flavour", "earl")
-        }
+  }
+  client register {
+    "b" into "teas" query {
+      term("flavour", "earl")
     }
-    client.sync.register {
-        "c" into "teas" query {
-            term("flavour", "darjeeling")
-        }
+  }
+  client.sync.register {
+    "c" into "teas" query {
+      term("flavour", "darjeeling")
     }
-    refresh("teas")
-    refresh("_percolator")
-    client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-    blockUntilCount(3, "_percolator", "teas")
+  }
+  refresh("teas")
+  refresh("_percolator")
+  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+  blockUntilCount(3, "_percolator", "teas")
 
-    "a percolate request" should "return queries that match the document" in {
+  "a percolate request" should "return queries that match the document" in {
 
-        val resp = client.sync.percolate {
-            "teas" doc "flavour" -> "assam"
-        }
-        assert(1 === resp.getMatches.size)
-        assert("a" === resp.getMatches.get(0))
+    val resp = client.sync.percolate {
+      "teas" doc "flavour" -> "assam"
     }
+    assert(1 === resp.getMatches.size)
+    assert("a" === resp.getMatches.get(0))
+  }
 }

@@ -12,6 +12,7 @@ object ElasticDsl
   with FacetDsl
   with GetDsl
   with MoreLikeThisDsl
+  with OptimizeDsl
   with PercolateDsl
   with SearchDsl
   with UpdateDsl

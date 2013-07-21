@@ -23,6 +23,7 @@ import ElasticDsl._
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.common.io.stream.OutputStreamStreamOutput
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
+import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long)
@@ -138,6 +139,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     client.admin.indices.create(create.build).actionGet(timeout)
   }
 
+  def optimize(d: OptimizeDefinition): Future[OptimizeResponse] = future {
+    client.admin().indices().optimize(d.builder).actionGet
+  }
+
   def execute(req: DeleteByQueryRequest): Future[DeleteByQueryResponse] = future {
     client.deleteByQuery(req).actionGet(timeout)
   }
@@ -248,6 +253,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def execute(v: ValidateDefinition)(implicit duration: Duration): ValidateQueryResponse =
       Await.result(client.execute(v), duration)
+
+    def optimize(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse =
+      Await.result(client.optimize(o), duration)
 
     def get(gets: GetDefinition*)(implicit duration: Duration): MultiGetResponse =
       Await.result(client.get(gets: _*), duration)
