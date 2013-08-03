@@ -102,9 +102,9 @@ Sometimes we want to specify the properties of the types in the index. This allo
 client.execute { 
     create index "places" mappings (
         "cities" as (      
-	        "id" typed IntegerType,
-            "name" boost 4,
-            "content" analyzer StopAnalyzer
+            field("id") typed IntegerType,
+            field("name") boost 4,
+            field("content") analyzer StopAnalyzer
         )
      )
 }
