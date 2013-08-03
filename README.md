@@ -256,17 +256,19 @@ For all the options see [here](http://www.elasticsearch.org/guide/reference/quer
 
 #### Bulk Operations
 
-ElasticSearch is fast. HTTP is not. Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations. Elastic has predicted our wishes and created the bulk API. To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
+ElasticSearch is fast. HTTP is not.
+Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations.
+Elastic has predicted our wishes and created the bulk API.
+To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
 
 ```scala
-client.bulk {
+client.execute {
    index into "bands/rock" fields "name"->"coldplay",
    index into "bands/rock" fields "name"->"kings of leon",
    index into "bands/pop" fields ( 
       "name"->"elton john",
       "best_album"-"goodbye yellow brick road"
-   ),
-   delete id "taylor swift" from "bands/pop"
+   )
 }
 ```
 A single HTTP request is now needed for 4 operations. The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
