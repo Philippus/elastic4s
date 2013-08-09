@@ -1,8 +1,5 @@
 import _root_.sbt._
 import _root_.sbt.Keys._
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
-import scala.Some
-import scala.Some
 
 name := "elastic4s"
 
@@ -11,6 +8,8 @@ organization := "com.sksamuel.elastic4s"
 version := "0.90.3.0"
 
 scalaVersion := "2.10.2"
+
+scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 publishMavenStyle := true
 
@@ -22,6 +21,12 @@ publishTo <<= version {
     else
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
+
+publishArtifact in Test := false
+
+parallelExecution in Test := false
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.1.3"
 
