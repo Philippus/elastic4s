@@ -321,16 +321,17 @@ You can always find the latest version on [maven central](http://search.maven.or
 
 ## Building and Testing
 
-Sorry SBT folks but this project is built with maven. To run the unit and integration tests
+This project is built with SBT. So to build
 ```
-mvn clean test
+sbt compile
 ```
-Integration tests run on a locally built elastic that is brought up and torn down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
 
-To build and deploy into your local repo
+And to test
 ```
-mvn clean install
+sbt test
 ```
+
+Integration tests run on a locally built elastic that is brought up and torn down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
