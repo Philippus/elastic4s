@@ -3,7 +3,9 @@ elastic4s
 
 Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch. It provides a full Scala DSL to construct your queries and (hopefully!) reducing errors. Due to its typesafe nature Elastic4s is also a good way to learn the options available for any operation, as your IDE can use the type information to show you what methods are available. Elastic4s also allows you to index JSON documents from standard JSON libraries such as Jackson without having to unmarshall.
 
+#### Release
 
+The latest release is 0.90.3.1 which is compatible with elasticsearch 0.90.3
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
