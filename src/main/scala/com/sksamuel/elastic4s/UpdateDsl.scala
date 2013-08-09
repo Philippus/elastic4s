@@ -70,7 +70,7 @@ trait UpdateDsl {
         source.field(field._1, field._2)
       }
       source.endObject()
-      _builder.setUpsertRequest(source)
+      _builder.setUpsert(source)
       _builder.setDocAsUpsert(true)
       this
     }

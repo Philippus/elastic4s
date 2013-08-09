@@ -507,6 +507,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate correct json for a rescore query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_rescore.json"))
+    val req = search in "music" types "bands" rescore {
+      rescore("coldplay").originalQueryWeight(1.4).rescoreQueryWeight(5.4).scoreMode("modey").window(14)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate correct json for geo polygon filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_polygon.json"))
     val req = search in "music" types "bands" filter {

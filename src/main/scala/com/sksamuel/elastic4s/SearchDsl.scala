@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search.{MultiSearchRequestBuilder, SearchRequestBuilder}
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.sort.SortBuilder
+import org.elasticsearch.search.rescore.RescoreBuilder
 
 /** @author Stephen Samuel */
 trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl {
@@ -21,6 +22,35 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
       val builder = new MultiSearchRequestBuilder(null)
       searches foreach (builder add _.build)
       builder.request()
+    }
+  }
+
+  def rescore(query: QueryDefinition): RescoreDefinition = {
+    new RescoreDefinition(query)
+  }
+
+  class RescoreDefinition(query: QueryDefinition) {
+    val builder = RescoreBuilder.queryRescorer(query.builder)
+    var windowSize = 50
+
+    def window(size: Int): RescoreDefinition = {
+      this.windowSize = size
+      this
+    }
+
+    def originalQueryWeight(weight: Double): RescoreDefinition = {
+      builder.setQueryWeight(weight.toFloat)
+      this
+    }
+
+    def rescoreQueryWeight(weight: Double): RescoreDefinition = {
+      builder.setRescoreQueryWeight(weight.toFloat)
+      this
+    }
+
+    def scoreMode(scoreMode: String): RescoreDefinition = {
+      builder.setScoreMode(scoreMode)
+      this
     }
   }
 
@@ -139,6 +169,23 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
       this
     }
 
+    def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
+    def preference(pref: String): SearchDefinition = {
+      _builder.setPreference(pref)
+      this
+    }
+
+    def rescore(rescore: RescoreDefinition): SearchDefinition = {
+      _builder.setRescoreWindow(rescore.windowSize)
+      _builder.setRescorer(rescore.builder)
+      this
+    }
+
+    def scroll(keepAlive: String): SearchDefinition = {
+      _builder.setScroll(keepAlive)
+      this
+    }
+
     def searchType(searchType: SearchType) = {
       _builder.setSearchType(searchType.elasticType)
       this
@@ -146,17 +193,6 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
 
     def version(enabled: Boolean): SearchDefinition = {
       _builder.setVersion(enabled)
-      this
-    }
-
-    def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
-    def preference(pref: String): SearchDefinition = {
-      _builder.setPreference(pref)
-      this
-    }
-
-    def scroll(keepAlive: String): SearchDefinition = {
-      _builder.setScroll(keepAlive)
       this
     }
 
