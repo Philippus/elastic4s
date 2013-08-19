@@ -1,12 +1,11 @@
 import _root_.sbt._
 import _root_.sbt.Keys._
-import org.json.Test
 
 name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "0.90.3.0"
+version := "0.90.3.1-SNAPSHOT"
 
 scalaVersion := "2.10.2"
 
