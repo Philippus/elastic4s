@@ -313,7 +313,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s</artifactId>
-    <version>0.90.2.8</version>
+    <version>0.90.3.0</version>
 </dependency>
 ```
 
