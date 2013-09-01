@@ -304,7 +304,7 @@ This way you can still access everything the normal Java client covers in the ca
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s" % "0.90.3.0"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.3.0"
 ```
 
 For Maven users simply add:
@@ -312,7 +312,7 @@ For Maven users simply add:
 ```xml
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
-    <artifactId>elastic4s</artifactId>
+    <artifactId>elastic4s_2.10</artifactId>
     <version>0.90.3.0</version>
 </dependency>
 ```
