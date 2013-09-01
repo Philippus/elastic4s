@@ -27,12 +27,12 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         "picture" typed AttachmentType analyzer NotAnalyzed,
         "age" typed FloatType,
         "area" typed GeoShapeType
-      ) analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
+      ) analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
     )
     assert(json === mapper.readTree(req._source.string))
   }
 
-  "the index dsl" should "generate json to override index settings when set" in {
+  it should "generate json to override index settings when set" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_settings.json"))
     val req = create index "users" shards 3 replicas 4
     assert(json === mapper.readTree(req._source.string))

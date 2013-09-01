@@ -6,7 +6,7 @@
     "mappings": {
         "tweets": {
             "_source": {
-                "enabled": false,
+                "enabled": true,
                 "dynamic_date_formats": [],
                 "numeric_detection": true
             },
@@ -44,7 +44,7 @@
         },
         "users": {
             "_source": {
-                "enabled": false,
+                "enabled": true,
                 "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
                 "date_detection": true,
                 "numeric_detection": true
