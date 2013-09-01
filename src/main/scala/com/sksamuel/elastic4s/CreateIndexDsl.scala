@@ -17,7 +17,7 @@ trait CreateIndexDsl {
   implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
 
   class MappingDefinition(val `type`: String) {
-    var source = false
+    var source = true
     var date_detection = false
     var numeric_detection = true
     var _size = false
