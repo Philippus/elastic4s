@@ -131,7 +131,7 @@ trait CreateIndexDsl {
     }
   }
 
-  class IndexSettings(var shards: Int = 1, var replicas: Int = 1)
+  class IndexSettings(var shards: Int = 5, var replicas: Int = 1)
 
   class CreateIndexDefinition(name: String) {
 
