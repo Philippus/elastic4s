@@ -6,6 +6,7 @@ object FieldType {
   case object StringType extends FieldType("string")
   case object GeoPointType extends FieldType("geo_point")
   case object IntegerType extends FieldType("integer")
+  case object BooleanType extends FieldType("boolean")
   case object DoubleType extends FieldType("double")
   case object LongType extends FieldType("long")
   case object ByteType extends FieldType("byte")
