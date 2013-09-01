@@ -12,7 +12,7 @@
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s</artifactId>
     <packaging>jar</packaging>
-    <version>0.90.3.0</version>
+    <version>0.90.3.1-SNAPSHOT</version>
     <name>elastic4s</name>
     <description>A Scala elastic client.</description>
     <url>https://github.com/sksamuel/elastic4s</url>
