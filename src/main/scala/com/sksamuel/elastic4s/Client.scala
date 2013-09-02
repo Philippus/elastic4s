@@ -26,6 +26,7 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
+import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -310,6 +311,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     client.admin().indices().prepareFlush(indexes: _*).execute(new ActionListener[FlushResponse]() {
       def onFailure(e: Throwable): Unit = p.failure(e)
       def onResponse(response: FlushResponse): Unit = p.success(response)
+    })
+    p.future
+  }
+
+  def refresh(indexes: String*): Future[RefreshResponse] = {
+    val p = Promise[RefreshResponse]()
+    client.admin().indices().prepareRefresh(indexes: _*).execute(new ActionListener[RefreshResponse]() {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: RefreshResponse): Unit = p.success(response)
     })
     p.future
   }
