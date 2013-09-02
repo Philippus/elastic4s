@@ -324,6 +324,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     p.future
   }
 
+  def optimize(indexes: String*): Future[OptimizeResponse] = {
+    val p = Promise[OptimizeResponse]()
+    client.admin().indices().prepareOptimize(indexes: _*).execute(new ActionListener[OptimizeResponse]() {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: OptimizeResponse): Unit = p.success(response)
+    })
+    p.future
+  }
+
   def close(): Unit = client.close()
 
   def java = client
