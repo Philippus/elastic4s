@@ -27,6 +27,7 @@ import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -332,6 +333,17 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     })
     p.future
   }
+
+  def open(index: String): Future[OpenIndexResponse] = {
+    val p = Promise[OpenIndexResponse]()
+    client.admin().indices().prepareOpen(index).execute(new ActionListener[OpenIndexResponse]() {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: OpenIndexResponse): Unit = p.success(response)
+    })
+    p.future
+  }
+
+
 
   def close(): Unit = client.close()
 
