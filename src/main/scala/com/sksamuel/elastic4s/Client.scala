@@ -28,6 +28,7 @@ import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
+import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -343,7 +344,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     p.future
   }
 
-
+  def close(index: String): Future[CloseIndexResponse] = {
+    val p = Promise[CloseIndexResponse]()
+    client.admin().indices().prepareClose(index).execute(new ActionListener[CloseIndexResponse]() {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: CloseIndexResponse): Unit = p.success(response)
+    })
+    p.future
+  }
 
   def close(): Unit = client.close()
 
