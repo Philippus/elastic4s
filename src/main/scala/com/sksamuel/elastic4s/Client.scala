@@ -29,6 +29,7 @@ import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
+import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -349,6 +350,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     client.admin().indices().prepareClose(index).execute(new ActionListener[CloseIndexResponse]() {
       def onFailure(e: Throwable): Unit = p.failure(e)
       def onResponse(response: CloseIndexResponse): Unit = p.success(response)
+    })
+    p.future
+  }
+
+  def segments(indexes: String*): Future[IndicesSegmentResponse] = {
+    val p = Promise[IndicesSegmentResponse]()
+    client.admin().indices().prepareSegments(indexes: _*).execute(new ActionListener[IndicesSegmentResponse]() {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: IndicesSegmentResponse): Unit = p.success(response)
     })
     p.future
   }
