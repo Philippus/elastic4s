@@ -25,7 +25,7 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
     val iPhone = new Phone("iPhone", "apple")
     val one = new Phone("One", "HTC")
 
-    client.execute(
+    client.bulk(
       index into "electronics/phone" source ObjectSource(iPhone),
       index into "electronics/phone" source ObjectSource(one)
     )

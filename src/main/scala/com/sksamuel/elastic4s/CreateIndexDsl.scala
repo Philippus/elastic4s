@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+import org.elasticsearch.action.admin.indices.create.{CreateIndexRequestBuilder, CreateIndexAction, CreateIndexResponse, CreateIndexRequest}
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
@@ -133,7 +133,7 @@ trait CreateIndexDsl {
 
   class IndexSettings(var shards: Int = 5, var replicas: Int = 1)
 
-  class CreateIndexDefinition(name: String) {
+  class CreateIndexDefinition(name: String) extends IndicesRequestDefinition(CreateIndexAction.INSTANCE) {
 
     val _mappings = new ListBuffer[MappingDefinition]
     val _settings = new IndexSettings
