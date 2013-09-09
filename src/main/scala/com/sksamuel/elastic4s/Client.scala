@@ -21,7 +21,6 @@ import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
-import org.elasticsearch.common.io.stream.OutputStreamStreamOutput
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.action.ActionListener
@@ -189,7 +188,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def delete(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d.builder)
 
   def execute(create: CreateIndexDefinition): Future[CreateIndexResponse] = {
-    create.build.writeTo(new OutputStreamStreamOutput(System.out))
     val p = Promise[CreateIndexResponse]()
     client.admin.indices.create(create.build, new ActionListener[CreateIndexResponse]() {
       def onFailure(e: Throwable): Unit = p.failure(e)
