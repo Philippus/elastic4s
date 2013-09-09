@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.IndexRequest
+import org.elasticsearch.action.index.{IndexAction, IndexRequest}
 import scala.collection.mutable.ListBuffer
 import com.sksamuel.elastic4s.source.Source
 
@@ -19,7 +19,8 @@ trait IndexDsl {
     def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
   }
 
-  class IndexDefinition(index: String, `type`: String) extends BulkCompatibleRequest {
+  class IndexDefinition(index: String, `type`: String)
+      extends RequestDefinition(IndexAction.INSTANCE) with BulkCompatibleDefinition {
 
     private val _request = new IndexRequest(index, `type`)
     private val _fields = new ListBuffer[(String, Any)]

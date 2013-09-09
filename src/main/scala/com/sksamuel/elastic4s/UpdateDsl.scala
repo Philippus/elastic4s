@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.update.UpdateRequestBuilder
+import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.common.xcontent.XContentFactory
@@ -17,7 +17,7 @@ trait UpdateDsl {
     def in(index: String) = new UpdateDefinition(index, id)
   }
 
-  class UpdateDefinition(index: String, id: String) extends BulkCompatibleRequest {
+  class UpdateDefinition(index: String, id: String) extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
     val _builder = new UpdateRequestBuilder(null)
       .setIndex(index.split("/").head)
       .setType(index.split("/").last)

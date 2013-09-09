@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
+import org.elasticsearch.action.mlt.MoreLikeThisAction
 
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
@@ -19,8 +20,12 @@ trait MoreLikeThisDsl {
     }
   }
 
-  class MoreLikeThisDefinition(index: String, `type`: String, id: String) {
-    val _builder = Requests.moreLikeThisRequest(index).`type`(`type`).id(id)
+  class MoreLikeThisDefinition(index: String, `type`: String, id: String)
+      extends RequestDefinition(MoreLikeThisAction.INSTANCE) {
+
+    private val _builder = Requests.moreLikeThisRequest(index).`type`(`type`).id(id)
+    def build = _builder
+
     def fields(fields: String*) = {
       _builder.fields(fields: _*)
       this

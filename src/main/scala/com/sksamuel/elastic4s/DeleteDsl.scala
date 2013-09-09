@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryAction, DeleteByQueryResponse, DeleteByQueryRequest}
+import org.elasticsearch.action.delete.{DeleteAction, DeleteResponse, DeleteRequest}
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl {
@@ -27,8 +29,10 @@ trait DeleteDsl extends QueryDsl {
     }
   }
 
-  class DeleteByIdDefinition(index: String, `type`: String, id: String) extends BulkCompatibleRequest {
-    val builder = Requests.deleteRequest(index).`type`(`type`).id(id)
+  class DeleteByIdDefinition(index: String, `type`: String, id: String)
+      extends RequestDefinition(DeleteAction.INSTANCE) with BulkCompatibleDefinition {
+    private val builder = Requests.deleteRequest(index).`type`(`type`).id(id)
+    def build = builder
   }
 
   class DeleteByQueryExpectsWhere(indexes: Seq[String], types: Seq[String]) {
@@ -36,7 +40,9 @@ trait DeleteDsl extends QueryDsl {
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexes, types, query)
   }
 
-  class DeleteByQueryDefinition(indexes: Seq[String], types: Seq[String], q: QueryDefinition) {
-    val builder = Requests.deleteByQueryRequest(indexes: _*).types(types: _*).query(q.builder)
+  class DeleteByQueryDefinition(indexes: Seq[String], types: Seq[String], q: QueryDefinition)
+      extends RequestDefinition(DeleteByQueryAction.INSTANCE) {
+    private val builder = Requests.deleteByQueryRequest(indexes: _*).types(types: _*).query(q.builder)
+    def build = builder
   }
 }
