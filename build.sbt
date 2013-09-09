@@ -40,9 +40,9 @@ libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.6.6"
 
-libraryDependencies += "log4j" % "log4j" % "1.2.17"
+libraryDependencies += "log4j" % "log4j" % "1.2.17" % "test"
 
-libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.6.6"
+libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.6.6" % "test"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
