@@ -9,7 +9,7 @@ Lets create an index (using the bulk API to insert multiple documents at once) t
   import com.sksamuel.elastic4s.ElasticClient
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  client execute (
+  client bulk (
     index into "coldplay/albums" id 1 fields "name" -> "mylo xyloto", // note the trailing commas
     index into "coldplay/albums" id 2 fields "name" -> "x & y", // we are invoking a var args method
     index into "coldplay/albums" id 3 fields "name" -> "parachutes",

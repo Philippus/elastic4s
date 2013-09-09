@@ -264,7 +264,7 @@ Elastic has predicted our wishes and created the bulk API.
 To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
 
 ```scala
-client.execute {
+client.bulk {
    index into "bands/rock" fields "name"->"coldplay",
    index into "bands/rock" fields "name"->"kings of leon",
    index into "bands/pop" fields ( 
