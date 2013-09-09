@@ -40,14 +40,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing corresponding ActionResponse
    */
-  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder]): Future[Res] = {
-    val p = Promise[Res]()
-    execute(requestDefinition, new ActionListener[Res] {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: Res): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder]): Future[Res] =
+    injectFuture[Res](execute(requestDefinition, _))
 
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder], callback: ActionListener[Res]): Unit =
     client.execute(requestDefinition.action, requestDefinition.build, callback)
@@ -59,14 +53,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing corresponding ActionResponse
    */
-  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Future[Res] = {
-    val p = Promise[Res]()
-    execute(requestDefinition, new ActionListener[Res] {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: Res): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Future[Res] =
+    injectFuture[Res](execute(requestDefinition, _))
 
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder], callback: ActionListener[Res]): Unit =
     client.admin.indices.execute(requestDefinition.action, requestDefinition.build, callback)
@@ -78,14 +66,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an IndexResponse
    */
-  def execute(req: IndexRequest): Future[IndexResponse] = {
-    val p = Promise[IndexResponse]()
-    client.index(req, new ActionListener[IndexResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: IndexResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: IndexRequest): Future[IndexResponse] = injectFuture[IndexResponse](client.index(req, _))
 
   def execute(req: IndexRequest, callback: ActionListener[IndexResponse]) = client.index(req, callback)
 
@@ -96,14 +77,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an SearchResponse
    */
-  def execute(req: SearchRequest): Future[SearchResponse] = {
-    val p = Promise[SearchResponse]()
-    client.search(req, new ActionListener[SearchResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: SearchResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: SearchRequest): Future[SearchResponse] = injectFuture[SearchResponse](client.search(req, _))
 
   def execute(req: SearchRequest, callback: ActionListener[SearchResponse]) = client.search(req, callback)
 
@@ -130,14 +104,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an CountResponse
    */
-  def execute(req: CountRequest): Future[CountResponse] = {
-    val p = Promise[CountResponse]()
-    client.count(req, new ActionListener[CountResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: CountResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: CountRequest): Future[CountResponse] = injectFuture[CountResponse](client.count(req, _))
 
   /**
    * Executes a Java API GetRequest and returns a scala Future with the GetResponse.
@@ -146,14 +113,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an GetResponse
    */
-  def get(req: GetRequest): Future[GetResponse] = {
-    val p = Promise[GetResponse]()
-    client.get(req, new ActionListener[GetResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: GetResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def get(req: GetRequest): Future[GetResponse] = injectFuture[GetResponse](client.get(req, _))
 
   /**
    * Executes a Scala DSL get and returns a scala Future with the GetResponse.
@@ -166,14 +126,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(builder: GetDefinition): Future[GetResponse] = get(builder)
   def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
 
-  def get(req: MultiGetRequest): Future[MultiGetResponse] = {
-    val p = Promise[MultiGetResponse]()
-    client.multiGet(req, new ActionListener[MultiGetResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: MultiGetResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def get(req: MultiGetRequest): Future[MultiGetResponse] = injectFuture[MultiGetResponse](client.multiGet(req, _))
 
   def get(gets: GetDefinition*): Future[MultiGetResponse] = execute(new MultiGetDefinition(gets))
 
@@ -183,32 +136,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def delete(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d)
 
-  def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] = {
-    val p = Promise[ValidateQueryResponse]()
-    client.admin.indices().validateQuery(req, new ActionListener[ValidateQueryResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: ValidateQueryResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] =
+    injectFuture[ValidateQueryResponse](client.admin.indices.validateQuery(req, _))
 
-  def execute(req: UpdateRequest): Future[UpdateResponse] = {
-    val p = Promise[UpdateResponse]()
-    client.update(req, new ActionListener[UpdateResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: UpdateResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: UpdateRequest): Future[UpdateResponse] =
+    injectFuture[UpdateResponse](client.update(req, _))
 
-  def execute(req: MoreLikeThisRequest): Future[SearchResponse] = {
-    val p = Promise[SearchResponse]()
-    client.moreLikeThis(req, new ActionListener[SearchResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: SearchResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def execute(req: MoreLikeThisRequest): Future[SearchResponse] =
+    injectFuture[SearchResponse](client.moreLikeThis(req, _))
 
   def bulk(requests: BulkCompatibleDefinition*): Future[BulkResponse] = {
     val bulk = client.prepareBulk()
@@ -217,26 +152,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       case delete: DeleteByIdDefinition => bulk.add(delete.build)
       case update: UpdateDefinition => bulk.add(update.build)
     })
-    val p = Promise[BulkResponse]()
-    bulk.execute(new ActionListener[BulkResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: BulkResponse): Unit = p.success(response)
-    })
-    p.future
+    injectFuture[BulkResponse](bulk.execute)
   }
 
   @deprecated("use the sync client")
   def result(requests: BulkCompatibleDefinition*)(implicit duration: Duration): BulkResponse =
     Await.result(bulk(requests: _*), duration)
 
-  def exists(indexes: String*): Future[IndicesExistsResponse] = {
-    val p = Promise[IndicesExistsResponse]()
-    client.admin().indices().prepareExists(indexes.toSeq: _*).execute(new ActionListener[IndicesExistsResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: IndicesExistsResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def exists(indexes: String*): Future[IndicesExistsResponse] =
+    injectFuture[IndicesExistsResponse](client.admin.indices.prepareExists(indexes: _*).execute)
 
   def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef)
 
@@ -244,68 +168,26 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def deleteIndex(d: DeleteIndexDefinition): Future[DeleteIndexResponse] = execute(d)
 
-  def searchScroll(scrollId: String): Future[SearchResponse] = {
-    val p = Promise[SearchResponse]()
-    client.prepareSearchScroll(scrollId).execute(new ActionListener[SearchResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: SearchResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def searchScroll(scrollId: String): Future[SearchResponse] =
+    injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
 
-  def flush(indexes: String*): Future[FlushResponse] = {
-    val p = Promise[FlushResponse]()
-    client.admin().indices().prepareFlush(indexes: _*).execute(new ActionListener[FlushResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: FlushResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def flush(indexes: String*): Future[FlushResponse] =
+    injectFuture[FlushResponse](client.admin.indices.prepareFlush(indexes: _*).execute)
 
-  def refresh(indexes: String*): Future[RefreshResponse] = {
-    val p = Promise[RefreshResponse]()
-    client.admin().indices().prepareRefresh(indexes: _*).execute(new ActionListener[RefreshResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: RefreshResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def refresh(indexes: String*): Future[RefreshResponse] =
+    injectFuture[RefreshResponse](client.admin.indices.prepareRefresh(indexes: _*).execute)
 
-  def optimize(indexes: String*): Future[OptimizeResponse] = {
-    val p = Promise[OptimizeResponse]()
-    client.admin().indices().prepareOptimize(indexes: _*).execute(new ActionListener[OptimizeResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: OptimizeResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def optimize(indexes: String*): Future[OptimizeResponse] =
+    injectFuture[OptimizeResponse](client.admin.indices.prepareOptimize(indexes: _*).execute)
 
-  def open(index: String): Future[OpenIndexResponse] = {
-    val p = Promise[OpenIndexResponse]()
-    client.admin().indices().prepareOpen(index).execute(new ActionListener[OpenIndexResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: OpenIndexResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def open(index: String): Future[OpenIndexResponse] =
+    injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
-  def close(index: String): Future[CloseIndexResponse] = {
-    val p = Promise[CloseIndexResponse]()
-    client.admin().indices().prepareClose(index).execute(new ActionListener[CloseIndexResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: CloseIndexResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def close(index: String): Future[CloseIndexResponse] =
+    injectFuture[CloseIndexResponse](client.admin.indices.prepareClose(index).execute)
 
-  def segments(indexes: String*): Future[IndicesSegmentResponse] = {
-    val p = Promise[IndicesSegmentResponse]()
-    client.admin().indices().prepareSegments(indexes: _*).execute(new ActionListener[IndicesSegmentResponse]() {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: IndicesSegmentResponse): Unit = p.success(response)
-    })
-    p.future
-  }
+  def segments(indexes: String*): Future[IndicesSegmentResponse] =
+    injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
 
   def close(): Unit = client.close()
 
@@ -353,6 +235,16 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }
+
+  private def injectFuture[A](f: ActionListener[A] => Unit) = {
+    val p = Promise[A]()
+    f(new ActionListener[A] {
+      def onFailure(e: Throwable): Unit = p.failure(e)
+      def onResponse(response: A): Unit = p.success(response)
+    })
+    p.future
+  }
+
 }
 
 object ElasticClient {
