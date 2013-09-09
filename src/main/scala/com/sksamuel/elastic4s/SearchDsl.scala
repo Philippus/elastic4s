@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.search.{MultiSearchRequestBuilder, SearchRequestBuilder}
+import org.elasticsearch.action.search._
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
@@ -17,7 +17,7 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
   }
 
-  class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
+  class MultiSearchDefinition(searches: Iterable[SearchDefinition]) extends RequestDefinition(MultiSearchAction.INSTANCE) {
     def build = {
       val builder = new MultiSearchRequestBuilder(null)
       searches foreach (builder add _.build)
@@ -54,9 +54,10 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     }
   }
 
-  class SearchDefinition(indexes: Seq[String]) {
+  class SearchDefinition(indexes: Seq[String]) extends RequestDefinition(SearchAction.INSTANCE) {
 
-    val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
+    // TODO Discuss: temporarily open to pass tests
+    private[elastic4s] val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
     def build = _builder.request()
 
     /**

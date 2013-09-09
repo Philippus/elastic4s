@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.percolate.PercolateRequestBuilder
+import org.elasticsearch.action.percolate.{PercolateAction, PercolateResponse, PercolateRequest, PercolateRequestBuilder}
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.IndexRequestBuilder
+import org.elasticsearch.action.index.{IndexAction, IndexResponse, IndexRequest, IndexRequestBuilder}
+import org.elasticsearch.search.query.QuerySearchRequest
 
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
@@ -17,7 +18,7 @@ trait PercolateDsl extends QueryDsl {
     def in(index: String) = new PercolateDefinition(index)
   }
 
-  class PercolateDefinition(index: String) {
+  class PercolateDefinition(index: String) extends RequestDefinition(PercolateAction.INSTANCE) {
 
     private val _fields = new ListBuffer[(String, Any)]
 
@@ -52,15 +53,14 @@ trait PercolateDsl extends QueryDsl {
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  class RegisterDefinition(index: String, id: String) {
-    var _query: QueryDefinition = _
+  class RegisterDefinition(index: String, id: String) extends RequestDefinition(IndexAction.INSTANCE) {
+    private[this] var _query: QueryDefinition = _
     def build = {
-      val req = new IndexRequestBuilder(null).setIndex("_percolator").setType(index).setId(id).setRefresh(true)
-      val source = XContentFactory.jsonBuilder().startObject()
-      source.field("query", _query.builder)
-      source.endObject()
-      req.setSource(source)
-      req
+      val source = XContentFactory.jsonBuilder()
+        .startObject().field("query", _query.builder).endObject()
+      new IndexRequestBuilder(null).setIndex("_percolator")
+        .setType(index).setId(id).setRefresh(true)
+        .setSource(source).request
     }
     def query(block: => QueryDefinition): RegisterDefinition = {
       _query = block

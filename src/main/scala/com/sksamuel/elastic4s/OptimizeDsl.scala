@@ -1,16 +1,17 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
+import org.elasticsearch.action.admin.indices.optimize.OptimizeAction
 
 /** @author Stephen Samuel */
 trait OptimizeDsl {
 
-  implicit def string2optimize(index: String) = optimize(index)
   def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
 
-  class OptimizeDefinition(indexes: String*) {
+  class OptimizeDefinition(indexes: String*) extends IndicesRequestDefinition(OptimizeAction.INSTANCE) {
 
-    val builder = Requests.optimizeRequest(indexes: _*)
+    private val builder = Requests.optimizeRequest(indexes: _*)
+    def build = builder
 
     def maxSegments(maxSegments: Int): OptimizeDefinition = {
       builder.maxNumSegments(maxSegments)
@@ -34,4 +35,9 @@ trait OptimizeDsl {
     }
 
   }
+
+  object OptimizeDefinition {
+    implicit def apply(index: String): OptimizeDefinition = optimize(index)
+  }
+
 }
