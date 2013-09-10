@@ -269,7 +269,7 @@ client.bulk {
    index into "bands/rock" fields "name"->"kings of leon",
    index into "bands/pop" fields ( 
       "name"->"elton john",
-      "best_album"-"goodbye yellow brick road"
+      "best_album"->"goodbye yellow brick road"
    )
 }
 ```
