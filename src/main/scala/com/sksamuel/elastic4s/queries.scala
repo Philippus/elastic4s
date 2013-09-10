@@ -337,7 +337,7 @@ class CommonQueryDefinition(name: String, text: String) extends QueryDefinition 
     this
   }
   def highFreqOperator(operator: String): CommonQueryDefinition = {
-    builder.highFreqOperator(if (operator.toLowerCase == "AND") Operator.AND else Operator.OR)
+    builder.highFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
     this
   }
   def analyzer(analyzer: Analyzer): CommonQueryDefinition = {
@@ -349,7 +349,7 @@ class CommonQueryDefinition(name: String, text: String) extends QueryDefinition 
     this
   }
   def lowFreqOperator(operator: String): CommonQueryDefinition = {
-    builder.lowFreqOperator(if (operator.toLowerCase == "AND") Operator.AND else Operator.OR)
+    builder.lowFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
     this
   }
   def cutoffFrequency(cutoffFrequency: Double): CommonQueryDefinition = {
@@ -673,7 +673,7 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
 
   def operator(op: String) = {
     op.toLowerCase match {
-      case "AND" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
+      case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
       case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
     }
     this
