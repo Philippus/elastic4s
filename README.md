@@ -71,9 +71,9 @@ val client = ElasticClient.local(settings.build)
 To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports:
 ```scala
 // single node
-val client = ElastiClient.remote("host1", 9300)
+val client = ElasticClient.remote("host1", 9300)
 // or for multiple nodes
-val client = ElastiClient.remote("host1" -> 9300, "host2" -> 9300)
+val client = ElasticClient.remote("host1" -> 9300, "host2" -> 9300)
 ```
 
 
