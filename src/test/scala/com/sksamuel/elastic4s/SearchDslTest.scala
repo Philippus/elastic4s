@@ -264,6 +264,23 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a match phrase prefix query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match_phrase_prefix.json"))
+    val req = search("*").types("bands", "artists").limit(5).query {
+      matchPhrasePrefix("name", "coldplay")
+        .cutoffFrequency(3.4)
+        .fuzzyTranspositions(true)
+        .maxExpansions(4)
+        .operator(MatchQueryBuilder.Operator.AND)
+        .zeroTermsQuery(ZeroTermsQuery.ALL)
+        .slop(3)
+        .setLenient(true)
+        .prefixLength(4)
+        .analyzer(SnowballAnalyzer)
+    } preference Preference.OnlyNode("a")
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for term filter" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_term_filter.json"))
     val req = search in "music" types "bands" filter {

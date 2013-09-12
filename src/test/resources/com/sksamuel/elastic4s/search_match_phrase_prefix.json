@@ -1,0 +1,19 @@
+{"size": 5,
+    "query": {
+        "match": {
+            "name": {
+                "query": "coldplay",
+                "type": "phrase_prefix",
+                "operator": "AND",
+                "analyzer": "snowball",
+                "slop": 3,
+                "prefix_length": 4,
+                "max_expansions": 4,
+                "fuzzy_transpositions": true,
+                "lenient": true,
+                "zero_terms_query": "ALL",
+                "cutoff_frequency": 3.4
+            }
+        }
+    }
+}
