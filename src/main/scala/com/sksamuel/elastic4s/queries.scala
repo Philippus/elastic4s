@@ -83,6 +83,7 @@ trait QueryDsl {
   def matches(field: String, value: Any): MatchQueryDefinition = matchQuery(field, value)
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
+  def matchPhrase(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
 
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
@@ -663,6 +664,70 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
+    this
+  }
+}
+
+class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
+  def builder = QueryBuilders.matchPhraseQuery(field, value.toString)
+
+  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery) = {
+    builder.zeroTermsQuery(z)
+    this
+  }
+
+  def slop(s: Int) = {
+    builder.slop(s)
+    this
+  }
+
+  def setLenient(lenient: Boolean) = {
+    builder.setLenient(lenient)
+    this
+  }
+
+  def rewrite(r: String) = {
+    builder.rewrite(r)
+    this
+  }
+
+  def prefixLength(a: Int) = {
+    builder.prefixLength(a)
+    this
+  }
+
+  def operator(op: MatchQueryBuilder.Operator) = {
+    builder.operator(op)
+    this
+  }
+
+  def minimumShouldMatch(a: String) = {
+    builder.minimumShouldMatch(a)
+    this
+  }
+
+  def maxExpansions(max: Int) = {
+    builder.maxExpansions(max)
+    this
+  }
+
+  def fuzzyTranspositions(f: Boolean) = {
+    builder.fuzzyTranspositions(f)
+    this
+  }
+
+  def fuzzyRewrite(f: String) = {
+    builder.fuzzyRewrite(f)
+    this
+  }
+
+  def fuzziness(a: AnyRef) = {
+    builder.fuzziness(a)
+    this
+  }
+
+  def cutoffFrequency(cutoff: Double) = {
+    builder.cutoffFrequency(cutoff.toFloat)
     this
   }
 }
