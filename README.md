@@ -258,7 +258,7 @@ For all the options see [here](http://www.elasticsearch.org/guide/reference/quer
 
 #### Bulk Operations
 
-ElasticSearch is fast. HTTP is not.
+ElasticSearch is fast. Roundtrips are not.
 Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations.
 Elastic has predicted our wishes and created the bulk API.
 To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
@@ -273,7 +273,7 @@ client.bulk {
    )
 }
 ```
-A single HTTP request is now needed for 4 operations. The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
+A single HTTP or TCP request is now needed for 4 operations. The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 
 #### Other
 
