@@ -273,7 +273,9 @@ client.bulk {
    )
 }
 ```
-A single HTTP or TCP request is now needed for 4 operations. The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
+A single HTTP or TCP request is now needed for 4 operations.
+The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
+See more information on the [bulk page](guide/bulk.md).
 
 #### Other
 
