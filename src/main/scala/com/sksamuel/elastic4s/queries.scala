@@ -84,6 +84,8 @@ trait QueryDsl {
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
   def matchPhrase(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
+  def matchPhrasePrefix(field: String, value: Any): MatchPhrasePrefixDefinition =
+    new MatchPhrasePrefixDefinition(field, value)
 
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
@@ -723,6 +725,89 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
   }
 
   def cutoffFrequency(cutoff: Double): MatchQueryDefinition = {
+    builder.cutoffFrequency(cutoff.toFloat)
+    this
+  }
+}
+
+class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefinition {
+
+  val builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
+
+  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = {
+    builder.analyzer(a.elastic)
+    this
+  }
+
+  def boost(boost: Double): MatchPhrasePrefixDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+
+  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery): MatchPhrasePrefixDefinition = {
+    builder.zeroTermsQuery(z)
+    this
+  }
+
+  def slop(s: Int): MatchPhrasePrefixDefinition = {
+    builder.slop(s)
+    this
+  }
+
+  def setLenient(lenient: Boolean): MatchPhrasePrefixDefinition = {
+    builder.setLenient(lenient)
+    this
+  }
+
+  def rewrite(r: String): MatchPhrasePrefixDefinition = {
+    builder.rewrite(r)
+    this
+  }
+
+  def prefixLength(a: Int): MatchPhrasePrefixDefinition = {
+    builder.prefixLength(a)
+    this
+  }
+
+  def operator(op: MatchQueryBuilder.Operator): MatchPhrasePrefixDefinition = {
+    builder.operator(op)
+    this
+  }
+
+  def operator(op: String): MatchPhrasePrefixDefinition = {
+    op match {
+      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
+      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
+    }
+    this
+  }
+
+  def minimumShouldMatch(a: String): MatchPhrasePrefixDefinition = {
+    builder.minimumShouldMatch(a)
+    this
+  }
+
+  def maxExpansions(max: Int): MatchPhrasePrefixDefinition = {
+    builder.maxExpansions(max)
+    this
+  }
+
+  def fuzzyTranspositions(f: Boolean): MatchPhrasePrefixDefinition = {
+    builder.fuzzyTranspositions(f)
+    this
+  }
+
+  def fuzzyRewrite(f: String): MatchPhrasePrefixDefinition = {
+    builder.fuzzyRewrite(f)
+    this
+  }
+
+  def fuzziness(a: AnyRef): MatchPhrasePrefixDefinition = {
+    builder.fuzziness(a)
+    this
+  }
+
+  def cutoffFrequency(cutoff: Double): MatchPhrasePrefixDefinition = {
     builder.cutoffFrequency(cutoff.toFloat)
     this
   }
