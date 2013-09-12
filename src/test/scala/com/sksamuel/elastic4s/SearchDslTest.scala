@@ -13,7 +13,9 @@ import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
-import com.sksamuel.elastic4s.Preference.Shards
+import com.sksamuel.elastic4s.Preference.{OnlyNode, Shards}
+import org.elasticsearch.index.query.MatchQueryBuilder.ZeroTermsQuery
+import org.elasticsearch.index.query.FieldQueryBuilder.Operator
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -234,6 +236,22 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         field("location", "oxford") fuzzyMinSim 0.5 fuzzyMaxExpansions 7 rewrite "rewrite"
       )
     ) preference Preference.OnlyNode("a")
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate json for a match phrase query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match_phrase.json"))
+    val req = search("*").types("bands", "artists").limit(5).query {
+      matchPhrase("name", "coldplay")
+        .cutoffFrequency(3.4)
+        .fuzzyTranspositions(true)
+        .maxExpansions(4)
+        .operator(MatchQueryBuilder.Operator.AND)
+        .zeroTermsQuery(ZeroTermsQuery.ALL)
+        .slop(3)
+        .setLenient(true)
+        .prefixLength(4)
+    } preference Preference.OnlyNode("a")
     assert(json === mapper.readTree(req._builder.toString))
   }
 

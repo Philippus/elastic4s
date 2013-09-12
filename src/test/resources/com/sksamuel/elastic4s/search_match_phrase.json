@@ -1,0 +1,11 @@
+{
+    "size": 5,
+    "query": {
+        "match": {
+            "name": {
+                "query": "coldplay",
+                "type": "phrase"
+            }
+        }
+    }
+}
