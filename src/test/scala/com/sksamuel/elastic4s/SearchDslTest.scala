@@ -13,9 +13,8 @@ import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
-import com.sksamuel.elastic4s.Preference.{OnlyNode, Shards}
+import com.sksamuel.elastic4s.Preference.Shards
 import org.elasticsearch.index.query.MatchQueryBuilder.ZeroTermsQuery
-import org.elasticsearch.index.query.FieldQueryBuilder.Operator
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {

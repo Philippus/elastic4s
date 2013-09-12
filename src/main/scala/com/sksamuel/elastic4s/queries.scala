@@ -649,7 +649,7 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
   val builder = QueryBuilders.matchQuery(field, value)
 
-  def operator(op: String) = {
+  def operator(op: String): MatchQueryDefinition = {
     op match {
       case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
       case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
@@ -657,19 +657,15 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def analyzer(a: Analyzer) = {
+  def analyzer(a: Analyzer): MatchQueryDefinition = {
     builder.analyzer(a.elastic)
     this
   }
 
-  def boost(boost: Double) = {
+  def boost(boost: Double): MatchQueryDefinition = {
     builder.boost(boost.toFloat)
     this
   }
-}
-
-class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
-  def builder = QueryBuilders.matchPhraseQuery(field, value.toString)
 
   def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery) = {
     builder.zeroTermsQuery(z)
@@ -698,6 +694,88 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
 
   def operator(op: MatchQueryBuilder.Operator) = {
     builder.operator(op)
+    this
+  }
+
+  def minimumShouldMatch(a: String) = {
+    builder.minimumShouldMatch(a)
+    this
+  }
+
+  def maxExpansions(max: Int) = {
+    builder.maxExpansions(max)
+    this
+  }
+
+  def fuzzyTranspositions(f: Boolean): MatchQueryDefinition = {
+    builder.fuzzyTranspositions(f)
+    this
+  }
+
+  def fuzzyRewrite(f: String): MatchQueryDefinition = {
+    builder.fuzzyRewrite(f)
+    this
+  }
+
+  def fuzziness(a: AnyRef): MatchQueryDefinition = {
+    builder.fuzziness(a)
+    this
+  }
+
+  def cutoffFrequency(cutoff: Double): MatchQueryDefinition = {
+    builder.cutoffFrequency(cutoff.toFloat)
+    this
+  }
+}
+
+class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
+  def builder = QueryBuilders.matchPhraseQuery(field, value.toString)
+
+  def analyzer(a: Analyzer): MatchPhraseDefinition = {
+    builder.analyzer(a.elastic)
+    this
+  }
+
+  def boost(boost: Double): MatchPhraseDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+
+  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery) = {
+    builder.zeroTermsQuery(z)
+    this
+  }
+
+  def slop(s: Int): MatchPhraseDefinition = {
+    builder.slop(s)
+    this
+  }
+
+  def setLenient(lenient: Boolean): MatchPhraseDefinition = {
+    builder.setLenient(lenient)
+    this
+  }
+
+  def rewrite(r: String): MatchPhraseDefinition = {
+    builder.rewrite(r)
+    this
+  }
+
+  def prefixLength(a: Int): MatchPhraseDefinition = {
+    builder.prefixLength(a)
+    this
+  }
+
+  def operator(op: MatchQueryBuilder.Operator): MatchPhraseDefinition = {
+    builder.operator(op)
+    this
+  }
+
+  def operator(op: String): MatchPhraseDefinition = {
+    op match {
+      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
+      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
+    }
     this
   }
 
