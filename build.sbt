@@ -1,6 +1,5 @@
 import _root_.sbt._
 import _root_.sbt.Keys._
-import org.json.Test
 
 name := "elastic4s"
 
