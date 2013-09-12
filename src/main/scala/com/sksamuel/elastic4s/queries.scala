@@ -729,7 +729,8 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
 }
 
 class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
-  def builder = QueryBuilders.matchPhraseQuery(field, value.toString)
+
+  val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
 
   def analyzer(a: Analyzer): MatchPhraseDefinition = {
     builder.analyzer(a.elastic)

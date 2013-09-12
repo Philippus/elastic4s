@@ -140,7 +140,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate json for a match query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_match.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
-      matches("drummmer" -> "will") boost 4 operator "AND" analyzer SnowballAnalyzer
+      matchQuery("name", "coldplay")
+        .cutoffFrequency(3.4)
+        .fuzzyTranspositions(true)
+        .maxExpansions(4)
+        .operator(MatchQueryBuilder.Operator.AND)
+        .zeroTermsQuery(ZeroTermsQuery.ALL)
+        .slop(3)
+        .setLenient(true)
+        .prefixLength(4)
+        .analyzer(SnowballAnalyzer)
     } searchType SearchType.Count
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -250,6 +259,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         .slop(3)
         .setLenient(true)
         .prefixLength(4)
+        .analyzer(SnowballAnalyzer)
     } preference Preference.OnlyNode("a")
     assert(json === mapper.readTree(req._builder.toString))
   }
