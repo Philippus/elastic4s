@@ -12,15 +12,14 @@ import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.node.{Node, NodeBuilder}
 import org.elasticsearch.client.Client
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse, GetResponse, GetRequest}
-import org.elasticsearch.action.delete.{DeleteResponse, DeleteRequest}
-import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
+import org.elasticsearch.action.delete.DeleteResponse
+import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
 import scala.concurrent.duration._
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.action.{ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener}
