@@ -49,7 +49,6 @@
 
         <maven.plugin.resources.version>2.6</maven.plugin.resources.version>
         <maven.plugin.compiler.version>3.1</maven.plugin.compiler.version>
-        <maven.plugin.dependency.version>2.7</maven.plugin.dependency.version>
         <maven.plugin.gpg.version>1.4</maven.plugin.gpg.version>
         <maven.plugin.jar.version>2.4</maven.plugin.jar.version>
         <maven.plugin.javadoc.version>2.9</maven.plugin.javadoc.version>
@@ -65,7 +64,7 @@
         <commons.io.version>2.4</commons.io.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
 
-        <elasticsearch.version>0.90.3</elasticsearch.version>
+        <elasticsearch.version>0.90.4</elasticsearch.version>
 
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>
