@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.admin.indices.create.{CreateIndexRequestBuilder, CreateIndexAction, CreateIndexResponse, CreateIndexRequest}
+import org.elasticsearch.action.admin.indices.create.{CreateIndexAction, CreateIndexRequest}
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
@@ -28,20 +28,12 @@ trait CreateIndexDsl {
     var _boostValue: Double = 0
     var _meta: Map[String, Any] = Map.empty
 
-    def source(source: Boolean): MappingDefinition = {
-      this.source = source
-      this
-    }
-    def meta(map: Map[String, Any]): MappingDefinition = {
-      this._meta = map
-      this
-    }
-    def dateDetection(date_detection: Boolean): MappingDefinition = {
-      this.date_detection = date_detection
-      this
-    }
     def analyzer(analyzer: String): MappingDefinition = {
       _analyzer = Option(analyzer)
+      this
+    }
+    def analyzer(analyzer: Analyzer): MappingDefinition = {
+      _analyzer = Option(analyzer.definition.string())
       this
     }
     def boost(name: String): MappingDefinition = {
@@ -52,12 +44,24 @@ trait CreateIndexDsl {
       _boostValue = value
       this
     }
-    def numericDetection(numeric_detection: Boolean): MappingDefinition = {
-      this.numeric_detection = numeric_detection
-      this
-    }
     def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition = {
       this.dynamic_date_formats = dynamic_date_formats
+      this
+    }
+    def meta(map: Map[String, Any]): MappingDefinition = {
+      this._meta = map
+      this
+    }
+    def source(source: Boolean): MappingDefinition = {
+      this.source = source
+      this
+    }
+    def dateDetection(date_detection: Boolean): MappingDefinition = {
+      this.date_detection = date_detection
+      this
+    }
+    def numericDetection(numeric_detection: Boolean): MappingDefinition = {
+      this.numeric_detection = numeric_detection
       this
     }
     def as(iterable: Iterable[FieldDefinition]): MappingDefinition = {
@@ -191,7 +195,7 @@ trait CreateIndexDsl {
         for ( field <- mapping._fields ) {
           source.startObject(field.name)
           field._type.foreach(arg => source.field("type", arg.elastic))
-          field._analyzer.foreach(arg => source.field("analyzer", arg.elastic))
+          field._analyzer.foreach(arg => source.field("analyzer", arg.definition.string()))
           field._index.foreach(index => source.field("index", index))
           field._omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
           field._nullValue.foreach(nullValue => source.field("null_value", nullValue))
