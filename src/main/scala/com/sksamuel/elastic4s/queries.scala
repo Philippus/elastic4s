@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
+import org.elasticsearch.index.query.functionscore.{ScoreFunctionBuilder, FunctionScoreQueryBuilder}
 
 /** @author Stephen Samuel */
 
@@ -52,6 +53,8 @@ trait QueryDsl {
     def field(name: String): FuzzyLikeThisDefinition = fields(name)
     def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
   }
+
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
 
   @deprecated("ambigious")
   def filter = filterQuery
@@ -156,6 +159,30 @@ class BoolQueryDefinition extends QueryDefinition {
 
 trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
+}
+
+class FunctionScoreQueryDefinition(query: QueryDefinition) extends QueryDefinition {
+  val builder = new FunctionScoreQueryBuilder(query.builder)
+  def boost(boost: Double): FunctionScoreQueryDefinition = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def boostMode(boostMode: String): FunctionScoreQueryDefinition = {
+    builder.boostMode(boostMode)
+    this
+  }
+  def maxBoost(maxBoost: Double): FunctionScoreQueryDefinition = {
+    builder.maxBoost(maxBoost.toFloat)
+    this
+  }
+  def scoreMode(scoreMode: String): FunctionScoreQueryDefinition = {
+    builder.scoreMode(scoreMode)
+    this
+  }
+  def scorers(scorer: ScoreFunctionBuilder): FunctionScoreQueryDefinition = {
+    builder.add(scorer)
+    this
+  }
 }
 
 class MultiMatchQueryDefinition(text: String) extends QueryDefinition {

@@ -5,6 +5,7 @@ import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 /** @author Stephen Samuel */
 trait Analyzer {
   def definition: XContentBuilder
+  def elastic = definition.string()
 }
 abstract class ElasticAnalyzer(string: String) {
   def definition = XContentFactory.jsonBuilder().value(string)
