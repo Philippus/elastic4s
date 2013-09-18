@@ -19,4 +19,12 @@ object TokenFilter {
                              stopwordsPath: String = "",
                              enablePositionIncrements: Boolean = true,
                              ignoreCase: Boolean = false)
+  case class PatternCaptureTokenFilter(patterns: Array[String], preserveOriginal: Boolean = true) extends TokenFilter
+  case class PatternReplaceTokenFilter(pattern: String, replacement: String) extends TokenFilter
+  case class CommongGramsTokenFilter(commonWords: Array[String],
+                                     commonWordsPath: String = "",
+                                     ignoreCase: Boolean = false,
+                                     queryMode: Boolean = false)
+  case class SnowballTokenFilter(language: String) extends TokenFilter
+  case class StemmerOverrideTokenFilter(rules: Array[String], rulesPath: String = "") extends TokenFilter
 }
