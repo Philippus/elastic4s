@@ -8,18 +8,16 @@ import org.elasticsearch.common.Priority
 /** @author Stephen Samuel */
 class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
-  client.execute {
-    index into "places/cities" fields(
+  client.bulk(
+    index into "places/cities" id 99 fields(
       "name" -> "London",
       "country" -> "UK"
-      ) id 99
-  }
-  client.execute {
-    index into "places/cities" fields(
+      ),
+    index into "places/cities" id 44 fields(
       "name" -> "Philadelphia",
       "country" -> "USA"
-      ) id 44
-  }
+      )
+  )
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
@@ -47,8 +45,8 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   "a search index" should "remove a document when deleting by id" in {
-    client.sync.delete {
-      "places/cities" -> 99
+    client.sync.execute {
+      delete id 99 from "places/cities"
     }
     refresh("places")
     blockUntilCount(1, "places")

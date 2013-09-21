@@ -89,7 +89,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    */
   def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
 
-  @deprecated("use the sync client")
+  @deprecated("use the sync client", "0.90.5")
   def result(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
     Await.result(execute(search), duration)
 
@@ -154,7 +154,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[BulkResponse](bulk.execute)
   }
 
-  @deprecated("use the sync client")
+  @deprecated("use the sync client", "0.90.5")
   def result(requests: BulkCompatibleDefinition*)(implicit duration: Duration): BulkResponse =
     Await.result(bulk(requests: _*), duration)
 
