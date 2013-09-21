@@ -7,7 +7,7 @@ trait Analyzer {
   def definition: XContentBuilder
   def elastic = definition.string()
 }
-abstract class ElasticAnalyzer(string: String) {
+abstract class ElasticAnalyzer(string: String) extends Analyzer {
   def definition = XContentFactory.jsonBuilder().value(string)
 }
 class CustomAnalyzer(string: String) extends Analyzer {

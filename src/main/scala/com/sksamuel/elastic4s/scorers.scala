@@ -30,24 +30,24 @@ class RandomScoreDefinition(seed: Long) extends ScoreDefinition {
 
 class ScriptScoreDefinition(script: String) extends ScoreDefinition {
   val builder = new ScriptScoreFunctionBuilder().script(script)
-  def boost(lang: String): ScoreDefinition = {
-    builder.lang(lang)
-    this
-  }
-  def param(key: String, value: String): ScoreDefinition = {
+  def param(key: String, value: String): ScriptScoreDefinition = {
     builder.param(key, value)
     this
   }
-  def boost(map: Map[String, String]): ScoreDefinition = {
+  def params(map: Map[String, String]): ScriptScoreDefinition = {
     map.foreach(entry => param(entry._1, entry._2))
+    this
+  }
+  def lang(lang: String): ScriptScoreDefinition = {
+    builder.lang(lang)
     this
   }
 }
 
 abstract class DecayScoreDefinition[T] extends ScoreDefinition {
   val builder: DecayFunctionBuilder
-  def offset(offset: String): T = {
-    builder.setOffset(offset: String)
+  def offset(offset: Any): T = {
+    builder.setOffset(offset.toString)
     this.asInstanceOf[T]
   }
   def decay(decay: Double): T = {

@@ -35,7 +35,8 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
       case 0 => Seq("_all")
       case _ => indexes
     }
-    client.client.admin().indices().prepareRefresh(i: _*).setWaitForOperations(true).execute()
+    val listener = client.client.admin().indices().prepareRefresh(i: _*).execute()
+    listener.actionGet()
   }
 
   def blockUntilCount(expected: Long,

@@ -16,6 +16,7 @@ object ElasticDsl
   with OptimizeDsl
   with PercolateDsl
   with SearchDsl
+  with ScoreDsl
   with UpdateDsl
   with ValidateDsl {
 

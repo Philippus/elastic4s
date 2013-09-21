@@ -25,15 +25,10 @@ trait OptimizeDsl {
       builder.onlyExpungeDeletes(onlyExpungeDeletes)
       this
     }
-    def refresh(refresh: Boolean): OptimizeDefinition = {
-      builder.refresh(refresh)
-      this
-    }
     def waitForMerge(waitForMerge: Boolean): OptimizeDefinition = {
       builder.waitForMerge()
       this
     }
-
   }
 
   object OptimizeDefinition {
