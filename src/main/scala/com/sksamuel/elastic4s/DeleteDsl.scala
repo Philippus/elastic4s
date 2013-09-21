@@ -7,9 +7,19 @@ import org.elasticsearch.action.delete.DeleteAction
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl {
 
+  def delete: DeleteExpectsId = new DeleteExpectsId
   def delete(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
+
+  class DeleteExpectsId {
+    def id(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
+  }
   class DeleteByIdExpectsIndexType(id: Any) {
-    def from(index: String): DeleteByIdDefinition = from(index, null)
+    def from(index: String): DeleteByIdDefinition = index.contains("/") match {
+      case true =>
+        val split = index.split("/")
+        from(split(0), split(1))
+      case false => from(index, null)
+    }
     def from(index: String, `type`: String): DeleteByIdDefinition = new DeleteByIdDefinition(index, `type`, id)
   }
 
