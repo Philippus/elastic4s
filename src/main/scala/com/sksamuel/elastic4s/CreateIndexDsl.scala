@@ -33,7 +33,7 @@ trait CreateIndexDsl {
       this
     }
     def analyzer(analyzer: Analyzer): MappingDefinition = {
-      _analyzer = Option(analyzer.definition.string())
+      _analyzer = Option(analyzer.elastic)
       this
     }
     def boost(name: String): MappingDefinition = {
@@ -195,7 +195,7 @@ trait CreateIndexDsl {
         for ( field <- mapping._fields ) {
           source.startObject(field.name)
           field._type.foreach(arg => source.field("type", arg.elastic))
-          field._analyzer.foreach(arg => source.field("analyzer", arg.definition.string()))
+          field._analyzer.foreach(arg => source.field("analyzer", arg.elastic))
           field._index.foreach(index => source.field("index", index))
           field._omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
           field._nullValue.foreach(nullValue => source.field("null_value", nullValue))

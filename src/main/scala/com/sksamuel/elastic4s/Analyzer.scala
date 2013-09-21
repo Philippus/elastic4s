@@ -4,14 +4,13 @@ import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 /** @author Stephen Samuel */
 trait Analyzer {
-  def definition: XContentBuilder
-  def elastic = definition.string()
+  def elastic: String
 }
 abstract class ElasticAnalyzer(string: String) extends Analyzer {
-  def definition = XContentFactory.jsonBuilder().value(string)
+  def elastic = string
 }
 class CustomAnalyzer(string: String) extends Analyzer {
-  def definition = XContentFactory.jsonBuilder().value(string)
+  def elastic = XContentFactory.jsonBuilder().value(string).string()
 }
 object Analyzer {
   case object NotAnalyzed extends ElasticAnalyzer("notindexed")

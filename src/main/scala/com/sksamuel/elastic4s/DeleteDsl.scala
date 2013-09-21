@@ -9,8 +9,8 @@ trait DeleteDsl extends QueryDsl {
 
   def delete(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
   class DeleteByIdExpectsIndexType(id: Any) {
-    def from(index: String) = from(index, null)
-    def from(index: String, `type`: String) = new DeleteByIdDefinition(index, `type`, id.toString)
+    def from(index: String): DeleteByIdDefinition = from(index, null)
+    def from(index: String, `type`: String): DeleteByIdDefinition = new DeleteByIdDefinition(index, `type`, id)
   }
 
   implicit def string2where(from: String): DeleteByQueryExpectsWhere = {
@@ -35,9 +35,9 @@ trait DeleteDsl extends QueryDsl {
     }
   }
 
-  class DeleteByIdDefinition(index: String, `type`: String, id: String)
+  class DeleteByIdDefinition(index: String, `type`: String, id: Any)
     extends RequestDefinition(DeleteAction.INSTANCE) with BulkCompatibleDefinition {
-    private val builder = Requests.deleteRequest(index).`type`(`type`).id(id)
+    private val builder = Requests.deleteRequest(index).`type`(`type`).id(id.toString)
     def build = builder
   }
 

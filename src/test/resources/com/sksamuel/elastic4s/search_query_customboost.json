@@ -1,10 +1,14 @@
-{"query": {
-    "custom_boost_factor": {
-        "query": {
-            "regexp": {
-                "place": "Lon.*"
-            }
-        },
-        "boost_factor": 10.0
+{
+    "query": {
+        "custom_boost_factor": {
+            "query": {
+                "regexp": {
+                    "place": {
+                        "value": "Lon.*"
+                    }
+                }
+            },
+            "boost_factor": 10.0
+        }
     }
-}}
+}

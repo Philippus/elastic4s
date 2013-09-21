@@ -1,0 +1,27 @@
+{
+    "query": {
+        "function_score": {
+            "query": {
+                "query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "functions": [
+                {
+                    "random_score": {
+                        "seed": 1234
+                    }
+                },
+                {
+                    "script_score": {
+                        "script": "some script here"
+                    }
+                }
+            ],
+            "score_mode": "multiply",
+            "boost_mode": "max",
+            "max_boost": 1.9,
+            "boost": 1.4
+        }
+    }
+}

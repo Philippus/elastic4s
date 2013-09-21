@@ -179,8 +179,8 @@ class FunctionScoreQueryDefinition(query: QueryDefinition) extends QueryDefiniti
     builder.scoreMode(scoreMode)
     this
   }
-  def scorers(scorer: ScoreFunctionBuilder): FunctionScoreQueryDefinition = {
-    builder.add(scorer)
+  def scorers(scorers: ScoreDefinition*): FunctionScoreQueryDefinition = {
+    scorers foreach (builder add _.builder)
     this
   }
 }
