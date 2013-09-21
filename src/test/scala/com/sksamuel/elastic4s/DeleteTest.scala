@@ -53,8 +53,8 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   "a search index" should "remove a document when deleting by query" in {
-    client.sync.delete {
-      "places" types Seq("cities", "countries") where "continent:Europe"
+    client.sync.execute {
+      delete from Seq("places") types Seq("cities") where "continent:Europe"
     }
     refresh("places")
     blockUntilCount(0, "places")

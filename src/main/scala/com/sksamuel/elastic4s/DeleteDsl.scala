@@ -7,18 +7,30 @@ import org.elasticsearch.action.delete.DeleteAction
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl {
 
-  def delete: DeleteExpectsId = new DeleteExpectsId
+  def delete: DeleteExpectsIdOrFrom = new DeleteExpectsIdOrFrom
   def delete(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
 
-  class DeleteExpectsId {
+  class DeleteExpectsIdOrFrom {
     def id(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
+    def from(index: String): DeleteByQueryExpectsWhere = index.split("/").toList match {
+      case i :: Nil => from(i, null)
+      case i :: t :: Nil => from(i, t)
+      case _ => throw new IllegalArgumentException("from arg must be in the form index/type")
+    }
+    def from(indexes: Seq[String]) = new DeleteByQueryExpectsType(indexes)
+    def from(index: String, `type`: String): DeleteByQueryExpectsWhere =
+      new DeleteByQueryExpectsWhere(Seq(index), Seq(`type`))
   }
+
+  class DeleteByQueryExpectsType(indexes: Seq[String]) {
+    def types(types: Seq[String]): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexes, types)
+  }
+
   class DeleteByIdExpectsIndexType(id: Any) {
-    def from(index: String): DeleteByIdDefinition = index.contains("/") match {
-      case true =>
-        val split = index.split("/")
-        from(split(0), split(1))
-      case false => from(index, null)
+    def from(index: String): DeleteByIdDefinition = index.split("/").toList match {
+      case i :: Nil => from(i, null)
+      case i :: t :: Nil => from(i, t)
+      case _ => throw new IllegalArgumentException("from arg must be in the form index/type")
     }
     def from(index: String, `type`: String): DeleteByIdDefinition = new DeleteByIdDefinition(index, `type`, id)
   }
@@ -27,7 +39,7 @@ trait DeleteDsl extends QueryDsl {
     from.split("/").toList match {
       case index :: Nil => new DeleteByQueryExpectsWhere(Seq(index), null)
       case index :: t :: Nil => new DeleteByQueryExpectsWhere(Seq(index), Seq(t))
-      case _ => throw new IllegalArgumentException("from must be in the form index/type")
+      case _ => throw new IllegalArgumentException("from arg must be in the form index/type")
     }
   }
   implicit def string2indextype(index: String): IndexType = new IndexType(index)
