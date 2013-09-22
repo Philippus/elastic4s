@@ -5,7 +5,7 @@ Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch. It 
 
 #### Release
 
-The latest release is 0.90.3.0 which is compatible with elasticsearch 0.90.3
+The latest release is 0.90.5.0 which is compatible with elasticsearch 0.90.5
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
@@ -306,7 +306,7 @@ This way you can still access everything the normal Java client covers in the ca
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.3.0"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.5.0"
 ```
 
 For Maven users simply add:
@@ -315,7 +315,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>0.90.3.0</version>
+    <version>0.90.5.0</version>
 </dependency>
 ```
 
