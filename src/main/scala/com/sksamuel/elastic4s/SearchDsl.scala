@@ -217,6 +217,11 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
       _builder.setTypes(types: _*)
       this
     }
+
+    def fields(fields: String*): SearchDefinition = {
+      _builder.addFields(fields: _*)
+      this
+    }
   }
 }
 
