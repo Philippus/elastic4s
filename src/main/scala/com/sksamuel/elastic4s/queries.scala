@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
-import org.elasticsearch.index.query.functionscore.{ScoreFunctionBuilder, FunctionScoreQueryBuilder}
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 
 /** @author Stephen Samuel */
 
@@ -54,7 +54,10 @@ trait QueryDsl {
     def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
   }
 
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition =
+    new FunctionScoreQueryDefinition(Left(query))
+  def functionScoreQuery(filter: FilterDefinition): FunctionScoreQueryDefinition =
+    new FunctionScoreQueryDefinition(Right(filter))
 
   @deprecated("ambigious, use filteredQuery", "0.90.3.3")
   def filter = filterQuery
@@ -161,8 +164,13 @@ trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-class FunctionScoreQueryDefinition(query: QueryDefinition) extends QueryDefinition {
-  val builder = new FunctionScoreQueryBuilder(query.builder)
+class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, FilterDefinition]) extends QueryDefinition {
+
+  val builder = if (queryOrFilter.isLeft)
+    new FunctionScoreQueryBuilder(queryOrFilter.left.get.builder)
+  else
+    new FunctionScoreQueryBuilder(queryOrFilter.right.get.builder)
+
   def boost(boost: Double): FunctionScoreQueryDefinition = {
     builder.boost(boost.toFloat)
     this
@@ -179,8 +187,11 @@ class FunctionScoreQueryDefinition(query: QueryDefinition) extends QueryDefiniti
     builder.scoreMode(scoreMode)
     this
   }
-  def scorers(scorers: ScoreDefinition*): FunctionScoreQueryDefinition = {
-    scorers foreach (builder add _.builder)
+  def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
+    scorers.foreach(scorer => scorer._filter match {
+      case None => builder.add(scorer.builder)
+      case Some(filter) => builder.add(filter.builder, scorer.builder)
+    })
     this
   }
 }

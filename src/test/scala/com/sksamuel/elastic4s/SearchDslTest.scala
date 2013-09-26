@@ -581,7 +581,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val req = search in "music" types "bands" query {
       functionScoreQuery("coldplay").boost(1.4).maxBoost(1.9).scoreMode("multiply").boostMode("max").scorers(
         randomScore(1234),
-        scriptScore("some script here")
+        scriptScore("some script here"),
+        gaussianScore("field1", "1m", "2m").filter(termFilter("band", "coldplay"))
       )
     }
     assert(json === mapper.readTree(req._builder.toString))

@@ -1,88 +1,76 @@
-{
-    "settings": {
-        "number_of_shards": 2,
-        "number_of_replicas": 1
-    },
-    "mappings": {
-        "tweets": {
-            "_source": {
-                "enabled": true,
-                "dynamic_date_formats": [],
-                "numeric_detection": true
+{"settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1
+}, "mappings": {
+    "tweets": {
+        "_source": {
+            "enabled": true
+        },
+        "numeric_detection": true,
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
+        },
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "_id": {
+                "type": "string",
+                "analyzer": "keyword",
+                "include_in_all": true,
+                "store": "yes"
             },
-            "_boost": {
-                "name": "myboost",
-                "null_value": 1.2
+            "name": {
+                "type": "geo_point",
+                "analyzer": "simple",
+                "index": "not_analyzed",
+                "boost": 4.0
             },
-            "_size": {
-                "enabled": true
-            },
-            "properties": {
-                "_id": {
-                    "type": "string",
-                    "analyzer": "keyword",
-                    "include_in_all": true,
-                    "store": "true"
-                },
-                "name": {
-                    "type": "geo_point",
-                    "analyzer": "simple",
-                    "index": "not_analyzed",
-                    "boost": 4.0,
-                    "store": "false"
-                },
-                "content": {
-                    "type": "date",
-                    "analyzer": "stop",
-                    "null_value": "no content",
-                    "store": "false"
-                }
-            },
-            "_meta": {
-                "class": "com.sksamuel.User"
+            "content": {
+                "type": "date",
+                "analyzer": "stop",
+                "null_value": "no content"
             }
         },
-        "users": {
-            "_source": {
-                "enabled": true,
-                "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
-                "date_detection": true,
-                "numeric_detection": true
+        "_meta": {
+            "class": "com.sksamuel.User"
+        }
+    },
+    "users": {
+        "_source": {
+            "enabled": true
+        },
+        "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
+        "date_detection": true,
+        "numeric_detection": true,
+        "_analyzer": {
+            "path": "somefield"
+        },
+        "properties": {
+            "name": {
+                "type": "ip",
+                "analyzer": "whitespace",
+                "omit_norms": true
             },
-            "_analyzer": {
-                "path": "somefield"
+            "location": {
+                "type": "integer",
+                "analyzer": "snowball"
             },
-            "properties": {
-                "name": {
-                    "type": "ip",
-                    "analyzer": "whitespace",
-                    "omit_norms": true,
-                    "store": "false"
-                },
-                "location": {
-                    "type": "integer",
-                    "analyzer": "snowball",
-                    "store": "false"
-                },
-                "email": {
-                    "type": "binary",
-                    "analyzer": "standard",
-                    "store": "false"
-                },
-                "picture": {
-                    "type": "attachment",
-                    "analyzer": "notindexed",
-                    "store": "false"
-                },
-                "age": {
-                    "type": "float",
-                    "store": "false"
-                },
-                "area": {
-                    "type": "geo_shape",
-                    "store": "false"
-                }
+            "email": {
+                "type": "binary",
+                "analyzer": "standard"
+            },
+            "picture": {
+                "type": "attachment",
+                "analyzer": "notindexed"
+            },
+            "age": {
+                "type": "float"
+            },
+            "area": {
+                "type": "geo_shape"
             }
         }
     }
-}
+}}
