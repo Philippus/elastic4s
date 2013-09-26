@@ -20,15 +20,20 @@ trait ScoreDsl {
     new ExponentialDecayScoreDefinition(field, origin, scale)
 }
 
-trait ScoreDefinition {
+trait ScoreDefinition[T] {
   val builder: ScoreFunctionBuilder
+  var _filter: Option[FilterDefinition] = None
+  def filter(filter: FilterDefinition): T = {
+    this._filter = Option(filter)
+    this.asInstanceOf[T]
+  }
 }
 
-class RandomScoreDefinition(seed: Long) extends ScoreDefinition {
+class RandomScoreDefinition(seed: Long) extends ScoreDefinition[RandomScoreDefinition] {
   val builder = new RandomScoreFunctionBuilder().seed(seed)
 }
 
-class ScriptScoreDefinition(script: String) extends ScoreDefinition {
+class ScriptScoreDefinition(script: String) extends ScoreDefinition[ScriptScoreDefinition] {
   val builder = new ScriptScoreFunctionBuilder().script(script)
   def param(key: String, value: String): ScriptScoreDefinition = {
     builder.param(key, value)
@@ -44,7 +49,7 @@ class ScriptScoreDefinition(script: String) extends ScoreDefinition {
   }
 }
 
-abstract class DecayScoreDefinition[T] extends ScoreDefinition {
+abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
   val builder: DecayFunctionBuilder
   def offset(offset: Any): T = {
     builder.setOffset(offset.toString)

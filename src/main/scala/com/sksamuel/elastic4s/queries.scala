@@ -187,8 +187,11 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
     builder.scoreMode(scoreMode)
     this
   }
-  def scorers(scorers: ScoreDefinition*): FunctionScoreQueryDefinition = {
-    scorers foreach (builder add _.builder)
+  def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
+    scorers.foreach(scorer => scorer._filter match {
+      case None => builder.add(scorer.builder)
+      case Some(filter) => builder.add(filter.builder, scorer.builder)
+    })
     this
   }
 }

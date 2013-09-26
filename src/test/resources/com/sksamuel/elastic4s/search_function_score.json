@@ -16,6 +16,19 @@
                     "script_score": {
                         "script": "some script here"
                     }
+                },
+                {
+                    "filter": {
+                        "term": {
+                            "band": "coldplay"
+                        }
+                    },
+                    "gauss": {
+                        "field1": {
+                            "origin": "1m",
+                            "scale": "2m"
+                        }
+                    }
                 }
             ],
             "score_mode": "multiply",
@@ -23,5 +36,4 @@
             "max_boost": 1.9,
             "boost": 1.4
         }
-    }
-}
+    }}
