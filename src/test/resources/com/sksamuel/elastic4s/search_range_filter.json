@@ -1,0 +1,14 @@
+{
+    "filter": {
+        "range": {
+            "released": {
+                "from": "2010-01-01",
+                "to": "2012-12-12",
+                "include_lower": true,
+                "include_upper": true
+            },
+            "_cache": true,
+            "_cache_key": "key"
+        }
+    }
+}

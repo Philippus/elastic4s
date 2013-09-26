@@ -38,6 +38,7 @@ trait FilterDsl {
     def filter(filter: FilterDefinition) = new NotFilterDefinition(filter)
   }
   def numericRangeFilter(field: String) = new NumericRangeFilter(field)
+  def rangeFilter(field: String) = new RangeFilter(field)
 
   def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
   def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
@@ -235,6 +236,54 @@ class NumericRangeFilter(field: String) extends FilterDefinition {
     this
   }
   def gte(gte: Long): NumericRangeFilter = {
+    builder.gte(gte)
+    this
+  }
+}
+
+class RangeFilter(field: String) extends FilterDefinition {
+  val builder = FilterBuilders.rangeFilter(field)
+  def filterName(filterName: String): RangeFilter = {
+    builder.filterName(filterName)
+    this
+  }
+  def cache(cache: Boolean): RangeFilter = {
+    builder.cache(cache)
+    this
+  }
+  def cacheKey(cacheKey: String): RangeFilter = {
+    builder.cacheKey(cacheKey)
+    this
+  }
+  def includeLower(includeLower: Boolean): RangeFilter = {
+    builder.includeLower(includeLower)
+    this
+  }
+  def includeUpper(includeUpper: Boolean): RangeFilter = {
+    builder.includeUpper(includeUpper)
+    this
+  }
+  def from(from: String): RangeFilter = {
+    builder.from(from)
+    this
+  }
+  def to(to: String): RangeFilter = {
+    builder.to(to)
+    this
+  }
+  def lt(lt: String): RangeFilter = {
+    builder.lt(lt)
+    this
+  }
+  def gt(ge: String): RangeFilter = {
+    builder.gt(ge)
+    this
+  }
+  def lte(lte: String): RangeFilter = {
+    builder.lte(lte)
+    this
+  }
+  def gte(gte: String): RangeFilter = {
     builder.gte(gte)
     this
   }
