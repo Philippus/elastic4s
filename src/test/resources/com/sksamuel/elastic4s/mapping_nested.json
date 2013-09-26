@@ -1,0 +1,52 @@
+{"settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1
+}, "mappings": {
+    "tweets": {
+        "_source": {
+            "enabled": true
+        },
+        "numeric_detection": true,
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
+        },
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "_id": {
+                "type": "string",
+                "analyzer": "keyword"
+            },
+            "name": {
+                "type": "string",
+                "analyzer": "keyword"
+            },
+            "locations": {
+                "type": "geo_point",
+                "analyzer": "simple",
+                "boost": 4.0
+            },
+            "date": {
+                "type": "date"
+            },
+            "content": {
+                "type": "string"
+            },
+            "user": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "last": {
+                    "lastLogin": {
+                        "type": "date"
+                    }
+                }
+            }
+        }
+    }
+}}

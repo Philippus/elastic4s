@@ -32,6 +32,27 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     assert(json === mapper.readTree(req._source.string))
   }
 
+  it should "supported nested fields" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_nested.json"))
+    val req = create.index("users").shards(2).mappings(
+      "tweets" as(
+        id typed StringType analyzer KeywordAnalyzer,
+        "name" typed StringType analyzer KeywordAnalyzer,
+        "locations" typed GeoPointType analyzer SimpleAnalyzer boost 4,
+        "date" typed DateType,
+        "content" typed StringType,
+        "user" nested(
+          "name" typed StringType,
+          "email" typed StringType,
+          "last" nested {
+            "lastLogin" typed DateType
+          }
+          )
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
   it should "generate json to override index settings when set" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_settings.json"))
     val req = create index "users" shards 3 replicas 4
