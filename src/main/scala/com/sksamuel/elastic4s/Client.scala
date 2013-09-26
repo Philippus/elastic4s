@@ -121,7 +121,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an GetResponse
    */
-  @deprecated
   def execute(builder: GetDefinition): Future[GetResponse] = get(builder)
   def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
 
