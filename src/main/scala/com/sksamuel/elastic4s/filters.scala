@@ -44,13 +44,15 @@ trait FilterDsl {
 
   def queryFilter(query: QueryDefinition): QueryFilterDefinition = new QueryFilterDefinition(query)
 
-  def regexFilter(field: String, prefix: Any): RegexFilterDefinition = new RegexFilterDefinition(field, prefix)
+  def regexFilter(field: String, regex: Any): RegexFilterDefinition = new RegexFilterDefinition(field, regex)
   def regexFilter(tuple: (String, Any)): RegexFilterDefinition = regexFilter(tuple._1, tuple._2)
 
   def scriptFilter(script: String): ScriptFilterDefinition = new ScriptFilterDefinition(script)
 
-  def termFilter(field: String, prefix: Any): TermFilterDefinition = new TermFilterDefinition(field, prefix)
+  def termFilter(field: String, value: Any): TermFilterDefinition = new TermFilterDefinition(field, value)
   def termFilter(tuple: (String, Any)): TermFilterDefinition = termFilter(tuple._1, tuple._2)
+
+  def termsFilter(field: String, values: Any*): TermsFilterDefinition = new TermsFilterDefinition(field, values.map(_.toString): _*)
 
   def typeFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
   def missingFilter(field: String): MissingFilterDefinition = new MissingFilterDefinition(field)
@@ -286,6 +288,22 @@ class PrefixFilterDefinition(field: String, prefix: Any) extends FilterDefinitio
 
 class TermFilterDefinition(field: String, value: Any) extends FilterDefinition {
   val builder = FilterBuilders.termFilter(field, value.toString)
+  def cache(cache: Boolean) = {
+    builder.cache(cache)
+    this
+  }
+  def cacheKey(cacheKey: String) = {
+    builder.cacheKey(cacheKey)
+    this
+  }
+  def name(name: String) = {
+    builder.filterName(name)
+    this
+  }
+}
+
+class TermsFilterDefinition(field: String, value: String*) extends FilterDefinition {
+  val builder = FilterBuilders.termsFilter(field, value: _*)
   def cache(cache: Boolean) = {
     builder.cache(cache)
     this
