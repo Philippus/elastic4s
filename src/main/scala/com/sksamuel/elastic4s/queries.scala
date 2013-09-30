@@ -938,7 +938,7 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
 
   val builder = QueryBuilders.queryString(query)
 
-  def operator(op: String) = {
+  def operator(op: String): StringQueryDefinition = {
     op.toLowerCase match {
       case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
       case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
@@ -946,73 +946,83 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
     this
   }
 
-  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int) = {
+  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): StringQueryDefinition = {
     builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
     this
   }
 
-  def lenient(l: Boolean) = {
+  def lenient(l: Boolean): StringQueryDefinition = {
     builder.lenient(java.lang.Boolean.valueOf(l))
     this
   }
 
-  def phraseSlop(phraseSlop: Int) = {
+  def phraseSlop(phraseSlop: Int): StringQueryDefinition = {
     builder.phraseSlop(phraseSlop)
     this
   }
 
-  def tieBreaker(tieBreaker: Double) = {
+  def tieBreaker(tieBreaker: Double): StringQueryDefinition = {
     builder.tieBreaker(tieBreaker.toFloat)
     this
   }
 
-  def fuzzyPrefixLength(fuzzyPrefixLength: Int) = {
+  def fuzzyPrefixLength(fuzzyPrefixLength: Int): StringQueryDefinition = {
     builder.fuzzyPrefixLength(fuzzyPrefixLength)
     this
   }
 
-  def fuzzyMinSim(fuzzyMinSim: Double) = {
+  def fuzzyMinSim(fuzzyMinSim: Double): StringQueryDefinition = {
     builder.fuzzyMinSim(fuzzyMinSim.toFloat)
     this
   }
 
-  def anaylyzer(analyzer: Analyzer) = {
+  def anaylyzer(analyzer: Analyzer): StringQueryDefinition = {
     builder.analyzer(analyzer.elastic)
     this
   }
 
-  def defaultField(field: String) = {
+  def defaultField(field: String): StringQueryDefinition = {
     builder.defaultField(field)
     this
   }
 
-  def analyzeWildcard(analyzeWildcard: Boolean) = {
+  def analyzeWildcard(analyzeWildcard: Boolean): StringQueryDefinition = {
     builder.analyzeWildcard(analyzeWildcard)
     this
   }
 
-  def rewrite(value: String) = {
+  def rewrite(value: String): StringQueryDefinition = {
     builder.rewrite(value)
     this
   }
 
-  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean) = {
+  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): StringQueryDefinition = {
     builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
     this
   }
 
-  def allowLeadingWildcard(allowLeadingWildcard: Boolean) = {
+  def allowLeadingWildcard(allowLeadingWildcard: Boolean): StringQueryDefinition = {
     builder.allowLeadingWildcard(allowLeadingWildcard)
     this
   }
 
-  def enablePositionIncrements(enablePositionIncrements: Boolean) = {
+  def enablePositionIncrements(enablePositionIncrements: Boolean): StringQueryDefinition = {
     builder.enablePositionIncrements(enablePositionIncrements)
     this
   }
 
-  def boost(boost: Double) = {
+  def boost(boost: Double): StringQueryDefinition = {
     builder.boost(boost.toFloat)
+    this
+  }
+
+  def field(name: String): StringQueryDefinition = {
+    builder.field(name)
+    this
+  }
+
+  def field(name: String, boost: Double): StringQueryDefinition = {
+    builder.field(name, boost.toFloat)
     this
   }
 }
