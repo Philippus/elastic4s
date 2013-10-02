@@ -5,7 +5,7 @@ Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch. It 
 
 #### Release
 
-The latest release is 0.90.5.0 which is compatible with elasticsearch 0.90.5
+The latest release is 0.90.5.1 which is compatible with elasticsearch 0.90.5
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
