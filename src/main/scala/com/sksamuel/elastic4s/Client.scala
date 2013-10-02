@@ -42,7 +42,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder]): Future[Res] =
     injectFuture[Res](execute(requestDefinition, _))
 
-  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder], callback: ActionListener[Res]): Unit =
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder],
+                                                                                                                    callback: ActionListener[Res]): Unit =
     client.execute(requestDefinition.action, requestDefinition.build, callback)
 
   /**
@@ -55,7 +56,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Future[Res] =
     injectFuture[Res](execute(requestDefinition, _))
 
-  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder], callback: ActionListener[Res]): Unit =
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder],
+                                                                                                                    callback: ActionListener[Res]): Unit =
     client.admin.indices.execute(requestDefinition.action, requestDefinition.build, callback)
 
   /**
@@ -166,8 +168,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def deleteIndex(d: DeleteIndexDefinition): Future[DeleteIndexResponse] = execute(d)
 
-  def searchScroll(scrollId: String): Future[SearchResponse] =
+  def searchScroll(scrollId: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
+
+  def searchScroll(scrollId: String, keepAlive: String) =
+    injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).setScroll(keepAlive).execute)
 
   def flush(indexes: String*): Future[FlushResponse] =
     injectFuture[FlushResponse](client.admin.indices.prepareFlush(indexes: _*).execute)
