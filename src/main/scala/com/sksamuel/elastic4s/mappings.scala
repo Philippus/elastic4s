@@ -186,3 +186,11 @@ class FieldDefinition(val name: String) {
     source.endObject()
   }
 }
+
+class AnalyzerDefinition(name: String) {
+
+  def analyzer(analyzer: Analyzer): AnalyzerDefinition = {
+    this
+  }
+
+}

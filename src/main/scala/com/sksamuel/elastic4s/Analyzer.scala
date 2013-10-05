@@ -1,57 +1,58 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-
 /** @author Stephen Samuel */
-trait Analyzer {
-  def elastic: String
-}
-abstract class ElasticAnalyzer(string: String) extends Analyzer {
-  def elastic = string
-}
-class CustomAnalyzer(string: String) extends Analyzer {
-  def elastic = XContentFactory.jsonBuilder().value(string).string()
-}
-object Analyzer {
-  case object NotAnalyzed extends ElasticAnalyzer("notindexed")
-  case object WhitespaceAnalyzer extends ElasticAnalyzer("whitespace")
-  case object StandardAnalyzer extends ElasticAnalyzer("standard")
-  case object SimpleAnalyzer extends ElasticAnalyzer("simple")
-  case object StopAnalyzer extends ElasticAnalyzer("stop")
-  case object KeywordAnalyzer extends ElasticAnalyzer("keyword")
-  case object PatternAnalyzer extends ElasticAnalyzer("pattern")
-  case object SnowballAnalyzer extends ElasticAnalyzer("snowball")
+abstract class Analyzer(name: String)
 
-  //language analyzers
-  case object ArabicAnalyzer extends ElasticAnalyzer("arabic")
-  case object ArmenianAnalyzer extends ElasticAnalyzer("armenian")
-  case object BasqueAnalyzer extends ElasticAnalyzer("basque")
-  case object BrazilianAnalyzer extends ElasticAnalyzer("brazilian")
-  case object BulgarianAnalyzer extends ElasticAnalyzer("bulgarian")
-  case object CatalanAnalyzer extends ElasticAnalyzer("catalan")
-  case object ChineseAnalyzer extends ElasticAnalyzer("chinese")
-  case object CjkAnalyzer extends ElasticAnalyzer("cjk")
-  case object CzechAnalyzer extends ElasticAnalyzer("czech")
-  case object DanishAnalyzer extends ElasticAnalyzer("danish")
-  case object DutchAnalyzer extends ElasticAnalyzer("dutch")
-  case object EnglishAnalyzer extends ElasticAnalyzer("english")
-  case object FinnishAnalyzer extends ElasticAnalyzer("finnish")
-  case object FrenchAnalyzer extends ElasticAnalyzer("french")
-  case object GalicianAnalyzer extends ElasticAnalyzer("galician")
-  case object GermanAnalyzer extends ElasticAnalyzer("german")
-  case object GreekAnalyzer extends ElasticAnalyzer("greek")
-  case object HindiAnalyzer extends ElasticAnalyzer("hindi")
-  case object HungarianAnalyzer extends ElasticAnalyzer("hungarian")
-  case object IndonesianAnalyzer extends ElasticAnalyzer("indonesian")
-  case object ItalianAnalyzer extends ElasticAnalyzer("italian")
-  case object LatvianAnalyzer extends ElasticAnalyzer("latvian")
-  case object NorwegianAnalyzer extends ElasticAnalyzer("norwegian")
-  case object PersianAnalyzer extends ElasticAnalyzer("persian")
-  case object PortugueseAnalyzer extends ElasticAnalyzer("portuguese")
-  case object RomanianAnalyzer extends ElasticAnalyzer("romanian")
-  case object RussianAnalyzer extends ElasticAnalyzer("russian")
-  case object SpanishAnalyzer extends ElasticAnalyzer("spanish")
-  case object SwedishAnalyzer extends ElasticAnalyzer("swedish")
-  case object TurkishAnalyzer extends ElasticAnalyzer("turkish")
-  case object ThaiAnalyzer extends ElasticAnalyzer("thai")
+case class NotAnalyzed extends Analyzer("notindexed")
+case class WhitespaceAnalyzer extends Analyzer("whitespace")
+case class StandardAnalyzer extends Analyzer("standard") {
+  def stopwords(stopwords: Iterable[String]) = this
+  def maxTokenLength(max: Int) = this
 }
+case class SimpleAnalyzer extends Analyzer("simple")
+case class StopAnalyzer extends Analyzer("stop")
+case class KeywordAnalyzer extends Analyzer("keyword")
+case class PatternAnalyzer extends Analyzer("pattern") {
+  def pattern(regex: String) = this
+  def lowercase(lowercase: Boolean) = this
+}
+case class SnowballAnalyzer extends Analyzer("snowball") {
+  def stopwords(stopwords: Iterable[String]) = this
+  def language(lang: String) = this
+}
+
+abstract class LanguageAnalyzer(name: String) extends Analyzer(name) {
+  def stopwords(stopwords: Iterable[String]) = this
+}
+
+case object ArabicLanguageAnalyzer extends LanguageAnalyzer("arabic")
+case object ArmenianLanguageAnalyzer extends LanguageAnalyzer("armenian")
+case object BasqueLanguageAnalyzer extends LanguageAnalyzer("basque")
+case object BrazilianLanguageAnalyzer extends LanguageAnalyzer("brazilian")
+case object BulgarianLanguageAnalyzer extends LanguageAnalyzer("bulgarian")
+case object CatalanLanguageAnalyzer extends LanguageAnalyzer("catalan")
+case object ChineseLanguageAnalyzer extends LanguageAnalyzer("chinese")
+case object CjkLanguageAnalyzer extends LanguageAnalyzer("cjk")
+case object CzechLanguageAnalyzer extends LanguageAnalyzer("czech")
+case object DanishLanguageAnalyzer extends LanguageAnalyzer("danish")
+case object DutchLanguageAnalyzer extends LanguageAnalyzer("dutch")
+case object EnglishLanguageAnalyzer extends LanguageAnalyzer("english")
+case object FinnishLanguageAnalyzer extends LanguageAnalyzer("finnish")
+case object FrenchLanguageAnalyzer extends LanguageAnalyzer("french")
+case object GalicianLanguageAnalyzer extends LanguageAnalyzer("galician")
+case object GermanLanguageAnalyzer extends LanguageAnalyzer("german")
+case object GreekLanguageAnalyzer extends LanguageAnalyzer("greek")
+case object HindiLanguageAnalyzer extends LanguageAnalyzer("hindi")
+case object HungarianLanguageAnalyzer extends LanguageAnalyzer("hungarian")
+case object IndonesianLanguageAnalyzer extends LanguageAnalyzer("indonesian")
+case object ItalianLanguageAnalyzer extends LanguageAnalyzer("italian")
+case object LatvianLanguageAnalyzer extends LanguageAnalyzer("latvian")
+case object NorwegianLanguageAnalyzer extends LanguageAnalyzer("norwegian")
+case object PersianLanguageAnalyzer extends LanguageAnalyzer("persian")
+case object PortugueseLanguageAnalyzer extends LanguageAnalyzer("portuguese")
+case object RomanianLanguageAnalyzer extends LanguageAnalyzer("romanian")
+case object RussianLanguageAnalyzer extends LanguageAnalyzer("russian")
+case object SpanishLanguageAnalyzer extends LanguageAnalyzer("spanish")
+case object SwedishLanguageAnalyzer extends LanguageAnalyzer("swedish")
+case object TurkishLanguageAnalyzer extends LanguageAnalyzer("turkish")
+case object ThaiLanguageAnalyzer extends LanguageAnalyzer("thai")
