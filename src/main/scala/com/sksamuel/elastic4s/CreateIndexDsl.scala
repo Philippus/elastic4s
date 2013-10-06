@@ -108,6 +108,19 @@ trait CreateIndexDsl {
 }
 
 class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
-  def tokenizers: Iterable[Tokenizer] = Nil
-  def filters: Iterable[Tokenizer] = Nil
+
+  def tokenizers: Iterable[Tokenizer] =
+    analyzers
+      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
+      .map(_.asInstanceOf[CustomAnalyzerDefinition])
+      .map(_.tokenizer)
+      .filter(_.customized)
+
+  def filters: Iterable[TokenFilter] =
+    analyzers
+      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
+      .map(_.asInstanceOf[CustomAnalyzerDefinition])
+      .flatMap(_.filters)
+      .filter(_.customized)
+
 }
