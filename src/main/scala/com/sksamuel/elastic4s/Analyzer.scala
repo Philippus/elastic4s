@@ -72,10 +72,9 @@ case class SnowballAnalyzerDefinition(override val name: String,
 }
 
 case class CustomAnalyzerDefinition(override val name: String,
-                                    tokenizer: String,
-                                    filters: Iterable[String]) extends AnalyzerDefinition(name) {
-  def this(name: String, tokenizer: String) = this(name, tokenizer, Nil)
-  def this(name: String, filters: Iterable[String]) = this(name, null, filters)
+                                    tokenizer: Tokenizer,
+                                    filters: TokenFilter*) extends AnalyzerDefinition(name) {
+  def this(name: String, filters: TokenFilter*) = this(name, null, filters: _*)
   def build(source: XContentBuilder): Unit = {}
 }
 

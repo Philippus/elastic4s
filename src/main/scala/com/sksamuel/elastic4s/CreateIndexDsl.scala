@@ -45,28 +45,8 @@ trait CreateIndexDsl {
       this
     }
 
-    def analysis(analyzers: AnalyzerDefinition*): CreateIndexDefinition = {
-      _analysis = Some(new AnalysisDefinition(analyzers, Nil, Nil))
-      this
-    }
-
-    def analysis(a: AnalyzersWrapper): CreateIndexDefinition = {
-      _analysis = Some(new AnalysisDefinition(a.analyzers, Nil, Nil))
-      this
-    }
-
-    def analysis(a: AnalyzersWrapper, t: TokenizersWrapper): CreateIndexDefinition = {
-      _analysis = Some(new AnalysisDefinition(a.analyzers, t.tokenizers, Nil))
-      this
-    }
-
-    def analysis(a: AnalyzersWrapper, f: TokenFiltersWrapper): CreateIndexDefinition = {
-      _analysis = Some(new AnalysisDefinition(a.analyzers, Nil, f.filters))
-      this
-    }
-
-    def analysis(a: AnalyzersWrapper, t: TokenizersWrapper, f: TokenFiltersWrapper): CreateIndexDefinition = {
-      _analysis = Some(new AnalysisDefinition(a.analyzers, t.tokenizers, f.filters))
+    def analysis(analyzers: AnalyzerDefinition*) = {
+      _analysis = Some(new AnalysisDefinition(analyzers))
       this
     }
 
@@ -87,23 +67,17 @@ trait CreateIndexDsl {
       _analysis.foreach(analysis => {
         source.startObject("analysis")
 
-        if (analysis.analyzers.size > 0) {
-          source.startObject("analyzer")
-          analysis.analyzers.foreach(_.build(source))
-          source.endObject()
-        }
+        source.startObject("analyzer")
+        analysis.analyzers.foreach(_.build(source))
+        source.endObject()
 
-        if (analysis.tokenizers.size > 0) {
-          source.startObject("tokenizer")
-          analysis.tokenizers.foreach(_.build(source))
-          source.endObject()
-        }
+        source.startObject("tokenizer")
+        analysis.tokenizers.foreach(_.build(source))
+        source.endObject()
 
-        if (analysis.filters.size > 0) {
-          source.startObject("filter")
-          analysis.filters.foreach(_.build(source))
-          source.endObject()
-        }
+        source.startObject("filter")
+        analysis.filters.foreach(_.build(source))
+        source.endObject()
 
         source.endObject()
       })
@@ -113,6 +87,7 @@ trait CreateIndexDsl {
   }
 }
 
-case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition],
-                              tokenizers: Iterable[Tokenizer],
-                              filters: Iterable[TokenFilter])
+class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
+  def tokenizers: Iterable[Tokenizer] = Nil
+  def filters: Iterable[Tokenizer] = Nil
+}

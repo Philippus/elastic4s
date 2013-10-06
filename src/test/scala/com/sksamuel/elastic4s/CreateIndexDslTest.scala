@@ -5,9 +5,6 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.FieldType._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
-import com.sksamuel.elastic4s.TokenFilter._
-import com.sksamuel.elastic4s.Tokenizer.KeywordTokenizer
-import com.sksamuel.elastic4s.Tokenizer.StandardTokenizer
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -34,15 +31,11 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     assert(json === mapper.readTree(req._source.string))
   }
 
-  it should "support custom analyzers" in {
+  it should "support override built in analyzers" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis.json"))
     val req = create.index("users").analysis(
       StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
-      StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
-      CustomAnalyzerDefinition(
-        "myAnalyzer2",
-        "standard",
-        Seq("standard", "lowercase", "myTokenFilter4"))
+      StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
     )
     assert(json === mapper.readTree(req._source.string))
   }
@@ -50,22 +43,18 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   it should "support custom analyzers, tokenizers and filters" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis2.json"))
     val req = create.index("users").analysis(
-      analyzers(
-        StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
-        StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
-        CustomAnalyzerDefinition(
-          "myAnalyzer2",
-          "standard",
-          Seq("standard", "lowercase", "myTokenFilter4"))
-      ),
-      tokenizers(
+      StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
+      StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
+      CustomAnalyzerDefinition(
+        "myAnalyzer2",
         StandardTokenizer("myTokenizer1", 900),
-        KeywordTokenizer("myTokenizer2", 256)
-      ),
-      filters(
         StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
         LengthTokenFilter("myTokenFilter2", 0, max = 10),
-        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true)
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer3",
+        StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
         ReverseTokenFilter("myTokenFilter4"),
         LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false)
       )
