@@ -45,6 +45,11 @@ trait CreateIndexDsl {
       this
     }
 
+    def analyis(analyzers: AnalyzerDefinition*): CreateIndexDefinition = {
+      _analysis = Some(new AnalysisDefinition(analyzers, Nil, Nil))
+      this
+    }
+
     def analyis(a: AnalyzersWrapper): CreateIndexDefinition = {
       _analysis = Some(new AnalysisDefinition(a.analyzers, Nil, Nil))
       this
