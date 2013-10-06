@@ -1,1 +1,29 @@
-{}
+{
+    "settings": {
+        "number_of_shards": 5,
+        "number_of_replicas": 1
+    },
+    "analysis": {
+        "analyzer": {
+            "patternAnalyzer": {
+                "type": "pattern",
+                "lowercase": true,
+                "pattern": "[a-z]"
+            },
+            "mysnowball": {
+                "type": "snowball",
+                "language": "english"
+            },
+            "myAnalyzer2": {
+                "type": "custom",
+                "tokenizer": "myTokenizer1",
+                "filter": ["myTokenFilter2", "myTokenFilter3", "prTokenFilter"]
+            },
+            "myAnalyzer3": {
+                "type": "custom",
+                "tokenizer": "lowercase",
+                "filter": ["myTokenFilter1", "reverse", "myTokenFilter5", "stemmerTokenFilter"]
+            }
+        }
+    }
+}

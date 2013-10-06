@@ -58,26 +58,46 @@ trait CreateIndexDsl {
       source.field("number_of_replicas", _settings.replicas)
       source.endObject()
 
-      if (_mappings.size > 0) source.startObject("mappings")
-      for ( mapping <- _mappings ) {
-        mapping.build(source)
+      if (_mappings.size > 0) {
+        source.startObject("mappings")
+        for ( mapping <- _mappings ) {
+          mapping.build(source)
+        }
+        source.endObject()
       }
-      if (_mappings.size > 0) source.endObject()
 
       _analysis.foreach(analysis => {
         source.startObject("analysis")
 
         source.startObject("analyzer")
-        analysis.analyzers.foreach(_.build(source))
+        analysis.analyzers.foreach(analyzer => {
+          source.startObject(analyzer.name)
+          analyzer.build(source)
+          source.endObject()
+        })
         source.endObject()
 
-        source.startObject("tokenizer")
-        analysis.tokenizers.foreach(_.build(source))
-        source.endObject()
+        val tokenizers = analysis.tokenizers
+        if (tokenizers.size > 0) {
+          source.startObject("tokenizer")
+          tokenizers.foreach(tokenizer => {
+            source.startObject(tokenizer.name)
+            tokenizer.build(source)
+            source.endObject()
+          })
+          source.endObject()
+        }
 
-        source.startObject("filter")
-        analysis.filters.foreach(_.build(source))
-        source.endObject()
+        val filters = analysis.filters
+        if (filters.size > 0) {
+          source.startObject("filter")
+          analysis.filters.foreach(filter => {
+            source.startObject(filter.name)
+            filter.build(source)
+            source.endObject()
+          })
+          source.endObject()
+        }
 
         source.endObject()
       })

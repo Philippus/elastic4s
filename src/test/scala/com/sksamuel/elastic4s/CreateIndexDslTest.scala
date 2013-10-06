@@ -43,22 +43,22 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   it should "support custom analyzers, tokenizers and filters" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis2.json"))
     val req = create.index("users").analysis(
-      StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
       PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
       SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
       CustomAnalyzerDefinition(
         "myAnalyzer2",
         StandardTokenizer("myTokenizer1", 900),
-        StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
         LengthTokenFilter("myTokenFilter2", 0, max = 10),
-        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true)
+        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep")
       ),
       CustomAnalyzerDefinition(
         "myAnalyzer3",
         LowercaseTokenizer,
         StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
-        ReverseTokenFilter("myTokenFilter4"),
-        LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false)
+        ReverseTokenFilter,
+        LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2"))
       )
     )
     assert(json === mapper.readTree(req._source.string))

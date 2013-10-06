@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.common.xcontent.XContentBuilder
 
 /** @author Stephen Samuel */
-class Analyzer(val name: String)
+abstract class Analyzer(val name: String)
 
 case object NotAnalyzed extends Analyzer("notindexed")
 case object WhitespaceAnalyzer extends Analyzer("whitespace")
@@ -13,6 +13,7 @@ case object StopAnalyzer extends Analyzer("stop")
 case object KeywordAnalyzer extends Analyzer("keyword")
 case object PatternAnalyzer extends Analyzer("pattern")
 case object SnowballAnalyzer extends Analyzer("snowball")
+case class CustomAnalyzer(override val name: String) extends Analyzer(name)
 
 abstract class LanguageAnalyzer(name: String) extends Analyzer(name: String)
 
@@ -57,7 +58,7 @@ case class StopAnalyzerDefinition(override val name: String,
                                   maxTokenLength: Int = 0) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "stop")
-    source.field("stopwords", stopwords.toArray: _*)
+    source.field("stopwords", stopwords.toArray[String]: _*)
   }
 }
 
@@ -66,7 +67,7 @@ case class StandardAnalyzerDefinition(override val name: String,
                                       maxTokenLength: Int = 0) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
-    source.field("stopwords", stopwords.toArray[String])
+    source.field("stopwords", stopwords.toArray[String]: _*)
     source.field("max_token_length", maxTokenLength)
   }
 }
@@ -100,7 +101,8 @@ case class CustomAnalyzerDefinition(override val name: String,
   }
 }
 
-abstract class LanguageAnalyzerDef(name: String, stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
+abstract class LanguageAnalyzerDef(override val name: String,
+                                   stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     source.field("lang", name)
