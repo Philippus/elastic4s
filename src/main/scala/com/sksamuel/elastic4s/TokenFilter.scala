@@ -1,30 +1,63 @@
 package com.sksamuel.elastic4s
 
 /** @author Stephen Samuel */
-trait TokenFilter
+abstract class TokenFilter(name: String)
+
 object TokenFilter {
-  case object StandardTokenFilter extends TokenFilter
-  case object AsciiFoldingTokenFilter extends TokenFilter
-  case object KStemTokenFilter extends TokenFilter
-  case object PorterStemTokenFilter extends TokenFilter
-  case object ReverseTokenFilter extends TokenFilter
-  case class TruncateTokenFilter(length: Int = 10) extends TokenFilter
-  case class UniqueTokenFilter(onlyOnSamePosition: Boolean) extends TokenFilter
-  case object TrimTokenFilter extends TokenFilter
-  case class KeywordMarkerTokenFilter(keywords: String = "", keywordsPath: String = "", ignoreCase: Boolean = false)
-    extends TokenFilter
-  case class ElisionTokenFilter(articles: Array[String]) extends TokenFilter
-  case class LimitTokenFilter(maxTokenCount: Int = 1, consumeAllTokens: Boolean = false)
-  case class StopTokenFilter(stopwords: Array[String] = Array(),
+
+  case class StandardTokenFilter(name: String) extends TokenFilter(name)
+
+  case class AsciiFoldingTokenFilter(name: String) extends TokenFilter(name)
+
+  case class KStemTokenFilter(name: String) extends TokenFilter(name)
+
+  case class PorterStemTokenFilter(name: String) extends TokenFilter(name)
+
+  case class ReverseTokenFilter(name: String) extends TokenFilter(name)
+
+  case class TruncateTokenFilter(name: String, length: Int = 10) extends TokenFilter(name)
+
+  case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE) extends TokenFilter(name)
+
+  case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false) extends TokenFilter(name)
+
+  case class TrimTokenFilter(name: String) extends TokenFilter(name)
+
+  case class KeywordMarkerTokenFilter(name: String,
+                                      keywords: String = "",
+                                      keywordsPath: String = "",
+                                      ignoreCase: Boolean = false) extends TokenFilter(name)
+
+  case class ElisionTokenFilter(name: String,
+                                articles: Array[String]) extends TokenFilter(name)
+
+  case class LimitTokenFilter(name: String,
+                              maxTokenCount: Int = 1,
+                              consumeAllTokens: Boolean = false) extends TokenFilter(name)
+
+  case class StopTokenFilter(name: String,
+                             stopwords: Array[String] = Array(),
                              stopwordsPath: String = "",
                              enablePositionIncrements: Boolean = true,
-                             ignoreCase: Boolean = false)
-  case class PatternCaptureTokenFilter(patterns: Array[String], preserveOriginal: Boolean = true) extends TokenFilter
-  case class PatternReplaceTokenFilter(pattern: String, replacement: String) extends TokenFilter
-  case class CommongGramsTokenFilter(commonWords: Array[String],
+                             ignoreCase: Boolean = false) extends TokenFilter(name)
+
+  case class PatternCaptureTokenFilter(name: String,
+                                       patterns: Array[String],
+                                       preserveOriginal: Boolean = true) extends TokenFilter(name)
+
+  case class PatternReplaceTokenFilter(name: String,
+                                       pattern: String,
+                                       replacement: String) extends TokenFilter(name)
+
+  case class CommongGramsTokenFilter(name: String,
+                                     commonWords: Array[String],
                                      commonWordsPath: String = "",
                                      ignoreCase: Boolean = false,
-                                     queryMode: Boolean = false)
-  case class SnowballTokenFilter(language: String) extends TokenFilter
-  case class StemmerOverrideTokenFilter(rules: Array[String], rulesPath: String = "") extends TokenFilter
+                                     queryMode: Boolean = false) extends TokenFilter(name)
+
+  case class SnowballTokenFilter(name: String, language: String) extends TokenFilter(name)
+
+  case class StemmerOverrideTokenFilter(name: String,
+                                        rules: Array[String],
+                                        rulesPath: String = "") extends TokenFilter(name)
 }

@@ -28,7 +28,7 @@ class MappingDefinition(val `type`: String) {
     this
   }
   def analyzer(analyzer: Analyzer): MappingDefinition = {
-    _analyzer = Option(analyzer.elastic)
+    _analyzer = Option(analyzer.name)
     this
   }
   def boost(name: String): MappingDefinition = {
@@ -171,7 +171,7 @@ class FieldDefinition(val name: String) {
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     _type.foreach(arg => source.field("type", arg.elastic))
-    _analyzer.foreach(arg => source.field("analyzer", arg.elastic))
+    _analyzer.foreach(arg => source.field("analyzer", arg.name))
     _index.foreach(index => source.field("index", index))
     _omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
     _nullValue.foreach(nullValue => source.field("null_value", nullValue))
@@ -185,12 +185,4 @@ class FieldDefinition(val name: String) {
 
     source.endObject()
   }
-}
-
-class AnalyzerDefinition(name: String) {
-
-  def analyzer(analyzer: Analyzer): AnalyzerDefinition = {
-    this
-  }
-
 }

@@ -37,7 +37,7 @@ class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
     this
   }
   def analyzer(analyzer: Analyzer): TermSuggestionDefinition = {
-    builder.analyzer(analyzer.elastic)
+    builder.analyzer(analyzer.name)
     this
   }
   def size(size: Int): TermSuggestionDefinition = {

@@ -4,7 +4,6 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import com.sksamuel.elastic4s.FieldType.StringType
-import com.sksamuel.elastic4s.Analyzer.{KeywordAnalyzer, StandardAnalyzer}
 import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */

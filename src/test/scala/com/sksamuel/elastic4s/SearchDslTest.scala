@@ -6,8 +6,6 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import com.sksamuel.elastic4s.Analyzer._
-import scala.Predef._
 import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag}
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet

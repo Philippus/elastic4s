@@ -211,7 +211,7 @@ class MultiMatchQueryDefinition(text: String) extends QueryDefinition {
     builder.boost(boost.toFloat)
     this
   }
-  def analyzer(a: Analyzer): MultiMatchQueryDefinition = analyzer(a.elastic)
+  def analyzer(a: Analyzer): MultiMatchQueryDefinition = analyzer(a.name)
   def analyzer(a: String): MultiMatchQueryDefinition = {
     builder.analyzer(a)
     this
@@ -346,7 +346,7 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String]) extends Qu
     this
   }
   def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
-    builder.analyzer(a.elastic)
+    builder.analyzer(a.name)
     this
   }
   def ignoreTF(b: Boolean): FuzzyLikeThisDefinition = {
@@ -382,7 +382,7 @@ class CommonQueryDefinition(name: String, text: String) extends QueryDefinition 
     this
   }
   def analyzer(analyzer: Analyzer): CommonQueryDefinition = {
-    builder.analyzer(analyzer.elastic)
+    builder.analyzer(analyzer.name)
     this
   }
   def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Double): CommonQueryDefinition = {
@@ -544,7 +544,7 @@ class FieldQueryDefinition(field: String, query: Any) extends QueryDefinition {
   }
 
   def analyzer(analyzer: Analyzer) = {
-    builder.analyzer(analyzer.elastic)
+    builder.analyzer(analyzer.name)
     this
   }
 
@@ -698,7 +698,7 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
   }
 
   def analyzer(a: Analyzer): MatchQueryDefinition = {
-    builder.analyzer(a.elastic)
+    builder.analyzer(a.name)
     this
   }
 
@@ -773,7 +773,7 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
   val builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
 
   def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = {
-    builder.analyzer(a.elastic)
+    builder.analyzer(a.name)
     this
   }
 
@@ -856,7 +856,7 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
   val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
 
   def analyzer(a: Analyzer): MatchPhraseDefinition = {
-    builder.analyzer(a.elastic)
+    builder.analyzer(a.name)
     this
   }
 
@@ -977,7 +977,7 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
   }
 
   def anaylyzer(analyzer: Analyzer): StringQueryDefinition = {
-    builder.analyzer(analyzer.elastic)
+    builder.analyzer(analyzer.name)
     this
   }
 

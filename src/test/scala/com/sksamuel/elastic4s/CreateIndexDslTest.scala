@@ -3,9 +3,11 @@ package com.sksamuel.elastic4s
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.FieldType._
-import com.sksamuel.elastic4s.Analyzer._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
+import com.sksamuel.elastic4s.TokenFilter._
+import com.sksamuel.elastic4s.Tokenizer.KeywordTokenizer
+import com.sksamuel.elastic4s.Tokenizer.StandardTokenizer
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -28,6 +30,32 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         "age" typed FloatType,
         "area" typed GeoShapeType
       ) analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
+  it should "support custom analyzers" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis.json"))
+    val req = create.index("users").analyis(
+      analyzers(
+        StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
+        StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
+        CustomAnalyzerDefinition(
+          "myAnalyzer2",
+          "standard",
+          Seq("standard", "lowercase", "myTokenFilter4"))
+      ),
+      tokenizers(
+        StandardTokenizer("myTokenizer1", 900),
+        KeywordTokenizer("myTokenizer2", 256)
+      ),
+      filters(
+        StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
+        LengthTokenFilter("myTokenFilter2", 0, max = 10),
+        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        ReverseTokenFilter("myTokenFilter4"),
+        LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false)
+      )
     )
     assert(json === mapper.readTree(req._source.string))
   }
