@@ -43,8 +43,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   it should "support custom analyzers, tokenizers and filters" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis2.json"))
     val req = create.index("users").analysis(
-      StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
       StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400),
+      PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
+      SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
       CustomAnalyzerDefinition(
         "myAnalyzer2",
         StandardTokenizer("myTokenizer1", 900),
@@ -54,6 +55,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
       ),
       CustomAnalyzerDefinition(
         "myAnalyzer3",
+        LowercaseTokenizer,
         StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
         ReverseTokenFilter("myTokenFilter4"),
         LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false)
