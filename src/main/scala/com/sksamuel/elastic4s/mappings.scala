@@ -106,7 +106,7 @@ class MappingDefinition(val `type`: String) {
 class FieldDefinition(val name: String) {
 
   var _type: Option[FieldType] = None
-  var _analyzer: Option[Analyzer] = None
+  var _analyzer: Option[String] = None
   var _index: Option[String] = None
   var _store: Boolean = false
   var _boost: Double = 0
@@ -129,6 +129,11 @@ class FieldDefinition(val name: String) {
   }
 
   def analyzer(a: Analyzer): FieldDefinition = {
+    _analyzer = Option(a.name)
+    this
+  }
+
+  def analyzer(a: String): FieldDefinition = {
     _analyzer = Option(a)
     this
   }
@@ -171,7 +176,7 @@ class FieldDefinition(val name: String) {
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     _type.foreach(arg => source.field("type", arg.elastic))
-    _analyzer.foreach(arg => source.field("analyzer", arg.name))
+    _analyzer.foreach(arg => source.field("analyzer", arg))
     _index.foreach(index => source.field("index", index))
     _omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
     _nullValue.foreach(nullValue => source.field("null_value", nullValue))

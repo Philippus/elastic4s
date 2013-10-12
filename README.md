@@ -116,6 +116,10 @@ Then ElasticSearch is configured with those mappings for those fields only. It i
 
 More examples on how to create indexes with elastic4s can be [found here](guide/createindex.md)
 
+#### Analyzers
+
+Elasticsearch allows us to register (create) custom analyzers. For more details [read here](guide/analyzers.md).
+
 #### Indexing
 
 To index a document we need to specify the index and type and optionally the id. We must also include at least one field.
