@@ -1,63 +1,65 @@
 {
     "settings": {
-        "number_of_shards": 5,
-        "number_of_replicas": 1
-    },
-    "analysis": {
-        "analyzer": {
-            "patternAnalyzer": {
-                "type": "pattern",
-                "lowercase": true,
-                "pattern": "[a-z]"
-            },
-            "mysnowball": {
-                "type": "snowball",
-                "language": "english"
-            },
-            "myAnalyzer2": {
-                "type": "custom",
-                "tokenizer": "myTokenizer1",
-                "filter": ["myTokenFilter2", "myTokenFilter3", "prTokenFilter"]
-            },
-            "myAnalyzer3": {
-                "type": "custom",
-                "tokenizer": "lowercase",
-                "filter": ["myTokenFilter1", "reverse", "myTokenFilter5", "stemmerTokenFilter"]
-            }
+        "index": {
+            "number_of_shards": 5,
+            "number_of_replicas": 1
         },
-        "tokenizer": {
-            "myTokenizer1": {
-                "type": "standard",
-                "max_token_length": 900
-            }
-        },
-        "filter": {
-            "myTokenFilter2": {
-                "type": "length",
-                "max": 10
+        "analysis": {
+            "analyzer": {
+                "patternAnalyzer": {
+                    "type": "pattern",
+                    "lowercase": true,
+                    "pattern": "[a-z]"
+                },
+                "mysnowball": {
+                    "type": "snowball",
+                    "language": "english"
+                },
+                "myAnalyzer2": {
+                    "type": "custom",
+                    "tokenizer": "myTokenizer1",
+                    "filter": ["myTokenFilter2", "myTokenFilter3", "prTokenFilter"]
+                },
+                "myAnalyzer3": {
+                    "type": "custom",
+                    "tokenizer": "lowercase",
+                    "filter": ["myTokenFilter1", "reverse", "myTokenFilter5", "stemmerTokenFilter"]
+                }
             },
-            "myTokenFilter3": {
-                "type": "unique",
-                "only_on_same_position": true
+            "tokenizer": {
+                "myTokenizer1": {
+                    "type": "standard",
+                    "max_token_length": 900
+                }
             },
-            "prTokenFilter": {
-                "type": "pattern_replace",
-                "pattern": "pattern",
-                "replacement": "rep"
-            },
-            "myTokenFilter1": {
-                "type": "stop",
-                "stopwords": [],
-                "enable_position_increments": true,
-                "ignore_case": true
-            },
-            "myTokenFilter5": {
-                "type": "stop",
-                "max_token_count": 5
-            },
-            "stemmerTokenFilter": {
-                "type": "stemmer_override",
-                "rules": ["rule1", "rule2"]
+            "filter": {
+                "myTokenFilter2": {
+                    "type": "length",
+                    "max": 10
+                },
+                "myTokenFilter3": {
+                    "type": "unique",
+                    "only_on_same_position": true
+                },
+                "prTokenFilter": {
+                    "type": "pattern_replace",
+                    "pattern": "pattern",
+                    "replacement": "rep"
+                },
+                "myTokenFilter1": {
+                    "type": "stop",
+                    "stopwords": [],
+                    "enable_position_increments": true,
+                    "ignore_case": true
+                },
+                "myTokenFilter5": {
+                    "type": "stop",
+                    "max_token_count": 5
+                },
+                "stemmerTokenFilter": {
+                    "type": "stemmer_override",
+                    "rules": ["rule1", "rule2"]
+                }
             }
         }
     }

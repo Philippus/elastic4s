@@ -1,52 +1,57 @@
-{"settings": {
-    "number_of_shards": 2,
-    "number_of_replicas": 1
-}, "mappings": {
-    "tweets": {
-        "_source": {
-            "enabled": true
-        },
-        "numeric_detection": true,
-        "_boost": {
-            "name": "myboost",
-            "null_value": 1.2
-        },
-        "_size": {
-            "enabled": true
-        },
-        "properties": {
-            "_id": {
-                "type": "string",
-                "analyzer": "keyword"
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        }
+    },
+    "mappings": {
+        "tweets": {
+            "_source": {
+                "enabled": true
             },
-            "name": {
-                "type": "string",
-                "analyzer": "keyword"
+            "numeric_detection": true,
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
             },
-            "locations": {
-                "type": "geo_point",
-                "analyzer": "simple",
-                "boost": 4.0
+            "_size": {
+                "enabled": true
             },
-            "date": {
-                "type": "date"
-            },
-            "content": {
-                "type": "string"
-            },
-            "user": {
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "analyzer": "keyword"
+                },
                 "name": {
+                    "type": "string",
+                    "analyzer": "keyword"
+                },
+                "locations": {
+                    "type": "geo_point",
+                    "analyzer": "simple",
+                    "boost": 4.0
+                },
+                "date": {
+                    "type": "date"
+                },
+                "content": {
                     "type": "string"
                 },
-                "email": {
-                    "type": "string"
-                },
-                "last": {
-                    "lastLogin": {
-                        "type": "date"
+                "user": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "last": {
+                        "lastLogin": {
+                            "type": "date"
+                        }
                     }
                 }
             }
         }
     }
-}}
+}

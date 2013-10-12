@@ -1,76 +1,81 @@
-{"settings": {
-    "number_of_shards": 2,
-    "number_of_replicas": 1
-}, "mappings": {
-    "tweets": {
-        "_source": {
-            "enabled": true
-        },
-        "numeric_detection": true,
-        "_boost": {
-            "name": "myboost",
-            "null_value": 1.2
-        },
-        "_size": {
-            "enabled": true
-        },
-        "properties": {
-            "_id": {
-                "type": "string",
-                "analyzer": "keyword",
-                "include_in_all": true,
-                "store": "yes"
-            },
-            "name": {
-                "type": "geo_point",
-                "analyzer": "simple",
-                "index": "not_analyzed",
-                "boost": 4.0
-            },
-            "content": {
-                "type": "date",
-                "analyzer": "stop",
-                "null_value": "no content"
-            }
-        },
-        "_meta": {
-            "class": "com.sksamuel.User"
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
         }
     },
-    "users": {
-        "_source": {
-            "enabled": true
+    "mappings": {
+        "tweets": {
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "analyzer": "keyword",
+                    "include_in_all": true,
+                    "store": "yes"
+                },
+                "name": {
+                    "type": "geo_point",
+                    "analyzer": "simple",
+                    "index": "not_analyzed",
+                    "boost": 4.0
+                },
+                "content": {
+                    "type": "date",
+                    "analyzer": "stop",
+                    "null_value": "no content"
+                }
+            },
+            "_meta": {
+                "class": "com.sksamuel.User"
+            }
         },
-        "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
-        "date_detection": true,
-        "numeric_detection": true,
-        "_analyzer": {
-            "path": "somefield"
-        },
-        "properties": {
-            "name": {
-                "type": "ip",
-                "analyzer": "whitespace",
-                "omit_norms": true
+        "users": {
+            "_source": {
+                "enabled": true
             },
-            "location": {
-                "type": "integer",
-                "analyzer": "snowball"
+            "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
+            "date_detection": true,
+            "numeric_detection": true,
+            "_analyzer": {
+                "path": "somefield"
             },
-            "email": {
-                "type": "binary",
-                "analyzer": "standard"
-            },
-            "picture": {
-                "type": "attachment",
-                "analyzer": "notindexed"
-            },
-            "age": {
-                "type": "float"
-            },
-            "area": {
-                "type": "geo_shape"
+            "properties": {
+                "name": {
+                    "type": "ip",
+                    "analyzer": "whitespace",
+                    "omit_norms": true
+                },
+                "location": {
+                    "type": "integer",
+                    "analyzer": "snowball"
+                },
+                "email": {
+                    "type": "binary",
+                    "analyzer": "standard"
+                },
+                "picture": {
+                    "type": "attachment",
+                    "analyzer": "notindexed"
+                },
+                "age": {
+                    "type": "float"
+                },
+                "area": {
+                    "type": "geo_shape"
+                }
             }
         }
     }
-}}
+}

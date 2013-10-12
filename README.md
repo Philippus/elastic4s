@@ -1,7 +1,12 @@
 elastic4s
 =========
 
-Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch. It provides a full Scala DSL to construct your queries and (hopefully!) reducing errors. Due to its typesafe nature Elastic4s is also a good way to learn the options available for any operation, as your IDE can use the type information to show you what methods are available. Elastic4s also allows you to index JSON documents from standard JSON libraries such as Jackson without having to unmarshall.
+Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch.
+It provides a full Scala DSL to construct your queries and (hopefully!) reducing errors.
+Due to its typesafe nature elastic4s is also a good way to learn the options available for any operation,
+as your IDE can use the type information to show you what methods are available.
+Elastic4s also allows you to index JSON documents from standard
+JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
@@ -10,14 +15,21 @@ The latest release is 0.90.5.2 which is compatible with elasticsearch 0.90.5
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
-## Introduction to the DSL
+## Introduction
 
-The basic format of the DSL is to create requests (eg a search request or delete request) and pass them in to the execute methods on the client, which returns a response object. 
-All requests on the standard client are asynchronous. These methods return a standard Scala 2.10 Future object. Eg, a search request will return a Future[SearchResponse]. The response objects are the same as for the Java API.
+The basic format of the DSL is to create requests (eg a search request or delete request)
+and pass them in to the execute methods on the client, which returns a response object.
+All requests on the standard client are asynchronous.
+These methods return a standard Scala 2.10 Future object.
+Eg, a search request will return a Future[SearchResponse].
+The response objects are the same type as in the Java API.
 
-All the request methods exist in the ElasticDsl object. The standard client is a class called ElasticClient. To create a client use the constructor methods on the ElasticClient companion object. 
+All the DSL constructs exist in the ElasticDsl object which needs to be imported.
+The standard client is a class called ElasticClient.
+To create a client use the methods on the ElasticClient companion object.
 
-An example is worth 1000 characters so here is a quick example of how to create a client and index a one field document:
+An example is worth 1000 characters so here is a quick example of how to create a local node with a client
+ and index a one field document:
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -33,9 +45,12 @@ object Test extends App {
 For more in depth examples keep reading.
 
 
-#### DSL Syntax
+## Syntax
 
-Here is a list of the common operations and the syntax used to create requests. For full examples read the following sections. Most operations have many optional settings. For those you should consult the elastic search document for the particular operation. The DSL keyword is usually called exactly what the option is called in the json request.
+Here is a list of the common operations and the syntax used to create requests. 
+
+For more details on each operation click through to the read me page. For options that are not yet documented,
+please refer back to the elasticsearch documentation as the DSL keyword is usually called exactly what the option is called in the Java API.
 
 | Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
@@ -51,9 +66,9 @@ Here is a list of the common operations and the syntax used to create requests. 
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
 | Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
 
-#### Client
+## Client
 
-A locally configured node and client can be created simply by:
+A locally configured node and client can be created simply by invoking ```local``` on the client companion object:
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -62,7 +77,7 @@ val client = ElasticClient.local
 
 To specify settings for the local node you can pass in a settings object like this:
 ```scala
- val settings = ImmutableSettings.settingsBuilder() 
+val settings = ImmutableSettings.settingsBuilder() 
       .put("http.enabled", false)
       .put("path.home", "/var/elastic/")
 val client = ElasticClient.local(settings.build)
@@ -77,14 +92,14 @@ val client = ElasticClient.remote("host1" -> 9300, "host2" -> 9300)
 ```
 
 
-If you already have a handle to a Node then you can create a client from it easily:
+If you already have a handle to a Node in the Java API then you can create a client from it easily:
 ```scala
-val node = ... // node from java somewhere
+val node = ... // node from the java API somewhere
 val client = ElasticClient.fromNode(node)
 ```
 
 
-#### Create Index
+## Create Index
 
  To create an index that is fully dynamic we can simply use
 

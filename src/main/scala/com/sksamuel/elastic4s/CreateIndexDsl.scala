@@ -54,17 +54,11 @@ trait CreateIndexDsl {
       val source = XContentFactory.jsonBuilder().startObject()
 
       source.startObject("settings")
+
+      source.startObject("index")
       source.field("number_of_shards", _settings.shards)
       source.field("number_of_replicas", _settings.replicas)
       source.endObject()
-
-      if (_mappings.size > 0) {
-        source.startObject("mappings")
-        for ( mapping <- _mappings ) {
-          mapping.build(source)
-        }
-        source.endObject()
-      }
 
       _analysis.foreach(analysis => {
         source.startObject("analysis")
@@ -101,6 +95,16 @@ trait CreateIndexDsl {
 
         source.endObject()
       })
+
+      source.endObject() // end settings
+
+      if (_mappings.size > 0) {
+        source.startObject("mappings")
+        for ( mapping <- _mappings ) {
+          mapping.build(source)
+        }
+        source.endObject()
+      }
 
       source.endObject()
     }

@@ -1,5 +1,3 @@
-import _root_.sbt._
-import _root_.sbt.Keys._
 
 name := "elastic4s"
 
@@ -12,6 +10,8 @@ scalaVersion := "2.10.3"
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 publishMavenStyle := true
+
+javacOptions ++= Seq("-source", "1.6", "-target", "1.6")
 
 publishTo <<= version {
   (v: String) =>
