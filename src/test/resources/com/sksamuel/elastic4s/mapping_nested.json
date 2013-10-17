@@ -39,6 +39,7 @@
                     "type": "string"
                 },
                 "user": {
+                    "type": "nested",
                     "name": {
                         "type": "string"
                     },
@@ -46,6 +47,7 @@
                         "type": "string"
                     },
                     "last": {
+                        "type": "nested",
                         "lastLogin": {
                             "type": "date"
                         }

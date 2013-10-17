@@ -119,6 +119,7 @@ class FieldDefinition(val name: String) {
 
   def nested(fields: FieldDefinition*): FieldDefinition = {
     _nested = fields.toList
+    _type = Some(FieldType.NestedType)
     this
   }
 
