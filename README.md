@@ -91,6 +91,13 @@ val client = ElasticClient.remote("host1", 9300)
 val client = ElasticClient.remote("host1" -> 9300, "host2" -> 9300)
 ```
 
+If you need to pass settings to the client, then you need to invoke remote() with a settings object.
+For example to specify the cluster name (if you changed the default then you must specify the cluster name).
+
+```scala
+val settings = ImmutableSettings.settingsBuilder().put("cluster.name", "myClusterName").build()
+val client = ElasticClient.remote(settings, ("somehost", 9300))
+```
 
 If you already have a handle to a Node in the Java API then you can create a client from it easily:
 ```scala
