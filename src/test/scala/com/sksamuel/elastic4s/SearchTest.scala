@@ -39,15 +39,13 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   "a search index" should "find an indexed document that matches a string query" in {
-
     val resp = client.sync.execute {
-      search in "places" -> "cities" query "coldplay"
+      search in "music" -> "bands" query "anderson"
     }
     assert(1 === resp.getHits.totalHits())
   }
 
   "a search index" should "return the correct count for a count with query" in {
-
     val resp = client.sync.execute {
       count from "music" query "johnny buckland"
     }
