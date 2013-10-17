@@ -16,4 +16,5 @@ object FieldType {
   case object AttachmentType extends FieldType("attachment")
   case object IpType extends FieldType("ip")
   case object GeoShapeType extends FieldType("geo_shape")
+  case object NestedType extends FieldType("nested")
 }
