@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 /** @author Stephen Samuel */
 trait MappingDsl {
@@ -67,6 +67,12 @@ class MappingDefinition(val `type`: String) {
   def size(size: Boolean): MappingDefinition = {
     _size = size
     this
+  }
+
+  def build: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject()
+    build(builder)
+    builder.endObject()
   }
 
   def build(source: XContentBuilder): Unit = {

@@ -28,7 +28,6 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
-import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 
 /** @author Stephen Samuel */
@@ -76,7 +75,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   /**
    * Executes a Java API SearchRequest and returns a scala Future with the SearchResponse.
    *
-   * @param req a SearchRequest from the Java client
+   * @param req a SearchRequest from the Java clientl
    *
    * @return a Future providing an SearchResponse
    */
@@ -149,11 +148,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def bulk(requests: BulkCompatibleDefinition*): Future[BulkResponse] = {
     val bulk = client.prepareBulk()
-    requests.foreach(req => req match {
+    requests.foreach {
       case index: IndexDefinition => bulk.add(index.build)
       case delete: DeleteByIdDefinition => bulk.add(delete.build)
       case update: UpdateDefinition => bulk.add(update.build)
-    })
+    }
     injectFuture[BulkResponse](bulk.execute)
   }
 
@@ -196,7 +195,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def putMapping(indexes: String*)(mapping: MappingDefinition) =
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
-      .setType(mapping.`type`).setSource(mapping.build(XContentFactory.jsonBuilder)).execute)
+      .setType(mapping.`type`).setSource(mapping.build).execute)
 
   def close(): Unit = client.close()
 
