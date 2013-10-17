@@ -90,4 +90,5 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val req = create index "users" shards 3 replicas 4
     assert(json === mapper.readTree(req._source.string))
   }
+
 }

@@ -28,6 +28,8 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
+import org.elasticsearch.common.xcontent.XContentFactory
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -191,6 +193,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def segments(indexes: String*): Future[IndicesSegmentResponse] =
     injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
+
+  def putMapping(indexes: String*)(mapping: MappingDefinition) =
+    injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
+      .setType(mapping.`type`).setSource(mapping.build(XContentFactory.jsonBuilder)).execute)
 
   def close(): Unit = client.close()
 
