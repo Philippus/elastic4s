@@ -67,7 +67,7 @@ pomExtra := (
     </scm>
     <developers>
       <developer>
-        <id>theon</id>
+        <id>sksamuel</id>
         <name>sksamuel</name>
         <url>http://github.com/elastic4s</url>
       </developer>

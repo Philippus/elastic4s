@@ -21,6 +21,7 @@ class MappingDefinition(val `type`: String) {
   var _analyzer: Option[String] = None
   var _boostName: Option[String] = None
   var _boostValue: Double = 0
+  var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
 
   def analyzer(analyzer: String): MappingDefinition = {
@@ -37,6 +38,10 @@ class MappingDefinition(val `type`: String) {
   }
   def boostNullValue(value: Double): MappingDefinition = {
     _boostValue = value
+    this
+  }
+  def dynamic(dynamic: DynamicMapping): MappingDefinition = {
+    _dynamic = dynamic
     this
   }
   def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition = {
@@ -83,6 +88,7 @@ class MappingDefinition(val `type`: String) {
       source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
     if (date_detection) source.field("date_detection", date_detection)
     if (numeric_detection) source.field("numeric_detection", numeric_detection)
+    if (_dynamic == Strict) source.field("dynamic", "strict")
 
     _boostName.foreach(arg =>
       source.startObject("_boost").field("name", arg).field("null_value", _boostValue).endObject()
@@ -108,6 +114,10 @@ class MappingDefinition(val `type`: String) {
     source.endObject() // end mapping name
   }
 }
+
+sealed abstract class DynamicMapping
+case object Strict extends DynamicMapping
+case object Dynamic extends DynamicMapping
 
 class FieldDefinition(val name: String) {
 
