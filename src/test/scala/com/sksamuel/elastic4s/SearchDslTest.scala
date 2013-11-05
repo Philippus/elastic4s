@@ -171,7 +171,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate json for a filtered query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_filter.json"))
     val req = search in "music" types "bands" query {
-      filterQuery query {
+      filteredQuery query {
         "coldplay"
       } filter {
         termFilter("location", "uk")

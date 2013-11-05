@@ -1,5 +1,10 @@
 {
     "doc": {
         "name": "cook"
+    },
+    "query" : {
+        "term" : {
+            "color" : "blue"
+        }
     }
 }

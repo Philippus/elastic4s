@@ -1,7 +1,8 @@
 {
+    "color" : "blue",
     "query": {
         "term": {
-            "field1": "value1"
+            "name": "cook"
         }
     }
 }
