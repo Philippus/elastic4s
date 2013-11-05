@@ -55,6 +55,7 @@
                 "name": {
                     "type": "ip",
                     "analyzer": "whitespace",
+                    "index_options": "offset",
                     "omit_norms": true
                 },
                 "location": {

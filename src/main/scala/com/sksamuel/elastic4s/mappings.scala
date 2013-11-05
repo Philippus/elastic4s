@@ -132,6 +132,7 @@ class FieldDefinition(val name: String) {
   var _ignoreAbove: Option[Int] = None
   var _includeInAll: Option[Boolean] = None
   var _nested: List[FieldDefinition] = Nil
+  var _indexOptions: Option[String] = None
 
   def nested(fields: FieldDefinition*): FieldDefinition = {
     _nested = fields.toList
@@ -152,6 +153,11 @@ class FieldDefinition(val name: String) {
 
   def analyzer(a: String): FieldDefinition = {
     _analyzer = Option(a)
+    this
+  }
+
+  def indexOptions(indexOptions: String) = {
+    this._indexOptions = Option(indexOptions)
     this
   }
 
@@ -193,7 +199,8 @@ class FieldDefinition(val name: String) {
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     _type.foreach(arg => source.field("type", arg.elastic))
-    _analyzer.foreach(arg => source.field("analyzer", arg))
+    _analyzer.foreach(source.field("analyzer", _))
+    _indexOptions.foreach(source.field("index_options", _))
     _index.foreach(index => source.field("index", index))
     _omitNorms.foreach(omitNorms => source.field("omit_norms", omitNorms))
     _nullValue.foreach(nullValue => source.field("null_value", nullValue))

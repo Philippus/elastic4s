@@ -20,7 +20,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         "content" typed DateType analyzer StopAnalyzer nullValue "no content"
         ) size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       map("users").as(
-        "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true,
+        "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true indexOptions "offset",
         "location" typed IntegerType analyzer SnowballAnalyzer ignoreAbove 50,
         "email" typed BinaryType analyzer StandardAnalyzer,
         "picture" typed AttachmentType analyzer NotAnalyzed,
