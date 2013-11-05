@@ -104,4 +104,4 @@ Therefore we'll also tell elastic to index the whole word as a single token.
   }
 ```
 
-There are many options one can set on a field. For the full list, see the methods in the DSL or see the official documentation on [mappings](http://www.elasticsearch.org/guide/reference/mapping) (the DSL keywords will be the same or very close to the name of the optional in the REST API).
+There are many options one can set on a field. For the full list, see the methods in the DSL or see the official documentation on [mappings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) (the DSL keywords will be the same or very close to the name of the optional in the REST API).
