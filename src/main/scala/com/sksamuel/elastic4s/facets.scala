@@ -51,6 +51,10 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
     builder.size(size)
     this
   }
+  def shardSize(shardSize: Int): TermFacetDefinition = {
+    builder.shardSize(shardSize)
+    this
+  }
   def exclude(exclude: String*): TermFacetDefinition = {
     builder.exclude(exclude: _*)
     this
