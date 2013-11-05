@@ -3,7 +3,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "0.90.5.4"
+version := "0.90.6.0"
 
 scalaVersion := "2.10.3"
 
@@ -48,11 +48,11 @@ libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.5"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.6"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
 
-pomExtra := (
+pomExtra :=
   <url>https://github.com/sksamuel/elastic4s</url>
     <licenses>
       <license>
@@ -71,4 +71,4 @@ pomExtra := (
         <name>sksamuel</name>
         <url>http://github.com/elastic4s</url>
       </developer>
-    </developers>)
+    </developers>
