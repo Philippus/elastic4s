@@ -90,5 +90,36 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val req = create index "users" shards 3 replicas 4
     assert(json === mapper.readTree(req._source.string))
   }
+  
+  it should "support inner objects" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        "person" inner (
+          "name" inner (
+            "first_name" typed StringType analyzer KeywordAnalyzer,
+            "last_name" typed StringType analyzer KeywordAnalyzer
+          ),
+          "sid" typed StringType index "not_analyzed"
+        ),
+        "message" typed StringType
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+  
+  it should "support disabled inner objects" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object_disabled.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        "person" inner (
+          "name" typed ObjectType enabled false,
+          "sid" typed StringType index "not_analyzed"
+        ),
+        "message" typed StringType
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
 
 }

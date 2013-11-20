@@ -125,6 +125,7 @@ class FieldDefinition(val name: String) {
   var _analyzer: Option[String] = None
   var _index: Option[String] = None
   var _store: Boolean = false
+  var _enabled: Option[Boolean] = None
   var _boost: Double = 0
   var _nullValue: Option[String] = None
   var _omitNorms: Option[Boolean] = None
@@ -132,6 +133,7 @@ class FieldDefinition(val name: String) {
   var _ignoreAbove: Option[Int] = None
   var _includeInAll: Option[Boolean] = None
   var _nested: List[FieldDefinition] = Nil
+  var _inner: List[FieldDefinition] = Nil
   var _indexOptions: Option[String] = None
 
   def nested(fields: FieldDefinition*): FieldDefinition = {
@@ -139,9 +141,16 @@ class FieldDefinition(val name: String) {
     _type = Some(FieldType.NestedType)
     this
   }
+  
+  def inner(fields: FieldDefinition*): FieldDefinition = {
+    _inner = fields.toList
+    _type = Some(FieldType.ObjectType)
+    this
+  }
 
   def typed(ft: FieldType): FieldDefinition = fieldType(ft)
   def fieldType(ft: FieldType): FieldDefinition = {
+    
     _type = Option(ft)
     this
   }
@@ -163,6 +172,11 @@ class FieldDefinition(val name: String) {
 
   def store(store: Boolean): FieldDefinition = {
     _store = store
+    this
+  }
+  
+  def enabled(enabled: Boolean): FieldDefinition = {
+    _enabled = Some(enabled)
     this
   }
 
@@ -207,10 +221,19 @@ class FieldDefinition(val name: String) {
     _includeInAll.foreach(includeInAll => source.field("include_in_all", includeInAll))
     if (_boost > 0) source.field("boost", _boost)
     if (_store) source.field("store", "yes")
+    _enabled.foreach(source.field("enabled", _))
 
     for ( field <- _nested ) {
       field.build(source)
     }
+    
+    if(!_inner.isEmpty) {
+      source.startObject("properties")
+      for ( field <- _inner ) {
+        field.build(source)
+      }
+      source.endObject()
+    } 
 
     source.endObject()
   }
