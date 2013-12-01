@@ -151,6 +151,7 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     }
 
     def highlighting(highlights: HighlightDefinition*): SearchDefinition = {
+      highlights.foreach(highlight => _builder.addHighlightedField(highlight.builder))
       this
     }
 
