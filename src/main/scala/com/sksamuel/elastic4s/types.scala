@@ -18,4 +18,5 @@ object FieldType {
   case object GeoShapeType extends FieldType("geo_shape")
   case object NestedType extends FieldType("nested")
   case object ObjectType extends FieldType("object")
+  case object CompletionType extends FieldType("completion")
 }
