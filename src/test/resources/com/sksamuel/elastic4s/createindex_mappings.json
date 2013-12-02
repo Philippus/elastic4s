@@ -21,19 +21,17 @@
             "properties": {
                 "_id": {
                     "type": "string",
+                    "store": "yes",
                     "analyzer": "keyword",
-                    "include_in_all": true,
-                    "store": "yes"
+                    "include_in_all": true
                 },
                 "name": {
                     "type": "geo_point",
-                    "analyzer": "simple",
-                    "index": "not_analyzed",
-                    "boost": 4.0
+                    "lat_lon": true,
+                    "geohash": true
                 },
                 "content": {
                     "type": "date",
-                    "analyzer": "stop",
                     "null_value": "no content"
                 }
             },
@@ -54,21 +52,18 @@
             "properties": {
                 "name": {
                     "type": "ip",
-                    "analyzer": "whitespace",
-                    "index_options": "offset",
-                    "omit_norms": true
+                    "boost": 1.0,
+                    "null_value": "127.0.0.1"
                 },
                 "location": {
                     "type": "integer",
-                    "analyzer": "snowball"
+                    "null_value": 0
                 },
                 "email": {
-                    "type": "binary",
-                    "analyzer": "standard"
+                    "type": "binary"
                 },
                 "picture": {
-                    "type": "attachment",
-                    "analyzer": "notindexed"
+                    "type": "attachment"
                 },
                 "age": {
                     "type": "float"

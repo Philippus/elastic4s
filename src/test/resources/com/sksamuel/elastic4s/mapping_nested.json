@@ -29,8 +29,8 @@
                 },
                 "locations": {
                     "type": "geo_point",
-                    "analyzer": "simple",
-                    "boost": 4.0
+                    "validate": true,
+                    "normalize": true
                 },
                 "date": {
                     "type": "date"
