@@ -38,6 +38,13 @@ package object mapping {
     case object Default extends PostingsFormat("default")
   }
 
+  sealed abstract class DocValuesFormat(val value: String)
+  object DocValuesFormat {
+    case object Memory extends DocValuesFormat("memory")
+    case object Disk extends DocValuesFormat("disk")
+    case object Default extends DocValuesFormat("default")
+  }
+
   sealed abstract class Similarity(val value: String)
   object Similarity {
     case object Default extends Similarity("default")

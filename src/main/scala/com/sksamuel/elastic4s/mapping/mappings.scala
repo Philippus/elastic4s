@@ -222,6 +222,7 @@ final class StringFieldDefinition(name: String)
   with AttributeIgnoreAbove
   with AttributePositionOffsetGap
   with AttributePostingsFormat
+  with AttributeDocValuesFormat
   with AttributeSimilarity {
 
   type Self = StringFieldDefinition
@@ -244,6 +245,7 @@ final class StringFieldDefinition(name: String)
     super[AttributeIgnoreAbove].insert(source)
     super[AttributePositionOffsetGap].insert(source)
     super[AttributePostingsFormat].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
     super[AttributeSimilarity].insert(source)
     source.endObject()
   }
@@ -259,7 +261,8 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
   with AttributeNullValue[T]
   with AttributeIncludeInAll
   with AttributeIgnoreMalformed
-  with AttributePostingsFormat {
+  with AttributePostingsFormat
+  with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -273,6 +276,7 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIgnoreMalformed].insert(source)
     super[AttributePostingsFormat].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
     source.endObject()
   }
 }
@@ -295,7 +299,8 @@ final class DateFieldDefinition(name: String)
   with AttributeNullValue[String]
   with AttributeIncludeInAll
   with AttributeIgnoreMalformed
-  with AttributePostingsFormat {
+  with AttributePostingsFormat
+  with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -310,6 +315,7 @@ final class DateFieldDefinition(name: String)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIgnoreMalformed].insert(source)
     super[AttributePostingsFormat].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
     source.endObject()
   }
 }
@@ -322,7 +328,8 @@ final class BooleanFieldDefinition(name: String)
   with AttributeBoost
   with AttributeNullValue[Boolean]
   with AttributeIncludeInAll
-  with AttributePostingsFormat {
+  with AttributePostingsFormat
+  with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -334,6 +341,7 @@ final class BooleanFieldDefinition(name: String)
     super[AttributeNullValue].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributePostingsFormat].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
     source.endObject()
   }
 }
@@ -341,13 +349,15 @@ final class BooleanFieldDefinition(name: String)
 final class BinaryFieldDefinition(name: String)
   extends TypedFieldDefinition(BinaryType, name)
   with AttributeIndexName
-  with AttributePostingsFormat {
+  with AttributePostingsFormat
+  with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
     super[AttributeIndexName].insert(source)
     super[AttributePostingsFormat].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
     source.endObject()
   }
 }

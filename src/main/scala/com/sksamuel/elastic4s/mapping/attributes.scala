@@ -299,6 +299,20 @@ object attributes {
     }
   }
 
+  trait AttributeDocValuesFormat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _docValuesFormat: Option[DocValuesFormat] = None
+
+    def docValuesFormat(docValuesFormat: DocValuesFormat): Self = {
+      _docValuesFormat = Some(docValuesFormat)
+      this.asInstanceOf[Self]
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _docValuesFormat.foreach(arg => source.field("doc_values_format", arg.value))
+    }
+  }
+
   trait AttributeSimilarity extends Attribute { self: TypedFieldDefinition =>
 
     private[this] var _similarity: Option[Similarity] = None
