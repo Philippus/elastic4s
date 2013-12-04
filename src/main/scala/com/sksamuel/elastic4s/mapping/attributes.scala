@@ -8,8 +8,6 @@ object attributes {
 
   sealed trait Attribute { self: TypedFieldDefinition =>
 
-    type Self <: TypedFieldDefinition
-
     protected def insert(source: XContentBuilder): Unit
   }
 
@@ -17,9 +15,9 @@ object attributes {
 
     private[this] var _indexName: Option[String] = None
 
-    def indexName(indexName: String): Self = {
+    def indexName(indexName: String): this.type = {
       _indexName = Some(indexName)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -31,9 +29,9 @@ object attributes {
 
     private[this] var _enabled: Option[Boolean] = None
 
-    def enabled(enabled: Boolean): Self = {
+    def enabled(enabled: Boolean): this.type = {
       _enabled = Some(enabled)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -45,14 +43,14 @@ object attributes {
 
     private[this] var _store: Option[String] = None
 
-    def store(store: YesNo): Self = {
+    def store(store: YesNo): this.type = {
       _store = Some(store.value)
-      this.asInstanceOf[Self]
+      this
     }
 
-    def store(param: Boolean): Self = {
+    def store(param: Boolean): this.type = {
       _store = Some(YesNo(param).value)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -64,9 +62,9 @@ object attributes {
 
     private[this] var _index: Option[String] = None
 
-    def index(index: String): Self = {
+    def index(index: String): this.type = {
       _index = Some(index)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -78,9 +76,9 @@ object attributes {
 
     private[this] var _precisionStep: Option[Int] = None
 
-    def precisionStep(precisionStep: Int): Self = {
+    def precisionStep(precisionStep: Int): this.type = {
       _precisionStep = Some(precisionStep)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -92,9 +90,9 @@ object attributes {
 
     private[this] var _boost: Option[Double] = None
 
-    def boost(boost: Double): Self = {
+    def boost(boost: Double): this.type = {
       _boost = Some(boost)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -106,9 +104,9 @@ object attributes {
 
     private[this] var _nullValue: Option[T] = None
 
-    def nullValue(nullValue: T): Self = {
+    def nullValue(nullValue: T): this.type = {
       _nullValue = Some(nullValue)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -120,9 +118,9 @@ object attributes {
 
     private[this] var _includeInAll: Option[Boolean] = None
 
-    def includeInAll(includeInAll: Boolean): Self = {
+    def includeInAll(includeInAll: Boolean): this.type = {
       _includeInAll = Some(includeInAll)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -134,9 +132,9 @@ object attributes {
 
     private[this] var _ignoreMalformed: Option[Boolean] = None
 
-    def ignoreMalformed(ignoreMalformed: Boolean): Self = {
+    def ignoreMalformed(ignoreMalformed: Boolean): this.type = {
       _ignoreMalformed = Some(ignoreMalformed)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -148,9 +146,9 @@ object attributes {
 
     private[this] var _format: Option[String] = None
 
-    def format(format: String): Self = {
+    def format(format: String): this.type = {
       _format = Some(format)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -162,9 +160,9 @@ object attributes {
 
     private[this] var _termVector: Option[TermVector] = None
 
-    def termVector(termVector: TermVector): Self = {
+    def termVector(termVector: TermVector): this.type = {
       _termVector = Some(termVector)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -176,9 +174,9 @@ object attributes {
 
     private[this] var _omitNorms: Option[Boolean] = None
 
-    def omitNorms(omitNorms: Boolean): Self = {
+    def omitNorms(omitNorms: Boolean): this.type = {
       _omitNorms = Some(omitNorms)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -190,9 +188,9 @@ object attributes {
 
     private[this] var _indexOptions: Option[IndexOptions] = None
 
-    def indexOptions(indexOptions: IndexOptions): Self = {
+    def indexOptions(indexOptions: IndexOptions): this.type = {
       _indexOptions = Some(indexOptions)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -204,14 +202,14 @@ object attributes {
 
     private[this] var _analyzer: Option[String] = None
 
-    def analyzer(analyzer: String): Self = {
+    def analyzer(analyzer: String): this.type = {
       _analyzer = Some(analyzer)
-      this.asInstanceOf[Self]
+      this
     }
 
-    def analyzer(analyzer: Analyzer): Self = {
+    def analyzer(analyzer: Analyzer): this.type = {
       _analyzer = Some(analyzer.name)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -223,14 +221,14 @@ object attributes {
 
     private[this] var _indexAnalyzer: Option[String] = None
 
-    def indexAnalyzer(analyzer: String): Self = {
+    def indexAnalyzer(analyzer: String): this.type = {
       _indexAnalyzer = Some(analyzer)
-      this.asInstanceOf[Self]
+      this
     }
 
-    def indexAnalyzer(analyzer: Analyzer): Self = {
+    def indexAnalyzer(analyzer: Analyzer): this.type = {
       _indexAnalyzer = Some(analyzer.name)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -242,14 +240,14 @@ object attributes {
 
     private[this] var _searchAnalyzer: Option[String] = None
 
-    def searchAnalyzer(analyzer: String): Self = {
+    def searchAnalyzer(analyzer: String): this.type = {
       _searchAnalyzer = Some(analyzer)
-      this.asInstanceOf[Self]
+      this
     }
 
-    def searchAnalyzer(analyzer: Analyzer): Self = {
+    def searchAnalyzer(analyzer: Analyzer): this.type = {
       _searchAnalyzer = Some(analyzer.name)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -261,9 +259,9 @@ object attributes {
 
     private[this] var _ignoreAbove: Option[Int] = None
 
-    def ignoreAbove(ignoreAbove: Int): Self = {
+    def ignoreAbove(ignoreAbove: Int): this.type = {
       _ignoreAbove = Some(ignoreAbove)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -275,9 +273,9 @@ object attributes {
 
     private[this] var _positionOffsetGap: Option[Int] = None
 
-    def positionOffsetGap(positionOffsetGap: Int): Self = {
+    def positionOffsetGap(positionOffsetGap: Int): this.type = {
       _positionOffsetGap = Some(positionOffsetGap)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -289,9 +287,9 @@ object attributes {
 
     private[this] var _postingsFormat: Option[PostingsFormat] = None
 
-    def postingsFormat(postingsFormat: PostingsFormat): Self = {
+    def postingsFormat(postingsFormat: PostingsFormat): this.type = {
       _postingsFormat = Some(postingsFormat)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -303,9 +301,9 @@ object attributes {
 
     private[this] var _docValuesFormat: Option[DocValuesFormat] = None
 
-    def docValuesFormat(docValuesFormat: DocValuesFormat): Self = {
+    def docValuesFormat(docValuesFormat: DocValuesFormat): this.type = {
       _docValuesFormat = Some(docValuesFormat)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -317,9 +315,9 @@ object attributes {
 
     private[this] var _similarity: Option[Similarity] = None
 
-    def similarity(similarity: Similarity): Self = {
+    def similarity(similarity: Similarity): this.type = {
       _similarity = Some(similarity)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -331,9 +329,9 @@ object attributes {
 
     private[this] var _latLon: Option[Boolean] = None
 
-    def latLon(latLon: Boolean): Self = {
+    def latLon(latLon: Boolean): this.type = {
       _latLon = Some(latLon)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -345,9 +343,9 @@ object attributes {
 
     private[this] var _geohash: Option[Boolean] = None
 
-    def geohash(geohash: Boolean): Self = {
+    def geohash(geohash: Boolean): this.type = {
       _geohash = Some(geohash)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -359,9 +357,9 @@ object attributes {
 
     private[this] var _geohashPrecision: Option[String] = None
 
-    def geohashPrecision(geohashPrecision: String): Self = {
+    def geohashPrecision(geohashPrecision: String): this.type = {
       _geohashPrecision = Some(geohashPrecision)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -373,9 +371,9 @@ object attributes {
 
     private[this] var _geohashPrefix: Option[Boolean] = None
 
-    def geohashPrefix(geohashPrefix: Boolean): Self = {
+    def geohashPrefix(geohashPrefix: Boolean): this.type = {
       _geohashPrefix = Some(geohashPrefix)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -387,9 +385,9 @@ object attributes {
 
     private[this] var _validate: Option[Boolean] = None
 
-    def validate(validate: Boolean): Self = {
+    def validate(validate: Boolean): this.type = {
       _validate = Some(validate)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -401,9 +399,9 @@ object attributes {
 
     private[this] var _validateLat: Option[Boolean] = None
 
-    def validateLat(validateLat: Boolean): Self = {
+    def validateLat(validateLat: Boolean): this.type = {
       _validateLat = Some(validateLat)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -415,9 +413,9 @@ object attributes {
 
     private[this] var _validateLon: Option[Boolean] = None
 
-    def validateLon(validateLon: Boolean): Self = {
+    def validateLon(validateLon: Boolean): this.type = {
       _validateLon = Some(validateLon)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -429,9 +427,9 @@ object attributes {
 
     private[this] var _normalize: Option[Boolean] = None
 
-    def normalize(normalize: Boolean): Self = {
+    def normalize(normalize: Boolean): this.type = {
       _normalize = Some(normalize)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -443,9 +441,9 @@ object attributes {
 
     private[this] var _normalizeLat: Option[Boolean] = None
 
-    def normalizeLat(normalizeLat: Boolean): Self = {
+    def normalizeLat(normalizeLat: Boolean): this.type = {
       _normalizeLat = Some(normalizeLat)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -457,9 +455,9 @@ object attributes {
 
     private[this] var _normalizeLon: Option[Boolean] = None
 
-    def normalizeLon(normalizeLon: Boolean): Self = {
+    def normalizeLon(normalizeLon: Boolean): this.type = {
       _normalizeLon = Some(normalizeLon)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -471,9 +469,9 @@ object attributes {
 
     private[this] var _tree: Option[PrefixTree] = None
 
-    def tree(tree: PrefixTree): Self = {
+    def tree(tree: PrefixTree): this.type = {
       _tree = Some(tree)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
@@ -485,9 +483,9 @@ object attributes {
 
     private[this] var _precision: Option[String] = None
 
-    def precision(precision: String): Self = {
+    def precision(precision: String): this.type = {
       _precision = Some(precision)
-      this.asInstanceOf[Self]
+      this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {

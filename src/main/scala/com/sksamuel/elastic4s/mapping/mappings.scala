@@ -225,8 +225,6 @@ final class StringFieldDefinition(name: String)
   with AttributeDocValuesFormat
   with AttributeSimilarity {
 
-  type Self = StringFieldDefinition
-
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
@@ -375,8 +373,6 @@ final class GeoPointFieldDefinition(name: String)
   with AttributeNormalizeLat
   with AttributeNormalizeLon {
 
-  type Self = GeoPointFieldDefinition
-
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
@@ -399,8 +395,6 @@ final class GeoShapeFieldDefinition(name: String)
   with AttributeTree
   with AttributePrecision {
 
-  type Self = GeoPointFieldDefinition
-
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
@@ -420,8 +414,6 @@ final class IpFieldDefinition(name: String)
   with AttributeNullValue[String]
   with AttributeIncludeInAll {
 
-  type Self = IpFieldDefinition
-
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
@@ -439,8 +431,6 @@ final class IpFieldDefinition(name: String)
 final class AttachmentFieldDefinition(name: String)
   extends TypedFieldDefinition(AttachmentType, name) {
 
-  type Self = AttachmentFieldDefinition
-
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
@@ -450,8 +440,6 @@ final class AttachmentFieldDefinition(name: String)
 
 final class CompletionFieldDefinition(name: String)
   extends TypedFieldDefinition(CompletionType, name) {
-
-  type Self = CompletionFieldDefinition
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
