@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import scala.collection.mutable.ListBuffer
 import org.elasticsearch.action.admin.indices.create.{CreateIndexAction, CreateIndexRequest}
+import com.sksamuel.elastic4s.mapping.MappingDefinition
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {

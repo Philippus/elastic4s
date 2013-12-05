@@ -1,0 +1,510 @@
+package com.sksamuel.elastic4s.mapping
+
+import org.elasticsearch.common.xcontent.XContentBuilder
+import com.sksamuel.elastic4s.Analyzer
+
+/** @author Fehmi Can Saglam */
+object attributes {
+
+  sealed trait Attribute { self: TypedFieldDefinition =>
+
+    protected def insert(source: XContentBuilder): Unit
+  }
+
+  trait AttributeIndexName extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _indexName: Option[String] = None
+
+    def indexName(indexName: String): this.type = {
+      _indexName = Some(indexName)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _indexName.foreach(source.field("index_name", _))
+    }
+  }
+
+  trait AttributeEnabled extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _enabled: Option[Boolean] = None
+
+    def enabled(enabled: Boolean): this.type = {
+      _enabled = Some(enabled)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _enabled.foreach(source.field("enabled", _))
+    }
+  }
+
+  trait AttributeStore extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _store: Option[String] = None
+
+    def store(store: YesNo): this.type = {
+      _store = Some(store.value)
+      this
+    }
+
+    def store(param: Boolean): this.type = {
+      _store = Some(YesNo(param).value)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _store.foreach(source.field("store", _))
+    }
+  }
+
+  trait AttributeIndex extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _index: Option[String] = None
+
+    def index(index: String): this.type = {
+      _index = Some(index)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _index.foreach(source.field("index", _))
+    }
+  }
+
+  trait AttributePrecisionStep extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _precisionStep: Option[Int] = None
+
+    def precisionStep(precisionStep: Int): this.type = {
+      _precisionStep = Some(precisionStep)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _precisionStep.foreach(source.field("precision_step", _))
+    }
+  }
+
+  trait AttributeBoost extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _boost: Option[Double] = None
+
+    def boost(boost: Double): this.type = {
+      _boost = Some(boost)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _boost.foreach(source.field("boost", _))
+    }
+  }
+
+  trait AttributeNullValue[T] extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _nullValue: Option[T] = None
+
+    def nullValue(nullValue: T): this.type = {
+      _nullValue = Some(nullValue)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _nullValue.foreach(source.field("null_value", _))
+    }
+  }
+
+  trait AttributeIncludeInAll extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _includeInAll: Option[Boolean] = None
+
+    def includeInAll(includeInAll: Boolean): this.type = {
+      _includeInAll = Some(includeInAll)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _includeInAll.foreach(source.field("include_in_all", _))
+    }
+  }
+
+  trait AttributeIgnoreMalformed extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _ignoreMalformed: Option[Boolean] = None
+
+    def ignoreMalformed(ignoreMalformed: Boolean): this.type = {
+      _ignoreMalformed = Some(ignoreMalformed)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _ignoreMalformed.foreach(source.field("ignore_malformed", _))
+    }
+  }
+
+  trait AttributeFormat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _format: Option[String] = None
+
+    def format(format: String): this.type = {
+      _format = Some(format)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _format.foreach(source.field("format", _))
+    }
+  }
+
+  trait AttributeTermVector extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _termVector: Option[TermVector] = None
+
+    def termVector(termVector: TermVector): this.type = {
+      _termVector = Some(termVector)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _termVector.foreach(arg => source.field("term_vector", arg.value))
+    }
+  }
+
+  trait AttributeOmitNorms extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _omitNorms: Option[Boolean] = None
+
+    def omitNorms(omitNorms: Boolean): this.type = {
+      _omitNorms = Some(omitNorms)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _omitNorms.foreach(source.field("omit_norms", _))
+    }
+  }
+
+  trait AttributeIndexOptions extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _indexOptions: Option[IndexOptions] = None
+
+    def indexOptions(indexOptions: IndexOptions): this.type = {
+      _indexOptions = Some(indexOptions)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _indexOptions.foreach(arg => source.field("index_options", arg.value))
+    }
+  }
+
+  trait AttributeAnalyzer extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _analyzer: Option[String] = None
+
+    def analyzer(analyzer: String): this.type = {
+      _analyzer = Some(analyzer)
+      this
+    }
+
+    def analyzer(analyzer: Analyzer): this.type = {
+      _analyzer = Some(analyzer.name)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _analyzer.foreach(source.field("analyzer", _))
+    }
+  }
+
+  trait AttributeIndexAnalyzer extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _indexAnalyzer: Option[String] = None
+
+    def indexAnalyzer(analyzer: String): this.type = {
+      _indexAnalyzer = Some(analyzer)
+      this
+    }
+
+    def indexAnalyzer(analyzer: Analyzer): this.type = {
+      _indexAnalyzer = Some(analyzer.name)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _indexAnalyzer.foreach(source.field("index_analyzer", _))
+    }
+  }
+
+  trait AttributeSearchAnalyzer extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _searchAnalyzer: Option[String] = None
+
+    def searchAnalyzer(analyzer: String): this.type = {
+      _searchAnalyzer = Some(analyzer)
+      this
+    }
+
+    def searchAnalyzer(analyzer: Analyzer): this.type = {
+      _searchAnalyzer = Some(analyzer.name)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _searchAnalyzer.foreach(source.field("search_analyzer", _))
+    }
+  }
+
+  trait AttributeIgnoreAbove extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _ignoreAbove: Option[Int] = None
+
+    def ignoreAbove(ignoreAbove: Int): this.type = {
+      _ignoreAbove = Some(ignoreAbove)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _ignoreAbove.foreach(source.field("ignore_above", _))
+    }
+  }
+
+  trait AttributePositionOffsetGap extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _positionOffsetGap: Option[Int] = None
+
+    def positionOffsetGap(positionOffsetGap: Int): this.type = {
+      _positionOffsetGap = Some(positionOffsetGap)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _positionOffsetGap.foreach(source.field("position_offset_gap", _))
+    }
+  }
+
+  trait AttributePostingsFormat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _postingsFormat: Option[PostingsFormat] = None
+
+    def postingsFormat(postingsFormat: PostingsFormat): this.type = {
+      _postingsFormat = Some(postingsFormat)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _postingsFormat.foreach(arg => source.field("postings_format", arg.value))
+    }
+  }
+
+  trait AttributeDocValuesFormat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _docValuesFormat: Option[DocValuesFormat] = None
+
+    def docValuesFormat(docValuesFormat: DocValuesFormat): this.type = {
+      _docValuesFormat = Some(docValuesFormat)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _docValuesFormat.foreach(arg => source.field("doc_values_format", arg.value))
+    }
+  }
+
+  trait AttributeSimilarity extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _similarity: Option[Similarity] = None
+
+    def similarity(similarity: Similarity): this.type = {
+      _similarity = Some(similarity)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _similarity.foreach(arg => source.field("similarity", arg.value))
+    }
+  }
+
+  trait AttributeLatLon extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _latLon: Option[Boolean] = None
+
+    def latLon(latLon: Boolean): this.type = {
+      _latLon = Some(latLon)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _latLon.foreach(source.field("lat_lon", _))
+    }
+  }
+
+  trait AttributeGeohash extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _geohash: Option[Boolean] = None
+
+    def geohash(geohash: Boolean): this.type = {
+      _geohash = Some(geohash)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _geohash.foreach(source.field("geohash", _))
+    }
+  }
+
+  trait AttributeGeohashPrecision extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _geohashPrecision: Option[String] = None
+
+    def geohashPrecision(geohashPrecision: String): this.type = {
+      _geohashPrecision = Some(geohashPrecision)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _geohashPrecision.foreach(source.field("geohash_precision", _))
+    }
+  }
+
+  trait AttributeGeohashPrefix extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _geohashPrefix: Option[Boolean] = None
+
+    def geohashPrefix(geohashPrefix: Boolean): this.type = {
+      _geohashPrefix = Some(geohashPrefix)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _geohashPrefix.foreach(source.field("geohash_prefix", _))
+    }
+  }
+
+  trait AttributeValidate extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _validate: Option[Boolean] = None
+
+    def validate(validate: Boolean): this.type = {
+      _validate = Some(validate)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _validate.foreach(source.field("validate", _))
+    }
+  }
+
+  trait AttributeValidateLat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _validateLat: Option[Boolean] = None
+
+    def validateLat(validateLat: Boolean): this.type = {
+      _validateLat = Some(validateLat)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _validateLat.foreach(source.field("validate_lat", _))
+    }
+  }
+
+  trait AttributeValidateLon extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _validateLon: Option[Boolean] = None
+
+    def validateLon(validateLon: Boolean): this.type = {
+      _validateLon = Some(validateLon)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _validateLon.foreach(source.field("validate_lon", _))
+    }
+  }
+
+  trait AttributeNormalize extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _normalize: Option[Boolean] = None
+
+    def normalize(normalize: Boolean): this.type = {
+      _normalize = Some(normalize)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _normalize.foreach(source.field("normalize", _))
+    }
+  }
+
+  trait AttributeNormalizeLat extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _normalizeLat: Option[Boolean] = None
+
+    def normalizeLat(normalizeLat: Boolean): this.type = {
+      _normalizeLat = Some(normalizeLat)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _normalizeLat.foreach(source.field("normalize_lat", _))
+    }
+  }
+
+  trait AttributeNormalizeLon extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _normalizeLon: Option[Boolean] = None
+
+    def normalizeLon(normalizeLon: Boolean): this.type = {
+      _normalizeLon = Some(normalizeLon)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _normalizeLon.foreach(source.field("normalize_lon", _))
+    }
+  }
+
+  trait AttributeTree extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _tree: Option[PrefixTree] = None
+
+    def tree(tree: PrefixTree): this.type = {
+      _tree = Some(tree)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _tree.foreach(arg => source.field("tree", arg.value))
+    }
+  }
+
+  trait AttributePrecision extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _precision: Option[String] = None
+
+    def precision(precision: String): this.type = {
+      _precision = Some(precision)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _precision.foreach(source.field("precision", _))
+    }
+  }
+
+  trait AttributePath extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _path: Option[String] = None
+
+    def path(path: String): this.type = {
+      _path = Some(path)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _path.foreach(source.field("path", _))
+    }
+  }
+
+}

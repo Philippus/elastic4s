@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.mapping
 
 /** @author Stephen Samuel */
 abstract class FieldType(val elastic: String)
@@ -6,6 +6,7 @@ object FieldType {
   case object StringType extends FieldType("string")
   case object GeoPointType extends FieldType("geo_point")
   case object IntegerType extends FieldType("integer")
+  case object ShortType extends FieldType("short")
   case object BooleanType extends FieldType("boolean")
   case object DoubleType extends FieldType("double")
   case object LongType extends FieldType("long")
@@ -19,4 +20,5 @@ object FieldType {
   case object NestedType extends FieldType("nested")
   case object ObjectType extends FieldType("object")
   case object CompletionType extends FieldType("completion")
+  case object MultiFieldType extends FieldType("multi_field")
 }

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import scala.concurrent.duration._
 import org.elasticsearch.action.bulk.{BulkRequestBuilder, BulkAction}
+import com.sksamuel.elastic4s.mapping.MappingDsl
 
 /** @author Stephen Samuel */
 object ElasticDsl

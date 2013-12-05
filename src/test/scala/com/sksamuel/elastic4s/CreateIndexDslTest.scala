@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.FieldType._
+import com.sksamuel.elastic4s.mapping.FieldType._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
 
@@ -16,14 +16,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val req = create.index("users").shards(2).mappings(
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-        "name" typed GeoPointType analyzer SimpleAnalyzer boost 4 index "not_analyzed",
-        "content" typed DateType analyzer StopAnalyzer nullValue "no content"
+        "name" typed GeoPointType latLon true geohash true,
+        "content" typed DateType nullValue "no content"
         ) size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       map("users").as(
-        "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true indexOptions "offset",
-        "location" typed IntegerType analyzer SnowballAnalyzer ignoreAbove 50,
-        "email" typed BinaryType analyzer StandardAnalyzer,
-        "picture" typed AttachmentType analyzer NotAnalyzed,
+        "name" typed IpType nullValue "127.0.0.1" boost 1.0,
+        "location" typed IntegerType nullValue 0,
+        "email" typed BinaryType,
+        "picture" typed AttachmentType,
         "age" typed FloatType,
         "area" typed GeoShapeType
       ) analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
@@ -70,7 +70,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer,
         "name" typed StringType analyzer KeywordAnalyzer,
-        "locations" typed GeoPointType analyzer SimpleAnalyzer boost 4,
+        "locations" typed GeoPointType validate true normalize true,
         "date" typed DateType,
         "content" typed StringType,
         "user" nested(
@@ -117,6 +117,36 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
           "sid" typed StringType index "not_analyzed"
         ),
         "message" typed StringType
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
+  it should "support multi field type" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_1.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "name" multi(
+          "name" typed StringType index "analyzed",
+          "untouched" typed StringType index "not_analyzed"
+        )
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
+  it should "support multi field type with path" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_2.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "first_name" typed MultiFieldType path "just_name" as(
+          "first_name" typed StringType index "analyzed",
+          "any_name" typed StringType index "analyzed"
+        ),
+        "last_name" typed MultiFieldType path "just_name" as(
+          "last_name" typed StringType index "analyzed",
+          "any_name" typed StringType index "analyzed"
+        )
       ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     assert(json === mapper.readTree(req._source.string))
