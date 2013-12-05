@@ -20,4 +20,5 @@ object FieldType {
   case object NestedType extends FieldType("nested")
   case object ObjectType extends FieldType("object")
   case object CompletionType extends FieldType("completion")
+  case object MultiFieldType extends FieldType("multi_field")
 }

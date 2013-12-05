@@ -140,12 +140,14 @@ private[mapping] class FieldDefinition(val name: String) {
   def typed(ft: IpType.type) = new IpFieldDefinition(name)
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def typed(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def typed(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
 
   // for backwards compatibility
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields:_*)
   def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields:_*)
+  def multi(fields: StringFieldDefinition*) = new MultiFieldDefinition(name).as(fields:_*)
 }
 
 abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends FieldDefinition(name) {
@@ -444,6 +446,32 @@ final class CompletionFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
+    source.endObject()
+  }
+}
+
+final class MultiFieldDefinition(name: String)
+  extends TypedFieldDefinition(MultiFieldType, name)
+  with AttributePath {
+
+  var _fields: Seq[StringFieldDefinition] = Nil
+
+  def as(fields: StringFieldDefinition *) = {
+    _fields = fields
+    this
+  }
+
+  def build(source: XContentBuilder): Unit = {
+    source.startObject(name)
+    insertType(source)
+    super[AttributePath].insert(source)
+    if(!_fields.isEmpty) {
+      source.startObject("fields")
+      for(field <- _fields) {
+        field.build(source)
+      }
+      source.endObject()
+    }
     source.endObject()
   }
 }

@@ -493,4 +493,18 @@ object attributes {
     }
   }
 
+  trait AttributePath extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _path: Option[String] = None
+
+    def path(path: String): this.type = {
+      _path = Some(path)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _path.foreach(source.field("path", _))
+    }
+  }
+
 }

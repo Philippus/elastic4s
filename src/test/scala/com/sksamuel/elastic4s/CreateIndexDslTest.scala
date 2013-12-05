@@ -122,4 +122,34 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     assert(json === mapper.readTree(req._source.string))
   }
 
+  it should "support multi field type" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_1.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "name" multi(
+          "name" typed StringType index "analyzed",
+          "untouched" typed StringType index "not_analyzed"
+        )
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
+  it should "support multi field type with path" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_2.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "first_name" typed MultiFieldType path "just_name" as(
+          "first_name" typed StringType index "analyzed",
+          "any_name" typed StringType index "analyzed"
+        ),
+        "last_name" typed MultiFieldType path "just_name" as(
+          "last_name" typed StringType index "analyzed",
+          "any_name" typed StringType index "analyzed"
+        )
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
 }
