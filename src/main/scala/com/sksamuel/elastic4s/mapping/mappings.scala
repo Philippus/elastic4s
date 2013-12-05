@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.mapping.FieldType._
 
 /** @author Stephen Samuel */
 trait MappingDsl {
-  def id: FieldDefinition = field("_id")
+  def id: FieldDefinition = "_id"
   implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
   implicit def map(`type`: String) = new MappingDefinition(`type`)
 }
@@ -123,7 +123,7 @@ case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
 
 /**/
-class FieldDefinition(val name: String) {
+private[mapping] class FieldDefinition(val name: String) {
 
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
