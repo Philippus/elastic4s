@@ -122,7 +122,6 @@ sealed abstract class DynamicMapping
 case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
 
-/**/
 private[mapping] class FieldDefinition(val name: String) {
 
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
@@ -145,9 +144,9 @@ private[mapping] class FieldDefinition(val name: String) {
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
 
   // for backwards compatibility
-  def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields:_*)
-  def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields:_*)
-  def multi(fields: StringFieldDefinition*) = new MultiFieldDefinition(name).as(fields:_*)
+  def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
+  def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields: _*)
+  def multi(fields: StringFieldDefinition*) = new MultiFieldDefinition(name).as(fields: _*)
 }
 
 abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends FieldDefinition(name) {
@@ -165,7 +164,7 @@ final class NestedFieldDefinition(name: String)
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: TypedFieldDefinition *) = {
+  def as(fields: TypedFieldDefinition*) = {
     _fields = fields
     this
   }
@@ -173,7 +172,7 @@ final class NestedFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    for(field <- _fields) {
+    for ( field <- _fields ) {
       field.build(source)
     }
     source.endObject()
@@ -187,7 +186,7 @@ final class ObjectFieldDefinition(name: String)
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: TypedFieldDefinition *) = {
+  def as(fields: TypedFieldDefinition*) = {
     _fields = fields
     this
   }
@@ -196,9 +195,9 @@ final class ObjectFieldDefinition(name: String)
     source.startObject(name)
     insertType(source)
     super[AttributeEnabled].insert(source)
-    if(!_fields.isEmpty) {
+    if (!_fields.isEmpty) {
       source.startObject("properties")
-      for(field <- _fields) {
+      for ( field <- _fields ) {
         field.build(source)
       }
       source.endObject()
@@ -456,7 +455,7 @@ final class MultiFieldDefinition(name: String)
 
   var _fields: Seq[StringFieldDefinition] = Nil
 
-  def as(fields: StringFieldDefinition *) = {
+  def as(fields: StringFieldDefinition*) = {
     _fields = fields
     this
   }
@@ -465,9 +464,9 @@ final class MultiFieldDefinition(name: String)
     source.startObject(name)
     insertType(source)
     super[AttributePath].insert(source)
-    if(!_fields.isEmpty) {
+    if (!_fields.isEmpty) {
       source.startObject("fields")
-      for(field <- _fields) {
+      for ( field <- _fields ) {
         field.build(source)
       }
       source.endObject()

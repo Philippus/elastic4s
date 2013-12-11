@@ -3,7 +3,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "0.90.7.1"
+version := "0.90.7.2"
 
 scalaVersion := "2.10.3"
 
@@ -25,8 +25,6 @@ publishTo <<= version {
 publishArtifact in Test := false
 
 parallelExecution in Test := false
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.1.3"
 
@@ -52,7 +50,11 @@ libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.7"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
 
-pomExtra :=
+ScoverageSbtPlugin.instrumentSettings
+
+CoverallsPlugin.singleProject
+
+pomExtra := {
   <url>https://github.com/sksamuel/elastic4s</url>
     <licenses>
       <license>
@@ -72,3 +74,4 @@ pomExtra :=
         <url>http://github.com/elastic4s</url>
       </developer>
     </developers>
+}
