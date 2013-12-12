@@ -96,6 +96,8 @@ trait QueryDsl {
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
 
+  def nested(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
+
   def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
 
   def range(field: String): RangeQueryDefinition = rangeQuery(field)
@@ -1027,3 +1029,29 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
   }
 }
 
+class NestedQueryDefinition(path: String) extends QueryDefinition {
+  private var _query: QueryDefinition = _
+  private var _boost: Double = 1.0
+  private var _scoreMode: String = _
+
+  def builder = {
+    require(_query != null, "must specify query for nested score query")
+    QueryBuilders.nestedQuery(path, _query.builder).scoreMode(_scoreMode).boost(_boost.toFloat)
+  }
+
+  def query(query: QueryDefinition): NestedQueryDefinition = {
+    _query = query
+    this
+  }
+
+  def scoreMode(scoreMode: String): NestedQueryDefinition = {
+    _scoreMode = scoreMode
+    this
+  }
+
+  def boost(b: Double): NestedQueryDefinition = {
+    _boost = b
+    this
+  }
+
+}
