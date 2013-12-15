@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
+import com.sksamuel.elastic4s.source.Source
 
 /** @author Stephen Samuel */
 class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -33,7 +34,7 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "should support percolate" in {
-    val updateDef = update id 5 in "scifi/startrek" percolate "inandout"
+    val updateDef = update id 54 in "scifi/startrek" percolate "inandout"
     assert(updateDef.build.percolate() === "inandout")
   }
 
@@ -43,9 +44,18 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "should support docAsUpdate" in {
-    val updateDef = update id 5 in "scifi/startrek" docAsUpdate true
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert true
     assert(updateDef.build.docAsUpsert())
+  }
+
+  it should "should support source" in {
+    val updateDef = update id 65 in "scifi/startrek" source new TestSource
+    assert(updateDef.build.doc().sourceAsMap().containsKey("ship"))
+    assert(updateDef.build.doc().sourceAsMap().containsValue("enterprise"))
   }
 }
 
+case class TestSource() extends Source {
+  def json: String = """{ "ship" : "enterprise"}"""
+}
 
