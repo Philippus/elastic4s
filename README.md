@@ -8,6 +8,13 @@ as your IDE can use the type information to show you what methods are available.
 Elastic4s also allows you to index JSON documents from standard
 JSON libraries such as Jackson without having to unmarshall.
 
+#### Key points
+
+* Typesafe DSL
+* Uses Scala futures
+* Supports Scala collections
+* Wraps Java library
+
 #### Release
 
 The latest release is 0.90.7.1 which is compatible with elasticsearch 0.90.7+
