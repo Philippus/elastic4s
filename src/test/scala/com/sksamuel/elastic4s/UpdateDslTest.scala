@@ -49,7 +49,7 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "should support source" in {
-    val updateDef = update id 65 in "scifi/startrek" source new TestSource
+    val updateDef = update id 65 in "scifi/startrek" doc new TestSource
     assert(updateDef.build.doc().sourceAsMap().containsKey("ship"))
     assert(updateDef.build.doc().sourceAsMap().containsValue("enterprise"))
   }

@@ -53,7 +53,10 @@ trait UpdateDsl {
       _builder.setDoc(fieldsAsXContent(iterable))
       this
     }
-
+    def doc(source: Source) = {
+      _builder.setDoc(source.json)
+      this
+    }
     def routing(routing: String): UpdateDefinition = {
       _builder.setRouting(routing)
       this
@@ -93,10 +96,6 @@ trait UpdateDsl {
     }
     def lang(scriptLang: String): UpdateDefinition = {
       _builder.setScriptLang(scriptLang)
-      this
-    }
-    def source(source: Source) = {
-      _builder.setDoc(source.json)
       this
     }
     def upsert(map: Map[String, Any]): UpdateDefinition = upsert(map.toList)
