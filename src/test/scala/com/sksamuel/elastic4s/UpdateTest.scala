@@ -91,9 +91,9 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
   it should "insert non existent doc when using docAsUpsert" in {
 
     client.sync.execute {
-      update(14).in("scifi/starwars").docAsUpsert(
+      update(14).in("scifi/starwars").doc(
         "character" -> "chewie"
-      )
+      ).docAsUpsert
     }
     refresh("scifi")
 

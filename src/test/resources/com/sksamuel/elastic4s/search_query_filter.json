@@ -1,15 +1,11 @@
-{"query": {
-    "filtered": {
+{"filter": {
+    "fquery": {
         "query": {
             "query_string": {
                 "query": "coldplay"
             }
         },
-        "filter": {
-            "term": {
-                "location": "uk"
-            }
-        },
-        "boost": 1.2
+        "_name": "sammysfilter",
+        "_cache": true
     }
 }}

@@ -739,8 +739,8 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def minimumShouldMatch(a: String) = {
-    builder.minimumShouldMatch(a)
+  def minimumShouldMatch(a: Any) = {
+    builder.minimumShouldMatch(a.toString)
     this
   }
 
@@ -759,8 +759,8 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def fuzziness(a: AnyRef): MatchQueryDefinition = {
-    builder.fuzziness(a)
+  def fuzziness(a: Any): MatchQueryDefinition = {
+    builder.fuzziness(a.toString)
     this
   }
 
@@ -822,8 +822,8 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
     this
   }
 
-  def minimumShouldMatch(a: String): MatchPhrasePrefixDefinition = {
-    builder.minimumShouldMatch(a)
+  def minimumShouldMatch(a: Any): MatchPhrasePrefixDefinition = {
+    builder.minimumShouldMatch(a.toString)
     this
   }
 
@@ -842,8 +842,8 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
     this
   }
 
-  def fuzziness(a: AnyRef): MatchPhrasePrefixDefinition = {
-    builder.fuzziness(a)
+  def fuzziness(a: Any): MatchPhrasePrefixDefinition = {
+    builder.fuzziness(a.toString)
     this
   }
 
@@ -905,8 +905,8 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def minimumShouldMatch(a: String) = {
-    builder.minimumShouldMatch(a)
+  def minimumShouldMatch(a: Any) = {
+    builder.minimumShouldMatch(a.toString)
     this
   }
 
@@ -925,7 +925,7 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def fuzziness(a: AnyRef) = {
+  def fuzziness(a: Any) = {
     builder.fuzziness(a)
     this
   }

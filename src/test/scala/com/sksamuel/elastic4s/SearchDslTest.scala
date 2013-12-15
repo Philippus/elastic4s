@@ -146,6 +146,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         .zeroTermsQuery(ZeroTermsQuery.ALL)
         .slop(3)
         .setLenient(true)
+        .minimumShouldMatch("75%")
+        .fuzziness(2f)
         .prefixLength(4)
         .analyzer(SnowballAnalyzer)
     } searchType SearchType.Count
@@ -169,7 +171,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "generate json for a filtered query" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_filter.json"))
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_filteredquery.json"))
     val req = search in "music" types "bands" query {
       filteredQuery query {
         "coldplay"
@@ -255,6 +257,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         .operator(MatchQueryBuilder.Operator.AND)
         .zeroTermsQuery(ZeroTermsQuery.ALL)
         .slop(3)
+        .operator("AND")
+        .minimumShouldMatch("75%")
+        .fuzziness(2f)
+        .boost(15)
         .setLenient(true)
         .prefixLength(4)
         .analyzer(SnowballAnalyzer)
@@ -272,7 +278,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         .operator(MatchQueryBuilder.Operator.AND)
         .zeroTermsQuery(ZeroTermsQuery.ALL)
         .slop(3)
+        .operator("AND")
+        .minimumShouldMatch("75%")
         .setLenient(true)
+        .fuzziness(2f)
         .prefixLength(4)
         .analyzer(SnowballAnalyzer)
     } preference Preference.OnlyNode("a")
@@ -653,6 +662,22 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           term("name", "sammy")
         }
       } scoreMode "avg" boost 14.5
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for a query filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_filter.json"))
+    val req = search in "*" types("users", "tweets") filter {
+      queryFilter("coldplay").cache(true).filterName("sammysfilter")
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for a SpanTermQueryDefinition" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_span_term.json"))
+    val req = search in "*" types("users", "tweets") query {
+      spanTermQuery("name", "coldplay").boost(123)
     }
     assert(json === mapper.readTree(req._builder.toString))
   }
