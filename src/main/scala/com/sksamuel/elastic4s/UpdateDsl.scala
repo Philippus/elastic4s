@@ -85,7 +85,7 @@ trait UpdateDsl {
       _builder.setPercolate(percolate)
       this
     }
-    def docAsUpdate(shouldUpsertDoc: Boolean): UpdateDefinition = {
+    def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = {
       _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
       this
     }

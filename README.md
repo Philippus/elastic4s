@@ -239,6 +239,21 @@ client.delete {
 
 See more about delete on the [delete page](guide/delete.md)
 
+#### Updates
+
+We can update existing documents without having to do a full index, by updating a partial set of fields.
+
+```scala
+client.execute {
+  update 25 in "scifi/starwars" docAsUpsert (
+    "character" -> "chewie",
+    "race" -> "wookie"
+  )
+}
+```
+
+Read more about updates and see [more examples](guide/update.md).
+
 #### More like this
 
 If you want to return documents that are "similar" to   a current document we can do that very easily with the more like this query.
