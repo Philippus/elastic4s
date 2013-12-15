@@ -38,42 +38,47 @@ trait IndexDsl {
       source.endObject()
     }
 
-    def id(id: Any) = {
+    def id(id: Any): IndexDefinition = {
       _request.id(id.toString)
       this
     }
-    def routing(routing: String) = {
+    def routing(routing: String): IndexDefinition = {
       _request.routing(routing)
       this
     }
 
-    def parent(parent: String) = {
+    def parent(parent: String): IndexDefinition = {
       _request.parent(parent)
       this
     }
 
-    def timestamp(timestamp: String) = {
+    def percolate(percolate: String): IndexDefinition = {
+      _request.percolate(percolate)
+      this
+    }
+
+    def timestamp(timestamp: String): IndexDefinition = {
       _request.timestamp(timestamp)
       this
     }
 
-    def ttl(ttl: Long) = {
+    def ttl(ttl: Long): IndexDefinition = {
       _request.ttl(ttl)
       this
     }
 
-    def update(update: Boolean) = opType(OpType.CREATE)
-    def opType(opType: IndexRequest.OpType) = {
+    def update(update: Boolean): IndexDefinition = opType(OpType.CREATE)
+    def opType(opType: IndexRequest.OpType): IndexDefinition = {
       _request.opType(opType)
       this
     }
 
-    def version(version: Int) = {
+    def version(version: Int): IndexDefinition = {
       _request.version(version)
       this
     }
 
-    def versionType(versionType: VersionType) = {
+    def versionType(versionType: VersionType): IndexDefinition = {
       _request.versionType(versionType)
       this
     }
