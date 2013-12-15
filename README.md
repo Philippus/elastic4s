@@ -1,8 +1,8 @@
 elastic4s
 =========
 
-Elastic4s is a concise, idiomatic, type safe Scala Client for ElasticSearch.
-It provides a full Scala DSL to construct your queries and (hopefully!) reducing errors.
+Elastic4s is a concise, idiomatic, asynchronous, type safe Scala Client for ElasticSearch.
+It provides a Scala DSL to construct your queries and (hopefully!) reducing errors and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflows.
 Due to its typesafe nature elastic4s is also a good way to learn the options available for any operation,
 as your IDE can use the type information to show you what methods are available.
 Elastic4s also allows you to index JSON documents from standard
