@@ -4,7 +4,6 @@ import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
 trait UpdateDsl {
@@ -18,7 +17,8 @@ trait UpdateDsl {
     def in(index: String) = new UpdateDefinition(index, id)
   }
 
-  class UpdateDefinition(index: String, id: String) extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
+  class UpdateDefinition(index: String, id: String)
+    extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
 
     val _builder = new UpdateRequestBuilder(null)
       .setIndex(index.split("/").head)
@@ -32,17 +32,16 @@ trait UpdateDsl {
       this
     }
 
-    private def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
-      val source = XContentFactory.jsonBuilder().startObject()
-      for ( tuple <- fields ) {
-        source.field(tuple._1, tuple._2)
-      }
-      source.endObject()
-    }
-
     def doc(map: Map[String, Any]): UpdateDefinition = doc(map.toList)
     def doc(_fields: (String, Any)*): UpdateDefinition = doc(_fields.toIterable)
     def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = {
+      def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
+        val source = XContentFactory.jsonBuilder().startObject()
+        for ( tuple <- fields ) {
+          source.field(tuple._1, tuple._2)
+        }
+        source.endObject()
+      }
       _builder.setDoc(fieldsAsXContent(iterable))
       this
     }
@@ -53,6 +52,10 @@ trait UpdateDsl {
     }
     def params(map: Map[String, AnyRef]): UpdateDefinition = {
       map.foreach(arg => _builder.addScriptParam(arg._1, arg._2))
+      this
+    }
+    def retryOnConflict(retryOnConflict: Int): UpdateDefinition = {
+      _builder.setRetryOnConflict(retryOnConflict)
       this
     }
     def parent(parent: String): UpdateDefinition = {
@@ -73,10 +76,6 @@ trait UpdateDsl {
     }
     def percolate(percolate: String): UpdateDefinition = {
       _builder.setPercolate(percolate)
-      this
-    }
-    def retryOnConflict(retryOnConflict: Int): UpdateDefinition = {
-      _builder.setRetryOnConflict(retryOnConflict)
       this
     }
     def lang(scriptLang: String): UpdateDefinition = {
