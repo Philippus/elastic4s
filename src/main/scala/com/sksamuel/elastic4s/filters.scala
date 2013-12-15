@@ -169,6 +169,7 @@ class MatchAllFilter extends FilterDefinition {
   val builder = FilterBuilders.matchAllFilter()
 }
 
+@deprecated("deprecated in elasticsearch 1.0", "1.0")
 class NumericRangeFilter(field: String) extends FilterDefinition {
   val builder = FilterBuilders.numericRangeFilter(field)
   def filterName(filterName: String): NumericRangeFilter = {
