@@ -4,6 +4,7 @@ import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.source.Source
 
 /** @author Stephen Samuel */
 trait UpdateDsl {
@@ -93,7 +94,10 @@ trait UpdateDsl {
       _builder.setScriptLang(scriptLang)
       this
     }
-
+    def source(source: Source) = {
+      _builder.setDoc(source.json)
+      this
+    }
     def upsert(map: Map[String, Any]): UpdateDefinition = upsert(map.toList)
     def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toIterable)
     def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = {
