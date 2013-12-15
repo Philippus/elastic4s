@@ -1,0 +1,12 @@
+{"filter": {
+    "numeric_range": {
+        "years": {
+            "from": 12.4,
+            "to": 45.5,
+            "include_lower": true,
+            "include_upper": true
+        },
+        "_cache": true,
+        "_cache_key": "key"
+    }
+}}
