@@ -3,13 +3,14 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.common.xcontent.XContentFactory
-import scala.concurrent.duration._
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
 trait UpdateDsl {
 
   def update = new UpdateExpectsId
+  def update(id: Any) = new UpdateExpectsIndex(id.toString)
   class UpdateExpectsId {
     def id(id: Any) = new UpdateExpectsIndex(id.toString)
   }
@@ -18,16 +19,34 @@ trait UpdateDsl {
   }
 
   class UpdateDefinition(index: String, id: String) extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
+
     val _builder = new UpdateRequestBuilder(null)
       .setIndex(index.split("/").head)
       .setType(index.split("/").last)
       .setId(id)
+
     def build = _builder.request
 
     def script(script: String): UpdateDefinition = {
       _builder.setScript(script)
       this
     }
+
+    private def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
+      val source = XContentFactory.jsonBuilder().startObject()
+      for ( tuple <- fields ) {
+        source.field(tuple._1, tuple._2)
+      }
+      source.endObject()
+    }
+
+    def doc(map: Map[String, Any]): UpdateDefinition = doc(map.toList)
+    def doc(_fields: (String, Any)*): UpdateDefinition = doc(_fields.toIterable)
+    def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = {
+      _builder.setDoc(fieldsAsXContent(iterable))
+      this
+    }
+
     def routing(routing: String): UpdateDefinition = {
       _builder.setRouting(routing)
       this
