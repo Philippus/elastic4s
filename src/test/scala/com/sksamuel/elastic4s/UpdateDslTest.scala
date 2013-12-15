@@ -41,6 +41,11 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val updateDef = update id 5 in "scifi/startrek" replicationType ReplicationType.ASYNC
     assert(updateDef.build.replicationType() === ReplicationType.ASYNC)
   }
+
+  it should "should support docAsUpdate" in {
+    val updateDef = update id 5 in "scifi/startrek" docAsUpdate true
+    assert(updateDef.build.docAsUpsert())
+  }
 }
 
 

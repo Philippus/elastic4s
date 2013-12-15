@@ -27,21 +27,28 @@ trait UpdateDsl {
 
     def build = _builder.request
 
+    private def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
+      val source = XContentFactory.jsonBuilder().startObject()
+      for ( tuple <- fields ) {
+        source.field(tuple._1, tuple._2)
+      }
+      source.endObject()
+    }
+
     def script(script: String): UpdateDefinition = {
       _builder.setScript(script)
       this
     }
 
+    def docAsUpsert(map: Map[String, Any]): UpdateDefinition = docAsUpsert(map.toList)
+    def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toIterable)
+    def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = {
+      _builder.setDocAsUpsert(true)
+      doc(iterable)
+    }
     def doc(map: Map[String, Any]): UpdateDefinition = doc(map.toList)
-    def doc(_fields: (String, Any)*): UpdateDefinition = doc(_fields.toIterable)
+    def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toIterable)
     def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = {
-      def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
-        val source = XContentFactory.jsonBuilder().startObject()
-        for ( tuple <- fields ) {
-          source.field(tuple._1, tuple._2)
-        }
-        source.endObject()
-      }
       _builder.setDoc(fieldsAsXContent(iterable))
       this
     }
@@ -78,21 +85,20 @@ trait UpdateDsl {
       _builder.setPercolate(percolate)
       this
     }
+    def docAsUpdate(shouldUpsertDoc: Boolean): UpdateDefinition = {
+      _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
+      this
+    }
     def lang(scriptLang: String): UpdateDefinition = {
       _builder.setScriptLang(scriptLang)
       this
     }
-    def upsert(fields: (String, Any)*): UpdateDefinition = {
-      val source = XContentFactory.jsonBuilder().startObject()
-      for ( field <- fields ) {
-        source.field(field._1, field._2)
-      }
-      source.endObject()
-      _builder.setUpsert(source)
-      _builder.setDocAsUpsert(true)
+
+    def upsert(map: Map[String, Any]): UpdateDefinition = upsert(map.toList)
+    def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toIterable)
+    def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = {
+      _builder.setUpsert(fieldsAsXContent(iterable))
       this
     }
-
-    def upsert(map: Map[String, Any]): UpdateDefinition = upsert(map.toSeq: _*)
   }
 }

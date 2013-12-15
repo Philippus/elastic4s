@@ -5,6 +5,7 @@ import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import scala.concurrent.duration._
 import org.elasticsearch.common.Priority
+import org.elasticsearch.index.engine.DocumentMissingException
 
 /** @author Stephen Samuel */
 class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -43,7 +44,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(1 == hits)
   }
 
-  it should "support partial updates" in {
+  it should "support doc based update" in {
 
     client.sync.execute {
       update(8).in("scifi/starwars").doc(
@@ -64,5 +65,61 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       k = k + 1
     }
     assert(1 == hits)
+  }
+
+  it should "keep existing fields with partial update" in {
+    client.sync.execute {
+      update(5).in("scifi/startrek").docAsUpsert(
+        "bestmate" -> "spock"
+      )
+    }
+    refresh("scifi")
+
+    var k = 0
+    var hits = 0l
+    while (k < 10 && hits == 0) {
+      val resp = client.sync.search {
+        search in "scifi" types "startrek" term "character" -> "kirk"
+      }
+      hits = resp.getHits.totalHits()
+      Thread.sleep(k * 200)
+      k = k + 1
+    }
+    assert(1 == hits)
+  }
+
+  it should "insert non existent doc when using docAsUpsert" in {
+
+    client.sync.execute {
+      update(14).in("scifi/starwars").docAsUpsert(
+        "character" -> "chewie"
+      )
+    }
+    refresh("scifi")
+
+    var k = 0
+    var hits = 0l
+    while (k < 10 && hits == 0) {
+      val resp = client.sync.search {
+        search in "scifi" types "starwars" term "character" -> "chewie"
+      }
+      hits = resp.getHits.totalHits()
+      Thread.sleep(k * 200)
+      k = k + 1
+    }
+    assert(1 == hits)
+  }
+
+  it should "not insert non existent doc when using doc" in {
+
+    val e = intercept[DocumentMissingException] {
+      client.sync.execute {
+        update(55).in("scifi/lostinspace").doc(
+          "character" -> "smith"
+        )
+      }
+      refresh("scifi")
+    }
+    assert(e != null)
   }
 }
