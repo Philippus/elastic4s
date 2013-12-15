@@ -5,6 +5,15 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.mapping.FieldType._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
+import com.sksamuel.elastic4s.PatternReplaceTokenFilter
+import com.sksamuel.elastic4s.StopTokenFilter
+import com.sksamuel.elastic4s.SnowballAnalyzerDefinition
+import com.sksamuel.elastic4s.StemmerOverrideTokenFilter
+import com.sksamuel.elastic4s.CustomAnalyzerDefinition
+import com.sksamuel.elastic4s.PatternAnalyzerDefinition
+import com.sksamuel.elastic4s.StandardAnalyzerDefinition
+import com.sksamuel.elastic4s.LimitTokenFilter
+import com.sksamuel.elastic4s.LengthTokenFilter
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -71,7 +80,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         id typed StringType analyzer KeywordAnalyzer,
         "name" typed StringType analyzer KeywordAnalyzer,
         "locations" typed GeoPointType validate true normalize true,
-        "date" typed DateType,
+        "date" typed DateType precisionStep 5,
+        "size" typed LongType,
+        "read" typed BooleanType,
         "content" typed StringType,
         "user" nested(
           "name" typed StringType,
@@ -98,7 +109,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         "person" inner (
           "name" inner (
             "first_name" typed StringType analyzer KeywordAnalyzer,
-            "last_name" typed StringType analyzer KeywordAnalyzer
+            "last_name" typed StringType analyzer KeywordAnalyzer,
+            "byte" typed ByteType,
+            "short" typed ShortType
           ),
           "sid" typed StringType index "not_analyzed"
         ),
