@@ -43,6 +43,6 @@ class PercolateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       "teas" doc "flavour" -> "assam"
     }
     assert(1 === resp.getMatches.size)
-    assert("a" === resp.getMatches.get(0))
+    assert("a" === resp.getMatches()(0))
   }
 }

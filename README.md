@@ -70,6 +70,7 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | [Delete by query](guide/delete.md)  | ```delete from <index/type> query { <queryblock> } [settings]```
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
 | [Update](guide/update.md)           | ```update id <id> in <index/type> script <script> [settings]``` |
+| Optimize | `optimize index "indexname" [settings]` |
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
 | Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
 

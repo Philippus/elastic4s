@@ -6,7 +6,12 @@ import org.elasticsearch.action.admin.indices.optimize.OptimizeAction
 /** @author Stephen Samuel */
 trait OptimizeDsl {
 
+  def optimize = new OptimizeExpectIndex
   def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
+
+  class OptimizeExpectIndex {
+    def index(idx: String) = new OptimizeDefinition(idx)
+  }
 
   class OptimizeDefinition(indexes: String*) extends IndicesRequestDefinition(OptimizeAction.INSTANCE) {
 
