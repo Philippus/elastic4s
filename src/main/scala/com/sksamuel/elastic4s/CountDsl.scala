@@ -8,6 +8,7 @@ trait CountDsl {
 
   @deprecated("use count", "1.0")
   def countall = new CountExpectsIndex
+
   def count = new CountExpectsIndex
   class CountExpectsIndex {
     def from(indexes: Iterable[String]): CountDefinition = new CountDefinition(indexes.toSeq)
@@ -20,6 +21,17 @@ trait CountDsl {
     private val _builder = new CountRequestBuilder(null).setIndices(indexes: _*).setQuery(QueryBuilders.matchAllQuery())
     def build = _builder.request()
 
+    def routing(routing: String): CountDefinition = {
+      _builder.setRouting(routing)
+      this
+    }
+    def minScore(minScore: Double): CountDefinition = {
+      _builder.setMinScore(minScore.toFloat)
+      this
+    }
+
+    def where(string: String): CountDefinition = query(new StringQueryDefinition(string))
+    def where(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
     def query(string: String): CountDefinition = query(new StringQueryDefinition(string))
     def query(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
     def javaquery(block: => QueryBuilder): CountDefinition = {
