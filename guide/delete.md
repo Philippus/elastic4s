@@ -5,37 +5,45 @@ A delete request allows us to delete a document from an index based on either an
 To delete a document by id, we need to know the type and the index. Then we can issue a query such as
 
 ```scala
-  client.delete {
-    "places/cities" -> 3
+  client.execute {
+    delete id 3 from "places/cities"
+  }
+```
+
+or
+
+```scala
+  client.execute {
+    delete id 3 from "places"-> "cities"
+  }
+```
+
+The syntax is quite SQL like. Of course we don't always want to delete by id, we might want to do a delete based on
+some criteria. Enter the delete by query request.
+
+Let's delete all London's from the cities index.
+
+```scala
+  client.execute {
+    delete from "places" -> "cities" where "name:london"
+  }
+```
+
+The query (the where clause) can be any type of query definition. Lets do something similar with a regex query.
+
+```scala
+  client.execute {
+    delete from "places" -> "cities" where regexQuery("name", "Lond*")
   }
 ```
 
 Delete is bulk compatible so we can issue multiple requests at once
 
 ```scala
-  client.delete {
-    "places/cities" -> 4,
-    "places/cities" -> 1,
-    "music/bands" -> 19
-  }
-```
-
-Of course we don't always want to delete by id, we might want to do a delete based on some criteria. Enter the
-delete by query request.
-
-Let's delete all London's from the cities index.
-
-```scala
-  client.delete {
-    "places" types "cities" where "name:london"
-  }
-```
-
-The query (the where clause) can be any type of query definition. Lets do something similar with a regex query (slow!)
-
-```scala
-  client.delete {
-    "places/cities" where regexQuery("name", "Lond*")
+  client.bulk {
+    delete id 3 from "places/cities",
+    delete id 8 from "places/cities",
+    delete id 3 from "music/bands"
   }
 ```
 
@@ -46,13 +54,14 @@ In fact the same constructs can be used by any operation that requires a query -
 Finally, if we want our query to execute across multiple indexes and types we can use this format
 
 ```scala
-  client.delete {
-    "places" types Seq("cities", "countries") where "continent:Europe"
+  client.execute {
+    delete from "places" types Seq("cities", "countries") where "continent:Europe"
   }
-
+```
   or
 
-  client.delete {
-    "places".types("cities", "countries").where("continent:Europe")
+```scala
+  client.execute {
+    delete from "places".types("cities", "countries").where("continent:Europe")
   }
 ```
