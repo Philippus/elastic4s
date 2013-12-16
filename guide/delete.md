@@ -1,4 +1,4 @@
-### Deleting
+## Deleting
 
 A delete request allows us to delete a document from an index based on either an id or a query.
 

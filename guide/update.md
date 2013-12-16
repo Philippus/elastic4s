@@ -1,4 +1,4 @@
-### Updates
+## Updates
 
 An update request allows us to update a document based on either a provided field set or a script.
 The operation loads the document, applies the script or merges the given fields, and re-indexes.

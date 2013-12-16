@@ -61,17 +61,15 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 
 | Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
-| [Create Index](guide/createindex.md)      | ```create index <name> mappings { mappings block> } [optional
-settings]```|
-| [Index](guide/index.md)                   | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
-| [Search](guide/search.md)                 | ```search in <index/type> query { <queryblock> } filter { <filterblock>
- } facets { <facetblock>  } sort { <sortblock> } ....``` |
-| Get              | ```get id <id> from <index/type> [optional settings]```|
+| [Create Index](guide/createindex.md)      | ```create index <name> mappings { mappings block> } [settings]```|
+| [Index](guide/index.md)                   | ```index into <index/type> fields { <fieldblock> } [settings]``` |
+| [Search](guide/search.md)                 | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock>  } sort { <sortblock> } ....``` |
+| Get              | ```get id <id> from <index/type> [settings]```|
 | Count            | ```count from <indexes> [types <types> query <queryblock>]``` |
-| Delete by id     | ```delete id <id> from <index/type> [optional settings]```
-| Delete by query  | ```delete from <index/type> query { <queryblock> } [optional settings]```
-| More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
-| Update           | ```update id <id> in <index/type> script <script> [optional settings]``` |
+| [Delete by id](guide/delete.md)     | ```delete id <id> from <index/type> [settings]```
+| [Delete by query](guide/delete.md)  | ```delete from <index/type> query { <queryblock> } [settings]```
+| More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
+| [Update](guide/update.md)           | ```update id <id> in <index/type> script <script> [settings]``` |
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
 | Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
 

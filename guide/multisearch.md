@@ -1,4 +1,4 @@
-### Multi Search
+## Multi Search
 
 The multisearch request type allows us to execute multiple searches in the a single request.
 The format is simple, pass a list of search requests into the client method.

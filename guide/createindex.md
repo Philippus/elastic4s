@@ -1,4 +1,4 @@
-### Creating Indexes
+## Creating Indexes
 
 Elastic4s does not require us to define indexes or their fields in advance. Indexes are created when first needed and fields are added when documents are indexed.
 Sometimes though we need to specify fields if we want non-default behaviour, such as changing the way a field is analyzed or a default null option.

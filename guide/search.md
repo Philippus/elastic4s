@@ -1,4 +1,4 @@
-#### Searching
+## Searching
 
 Searching is naturally the most involved operation. There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the search DSL.
