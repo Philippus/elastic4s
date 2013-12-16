@@ -27,7 +27,7 @@ The latest release is 0.90.7.4 which is compatible with elasticsearch 0.90.7+. T
 The basic format of the DSL is to create requests (eg a search request or delete request)
 and pass them in to the execute methods on the client, which returns a response object.
 All requests on the standard client are asynchronous.
-These methods return a standard Scala 2.10 Future object.
+These methods return a standard Scala 2.10 Future object allowing you to easily integrate them into the rest of your scala stack.
 Eg, a search request will return a Future[SearchResponse].
 The response objects are the same type as in the Java API.
 
@@ -145,11 +145,11 @@ Then ElasticSearch is configured with those mappings for those fields only. It i
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
-#### Analyzers
+### Analyzers
 
 Elasticsearch allows us to register (create) custom analyzers. For more details [read here](guide/analyzers.md).
 
-#### Indexing
+### Indexing
 
 To index a document we need to specify the index and type and optionally the id. We must also include at least one field.
 
@@ -182,7 +182,7 @@ client.execute { index into "electronics/phones" source ObjectSource(anyOldObjec
 
 In fact you can write your own "source" conversions by simply creating a class that mixes in the trait Source.
 
-#### Searching
+### Searching
 
 Searching is naturally the most involved operation. There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the search DSL.
