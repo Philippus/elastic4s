@@ -143,7 +143,7 @@ client.execute {
 
 Then ElasticSearch is configured with those mappings for those fields only. It is still fully dynamic and other fields will be created as needed with default options.
 
-More examples on how to create indexes with elastic4s can be [found here](guide/createindex.md)
+More examples on the create index syntax can be [found here](guide/createindex.md).
 
 #### Analyzers
 
