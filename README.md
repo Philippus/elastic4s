@@ -56,18 +56,20 @@ For more in depth examples keep reading.
 
 Here is a list of the common operations and the syntax used to create requests. 
 
-For more details on each operation click through to the read me page. For options that are not yet documented,
-please refer back to the elasticsearch documentation as the DSL keyword is usually called exactly what the option is called in the Java API.
+For more details on each operation click through to the readme page. For options that are not yet documented, refer
+to the elasticsearch documentation as the DSL closely mirrors the standard Java API.
 
 | Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
-| Create Index     | ```create index <name> mappings { mappings block> } [optional settings]```|
-| Index            | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
+| [Create Index](guide/createindex.md)      | ```create index <name> mappings { mappings block> } [optional
+settings]```|
+| [Index](guide/index.md)                   | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
+| [Search](guide/search.md)                 | ```search in <index/type> query { <queryblock> } filter { <filterblock>
+ } facets { <facetblock>  } sort { <sortblock> } ....``` |
 | Get              | ```get id <id> from <index/type> [optional settings]```|
 | Count            | ```count from <indexes> [types <types> query <queryblock>]``` |
 | Delete by id     | ```delete id <id> from <index/type> [optional settings]```
 | Delete by query  | ```delete from <index/type> query { <queryblock> } [optional settings]```
-| Search           | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
 | Update           | ```update id <id> in <index/type> script <script> [optional settings]``` |
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
