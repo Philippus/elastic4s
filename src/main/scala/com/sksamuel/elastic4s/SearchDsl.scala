@@ -8,7 +8,9 @@ import org.elasticsearch.search.rescore.RescoreBuilder
 /** @author Stephen Samuel */
 trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl {
 
+  @deprecated("use select or search", "1.0")
   def find = new SearchExpectsIndex
+
   def select = new SearchExpectsIndex
   def search = new SearchExpectsIndex
   def search(indexes: String*): SearchDefinition = new SearchDefinition(indexes)

@@ -26,9 +26,18 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-  "a search index" should "do nothing when deleting a document where the id does not exist" in {
-    client.delete {
-      "places/cities" -> 3423424
+  "a search index" should "do nothing when deleting a document where the id does not exist using where" in {
+    client.execute {
+      delete from "places" -> "cities" where "name" -> "sammy"
+    }
+    refresh("places")
+    Thread.sleep(1000)
+    blockUntilCount(2, "places")
+  }
+
+  "a search index" should "do nothing when deleting a document where the id does not exist using id" in {
+    client.execute {
+      delete id 141212 from "places" -> "cities"
     }
     refresh("places")
     Thread.sleep(1000)

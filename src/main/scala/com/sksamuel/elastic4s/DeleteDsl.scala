@@ -8,10 +8,11 @@ import org.elasticsearch.action.delete.DeleteAction
 trait DeleteDsl extends QueryDsl {
 
   def delete: DeleteExpectsIdOrFrom = new DeleteExpectsIdOrFrom
-  def delete(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
+  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   class DeleteExpectsIdOrFrom {
-    def id(id: Any): DeleteByIdExpectsIndexType = new DeleteByIdExpectsIndexType(id)
+    def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+    def from(kv: (String, String)): DeleteByQueryExpectsWhere = from(kv._1, kv._2)
     def from(index: String): DeleteByQueryExpectsWhere = index.split("/").toList match {
       case i :: Nil => from(i, null)
       case i :: t :: Nil => from(i, t)
@@ -26,15 +27,17 @@ trait DeleteDsl extends QueryDsl {
     def types(types: Seq[String]): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexes, types)
   }
 
-  class DeleteByIdExpectsIndexType(id: Any) {
+  class DeleteByIdExpectsFrom(id: Any) {
     def from(index: String): DeleteByIdDefinition = index.split("/").toList match {
       case i :: Nil => from(i, null)
       case i :: t :: Nil => from(i, t)
       case _ => throw new IllegalArgumentException("from arg must be in the form index/type")
     }
+    def from(kv: (String, String)): DeleteByIdDefinition = from(kv._1, kv._2)
     def from(index: String, `type`: String): DeleteByIdDefinition = new DeleteByIdDefinition(index, `type`, id)
   }
 
+  @deprecated("use delete id <id> from <index/type>", "1.0")
   implicit def string2where(from: String): DeleteByQueryExpectsWhere = {
     from.split("/").toList match {
       case index :: Nil => new DeleteByQueryExpectsWhere(Seq(index), null)

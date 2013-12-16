@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 trait QueryDsl {
 
   implicit def string2query(string: String) = new StringQueryDefinition(string)
+  implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
 

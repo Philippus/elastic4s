@@ -12,10 +12,10 @@ trait GetDsl {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
   }
   class GetWithIdExpectsFrom(id: String) {
+    def from(kv: (String, String)): GetDefinition = from(kv._1, kv._2)
     def from(index: String): GetDefinition = from(index.split("/"))
     private def from(seq: Seq[String]): GetDefinition = from(seq(0), seq(1))
     def from(index: String, `type`: String): GetDefinition = new GetDefinition(index, `type`, id)
-    def from(kv: (String, String)): GetDefinition = from(kv._1, kv._2)
   }
 
   case class GetDefinition(index: String, `type`: String, id: String) extends RequestDefinition(GetAction.INSTANCE) {
