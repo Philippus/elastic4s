@@ -65,7 +65,7 @@ please refer back to the elasticsearch documentation as the DSL keyword is usual
 | Index            | ```index into <index/type> fields { <fieldblock> } [optional settings]``` |
 | Get              | ```get id <id> from <index/type> [optional settings]```|
 | Count            | ```count from <indexes> [types <types> query <queryblock>]``` |
-| Delete by id     | ```delete id <id> in <index/type> [optional settings]```
+| Delete by id     | ```delete id <id> from <index/type> [optional settings]```
 | Delete by query  | ```delete from <index/type> query { <queryblock> } [optional settings]```
 | Search           | ```search in <index/type> query { <queryblock> } filter { <filterblock> } facets { <facetblock> } sort { <sortblock> } ....``` |
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [optional settings]``` |
