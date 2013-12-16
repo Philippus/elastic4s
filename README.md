@@ -17,7 +17,7 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-The latest release is 0.90.7.1 which is compatible with elasticsearch 0.90.7+
+The latest release is 0.90.7.4 which is compatible with elasticsearch 0.90.7+. This will be the last release in the 0.90 chain as we prepare for the 1.0 release.
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
