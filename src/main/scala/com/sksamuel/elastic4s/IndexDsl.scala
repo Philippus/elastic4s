@@ -52,11 +52,6 @@ trait IndexDsl {
       this
     }
 
-    def percolate(percolate: String): IndexDefinition = {
-      _request.percolate(percolate)
-      this
-    }
-
     def timestamp(timestamp: String): IndexDefinition = {
       _request.timestamp(timestamp)
       this

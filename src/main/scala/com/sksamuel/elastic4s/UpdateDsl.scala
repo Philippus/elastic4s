@@ -85,10 +85,6 @@ trait UpdateDsl {
       _builder.setConsistencyLevel(consistencyLevel)
       this
     }
-    def percolate(percolate: String): UpdateDefinition = {
-      _builder.setPercolate(percolate)
-      this
-    }
     def docAsUpsert: UpdateDefinition = docAsUpsert(shouldUpsertDoc = true)
     def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = {
       _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)

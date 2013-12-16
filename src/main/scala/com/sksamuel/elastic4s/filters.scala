@@ -402,8 +402,8 @@ class GeoDistanceRangeFilterDefinition(field: String) extends FilterDefinition {
     builder.point(lat, lon)
     this
   }
-  def from(from: String): GeoDistanceRangeFilterDefinition = {
-    builder.from(from)
+  def from(from: Any): GeoDistanceRangeFilterDefinition = {
+    builder.from(from.toString)
     this
   }
   def lat(lat: Double): GeoDistanceRangeFilterDefinition = {

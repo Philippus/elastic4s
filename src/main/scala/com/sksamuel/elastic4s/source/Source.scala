@@ -4,5 +4,5 @@ package com.sksamuel.elastic4s.source
 trait DocumentSource {
   def json: String
 }
-@deprecated
+@deprecated("use DocumentSource", "1.0")
 trait Source extends DocumentSource

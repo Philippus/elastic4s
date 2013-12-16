@@ -697,6 +697,22 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     }
     assert(json === mapper.readTree(req._builder.toString))
   }
+
+  it should "generate correct json for a geo distance range filter" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_filter_geo_range.json"))
+    val req = search in "*" types("users", "tweets") filter {
+      geoDistanceRangeFilter("postcode")
+        .cache(true)
+        .cacheKey("cacheybaby")
+        .geohash("hash123")
+        .gte(123).lte(123)
+        .includeLower(true)
+        .includeUpper(true)
+        .name("myfilter")
+        .to(12).from(560)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
 }
 
 
