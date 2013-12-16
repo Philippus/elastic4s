@@ -91,11 +91,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    *
    * @return a Future providing an SearchResponse
    */
+  @deprecated("use execute method", "1.0")
   def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
-
-  @deprecated("use the sync client", "0.90.5")
-  def result(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
-    Await.result(execute(search), duration)
 
   def search(searches: SearchDefinition*): Future[MultiSearchResponse] =
     execute(new MultiSearchDefinition(searches))
@@ -126,16 +123,27 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
    * @return a Future providing an GetResponse
    */
   def execute(builder: GetDefinition): Future[GetResponse] = get(builder)
+  @deprecated("use execute method", "1.0")
   def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
 
-  def get(req: MultiGetRequest): Future[MultiGetResponse] = injectFuture[MultiGetResponse](client.multiGet(req, _))
+  @deprecated("use execute method", "1.0")
+  def get(req: MultiGetRequest) = execute(req)
+  def execute(req: MultiGetRequest): Future[MultiGetResponse] = injectFuture[MultiGetResponse](client.multiGet(req, _))
 
-  def get(gets: GetDefinition*): Future[MultiGetResponse] = execute(new MultiGetDefinition(gets))
+  @deprecated("use execute method", "1.0")
+  def get(gets: GetDefinition*): Future[MultiGetResponse] = execute(gets: _*)
+  def execute(gets: GetDefinition*): Future[MultiGetResponse] = execute(new MultiGetDefinition(gets))
 
+  @deprecated("use execute method", "1.0")
   def delete(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d)
 
+  @deprecated("use execute method", "1.0")
   def optimize(d: OptimizeDefinition): Future[OptimizeResponse] = execute(d)
+  def optimize(indexes: String*): Future[OptimizeResponse] = {
+    injectFuture[OptimizeResponse](client.admin.indices.prepareOptimize(indexes: _*).execute)
+  }
 
+  @deprecated("use execute method", "1.0")
   def delete(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d)
 
   def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] =
@@ -164,10 +172,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def exists(indexes: String*): Future[IndicesExistsResponse] =
     injectFuture[IndicesExistsResponse](client.admin.indices.prepareExists(indexes: _*).execute)
 
+  @deprecated("use execute method", "1.0")
   def register(registerDef: RegisterDefinition): Future[IndexResponse] = execute(registerDef)
 
+  @deprecated("use execute method", "1.0")
   def percolate(percolate: PercolateDefinition): Future[PercolateResponse] = execute(percolate)
 
+  @deprecated("use execute method", "1.0")
   def deleteIndex(d: DeleteIndexDefinition): Future[DeleteIndexResponse] = execute(d)
 
   def searchScroll(scrollId: String) =
@@ -181,9 +192,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def refresh(indexes: String*): Future[RefreshResponse] =
     injectFuture[RefreshResponse](client.admin.indices.prepareRefresh(indexes: _*).execute)
-
-  def optimize(indexes: String*): Future[OptimizeResponse] =
-    injectFuture[OptimizeResponse](client.admin.indices.prepareOptimize(indexes: _*).execute)
 
   def open(index: String): Future[OpenIndexResponse] =
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
@@ -213,34 +221,44 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Res =
       Await.result(client.execute(requestDefinition), duration)
 
+    @deprecated("use execute method", "1.0")
     def deleteIndex(deleteIndex: DeleteIndexDefinition)(implicit duration: Duration): DeleteIndexResponse =
       Await.result(client.deleteIndex(deleteIndex), duration)
 
+    @deprecated("use execute method", "1.0")
     def percolate(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
       Await.result(client.percolate(percolateDef), duration)
 
+    @deprecated("use execute method", "1.0")
     def register(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
       Await.result(client.register(registerDef), duration)
 
+    @deprecated("use execute method", "1.0")
     def delete(ddef: DeleteByIdDefinition)(implicit duration: Duration): DeleteResponse =
       Await.result(client.delete(ddef), duration)
 
+    @deprecated("use execute method", "1.0")
     def delete(ddef: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
       Await.result(client.delete(ddef), duration)
 
+    @deprecated("use execute method", "1.0")
     def get(get: GetDefinition)(implicit duration: Duration): GetResponse = execute(get)
+    @deprecated("use execute method", "1.0")
+    def get(gets: GetDefinition*)(implicit duration: Duration): MultiGetResponse =
+      Await.result(client.get(gets: _*), duration)
 
     def search(sdef: SearchDefinition)(implicit duration: Duration): SearchResponse =
       Await.result(client.search(sdef), duration)
 
-    def search(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
+    @deprecated("use execute method", "1.0")
+    def search(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse = execute(searches: _*)
+    def execute(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
       Await.result(client.search(searches: _*), duration)
 
-    def optimize(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse =
+    @deprecated("use execute method", "1.0")
+    def optimize(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse = execute(o)
+    def execute(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse =
       Await.result(client.optimize(o), duration)
-
-    def get(gets: GetDefinition*)(implicit duration: Duration): MultiGetResponse =
-      Await.result(client.get(gets: _*), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }
