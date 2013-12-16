@@ -65,7 +65,7 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | [Index](guide/index.md)                   | ```index into <index/type> fields { <fieldblock> } [settings]``` |
 | [Search](guide/search.md)                 | ```search in <index/type> query ... filter ... sort ...``` |
 | Get              | ```get id <id> from <index/type> [settings]```|
-| Count            | ```count from <indexes> [types <types> query <queryblock>]``` |
+| Count            | `count from <indexes> [types <types> [queryblock>]` or `count from <index> -> <type> [queryblock]`|
 | [Delete by id](guide/delete.md)     | ```delete id <id> from <index/type> [settings]```
 | [Delete by query](guide/delete.md)  | ```delete from <index/type> query { <queryblock> } [settings]```
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
