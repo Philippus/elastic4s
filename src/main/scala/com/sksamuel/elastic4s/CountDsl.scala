@@ -21,8 +21,8 @@ trait CountDsl {
     def build = _builder.request()
 
     def query(string: String): CountDefinition = query(new StringQueryDefinition(string))
-    def query(block: => QueryDefinition): CountDefinition = query2(block.builder)
-    def query2(block: => QueryBuilder): CountDefinition = {
+    def query(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
+    def javaquery(block: => QueryBuilder): CountDefinition = {
       _builder.setQuery(block)
       this
     }
