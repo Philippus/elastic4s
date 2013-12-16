@@ -6,6 +6,7 @@ import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 /** @author Stephen Samuel */
 trait CountDsl {
 
+  @deprecated("use count", "1.0")
   def countall = new CountExpectsIndex
   def count = new CountExpectsIndex
   class CountExpectsIndex {
