@@ -33,11 +33,6 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(updateDef.build.routing() === "aroundwego")
   }
 
-  it should "should support percolate" in {
-    val updateDef = update id 54 in "scifi/startrek" percolate "inandout"
-    assert(updateDef.build.percolate() === "inandout")
-  }
-
   it should "should support replicationType" in {
     val updateDef = update id 5 in "scifi/startrek" replicationType ReplicationType.ASYNC
     assert(updateDef.build.replicationType() === ReplicationType.ASYNC)

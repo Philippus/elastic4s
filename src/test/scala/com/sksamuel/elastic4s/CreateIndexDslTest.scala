@@ -5,15 +5,6 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.mapping.FieldType._
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
-import com.sksamuel.elastic4s.PatternReplaceTokenFilter
-import com.sksamuel.elastic4s.StopTokenFilter
-import com.sksamuel.elastic4s.SnowballAnalyzerDefinition
-import com.sksamuel.elastic4s.StemmerOverrideTokenFilter
-import com.sksamuel.elastic4s.CustomAnalyzerDefinition
-import com.sksamuel.elastic4s.PatternAnalyzerDefinition
-import com.sksamuel.elastic4s.StandardAnalyzerDefinition
-import com.sksamuel.elastic4s.LimitTokenFilter
-import com.sksamuel.elastic4s.LengthTokenFilter
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
