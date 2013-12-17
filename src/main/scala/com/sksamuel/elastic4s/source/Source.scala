@@ -6,3 +6,7 @@ trait DocumentSource {
 }
 @deprecated("use DocumentSource", "1.0")
 trait Source extends DocumentSource
+
+trait DocumentMap {
+  def map: Map[String, Any]
+}

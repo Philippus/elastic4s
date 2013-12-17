@@ -54,8 +54,8 @@ case class GetDefinition(index: String, `type`: String, id: String) extends Requ
     this
   }
 
-  def preference(pref: Preference) = preference(pref.elastic)
-  def preference(pref: String) = {
+  def preference(pref: Preference): GetDefinition = preference(pref.elastic)
+  def preference(pref: String): GetDefinition = {
     _builder.preference(pref)
     this
   }

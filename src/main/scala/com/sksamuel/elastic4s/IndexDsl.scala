@@ -5,7 +5,8 @@ import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.index.{IndexAction, IndexRequest}
 import scala.collection.mutable.ListBuffer
-import com.sksamuel.elastic4s.source.{DocumentSource, Source}
+import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Source}
 
 /** @author Stephen Samuel */
 trait IndexDsl {
@@ -25,9 +26,14 @@ trait IndexDsl {
     private val _request = new IndexRequest(index, `type`)
     private val _fields = new ListBuffer[(String, Any)]
     private var _source: Option[DocumentSource] = None
+    private var _map: Option[DocumentMap] = None
+
     def build = _source match {
-      case None => _request.source(_fieldsAsXContent)
       case Some(src) => _request.source(src.json)
+      case None => _map match {
+        case Some(map) => _request.source(map.map.asJava)
+        case None => _request.source(_fieldsAsXContent)
+      }
     }
 
     def _fieldsAsXContent: XContentBuilder = {
@@ -89,6 +95,12 @@ trait IndexDsl {
       this._source = Option(source)
       this
     }
+
+    def doc(map: DocumentMap) = {
+      this._map = Option(map)
+      this
+    }
+
     @deprecated("renamed to doc", "1.0")
     def source(source: Source) = doc(source)
   }
