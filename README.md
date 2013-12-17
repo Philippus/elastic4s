@@ -73,7 +73,7 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
 | [Multiget](guide/multiget.md)       | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Update](guide/update.md)           | ```update id <id> in <index/type> script <script> [settings]``` |
-| Optimize | `optimize index "indexname" [settings]` |
+| [Optimize](guide/optimize.md)     | `optimize index "indexname" [settings]` |
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
 | Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
 
