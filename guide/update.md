@@ -7,7 +7,7 @@ Read [offical update docs](http://www.elasticsearch.org/guide/en/elasticsearch/r
 To update a document by id, we need to know the type and the index. Then we can issue a query such as
 
 ```scala
-client.execute {
+val resp = client.execute {
   update(5).in("scifi/startrek").doc(
     "name" -> "spock",
     "race" -> "vulcan"
@@ -20,7 +20,7 @@ Which will update the document with id 5 with the new fields.
 Update is bulk compatible so we can issue multiple requests at once
 
 ```scala
-client.bulk {
+val resp = client.bulk {
   update(5).in("scifi/startrek").doc("name" -> "spock"),
   update(8).in("scifi/startrek").doc("name" -> "kirk"),
   update(9).in("scifi/startrek").doc("name" -> "scottie")
@@ -32,7 +32,7 @@ you might want to insert the document if it does not already exist, then you can
 operation. Eg,
 
 ```scala
-client.execute {
+val resp = client.execute {
   update 25 in "scifi/starwars" docAsUpsert (
     "character" -> "chewie",
     "race" -> "wookie"
@@ -47,7 +47,7 @@ your queries a little more readable but either works equally as well.
 Update also supports updating via a script, eg
 
 ```scala
-client.sync.execute {
+val resp = client.execute {
   update id 5 in "scifi/startrek" script "ctx._source.birthplace = 'iowa'"
 }
 ```
@@ -57,7 +57,7 @@ Now document 5 will had have its field `birthplace` set to `iowa`, which is of c
 If you want to do an upsert with script, then you can set the docAsUpsert option with true, eg:
 
 ```scala
-client.sync.execute {
+val resp = client.execute {
   update id 98 in "scifi/battlestargalactica" script "ctx._source.name = 'adama'" docAsUpsert true
 }
 ```
