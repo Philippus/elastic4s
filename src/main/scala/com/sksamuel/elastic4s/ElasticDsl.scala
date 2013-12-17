@@ -14,6 +14,7 @@ object ElasticDsl
   with GetDsl
   with MappingDsl
   with MoreLikeThisDsl
+  with MultiGetDsl
   with OptimizeDsl
   with PercolateDsl
   with SearchDsl

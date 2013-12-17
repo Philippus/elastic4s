@@ -24,10 +24,12 @@ class MultiGetDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a multiget request" should "retrieve documents by id" in {
 
-    val resp = client.sync.get(
-      3 from "coldplay/albums",
-      5 from "coldplay/albums",
-      34 from "coldplay/albums"
+    val resp = client.sync.execute(
+      multiget(
+        get id 3 from "coldplay/albums",
+        get id 5 from "coldplay/albums",
+        get id 34 from "coldplay/albums"
+      )
     )
     assert(3 === resp.getResponses.size)
     assert("3" === resp.getResponses.toSeq(0).getResponse.getId)

@@ -11,7 +11,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.node.{Node, NodeBuilder}
 import org.elasticsearch.client.Client
-import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse, GetResponse, GetRequest}
+import org.elasticsearch.action.get._
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
 import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
@@ -94,6 +94,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   @deprecated("use execute method", "1.0")
   def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
 
+  @deprecated("use execute method", "1.0")
   def search(searches: SearchDefinition*): Future[MultiSearchResponse] =
     execute(new MultiSearchDefinition(searches))
 
@@ -126,11 +127,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   @deprecated("use execute method", "1.0")
   def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
 
-  @deprecated("use execute method", "1.0")
-  def get(req: MultiGetRequest) = execute(req)
-  def execute(req: MultiGetRequest): Future[MultiGetResponse] = injectFuture[MultiGetResponse](client.multiGet(req, _))
-
-  @deprecated("use execute method", "1.0")
+  @deprecated("use execute method with multiget block", "1.0")
+  def get(req: MultiGetDefinition): Future[MultiGetResponse] = execute(req)
+  @deprecated("use execute method with multiget block", "1.0")
   def get(gets: GetDefinition*): Future[MultiGetResponse] = execute(gets: _*)
   def execute(gets: GetDefinition*): Future[MultiGetResponse] = execute(new MultiGetDefinition(gets))
 
@@ -154,6 +153,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(req: MoreLikeThisRequest): Future[SearchResponse] =
     injectFuture[SearchResponse](client.moreLikeThis(req, _))
+
+  def execute(req: MultiGetDefinition): Future[MultiGetResponse] = {
+    injectFuture[MultiGetResponse](client.multiGet(req.build, _))
+  }
 
   def bulk(requests: BulkCompatibleDefinition*): Future[BulkResponse] = {
     val bulk = client.prepareBulk()
