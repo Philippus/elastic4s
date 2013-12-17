@@ -340,10 +340,12 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 
 ## Using Elastic4s in your project
 
+Note: Only available for scala 2.10.
+
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.5.2"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.7.4"
 ```
 
 For Maven users simply add:
@@ -352,7 +354,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>0.90.5.2</version>
+    <version>0.90.7.4</version>
 </dependency>
 ```
 
