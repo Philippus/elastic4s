@@ -1,4 +1,4 @@
-elastic4s - Elasticsearch Scala DSL
+elastic4s - Elasticsearch Scala Client DSL
 =========
 
 Elastic4s is a concise, idiomatic, asynchronous, type safe Scala Client for ElasticSearch.
