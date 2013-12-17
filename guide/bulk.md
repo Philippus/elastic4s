@@ -9,7 +9,7 @@ delete syntax as before, except combine into a sequence and pass to the bulk met
 For example, multiple indexing:
 
 ```scala
-client.bulk {
+val resp = client.bulk {
    index into "bands/rock" fields "name"->"coldplay",
    index into "bands/rock" fields "name"->"kings of leon",
    index into "bands/pop" fields (
@@ -22,16 +22,17 @@ client.bulk {
 And multiple deletin:g
 
 ```scala
-  client.bulk {
+val resp = client.bulk {
     delete id 3 from "places/cities",
     delete id 8 from "places/cities",
     delete id 3 from "music/bands"
-  }```
+  }
+```
 
 And we can even combine all the different types into a single bulk request:
 
 ```scala
-client.bulk {
+val resp = client.bulk {
    index into "bands/rock" fields "name"->"coldplay",
    index into "bands/rock" fields "name"->"kings of leon",
    delete id 3 from "places/cities",
