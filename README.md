@@ -26,9 +26,8 @@ The latest release is 0.90.7.4 which is compatible with elasticsearch 0.90.7+. T
 
 The basic format of the DSL is to create requests (eg a search request or delete request)
 and pass them in to the execute methods on the client, which returns a response object.
-All requests on the standard client are asynchronous.
-These methods return a standard Scala 2.10 Future object allowing you to easily integrate them into the rest of your scala stack.
-Eg, a search request will return a Future[SearchResponse].
+All requests on the standard client are asynchronous and will return a standard Scala 2.10 Future[T]
+where T is the response type appropriate to your request - eg a SearchResponse for a SearchRequest.
 The response objects are the same type as in the Java API.
 
 All the DSL constructs exist in the ElasticDsl object which needs to be imported.
@@ -49,8 +48,11 @@ object Test extends App {
 
 }
 ```
-For more in depth examples keep reading.
 
+In general the format of the DSL is to call the execute method on the client and
+pass in a block that returns a request of the type you wish to execute.
+
+For more in depth examples keep reading.
 
 ## Syntax
 
@@ -147,11 +149,11 @@ Then ElasticSearch is configured with those mappings for those fields only. It i
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
-### Analyzers
+## Analyzers
 
 Elasticsearch allows us to register (create) custom analyzers. For more details [read here](guide/analyzers.md).
 
-### Indexing
+## Indexing
 
 To index a document we need to specify the index and type and optionally the id. We must also include at least one field.
 
@@ -201,7 +203,7 @@ client.execute { index into "electronics/phones" doc myCaseClass }
 
 Beautiful!
 
-### Searching
+## Searching
 
 Searching is naturally the most involved operation. There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the search DSL.
@@ -224,7 +226,7 @@ search in "places"->"cities" query "paris" start 5 limit 10
 Read more about search syntax [here](guide/search.md)
 Read about [multisearch here](guide/multisearch.md)
 
-#### Get
+## Get
 
 Sometimes we don't want to search and want to retrieve a document directly from the index by id.
 In this example we are retrieving the document with id 'coldplay' from the bands/rock index and type.
@@ -248,7 +250,7 @@ client.execute {
 
 See more [get examples](guide/mget.md) and usage of multiget [here](guide/multiget.md)
 
-#### Deleting
+## Deleting
 
 In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead.
 We think they're a little past their best (controversial). This operation assumes the id of the document is "u2".
@@ -271,7 +273,7 @@ client.execute {
 
 See more about delete on the [delete page](guide/delete.md)
 
-#### Updates
+## Updates
 
 We can update existing documents without having to do a full index, by updating a partial set of fields.
 
@@ -286,7 +288,7 @@ client.execute {
 
 Read more about updates and see [more examples](guide/update.md).
 
-#### More like this
+## More like this
 
 If you want to return documents that are "similar" to   a current document we can do that very easily with the more like this query.
 
@@ -298,7 +300,7 @@ client.execute {
 
 For all the options see [here](http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/).
 
-#### Bulk Operations
+## Bulk Operations
 
 ElasticSearch is fast. Roundtrips are not.
 Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations.
@@ -319,11 +321,13 @@ A single HTTP or TCP request is now needed for 4 operations.
 The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 See more information on the [bulk page](guide/bulk.md).
 
-#### Other
+## Other
 
-There are other DSLs in play. Validate, update, percolate, and explain all have a DSL that is very easy to understand and can be understood from the source. They work in similar ways to the others. Examples will be added in due course.
+There are other DSLs in play. Validate, percolate, and explain all have a
+DSL that is very easy to understand and can be understood from the source.
+They work in similar ways to the others. Examples will be added in due course.
 
-#### Synchronous Operations
+## Synchronous Operations
 
 All operations are normally async. To switch to a sync client called .sync on the client object. Then all requests will block until the operations has completed. Eg,
 ```scala
@@ -331,17 +335,25 @@ val resp = client.sync.index { index into "bands/rock" fields ("name"->"coldplay
 resp.isInstanceOf[IndexResponse] // true
 ```
 
-#### DSL Completeness
+## DSL Completeness
 
-As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations. There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner. 
+As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query,
+search, validate, percolate, update, explain, get, and bulk operations.
+There is good support for the various settings for each of these -
+more so than the Java client provides in the sense that more settings are provided in a type safe manner.
 
-However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!). In these cases it is necessary to drop back to the Java API. This can be done by calling .java on the client object to get the underlying java elastic client, or .admin to get the admin based client, eg, the following request is a Java API request.
+However there are settings and operations (mostly admin / cluster related) that the DSL does not yet
+cover (pull requests welcome!).
+In these cases it is necessary to drop back to the Java API.
+This can be done by calling .java on the client object to get the underlying java elastic client,
+or .admin to get the admin based client, eg, the following request is a Java API request.
 
 ```scala
 client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 ```
 
-This way you can still access everything the normal Java client covers in the cases where the Scala DSL is missing a construct, or where there is no need to provide a DSL.
+This way you can still access everything the normal Java client covers in the cases
+where the Scala DSL is missing a construct, or where there is no need to provide a DSL.
 
 ## Using Elastic4s in your project
 
@@ -375,7 +387,8 @@ And to test
 sbt test
 ```
 
-Integration tests run on a locally built elastic that is brought up and torn down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
+Integration tests run on a locally built elastic that is brought up and torn
+down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
@@ -383,6 +396,7 @@ Contributions to elastic4s are always welcome. Good ways to contribute include:
 * Raising bugs and feature requests
 * Fixing bugs and enhancing the DSL
 * Improving the performance of elastic4s
+* Adding to the documentation
 
 ## License
 ```
