@@ -171,35 +171,18 @@ client.execute {
 There are many additional options we can set such as routing, version, parent, timestamp and op type.
 See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
 
-If you want to index directly from a Jackson JSON document, then elastic4s supports this directly by using the
-doc keyword. This accepts an object that mixes in the DocumentSource trait.
+Sometimes it is useful to seperate the knowledge of the type from the indexing logic. For this we can use the
+DocumentSource or DocumentMap abstraction. A quick example.
 
 ```scala
-val myJsonDoc = ... // some jackson object
-client.execute { index into "electronics/phones" doc JacksonSource(myJsonDoc) }
-```
+val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
 
-Or you can even index raw objects and then by using Jackson the object will be marshalled into JSON.
-This uses the Scala extension in Jackson and so supports scala collections, options, etc.
-
-```scala
-val anyOldObject = ... // anything that extends from AnyRef
-client.execute { index into "electronics/phones" doc ObjectSource(anyOldObject) }
-```
-
-You can easily write your own document conversion by simply creating a class that mixes in the trait DocumentSource.
-This is commonly used by index case classes to avoid cluttering the elasticsearch query builders, eg
-
-```scala
-case class Person(name: String, age: Int) extends DocumentSource {
-...
+client.execute {
+  index into "music/bands" doc band
 }
-
-Then to index
-```scala
-val myCaseClass = Person("sammy", 34)
-client.execute { index into "electronics/phones" doc myCaseClass }
 ```
+
+More details on the [document traits](guide/source.md) page.
 
 Beautiful!
 
