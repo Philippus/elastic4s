@@ -69,6 +69,7 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | [Delete by id](guide/delete.md)     | ```delete id <id> from <index/type> [settings]```
 | [Delete by query](guide/delete.md)  | ```delete from <index/type> query { <queryblock> } [settings]```
 | More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
+| [Multiget](guide/multiget.md)       | `multiget( get id 1 from index, get id 2 from index, ...)` |
 | [Update](guide/update.md)           | ```update id <id> in <index/type> script <script> [settings]``` |
 | Optimize | `optimize index "indexname" [settings]` |
 | Register Query   | ```<id> into <index> query { <queryblock> }``` |
@@ -208,14 +209,27 @@ Read about [multisearch here](guide/multisearch.md)
 
 #### Get
 
-Sometimes we don't want to search and want to retrieve a document directly from the index by id. In this example we are retrieving the document with id 'coldplay' from the bands/rock index and type.
+Sometimes we don't want to search and want to retrieve a document directly from the index by id.
+In this example we are retrieving the document with id 'coldplay' from the bands/rock index and type.
+
 ```scala
 client.execute {
-    get "coldplay" from "bands/rock"
+ get id "coldplay" from "bands/rock"
 }
 ```
 
-See more examples and multiget [here](guide/multiget.md)
+We can get multiple documents at once too. Notice the following multiget wrapping block.
+
+```scala
+client.execute {
+  multiget(
+    get id "coldplay" from "bands/rock",
+    get id "keane" from "bands/rock"
+  )
+}
+```
+
+See more [get examples](guide/mget.md) and usage of multiget [here](guide/multiget.md)
 
 #### Deleting
 
