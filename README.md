@@ -166,23 +166,40 @@ client.execute {
 }
 ```
 
-There are many additional options we can set such as routing, version, parent, timestamp and op type. See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
+There are many additional options we can set such as routing, version, parent, timestamp and op type.
+See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
 
-If you want to index directly from a Jackson JSON document, then elastic4s supports this directly.
+If you want to index directly from a Jackson JSON document, then elastic4s supports this directly by using the
+doc keyword. This accepts an object that mixes in the DocumentSource trait.
 
 ```scala
 val myJsonDoc = ... // some jackson object
-client.execute { index into "electronics/phones" source JacksonSource(myJsonDoc) }
+client.execute { index into "electronics/phones" doc JacksonSource(myJsonDoc) }
 ```
 
-Or you can even index objects natively and then by using Jackson the object will be marshalled into JSON. This uses the Scala extension in Jackson and so supports scala collections, options, etc.
+Or you can even index raw objects and then by using Jackson the object will be marshalled into JSON.
+This uses the Scala extension in Jackson and so supports scala collections, options, etc.
 
 ```scala
 val anyOldObject = ... // anything that extends from AnyRef
-client.execute { index into "electronics/phones" source ObjectSource(anyOldObject) }
+client.execute { index into "electronics/phones" doc ObjectSource(anyOldObject) }
 ```
 
-In fact you can write your own "source" conversions by simply creating a class that mixes in the trait Source.
+You can easily write your own document conversion by simply creating a class that mixes in the trait DocumentSource.
+This is commonly used by index case classes to avoid cluttering the elasticsearch query builders, eg
+
+```scala
+case class Person(name: String, age: Int) extends DocumentSource {
+...
+}
+
+Then to index
+```scala
+val myCaseClass = Person("sammy", 34)
+client.execute { index into "electronics/phones" doc myCaseClass }
+```
+
+Beautiful!
 
 ### Searching
 
@@ -237,8 +254,8 @@ In the rare case that we become tired of a band we might want to remove them. Na
 We think they're a little past their best (controversial). This operation assumes the id of the document is "u2".
 
 ```scala
-client.delete {
-    "bands/rock" -> "u2"
+client.execute {
+  delete id "u2" from "bands/rock"
 }
 ```
 
@@ -247,8 +264,8 @@ In this sense the delete is very similar to an SQL delete statement.
 In this example we're deleting all bands where their type is rap.
 
 ```scala
-client.delete {
-    "bands" types "rock" where termQuery("type", "rap")
+client.execute {
+    delete from index "bands" types "rock" where termQuery("type", "rap")
 }
 ```
 
