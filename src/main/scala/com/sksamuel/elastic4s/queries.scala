@@ -430,7 +430,7 @@ class FilteredQueryDefinition extends QueryDefinition {
   def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
   private var _query: QueryBuilder = null
   private var _filter: FilterBuilder = null
-  private var _boost: Double = 0d
+  private var _boost: Double = -1d
   def boost(boost: Double): FilteredQueryDefinition = {
     _boost = boost
     this
