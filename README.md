@@ -315,7 +315,7 @@ They work in similar ways to the others. Examples will be added in due course.
 
 All operations are normally async. To switch to a sync client called .sync on the client object. Then all requests will block until the operations has completed. Eg,
 ```scala
-val resp = client.sync.index { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }
+val resp = client.sync.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }
 resp.isInstanceOf[IndexResponse] // true
 ```
 
