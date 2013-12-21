@@ -4,7 +4,7 @@ import org.elasticsearch.client.Requests
 import org.elasticsearch.action.get._
 
 /** @author Stephen Samuel */
-trait GetDsl {
+trait GetDsl extends IndexesTypesDsl {
 
   def get = new GetExpectsId
   def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
@@ -13,18 +13,14 @@ trait GetDsl {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
   }
   class GetWithIdExpectsFrom(id: String) {
-    def from(kv: (String, String)): GetDefinition = from(kv._1, kv._2)
-    def from(index: String): GetDefinition = {
-      val tokens = index.split("/")
-      from(tokens(0), tokens(1))
-    }
-    def from(index: String, `type`: String): GetDefinition = new GetDefinition(index, `type`, id)
+    def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
+    def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))
   }
 }
 
-case class GetDefinition(index: String, `type`: String, id: String) extends RequestDefinition(GetAction.INSTANCE) {
+case class GetDefinition(indexesTypes: IndexesTypes, id: String) extends RequestDefinition(GetAction.INSTANCE) {
 
-  private val _builder = Requests.getRequest(index).`type`(`type`).id(id)
+  private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
   def build = _builder
 
   def routing(r: String) = {

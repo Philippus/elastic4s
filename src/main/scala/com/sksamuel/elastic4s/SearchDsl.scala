@@ -6,17 +6,21 @@ import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 
 /** @author Stephen Samuel */
-trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl {
+trait SearchDsl
+  extends QueryDsl
+  with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl with IndexesTypesDsl {
 
   @deprecated("use select or search", "1.0")
   def find = new SearchExpectsIndex
 
-  def select = new SearchExpectsIndex
-  def search = new SearchExpectsIndex
-  def search(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
+  def select: SearchExpectsIndex = search
+  def select(indexes: String*): SearchDefinition = search(indexes: _*)
+  def search: SearchExpectsIndex = new SearchExpectsIndex
+  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
   class SearchExpectsIndex {
-    def in(indexes: String*): SearchDefinition = new SearchDefinition(indexes)
-    def in(tuple: (String, String)): SearchDefinition = new SearchDefinition(Seq(tuple._1)).types(tuple._2)
+    def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
+    def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
+    def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
   }
 
   class MultiSearchDefinition(searches: Iterable[SearchDefinition])
@@ -57,10 +61,14 @@ trait SearchDsl extends QueryDsl with FilterDsl with FacetDsl with HighlightDsl 
     }
   }
 
-  class SearchDefinition(indexes: Seq[String]) extends RequestDefinition(SearchAction.INSTANCE) {
+  class SearchDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(SearchAction.INSTANCE) {
 
     // TODO Discuss: temporarily open to pass tests
-    private[elastic4s] val _builder = new SearchRequestBuilder(null).setIndices(indexes: _*)
+    private[elastic4s] val _builder = {
+      new SearchRequestBuilder(null)
+        .setIndices(indexesTypes.indexes: _*)
+        .setTypes(indexesTypes.types: _*)
+    }
     def build = _builder.request()
 
     /**

@@ -10,7 +10,7 @@ trait MultiGetDsl extends GetDsl {
 class MultiGetDefinition(gets: Iterable[GetDefinition]) extends RequestDefinition(MultiGetAction.INSTANCE) {
 
   private val _builder = new MultiGetRequestBuilder(null)
-  gets.foreach(get => _builder.add(get.index, get.`type`, get.id))
+  gets.foreach(get => _builder.add(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id))
   def build: MultiGetRequest = _builder.request()
 
   def realtime(r: Boolean): MultiGetDefinition = {

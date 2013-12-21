@@ -26,7 +26,7 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-  "a search index" should "do nothing when deleting a document where the id does not exist using where" in {
+  "an index" should "do nothing when deleting a document where the id does not exist using where" in {
     client.execute {
       delete from "places" -> "cities" where "name" -> "sammy"
     }
@@ -35,7 +35,7 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
     blockUntilCount(2, "places")
   }
 
-  "a search index" should "do nothing when deleting a document where the id does not exist using id" in {
+  it should "do nothing when deleting a document where the id does not exist using id" in {
     client.execute {
       delete id 141212 from "places" -> "cities"
     }
@@ -44,16 +44,16 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
     blockUntilCount(2, "places")
   }
 
-  "a search index" should "do nothing when deleting a document where the query returns no results" in {
+  it should "do nothing when deleting a document where the query returns no results" in {
     client.execute {
-      "places" types "cities" where "paris"
+      delete from "places" types "cities" where "paris"
     }
     refresh("places")
     Thread.sleep(1000)
     blockUntilCount(2, "places")
   }
 
-  "a search index" should "remove a document when deleting by id" in {
+  it should "remove a document when deleting by id" in {
     client.sync.execute {
       delete id 99 from "places/cities"
     }
@@ -61,7 +61,7 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
     blockUntilCount(1, "places")
   }
 
-  "a search index" should "remove a document when deleting by query" in {
+  it should "remove a document when deleting by query" in {
     client.sync.execute {
       delete from Seq("places") types Seq("cities") where "continent:Europe"
     }

@@ -11,14 +11,18 @@ trait CountDsl {
 
   def count = new CountExpectsIndex
   class CountExpectsIndex {
-    def from(indexes: Iterable[String]): CountDefinition = new CountDefinition(indexes.toSeq)
-    def from(indexes: String*): CountDefinition = new CountDefinition(indexes)
-    def from(tuple: (String, String)): CountDefinition = new CountDefinition(Seq(tuple._1)).types(tuple._2)
+    def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
+    def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
+    def from(tuple: (String, String)): CountDefinition = from(IndexesTypes(tuple))
+    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   }
 
-  class CountDefinition(indexes: Seq[String]) extends RequestDefinition(CountAction.INSTANCE) {
+  class CountDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(CountAction.INSTANCE) {
 
-    private val _builder = new CountRequestBuilder(null).setIndices(indexes: _*).setQuery(QueryBuilders.matchAllQuery())
+    private val _builder = new CountRequestBuilder(null)
+      .setIndices(indexesTypes.indexes: _*)
+      .setTypes(indexesTypes.types: _*)
+      .setQuery(QueryBuilders.matchAllQuery())
     def build = _builder.request()
 
     def routing(routing: String): CountDefinition = {
