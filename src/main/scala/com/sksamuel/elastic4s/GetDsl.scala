@@ -2,8 +2,6 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
 import org.elasticsearch.action.get._
-import org.elasticsearch.search.fetch.source.FetchSourceContext
-import org.elasticsearch.index.VersionType
 
 /** @author Stephen Samuel */
 trait GetDsl {
@@ -34,23 +32,8 @@ case class GetDefinition(index: String, `type`: String, id: String) extends Requ
     this
   }
 
-  def fetchSourceContext(r: FetchSourceContext) = {
-    _builder.fetchSourceContext(r)
-    this
-  }
-
   def realtime(r: Boolean) = {
     _builder.realtime(r)
-    this
-  }
-
-  def version(v: Long) = {
-    _builder.version(v)
-    this
-  }
-
-  def versionType(v: VersionType) = {
-    _builder.versionType(v)
     this
   }
 
