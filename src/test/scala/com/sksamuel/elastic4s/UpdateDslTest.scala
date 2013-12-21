@@ -6,14 +6,14 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import com.sksamuel.elastic4s.source.Source
+import com.sksamuel.elastic4s.source.DocumentSource
 
 /** @author Stephen Samuel */
 class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
 
   val mapper = new ObjectMapper()
 
-  "the search dsl" should "should support retry on conflict" in {
+  "the update dsl" should "should support retry on conflict" in {
     val updateDef = update id 5 in "scifi/startrek" retryOnConflict 4
     assert(updateDef.build.retryOnConflict() == 4)
   }
@@ -48,9 +48,27 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(updateDef.build.doc().sourceAsMap().containsKey("ship"))
     assert(updateDef.build.doc().sourceAsMap().containsValue("enterprise"))
   }
+
+  it should "accept tuple for in" in {
+    val req = update id 65 in "places" -> "cities"
+    assert(req.build.index() === "places")
+    assert(req.build.`type`() === "cities")
+  }
+
+  it should "accept two parameters for in" in {
+    val req = update id 65 in("places", "cities")
+    assert(req.build.index() === "places")
+    assert(req.build.`type`() === "cities")
+  }
+
+  it should "parse slash indextype" in {
+    val req = update id 65 in "places/cities"
+    assert(req.build.index() === "places")
+    assert(req.build.`type`() === "cities")
+  }
 }
 
-case class TestSource() extends Source {
+case class TestSource() extends DocumentSource {
   def json: String = """{ "ship" : "enterprise"}"""
 }
 

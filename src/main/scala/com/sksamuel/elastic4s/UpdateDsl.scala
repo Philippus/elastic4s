@@ -4,10 +4,10 @@ import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.source.Source
+import com.sksamuel.elastic4s.source.DocumentSource
 
 /** @author Stephen Samuel */
-trait UpdateDsl {
+trait UpdateDsl extends IndexesTypesDsl {
 
   def update = new UpdateExpectsId
   def update(id: Any) = new UpdateExpectsIndex(id.toString)
@@ -15,15 +15,15 @@ trait UpdateDsl {
     def id(id: Any) = new UpdateExpectsIndex(id.toString)
   }
   class UpdateExpectsIndex(id: String) {
-    def in(index: String) = new UpdateDefinition(index, id)
+    def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
   }
 
-  class UpdateDefinition(index: String, id: String)
+  class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
 
     val _builder = new UpdateRequestBuilder(null)
-      .setIndex(index.split("/").head)
-      .setType(index.split("/").last)
+      .setIndex(indexesTypes.index)
+      .setType(indexesTypes.typ.orNull)
       .setId(id)
 
     def build = _builder.request
@@ -53,7 +53,7 @@ trait UpdateDsl {
       _builder.setDoc(fieldsAsXContent(iterable))
       this
     }
-    def doc(source: Source) = {
+    def doc(source: DocumentSource) = {
       _builder.setDoc(source.json)
       this
     }
