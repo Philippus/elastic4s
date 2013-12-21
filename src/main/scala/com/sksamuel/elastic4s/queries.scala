@@ -25,8 +25,12 @@ trait QueryDsl {
     def text(q: String): CommonQueryDefinition = new CommonQueryDefinition(name, q)
     def query(q: String): CommonQueryDefinition = text(q)
   }
+
+  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
   def customScore = new CustomScoreDefinition
+  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
   def customBoost = new CustomBoostExpectingQuery
+  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
   class CustomBoostExpectingQuery {
     def query(query: QueryDefinition) = new CustomBoostFactorQueryDefinition(query)
   }
@@ -306,6 +310,7 @@ class HasParentQueryDefinition(`type`: String, q: QueryDefinition) extends Query
   }
 }
 
+@deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
 class CustomScoreDefinition extends QueryDefinition {
   private var _query: QueryDefinition = _
   private var _boost: Double = _
@@ -403,6 +408,7 @@ class CommonQueryDefinition(name: String, text: String) extends QueryDefinition 
   }
 }
 
+@deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
 class CustomBoostFactorQueryDefinition(query: QueryDefinition) extends QueryDefinition {
   val builder = QueryBuilders.customBoostFactorQuery(query.builder)
   def boostFactor(b: Double): CustomBoostFactorQueryDefinition = {
