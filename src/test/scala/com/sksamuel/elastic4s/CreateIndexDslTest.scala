@@ -144,7 +144,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "first_name" typed MultiFieldType path "just_name" as(
-          "first_name" typed StringType index "analyzed",
+          "first_name" typed TokenCountType index "analyzed",
           "any_name" typed StringType index "analyzed"
         ),
         "last_name" typed MultiFieldType path "just_name" as(

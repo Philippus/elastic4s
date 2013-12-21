@@ -21,5 +21,5 @@ object FieldType {
   case object ObjectType extends FieldType("object")
   case object ShortType extends FieldType("short")
   case object StringType extends FieldType("string")
-  case object TokenCount extends FieldType("token_count")
+  case object TokenCountType extends FieldType("token_count")
 }

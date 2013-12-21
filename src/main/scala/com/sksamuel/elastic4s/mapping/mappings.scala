@@ -124,24 +124,25 @@ case object Dynamic extends DynamicMapping
 
 private[mapping] class FieldDefinition(val name: String) {
 
-  def typed(ft: StringType.type) = new StringFieldDefinition(name)
+  def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
-  def typed(ft: FloatType.type) = new FloatFieldDefinition(name)
-  def typed(ft: DoubleType.type) = new DoubleFieldDefinition(name)
-  def typed(ft: ByteType.type) = new ByteFieldDefinition(name)
-  def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
-  def typed(ft: IntegerType.type) = new IntegerFieldDefinition(name)
-  def typed(ft: LongType.type) = new LongFieldDefinition(name)
-  def typed(ft: DateType.type) = new DateFieldDefinition(name)
   def typed(ft: BooleanType.type) = new BooleanFieldDefinition(name)
+  def typed(ft: ByteType.type) = new ByteFieldDefinition(name)
+  def typed(ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def typed(ft: DateType.type) = new DateFieldDefinition(name)
+  def typed(ft: DoubleType.type) = new DoubleFieldDefinition(name)
+  def typed(ft: FloatType.type) = new FloatFieldDefinition(name)
   def typed(ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
   def typed(ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
+  def typed(ft: IntegerType.type) = new IntegerFieldDefinition(name)
   def typed(ft: IpType.type) = new IpFieldDefinition(name)
-  def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
-  def typed(ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def typed(ft: LongType.type) = new LongFieldDefinition(name)
   def typed(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def typed(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
+  def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
+  def typed(ft: StringType.type) = new StringFieldDefinition(name)
+  def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   // for backwards compatibility
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
@@ -449,13 +450,27 @@ final class CompletionFieldDefinition(name: String)
   }
 }
 
+final class TokenCountDefinition(name: String) extends TypedFieldDefinition(TokenCountType, name)
+with AttributeIndex
+with AttributeAnalyzer
+with AttributeIndexAnalyzer {
+  def build(source: XContentBuilder): Unit = {
+    source.startObject(name)
+    insertType(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeAnalyzer].insert(source)
+    super[AttributeIndexAnalyzer].insert(source)
+    source.endObject()
+  }
+}
+
 final class MultiFieldDefinition(name: String)
   extends TypedFieldDefinition(MultiFieldType, name)
   with AttributePath {
 
-  var _fields: Seq[StringFieldDefinition] = Nil
+  var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: StringFieldDefinition*) = {
+  def as(fields: TypedFieldDefinition*) = {
     _fields = fields
     this
   }
