@@ -30,9 +30,15 @@ import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import com.sksamuel.elastic4s.mapping.MappingDefinition
+import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
+
+  def shutdown = shutdown("_local")
+  def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
+    injectFuture[NodesShutdownResponse](client.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
+  }
 
   /**
    * Executes a Scala DSL RequestDefinition and returns a scala Future with corresponding ActionResponse.
