@@ -232,7 +232,7 @@ client.execute {
 }
 ```
 
-See more [get examples](guide/mget.md) and usage of multiget [here](guide/multiget.md)
+See more [get examples](guide/get.md) and usage of multiget [here](guide/multiget.md)
 
 ## Deleting
 
