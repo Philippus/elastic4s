@@ -144,7 +144,6 @@ private[mapping] class FieldDefinition(val name: String) {
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
-  // for backwards compatibility
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
   def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields: _*)
   def multi(fields: StringFieldDefinition*) = new MultiFieldDefinition(name).as(fields: _*)
@@ -165,7 +164,7 @@ final class NestedFieldDefinition(name: String)
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: TypedFieldDefinition*) = {
+  def as(fields: TypedFieldDefinition*): NestedFieldDefinition = {
     _fields = fields
     this
   }
@@ -187,7 +186,7 @@ final class ObjectFieldDefinition(name: String)
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: TypedFieldDefinition*) = {
+  def as(fields: TypedFieldDefinition*): ObjectFieldDefinition = {
     _fields = fields
     this
   }
@@ -468,9 +467,9 @@ final class MultiFieldDefinition(name: String)
   extends TypedFieldDefinition(MultiFieldType, name)
   with AttributePath {
 
-  var _fields: Seq[TypedFieldDefinition] = Nil
+  var _fields: Seq[StringFieldDefinition] = Nil
 
-  def as(fields: TypedFieldDefinition*) = {
+  def as(fields: StringFieldDefinition*) = {
     _fields = fields
     this
   }

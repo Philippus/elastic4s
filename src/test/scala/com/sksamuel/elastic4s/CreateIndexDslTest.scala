@@ -92,36 +92,36 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val req = create index "users" shards 3 replicas 4
     assert(json === mapper.readTree(req._source.string))
   }
-  
+
   it should "support inner objects" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object.json"))
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as (
-        "person" inner (
-          "name" inner (
+      "tweet" as(
+        "person" inner(
+          "name" inner(
             "first_name" typed StringType analyzer KeywordAnalyzer,
             "last_name" typed StringType analyzer KeywordAnalyzer,
             "byte" typed ByteType,
             "short" typed ShortType
-          ),
+            ),
           "sid" typed StringType index "not_analyzed"
-        ),
+          ),
         "message" typed StringType
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     assert(json === mapper.readTree(req._source.string))
   }
-  
+
   it should "support disabled inner objects" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object_disabled.json"))
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as (
-        "person" inner (
+      "tweet" as(
+        "person" inner(
           "name" typed ObjectType enabled false,
           "sid" typed StringType index "not_analyzed"
-        ),
+          ),
         "message" typed StringType
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     assert(json === mapper.readTree(req._source.string))
   }
@@ -129,12 +129,12 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   it should "support multi field type" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_1.json"))
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
+      "tweet" as (
         "name" multi(
           "name" typed StringType index "analyzed",
           "untouched" typed StringType index "not_analyzed"
-        )
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+          )
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     assert(json === mapper.readTree(req._source.string))
   }
@@ -143,15 +143,15 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_2.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
-        "first_name" typed MultiFieldType path "just_name" as(
+        "first_name" typed ObjectType as(
           "first_name" typed TokenCountType index "analyzed",
           "any_name" typed StringType index "analyzed"
-        ),
+          ),
         "last_name" typed MultiFieldType path "just_name" as(
           "last_name" typed StringType index "analyzed",
           "any_name" typed StringType index "analyzed"
-        )
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+          )
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     assert(json === mapper.readTree(req._source.string))
   }
