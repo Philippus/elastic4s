@@ -8,7 +8,7 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 
 trait QueryDsl {
 
-  implicit def string2query(string: String) = new StringQueryDefinition(string)
+  implicit def string2query(string: String) = new SimpleStringQueryDefinition(string)
   implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
@@ -114,6 +114,7 @@ trait QueryDsl {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
+  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
   def stringQuery(q: String) = new StringQueryDefinition(q)
 
   def spanOrQuery = new SpanOrQueryDefinition
@@ -933,6 +934,30 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
 
   def cutoffFrequency(cutoff: Double) = {
     builder.cutoffFrequency(cutoff.toFloat)
+    this
+  }
+}
+
+class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
+  val builder = QueryBuilders.simpleQueryString(query)
+
+  def defaultOperator(d: SimpleQueryStringBuilder.Operator): SimpleStringQueryDefinition = {
+    builder.defaultOperator(d)
+    this
+  }
+
+  def fields(fields: String*): SimpleStringQueryDefinition = {
+    fields foreach field
+    this
+  }
+
+  def field(name: String): SimpleStringQueryDefinition = {
+    builder.field(name)
+    this
+  }
+
+  def field(name: String, boost: Double): SimpleStringQueryDefinition = {
+    builder.field(name, boost.toFloat)
     this
   }
 }

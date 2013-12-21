@@ -37,7 +37,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def shutdown = shutdown("_local")
   def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
-    injectFuture[NodesShutdownResponse](client.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
+    injectFuture[NodesShutdownResponse](java.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
   }
 
   /**
