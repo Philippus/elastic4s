@@ -31,6 +31,7 @@ import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import com.sksamuel.elastic4s.mapping.MappingDefinition
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
+import scala.deprecated
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -144,6 +145,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   @deprecated("use execute method", "1.0")
   def optimize(d: OptimizeDefinition): Future[OptimizeResponse] = execute(d)
+  @deprecated("use execute method", "1.0")
   def optimize(indexes: String*): Future[OptimizeResponse] = {
     injectFuture[OptimizeResponse](client.admin.indices.prepareOptimize(indexes: _*).execute)
   }
@@ -205,6 +207,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def open(index: String): Future[OpenIndexResponse] =
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
+  def close(): Unit = client.close()
   def close(index: String): Future[CloseIndexResponse] =
     injectFuture[CloseIndexResponse](client.admin.indices.prepareClose(index).execute)
 
@@ -214,8 +217,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def putMapping(indexes: String*)(mapping: MappingDefinition) =
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
-
-  def close(): Unit = client.close()
 
   def java = client
   def admin = client.admin

@@ -10,7 +10,8 @@ trait OptimizeDsl {
   def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
 
   class OptimizeExpectIndex {
-    def index(idx: String) = new OptimizeDefinition(idx)
+    def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
+    def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
 
   class OptimizeDefinition(indexes: String*) extends IndicesRequestDefinition(OptimizeAction.INSTANCE) {
