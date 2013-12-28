@@ -11,11 +11,12 @@ trait CountDsl {
 
   def count = new CountExpectsIndex
   class CountExpectsIndex {
+    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
     def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
     def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
-    def from(tuple: (String, String)): CountDefinition = from(IndexesTypes(tuple))
-    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   }
+  def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
+  def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
 
   class CountDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(CountAction.INSTANCE) {
 
