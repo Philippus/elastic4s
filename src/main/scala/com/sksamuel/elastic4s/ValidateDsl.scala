@@ -12,7 +12,8 @@ trait ValidateDsl extends QueryDsl {
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
 
-  class ValidateDefinition(index: String, `type`: String) extends IndicesRequestDefinition(ValidateQueryAction.INSTANCE) {
+  class ValidateDefinition(index: String, `type`: String)
+    extends IndicesRequestDefinition(ValidateQueryAction.INSTANCE) {
     val _builder = new ValidateQueryRequestBuilder(null).setIndices(index).setTypes(`type`)
     def build = _builder.request
 

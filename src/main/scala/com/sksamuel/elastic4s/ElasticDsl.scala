@@ -10,6 +10,7 @@ object ElasticDsl
   with CreateIndexDsl
   with DeleteIndexDsl
   with DeleteDsl
+  with ExplainDsl
   with FacetDsl
   with GetDsl
   with MappingDsl
