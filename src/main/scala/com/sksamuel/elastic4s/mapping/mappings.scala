@@ -367,6 +367,7 @@ final class GeoPointFieldDefinition(name: String)
   with AttributeGeohash
   with AttributeGeohashPrecision
   with AttributeGeohashPrefix
+  with AttributeStore
   with AttributeValidate
   with AttributeValidateLat
   with AttributeValidateLon
@@ -393,6 +394,7 @@ final class GeoPointFieldDefinition(name: String)
 
 final class GeoShapeFieldDefinition(name: String)
   extends TypedFieldDefinition(GeoShapeType, name)
+  with AttributeStore
   with AttributeTree
   with AttributePrecision {
 
