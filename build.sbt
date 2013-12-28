@@ -3,7 +3,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "0.90.8.2"
+version := "0.90.9.0"
 
 scalaVersion := "2.10.3"
 
@@ -46,7 +46,7 @@ libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.8"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.9"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
 
