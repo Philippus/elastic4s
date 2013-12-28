@@ -229,53 +229,53 @@ final class StringFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndexName].insert(source)
-    super[AttributeStore].insert(source)
-    super[AttributeIndex].insert(source)
-    super[AttributeTermVector].insert(source)
+    super[AttributeAnalyzer].insert(source)
     super[AttributeBoost].insert(source)
+    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexAnalyzer].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeIndexOptions].insert(source)
+    super[AttributeIgnoreAbove].insert(source)
     super[AttributeNullValue].insert(source)
     super[AttributeOmitNorms].insert(source)
-    super[AttributeIndexOptions].insert(source)
-    super[AttributeAnalyzer].insert(source)
-    super[AttributeIndexAnalyzer].insert(source)
-    super[AttributeSearchAnalyzer].insert(source)
-    super[AttributeIncludeInAll].insert(source)
-    super[AttributeIgnoreAbove].insert(source)
     super[AttributePositionOffsetGap].insert(source)
     super[AttributePostingsFormat].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeSearchAnalyzer].insert(source)
     super[AttributeSimilarity].insert(source)
+    super[AttributeStore].insert(source)
+    super[AttributeTermVector].insert(source)
     source.endObject()
   }
 }
 
 abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
   extends TypedFieldDefinition(`type`, name)
-  with AttributeIndexName
-  with AttributeStore
-  with AttributeIndex
-  with AttributePrecisionStep
   with AttributeBoost
-  with AttributeNullValue[T]
   with AttributeIncludeInAll
   with AttributeIgnoreMalformed
+  with AttributeIndex
+  with AttributeIndexName
+  with AttributeNullValue[T]
   with AttributePostingsFormat
+  with AttributePrecisionStep
+  with AttributeStore
   with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndexName].insert(source)
-    super[AttributeStore].insert(source)
-    super[AttributeIndex].insert(source)
-    super[AttributePrecisionStep].insert(source)
     super[AttributeBoost].insert(source)
-    super[AttributeNullValue].insert(source)
-    super[AttributeIncludeInAll].insert(source)
-    super[AttributeIgnoreMalformed].insert(source)
-    super[AttributePostingsFormat].insert(source)
     super[AttributeDocValuesFormat].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeIgnoreMalformed].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributePostingsFormat].insert(source)
+    super[AttributePrecisionStep].insert(source)
+    super[AttributeStore].insert(source)
     source.endObject()
   }
 }
@@ -289,32 +289,32 @@ final class LongFieldDefinition(name: String) extends NumberFieldDefinition[Long
 
 final class DateFieldDefinition(name: String)
   extends TypedFieldDefinition(DateType, name)
-  with AttributeIndexName
-  with AttributeFormat
-  with AttributeStore
-  with AttributeIndex
-  with AttributePrecisionStep
   with AttributeBoost
-  with AttributeNullValue[String]
+  with AttributeFormat
   with AttributeIncludeInAll
+  with AttributeIndex
+  with AttributeIndexName
   with AttributeIgnoreMalformed
+  with AttributeNullValue[String]
   with AttributePostingsFormat
+  with AttributePrecisionStep
+  with AttributeStore
   with AttributeDocValuesFormat {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndexName].insert(source)
-    super[AttributeFormat].insert(source)
-    super[AttributeStore].insert(source)
-    super[AttributeIndex].insert(source)
-    super[AttributePrecisionStep].insert(source)
     super[AttributeBoost].insert(source)
-    super[AttributeNullValue].insert(source)
-    super[AttributeIncludeInAll].insert(source)
-    super[AttributeIgnoreMalformed].insert(source)
-    super[AttributePostingsFormat].insert(source)
     super[AttributeDocValuesFormat].insert(source)
+    super[AttributeFormat].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeIgnoreMalformed].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributePostingsFormat].insert(source)
+    super[AttributePrecisionStep].insert(source)
+    super[AttributeStore].insert(source)
     source.endObject()
   }
 }
@@ -333,14 +333,14 @@ final class BooleanFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndexName].insert(source)
-    super[AttributeStore].insert(source)
-    super[AttributeIndex].insert(source)
     super[AttributeBoost].insert(source)
-    super[AttributeNullValue].insert(source)
-    super[AttributeIncludeInAll].insert(source)
-    super[AttributePostingsFormat].insert(source)
     super[AttributeDocValuesFormat].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributePostingsFormat].insert(source)
+    super[AttributeStore].insert(source)
     source.endObject()
   }
 }
@@ -354,9 +354,9 @@ final class BinaryFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
+    super[AttributeDocValuesFormat].insert(source)
     super[AttributeIndexName].insert(source)
     super[AttributePostingsFormat].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
     source.endObject()
   }
 }
@@ -378,16 +378,16 @@ final class GeoPointFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeLatLon].insert(source)
     super[AttributeGeohash].insert(source)
     super[AttributeGeohashPrecision].insert(source)
     super[AttributeGeohashPrefix].insert(source)
-    super[AttributeValidate].insert(source)
-    super[AttributeValidateLat].insert(source)
-    super[AttributeValidateLon].insert(source)
+    super[AttributeLatLon].insert(source)
     super[AttributeNormalize].insert(source)
     super[AttributeNormalizeLat].insert(source)
     super[AttributeNormalizeLon].insert(source)
+    super[AttributeValidate].insert(source)
+    super[AttributeValidateLat].insert(source)
+    super[AttributeValidateLon].insert(source)
     source.endObject()
   }
 }
@@ -401,8 +401,8 @@ final class GeoShapeFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeTree].insert(source)
     super[AttributePrecision].insert(source)
+    super[AttributeTree].insert(source)
     source.endObject()
   }
 }
@@ -420,13 +420,13 @@ final class IpFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndexName].insert(source)
-    super[AttributeStore].insert(source)
-    super[AttributeIndex].insert(source)
-    super[AttributePrecisionStep].insert(source)
     super[AttributeBoost].insert(source)
-    super[AttributeNullValue].insert(source)
     super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributePrecisionStep].insert(source)
+    super[AttributeStore].insert(source)
     source.endObject()
   }
 }
@@ -458,8 +458,8 @@ with AttributeIndexAnalyzer {
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
-    super[AttributeIndex].insert(source)
     super[AttributeAnalyzer].insert(source)
+    super[AttributeIndex].insert(source)
     super[AttributeIndexAnalyzer].insert(source)
     source.endObject()
   }
