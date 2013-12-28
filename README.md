@@ -63,21 +63,22 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 
 | Operation | Samuel Normal Form Syntax |
 |-----------|----------------|
-| [Create Index](guide/createindex.md)      | ```create index <name> mappings { mappings block> } [settings]```|
-| [Index](guide/index.md)                   | ```index into <index/type> fields { <fieldblock> } [settings]``` |
-| [Search](guide/search.md)                 | ```search in <index/type> query ... filter ... sort ...``` |
+| [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
+| [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
+| [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
 | [Get](guide/get.md)              | `get id <id> from <index/type> [settings]` |
 | [Count](guide/count.md)            | `count from <indexes> types <types> <queryblock>` |
-| [Delete by id](guide/delete.md)     | ```delete id <id> from <index/type> [settings]```
-| [Delete by query](guide/delete.md)  | ```delete from <index/type> query { <queryblock> } [settings]```
-| [Eplainy](guide/explain.md)  | ```explain id <id> in <index/type> query { <queryblock> }```
-| More like this   | ```morelike id <id> in <index/type> { fields <fieldsblock> } [settings]``` |
+| [Delete by id](guide/delete.md)     | `delete id <id> from <index/type> [settings]`
+| [Delete by query](guide/delete.md)  | `delete from <index/type> query { <queryblock> } [settings]`
+| [Eplainy](guide/explain.md)  | `explain id <id> in <index/type> query { <queryblock> }`
+| More like this   | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)       | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md) | `execute ( search in <index/type> query, search in <index/type> query, ...)`|
-| [Update](guide/update.md)           | ```update id <id> in <index/type> script <script> [settings]``` |
+| [Update](guide/update.md)           | `update id <id> in <index/type> script <script> [settings]` |
 | [Optimize](guide/optimize.md)     | `optimize index "indexname" [settings]` |
-| Register Query   | ```<id> into <index> query { <queryblock> }``` |
-| Percolate Doc    | ```percolate in <index> { fields <fieldsblock> }``` |
+| Register Query   | `<id> into <index> query { <queryblock> }` |
+| Percolate Doc    | `percolate in <index> { fields <fieldsblock> }` |
+| [Validate](guide/validate.md)     | `validate in "index/type" query <queryblock>` |
 
 ## Client
 
@@ -305,12 +306,6 @@ client.bulk {
 A single HTTP or TCP request is now needed for 4 operations.
 The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 See more information on the [bulk page](guide/bulk.md).
-
-## Other
-
-There are other DSLs in play. Validate, percolate, and explain all have a
-DSL that is very easy to understand and can be understood from the source.
-They work in similar ways to the others. Examples will be added in due course.
 
 ## Synchronous Operations
 
