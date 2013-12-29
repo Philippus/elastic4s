@@ -94,6 +94,24 @@ object DefinitionAttributes {
     def preference(pref: Preference): this.type = preference(pref.elastic)
   }
 
+  trait DefinitionAttributeLon {
+    val _builder: {def lon(l: Double): Any}
+
+    def lon(l: Double): this.type = {
+      _builder.lon(l)
+      this
+    }
+  }
+
+  trait DefinitionAttributeLat {
+    val _builder: {def lat(l: Double): Any}
+
+    def lat(lat: Double): this.type = {
+      _builder.lat(lat)
+      this
+    }
+  }
+
   trait DefinitionAttributeRouting {
     val _builder: {def setRouting(preference: String): Any}
 

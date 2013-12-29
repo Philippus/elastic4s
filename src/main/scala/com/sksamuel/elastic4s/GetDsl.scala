@@ -18,7 +18,8 @@ trait GetDsl extends IndexesTypesDsl {
   }
 }
 
-case class GetDefinition(indexesTypes: IndexesTypes, id: String) extends RequestDefinition(GetAction.INSTANCE) {
+case class GetDefinition(indexesTypes: IndexesTypes, id: String)
+  extends RequestDefinition(GetAction.INSTANCE) {
 
   private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
   def build = _builder

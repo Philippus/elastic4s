@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.query.{HasParentFilterBuilder, HasChildFilterBuilder, FilterBuilders}
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeGt, DefinitionAttributeLt, DefinitionAttributeFrom, DefinitionAttributeTo}
+import com.sksamuel.elastic4s.DefinitionAttributes._
 
 /** @author Stephen Samuel */
 trait FilterDsl {
@@ -358,7 +358,9 @@ class GeoDistanceRangeFilterDefinition(field: String)
   with DefinitionAttributeTo
   with DefinitionAttributeFrom
   with DefinitionAttributeLt
-  with DefinitionAttributeGt {
+  with DefinitionAttributeGt
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon {
   val builder = FilterBuilders.geoDistanceRangeFilter(field)
   val _builder = builder
   def cache(cache: Boolean): GeoDistanceRangeFilterDefinition = {
@@ -371,14 +373,6 @@ class GeoDistanceRangeFilterDefinition(field: String)
   }
   def point(lat: Double, lon: Double): GeoDistanceRangeFilterDefinition = {
     builder.point(lat, lon)
-    this
-  }
-  def lat(lat: Double): GeoDistanceRangeFilterDefinition = {
-    builder.lat(lat)
-    this
-  }
-  def lon(lon: Double): GeoDistanceRangeFilterDefinition = {
-    builder.lon(lon)
     this
   }
   def geoDistance(geoDistance: GeoDistance): GeoDistanceRangeFilterDefinition = {
@@ -423,8 +417,12 @@ class NotFilterDefinition(filter: FilterDefinition) extends FilterDefinition {
   }
 }
 
-class GeoDistanceFilter(name: String) extends FilterDefinition {
+class GeoDistanceFilter(name: String)
+  extends FilterDefinition
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon {
   val builder = FilterBuilders.geoDistanceFilter(name)
+  val _builder = builder
   def cache(cache: Boolean): GeoDistanceFilter = {
     builder.cache(cache)
     this
@@ -437,14 +435,7 @@ class GeoDistanceFilter(name: String) extends FilterDefinition {
     builder.geohash(geohash)
     this
   }
-  def lat(lat: Double): GeoDistanceFilter = {
-    builder.lat(lat)
-    this
-  }
-  def lon(long: Double): GeoDistanceFilter = {
-    builder.lon(long)
-    this
-  }
+
   def method(method: GeoDistance): GeoDistanceFilter = geoDistance(method)
   def geoDistance(geoDistance: GeoDistance): GeoDistanceFilter = {
     builder.geoDistance(geoDistance)
