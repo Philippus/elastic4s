@@ -485,12 +485,9 @@ class BoostingQueryDefinition extends QueryDefinition {
   }
 }
 
-class SpanOrQueryDefinition extends QueryDefinition {
+class SpanOrQueryDefinition extends QueryDefinition with DefinitionAttributeBoost {
   val builder = QueryBuilders.spanOrQuery
-  def boost(boost: Double): SpanOrQueryDefinition = {
-    builder.boost(boost.toFloat)
-    this
-  }
+  val _builder = builder
   def clause(spans: SpanTermQueryDefinition*): SpanOrQueryDefinition = {
     spans.foreach {
       span => builder.clause(span.builder)

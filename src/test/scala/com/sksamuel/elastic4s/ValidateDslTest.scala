@@ -18,7 +18,7 @@ class ValidateDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "parse slash indextype" in {
-    val req = validate in "places/cities" query "coldplay"
+    val req = validate in "places/cities" query stringQuery("coldplay")
     assert(req.build.indices() === Array("places"))
   }
 }
