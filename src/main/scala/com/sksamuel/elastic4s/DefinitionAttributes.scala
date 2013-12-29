@@ -112,6 +112,24 @@ object DefinitionAttributes {
     }
   }
 
+  trait DefinitionAttributeCache {
+    val _builder: {def cache(b: Boolean): Any}
+
+    def cache(b: Boolean): this.type = {
+      _builder.cache(b)
+      this
+    }
+  }
+
+  trait DefinitionAttributeCacheKey {
+    val _builder: {def cacheKey(cacheKey: String): Any}
+
+    def cacheKey(cacheKey: String): this.type = {
+      _builder.cacheKey(cacheKey)
+      this
+    }
+  }
+
   trait DefinitionAttributeRouting {
     val _builder: {def setRouting(preference: String): Any}
 

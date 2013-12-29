@@ -110,14 +110,13 @@ class ExistsFilter(field: String) extends FilterDefinition {
   }
 }
 
-class QueryFilterDefinition(q: QueryDefinition) extends FilterDefinition {
+class QueryFilterDefinition(q: QueryDefinition)
+  extends FilterDefinition
+  with DefinitionAttributeCache {
   val builder = FilterBuilders.queryFilter(q.builder)
+  val _builder = builder
   def filterName(filterName: String): QueryFilterDefinition = {
     builder.filterName(filterName)
-    this
-  }
-  def cache(cache: Boolean): QueryFilterDefinition = {
-    builder.cache(cache)
     this
   }
 }
@@ -138,8 +137,12 @@ class MissingFilterDefinition(field: String) extends FilterDefinition {
   }
 }
 
-class ScriptFilterDefinition(script: String) extends FilterDefinition {
+class ScriptFilterDefinition(script: String)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.scriptFilter(script)
+  val _builder = builder
   def lang(lang: String): ScriptFilterDefinition = {
     builder.lang(lang)
     this
@@ -156,14 +159,6 @@ class ScriptFilterDefinition(script: String) extends FilterDefinition {
     for ( entry <- map ) param(entry._1, entry._2)
     this
   }
-  def cache(cache: Boolean): ScriptFilterDefinition = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): ScriptFilterDefinition = {
-    builder.cacheKey(cacheKey)
-    this
-  }
 }
 
 class MatchAllFilter extends FilterDefinition {
@@ -176,19 +171,13 @@ class NumericRangeFilter(field: String)
   with DefinitionAttributeFrom
   with DefinitionAttributeTo
   with DefinitionAttributeLt
-  with DefinitionAttributeGt {
+  with DefinitionAttributeGt
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.numericRangeFilter(field)
   val _builder = builder
   def filterName(filterName: String): NumericRangeFilter = {
     builder.filterName(filterName)
-    this
-  }
-  def cache(cache: Boolean): NumericRangeFilter = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): NumericRangeFilter = {
-    builder.cacheKey(cacheKey)
     this
   }
   def includeLower(includeLower: Boolean): NumericRangeFilter = {
@@ -222,19 +211,13 @@ class RangeFilter(field: String)
   with DefinitionAttributeTo
   with DefinitionAttributeFrom
   with DefinitionAttributeLt
-  with DefinitionAttributeGt {
+  with DefinitionAttributeGt
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.rangeFilter(field)
   val _builder = builder
   def filterName(filterName: String): RangeFilter = {
     builder.filterName(filterName)
-    this
-  }
-  def cache(cache: Boolean): RangeFilter = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): RangeFilter = {
-    builder.cacheKey(cacheKey)
     this
   }
   def includeLower(includeLower: Boolean): RangeFilter = {
@@ -255,94 +238,70 @@ class RangeFilter(field: String)
   }
 }
 
-class HasChildFilterDefinition(val builder: HasChildFilterBuilder) extends FilterDefinition {
-  def cache(cache: Boolean): HasChildFilterDefinition = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): HasChildFilterDefinition = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+  val _builder = builder
   def name(name: String): HasChildFilterDefinition = {
     builder.filterName(name)
     this
   }
 }
 
-class HasParentFilterDefinition(val builder: HasParentFilterBuilder) extends FilterDefinition {
-  def cache(cache: Boolean): HasParentFilterDefinition = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): HasParentFilterDefinition = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+class HasParentFilterDefinition(val builder: HasParentFilterBuilder)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+  val _builder = builder
   def name(name: String): HasParentFilterDefinition = {
     builder.filterName(name)
     this
   }
 }
 
-class PrefixFilterDefinition(field: String, prefix: Any) extends FilterDefinition {
+class PrefixFilterDefinition(field: String, prefix: Any)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.prefixFilter(field, prefix.toString)
-  def cache(cache: Boolean) = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String) = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+  val _builder = builder
   def name(name: String) = {
     builder.filterName(name)
     this
   }
 }
 
-class TermFilterDefinition(field: String, value: Any) extends FilterDefinition {
+class TermFilterDefinition(field: String, value: Any)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.termFilter(field, value.toString)
-  def cache(cache: Boolean) = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String) = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+  val _builder = builder
   def name(name: String) = {
     builder.filterName(name)
     this
   }
 }
 
-class TermsFilterDefinition(field: String, value: String*) extends FilterDefinition {
+class TermsFilterDefinition(field: String, value: String*)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.termsFilter(field, value: _*)
-  def cache(cache: Boolean) = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String) = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+  val _builder = builder
   def name(name: String) = {
     builder.filterName(name)
     this
   }
 }
 
-class GeoPolygonFilter(name: String) extends FilterDefinition {
+class GeoPolygonFilter(name: String)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoPolygonFilter(name)
-  def cache(cache: Boolean): GeoPolygonFilter = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): GeoPolygonFilter = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+  val _builder = builder
   def point(lat: Double, lon: Double): GeoPolygonFilter = {
     builder.addPoint(lat, lon)
     this
@@ -360,17 +319,11 @@ class GeoDistanceRangeFilterDefinition(field: String)
   with DefinitionAttributeLt
   with DefinitionAttributeGt
   with DefinitionAttributeLat
-  with DefinitionAttributeLon {
+  with DefinitionAttributeLon
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoDistanceRangeFilter(field)
   val _builder = builder
-  def cache(cache: Boolean): GeoDistanceRangeFilterDefinition = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): GeoDistanceRangeFilterDefinition = {
-    builder.cacheKey(cacheKey)
-    this
-  }
   def point(lat: Double, lon: Double): GeoDistanceRangeFilterDefinition = {
     builder.point(lat, lon)
     this
@@ -405,12 +358,11 @@ class GeoDistanceRangeFilterDefinition(field: String)
   }
 }
 
-class NotFilterDefinition(filter: FilterDefinition) extends FilterDefinition {
+class NotFilterDefinition(filter: FilterDefinition)
+  extends FilterDefinition
+  with DefinitionAttributeCache {
   val builder = FilterBuilders.notFilter(filter.builder)
-  def cache(cache: Boolean): NotFilterDefinition = {
-    builder.cache(cache)
-    this
-  }
+  val _builder = builder
   def name(name: String): NotFilterDefinition = {
     builder.filterName(name)
     this
@@ -420,17 +372,11 @@ class NotFilterDefinition(filter: FilterDefinition) extends FilterDefinition {
 class GeoDistanceFilter(name: String)
   extends FilterDefinition
   with DefinitionAttributeLat
-  with DefinitionAttributeLon {
+  with DefinitionAttributeLon
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoDistanceFilter(name)
   val _builder = builder
-  def cache(cache: Boolean): GeoDistanceFilter = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): GeoDistanceFilter = {
-    builder.cacheKey(cacheKey)
-    this
-  }
   def geohash(geohash: String): GeoDistanceFilter = {
     builder.geohash(geohash)
     this
@@ -455,20 +401,16 @@ class GeoDistanceFilter(name: String)
   }
 }
 
-class GeoBoundingBoxFilter(name: String) extends FilterDefinition {
+class GeoBoundingBoxFilter(name: String)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoBoundingBoxFilter(name)
+  val _builder = builder
   private var _left: Double = _
   private var _top: Double = _
   private var _right: Double = _
   private var _bottom: Double = _
-  def cache(cache: Boolean): GeoBoundingBoxFilter = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String): GeoBoundingBoxFilter = {
-    builder.cacheKey(cacheKey)
-    this
-  }
   def left(left: Double): GeoBoundingBoxFilter = {
     _left = left
     builder.topLeft(_left, _top)
@@ -491,16 +433,12 @@ class GeoBoundingBoxFilter(name: String) extends FilterDefinition {
   }
 }
 
-class RegexFilterDefinition(field: String, regex: Any) extends FilterDefinition {
+class RegexFilterDefinition(field: String, regex: Any)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.regexpFilter(field, regex.toString)
-  def cache(cache: Boolean) = {
-    builder.cache(cache)
-    this
-  }
-  def cacheKey(cacheKey: String) = {
-    builder.cacheKey(cacheKey)
-    this
-  }
+  val _builder = builder
   def name(name: String) = {
     builder.filterName(name)
     this

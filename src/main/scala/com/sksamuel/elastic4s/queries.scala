@@ -342,7 +342,8 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
 
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   extends QueryDefinition
-  with DefinitionAttributePrefixLength {
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeBoost {
 
   val builder = fields.size match {
     case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
@@ -350,10 +351,6 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   }
   val _builder = builder
 
-  def boost(b: Double): FuzzyLikeThisDefinition = {
-    builder.boost(b.toFloat)
-    this
-  }
   def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
     builder.analyzer(a.name)
     this
@@ -808,9 +805,6 @@ class MatchPhrasePrefixDefinition(field: String, value: Any)
     builder.fuzzyTranspositions(f)
     this
   }
-
-
-
   def cutoffFrequency(cutoff: Double): MatchPhrasePrefixDefinition = {
     builder.cutoffFrequency(cutoff.toFloat)
     this
