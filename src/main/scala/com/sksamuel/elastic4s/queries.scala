@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
+import com.sksamuel.elastic4s.DefinitionAttributes._
+import scala.Some
 
 /** @author Stephen Samuel */
 
@@ -204,8 +206,15 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
   }
 }
 
-class MultiMatchQueryDefinition(text: String) extends QueryDefinition {
-  val builder = QueryBuilders.multiMatchQuery(text)
+class MultiMatchQueryDefinition(text: String)
+  extends QueryDefinition
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeFuzzyRewrite {
+
+  val _builder = QueryBuilders.multiMatchQuery(text)
+  val builder = _builder
+
   def maxExpansions(maxExpansions: Int): MultiMatchQueryDefinition = {
     builder.maxExpansions(maxExpansions)
     this
@@ -224,18 +233,7 @@ class MultiMatchQueryDefinition(text: String) extends QueryDefinition {
     builder.analyzer(a)
     this
   }
-  def prefixLength(prefixLength: Int): MultiMatchQueryDefinition = {
-    builder.prefixLength(prefixLength)
-    this
-  }
-  def fuzziness(f: AnyRef): MultiMatchQueryDefinition = {
-    builder.fuzziness(f)
-    this
-  }
-  def fuzzyRewrite(fuzzyRewrite: String): MultiMatchQueryDefinition = {
-    builder.fuzzyRewrite(fuzzyRewrite)
-    this
-  }
+
   def minimumShouldMatch(minimumShouldMatch: Int): MultiMatchQueryDefinition = {
     builder.minimumShouldMatch(minimumShouldMatch.toString)
     this
@@ -262,8 +260,9 @@ class MultiMatchQueryDefinition(text: String) extends QueryDefinition {
   }
 }
 
-class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
+class FuzzyDefinition(name: String, value: Any) extends QueryDefinition with DefinitionAttributePrefixLength {
   val builder = QueryBuilders.fuzzyQuery(name, value.toString)
+  val _builder = builder
   def minSimilarity(minSimilarity: Double) = {
     builder.minSimilarity(minSimilarity.toString)
     this
@@ -278,10 +277,6 @@ class FuzzyDefinition(name: String, value: Any) extends QueryDefinition {
   }
   def transpositions(transpositions: Boolean) = {
     builder.transpositions(transpositions)
-    this
-  }
-  def prefixLength(prefixLength: Int) = {
-    builder.prefixLength(prefixLength)
     this
   }
 }
@@ -345,11 +340,16 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
   }
 }
 
-class FuzzyLikeThisDefinition(text: String, fields: Iterable[String]) extends QueryDefinition {
+class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
+  extends QueryDefinition
+  with DefinitionAttributePrefixLength {
+
   val builder = fields.size match {
     case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
     case _ => QueryBuilders.fuzzyLikeThisQuery(fields.toSeq: _*).likeText(text)
   }
+  val _builder = builder
+
   def boost(b: Double): FuzzyLikeThisDefinition = {
     builder.boost(b.toFloat)
     this
@@ -360,10 +360,6 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String]) extends Qu
   }
   def ignoreTF(b: Boolean): FuzzyLikeThisDefinition = {
     builder.ignoreTF(b)
-    this
-  }
-  def prefixLength(b: Int): FuzzyLikeThisDefinition = {
-    builder.prefixLength(b)
     this
   }
   def maxQueryTerms(b: Int): FuzzyLikeThisDefinition = {
@@ -511,24 +507,22 @@ class SpanTermQueryDefinition(field: String, value: Any) extends QueryDefinition
   }
 }
 
-class WildcardQueryDefinition(field: String, query: Any) extends QueryDefinition {
+class WildcardQueryDefinition(field: String, query: Any)
+  extends QueryDefinition
+  with DefinitionAttributeRewrite {
   val builder = QueryBuilders.wildcardQuery(field, query.toString)
-  def rewrite(rewrite: String) = {
-    builder.rewrite(rewrite)
-    this
-  }
+  val _builder = builder
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
   }
 }
 
-class FieldQueryDefinition(field: String, query: Any) extends QueryDefinition {
+class FieldQueryDefinition(field: String, query: Any)
+  extends QueryDefinition
+  with DefinitionAttributeRewrite {
   val builder = QueryBuilders.fieldQuery(field, query)
-  def rewrite(rewrite: String) = {
-    builder.rewrite(rewrite)
-    this
-  }
+  val _builder = builder
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
@@ -579,26 +573,19 @@ class FieldQueryDefinition(field: String, query: Any) extends QueryDefinition {
   }
 }
 
-class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition {
+class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition with DefinitionAttributeRewrite {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
-  def rewrite(rewrite: String) = {
-    builder.rewrite(rewrite)
-    this
-  }
+  val _builder = builder
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
   }
 }
-class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition {
-
+class RegexQueryDefinition(field: String, regex: Any) extends QueryDefinition with DefinitionAttributeRewrite {
   val builder = QueryBuilders.regexpQuery(field, regex.toString)
+  val _builder = builder
   def flags(flags: RegexpFlag*): RegexQueryDefinition = {
     builder.flags(flags: _*)
-    this
-  }
-  def rewrite(rewrite: String): RegexQueryDefinition = {
-    builder.rewrite(rewrite)
     this
   }
   def boost(boost: Double): RegexQueryDefinition = {
@@ -695,9 +682,15 @@ class RangeQueryDefinition(field: String) extends QueryDefinition {
   }
 }
 
-class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
+class MatchQueryDefinition(field: String, value: Any)
+  extends QueryDefinition
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite {
 
   val builder = QueryBuilders.matchQuery(field, value)
+  val _builder = builder
 
   def operator(op: String): MatchQueryDefinition = {
     op match {
@@ -732,16 +725,6 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def rewrite(r: String) = {
-    builder.rewrite(r)
-    this
-  }
-
-  def prefixLength(a: Int) = {
-    builder.prefixLength(a)
-    this
-  }
-
   def operator(op: MatchQueryBuilder.Operator) = {
     builder.operator(op)
     this
@@ -762,15 +745,7 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
     this
   }
 
-  def fuzzyRewrite(f: String): MatchQueryDefinition = {
-    builder.fuzzyRewrite(f)
-    this
-  }
 
-  def fuzziness(a: Any): MatchQueryDefinition = {
-    builder.fuzziness(a.toString)
-    this
-  }
 
   def cutoffFrequency(cutoff: Double): MatchQueryDefinition = {
     builder.cutoffFrequency(cutoff.toFloat)
@@ -778,17 +753,19 @@ class MatchQueryDefinition(field: String, value: Any) extends QueryDefinition {
   }
 }
 
-class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefinition {
+class MatchPhrasePrefixDefinition(field: String, value: Any)
+  extends QueryDefinition
+  with DefinitionAttributeBoost
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite {
 
-  val builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
+  def builder = _builder
+  val _builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
 
   def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = {
     builder.analyzer(a.name)
-    this
-  }
-
-  def boost(boost: Double): MatchPhrasePrefixDefinition = {
-    builder.boost(boost.toFloat)
     this
   }
 
@@ -804,16 +781,6 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
 
   def setLenient(lenient: Boolean): MatchPhrasePrefixDefinition = {
     builder.setLenient(lenient)
-    this
-  }
-
-  def rewrite(r: String): MatchPhrasePrefixDefinition = {
-    builder.rewrite(r)
-    this
-  }
-
-  def prefixLength(a: Int): MatchPhrasePrefixDefinition = {
-    builder.prefixLength(a)
     this
   }
 
@@ -845,15 +812,7 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
     this
   }
 
-  def fuzzyRewrite(f: String): MatchPhrasePrefixDefinition = {
-    builder.fuzzyRewrite(f)
-    this
-  }
 
-  def fuzziness(a: Any): MatchPhrasePrefixDefinition = {
-    builder.fuzziness(a.toString)
-    this
-  }
 
   def cutoffFrequency(cutoff: Double): MatchPhrasePrefixDefinition = {
     builder.cutoffFrequency(cutoff.toFloat)
@@ -861,9 +820,15 @@ class MatchPhrasePrefixDefinition(field: String, value: Any) extends QueryDefini
   }
 }
 
-class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
+class MatchPhraseDefinition(field: String, value: Any)
+  extends QueryDefinition
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite {
 
   val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
+  val _builder = builder
 
   def analyzer(a: Analyzer): MatchPhraseDefinition = {
     builder.analyzer(a.name)
@@ -887,16 +852,6 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
 
   def setLenient(lenient: Boolean): MatchPhraseDefinition = {
     builder.setLenient(lenient)
-    this
-  }
-
-  def rewrite(r: String): MatchPhraseDefinition = {
-    builder.rewrite(r)
-    this
-  }
-
-  def prefixLength(a: Int): MatchPhraseDefinition = {
-    builder.prefixLength(a)
     this
   }
 
@@ -925,16 +880,6 @@ class MatchPhraseDefinition(field: String, value: Any) extends QueryDefinition {
 
   def fuzzyTranspositions(f: Boolean) = {
     builder.fuzzyTranspositions(f)
-    this
-  }
-
-  def fuzzyRewrite(f: String) = {
-    builder.fuzzyRewrite(f)
-    this
-  }
-
-  def fuzziness(a: Any) = {
-    builder.fuzziness(a)
     this
   }
 
@@ -968,9 +913,10 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
   }
 }
 
-class StringQueryDefinition(query: String) extends QueryDefinition {
+class StringQueryDefinition(query: String) extends QueryDefinition with DefinitionAttributeRewrite {
 
   val builder = QueryBuilders.queryString(query)
+  val _builder = builder
 
   def operator(op: String): StringQueryDefinition = {
     op.toLowerCase match {
@@ -1022,11 +968,6 @@ class StringQueryDefinition(query: String) extends QueryDefinition {
 
   def analyzeWildcard(analyzeWildcard: Boolean): StringQueryDefinition = {
     builder.analyzeWildcard(analyzeWildcard)
-    this
-  }
-
-  def rewrite(value: String): StringQueryDefinition = {
-    builder.rewrite(value)
     this
   }
 
