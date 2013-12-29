@@ -140,15 +140,12 @@ class MissingFilterDefinition(field: String) extends FilterDefinition {
 class ScriptFilterDefinition(script: String)
   extends FilterDefinition
   with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.scriptFilter(script)
   val _builder = builder
   def lang(lang: String): ScriptFilterDefinition = {
     builder.lang(lang)
-    this
-  }
-  def filterName(filterName: String): ScriptFilterDefinition = {
-    builder.filterName(filterName)
     this
   }
   def param(name: String, value: Any): ScriptFilterDefinition = {
@@ -213,13 +210,11 @@ class RangeFilter(field: String)
   with DefinitionAttributeLt
   with DefinitionAttributeGt
   with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.rangeFilter(field)
   val _builder = builder
-  def filterName(filterName: String): RangeFilter = {
-    builder.filterName(filterName)
-    this
-  }
+
   def includeLower(includeLower: Boolean): RangeFilter = {
     builder.includeLower(includeLower)
     this
@@ -302,12 +297,12 @@ class GeoPolygonFilter(name: String)
   with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoPolygonFilter(name)
   val _builder = builder
-  def point(lat: Double, lon: Double): GeoPolygonFilter = {
-    builder.addPoint(lat, lon)
-    this
-  }
   def point(geohash: String): GeoPolygonFilter = {
     builder.addPoint(geohash)
+    this
+  }
+  def point(lat: Double, lon: Double): this.type = {
+    _builder.addPoint(lat, lon)
     this
   }
 }
@@ -321,13 +316,10 @@ class GeoDistanceRangeFilterDefinition(field: String)
   with DefinitionAttributeLat
   with DefinitionAttributeLon
   with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributePoint {
   val builder = FilterBuilders.geoDistanceRangeFilter(field)
   val _builder = builder
-  def point(lat: Double, lon: Double): GeoDistanceRangeFilterDefinition = {
-    builder.point(lat, lon)
-    this
-  }
   def geoDistance(geoDistance: GeoDistance): GeoDistanceRangeFilterDefinition = {
     builder.geoDistance(geoDistance)
     this
@@ -360,13 +352,10 @@ class GeoDistanceRangeFilterDefinition(field: String)
 
 class NotFilterDefinition(filter: FilterDefinition)
   extends FilterDefinition
-  with DefinitionAttributeCache {
+  with DefinitionAttributeCache
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.notFilter(filter.builder)
   val _builder = builder
-  def name(name: String): NotFilterDefinition = {
-    builder.filterName(name)
-    this
-  }
 }
 
 class GeoDistanceFilter(name: String)
