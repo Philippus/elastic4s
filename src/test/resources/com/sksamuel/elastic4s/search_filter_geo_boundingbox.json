@@ -1,4 +1,4 @@
-{"filter": {
+{"post_filter": {
     "geo_bbox": {
         "box": {
             "top_left": [56.5, 40.6],

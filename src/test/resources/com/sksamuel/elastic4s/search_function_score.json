@@ -2,7 +2,7 @@
     "query": {
         "function_score": {
             "query": {
-                "query_string": {
+                "simple_query_string": {
                     "query": "coldplay"
                 }
             },

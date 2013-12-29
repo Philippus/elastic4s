@@ -1,5 +1,5 @@
 {
-    "filter": {
+    "post_filter": {
         "range": {
             "released": {
                 "from": "2010-01-01",

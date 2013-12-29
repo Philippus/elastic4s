@@ -19,6 +19,7 @@ object DefinitionAttributes {
       _builder.setPreference(preference)
       this
     }
+    def preference(pref: Preference): this.type = preference(pref.elastic)
   }
 
   trait DefinitionAttributeRouting {
@@ -26,6 +27,24 @@ object DefinitionAttributes {
 
     def routing(routing: String): this.type = {
       _builder.setRouting(routing)
+      this
+    }
+  }
+
+  trait DefinitionAttributeRefresh {
+    val _builder: {def setRefresh(refresh: Boolean): Any}
+
+    def refresh(refresh: Boolean): this.type = {
+      _builder.setRefresh(refresh)
+      this
+    }
+  }
+
+  trait DefinitionAttributeRealtime {
+    val _builder: {def setRealtime(realtime: Boolean): Any}
+
+    def realtime(realtime: Boolean): this.type = {
+      _builder.setRealtime(realtime)
       this
     }
   }

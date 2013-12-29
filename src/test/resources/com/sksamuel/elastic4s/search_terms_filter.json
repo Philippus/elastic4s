@@ -1,5 +1,5 @@
 {
-    "filter": {
+    "post_filter": {
         "terms": {
             "singer": ["chris", "martin"],
             "_name": "my-filter",

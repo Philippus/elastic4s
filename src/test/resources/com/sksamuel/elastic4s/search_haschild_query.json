@@ -1,8 +1,7 @@
-{
-    "size": 5, "query": {
+{"size": 5, "query": {
     "has_child": {
         "query": {
-            "query_string": {
+            "simple_query_string": {
                 "query": "coldplay"
             }
         },

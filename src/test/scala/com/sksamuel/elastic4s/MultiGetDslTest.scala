@@ -29,7 +29,7 @@ class MultiGetDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
         get id 3 from "coldplay/albums",
         get id 5 from "coldplay/albums",
         get id 34 from "coldplay/albums"
-      )
+      ) preference Preference.Local refresh true realtime true
     )
     assert(3 === resp.getResponses.size)
     assert("3" === resp.getResponses.toSeq(0).getResponse.getId)

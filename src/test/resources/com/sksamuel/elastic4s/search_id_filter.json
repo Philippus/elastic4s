@@ -1,4 +1,4 @@
-{"filter": {
+{"post_filter": {
     "ids": {
         "types": [],
         "values": ["a", "b", "c", "q", "r"],

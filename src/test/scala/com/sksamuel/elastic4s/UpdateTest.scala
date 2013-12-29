@@ -19,7 +19,6 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-  refresh("scifi")
   blockUntilCount(2, "scifi")
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet

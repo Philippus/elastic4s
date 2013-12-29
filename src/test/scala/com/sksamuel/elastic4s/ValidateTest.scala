@@ -20,7 +20,6 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-  refresh("food")
   blockUntilCount(1, "food")
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
