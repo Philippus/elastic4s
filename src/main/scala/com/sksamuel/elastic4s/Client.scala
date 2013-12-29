@@ -208,6 +208,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
   def close(): Unit = client.close()
+
   def close(index: String): Future[CloseIndexResponse] =
     injectFuture[CloseIndexResponse](client.admin.indices.prepareClose(index).execute)
 

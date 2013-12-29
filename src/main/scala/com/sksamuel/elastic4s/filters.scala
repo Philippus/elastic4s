@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.index.query.{HasParentFilterBuilder, HasChildFilterBuilder, FilterBuilders}
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
+import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeGt, DefinitionAttributeLt, DefinitionAttributeFrom, DefinitionAttributeTo}
 
 /** @author Stephen Samuel */
 trait FilterDsl {
@@ -170,8 +171,14 @@ class MatchAllFilter extends FilterDefinition {
 }
 
 @deprecated("deprecated in elasticsearch 1.0", "1.0")
-class NumericRangeFilter(field: String) extends FilterDefinition {
+class NumericRangeFilter(field: String)
+  extends FilterDefinition
+  with DefinitionAttributeFrom
+  with DefinitionAttributeTo
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt {
   val builder = FilterBuilders.numericRangeFilter(field)
+  val _builder = builder
   def filterName(filterName: String): NumericRangeFilter = {
     builder.filterName(filterName)
     this
@@ -192,38 +199,6 @@ class NumericRangeFilter(field: String) extends FilterDefinition {
     builder.includeUpper(includeUpper)
     this
   }
-  def from(from: Double): NumericRangeFilter = {
-    builder.from(from)
-    this
-  }
-  def from(from: Long): NumericRangeFilter = {
-    builder.from(from)
-    this
-  }
-  def to(to: Double): NumericRangeFilter = {
-    builder.to(to)
-    this
-  }
-  def to(to: Long): NumericRangeFilter = {
-    builder.to(to)
-    this
-  }
-  def lt(lt: Double): NumericRangeFilter = {
-    builder.lt(lt)
-    this
-  }
-  def lt(lt: Long): NumericRangeFilter = {
-    builder.lt(lt)
-    this
-  }
-  def gt(to: Double): NumericRangeFilter = {
-    builder.gt(to)
-    this
-  }
-  def gt(ge: Long): NumericRangeFilter = {
-    builder.gt(ge)
-    this
-  }
   def lte(lte: Double): NumericRangeFilter = {
     builder.lte(lte)
     this
@@ -242,8 +217,14 @@ class NumericRangeFilter(field: String) extends FilterDefinition {
   }
 }
 
-class RangeFilter(field: String) extends FilterDefinition {
+class RangeFilter(field: String)
+  extends FilterDefinition
+  with DefinitionAttributeTo
+  with DefinitionAttributeFrom
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt {
   val builder = FilterBuilders.rangeFilter(field)
+  val _builder = builder
   def filterName(filterName: String): RangeFilter = {
     builder.filterName(filterName)
     this
@@ -262,22 +243,6 @@ class RangeFilter(field: String) extends FilterDefinition {
   }
   def includeUpper(includeUpper: Boolean): RangeFilter = {
     builder.includeUpper(includeUpper)
-    this
-  }
-  def from(from: String): RangeFilter = {
-    builder.from(from)
-    this
-  }
-  def to(to: String): RangeFilter = {
-    builder.to(to)
-    this
-  }
-  def lt(lt: String): RangeFilter = {
-    builder.lt(lt)
-    this
-  }
-  def gt(ge: String): RangeFilter = {
-    builder.gt(ge)
     this
   }
   def lte(lte: String): RangeFilter = {
@@ -388,8 +353,14 @@ class GeoPolygonFilter(name: String) extends FilterDefinition {
   }
 }
 
-class GeoDistanceRangeFilterDefinition(field: String) extends FilterDefinition {
+class GeoDistanceRangeFilterDefinition(field: String)
+  extends FilterDefinition
+  with DefinitionAttributeTo
+  with DefinitionAttributeFrom
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt {
   val builder = FilterBuilders.geoDistanceRangeFilter(field)
+  val _builder = builder
   def cache(cache: Boolean): GeoDistanceRangeFilterDefinition = {
     builder.cache(cache)
     this
@@ -400,10 +371,6 @@ class GeoDistanceRangeFilterDefinition(field: String) extends FilterDefinition {
   }
   def point(lat: Double, lon: Double): GeoDistanceRangeFilterDefinition = {
     builder.point(lat, lon)
-    this
-  }
-  def from(from: Any): GeoDistanceRangeFilterDefinition = {
-    builder.from(from.toString)
     this
   }
   def lat(lat: Double): GeoDistanceRangeFilterDefinition = {
@@ -422,24 +389,12 @@ class GeoDistanceRangeFilterDefinition(field: String) extends FilterDefinition {
     builder.geohash(geohash)
     this
   }
-  def gt(gt: Any): GeoDistanceRangeFilterDefinition = {
-    builder.gt(gt)
-    this
-  }
   def gte(gte: Any): GeoDistanceRangeFilterDefinition = {
     builder.gte(gte)
     this
   }
-  def lt(lt: Any): GeoDistanceRangeFilterDefinition = {
-    builder.lt(lt)
-    this
-  }
   def lte(lte: Any): GeoDistanceRangeFilterDefinition = {
     builder.lte(lte)
-    this
-  }
-  def to(to: Any): GeoDistanceRangeFilterDefinition = {
-    builder.to(to)
     this
   }
   def includeLower(includeLower: Boolean): GeoDistanceRangeFilterDefinition = {

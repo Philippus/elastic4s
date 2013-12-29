@@ -1,14 +1,12 @@
-{
-    "post_filter": {
-        "geo_distance_range": {
+{"post_filter": {
+    "geo_distance_range": {
         "postcode": "hash123",
         "from": "560",
-        "to": 12,
+        "to": "12",
         "include_lower": true,
         "include_upper": true,
         "_name": "myfilter",
         "_cache": true,
         "_cache_key": "cacheybaby"
     }
-    }
-}
+}}
