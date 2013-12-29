@@ -56,7 +56,7 @@ For more in depth examples keep reading.
 
 ## Syntax
 
-Here is a list of the common operations and the syntax used to create requests. 
+Here is a list of the common operations and the syntax used to create requests.
 
 For more details on each operation click through to the readme page. For options that are not yet documented, refer
 to the elasticsearch documentation as the DSL closely mirrors the standard Java API.
@@ -91,7 +91,7 @@ val client = ElasticClient.local
 
 To specify settings for the local node you can pass in a settings object like this:
 ```scala
-val settings = ImmutableSettings.settingsBuilder() 
+val settings = ImmutableSettings.settingsBuilder()
       .put("http.enabled", false)
       .put("path.home", "/var/elastic/")
 val client = ElasticClient.local(settings.build)
@@ -137,14 +137,17 @@ client.execute { create index "places" shards 3 replicas 2 }
 Sometimes we want to specify the properties of the types in the index. This allows us to override a fields type, the analyzer used, whether we should store that field, etc. To do this we add mappings
 
 ```scala
-client.execute { 
+import com.sksamuel.elastic4s.FieldType._
+import com.sksamuel.elastic4s.StopAnalyzer
+
+client.execute {
     create index "places" mappings (
-        "cities" as (      
-            field("id") typed IntegerType,
-            field("name") boost 4,
-            field("content") analyzer StopAnalyzer
+        "cities" as (
+            "id" typed IntegerType,
+            "name" typed StringType boost 4,
+            "content" typed StringType analyzer StopAnalyzer
         )
-     )
+    )
 }
 ```
 
@@ -297,7 +300,7 @@ To do this we simply combine index, delete and update operations into a sequence
 client.bulk {
    index into "bands/rock" fields "name"->"coldplay",
    index into "bands/rock" fields "name"->"kings of leon",
-   index into "bands/pop" fields ( 
+   index into "bands/pop" fields (
       "name"->"elton john",
       "best_album"->"goodbye yellow brick road"
    )
