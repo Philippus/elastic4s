@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.search.facet.{FacetBuilder, FacetBuilders}
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.search.facet.histogram.HistogramFacet
+import org.elasticsearch.search.facet.datehistogram.DateHistogramFacet
 import org.elasticsearch.common.geo.GeoDistance
 
 /** @author Stephen Samuel */
@@ -14,6 +15,10 @@ trait FacetDsl {
     def histogram(name: String) = new HistogramExpectsInterval(name)
     class HistogramExpectsInterval(name: String) {
       def interval(interval: Long) = new HistogramFacetDefinition(name, interval)
+    }
+    def datehistogram(name: String) = new DateHistogramExpectsInterval(name)
+    class DateHistogramExpectsInterval(name: String) {
+      def interval(interval: String) = new DateHistogramFacetDefinition(name, interval)
     }
     def filter(name: String) = new FilterFacetDefinition(name)
     def query(name: String) = new QueryFacetDefinition(name)
@@ -134,6 +139,31 @@ class HistogramFacetDefinition(name: String, interval: Long) extends FacetDefini
     this
   }
 }
+
+class DateHistogramFacetDefinition(name: String, interval: String) extends FacetDefinition {
+  val builder = FacetBuilders.dateHistogramFacet(name).interval(interval)
+   def global(global: Boolean): DateHistogramFacetDefinition = {
+    builder.global(global)
+    this
+  }
+  def keyField(keyField: String): DateHistogramFacetDefinition = {
+    builder.keyField(keyField)
+    this
+  }
+  def valueField(valueField: String): DateHistogramFacetDefinition = {
+    builder.valueField(valueField)
+    this
+  }
+  def comparator(comparator: DateHistogramFacet.ComparatorType): DateHistogramFacetDefinition = {
+    builder.comparator(comparator)
+    this
+  }
+  def nested(nested: String): DateHistogramFacetDefinition = {
+    builder.nested(nested)
+    this
+  }
+}
+
 
 class FilterFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.filterFacet(name)

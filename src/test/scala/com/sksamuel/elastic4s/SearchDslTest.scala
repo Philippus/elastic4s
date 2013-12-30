@@ -644,6 +644,17 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+
+    it should "generate correct json for datehistogram facet" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets_datehistogram.json"))
+    val req = search in "music" types "bands" facets {
+      facet datehistogram "years" interval "year" comparator
+      org.elasticsearch.search.facet.datehistogram.DateHistogramFacet.ComparatorType.COUNT valueField
+        "myvalue" keyField "mykey" global true nested "nested-path"
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate correct json for highlighting" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
     val req = search in "music" types "bands" highlighting(
