@@ -72,4 +72,7 @@ To delete an entire index you can use `deleteIndex`:
 ```scala
   client.execute { deleteIndex("places") }
   client.execute { deleteIndex("_all") } // Deletes ALL indices!
+  // Or alternatively:
+  client.execute { delete index ("places") }
+  client.execute { delete index ("places", "countries") } // Deletes two indices
 ```
