@@ -23,18 +23,18 @@ The id can be any object, it will be converted to a string using toString().
 Multiple fields? Easy.
 
 ```scala
-index into "family" -> "soprano" fields {
+index into "family" -> "soprano" fields (
     "boss" -> "tony",
     "consigliere" -> "salvidor",
     "underboss" -> "bobby"
-} id 1234
+) id 1234
 ```
 
 If we have a nested structure, we can specifiy nested fields using dot notation.
 
 ```scala
-index into "family" -> "soprano" fields {
+index into "family" -> "soprano" fields (
     "boss" -> "tony",
     "boss.age" -> "56"
-}
+)
 ```
