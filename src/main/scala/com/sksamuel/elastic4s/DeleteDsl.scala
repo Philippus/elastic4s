@@ -7,15 +7,16 @@ import org.elasticsearch.action.delete.DeleteAction
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-  def delete: DeleteExpectsIdOrFrom = new DeleteExpectsIdOrFrom
+  def delete: DeleteExpectsIdOrFromOrIndex = new DeleteExpectsIdOrFromOrIndex
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
-  class DeleteExpectsIdOrFrom {
+  class DeleteExpectsIdOrFromOrIndex {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
     def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
     def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
+    def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
   }
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
