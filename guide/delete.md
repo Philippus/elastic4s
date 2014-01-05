@@ -70,6 +70,6 @@ Finally, if we want our query to execute across multiple indexes and types we ca
 To delete an entire index you can use `deleteIndex`:
 
 ```scala
-  client.deleteIndex("places")
-  client.deleteIndex("_all") // Deletes ALL indices!
+  client.execute { deleteIndex("places") }
+  client.execute { deleteIndex("_all") } // Deletes ALL indices!
 ```
