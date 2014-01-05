@@ -10,6 +10,9 @@ One of most common things we want to define is the field type, this is useful fo
 Let's define an index with a single field, of type Integer.
 
 ```scala
+// Import the field type DSL. (For examples below omitted)
+import com.sksamuel.elastic4s.mapping.FieldType._
+
 client.execute {
   create index "places" mappings (
     "city" as (
