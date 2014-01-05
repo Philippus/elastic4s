@@ -137,7 +137,7 @@ client.execute { create index "places" shards 3 replicas 2 }
 Sometimes we want to specify the properties of the types in the index. This allows us to override a fields type, the analyzer used, whether we should store that field, etc. To do this we add mappings
 
 ```scala
-import com.sksamuel.elastic4s.FieldType._
+import com.sksamuel.elastic4s.mapping.FieldType._
 import com.sksamuel.elastic4s.StopAnalyzer
 
 client.execute {
