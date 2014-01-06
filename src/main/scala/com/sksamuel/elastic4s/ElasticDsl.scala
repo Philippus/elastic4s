@@ -13,6 +13,7 @@ object ElasticDsl
   with ExplainDsl
   with FacetDsl
   with GetDsl
+  with IndexStatusDsl
   with MappingDsl
   with MoreLikeThisDsl
   with MultiGetDsl
