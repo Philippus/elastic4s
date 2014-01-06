@@ -5,7 +5,6 @@ import org.elasticsearch.common.xcontent.XContentBuilder
 /** @author Stephen Samuel */
 abstract class Analyzer(val name: String)
 
-case object NotAnalyzed extends Analyzer("not_analyzed")
 case object WhitespaceAnalyzer extends Analyzer("whitespace")
 case object StandardAnalyzer extends Analyzer("standard")
 case object SimpleAnalyzer extends Analyzer("simple")
