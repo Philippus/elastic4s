@@ -5,6 +5,7 @@ import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import org.elasticsearch.common.Priority
 import org.elasticsearch.index.query.FilterBuilders
+import scala.collection.JavaConversions._
 
 class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
   client.bulk(
@@ -28,21 +29,31 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
   blockUntilCount(3, "waterways")
 
   client.sync.execute {
-    addAlias("waterways", "aquatic_locations")
+    aliases add "aquatic_locations" on "waterways"
   }
 
   client.sync.execute {
-    addAlias("waterways", "english_waterways", FilterBuilders.termFilter("country", "england"))
+    aliases add "english_waterways" on "waterways" filter FilterBuilders.termFilter("country", "england")
   }
 
-  "get 'River Lune' on english_waterways/rivers" should "return 'River Lune' from waterways/rivers" in {
+  "waterways index" should "return 'River Dee' in England and Wales for search" in {
     val resp = client.sync.execute {
-      get id 11 from "english_waterways/rivers"
+      search in "waterways" query "Dee"
     }
-    assert("11" === resp.getId)
+
+    assert(2 === resp.getHits.totalHits())
+    val hitIds = resp.getHits.map(hit => hit.id()).toList.sorted
+    assert(hitIds === Array("12", "21"))
   }
 
-  "search for 'Dee' on english_waterways" should "return 'River Dee' in England" in {
+  "aquatic_locations alias" should "get 'River Dee (Wales)' from waterways/rivers" in {
+    val resp = client.sync.execute {
+      get id 21 from "aquatic_locations/rivers"
+    }
+    assert("21" === resp.getId)
+  }
+
+  "english_waterways alias" should "return 'River Dee' in England for search" in {
     val resp = client.sync.execute {
       search in "english_waterways" query "Dee"
     }
