@@ -82,6 +82,8 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
 | Index Status                              | `status(<index>)` |
 
+Please also note [some java interoperability notes](guide/javainterop.md).
+
 ## Client
 
 A locally configured node and client can be created simply by invoking ```local``` on the client companion object:
