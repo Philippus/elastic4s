@@ -80,6 +80,8 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | Register Query   | `<id> into <index> query { <queryblock> }` |
 | Percolate Doc    | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)     | `validate in "index/type" query <queryblock>` |
+| [Add Alias](guide/aliases.md)             | `addAlias(<index>, <alias>` |
+| [Remove Alias](guide/aliases.md)          | `removeAlias(<index>, <alias>` |
 
 ## Client
 
