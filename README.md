@@ -61,25 +61,26 @@ Here is a list of the common operations and the syntax used to create requests.
 For more details on each operation click through to the readme page. For options that are not yet documented, refer
 to the elasticsearch documentation as the DSL closely mirrors the standard Java API.
 
-| Operation | Samuel Normal Form Syntax |
-|-----------|----------------|
+| Operation                                 | Samuel Normal Form Syntax |
+|-------------------------------------------|----------------|
 | [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
-| [Get](guide/get.md)              | `get id <id> from <index/type> [settings]` |
-| [Count](guide/count.md)            | `count from <indexes> types <types> <queryblock>` |
-| [Delete by id](guide/delete.md)     | `delete id <id> from <index/type> [settings]`
-| [Delete by query](guide/delete.md)  | `delete from <index/type> query { <queryblock> } [settings]`
-| [Delete index](guide/delete.md)  | `delete index <index> [settings]`
-| [Explain](guide/explain.md)  | `explain id <id> in <index/type> query { <queryblock> }`
-| More like this   | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
-| [Multiget](guide/multiget.md)       | `multiget ( get id 1 from index, get id 2 from index, ... )` |
-| [Multisearch](guide/multisearch.md) | `execute ( search in <index/type> query, search in <index/type> query, ...)`|
-| [Update](guide/update.md)           | `update id <id> in <index/type> script <script> [settings]` |
-| [Optimize](guide/optimize.md)     | `optimize index "indexname" [settings]` |
-| Register Query   | `<id> into <index> query { <queryblock> }` |
-| Percolate Doc    | `percolate in <index> { fields <fieldsblock> }` |
-| [Validate](guide/validate.md)     | `validate in "index/type" query <queryblock>` |
+| [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
+| [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
+| [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
+| [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
+| [Delete index](guide/delete.md)           | `delete index <index> [settings]`
+| [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
+| More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
+| [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
+| [Multisearch](guide/multisearch.md)       | `execute ( search in <index/type> query, search in <index/type> query, ...)`|
+| [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
+| [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
+| Register Query                            | `<id> into <index> query { <queryblock> }` |
+| Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
+| [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
+| Index Status                              | `status(<index>)` |
 
 ## Client
 
@@ -96,7 +97,7 @@ val settings = ImmutableSettings.settingsBuilder()
       .put("http.enabled", false)
       .put("path.home", "/var/elastic/")
 val client = ElasticClient.local(settings.build)
- ```
+```
 
 To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports:
 ```scala
