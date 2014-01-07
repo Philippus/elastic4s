@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.mapping.MappingDsl
 /** @author Stephen Samuel */
 object ElasticDsl
   extends IndexDsl
+  with AliasesDsl
   with CountDsl
   with CreateIndexDsl
   with DeleteIndexDsl

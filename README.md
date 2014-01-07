@@ -81,6 +81,8 @@ to the elasticsearch documentation as the DSL closely mirrors the standard Java 
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
 | Index Status                              | `status(<index>)` |
+| [Add Alias](guide/aliases.md)             | `aliases add "<alias>" on "<index>"` |
+| [Remove Alias](guide/aliases.md)          | `aliases remove "<alias>" on "<index>"` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
