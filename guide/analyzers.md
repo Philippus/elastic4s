@@ -79,7 +79,7 @@ create.index("users").mappings(
     "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true,
     "location" typed IntegerType analyzer "myAnalyzer2" ignoreAbove 50,
     "email" typed BinaryType analyzer StandardAnalyzer,
-    "picture" typed AttachmentType analyzer NotAnalyzed,
+    "picture" typed AttachmentType,
     "age" typed FloatType,
     "area" typed GeoShapeType
   )
