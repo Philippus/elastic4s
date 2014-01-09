@@ -6,6 +6,7 @@ import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBui
 import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
+import org.elasticsearch.index.query.functionscore.factor.FactorBuilder
 
 /** @author Stephen Samuel */
 trait ScoreDsl {
@@ -18,6 +19,12 @@ trait ScoreDsl {
     new LinearDecayScoreDefinition(field, origin, scale)
   def exponentialScore(field: String, origin: String, scale: String) =
     new ExponentialDecayScoreDefinition(field, origin, scale)
+  def factorScore(boost: Double) =
+    new FactorScoreDefinition(boost)
+}
+
+class FactorScoreDefinition(boost: Double) extends ScoreDefinition[FactorScoreDefinition] {
+  val builder = new FactorBuilder().boostFactor(boost.toFloat)
 }
 
 trait ScoreDefinition[T] {
