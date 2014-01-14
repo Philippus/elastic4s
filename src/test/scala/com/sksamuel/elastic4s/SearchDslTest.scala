@@ -715,6 +715,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate correct json for sub aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_datehistogram_subs.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation datehistogram "days" field "date" interval DateHistogram.Interval.DAY aggs(
+        aggregation terms "keywords" field "keyword" size 5,
+        aggregation terms "countries" field "country")
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
 
     it should "generate correct json for highlighting" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))

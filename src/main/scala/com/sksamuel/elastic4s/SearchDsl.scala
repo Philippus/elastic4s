@@ -106,13 +106,13 @@ trait SearchDsl
     }
     def facets(f: FacetDefinition*): SearchDefinition = facets(f.toIterable)
 
-    def aggregations(iterable: Iterable[AggregationDefinition]): SearchDefinition = {
+    def aggregations(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = {
       iterable.foreach(agg => _builder.addAggregation(agg.builder))
       this
     }
-    def aggregations(a: AggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
-    def aggs(a: AggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
-    def aggs(iterable: Iterable[AggregationDefinition]): SearchDefinition = aggregations(iterable)
+    def aggregations(a: AbstractAggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
+    def aggs(a: AbstractAggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
+    def aggs(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = aggregations(iterable)
 
     def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
     def sort2(sorts: SortBuilder*): SearchDefinition = {

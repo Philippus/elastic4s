@@ -1,9 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.aggregations.{AggregationBuilder, AggregationBuilders}
+import org.elasticsearch.search.aggregations.{AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders}
 import org.elasticsearch.search.aggregations.bucket.terms.{TermsBuilder, Terms}
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
+import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramBuilder, HistogramBuilder, DateHistogram}
 import org.elasticsearch.common.geo.{GeoPoint, GeoDistance}
+import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
+import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
+import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
+import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 
 
 /** @author Nicolas Yzet */
@@ -22,191 +26,204 @@ trait AggregationDsl {
   }
 }
 
-
-trait AggregationDefinition {
-  def builder[B <: AggregationBuilder[B]]: AggregationBuilder[B]
+trait AbstractAggregationDefinition {
+  def builder: AbstractAggregationBuilder
 }
 
-class TermAggregationDefinition(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.terms(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]] extends AbstractAggregationDefinition {
+  val aggregationBuilder: B
+
+  def builder = aggregationBuilder
+
+  def aggregations(it: Iterable[AbstractAggregationDefinition]): Self = {
+    it.foreach { aad => aggregationBuilder.subAggregation(aad.builder) }
+    this.asInstanceOf[Self]
+  }
+
+  def aggregations(a: AbstractAggregationDefinition*): Self = aggregations(a.toIterable)
+
+  def aggs(a: AbstractAggregationDefinition*): Self = aggregations(a)
+
+  def aggs(a: Iterable[AbstractAggregationDefinition]): Self = aggregations(a)
+}
+
+class TermAggregationDefinition(name: String) extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
+  val aggregationBuilder = AggregationBuilders.terms(name)
+
+  //def builder = builder
 
   def size(size: Int): TermAggregationDefinition = {
-    _builder.size(size)
+    builder.size(size)
     this
   }
 
   def lang(lang: String): TermAggregationDefinition = {
-    _builder.lang(lang)
+    builder.lang(lang)
     this
   }
 
   def order(order: Terms.Order): TermAggregationDefinition = {
-    _builder.order(order)
+    builder.order(order)
     this
   }
 
   def field(field: String): TermAggregationDefinition = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 
   def script(script: String): TermAggregationDefinition = {
-    _builder.script(script)
+    builder.script(script)
     this
   }
 
   def shardSize(shardSize: Int): TermAggregationDefinition = {
-    _builder.shardSize(shardSize)
+    builder.shardSize(shardSize)
     this
   }
 
   def include(regex: String): TermAggregationDefinition = {
-    _builder.include(regex)
+    builder.include(regex)
     this
   }
 
   def exclude(regex: String): TermAggregationDefinition = {
-    _builder.exclude(regex)
+    builder.exclude(regex)
     this
   }
 }
 
-class RangeAggregationDefinition(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.range(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class RangeAggregationDefinition(name: String) extends AggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
+  val aggregationBuilder = AggregationBuilders.range(name)
 
   def range(from: Double, to: Double): RangeAggregationDefinition = {
-    _builder.addRange(from, to)
+    builder.addRange(from, to)
     this
   }
 
   def range(key: String, from: Double, to: Double): RangeAggregationDefinition = {
-    _builder.addRange(key, from, to)
+    builder.addRange(key, from, to)
     this
   }
 
   def field(field: String): RangeAggregationDefinition = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 }
 
-class DateRangeAggregation(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.dateRange(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
+  val aggregationBuilder = AggregationBuilders.dateRange(name)
 
   def range(from: String, to: String): DateRangeAggregation = {
-    _builder.addRange(from, to)
+    builder.addRange(from, to)
     this
   }
 
   def range(key: String, from: String, to: String): DateRangeAggregation = {
-    _builder.addRange(key, from, to)
+    builder.addRange(key, from, to)
     this
   }
 
   def range(from: Long, to: Long): DateRangeAggregation = {
-    _builder.addRange(from, to)
+    builder.addRange(from, to)
     this
   }
 
   def range(key: String, from: Long, to: Long): DateRangeAggregation = {
-    _builder.addRange(key, from, to)
+    builder.addRange(key, from, to)
     this
   }
 
   def field(field: String): DateRangeAggregation = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 
   def format(fmt: String): DateRangeAggregation = {
-    _builder.format(fmt)
+    builder.format(fmt)
     this
   }
 }
 
 
-class HistogramAggregation(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.histogram(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class HistogramAggregation(name: String) extends AggregationDefinition[HistogramAggregation, HistogramBuilder] {
+  val aggregationBuilder = AggregationBuilders.histogram(name)
+  
   def field(field: String): HistogramAggregation = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 
   def interval(interval: Long): HistogramAggregation = {
-    _builder.interval(interval)
+    builder.interval(interval)
     this
   }
 }
 
 
-class DateHistogramAggregation(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.dateHistogram(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class DateHistogramAggregation(name: String) extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
+  val aggregationBuilder = AggregationBuilders.dateHistogram(name)
+
 
   def field(field: String): DateHistogramAggregation = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 
   def interval(interval: Long): DateHistogramAggregation = {
-    _builder.interval(interval)
+    builder.interval(interval)
     this
   }
 
   def interval(interval: DateHistogram.Interval):  DateHistogramAggregation = {
-    _builder.interval(interval)
+    builder.interval(interval)
     this
   }
 }
 
-class GeoDistanceAggregationDefinition(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.geoDistance(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class GeoDistanceAggregationDefinition(name: String) extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {
+  val aggregationBuilder = AggregationBuilders.geoDistance(name)
 
   def range(tuple: (Double, Double)): GeoDistanceAggregationDefinition = range(tuple._1, tuple._2)
   def range(from: Double, to: Double): GeoDistanceAggregationDefinition = {
-    _builder.addRange(from, to)
+    builder.addRange(from, to)
     this
   }
 
   def field(field: String): GeoDistanceAggregationDefinition = {
-    _builder.field(field)
+    builder.field(field)
     this
   }
 
   def geoDistance(geoDistance: GeoDistance): GeoDistanceAggregationDefinition = {
-    _builder.distanceType(geoDistance)
+    builder.distanceType(geoDistance)
     this
   }
   def geohash(geohash: String): GeoDistanceAggregationDefinition = {
-    _builder.geohash(geohash)
+    builder.geohash(geohash)
     this
   }
 
   def point(lat: Double, long: Double): GeoDistanceAggregationDefinition = {
-    _builder.point(new GeoPoint(lat, long))
+    builder.point(new GeoPoint(lat, long))
     this
   }
   def addUnboundedFrom(addUnboundedFrom: Double): GeoDistanceAggregationDefinition = {
-    _builder.addUnboundedFrom(addUnboundedFrom)
+    builder.addUnboundedFrom(addUnboundedFrom)
     this
   }
   def addUnboundedTo(addUnboundedTo: Double): GeoDistanceAggregationDefinition = {
-    _builder.addUnboundedTo(addUnboundedTo)
+    builder.addUnboundedTo(addUnboundedTo)
     this
   }
 }
 
-class FilterAggregationDefinition(name: String) extends AggregationDefinition {
-  val _builder = AggregationBuilders.filter(name)
-  def builder[B <: AggregationBuilder[B]] = _builder.asInstanceOf[B]
+class FilterAggregationDefinition(name: String) extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
+  val aggregationBuilder = AggregationBuilders.filter(name)
 
   def filter(block: => FilterDefinition): FilterAggregationDefinition = {
-    _builder.filter(block.builder)
+    builder.filter(block.builder)
     this
   }
 }
