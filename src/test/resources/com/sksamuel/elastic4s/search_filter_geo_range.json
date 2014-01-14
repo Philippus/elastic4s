@@ -1,4 +1,4 @@
-{"post_filter": {
+{"filter": {
     "geo_distance_range": {
         "postcode": "hash123",
         "from": "560",

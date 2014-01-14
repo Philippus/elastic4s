@@ -2,7 +2,7 @@
     "window_size": 14,
     "query": {
         "rescore_query": {
-            "simple_query_string": {
+            "query_string": {
                 "query": "coldplay"
             }
         },

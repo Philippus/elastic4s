@@ -20,7 +20,7 @@ trait ExplainDsl {
     def build = _builder.request
 
     def query(string: String): ExplainDefinition = {
-      val q = new SimpleStringQueryDefinition(string)
+      val q = new StringQueryDefinition(string)
       _builder.setQuery(q.builder.buildAsBytes)
       this
     }

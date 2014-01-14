@@ -1,4 +1,4 @@
-{"post_filter": {
+{"filter": {
     "prefix": {
         "singer": "chris martin",
         "_name": "my-filter3",

@@ -4,12 +4,12 @@
         "boost": 4.5,
         "queries": [
             {
-                "simple_query_string": {
+                "query_string": {
                     "query": "coldplay"
                 }
             },
             {
-                "simple_query_string": {
+                "query_string": {
                     "query": "london"
                 }
             }

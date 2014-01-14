@@ -10,7 +10,7 @@ import scala.Some
 
 trait QueryDsl {
 
-  implicit def string2query(string: String) = new SimpleStringQueryDefinition(string)
+  implicit def string2query(string: String) = new StringQueryDefinition(string)
   implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
@@ -120,7 +120,7 @@ trait QueryDsl {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
-  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
+//  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
   def stringQuery(q: String) = new StringQueryDefinition(q)
 
   def spanOrQuery = new SpanOrQueryDefinition
@@ -880,8 +880,8 @@ class MatchPhraseDefinition(field: String, value: Any)
   }
 }
 
+/*
 class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
-  val builder = QueryBuilders.simpleQueryString(query)
 
   def defaultOperator(d: SimpleQueryStringBuilder.Operator): SimpleStringQueryDefinition = {
     builder.defaultOperator(d)
@@ -902,7 +902,7 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
     builder.field(name, boost.toFloat)
     this
   }
-}
+} */
 
 class StringQueryDefinition(query: String) extends QueryDefinition with DefinitionAttributeRewrite {
 

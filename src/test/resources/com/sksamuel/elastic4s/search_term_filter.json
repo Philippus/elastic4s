@@ -1,5 +1,5 @@
 {
-    "post_filter": {
+    "filter": {
         "term": {
             "singer": "chris martin",
             "_name": "my-filter",

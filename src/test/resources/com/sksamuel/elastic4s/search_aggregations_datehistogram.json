@@ -1,0 +1,10 @@
+{
+  "aggregations": {
+    "years": {
+      "date_histogram": {
+        "field": "date",
+        "interval": "1y"
+      }
+    }
+  }
+}

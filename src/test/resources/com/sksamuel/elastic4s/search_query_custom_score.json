@@ -1,7 +1,7 @@
 {"query": {
     "custom_score": {
         "query": {
-            "simple_query_string": {
+            "query_string": {
                 "query": "coldplay"
             }
         },

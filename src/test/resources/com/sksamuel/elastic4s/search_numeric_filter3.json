@@ -1,5 +1,5 @@
 {
-    "post_filter": {
+    "filter": {
         "numeric_range": {
         "years": {
             "from": "12.4",

@@ -1,5 +1,5 @@
 {
-    "post_filter": {
+    "filter": {
         "bool": {
             "must_not": {
                 "geo_distance": {

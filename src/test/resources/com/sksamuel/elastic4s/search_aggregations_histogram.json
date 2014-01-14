@@ -1,0 +1,10 @@
+{
+  "aggregations": {
+    "score_histogram": {
+      "histogram": {
+        "field": "score",
+        "interval": 2
+      }
+    }
+  }
+}

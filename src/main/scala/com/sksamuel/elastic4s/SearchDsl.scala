@@ -8,7 +8,13 @@ import org.elasticsearch.search.rescore.RescoreBuilder
 /** @author Stephen Samuel */
 trait SearchDsl
   extends QueryDsl
-  with FilterDsl with FacetDsl with HighlightDsl with SortDsl with SuggestionDsl with IndexesTypesDsl {
+  with FilterDsl
+  with FacetDsl
+  with AggregationDsl
+  with HighlightDsl
+  with SortDsl
+  with SuggestionDsl
+  with IndexesTypesDsl {
 
   @deprecated("use select or search", "1.0")
   def find = new SearchExpectsIndex
@@ -99,6 +105,14 @@ trait SearchDsl
       this
     }
     def facets(f: FacetDefinition*): SearchDefinition = facets(f.toIterable)
+
+    def aggregations(iterable: Iterable[AggregationDefinition]): SearchDefinition = {
+      iterable.foreach(agg => _builder.addAggregation(agg.builder))
+      this
+    }
+    def aggregations(a: AggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
+    def aggs(a: AggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
+    def aggs(iterable: Iterable[AggregationDefinition]): SearchDefinition = aggregations(iterable)
 
     def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
     def sort2(sorts: SortBuilder*): SearchDefinition = {
