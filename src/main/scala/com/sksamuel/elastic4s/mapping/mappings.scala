@@ -442,11 +442,23 @@ final class AttachmentFieldDefinition(name: String)
 }
 
 final class CompletionFieldDefinition(name: String)
-  extends TypedFieldDefinition(CompletionType, name) {
+  extends TypedFieldDefinition(CompletionType, name)
+  with AttributeIndexAnalyzer
+  with AttributeSearchAnalyzer
+  with AttributePayloads
+  with AttributePreserveSeparators
+  with AttributePreservePositionIncrements
+  with AttributeMaxInputLen {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
+    super[AttributeIndexAnalyzer].insert(source)
+    super[AttributeSearchAnalyzer].insert(source)
+    super[AttributePayloads].insert(source)
+    super[AttributePreserveSeparators].insert(source)
+    super[AttributePreservePositionIncrements].insert(source)
+    super[AttributeMaxInputLen].insert(source)
     source.endObject()
   }
 }

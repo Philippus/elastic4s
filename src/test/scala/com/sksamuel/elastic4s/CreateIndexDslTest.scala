@@ -156,4 +156,16 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     assert(json === mapper.readTree(req._source.string))
   }
 
+  it should "support completion type" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/completion_type_1.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+          "name" typed StringType index "analyzed",
+          "ac" typed CompletionType indexAnalyzer "simple" searchAnalyzer "simple"
+            payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
 }
