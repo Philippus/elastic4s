@@ -1,4 +1,4 @@
-{"filter": {
+{"post_filter": {
     "missing": {
         "field": "producer",
         "null_value": true,

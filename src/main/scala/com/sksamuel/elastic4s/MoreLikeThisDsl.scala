@@ -43,11 +43,11 @@ trait MoreLikeThisDsl {
       this
     }
     def maxWordLen(maxWordLen: Int) = {
-      _builder.maxWordLen(maxWordLen)
+      _builder.maxWordLength(maxWordLen)
       this
     }
     def minWordLen(minWordLen: Int) = {
-      _builder.minWordLen(minWordLen)
+      _builder.minWordLength(minWordLen)
       this
     }
     def boostTerms(boostTerms: Double) = {

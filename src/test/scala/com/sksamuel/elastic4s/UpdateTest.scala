@@ -5,7 +5,8 @@ import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import scala.concurrent.duration._
 import org.elasticsearch.common.Priority
-import org.elasticsearch.ElasticSearchException
+import org.elasticsearch.ElasticsearchException
+
 
 /** @author Stephen Samuel */
 class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -111,7 +112,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "not insert non existent doc when using doc" in {
 
-    val e = intercept[ElasticSearchException] {
+    val e = intercept[ElasticsearchException] {
       client.sync.execute {
         update(55).in("scifi/lostinspace").doc(
           "character" -> "smith"

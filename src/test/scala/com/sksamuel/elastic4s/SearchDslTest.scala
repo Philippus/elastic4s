@@ -92,7 +92,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate json for a string query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_string.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
-      query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyMinSim 0.9 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer"
+      query("coldplay") allowLeadingWildcard true analyzeWildcard true anaylyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer"
     } searchType SearchType.DfsQueryThenFetch
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -167,7 +167,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate json for a fuzzy query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_fuzzy.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
-      fuzzy("drummmer", "will") boost 4 maxExpansions 10 prefixLength 10 transpositions true minSimilarity 2.2
+      fuzzy("drummmer", "will") boost 4 maxExpansions 10 prefixLength 10 transpositions true
     } searchType SearchType.Count
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -243,7 +243,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           "coldplay") allowLeadingWildcard true analyzeWildcard false boost 5 fuzzyPrefixLength 5 phraseSlop 9,
         field("status",
           "awesome") analyzer PatternAnalyzer autoGeneratePhraseQueries true enablePositionIncrements true,
-        field("location", "oxford") fuzzyMinSim 0.5 fuzzyMaxExpansions 7 rewrite "rewrite"
+        field("location", "oxford") fuzzyMaxExpansions 7 rewrite "rewrite"
       )
     ) preference Preference.OnlyNode("a")
     assert(json === mapper.readTree(req._builder.toString))
@@ -537,7 +537,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate correct json for flt query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_flt.json"))
     val req = search in "music" types "bands" query {
-      fuzzylikethis text "text like this one" fields("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 minSimilarity 0.4 boost 1.2
+      fuzzylikethis text "text like this one" fields("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 boost 1.2
     }
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -702,7 +702,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "generate correct json for terms aggregation" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_terms.json"))
     val req = search in "music" types "bands" aggs {
-      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.COUNT_DESC
+      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.count(false)
     }
     assert(json === mapper.readTree(req._builder.toString))
   }

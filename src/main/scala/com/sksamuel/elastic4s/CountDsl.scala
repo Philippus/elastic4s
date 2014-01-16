@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.count.{CountAction, CountRequestBuilder}
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
+import org.elasticsearch.action.support.QuerySourceBuilder
 
 /** @author Stephen Samuel */
 trait CountDsl {
@@ -20,10 +21,11 @@ trait CountDsl {
 
   class CountDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(CountAction.INSTANCE) {
 
-    private val _builder = new CountRequestBuilder(null)
+    val _builder = new CountRequestBuilder(null)
       .setIndices(indexesTypes.indexes: _*)
       .setTypes(indexesTypes.types: _*)
       .setQuery(QueryBuilders.matchAllQuery())
+
     def build = _builder.request()
 
     def routing(routing: String): CountDefinition = {
@@ -40,7 +42,8 @@ trait CountDsl {
     def query(string: String): CountDefinition = query(new StringQueryDefinition(string))
     def query(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
     def javaquery(block: => QueryBuilder): CountDefinition = {
-      _builder.setQuery(block)
+      _builder.request.source(new QuerySourceBuilder().setQuery(block))
+      //_builder.setQuery(block)
       this
     }
 

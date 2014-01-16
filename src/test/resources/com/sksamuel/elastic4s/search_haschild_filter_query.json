@@ -1,5 +1,5 @@
 {
-    "filter": {
+    "post_filter": {
         "has_child": {
             "query": {
                 "term": {

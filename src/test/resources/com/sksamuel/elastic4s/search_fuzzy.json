@@ -4,7 +4,6 @@
             "value": "will",
             "boost": 4.0,
             "transpositions": true,
-            "min_similarity": "2.2",
             "prefix_length": 10,
             "max_expansions": 10
         }

@@ -1,4 +1,4 @@
-{"filter": {
+{"post_filter": {
     "has_parent": {
         "filter": {
             "term": {

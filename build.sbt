@@ -46,7 +46,7 @@ libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "1.0.0.Beta2"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "1.0.0.RC1"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
 

@@ -1,5 +1,5 @@
 {
-    "filter": {
+    "post_filter": {
         "geo_polygon": {
             "distance": {
                 "points": [

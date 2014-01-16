@@ -10,7 +10,7 @@ import scala.Some
 
 trait QueryDsl {
 
-  implicit def string2query(string: String) = new StringQueryDefinition(string)
+  implicit def string2query(string: String) = new SimpleStringQueryDefinition(string)
   implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
@@ -44,10 +44,10 @@ trait QueryDsl {
 
   def dismax = new DisMaxDefinition
 
-  def field(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple)
-  def field(field: String, value: Any): FieldQueryDefinition = fieldQuery(field, value)
-  def fieldQuery(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
-  def fieldQuery(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
+  def field(tuple: (String, String)): FieldQueryDefinition = fieldQuery(tuple)
+  def field(field: String, value: String): FieldQueryDefinition = fieldQuery(field, value)
+  def fieldQuery(tuple: (String, String)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
+  def fieldQuery(field: String, value: String): FieldQueryDefinition = new FieldQueryDefinition(field, value)
 
   def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = flt
   def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
@@ -120,7 +120,7 @@ trait QueryDsl {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
-//  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
+  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
   def stringQuery(q: String) = new StringQueryDefinition(q)
 
   def spanOrQuery = new SpanOrQueryDefinition
@@ -263,10 +263,7 @@ class MultiMatchQueryDefinition(text: String)
 class FuzzyDefinition(name: String, value: Any) extends QueryDefinition with DefinitionAttributePrefixLength {
   val builder = QueryBuilders.fuzzyQuery(name, value.toString)
   val _builder = builder
-  def minSimilarity(minSimilarity: Double) = {
-    builder.minSimilarity(minSimilarity.toString)
-    this
-  }
+
   def maxExpansions(maxExpansions: Int) = {
     builder.maxExpansions(maxExpansions)
     this
@@ -361,10 +358,6 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   }
   def maxQueryTerms(b: Int): FuzzyLikeThisDefinition = {
     builder.maxQueryTerms(b)
-    this
-  }
-  def minSimilarity(b: Double): FuzzyLikeThisDefinition = {
-    builder.minSimilarity(b.toFloat)
     this
   }
 }
@@ -512,11 +505,12 @@ class WildcardQueryDefinition(field: String, query: Any)
   }
 }
 
-class FieldQueryDefinition(field: String, query: Any)
+class FieldQueryDefinition(field: String, query: String)
   extends QueryDefinition
   with DefinitionAttributeRewrite {
-  val builder = QueryBuilders.fieldQuery(field, query)
+  val builder = QueryBuilders.queryString(query).defaultField(field)
   val _builder = builder
+
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
@@ -533,11 +527,6 @@ class FieldQueryDefinition(field: String, query: Any)
 
   def fuzzyPrefixLength(fuzzyPrefixLength: Int) = {
     builder.fuzzyPrefixLength(fuzzyPrefixLength)
-    this
-  }
-
-  def fuzzyMinSim(fuzzyMinSim: Double) = {
-    builder.fuzzyMinSim(fuzzyMinSim.toFloat)
     this
   }
 
@@ -880,8 +869,9 @@ class MatchPhraseDefinition(field: String, value: Any)
   }
 }
 
-/*
+
 class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
+  val builder = QueryBuilders.simpleQueryString(query)
 
   def defaultOperator(d: SimpleQueryStringBuilder.Operator): SimpleStringQueryDefinition = {
     builder.defaultOperator(d)
@@ -902,7 +892,7 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
     builder.field(name, boost.toFloat)
     this
   }
-} */
+}
 
 class StringQueryDefinition(query: String) extends QueryDefinition with DefinitionAttributeRewrite {
 
@@ -939,11 +929,6 @@ class StringQueryDefinition(query: String) extends QueryDefinition with Definiti
 
   def fuzzyPrefixLength(fuzzyPrefixLength: Int): StringQueryDefinition = {
     builder.fuzzyPrefixLength(fuzzyPrefixLength)
-    this
-  }
-
-  def fuzzyMinSim(fuzzyMinSim: Double): StringQueryDefinition = {
-    builder.fuzzyMinSim(fuzzyMinSim.toFloat)
     this
   }
 

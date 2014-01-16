@@ -10,7 +10,6 @@
             "auto_generate_phrase_queries": true,
             "allow_leading_wildcard": true,
             "enable_position_increments": true,
-            "fuzzy_min_sim": 0.9,
             "boost": 6.5,
             "fuzzy_prefix_length": 3,
             "fuzzy_max_expansions": 4,
