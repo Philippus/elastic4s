@@ -11,7 +11,7 @@ trait SuggestionDsl {
   }
   def suggest(name: String) = new SuggestionExpectsText(name)
   class SuggestionExpectsText(name: String) {
-    def on(text: String) = new TermSuggestionDefinition(name)
+    def on(text: String) = new TermSuggestionDefinition(name, text)
     def as = this
   }
 }
@@ -19,9 +19,10 @@ trait SuggestionDsl {
 trait SuggestionDefinition {
   val builder: SuggestionBuilder[_]
 }
-class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
+class TermSuggestionDefinition(name: String, text: String) extends SuggestionDefinition {
 
   val builder = SuggestBuilder.termSuggestion(name)
+  builder.text(text)
 
   def from(f: String) = field(f)
   def field(f: String) = {
