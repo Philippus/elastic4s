@@ -682,6 +682,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     //   assert(json === mapper.readTree(req.builder.toString))
   }
 
+  it should "generate correct json for suggestion" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions.json"))
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+      suggest as "suggestion-1" on "clocks by culdpaly" from "name" maxEdits 2,
+      suggest as "suggestion-2" on "aqualuck by jethro toll" from "name"
+    )
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate correct json for nested query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_query_nested.json"))
     val req = search in "music" types "bands" query {
