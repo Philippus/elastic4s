@@ -2,82 +2,162 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.search.suggest.SuggestBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder
 
 /** @author Stephen Samuel */
 trait SuggestionDsl {
-  def suggest = new SuggestionExpectsAs
-  class SuggestionExpectsAs {
-    def as(name: String) = new SuggestionExpectsText(name)
+
+  sealed trait Suggester[S <: SuggestionDefinition]
+  object term extends Suggester[TermSuggestionDefinition]
+  object phrase extends Suggester[PhraseSuggestionDefinition]
+  object completion extends Suggester[CompletionSuggestionDefinition]
+
+  object suggest {
+
+    def using[S <: SuggestionDefinition](suggester: Suggester[S]) = new {
+      def as(name: String): S = suggester match {
+        case `term` => new TermSuggestionDefinition(name)
+        case `phrase` => new PhraseSuggestionDefinition(name)
+        case `completion` => new CompletionSuggestionDefinition(name)
+      }
+    }
+
+    def as(name: String) = using(term) as name
   }
-  def suggest(name: String) = new SuggestionExpectsText(name)
-  class SuggestionExpectsText(name: String) {
-    def on(text: String) = new TermSuggestionDefinition(name, text)
-    def as = this
-  }
+
 }
 
 trait SuggestionDefinition {
   val builder: SuggestionBuilder[_]
-}
-class TermSuggestionDefinition(name: String, text: String) extends SuggestionDefinition {
 
-  val builder = SuggestBuilder.termSuggestion(name)
-  builder.text(text)
-
-  def from(f: String) = field(f)
-  def field(f: String) = {
-    builder.field(f)
+  def on(_text: String): this.type = text(_text)
+  def text(_text: String): this.type = {
+    builder.text(_text)
     this
   }
+
+  def from(_field: String): this.type = field(_field)
+  def field(_field: String): this.type = {
+    builder.field(_field)
+    this
+  }
+
+  def analyzer(analyzer: Analyzer): this.type = {
+    builder.analyzer(analyzer.name)
+    this
+  }
+
+  def size(size: Int): this.type = {
+    builder.size(size)
+    this
+  }
+
+  def shardSize(shardSize: Int): this.type = {
+    builder.shardSize(shardSize)
+    this
+  }
+}
+
+class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
+
+  val builder = SuggestBuilder.termSuggestion(name)
+
   def maxEdits(maxEdits: Int): TermSuggestionDefinition = {
     builder.maxEdits(maxEdits)
     this
   }
+
   def minDocFreq(minDocFreq: Double): TermSuggestionDefinition = {
     builder.minDocFreq(minDocFreq.toFloat)
     this
   }
-  def analyzer(analyzer: Analyzer): TermSuggestionDefinition = {
-    builder.analyzer(analyzer.name)
-    this
-  }
-  def size(size: Int): TermSuggestionDefinition = {
-    builder.size(size)
-    this
-  }
+
   def mode(suggestMode: SuggestMode): TermSuggestionDefinition = mode(suggestMode.elastic)
   def mode(suggestMode: String): TermSuggestionDefinition = {
     builder.suggestMode(suggestMode)
     this
   }
+
   def minWordLength(minWordLength: Int): TermSuggestionDefinition = {
     builder.minWordLength(minWordLength)
     this
   }
-  def shardSize(shardSize: Int): TermSuggestionDefinition = {
-    builder.shardSize(shardSize)
-    this
-  }
+
   def accuracy(accuracy: Double): TermSuggestionDefinition = {
     builder.setAccuracy(accuracy.toFloat)
     this
   }
+
   def maxInspections(maxInspections: Int): TermSuggestionDefinition = {
     builder.maxInspections(maxInspections)
     this
   }
+
   def maxTermFreq(maxTermFreq: Double): TermSuggestionDefinition = {
     builder.maxTermFreq(maxTermFreq.toFloat)
     this
   }
+
   def stringDistance(stringDistance: String): TermSuggestionDefinition = {
     builder.stringDistance(stringDistance)
     this
   }
+
   def prefixLength(prefixLength: Int): TermSuggestionDefinition = {
     builder.prefixLength(prefixLength)
     this
   }
+}
+
+class PhraseSuggestionDefinition(name: String) extends SuggestionDefinition {
+
+  val builder = SuggestBuilder.phraseSuggestion(name)
+
+  def gramSize(gramSize: Int): PhraseSuggestionDefinition = {
+    builder.gramSize(gramSize)
+    this
+  }
+
+  def maxErrors(maxErrors: Float): PhraseSuggestionDefinition = {
+    builder.maxErrors(maxErrors)
+    this
+  }
+
+  def separator(separator: String): PhraseSuggestionDefinition = {
+    builder.separator(separator)
+    this
+  }
+
+  def realWordErrorLikelihood(realWordErrorLikelihood: Float): PhraseSuggestionDefinition = {
+    builder.realWordErrorLikelihood(realWordErrorLikelihood)
+    this
+  }
+
+  def confidence(confidence: Float): PhraseSuggestionDefinition = {
+    builder.confidence(confidence)
+    this
+  }
+
+  def forceUnigrams(forceUnigrams: Boolean): PhraseSuggestionDefinition = {
+    builder.forceUnigrams(forceUnigrams)
+    this
+  }
+
+  def tokenLimit(tokenLimit: Int): PhraseSuggestionDefinition = {
+    builder.tokenLimit(tokenLimit)
+    this
+  }
+
+  def highlight(highlight: (String, String)): PhraseSuggestionDefinition = {
+    builder.highlight(highlight._1, highlight._2)
+    this
+  }
+
+}
+
+class CompletionSuggestionDefinition(name: String) extends SuggestionDefinition {
+
+  val builder = new CompletionSuggestionBuilder(name)
 }
 
 sealed abstract class SuggestMode(val elastic: String)
