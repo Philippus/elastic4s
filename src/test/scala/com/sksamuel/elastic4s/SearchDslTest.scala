@@ -667,8 +667,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
-
-
   it should "generate correct json for multiple suggestions" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
     val req = search in "music" types "bands" query "coldplay" suggestions(
@@ -680,6 +678,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
       )
     // -- disabled due to bug in elastic search
     //   assert(json === mapper.readTree(req.builder.toString))
+  }
+
+  // for backwards compatibility default suggester is the term suggester
+  it should "generate correct json for suggestions" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions.json"))
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+      suggest as "suggestion-1" on "clocks by culdpaly" from "name" maxEdits 2,
+      suggest as "suggestion-2" on "aqualuck by jethro toll" from "name"
+    )
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for suggestions of multiple suggesters" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple_suggesters.json"))
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+      suggest using term as "suggestion-term" on "culdpaly" field "name" maxEdits 2,
+      suggest using phrase as "suggestion-phrase" on "aqualuck by jethro toll" field "name",
+      suggest using completion as "suggestion-completion" on "cold" field "ac"
+    )
+    assert(json === mapper.readTree(req._builder.toString))
   }
 
   it should "generate correct json for nested query" in {
