@@ -19,6 +19,8 @@ JSON libraries such as Jackson without having to unmarshall.
 
 The latest release is 0.90.10.0 which is compatible with elasticsearch 0.90.10. For releases that are compatible with earlier versions of elasticsearch, [search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
 
+Version 1.0.0-SNAPSHOT is currently in progress and will be released once elasticsearch 1.0 is released. If you wish to use elastic4s with a 1.0.0 release candidate then you will need to build from source for the time being.
+
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
