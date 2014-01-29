@@ -26,7 +26,7 @@ trait ValidateDsl extends QueryDsl {
      */
     def query(string: String): ValidateDefinition = {
       val q = new StringQueryDefinition(string)
-      _builder.setQuery(q.builder.buildAsBytes)
+      _builder.setQuery(q.builder)
       this
     }
 
