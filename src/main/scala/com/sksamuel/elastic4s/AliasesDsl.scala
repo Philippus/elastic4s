@@ -11,7 +11,7 @@ trait AliasesDsl {
   class AliasesExpectsAction {
     def add(alias: String) = new AddAliasExpectsIndex(alias)
     def remove(alias: String) = new RemoveAliasExpectsIndex(alias)
-    def get(aliases: String*) = new GetAliasExpectsIndex(aliases)
+    def get(aliases: String*) = new GetAliasDefinition(aliases)
   }
 
   class AddAliasExpectsIndex(alias: String) {
@@ -23,12 +23,16 @@ trait AliasesDsl {
   }
 
   class GetAliasExpectsIndex(aliases: Seq[String]) {
-    def on(indexes: String*) = new GetAliasDefinition(aliases)
   }
 
-  class GetAliasDefinition(aliases: Seq[String], indexes: String*)
+  class GetAliasDefinition(aliases: Seq[String])
     extends IndicesRequestDefinition(GetAliasesAction.INSTANCE) {
-    val build = new GetAliasesRequest(aliases.toArray).indices(indexes: _*)
+    val request = new GetAliasesRequest(aliases.toArray)
+    def build = request
+    def on(indexes: String*): GetAliasDefinition = {
+      request.indices(indexes: _*)
+      this
+    }
   }
 
   class MutateAliasDefinition(aliasAction: AliasAction)
