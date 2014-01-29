@@ -90,7 +90,7 @@ trait SearchDsl
     }
 
     def filter(block: => FilterDefinition): SearchDefinition = {
-      _builder.setFilter(block.builder)
+      _builder.setPostFilter(block.builder)
       this
     }
 
