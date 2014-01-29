@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesAction, IndicesAliasesRequest}
 import org.elasticsearch.index.query.FilterBuilder
 import org.elasticsearch.cluster.metadata.AliasAction
-import org.elasticsearch.action.admin.indices.alias.get.{IndicesGetAliasesRequest, IndicesGetAliasesAction}
+import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesAction, GetAliasesRequest}
+import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesAction}
 
 trait AliasesDsl {
   def aliases = new AliasesExpectsAction
@@ -11,29 +11,30 @@ trait AliasesDsl {
   class AliasesExpectsAction {
     def add(alias: String) = new AddAliasExpectsIndex(alias)
     def remove(alias: String) = new RemoveAliasExpectsIndex(alias)
-    def get(alias: String*) = new AliasQueryDefinition(new IndicesGetAliasesRequest(alias.toArray))
+    def get(aliases: String*) = new GetAliasExpectsIndex(aliases)
   }
 
   class AddAliasExpectsIndex(alias: String) {
-    def on(index: String) = new AliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
+    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
   }
 
   class RemoveAliasExpectsIndex(alias: String) {
-    def on(index: String) = new AliasDefinition(new AliasAction(AliasAction.Type.REMOVE, index, alias))
+    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.REMOVE, index, alias))
   }
 
-  class AliasDefinition(aliasAction: AliasAction) extends IndicesRequestDefinition(IndicesAliasesAction.INSTANCE) {
-    def routing(route: String) = new AliasDefinition(aliasAction.routing(route))
+  class GetAliasExpectsIndex(aliases: Seq[String]) {
+    def on(indexes: String*) = new GetAliasDefinition(aliases)
+  }
 
-    def filter(filter: FilterBuilder) = new AliasDefinition(aliasAction.filter(filter))
+  class GetAliasDefinition(aliases: Seq[String], indexes: String*)
+    extends IndicesRequestDefinition(GetAliasesAction.INSTANCE) {
+    val build = new GetAliasesRequest(aliases.toArray).indices(indexes: _*)
+  }
 
+  class MutateAliasDefinition(aliasAction: AliasAction)
+    extends IndicesRequestDefinition(IndicesAliasesAction.INSTANCE) {
+    def routing(route: String) = new MutateAliasDefinition(aliasAction.routing(route))
+    def filter(filter: FilterBuilder) = new MutateAliasDefinition(aliasAction.filter(filter))
     def build = new IndicesAliasesRequest().addAliasAction(aliasAction)
-  }
-
-  class AliasQueryDefinition(request: IndicesGetAliasesRequest) extends IndicesRequestDefinition(IndicesGetAliasesAction.INSTANCE) {
-
-    def on(indices: String*) = new AliasQueryDefinition(request.indices(indices:_*))
-
-    def build = request
   }
 }
