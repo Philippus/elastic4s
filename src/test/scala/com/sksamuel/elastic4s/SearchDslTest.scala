@@ -233,6 +233,23 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a boolean query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boolean2.json"))
+    val req = search in "space" -> "planets" limit 5 query {
+      bool {
+        must(
+          regex("drummmer" -> "will*") boost 5,
+          term("singer" -> "chris")
+        ) should {
+          term("bassist" -> "berryman")
+        } not {
+          term("singer" -> "anderson")
+        } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
+      }
+    } preference Preference.Local
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a field query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_field.json"))
     val req = search("*").types("bands", "artists").limit(5).bool(

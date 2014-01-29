@@ -152,20 +152,24 @@ trait QueryDsl {
 
 class BoolQueryDefinition extends QueryDefinition {
   val builder = QueryBuilders.boolQuery()
-  def must(queries: QueryDefinition*) = {
-    queries.foreach(builder must _.builder)
+  def adjustPureNegative(adjustPureNegative: Boolean) = {
+    builder.adjustPureNegative(adjustPureNegative)
     this
   }
-  def should(queries: QueryDefinition*) = {
-    queries.foreach(builder should _.builder)
+  def boost(boost: Double) = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def must(queries: QueryDefinition*) = {
+    queries.foreach(builder must _.builder)
     this
   }
   def not(queries: QueryDefinition*) = {
     queries.foreach(builder mustNot _.builder)
     this
   }
-  def boost(boost: Double) = {
-    builder.boost(boost.toFloat)
+  def should(queries: QueryDefinition*) = {
+    queries.foreach(builder should _.builder)
     this
   }
   def minimumShouldMatch(minimumShouldMatch: String) = {
@@ -178,10 +182,6 @@ class BoolQueryDefinition extends QueryDefinition {
   }
   def disableCoord(disableCoord: Boolean) = {
     builder.disableCoord(disableCoord: Boolean)
-    this
-  }
-  def adjustPureNegative(adjustPureNegative: Boolean) = {
-    builder.adjustPureNegative(adjustPureNegative)
     this
   }
   def queryName(queryName: String) = {
