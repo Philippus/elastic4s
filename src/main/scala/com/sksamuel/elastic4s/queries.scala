@@ -512,61 +512,6 @@ class WildcardQueryDefinition(field: String, query: Any)
   }
 }
 
-class FieldQueryDefinition(field: String, query: Any)
-  extends QueryDefinition
-  with DefinitionAttributeRewrite {
-  val builder = QueryBuilders.fieldQuery(field, query)
-  val _builder = builder
-  def boost(boost: Double) = {
-    builder.boost(boost.toFloat)
-    this
-  }
-  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int) = {
-    builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
-    this
-  }
-
-  def phraseSlop(phraseSlop: Int) = {
-    builder.phraseSlop(phraseSlop)
-    this
-  }
-
-  def fuzzyPrefixLength(fuzzyPrefixLength: Int) = {
-    builder.fuzzyPrefixLength(fuzzyPrefixLength)
-    this
-  }
-
-  def fuzzyMinSim(fuzzyMinSim: Double) = {
-    builder.fuzzyMinSim(fuzzyMinSim.toFloat)
-    this
-  }
-
-  def analyzer(analyzer: Analyzer) = {
-    builder.analyzer(analyzer.name)
-    this
-  }
-
-  def analyzeWildcard(analyzeWildcard: Boolean) = {
-    builder.analyzeWildcard(analyzeWildcard)
-    this
-  }
-
-  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean) = {
-    builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
-    this
-  }
-
-  def allowLeadingWildcard(allowLeadingWildcard: Boolean) = {
-    builder.allowLeadingWildcard(allowLeadingWildcard)
-    this
-  }
-
-  def enablePositionIncrements(enablePositionIncrements: Boolean) = {
-    builder.enablePositionIncrements(enablePositionIncrements)
-    this
-  }
-}
-
 class PrefixQueryDefinition(field: String, prefix: Any) extends QueryDefinition with DefinitionAttributeRewrite {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
