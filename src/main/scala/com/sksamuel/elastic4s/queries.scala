@@ -5,6 +5,7 @@ import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import scala.Some
+import org.elasticsearch.common.unit.Fuzziness
 
 /** @author Stephen Samuel */
 
@@ -43,11 +44,6 @@ trait QueryDsl {
   }
 
   def dismax = new DisMaxDefinition
-
-  def field(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple)
-  def field(field: String, value: Any): FieldQueryDefinition = fieldQuery(field, value)
-  def fieldQuery(tuple: (String, Any)): FieldQueryDefinition = fieldQuery(tuple._1, tuple._2)
-  def fieldQuery(field: String, value: Any): FieldQueryDefinition = new FieldQueryDefinition(field, value)
 
   def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = flt
   def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
@@ -168,6 +164,30 @@ class BoolQueryDefinition extends QueryDefinition {
     queries.foreach(builder mustNot _.builder)
     this
   }
+  def boost(boost: Double) = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def minimumShouldMatch(minimumShouldMatch: String) = {
+    builder.minimumShouldMatch(minimumShouldMatch: String)
+    this
+  }
+  def minimumShouldMatch(minimumNumberShouldMatch: Int) = {
+    builder.minimumNumberShouldMatch(minimumNumberShouldMatch: Int)
+    this
+  }
+  def disableCoord(disableCoord: Boolean) = {
+    builder.disableCoord(disableCoord: Boolean)
+    this
+  }
+  def adjustPureNegative(adjustPureNegative: Boolean) = {
+    builder.adjustPureNegative(adjustPureNegative)
+    this
+  }
+  def queryName(queryName: String) = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
 trait QueryDefinition {
@@ -263,8 +283,8 @@ class MultiMatchQueryDefinition(text: String)
 class FuzzyDefinition(name: String, value: Any) extends QueryDefinition with DefinitionAttributePrefixLength {
   val builder = QueryBuilders.fuzzyQuery(name, value.toString)
   val _builder = builder
-  def minSimilarity(minSimilarity: Double) = {
-    builder.minSimilarity(minSimilarity.toString)
+  def fuzziness(fuzziness: Fuzziness) = {
+    builder.fuzziness(fuzziness)
     this
   }
   def maxExpansions(maxExpansions: Int) = {
@@ -363,8 +383,8 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
     builder.maxQueryTerms(b)
     this
   }
-  def minSimilarity(b: Double): FuzzyLikeThisDefinition = {
-    builder.minSimilarity(b.toFloat)
+  def failOnUnsupportedField(failOnUnsupportedField: Boolean): FuzzyLikeThisDefinition = {
+    builder.failOnUnsupportedField(failOnUnsupportedField)
     this
   }
 }
@@ -854,44 +874,6 @@ class StringQueryDefinition(query: String) extends QueryDefinition with Definiti
   val builder = QueryBuilders.queryString(query)
   val _builder = builder
 
-  def operator(op: String): StringQueryDefinition = {
-    op.toLowerCase match {
-      case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
-      case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
-    }
-    this
-  }
-
-  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): StringQueryDefinition = {
-    builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
-    this
-  }
-
-  def lenient(l: Boolean): StringQueryDefinition = {
-    builder.lenient(java.lang.Boolean.valueOf(l))
-    this
-  }
-
-  def phraseSlop(phraseSlop: Int): StringQueryDefinition = {
-    builder.phraseSlop(phraseSlop)
-    this
-  }
-
-  def tieBreaker(tieBreaker: Double): StringQueryDefinition = {
-    builder.tieBreaker(tieBreaker.toFloat)
-    this
-  }
-
-  def fuzzyPrefixLength(fuzzyPrefixLength: Int): StringQueryDefinition = {
-    builder.fuzzyPrefixLength(fuzzyPrefixLength)
-    this
-  }
-
-  def fuzzyMinSim(fuzzyMinSim: Double): StringQueryDefinition = {
-    builder.fuzzyMinSim(fuzzyMinSim.toFloat)
-    this
-  }
-
   def anaylyzer(analyzer: Analyzer): StringQueryDefinition = {
     builder.analyzer(analyzer.name)
     this
@@ -917,13 +899,13 @@ class StringQueryDefinition(query: String) extends QueryDefinition with Definiti
     this
   }
 
-  def enablePositionIncrements(enablePositionIncrements: Boolean): StringQueryDefinition = {
-    builder.enablePositionIncrements(enablePositionIncrements)
+  def boost(boost: Double): StringQueryDefinition = {
+    builder.boost(boost.toFloat)
     this
   }
 
-  def boost(boost: Double): StringQueryDefinition = {
-    builder.boost(boost.toFloat)
+  def enablePositionIncrements(enablePositionIncrements: Boolean): StringQueryDefinition = {
+    builder.enablePositionIncrements(enablePositionIncrements)
     this
   }
 
@@ -934,6 +916,44 @@ class StringQueryDefinition(query: String) extends QueryDefinition with Definiti
 
   def field(name: String, boost: Double): StringQueryDefinition = {
     builder.field(name, boost.toFloat)
+    this
+  }
+
+  def fuzzyPrefixLength(fuzzyPrefixLength: Int): StringQueryDefinition = {
+    builder.fuzzyPrefixLength(fuzzyPrefixLength)
+    this
+  }
+
+  def fuzzyRewrite(fuzzyRewrite: String): StringQueryDefinition = {
+    builder.fuzzyRewrite(fuzzyRewrite)
+    this
+  }
+
+  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): StringQueryDefinition = {
+    builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
+    this
+  }
+
+  def lenient(l: Boolean): StringQueryDefinition = {
+    builder.lenient(java.lang.Boolean.valueOf(l))
+    this
+  }
+
+  def operator(op: String): StringQueryDefinition = {
+    op.toLowerCase match {
+      case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
+      case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
+    }
+    this
+  }
+
+  def phraseSlop(phraseSlop: Int): StringQueryDefinition = {
+    builder.phraseSlop(phraseSlop)
+    this
+  }
+
+  def tieBreaker(tieBreaker: Double): StringQueryDefinition = {
+    builder.tieBreaker(tieBreaker.toFloat)
     this
   }
 }
