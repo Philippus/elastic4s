@@ -23,7 +23,7 @@ trait PercolateDsl extends QueryDsl {
     private val _fields = new ListBuffer[(String, Any)]
     private[this] var _query: QueryDefinition = _
 
-    def build = new PercolateRequestBuilder(null).setSource(_doc).setIndex(index).setType("doc").request()
+    def build = new PercolateRequestBuilder(null).setSource(_doc).setIndices(index).setDocumentType("doc").request()
 
     private[elastic4s] def _doc: XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
