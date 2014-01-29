@@ -42,12 +42,12 @@ trait MoreLikeThisDsl {
       _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
       this
     }
-    def maxWordLen(maxWordLen: Int) = {
-      _builder.maxWordLen(maxWordLen)
+    def maxWordLength(maxWordLen: Int) = {
+      _builder.maxWordLength(maxWordLen)
       this
     }
-    def minWordLen(minWordLen: Int) = {
-      _builder.minWordLen(minWordLen)
+    def minWordLength(minWordLen: Int) = {
+      _builder.minWordLength(minWordLen)
       this
     }
     def boostTerms(boostTerms: Double) = {
