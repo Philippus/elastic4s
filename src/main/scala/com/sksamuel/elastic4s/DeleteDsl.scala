@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
-import org.elasticsearch.action.deletebyquery.DeleteByQueryAction
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryAction}
 import org.elasticsearch.action.delete.DeleteAction
 
 /** @author Stephen Samuel */
@@ -71,14 +71,14 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition)
     extends RequestDefinition(DeleteByQueryAction.INSTANCE) {
 
-    private val builder = Requests.deleteByQueryRequest(indexesTypes.indexes: _*)
-      .types(indexesTypes.types: _*)
-      .query(q.builder)
+    private val builder = new DeleteByQueryRequestBuilder(null).setIndices(indexesTypes.indexes: _*)
+      .setTypes(indexesTypes.types: _*)
+      .setQuery(q.builder)
 
     def types(types: String*): DeleteByQueryDefinition = {
-      builder.types(types.toSeq: _*)
+      builder.setTypes(types.toSeq: _*)
       this
     }
-    def build = builder
+    def build = builder.request()
   }
 }
