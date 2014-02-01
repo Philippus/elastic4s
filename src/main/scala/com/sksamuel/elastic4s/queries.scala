@@ -144,7 +144,7 @@ trait QueryDsl {
   def ids(ids: String*): IdQueryDefinition = new IdQueryDefinition(ids: _*)
   def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
 
-  def bool(block: => BoolQueryDefinition): QueryDefinition = block
+  def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
   def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)

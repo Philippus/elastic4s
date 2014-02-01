@@ -244,8 +244,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
           term("bassist" -> "berryman")
         } not {
           term("singer" -> "anderson")
-        } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
-      }
+        }
+      } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
     } preference Preference.Local
     assert(json === mapper.readTree(req._builder.toString))
   }
