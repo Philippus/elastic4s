@@ -1,46 +1,41 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.FlatSpec
+import org.scalatest.{ FlatSpec, Matchers }
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import scala.concurrent.duration._
 import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
-class PercolateTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class PercolateTest extends FlatSpec with Matchers with MockitoSugar with ElasticSugar {
 
-  implicit val duration = 10.seconds
-
-  client execute {
+  client.sync.execute {
     create index "teas" shards 1
   }
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
-  client register {
+  client execute {
     "a" into "teas" query {
       term("flavour", "assam")
     }
   }
-  client register {
+  client execute {
     "b" into "teas" query {
       term("flavour", "earl")
     }
   }
-  client.sync.register {
+  client.sync.execute {
     "c" into "teas" query {
       term("flavour", "darjeeling")
     }
   }
-  //client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-  // blockUntilCount(3, "_percolator", "teas")
 
-  //  "a percolate request" should "return queries that match the document" in {
-  //
-  //    val resp = client.sync.percolate {
-  //      "teas" doc "flavour" -> "assam"
-  //    }
-  //    assert(1 === resp.getMatches.size)
-  //    assert("a" === resp.getMatches.get(0))
-  //  }
+  "a percolate request" should "return queries that match the document" in {
+
+    val matches = client.sync.execute {
+     "teas" doc "flavour" -> "assam"
+    } getMatches
+
+    matches.size shouldBe 1
+    matches(0).getId.string shouldBe "a"
+  }
 }

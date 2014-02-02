@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder}
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder}
+import org.elasticsearch.percolator.PercolatorService
 
 
 /** @author Stephen Samuel */
@@ -75,8 +76,8 @@ trait PercolateDsl extends QueryDsl {
         source.field(tuple._1, tuple._2)
       }
       source.endObject()
-      new IndexRequestBuilder(null).setIndex("_percolator")
-        .setType(index).setId(id).setRefresh(true)
+      new IndexRequestBuilder(null).setIndex(index)
+        .setType(PercolatorService.TYPE_NAME).setId(id).setRefresh(true)
         .setSource(source).request
     }
 
