@@ -149,6 +149,23 @@ trait SearchDsl
       this
     }
 
+    /**
+      * Expects a query in json format and sets the query of the search request.
+      * Query must be valid json beginning with '{' and ending with '}'.
+      * Field names must be double quoted.
+      *
+      * Example:
+      * {{{
+      * search in "*" types("users", "tweets") limit 5 rawQuery {
+      *   """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+      * } searchType SearchType.Scan
+      * }}}
+      */
+    def rawQuery(json: String): SearchDefinition = {
+      _builder.setQuery(json)
+      this
+    }
+
     def highlighting(options: HighlightOptionsDefinition, highlights: HighlightDefinition*) = {
       options._encoder.foreach(encoder => _builder.setHighlighterEncoder(encoder.elastic))
       options._tagSchema.foreach(arg => _builder.setHighlighterTagsSchema(arg.elastic))

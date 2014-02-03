@@ -55,6 +55,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a raw query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
+    val req = search in "*" types("users", "tweets") limit 5 rawQuery {
+        """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+      } searchType SearchType.Scan
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a prefix query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
