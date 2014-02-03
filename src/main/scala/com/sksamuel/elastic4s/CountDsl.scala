@@ -35,9 +35,9 @@ trait CountDsl {
       this
     }
 
-    def where(string: String): CountDefinition = query(new StringQueryDefinition(string))
+    def where(string: String): CountDefinition = query(new SimpleStringQueryDefinition(string))
     def where(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
-    def query(string: String): CountDefinition = query(new StringQueryDefinition(string))
+    def query(string: String): CountDefinition = query(new SimpleStringQueryDefinition(string))
     def query(block: => QueryDefinition): CountDefinition = javaquery(block.builder)
     def javaquery(block: => QueryBuilder): CountDefinition = {
       _builder.setQuery(block)

@@ -64,7 +64,7 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
     def types(_types: Iterable[String]): DeleteByQueryExpectsWhere =
       new DeleteByQueryExpectsWhere(indexesTypes.copy(types = _types.toSeq))
-    def where(query: String): DeleteByQueryDefinition = where(new StringQueryDefinition(query))
+    def where(query: String): DeleteByQueryDefinition = where(new SimpleStringQueryDefinition(query))
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
 

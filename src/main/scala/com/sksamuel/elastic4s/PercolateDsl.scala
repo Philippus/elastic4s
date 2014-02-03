@@ -6,7 +6,6 @@ import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder}
 import org.elasticsearch.percolator.PercolatorService
 
-
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
 
