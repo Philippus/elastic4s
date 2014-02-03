@@ -23,9 +23,9 @@ package object mapping {
 
   sealed abstract class IndexOptions(val value: String)
   object IndexOptions {
-    case object Docs extends TermVector("docs")
-    case object Freqs extends TermVector("freqs")
-    case object Positions extends TermVector("positions")
+    case object Docs extends IndexOptions("docs")
+    case object Freqs extends IndexOptions("freqs")
+    case object Positions extends IndexOptions("positions")
   }
 
   sealed abstract class PostingsFormat(val value: String)
