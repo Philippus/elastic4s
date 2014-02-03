@@ -37,6 +37,14 @@ search in "places"->"cities" query {
 }
 ```
 
+It is also possible to use raw json queries. This provides more flexibility (i.e when the DSL is not complete) and enables storing queries in a separate environment (DB, cache, etc.).
+```scala
+search in "*" types("users", "tweets") limit 5 rawQuery {
+  """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+} searchType SearchType.Scan
+```
+
+
 We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and the age of those attractions and so we'd offer these as selectable facets to our lovely users.
 ```scala
 search in "places"->"cities" query "london" facets (
