@@ -13,6 +13,11 @@ trait MappingDsl {
   implicit def map(`type`: String) = new MappingDefinition(`type`)
 }
 
+case class RoutingDefinition (
+  required: Boolean,
+  path: Option[String]
+)
+
 class MappingDefinition(val `type`: String) {
 
   var _source = true
@@ -26,6 +31,7 @@ class MappingDefinition(val `type`: String) {
   var _boostValue: Double = 0
   var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
+  var _routing: Option[RoutingDefinition] = None
 
   def analyzer(analyzer: String): MappingDefinition = {
     _analyzer = Option(analyzer)
@@ -53,6 +59,10 @@ class MappingDefinition(val `type`: String) {
   }
   def meta(map: Map[String, Any]): MappingDefinition = {
     this._meta = map
+    this
+  }
+  def routing(required: Boolean, path: Option[String] = None): MappingDefinition = {
+    this._routing = Some(RoutingDefinition(required, path))
     this
   }
   def source(source: Boolean): MappingDefinition = {
@@ -110,6 +120,14 @@ class MappingDefinition(val `type`: String) {
       source.startObject("_meta")
       for ( meta <- _meta ) {
         source.field(meta._1, meta._2)
+      }
+      source.endObject()
+    }
+
+    if(_routing.isDefined) {
+      source.startObject("_routing").field("required", _routing.get.required)
+      if(_routing.get.path.isDefined) {
+        source.field("path", _routing.get.path.get)
       }
       source.endObject()
     }
