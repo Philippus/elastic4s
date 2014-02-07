@@ -13,11 +13,6 @@ trait MappingDsl {
   implicit def map(`type`: String) = new MappingDefinition(`type`)
 }
 
-case class RoutingDefinition (
-  required: Boolean,
-  path: Option[String]
-)
-
 class MappingDefinition(val `type`: String) {
 
   var _source = true
@@ -520,3 +515,8 @@ final class MultiFieldDefinition(name: String)
     source.endObject()
   }
 }
+
+case class RoutingDefinition (
+  required: Boolean,
+  path: Option[String]
+)
