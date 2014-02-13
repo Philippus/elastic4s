@@ -185,9 +185,11 @@ final class NestedFieldDefinition(name: String)
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
+    source.startObject("properties")
     for ( field <- _fields ) {
       field.build(source)
     }
+    source.endObject()
     source.endObject()
   }
 }
