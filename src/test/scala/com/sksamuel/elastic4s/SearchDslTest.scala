@@ -336,7 +336,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val req = search in "music" types "bands" filter {
       hasChildFilter("singer") filter {
         termFilter("name", "chris")
-      } cache true cacheKey "band-singers" name "my-filter4"
+      } name "my-filter4"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -346,7 +346,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val req = search in "music" types "bands" filter {
       hasParentFilter("singer") filter {
         termFilter("name", "chris")
-      } cache true cacheKey "band-singers" name "my-filter5"
+      } name "my-filter5"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }

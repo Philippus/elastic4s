@@ -234,9 +234,7 @@ class RangeFilter(field: String)
 }
 
 class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
-  extends FilterDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends FilterDefinition {
   val _builder = builder
   def name(name: String): HasChildFilterDefinition = {
     builder.filterName(name)
@@ -245,9 +243,7 @@ class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
 }
 
 class HasParentFilterDefinition(val builder: HasParentFilterBuilder)
-  extends FilterDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends FilterDefinition {
   val _builder = builder
   def name(name: String): HasParentFilterDefinition = {
     builder.filterName(name)
