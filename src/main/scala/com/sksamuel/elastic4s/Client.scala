@@ -70,6 +70,20 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     client.admin.indices.execute(requestDefinition.action, requestDefinition.build, callback)
 
   /**
+   * Executes a Scala DSL ClusterRequestDefinition and returns a scala Future with corresponding ActionResponse.
+   *
+   * @param requestDefinition a RequestDefinition from the Scala DSL
+   *
+   * @return a Future providing corresponding ActionResponse
+   */
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: ClusterRequestDefinition[Req, Res, Builder]): Future[Res] =
+    injectFuture[Res](execute(requestDefinition, _))
+
+  def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: ClusterRequestDefinition[Req, Res, Builder],
+                                                                                                                    callback: ActionListener[Res]): Unit =
+    client.admin.cluster.execute(requestDefinition.action, requestDefinition.build, callback)
+
+  /**
    * Indexes a Java IndexRequest and returns a scala Future with the IndexResponse.
    *
    * @param req an IndexRequest from the Java client
@@ -230,6 +244,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       Await.result(client.execute(requestDefinition), duration)
 
     def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Res =
+      Await.result(client.execute(requestDefinition), duration)
+
+    def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: ClusterRequestDefinition[Req, Res, Builder]): Res =
       Await.result(client.execute(requestDefinition), duration)
 
     @deprecated("use execute method", "1.0")
