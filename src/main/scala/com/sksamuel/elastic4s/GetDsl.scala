@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
 import org.elasticsearch.action.get._
+import org.elasticsearch.search.fetch.source.FetchSourceContext
 
 /** @author Stephen Samuel */
 trait GetDsl extends IndexesTypesDsl {
@@ -31,6 +32,21 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String)
 
   def realtime(r: Boolean) = {
     _builder.realtime(r)
+    this
+  }
+
+  def fields(fields: String *) = {
+    _builder.fields(fields: _*)
+    this
+  }
+
+  def fetchSourceContext(context: Boolean) = {
+    _builder.fetchSourceContext(new FetchSourceContext(context))
+    this
+  }
+
+  def fetchSourceContext(context: FetchSourceContext) = {
+    _builder.fetchSourceContext(context)
     this
   }
 
