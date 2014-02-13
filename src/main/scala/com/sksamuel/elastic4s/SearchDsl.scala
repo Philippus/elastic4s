@@ -63,8 +63,7 @@ trait SearchDsl
 
   class SearchDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(SearchAction.INSTANCE) {
 
-    // TODO Discuss: temporarily open to pass tests
-    private[elastic4s] val _builder = {
+    val _builder = {
       new SearchRequestBuilder(null)
         .setIndices(indexesTypes.indexes: _*)
         .setTypes(indexesTypes.types: _*)
