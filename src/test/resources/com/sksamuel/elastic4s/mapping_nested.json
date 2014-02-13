@@ -45,16 +45,20 @@
             },
             "user": {
                 "type": "nested",
-                "name": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "last": {
-                    "type": "nested",
-                    "lastLogin": {
-                        "type": "date"
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "last": {
+                        "type": "nested",
+                        "properties": {
+                            "lastLogin": {
+                                "type": "date"
+                            }
+                        }
                     }
                 }
             }
