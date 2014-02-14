@@ -21,6 +21,14 @@ object DefinitionAttributes {
     }
   }
 
+  trait DefinitionAttributeCutoffFrequency {
+    val _builder: {def cutoffFrequency(cutoffFrequency: Float): Any}
+    def cutoffFrequency(cutoffFrequency: Double): this.type = {
+      _builder.cutoffFrequency(cutoffFrequency.toFloat)
+      this
+    }
+  }
+
   trait DefinitionAttributeFuzzyRewrite {
     val _builder: {def fuzzyRewrite(a: String): Any}
 

@@ -61,4 +61,26 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(1 === resp.getHits.totalHits())
     assert("12" === resp.getHits.getAt(0).id())
   }
+
+  it should "be in query for alias" in {
+    val resp = client.sync.execute {
+      aliases get "english_waterways"
+    }
+
+    val waterwaysAliases = resp.getAliases.get("waterways")
+    assert(waterwaysAliases !== null)
+    assert(1 === waterwaysAliases.size)
+    assert("english_waterways" === waterwaysAliases.head.alias())
+  }
+
+  it should "be in query for alias on waterways" in {
+    val resp = client.sync.execute {
+      aliases get "english_waterways" on "waterways"
+    }
+
+    val waterwaysAliases = resp.getAliases.get("waterways")
+    assert(waterwaysAliases !== null)
+    assert(1 === waterwaysAliases.size)
+    assert("english_waterways" === waterwaysAliases.head.alias())
+  }
 }

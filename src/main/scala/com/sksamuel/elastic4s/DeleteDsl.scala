@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
-import org.elasticsearch.action.deletebyquery.DeleteByQueryAction
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryAction}
 import org.elasticsearch.action.delete.DeleteAction
 import org.elasticsearch.action.support.QuerySourceBuilder
 
@@ -65,21 +65,21 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
     def types(_types: Iterable[String]): DeleteByQueryExpectsWhere =
       new DeleteByQueryExpectsWhere(indexesTypes.copy(types = _types.toSeq))
-    def where(query: String): DeleteByQueryDefinition = where(new StringQueryDefinition(query))
+    def where(query: String): DeleteByQueryDefinition = where(new SimpleStringQueryDefinition(query))
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
 
   class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition)
     extends RequestDefinition(DeleteByQueryAction.INSTANCE) {
 
-    private val builder = Requests.deleteByQueryRequest(indexesTypes.indexes: _*)
-      .types(indexesTypes.types: _*)
-      .source(new QuerySourceBuilder().setQuery(q.builder))
+    private val builder = new DeleteByQueryRequestBuilder(null).setIndices(indexesTypes.indexes: _*)
+      .setTypes(indexesTypes.types: _*)
+      .setQuery(q.builder)
 
     def types(types: String*): DeleteByQueryDefinition = {
-      builder.types(types.toSeq: _*)
+      builder.setTypes(types.toSeq: _*)
       this
     }
-    def build = builder
+    def build = builder.request()
   }
 }

@@ -1,7 +1,7 @@
 elastic4s - Elasticsearch Scala Client
 =========
 
-Elastic4s is a concise, idiomatic, asynchronous, type safe Scala Client for ElasticSearch.
+Elastic4s is a concise, idiomatic, asynchronous, type safe Scala Client for Elasticsearch.
 It provides a Scala DSL to construct your queries and (hopefully!) reducing errors and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflows.
 Due to its typesafe nature elastic4s is also a good way to learn the options available for any operation,
 as your IDE can use the type information to show you what methods are available.
@@ -17,7 +17,20 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-The latest release is 0.90.9.0 which is compatible with elasticsearch 0.90.9. For releases that are compatible with earlier versions of elasticsearch, [search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
+##### 1.0 is here !!
+
+The latest release is 1.0.0.0 which is compatible with elasticsearch 1.0.0
+For releases that are compatible with earlier versions of elasticsearch,
+[search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
+
+
+```scala
+resolvers += "Sonatype Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+
+libraryDependencies ++= Seq(
+  "com.sksamuel.elastic4s" %% "elastic4s" % "1.0.0.0"
+)
+```
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
@@ -59,7 +72,7 @@ For more in depth examples keep reading.
 Here is a list of the common operations and the syntax used to create requests.
 
 For more details on each operation click through to the readme page. For options that are not yet documented, refer
-to the elasticsearch documentation as the DSL closely mirrors the standard Java API.
+to the Elasticsearch documentation as the DSL closely mirrors the standard Java API.
 
 | Operation                                 | Samuel Normal Form Syntax |
 |-------------------------------------------|----------------|
@@ -157,7 +170,7 @@ client.execute {
 }
 ```
 
-Then ElasticSearch is configured with those mappings for those fields only. It is still fully dynamic and other fields will be created as needed with default options.
+Then Elasticsearch is configured with those mappings for those fields only. It is still fully dynamic and other fields will be created as needed with default options.
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
@@ -297,7 +310,7 @@ For all the options see [here](http://www.elasticsearch.org/guide/reference/quer
 
 ## Bulk Operations
 
-ElasticSearch is fast. Roundtrips are not.
+Elasticsearch is fast. Roundtrips are not.
 Sometimes we want to wrestle every last inch of performance and a useful way to do this is to batch up operations.
 Elastic has predicted our wishes and created the bulk API.
 To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
@@ -351,7 +364,7 @@ Note: Only available for scala 2.10.
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.7.4"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "1.0.0.0"
 ```
 
 For Maven users simply add:
@@ -360,7 +373,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>0.90.7.4</version>
+    <version>1.0.0.0</version>
 </dependency>
 ```
 

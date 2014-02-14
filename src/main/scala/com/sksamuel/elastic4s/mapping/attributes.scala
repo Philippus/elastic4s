@@ -507,4 +507,60 @@ object attributes {
     }
   }
 
+  trait AttributePayloads extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _payloads: Option[Boolean] = None
+
+    def payloads(payloads: Boolean): this.type = {
+      _payloads = Some(payloads)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _payloads.foreach(source.field("payloads", _))
+    }
+  }
+
+  trait AttributePreserveSeparators extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _preserveSeparators: Option[Boolean] = None
+
+    def preserveSeparators(preserveSeparators: Boolean): this.type = {
+      _preserveSeparators = Some(preserveSeparators)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _preserveSeparators.foreach(source.field("preserve_separators", _))
+    }
+  }
+
+  trait AttributePreservePositionIncrements extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _preservePositionIncrements: Option[Boolean] = None
+
+    def preservePositionIncrements(preservePositionIncrements: Boolean): this.type = {
+      _preservePositionIncrements = Some(preservePositionIncrements)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _preservePositionIncrements.foreach(source.field("preserve_position_increments", _))
+    }
+  }
+
+  trait AttributeMaxInputLen extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _maxInputLen: Option[Int] = None
+
+    def maxInputLen(maxInputLen: Int): this.type = {
+      _maxInputLen = Some(maxInputLen)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _maxInputLen.foreach(source.field("max_input_len", _))
+    }
+  }
+
 }

@@ -45,10 +45,15 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(1 === resp.getHits.totalHits())
   }
 
-  "a search index" should "return the correct count for a count with query" in {
-    val resp = client.sync.execute {
-      count from "music" query "johnny buckland"
+  "a search index" should "find an indexed document in the given type only" in {
+    val resp1 = client.sync.execute {
+      search in "music" -> "bands" query "kate"
     }
-    assert(2 === resp.getCount)
+    assert(0 === resp1.getHits.totalHits())
+
+    val resp2 = client.sync.execute {
+      search in "music" -> "artists" query "kate"
+    }
+    assert(1 === resp2.getHits.totalHits())
   }
 }

@@ -69,8 +69,7 @@ trait SearchDsl
 
   class SearchDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(SearchAction.INSTANCE) {
 
-    // TODO Discuss: temporarily open to pass tests
-    private[elastic4s] val _builder = {
+    val _builder = {
       new SearchRequestBuilder(null)
         .setIndices(indexesTypes.indexes: _*)
         .setTypes(indexesTypes.types: _*)
@@ -160,6 +159,23 @@ trait SearchDsl
     def range(field: String) = {
       val q = new RangeQueryDefinition(field)
       _builder.setQuery(q.builder.buildAsBytes)
+      this
+    }
+
+    /**
+      * Expects a query in json format and sets the query of the search request.
+      * Query must be valid json beginning with '{' and ending with '}'.
+      * Field names must be double quoted.
+      *
+      * Example:
+      * {{{
+      * search in "*" types("users", "tweets") limit 5 rawQuery {
+      *   """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+      * } searchType SearchType.Scan
+      * }}}
+      */
+    def rawQuery(json: String): SearchDefinition = {
+      _builder.setQuery(json)
       this
     }
 

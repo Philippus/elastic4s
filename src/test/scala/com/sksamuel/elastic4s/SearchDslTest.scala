@@ -57,6 +57,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "generate json for a raw query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
+    val req = search in "*" types("users", "tweets") limit 5 rawQuery {
+        """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+      } searchType SearchType.Scan
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "generate json for a prefix query" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test5.json"))
     val req = search in "*" types("users", "tweets") limit 5 query {
@@ -235,17 +243,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
-  it should "generate json for a field query" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_field.json"))
-    val req = search("*").types("bands", "artists").limit(5).bool(
-      must(
-        field("name",
-          "coldplay") allowLeadingWildcard true analyzeWildcard false boost 5 fuzzyPrefixLength 5 phraseSlop 9,
-        field("status",
-          "awesome") analyzer PatternAnalyzer autoGeneratePhraseQueries true enablePositionIncrements true,
-        field("location", "oxford") fuzzyMaxExpansions 7 rewrite "rewrite"
-      )
-    ) preference Preference.OnlyNode("a")
+  it should "generate json for a boolean query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_boolean2.json"))
+    val req = search in "space" -> "planets" limit 5 query {
+      bool {
+        must(
+          regex("drummmer" -> "will*") boost 5,
+          term("singer" -> "chris")
+        ) should {
+          term("bassist" -> "berryman")
+        } not {
+          term("singer" -> "anderson")
+        }
+      } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
+    } preference Preference.Local
     assert(json === mapper.readTree(req._builder.toString))
   }
 
@@ -327,7 +338,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val req = search in "music" types "bands" filter {
       hasChildFilter("singer") filter {
         termFilter("name", "chris")
-      } cache true cacheKey "band-singers" name "my-filter4"
+      } name "my-filter4"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -337,7 +348,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     val req = search in "music" types "bands" filter {
       hasParentFilter("singer") filter {
         termFilter("name", "chris")
-      } cache true cacheKey "band-singers" name "my-filter5"
+      } name "my-filter5"
     } preference Preference.Primary
     assert(json === mapper.readTree(req._builder.toString))
   }
@@ -737,8 +748,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
-
-
   it should "generate correct json for multiple suggestions" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple.json"))
     val req = search in "music" types "bands" query "coldplay" suggestions(
@@ -750,6 +759,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
       )
     // -- disabled due to bug in elastic search
     //   assert(json === mapper.readTree(req.builder.toString))
+  }
+
+  // for backwards compatibility default suggester is the term suggester
+  it should "generate correct json for suggestions" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions.json"))
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+      suggest as "suggestion-1" on "clocks by culdpaly" from "name" maxEdits 2,
+      suggest as "suggestion-2" on "aqualuck by jethro toll" from "name"
+    )
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for suggestions of multiple suggesters" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_suggestions_multiple_suggesters.json"))
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+      suggest using term as "suggestion-term" on "culdpaly" field "name" maxEdits 2,
+      suggest using phrase as "suggestion-phrase" on "aqualuck by jethro toll" field "name",
+      suggest using completion as "suggestion-completion" on "cold" field "ac"
+    )
+    assert(json === mapper.readTree(req._builder.toString))
   }
 
   it should "generate correct json for nested query" in {

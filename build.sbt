@@ -1,9 +1,8 @@
-
 name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.0.0.0-SNAPSHOT"
+version := "1.0.0.0"
 
 scalaVersion := "2.10.3"
 
@@ -26,15 +25,16 @@ publishArtifact in Test := false
 
 parallelExecution in Test := false
 
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.1.3"
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.1.3" % "optional"
 
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.1.3"
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.1.3" % "optional"
 
-libraryDependencies += "com.fasterxml.jackson.jaxrs" % "jackson-jaxrs-json-provider" % "2.1.3"
+libraryDependencies += "com.fasterxml.jackson.jaxrs" % "jackson-jaxrs-json-provider" % "2.1.3" % "optional"
 
-libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-hibernate4" % "2.1.2"
+libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-hibernate4" % "2.1.2" % "optional"
 
-libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % "2.1.3" exclude("org.scalatest", "scalatest_2.10.0")
+libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % "2.1.3" % "optional" exclude
+  ("org.scalatest", "scalatest_2.10.0")
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.6.6"
 
@@ -46,9 +46,9 @@ libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "1.0.0.RC1"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "1.0.0"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.0" % "test"
 
 ScoverageSbtPlugin.instrumentSettings
 
