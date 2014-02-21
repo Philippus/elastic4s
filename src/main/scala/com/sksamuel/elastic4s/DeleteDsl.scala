@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.client.Requests
 import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryAction}
 import org.elasticsearch.action.delete.DeleteAction
+import org.elasticsearch.action.support.QuerySourceBuilder
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {

@@ -13,6 +13,8 @@ import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import com.sksamuel.elastic4s.Preference.Shards
 import org.elasticsearch.index.query.MatchQueryBuilder.ZeroTermsQuery
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
+import org.elasticsearch.search.aggregations.bucket.terms.Terms
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
@@ -657,7 +659,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
 
-    it should "generate correct json for datehistogram facet" in {
+  it should "generate correct json for datehistogram facet" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_facets_datehistogram.json"))
     val req = search in "music" types "bands" facets {
       facet datehistogram "years" interval "year" comparator
@@ -667,7 +669,75 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
-  it should "generate correct json for highlighting" in {
+  it should "generate correct json for datehistogram aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_datehistogram.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation datehistogram "years" field "date" interval DateHistogram.Interval.YEAR
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for range aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_range.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation range "range_agg" field "score" range(10.0, 15.0)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for histogram aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_histogram.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation histogram "score_histogram" field "score" interval 2
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for filter aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_filter.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation filter "my_filter_agg" filter { bool {
+        must {
+          termFilter("name", "sammy")
+        } should {
+          termFilter("location", "oxford")
+        } not {
+          termFilter("type", "rap")
+        }
+      }
+      }
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for terms aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_terms.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.count(false)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for geodistance aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_geodistance.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation geodistance "geo_agg" field "geo_point" point(45.0, 27.0) geoDistance GeoDistance.ARC range (1.0, 1.0)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for sub aggregation" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_aggregations_datehistogram_subs.json"))
+    val req = search in "music" types "bands" aggs {
+      aggregation datehistogram "days" field "date" interval DateHistogram.Interval.DAY aggs(
+        aggregation terms "keywords" field "keyword" size 5,
+        aggregation terms "countries" field "country")
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+
+    it should "generate correct json for highlighting" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_highlighting.json"))
     val req = search in "music" types "bands" highlighting(
       options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder

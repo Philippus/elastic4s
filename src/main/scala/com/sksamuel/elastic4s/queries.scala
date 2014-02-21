@@ -290,6 +290,7 @@ class FuzzyDefinition(name: String, value: Any)
     builder.fuzziness(fuzziness)
     this
   }
+
   def maxExpansions(maxExpansions: Int) = {
     builder.maxExpansions(maxExpansions)
     this
@@ -378,6 +379,7 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
     builder.maxQueryTerms(b)
     this
   }
+
   def failOnUnsupportedField(failOnUnsupportedField: Boolean): FuzzyLikeThisDefinition = {
     builder.failOnUnsupportedField(failOnUnsupportedField)
     this
@@ -801,6 +803,7 @@ class MatchPhraseDefinition(field: String, value: Any)
   }
 
 }
+
 
 class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
   val builder = QueryBuilders.simpleQueryString(query)

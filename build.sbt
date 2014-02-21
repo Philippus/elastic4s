@@ -1,4 +1,3 @@
-
 name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
