@@ -156,6 +156,30 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
     assert(json === mapper.readTree(req._source.string))
   }
 
+  it should "support copy to a single field" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/copy_to_single_field.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "first_name" typed StringType index "analyzed" copyTo "full_name",
+        "last_name" typed StringType index "analyzed" copyTo "full_name",
+        "full_name" typed StringType index "analyzed"
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
+  it should "support copy to multiple fields" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/copy_to_multiple_fields.json"))
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as(
+        "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
+        "meta_data" typed StringType index "analyzed",
+        "article_info" typed StringType index "analyzed"
+        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    assert(json === mapper.readTree(req._source.string))
+  }
+
   it should "support completion type" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/completion_type_1.json"))
     val req = create.index("tweets").shards(2).mappings(
