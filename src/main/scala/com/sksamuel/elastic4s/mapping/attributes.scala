@@ -563,4 +563,18 @@ object attributes {
     }
   }
 
+  trait AttributeCopyTo extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _copyTo: Option[Seq[String]] = None
+
+    def copyTo(copyTo: String*): this.type = {
+      _copyTo = Some(copyTo)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _copyTo.foreach(source.field("copy_to", _: _*))
+    }
+  }
+
 }
