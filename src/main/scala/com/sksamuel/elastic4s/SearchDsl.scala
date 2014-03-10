@@ -264,6 +264,11 @@ trait SearchDsl
       _builder.addFields(fields: _*)
       this
     }
+
+    def fetchSource(fetch: Boolean): SearchDefinition = {
+      _builder.setFetchSource(fetch)
+      this
+    }
   }
 }
 
