@@ -7,6 +7,9 @@
     },
     "mappings": {
         "tweets": {
+            "_all": {
+                "enabled": true
+            },
             "_source": {
                 "enabled": true
             },
@@ -40,6 +43,9 @@
             }
         },
         "users": {
+            "_all": {
+                "enabled": false
+            },
             "_source": {
                 "enabled": true
             },

@@ -7,6 +7,9 @@
     },
     "mappings": {
         "tweet": {
+            "_all": {
+                "enabled": true
+            },
             "_source": {
                 "enabled": true
             },
