@@ -45,6 +45,12 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
     assert(json === mapper.readTree(req._builder.toString))
   }
 
+  it should "use fetchSource when specified" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_test_fetch_source.json"))
+    val req = search in "*" types("users", "tweets") fetchSource false query "coldplay"
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
   it should "use preference when specified" in {
     val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_preference_primary_first.json"))
     val req = search in "*" types("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
