@@ -22,18 +22,19 @@
                 "enabled": true
             },
             "properties": {
-                "name": {
+                "first_name": {
+                    "type": "string",
+                    "index": "analyzed",
+                    "copy_to": ["full_name"]
+                },
+                "last_name": {
+                    "type": "string",
+                    "index": "analyzed",
+                    "copy_to": ["full_name"]
+                },
+                "full_name": {
                     "type": "string",
                     "index": "analyzed"
-                },
-                "ac" : {
-                    "type" : "completion",
-                    "index_analyzer" : "simple",
-                    "search_analyzer" : "simple",
-                    "payloads" : true,
-                    "preserve_separators" : false,
-                    "preserve_position_increments" : false,
-                    "max_input_len" : 10
                 }
             }
         }

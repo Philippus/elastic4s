@@ -15,6 +15,7 @@ trait MappingDsl {
 
 class MappingDefinition(val `type`: String) {
 
+  var _all = true
   var _source = true
   var date_detection = false
   var numeric_detection = true
@@ -28,6 +29,10 @@ class MappingDefinition(val `type`: String) {
   var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
 
+  def all(enabled: Boolean): MappingDefinition = {
+    _all = enabled
+    this
+  }
   def analyzer(analyzer: String): MappingDefinition = {
     _analyzer = Option(analyzer)
     this
@@ -93,6 +98,7 @@ class MappingDefinition(val `type`: String) {
   def build(source: XContentBuilder): Unit = {
     source.startObject(`type`)
 
+    source.startObject("_all").field("enabled", _all).endObject()
     source.startObject("_source").field("enabled", _source).endObject()
     if (dynamic_date_formats.size > 0)
       source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
