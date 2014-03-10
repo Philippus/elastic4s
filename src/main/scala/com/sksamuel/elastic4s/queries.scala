@@ -808,6 +808,24 @@ class MatchPhraseDefinition(field: String, value: Any)
 class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
   val builder = QueryBuilders.simpleQueryString(query)
 
+  def analyzer(analyzer: String): SimpleStringQueryDefinition = {
+    builder.analyzer(analyzer)
+    this
+  }
+
+  def analyzer(analyzer: Analyzer): SimpleStringQueryDefinition = {
+    builder.analyzer(analyzer.name)
+    this
+  }
+
+  def defaultOperator(op: String): SimpleStringQueryDefinition = {
+    op match {
+      case "AND" => builder.defaultOperator(SimpleQueryStringBuilder.Operator.AND)
+      case _ => builder.defaultOperator(SimpleQueryStringBuilder.Operator.OR)
+    }
+    this
+  }
+
   def defaultOperator(d: SimpleQueryStringBuilder.Operator): SimpleStringQueryDefinition = {
     builder.defaultOperator(d)
     this
@@ -825,6 +843,11 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
 
   def field(name: String, boost: Double): SimpleStringQueryDefinition = {
     builder.field(name, boost.toFloat)
+    this
+  }
+
+  def flags(flags: SimpleQueryStringFlag*): SimpleStringQueryDefinition = {
+    builder.flags(flags: _*)
     this
   }
 }
