@@ -18,7 +18,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
+        ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       map("users").as(
         "name" typed IpType nullValue "127.0.0.1" boost 1.0,
         "location" typed IntegerType nullValue 0,
@@ -26,7 +26,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
         "picture" typed AttachmentType,
         "age" typed FloatType,
         "area" typed GeoShapeType
-      ) analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
+      ) all false analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
     )
     assert(json === mapper.readTree(req._source.string))
   }
