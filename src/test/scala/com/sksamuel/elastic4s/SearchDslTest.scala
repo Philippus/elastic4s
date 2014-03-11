@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.search.sort.SortOrder
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag}
+import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag}
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
@@ -827,6 +827,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
         .includeUpper(true)
         .name("myfilter")
         .to(12).from(560)
+    }
+    assert(json === mapper.readTree(req._builder.toString))
+  }
+
+  it should "generate correct json for a simple string query" in {
+    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/search_simple_string_query.json"))
+    val req = search in "*" types("users", "tweets") query {
+      simpleStringQuery("coldplay")
+        .analyzer("whitespace")
+        .defaultOperator("AND")
+        .field("name")
+        .flags(SimpleQueryStringFlag.AND, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.NOT)
     }
     assert(json === mapper.readTree(req._builder.toString))
   }
