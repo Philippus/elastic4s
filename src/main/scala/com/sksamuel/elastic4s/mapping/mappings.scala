@@ -53,6 +53,14 @@ class MappingDefinition(val `type`: String) {
     _dynamic = dynamic
     this
   }
+  def dynamic(dynamic: Boolean): MappingDefinition = {
+    _dynamic = dynamic match {
+      case true => Dynamic
+      case false => False
+    }
+    this
+  }
+
   def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition = {
     this.dynamic_date_formats = dynamic_date_formats
     this
@@ -102,7 +110,12 @@ class MappingDefinition(val `type`: String) {
       source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
     if (date_detection) source.field("date_detection", date_detection)
     if (numeric_detection) source.field("numeric_detection", numeric_detection)
-    if (_dynamic == Strict) source.field("dynamic", "strict")
+    source.field("dynamic", _dynamic match {
+      case Strict => "strict"
+      case False => "false"
+      case _ => "dynamic"
+    })
+
 
     _boostName.foreach(arg =>
       source.startObject("_boost").field("name", arg).field("null_value", _boostValue).endObject()
@@ -140,6 +153,7 @@ class MappingDefinition(val `type`: String) {
 sealed abstract class DynamicMapping
 case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
+case object False extends DynamicMapping
 
 private[mapping] class FieldDefinition(val name: String) {
 
