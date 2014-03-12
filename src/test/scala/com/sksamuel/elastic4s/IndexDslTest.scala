@@ -11,7 +11,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   val mapper = new ObjectMapper()
 
   "an index dsl" should "accept index and type as a / delimited string" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test1.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test1.json"))
     val req = index.into("twitter/tweets").id("thisid").fields {
       "name" -> "sksamuel"
     }
@@ -19,7 +19,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "accept index and type as a tuple" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test2.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test2.json"))
     val req = index into "twitter" -> "tweets" fields {
       "name" -> "sksamuel"
     }
@@ -27,7 +27,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "generate json for all fields" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test3.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test3.json"))
     val req = index into "twitter/tweet" id 1234 fields(
       "user" -> "sammy",
       "post_date" -> "2009-11-15T14:12:12",
@@ -37,7 +37,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "generate json for fields when using a map" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test4.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test4.json"))
     val req = index into "twitter/tweet" id 1234 fields Map("user" -> "sammy",
       "post_date" -> "2009-11-15T14:12:12",
       "message" -> "trying out Elastic Search Scala DSL")
@@ -45,7 +45,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "not include id when id is not specified" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test5.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test5.json"))
     val req = index into "twitter/tweet" fields(
       "user" -> "sammy",
       "post_date" -> "2009-11-15T14:12:12",
@@ -55,7 +55,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "include id when id is specified" in {
-    val json = mapper.readTree(getClass.getResource("/json/index_test6.json"))
+    val json = mapper.readTree(getClass.getResource("/json/index/index_test6.json"))
     val req = index into "twitter/tweet" id 9999 fields(
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
