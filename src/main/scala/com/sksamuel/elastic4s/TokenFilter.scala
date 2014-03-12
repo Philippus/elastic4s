@@ -119,6 +119,16 @@ case class CommongGramsTokenFilter(override val name: String,
   }
 }
 
+case class EdgeNGramTokenFilter(override val name: String,
+                                minGram: Int = 1,
+                                maxGram: Int = 2) extends CustomizedTokenFilter(name) {
+  override def build(source: XContentBuilder): Unit = {
+    source.field("type", "edgeNGram")
+    source.field("min_gram", minGram)
+    source.field("max_gram", maxGram)
+  }
+}
+
 case class SnowballTokenFilter(override val name: String,
                                language: String = "English") extends CustomizedTokenFilter(name) {
   override def build(source: XContentBuilder): Unit = {
