@@ -127,6 +127,14 @@ case class SnowballTokenFilter(override val name: String,
   }
 }
 
+case class StemmerTokenFilter(override val name: String,
+                              lang: String) extends CustomizedTokenFilter(name) {
+  override def build(source: XContentBuilder): Unit = {
+    source.field("type", "stemmer")
+    source.field("name", lang)
+  }
+}
+
 case class StemmerOverrideTokenFilter(override val name: String,
                                       rules: Array[String]) extends CustomizedTokenFilter(name) {
   override def build(source: XContentBuilder): Unit = {

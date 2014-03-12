@@ -18,7 +18,7 @@
                 "myAnalyzer2": {
                     "type": "custom",
                     "tokenizer": "myTokenizer1",
-                    "filter": ["myTokenFilter2", "myTokenFilter3", "prTokenFilter"]
+                    "filter": ["myTokenFilter2", "myTokenFilter3", "myFrenchStemmerTokenFilter", "prTokenFilter"]
                 },
                 "myAnalyzer3": {
                     "type": "custom",
@@ -40,6 +40,10 @@
                 "myTokenFilter3": {
                     "type": "unique",
                     "only_on_same_position": true
+                },
+                "myFrenchStemmerTokenFilter": {
+                    "type": "stemmer",
+                    "name": "french"
                 },
                 "prTokenFilter": {
                     "type": "pattern_replace",
