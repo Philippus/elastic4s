@@ -12,7 +12,7 @@ trait JsonSugar extends Matchers {
   class JsonResourceMatcher(resourceName: String) extends Matcher[String] {
     override def apply(left: String): MatchResult = {
       val jsonResource = getClass.getResource(resourceName)
-//      withClue("expected JSON resource: ") { jsonResource should not be null}
+      withClue(s"expected JSON resource [$resourceName] ") { jsonResource should not be null}
 
       val expectedJson = mapper.readTree(jsonResource)
       val actualJson = mapper.readTree(left)

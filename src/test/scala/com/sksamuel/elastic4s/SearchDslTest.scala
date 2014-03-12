@@ -39,7 +39,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "use fetchSource when specified" in {
     val req = search in "*" types("users", "tweets") fetchSource false query "coldplay"
-    req._builder.toString should matchJsonResource("/com/sksamuel/elastic4s/search_test_fetch_source.json")
+    req._builder.toString should matchJsonResource("/json/search/search_test_fetch_source.json")
   }
 
   it should "use preference when specified" in {
@@ -752,7 +752,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         .field("name")
         .flags(SimpleQueryStringFlag.AND, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.NOT)
     }
-    req._builder.toString should matchJsonResource("/com/sksamuel/elastic4s/search_simple_string_query.json")
+    req._builder.toString should matchJsonResource("/json/search/search_simple_string_query.json")
   }
 }
 
