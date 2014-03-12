@@ -12,7 +12,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   val mapper = new ObjectMapper()
 
   "the index dsl" should "generate json to include mapping properties" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_mappings.json"))
+    val json = mapper.readTree(getClass.getResource("/json/createindex_mappings.json"))
     val req = create.index("users").shards(2).mappings(
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
@@ -32,7 +32,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support override built in analyzers" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis.json"))
+    val json = mapper.readTree(getClass.getResource("/json/createindex_analyis.json"))
     val req = create.index("users").analysis(
       StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
       StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
@@ -41,7 +41,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support custom analyzers, tokenizers and filters" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_analyis2.json"))
+    val json = mapper.readTree(getClass.getResource("/json/createindex_analyis2.json"))
     val req = create.index("users").analysis(
       PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
       SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
@@ -65,7 +65,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "supported nested fields" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_nested.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping_nested.json"))
     val req = create.index("users").shards(2).mappings(
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer,
@@ -88,13 +88,13 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "generate json to override index settings when set" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/createindex_settings.json"))
+    val json = mapper.readTree(getClass.getResource("/json/createindex_settings.json"))
     val req = create index "users" shards 3 replicas 4
     assert(json === mapper.readTree(req._source.string))
   }
 
   it should "support inner objects" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping_inner_object.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "person" inner(
@@ -113,7 +113,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support disabled inner objects" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping_inner_object_disabled.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping_inner_object_disabled.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "person" inner(
@@ -127,7 +127,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support multi field type" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_1.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping/types/multi_field_type_1.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (
         "name" multi(
@@ -140,7 +140,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support multi field type with path" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/multi_field_type_2.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping/types/multi_field_type_2.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "first_name" typed ObjectType as(
@@ -157,7 +157,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support copy to a single field" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/copy_to_single_field.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping/types/copy_to_single_field.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "first_name" typed StringType index "analyzed" copyTo "full_name",
@@ -169,7 +169,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support copy to multiple fields" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/copy_to_multiple_fields.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping/types/copy_to_multiple_fields.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as(
         "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
@@ -181,7 +181,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support completion type" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/mapping/types/completion_type_1.json"))
+    val json = mapper.readTree(getClass.getResource("/json/mapping/types/completion_type_1.json"))
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (
           "name" typed StringType index "analyzed",
