@@ -1,5 +1,5 @@
 {
-    "color" : "blue",
+    "color": "blue",
     "query": {
         "term": {
             "name": "cook"

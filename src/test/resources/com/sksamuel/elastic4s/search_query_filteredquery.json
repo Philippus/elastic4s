@@ -1,15 +1,17 @@
-{"query": {
-    "filtered": {
-        "query": {
-            "simple_query_string": {
-                "query": "coldplay"
-            }
-        },
-        "filter": {
-            "term": {
-                "location": "uk"
-            }
-        },
-        "boost": 1.2
+{
+    "query": {
+        "filtered": {
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "filter": {
+                "term": {
+                    "location": "uk"
+                }
+            },
+            "boost": 1.2
+        }
     }
-}}
+}

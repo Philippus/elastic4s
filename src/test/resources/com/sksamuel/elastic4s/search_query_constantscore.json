@@ -1,10 +1,12 @@
-{"query": {
-    "constant_score": {
-        "query": {
-            "term": {
-                "name": "sammy"
-            }
-        },
-        "boost": 14.5
+{
+    "query": {
+        "constant_score": {
+            "query": {
+                "term": {
+                    "name": "sammy"
+                }
+            },
+            "boost": 14.5
+        }
     }
-}}
+}

@@ -1,12 +1,14 @@
-{"query": {
-    "custom_score": {
-        "query": {
-            "simple_query_string": {
-                "query": "coldplay"
-            }
-        },
-        "script": "somescript",
-        "lang": "java",
-        "boost": 45.4
+{
+    "query": {
+        "custom_score": {
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "script": "somescript",
+            "lang": "java",
+            "boost": 45.4
+        }
     }
-}}
+}

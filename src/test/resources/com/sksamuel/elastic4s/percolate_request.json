@@ -2,9 +2,9 @@
     "doc": {
         "name": "cook"
     },
-    "query" : {
-        "term" : {
-            "color" : "blue"
+    "query": {
+        "term": {
+            "color": "blue"
         }
     }
 }

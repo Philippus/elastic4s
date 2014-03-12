@@ -1,11 +1,13 @@
 {
-  "query" : {
-    "simple_query_string" : {
-      "query" : "coldplay",
-      "fields" : [ "name" ],
-      "flags" : 7,
-      "analyzer" : "whitespace",
-      "default_operator" : "and"
+    "query": {
+        "simple_query_string": {
+            "query": "coldplay",
+            "fields": [
+                "name"
+            ],
+            "flags": 7,
+            "analyzer": "whitespace",
+            "default_operator": "and"
+        }
     }
-  }
 }

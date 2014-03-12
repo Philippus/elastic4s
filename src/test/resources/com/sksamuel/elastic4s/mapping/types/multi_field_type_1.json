@@ -30,13 +30,13 @@
                             "type": "string",
                             "index": "analyzed"
                         },
-                        "untouched": {
-                            "type": "string",
-                            "index": "not_analyzed"
-                        }
-                    }
-                }
+            "untouched": {
+              "type": "string",
+              "index": "not_analyzed"
             }
+          }
         }
+      }
     }
+  }
 }

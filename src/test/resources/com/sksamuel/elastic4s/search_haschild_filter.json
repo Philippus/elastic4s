@@ -1,11 +1,13 @@
-{"post_filter": {
-    "has_child": {
-        "filter": {
-            "term": {
-                "name": "chris"
-            }
-        },
-        "child_type": "singer",
-        "_name": "my-filter4"
+{
+    "post_filter": {
+        "has_child": {
+            "filter": {
+                "term": {
+                    "name": "chris"
+                }
+            },
+            "child_type": "singer",
+            "_name": "my-filter4"
+        }
     }
-}}
+}

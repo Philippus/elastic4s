@@ -18,12 +18,21 @@
                 "myAnalyzer2": {
                     "type": "custom",
                     "tokenizer": "myTokenizer1",
-                    "filter": ["myTokenFilter2", "myTokenFilter3", "prTokenFilter"]
+                    "filter": [
+                        "myTokenFilter2",
+                        "myTokenFilter3",
+                        "prTokenFilter"
+                    ]
                 },
                 "myAnalyzer3": {
                     "type": "custom",
                     "tokenizer": "lowercase",
-                    "filter": ["myTokenFilter1", "reverse", "myTokenFilter5", "stemmerTokenFilter"]
+                    "filter": [
+                        "myTokenFilter1",
+                        "reverse",
+                        "myTokenFilter5",
+                        "stemmerTokenFilter"
+                    ]
                 }
             },
             "tokenizer": {
@@ -58,7 +67,10 @@
                 },
                 "stemmerTokenFilter": {
                     "type": "stemmer_override",
-                    "rules": ["rule1", "rule2"]
+                    "rules": [
+                        "rule1",
+                        "rule2"
+                    ]
                 }
             }
         }

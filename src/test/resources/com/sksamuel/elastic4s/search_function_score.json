@@ -1,48 +1,48 @@
 {
-   "query":{
-      "function_score":{
-         "query":{
-            "simple_query_string":{
-               "query":"coldplay"
-            }
-         },
-         "functions":[
-            {
-               "random_score":{
-                  "seed":1234
-               }
+    "query": {
+        "function_score": {
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay"
+                }
             },
-            {
-               "script_score":{
-                  "script":"some script here"
-               }
-            },
-            {
-               "filter":{
-                  "term":{
-                     "band":"coldplay"
-                  }
-               },
-               "gauss":{
-                  "field1":{
-                     "origin":"1m",
-                     "scale":"2m"
-                  }
-               }
-            },
-            {
-               "filter":{
-                  "term":{
-                     "band":"taylor swift"
-                  }
-               },
-               "boost_factor":1.2
-            }
-         ],
-         "score_mode":"multiply",
-         "boost_mode":"max",
-         "max_boost":1.9,
-         "boost":1.4
-      }
-   }
+            "functions": [
+                {
+                    "random_score": {
+                        "seed": 1234
+                    }
+                },
+                {
+                    "script_score": {
+                        "script": "some script here"
+                    }
+                },
+                {
+                    "filter": {
+                        "term": {
+                            "band": "coldplay"
+                        }
+                    },
+                    "gauss": {
+                        "field1": {
+                            "origin": "1m",
+                            "scale": "2m"
+                        }
+                    }
+                },
+                {
+                    "filter": {
+                        "term": {
+                            "band": "taylor swift"
+                        }
+                    },
+                    "boost_factor": 1.2
+                }
+            ],
+            "score_mode": "multiply",
+            "boost_mode": "max",
+            "max_boost": 1.9,
+            "boost": 1.4
+        }
+    }
 }

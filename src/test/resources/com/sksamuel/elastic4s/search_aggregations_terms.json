@@ -1,13 +1,13 @@
 {
-  "aggregations": {
-    "my_terms_agg": {
-      "terms": {
-        "field": "keyword",
-        "size": 10,
-        "order": {
-          "_count": "desc"
+    "aggregations": {
+        "my_terms_agg": {
+            "terms": {
+                "field": "keyword",
+                "size": 10,
+                "order": {
+                    "_count": "desc"
+                }
+            }
         }
-      }
     }
-  }
 }

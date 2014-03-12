@@ -50,7 +50,10 @@
             "_source": {
                 "enabled": true
             },
-            "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
+            "dynamic_date_formats": [
+                "mm/yyyy",
+                "dd-MM-yyyy"
+            ],
             "date_detection": true,
             "numeric_detection": true,
             "dynamic": "dynamic",

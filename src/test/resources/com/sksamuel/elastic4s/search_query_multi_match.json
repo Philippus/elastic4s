@@ -2,7 +2,11 @@
     "query": {
         "multi_match": {
             "query": "this is my query",
-            "fields": ["name", "location", "genre"],
+            "fields": [
+                "name",
+                "location",
+                "genre"
+            ],
             "analyzer": "whitespace",
             "boost": 3.4,
             "fuzziness": "something",

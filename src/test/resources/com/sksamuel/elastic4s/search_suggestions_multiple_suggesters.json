@@ -1,28 +1,28 @@
 {
-  "query": {
-    "term": {
-      "name": "coldplay"
-    }
-  },
-  "suggest": {
-    "suggestion-term": {
-      "text": "culdpaly",
-      "term": {
-        "field": "name",
-        "max_edits": 2
-      }
+    "query": {
+        "term": {
+            "name": "coldplay"
+        }
     },
-    "suggestion-phrase": {
-      "text": "aqualuck by jethro toll",
-      "phrase": {
-        "field": "name"
-      }
-    },
-    "suggestion-completion": {
-      "text": "cold",
-      "completion": {
-        "field": "ac"
-      }
+    "suggest": {
+        "suggestion-term": {
+            "text": "culdpaly",
+            "term": {
+                "field": "name",
+                "max_edits": 2
+            }
+        },
+        "suggestion-phrase": {
+            "text": "aqualuck by jethro toll",
+            "phrase": {
+                "field": "name"
+            }
+        },
+        "suggestion-completion": {
+            "text": "cold",
+            "completion": {
+                "field": "ac"
+            }
+        }
     }
-  }
 }

@@ -1,8 +1,12 @@
 {
     "highlight": {
         "tags_schema": "styled",
-        "pre_tags": ["<b>"],
-        "post_tags": ["</b>"],
+        "pre_tags": [
+            "<b>"
+        ],
+        "post_tags": [
+            "</b>"
+        ],
         "order": "score",
         "encoder": "html",
         "require_field_match": false,

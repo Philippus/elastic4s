@@ -1,8 +1,10 @@
-{"post_filter": {
-    "missing": {
-        "field": "producer",
-        "null_value": true,
-        "existence": true,
-        "_name": "named"
+{
+    "post_filter": {
+        "missing": {
+            "field": "producer",
+            "null_value": true,
+            "existence": true,
+            "_name": "named"
+        }
     }
-}}
+}

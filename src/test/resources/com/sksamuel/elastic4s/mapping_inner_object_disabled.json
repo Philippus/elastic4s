@@ -1,45 +1,45 @@
 {
-   "settings":{
-      "index":{
-         "number_of_shards":2,
-         "number_of_replicas":1
-      }
-   },
-   "mappings":{
-      "tweet":{
-         "_all":{
-            "enabled":true
-         },
-         "_source":{
-            "enabled":true
-         },
-         "numeric_detection":true,
-         "dynamic": "dynamic",
-         "_boost":{
-            "name":"myboost",
-            "null_value":1.2
-         },
-         "_size":{
-            "enabled":true
-         },
-         "properties":{
-            "person":{
-               "type":"object",
-               "properties":{
-                  "name":{
-                  	 "type":"object",
-                     "enabled":false
-                  },
-                  "sid":{
-                     "type":"string",
-                     "index":"not_analyzed"
-                  }
-               }
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        }
+    },
+    "mappings": {
+        "tweet": {
+            "_all": {
+                "enabled": true
             },
-            "message":{
-               "type":"string"
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "properties": {
+                "person": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "object",
+                            "enabled": false
+                        },
+                        "sid": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }

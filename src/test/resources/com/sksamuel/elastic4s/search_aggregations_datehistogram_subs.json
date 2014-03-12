@@ -1,23 +1,23 @@
 {
-  "aggregations": {
-    "days": {
-      "date_histogram": {
-        "field": "date",
-        "interval": "1d"
-      },
-      "aggregations": {
-        "keywords": {
-          "terms": {
-            "field": "keyword",
-            "size": 5
-          }
-        },
-        "countries": {
-          "terms": {
-            "field": "country"
-          }
+    "aggregations": {
+        "days": {
+            "date_histogram": {
+                "field": "date",
+                "interval": "1d"
+            },
+            "aggregations": {
+                "keywords": {
+                    "terms": {
+                        "field": "keyword",
+                        "size": 5
+                    }
+                },
+                "countries": {
+                    "terms": {
+                        "field": "country"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

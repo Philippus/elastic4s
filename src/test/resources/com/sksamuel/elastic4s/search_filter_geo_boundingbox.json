@@ -1,10 +1,18 @@
-{"post_filter": {
-    "geo_bbox": {
-        "box": {
-            "top_left": [56.5, 40.6],
-            "bottom_right": [12.55, 45.5]
-        },
-        "_cache": true,
-        "_cache_key": "somecachekey"
+{
+    "post_filter": {
+        "geo_bbox": {
+            "box": {
+                "top_left": [
+                    56.5,
+                    40.6
+                ],
+                "bottom_right": [
+                    12.55,
+                    45.5
+                ]
+            },
+            "_cache": true,
+            "_cache_key": "somecachekey"
+        }
     }
-}}
+}

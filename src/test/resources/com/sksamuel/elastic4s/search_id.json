@@ -1,7 +1,17 @@
-{"size": 5, "query": {
-    "ids": {
-        "types": ["a", "b"],
-        "values": ["1", "2", "3"],
-        "boost": 1.6
+{
+    "size": 5,
+    "query": {
+        "ids": {
+            "types": [
+                "a",
+                "b"
+            ],
+            "values": [
+                "1",
+                "2",
+                "3"
+            ],
+            "boost": 1.6
+        }
     }
-}}
+}
