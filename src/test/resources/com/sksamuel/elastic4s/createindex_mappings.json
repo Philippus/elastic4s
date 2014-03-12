@@ -14,6 +14,7 @@
                 "enabled": true
             },
             "numeric_detection": true,
+            "dynamic": "dynamic",
             "_boost": {
                 "name": "myboost",
                 "null_value": 1.2
@@ -24,9 +25,9 @@
             "properties": {
                 "_id": {
                     "type": "string",
-                    "store": "yes",
                     "analyzer": "keyword",
-                    "include_in_all": true
+                    "include_in_all": true,
+                    "store": "yes"
                 },
                 "name": {
                     "type": "geo_point",
@@ -52,6 +53,7 @@
             "dynamic_date_formats": ["mm/yyyy", "dd-MM-yyyy"],
             "date_detection": true,
             "numeric_detection": true,
+            "dynamic": "dynamic",
             "_analyzer": {
                 "path": "somefield"
             },
