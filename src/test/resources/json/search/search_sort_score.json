@@ -1,0 +1,9 @@
+{
+    "sort": [
+        {
+            "_score": {
+                "reverse": true
+            }
+        }
+    ]
+}

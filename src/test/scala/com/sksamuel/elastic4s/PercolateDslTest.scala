@@ -3,22 +3,16 @@ package com.sksamuel.elastic4s
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
-import com.fasterxml.jackson.databind.ObjectMapper
 
 /** @author Stephen Samuel */
-class PercolateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
-
-  val mapper = new ObjectMapper()
-
+class PercolateDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
   "the percolate dsl" should "should generate json for a register query" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/percolate_register.json"))
     val req = register id 2 into "captains" query term("name", "cook") fields { "color" -> "blue" }
-    assert(json === mapper.readTree(req.build.source.toUtf8))
+    req.build.source.toUtf8 should matchJsonResource("/json/percolate/percolate_register.json")
   }
 
   it should "should generate fields json for a percolate request" in {
-    val json = mapper.readTree(getClass.getResource("/com/sksamuel/elastic4s/percolate_request.json"))
     val req = percolate in "captains" doc "name" -> "cook" query { term("color"-> "blue") }
-    assert(json === mapper.readTree(req._doc.string))
+    req._doc.string should matchJsonResource("/json/percolate/percolate_request.json")
   }
 }

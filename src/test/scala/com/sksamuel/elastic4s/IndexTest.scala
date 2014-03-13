@@ -12,7 +12,7 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
   val mapper = new ObjectMapper()
 
   "an index request" should "index from jackson source when used" in {
-    val json = mapper.readTree(getClass.getResourceAsStream("/com/sksamuel/elastic4s/samsung.json"))
+    val json = mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
     client.execute {
       index into "electronics/phone" source JacksonSource(json)
     }

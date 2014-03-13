@@ -1,0 +1,88 @@
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        }
+    },
+    "mappings": {
+        "tweets": {
+            "_all": {
+                "enabled": true
+            },
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "analyzer": "keyword",
+                    "include_in_all": true,
+                    "store": "yes"
+                },
+                "name": {
+                    "type": "geo_point",
+                    "lat_lon": true,
+                    "geohash": true
+                },
+                "content": {
+                    "type": "date",
+                    "null_value": "no content"
+                }
+            },
+            "_meta": {
+                "class": "com.sksamuel.User"
+            }
+        },
+        "users": {
+            "_all": {
+                "enabled": false
+            },
+            "_source": {
+                "enabled": true
+            },
+            "dynamic_date_formats": [
+                "mm/yyyy",
+                "dd-MM-yyyy"
+            ],
+            "date_detection": true,
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_analyzer": {
+                "path": "somefield"
+            },
+            "properties": {
+                "name": {
+                    "type": "ip",
+                    "boost": 1.0,
+                    "null_value": "127.0.0.1"
+                },
+                "location": {
+                    "type": "integer",
+                    "null_value": 0
+                },
+                "email": {
+                    "type": "binary"
+                },
+                "picture": {
+                    "type": "attachment"
+                },
+                "age": {
+                    "type": "float"
+                },
+                "area": {
+                    "type": "geo_shape"
+                }
+            }
+        }
+    }
+}

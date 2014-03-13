@@ -1,0 +1,10 @@
+{
+    "query": {
+        "span_term": {
+            "name": {
+                "value": "coldplay",
+                "boost": 123.0
+            }
+        }
+    }
+}
