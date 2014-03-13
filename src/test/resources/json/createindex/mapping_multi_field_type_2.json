@@ -1,0 +1,56 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 2,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "tweet": {
+        "_all": {
+            "enabled": true
+        },
+        "_source": {
+            "enabled": true
+        },
+        "numeric_detection": true,
+        "dynamic": "dynamic",
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
+        },
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "first_name": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "token_count",
+                  "index": "analyzed"
+                },
+                "any_name": {
+                  "type": "string",
+                  "index": "analyzed"
+                }
+              }
+            },
+        "last_name": {
+          "type": "multi_field",
+          "path": "just_name",
+          "fields": {
+            "last_name": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "any_name": {
+              "type": "string",
+              "index": "analyzed"
+            }
+          }
+        }
+      }
+    }
+  }
+}

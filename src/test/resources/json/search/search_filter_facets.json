@@ -1,0 +1,18 @@
+{
+    "facets": {
+        "filter-facet": {
+            "filter": {
+                "regexp": {
+                    "field": "value.*"
+                }
+            },
+            "facet_filter": {
+                "prefix": {
+                    "field": "prefixvalue"
+                }
+            },
+            "nested": "some.path",
+            "global": true
+        }
+    }
+}

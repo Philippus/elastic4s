@@ -1,0 +1,10 @@
+{
+    "post_filter": {
+        "prefix": {
+            "singer": "chris martin",
+            "_name": "my-filter3",
+            "_cache": true,
+            "_cache_key": "band-singers"
+        }
+    }
+}
