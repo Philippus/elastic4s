@@ -1,0 +1,16 @@
+{
+    "sort": [
+        {
+            "singer.weight": {
+                "order": "desc",
+                "ignore_unmapped": true,
+                "mode": "sum",
+                "nested_filter": {
+                    "term": {
+                        "singer.name": "coldplay"
+                    }
+                }
+            }
+        }
+    ]
+}
