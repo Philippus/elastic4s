@@ -1,0 +1,37 @@
+{
+    "size": 5,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "query_string": {
+                        "query": "coldplay",
+                        "default_field": "name",
+                        "allow_leading_wildcard": true,
+                        "boost": 5,
+                        "fuzzy_prefix_length": 5,
+                        "phrase_slop": 9,
+                        "analyze_wildcard": false
+                    }
+                },
+                {
+                    "query_string": {
+                        "query": "awesome",
+                        "default_field": "status",
+                        "analyzer": "pattern",
+                        "auto_generate_phrase_queries": true,
+                        "enable_position_increments": true
+                    }
+                },
+                {
+                    "query_string": {
+                        "query": "oxford",
+                        "default_field": "location",
+                        "fuzzy_max_expansions": 7,
+                        "rewrite": "rewrite"
+                    }
+                }
+            ]
+        }
+    }
+}

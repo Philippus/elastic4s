@@ -1,0 +1,18 @@
+{
+    "facets": {
+        "query-facet": {
+            "query": {
+                "query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "facet_filter": {
+                "term": {
+                    "name": "coldplay"
+                }
+            },
+            "nested": "path.nested",
+            "global": true
+        }
+    }
+}

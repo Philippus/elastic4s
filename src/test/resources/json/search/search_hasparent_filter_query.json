@@ -1,0 +1,12 @@
+{
+    "post_filter": {
+        "has_parent": {
+            "query": {
+                "term": {
+                    "name": "chris"
+                }
+            },
+            "parent_type": "singer"
+        }
+    }
+}

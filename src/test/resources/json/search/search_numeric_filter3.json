@@ -1,0 +1,15 @@
+{
+    "post_filter": {
+        "numeric_range": {
+            "years": {
+                "from": "12.4",
+                "to": "45.5",
+                "include_lower": false,
+                "include_upper": false
+            },
+            "_name": "superfilter",
+            "_cache": true,
+            "_cache_key": "key"
+        }
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        }
+    },
+    "mappings": {
+        "tweet": {
+            "_all": {
+                "enabled": true
+            },
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "properties": {
+                "person": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "object",
+                            "properties": {
+                                "first_name": {
+                                    "type": "string",
+                                    "analyzer": "keyword"
+                                },
+                                "last_name": {
+                                    "type": "string",
+                                    "analyzer": "keyword"
+                                },
+                                "byte": {
+                                    "type": "byte"
+                                },
+                                "short": {
+                                    "type": "short"
+                                }
+                            }
+                        },
+                        "sid": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

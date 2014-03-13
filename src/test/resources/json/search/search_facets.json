@@ -1,0 +1,68 @@
+{
+    "facets": {
+        "type": {
+            "terms": {
+                "field": "type",
+                "size": 10,
+                "exclude": [
+                    "pop"
+                ],
+                "regex": "qwer",
+                "order": "reverse_term",
+                "all_terms": true,
+                "script": "some-script",
+                "lang": "french",
+                "execution_hint": "hinty"
+            },
+            "nested": "nested-path",
+            "global": true
+        },
+        "years-active": {
+            "range": {
+                "key_field": "mykey",
+                "value_field": "myvalue",
+                "ranges": [
+                    {
+                        "from": "10",
+                        "to": "20"
+                    }
+                ]
+            },
+            "nested": "some-nested",
+            "global": true
+        },
+        "distance": {
+            "geo_distance": {
+                "location": "ABC",
+                "value_field": "myvalue",
+                "value_script": "some.script",
+                "lang": "java",
+                "ranges": [
+                    {
+                        "from": 20.0,
+                        "to": 30.0
+                    },
+                    {
+                        "from": 30.0,
+                        "to": 40.0
+                    },
+                    {
+                        "to": 100.0
+                    },
+                    {
+                        "from": 900.0
+                    }
+                ],
+                "distance_type": "plane"
+            },
+            "facet_filter": {
+                "term": {
+                    "location": "europe",
+                    "_cache": true,
+                    "_cache_key": "cache-key"
+                }
+            },
+            "global": true
+        }
+    }
+}

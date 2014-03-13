@@ -1,0 +1,74 @@
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        }
+    },
+    "mappings": {
+        "tweets": {
+            "_all": {
+                "enabled": true
+            },
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "analyzer": "keyword"
+                },
+                "name": {
+                    "type": "string",
+                    "analyzer": "keyword"
+                },
+                "locations": {
+                    "type": "geo_point",
+                    "validate": true,
+                    "normalize": true
+                },
+                "date": {
+                    "type": "date",
+                    "precision_step": 5
+                },
+                "size": {
+                    "type": "long"
+                },
+                "read": {
+                    "type": "boolean"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "user": {
+                    "type": "nested",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "last": {
+                            "type": "nested",
+                            "properties": {
+                                "lastLogin": {
+                                    "type": "date"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

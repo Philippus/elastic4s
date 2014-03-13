@@ -1,0 +1,18 @@
+{
+    "sort": [
+        {
+            "_script": {
+                "script": "document.score",
+                "type": "java"
+            }
+        },
+        {
+            "_score": {}
+        },
+        {
+            "dancer": {
+                "order": "desc"
+            }
+        }
+    ]
+}

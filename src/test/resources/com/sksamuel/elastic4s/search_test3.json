@@ -1,5 +1,0 @@
-{"from": 5, "query": {
-    "query_string": {
-        "query": "sammy"
-    }
-}}

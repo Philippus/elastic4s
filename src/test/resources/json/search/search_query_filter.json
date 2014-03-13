@@ -1,0 +1,13 @@
+{
+    "post_filter": {
+        "fquery": {
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "_name": "sammysfilter",
+            "_cache": true
+        }
+    }
+}

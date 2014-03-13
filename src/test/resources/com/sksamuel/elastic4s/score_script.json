@@ -1,8 +1,0 @@
-{"script_score": {
-    "script": "some script",
-    "lang": "java",
-    "params": {
-        "param1": "value1",
-        "param2": "value2"
-    }
-}}
