@@ -526,9 +526,9 @@ final class MultiFieldDefinition(name: String)
   extends TypedFieldDefinition(MultiFieldType, name)
   with AttributePath {
 
-  var _fields: Seq[StringFieldDefinition] = Nil
+  var _fields: Seq[TypedFieldDefinition] = Nil
 
-  def as(fields: StringFieldDefinition*) = {
+  def as(fields: TypedFieldDefinition*) = {
     _fields = fields
     this
   }
