@@ -43,6 +43,10 @@ class FieldSortDefinition(field: String) extends SortDefinition {
     builder.ignoreUnmapped(ignoreUnmapped)
     this
   }
+  def nestedFilter(nestedFilter: FilterDefinition) = {
+    builder.setNestedFilter(nestedFilter.builder)
+    this
+  }
   def nestedPath(nestedPath: String) = {
     builder.setNestedPath(nestedPath)
     this
