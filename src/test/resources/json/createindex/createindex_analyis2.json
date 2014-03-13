@@ -21,6 +21,7 @@
                     "filter": [
                         "myTokenFilter2",
                         "myTokenFilter3",
+                        "myFrenchStemmerTokenFilter",
                         "prTokenFilter"
                     ]
                 },
@@ -49,6 +50,10 @@
                 "myTokenFilter3": {
                     "type": "unique",
                     "only_on_same_position": true
+                },
+                "myFrenchStemmerTokenFilter": {
+                    "type": "stemmer",
+                    "name": "french"
                 },
                 "prTokenFilter": {
                     "type": "pattern_replace",
