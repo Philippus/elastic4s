@@ -52,6 +52,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
         ReverseTokenFilter,
         LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false),
+        EdgeNGramTokenFilter("myEdgeNGramTokenFilter", minGram = 3, maxGram = 50),
         StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2"))
       )
     )

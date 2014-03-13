@@ -32,6 +32,7 @@
                         "myTokenFilter1",
                         "reverse",
                         "myTokenFilter5",
+                        "myEdgeNGramTokenFilter",
                         "stemmerTokenFilter"
                     ]
                 }
@@ -69,6 +70,11 @@
                 "myTokenFilter5": {
                     "type": "stop",
                     "max_token_count": 5
+                },
+                "myEdgeNGramTokenFilter": {
+                    "type": "edgeNGram",
+                    "min_gram": 3,
+                    "max_gram": 50
                 },
                 "stemmerTokenFilter": {
                     "type": "stemmer_override",
