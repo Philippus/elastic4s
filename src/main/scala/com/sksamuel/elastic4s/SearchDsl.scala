@@ -99,11 +99,6 @@ trait SearchDsl
       this
     }
 
-    def source(enabled: Boolean): SearchDefinition = {
-      _builder.setFetchSource(enabled)
-      this
-    }
-
     def facets(iterable: Iterable[FacetDefinition]): SearchDefinition = {
       iterable.foreach(facet => _builder.addFacet(facet.builder))
       this
