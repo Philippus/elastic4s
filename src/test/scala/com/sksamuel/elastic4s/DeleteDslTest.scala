@@ -33,12 +33,12 @@ class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept varargs index and varargs of types" in {
-    val req = delete from("places", "bands") types("type1", "type2") where "paris"
+    val req = delete from ("places", "bands") types ("type1", "type2") where "paris"
     assert(req.build.indices() === Array("places", "bands"))
   }
 
   it should "accept single index and varargs of types" in {
-    val req = delete from "places" types("type1", "type2") where "paris"
+    val req = delete from "places" types ("type1", "type2") where "paris"
     assert(req.build.indices() === Array("places"))
   }
 
@@ -72,7 +72,7 @@ class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept varargs index and varargs of types" in {
-    val req = delete id 141212 from("places", "bands") types("type1", "type2")
+    val req = delete id 141212 from ("places", "bands") types ("type1", "type2")
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "type1")
   }

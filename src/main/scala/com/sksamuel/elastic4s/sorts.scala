@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.sort.{SortOrder, SortBuilder, SortBuilders}
+import org.elasticsearch.search.sort.{ SortOrder, SortBuilder, SortBuilders }
 import org.elasticsearch.common.geo.GeoDistance
 
 /** @author Stephen Samuel */

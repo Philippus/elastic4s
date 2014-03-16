@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
+import org.elasticsearch.action.update.{ UpdateAction, UpdateRequestBuilder }
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import com.sksamuel.elastic4s.source.DocumentSource
 
 /** @author Stephen Samuel */
@@ -19,7 +19,7 @@ trait UpdateDsl extends IndexesTypesDsl {
   }
 
   class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
-    extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
+      extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
 
     val _builder = new UpdateRequestBuilder(null)
       .setIndex(indexesTypes.index)
@@ -30,7 +30,7 @@ trait UpdateDsl extends IndexesTypesDsl {
 
     private def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
-      for ( tuple <- fields ) {
+      for (tuple <- fields) {
         source.field(tuple._1, tuple._2)
       }
       source.endObject()

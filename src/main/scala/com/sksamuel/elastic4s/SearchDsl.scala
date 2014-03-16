@@ -7,14 +7,14 @@ import org.elasticsearch.search.rescore.RescoreBuilder
 
 /** @author Stephen Samuel */
 trait SearchDsl
-  extends QueryDsl
-  with FilterDsl
-  with FacetDsl
-  with AggregationDsl
-  with HighlightDsl
-  with SortDsl
-  with SuggestionDsl
-  with IndexesTypesDsl {
+    extends QueryDsl
+    with FilterDsl
+    with FacetDsl
+    with AggregationDsl
+    with HighlightDsl
+    with SortDsl
+    with SuggestionDsl
+    with IndexesTypesDsl {
 
   @deprecated("use select or search", "1.0")
   def find = new SearchExpectsIndex
@@ -30,7 +30,7 @@ trait SearchDsl
   }
 
   class MultiSearchDefinition(searches: Iterable[SearchDefinition])
-    extends RequestDefinition(MultiSearchAction.INSTANCE) {
+      extends RequestDefinition(MultiSearchAction.INSTANCE) {
     def build = {
       val builder = new MultiSearchRequestBuilder(null)
       searches foreach (builder add _.build)
@@ -76,13 +76,12 @@ trait SearchDsl
     }
     def build = _builder.request()
 
-    /**
-     * Adds a single string query to this search
-     *
-     * @param string the query string
-     *
-     * @return this
-     */
+    /** Adds a single string query to this search
+      *
+      * @param string the query string
+      *
+      * @return this
+      */
     def query(string: String): SearchDefinition = query(new StringQueryDefinition(string))
     def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
     def query2(block: => QueryBuilder): SearchDefinition = {
@@ -124,26 +123,24 @@ trait SearchDsl
       this
     }
 
-    /**
-     * Adds a single prefix query to this search
-     *
-     * @param tuple - the field and prefix value
-     *
-     * @return this
-     */
+    /** Adds a single prefix query to this search
+      *
+      * @param tuple - the field and prefix value
+      *
+      * @return this
+      */
     def prefix(tuple: (String, Any)) = {
       val q = new PrefixQueryDefinition(tuple._1, tuple._2)
       _builder.setQuery(q.builder.buildAsBytes)
       this
     }
 
-    /**
-     * Adds a single regex query to this search
-     *
-     * @param tuple - the field and regex value
-     *
-     * @return this
-     */
+    /** Adds a single regex query to this search
+      *
+      * @param tuple - the field and regex value
+      *
+      * @return this
+      */
     def regex(tuple: (String, Any)) = {
       val q = new RegexQueryDefinition(tuple._1, tuple._2)
       _builder.setQuery(q.builder.buildAsBytes)
@@ -162,15 +159,14 @@ trait SearchDsl
       this
     }
 
-    /**
-      * Expects a query in json format and sets the query of the search request.
+    /** Expects a query in json format and sets the query of the search request.
       * Query must be valid json beginning with '{' and ending with '}'.
       * Field names must be double quoted.
       *
       * Example:
       * {{{
       * search in "*" types("users", "tweets") limit 5 rawQuery {
-      *   """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+      * """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
       * } searchType SearchType.Scan
       * }}}
       */

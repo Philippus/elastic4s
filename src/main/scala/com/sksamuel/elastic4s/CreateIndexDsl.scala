@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.admin.indices.create.{CreateIndexAction, CreateIndexRequest}
+import org.elasticsearch.action.admin.indices.create.{ CreateIndexAction, CreateIndexRequest }
 import com.sksamuel.elastic4s.mapping.MappingDefinition
 
 /** @author Stephen Samuel */
@@ -101,7 +101,7 @@ trait CreateIndexDsl {
 
       if (_mappings.size > 0) {
         source.startObject("mappings")
-        for ( mapping <- _mappings ) {
+        for (mapping <- _mappings) {
           mapping.build(source)
         }
         source.endObject()

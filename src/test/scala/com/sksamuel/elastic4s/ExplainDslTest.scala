@@ -15,7 +15,7 @@ class ExplainDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept two parameters for index / type" in {
-    val req = explain id 123 in("places", "cities") query termQuery("name", "sammy")
+    val req = explain id 123 in ("places", "cities") query termQuery("name", "sammy")
     assert(req.build.id() === "123")
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "cities")

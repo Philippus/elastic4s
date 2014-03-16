@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.count.{CountAction, CountRequestBuilder}
-import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
+import org.elasticsearch.action.count.{ CountAction, CountRequestBuilder }
+import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
 import org.elasticsearch.action.support.QuerySourceBuilder
 
 /** @author Stephen Samuel */

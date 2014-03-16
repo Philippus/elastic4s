@@ -13,7 +13,7 @@ class DeleteIndexDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   indicesMethod.setAccessible(true)
 
   "a delete index request" should "accept var args" in {
-    val req = delete index("index1", "index2")
+    val req = delete index ("index1", "index2")
     assert(extractIndices(req.build) === Array("index1", "index2"))
   }
 

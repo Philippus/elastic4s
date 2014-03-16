@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{FlatSpec, OneInstancePerTest}
+import org.scalatest.{ FlatSpec, OneInstancePerTest }
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.common.xcontent.{ToXContent, XContentFactory}
+import org.elasticsearch.common.xcontent.{ ToXContent, XContentFactory }
 
 /** @author Stephen Samuel */
 class ScoreTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {

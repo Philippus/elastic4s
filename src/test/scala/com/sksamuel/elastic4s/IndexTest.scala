@@ -4,7 +4,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
-import com.sksamuel.elastic4s.source.{ObjectSource, JacksonSource}
+import com.sksamuel.elastic4s.source.{ ObjectSource, JacksonSource }
 
 /** @author Stephen Samuel */
 class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {

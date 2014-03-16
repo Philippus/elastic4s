@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FlatSpec, OneInstancePerTest}
+import org.scalatest.{ FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 
@@ -12,7 +12,7 @@ class PercolateDslTest extends FlatSpec with MockitoSugar with JsonSugar with On
   }
 
   it should "should generate fields json for a percolate request" in {
-    val req = percolate in "captains" doc "name" -> "cook" query { term("color"-> "blue") }
+    val req = percolate in "captains" doc "name" -> "cook" query { term("color" -> "blue") }
     req._doc.string should matchJsonResource("/json/percolate/percolate_request.json")
   }
 }

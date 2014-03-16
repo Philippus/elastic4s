@@ -7,7 +7,7 @@ import java.util.UUID
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{Suite, BeforeAndAfterAll}
+import org.scalatest.{ Suite, BeforeAndAfterAll }
 
 /** @author Stephen Samuel */
 trait ElasticSugar extends BeforeAndAfterAll with Logging {

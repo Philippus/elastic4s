@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.get.{MultiGetRequest, MultiGetAction, MultiGetRequestBuilder}
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeRefresh, DefinitionAttributePreference}
+import org.elasticsearch.action.get.{ MultiGetRequest, MultiGetAction, MultiGetRequestBuilder }
+import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributeRefresh, DefinitionAttributePreference }
 
 /** @author Stephen Samuel */
 trait MultiGetDsl extends GetDsl {
@@ -9,9 +9,9 @@ trait MultiGetDsl extends GetDsl {
 }
 
 class MultiGetDefinition(gets: Iterable[GetDefinition])
-  extends RequestDefinition(MultiGetAction.INSTANCE)
-  with DefinitionAttributePreference
-  with DefinitionAttributeRefresh {
+    extends RequestDefinition(MultiGetAction.INSTANCE)
+    with DefinitionAttributePreference
+    with DefinitionAttributeRefresh {
 
   val _builder = new MultiGetRequestBuilder(null)
   gets.foreach(get => _builder.add(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id))

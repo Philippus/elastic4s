@@ -11,16 +11,16 @@ import org.scalatest.Matchers
 class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar with ElasticSugar {
 
   client.execute {
-    index into "beer/lager" fields(
+    index into "beer/lager" fields (
       "name" -> "coors light",
       "brand" -> "coors"
-      ) id 4
+    ) id 4
   }
   client.execute {
-    index into "beer/lager" fields(
+    index into "beer/lager" fields (
       "name" -> "bud lite",
       "brand" -> "bud"
-      ) id 8
+    ) id 8
   }
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
@@ -45,7 +45,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (true)
+      result.isExists should be(true)
       result.getId shouldBe "8"
     }
   }
@@ -57,7 +57,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (true)
+      result.isExists should be(true)
       result.getId shouldBe "8"
       result.getSource should not be (null)
       result.getFields should have size 0
@@ -71,9 +71,9 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (true)
+      result.isExists should be(true)
       result.getId shouldBe "8"
-      result.getSource should be (null)
+      result.getSource should be(null)
       result.getFields should have size 0
     }
   }
@@ -81,39 +81,39 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
   it should "retrieve a document asynchronously by id w/ name and w/o source" in {
 
     val resp = client.execute {
-      get id 8 from "beer/lager" fields("name")
+      get id 8 from "beer/lager" fields ("name")
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (true)
+      result.isExists should be(true)
       result.getId shouldBe "8"
-      result.getSource should be (null)
-      result.getFields should (contain key ("name") and not contain key ("brand"))
+      result.getSource should be(null)
+      result.getFields should (contain key ("name") and not contain key("brand"))
     }
   }
 
   it should "retrieve a document asynchronously by id w/ name and brand and source" in {
 
     val resp = client.execute {
-      get id 4 from "beer/lager" fields("name") fetchSourceContext true
+      get id 4 from "beer/lager" fields ("name") fetchSourceContext true
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (true)
+      result.isExists should be(true)
       result.getId shouldBe "4"
       result.getSource should not be (null)
-      result.getFields should (contain key ("name") and not contain key ("brand"))
+      result.getFields should (contain key ("name") and not contain key("brand"))
     }
   }
 
   it should "not retrieve any documents w/ unknown id" in {
 
     val resp = client.execute {
-      get id 1 from "beer/lager" fields("name") fetchSourceContext true
+      get id 1 from "beer/lager" fields ("name") fetchSourceContext true
     }
 
     whenReady(resp) { result =>
-      result.isExists should be (false)
+      result.isExists should be(false)
     }
   }
 

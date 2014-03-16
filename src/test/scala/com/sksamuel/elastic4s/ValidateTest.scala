@@ -12,10 +12,10 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
   implicit val duration: Duration = 10.seconds
 
   client.execute {
-    index into "food/pasta" fields(
+    index into "food/pasta" fields (
       "name" -> "maccaroni",
       "color" -> "yellow"
-      )
+    )
   }
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet

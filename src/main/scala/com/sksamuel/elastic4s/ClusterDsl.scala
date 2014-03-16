@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequest, ClusterHealthAction}
+import org.elasticsearch.action.admin.cluster.health.{ ClusterHealthRequest, ClusterHealthAction }
 
 trait ClusterDsl {
   def clusterHealth = new ClusterHealth()

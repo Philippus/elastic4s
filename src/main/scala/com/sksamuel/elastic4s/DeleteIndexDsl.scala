@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.delete.{DeleteIndexAction, DeleteIndexRequest}
+import org.elasticsearch.action.admin.indices.delete.{ DeleteIndexAction, DeleteIndexRequest }
 
 /** @author Stephen Samuel */
 trait DeleteIndexDsl {

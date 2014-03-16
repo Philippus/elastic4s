@@ -9,19 +9,19 @@ import org.elasticsearch.common.Priority
 class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.bulk(
-    index into "places/cities" id 99 fields(
+    index into "places/cities" id 99 fields (
       "name" -> "London",
       "country" -> "UK"
-      ),
-    index into "places/cities" id 44 fields(
+    ),
+    index into "places/cities" id 44 fields (
       "name" -> "Philadelphia",
       "country" -> "USA"
-      ),
-    index into "places/cities" id 615 fields(
+    ),
+    index into "places/cities" id 615 fields (
       "name" -> "Middlesbrough",
       "country" -> "UK",
       "continent" -> "Europe"
-      )
+    )
   )
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
