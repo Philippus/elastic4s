@@ -1,3 +1,5 @@
+import scalariform.formatter.preferences._
+
 name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
@@ -25,6 +27,8 @@ publishArtifact in Test := false
 
 parallelExecution in Test := false
 
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
+
 libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.0.1",
   "org.slf4j"                      %  "slf4j-api"                   % "1.6.6",
@@ -43,6 +47,15 @@ libraryDependencies ++= Seq(
 ScoverageSbtPlugin.instrumentSettings
 
 CoverallsPlugin.singleProject
+
+// scalariform settings
+scalariformSettings
+
+ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  .setPreference(AlignParameters, true)
+  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
+  .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
 
 pomExtra := {
   <url>https://github.com/sksamuel/elastic4s</url>

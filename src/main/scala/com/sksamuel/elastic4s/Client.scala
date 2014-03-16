@@ -1,20 +1,20 @@
 package com.sksamuel.elastic4s
 
 import scala.concurrent._
-import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
-import org.elasticsearch.action.count.{CountRequest, CountResponse}
-import org.elasticsearch.action.search.{MultiSearchResponse, SearchRequest, SearchResponse}
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
+import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.action.count.{ CountRequest, CountResponse }
+import org.elasticsearch.action.search.{ MultiSearchResponse, SearchRequest, SearchResponse }
+import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryResponse, ValidateQueryRequest }
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
-import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
+import org.elasticsearch.common.settings.{ Settings, ImmutableSettings }
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.node.{ Node, NodeBuilder }
 import org.elasticsearch.client.Client
 import org.elasticsearch.action.get._
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
-import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
+import org.elasticsearch.action.update.{ UpdateResponse, UpdateRequest }
 import scala.concurrent.duration._
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.bulk.BulkResponse
@@ -22,7 +22,7 @@ import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
-import org.elasticsearch.action.{ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener}
+import org.elasticsearch.action.{ ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener }
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
@@ -41,13 +41,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[NodesShutdownResponse](java.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
   }
 
-  /**
-   * Executes a Scala DSL RequestDefinition and returns a scala Future with corresponding ActionResponse.
-   *
-   * @param requestDefinition a RequestDefinition from the Scala DSL
-   *
-   * @return a Future providing corresponding ActionResponse
-   */
+  /** Executes a Scala DSL RequestDefinition and returns a scala Future with corresponding ActionResponse.
+    *
+    * @param requestDefinition a RequestDefinition from the Scala DSL
+    *
+    * @return a Future providing corresponding ActionResponse
+    */
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: RequestDefinition[Req, Res, Builder]): Future[Res] =
     injectFuture[Res](execute(requestDefinition, _))
 
@@ -55,13 +54,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
                                                                                                                     callback: ActionListener[Res]): Unit =
     client.execute(requestDefinition.action, requestDefinition.build, callback)
 
-  /**
-   * Executes a Scala DSL IndicesRequestDefinition and returns a scala Future with corresponding ActionResponse.
-   *
-   * @param requestDefinition a RequestDefinition from the Scala DSL
-   *
-   * @return a Future providing corresponding ActionResponse
-   */
+  /** Executes a Scala DSL IndicesRequestDefinition and returns a scala Future with corresponding ActionResponse.
+    *
+    * @param requestDefinition a RequestDefinition from the Scala DSL
+    *
+    * @return a Future providing corresponding ActionResponse
+    */
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: IndicesRequestDefinition[Req, Res, Builder]): Future[Res] =
     injectFuture[Res](execute(requestDefinition, _))
 
@@ -69,13 +67,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
                                                                                                                     callback: ActionListener[Res]): Unit =
     client.admin.indices.execute(requestDefinition.action, requestDefinition.build, callback)
 
-  /**
-   * Executes a Scala DSL ClusterRequestDefinition and returns a scala Future with corresponding ActionResponse.
-   *
-   * @param requestDefinition a RequestDefinition from the Scala DSL
-   *
-   * @return a Future providing corresponding ActionResponse
-   */
+  /** Executes a Scala DSL ClusterRequestDefinition and returns a scala Future with corresponding ActionResponse.
+    *
+    * @param requestDefinition a RequestDefinition from the Scala DSL
+    *
+    * @return a Future providing corresponding ActionResponse
+    */
   def execute[Req <: ActionRequest[Req], Res <: ActionResponse, Builder <: ActionRequestBuilder[Req, Res, Builder]](requestDefinition: ClusterRequestDefinition[Req, Res, Builder]): Future[Res] =
     injectFuture[Res](execute(requestDefinition, _))
 
@@ -83,35 +80,32 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
                                                                                                                     callback: ActionListener[Res]): Unit =
     client.admin.cluster.execute(requestDefinition.action, requestDefinition.build, callback)
 
-  /**
-   * Indexes a Java IndexRequest and returns a scala Future with the IndexResponse.
-   *
-   * @param req an IndexRequest from the Java client
-   *
-   * @return a Future providing an IndexResponse
-   */
+  /** Indexes a Java IndexRequest and returns a scala Future with the IndexResponse.
+    *
+    * @param req an IndexRequest from the Java client
+    *
+    * @return a Future providing an IndexResponse
+    */
   def execute(req: IndexRequest): Future[IndexResponse] = injectFuture[IndexResponse](client.index(req, _))
 
   def execute(req: IndexRequest, callback: ActionListener[IndexResponse]) = client.index(req, callback)
 
-  /**
-   * Executes a Java API SearchRequest and returns a scala Future with the SearchResponse.
-   *
-   * @param req a SearchRequest from the Java clientl
-   *
-   * @return a Future providing an SearchResponse
-   */
+  /** Executes a Java API SearchRequest and returns a scala Future with the SearchResponse.
+    *
+    * @param req a SearchRequest from the Java clientl
+    *
+    * @return a Future providing an SearchResponse
+    */
   def execute(req: SearchRequest): Future[SearchResponse] = injectFuture[SearchResponse](client.search(req, _))
 
   def execute(req: SearchRequest, callback: ActionListener[SearchResponse]) = client.search(req, callback)
 
-  /**
-   * Executes a Scala DSL search and returns a scala Future with the SearchResponse.
-   *
-   * @param sdef a SearchDefinition from the Scala DSL
-   *
-   * @return a Future providing an SearchResponse
-   */
+  /** Executes a Scala DSL search and returns a scala Future with the SearchResponse.
+    *
+    * @param sdef a SearchDefinition from the Scala DSL
+    *
+    * @return a Future providing an SearchResponse
+    */
   @deprecated("use execute method", "1.0")
   def search(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
 
@@ -119,31 +113,28 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def search(searches: SearchDefinition*): Future[MultiSearchResponse] =
     execute(new MultiSearchDefinition(searches))
 
-  /**
-   * Executes a Java API CountRequest and returns a scala Future with the CountResponse.
-   *
-   * @param req a CountRequest from the Java client
-   *
-   * @return a Future providing an CountResponse
-   */
+  /** Executes a Java API CountRequest and returns a scala Future with the CountResponse.
+    *
+    * @param req a CountRequest from the Java client
+    *
+    * @return a Future providing an CountResponse
+    */
   def execute(req: CountRequest): Future[CountResponse] = injectFuture[CountResponse](client.count(req, _))
 
-  /**
-   * Executes a Java API GetRequest and returns a scala Future with the GetResponse.
-   *
-   * @param req a GetRequest from the Java client
-   *
-   * @return a Future providing an GetResponse
-   */
+  /** Executes a Java API GetRequest and returns a scala Future with the GetResponse.
+    *
+    * @param req a GetRequest from the Java client
+    *
+    * @return a Future providing an GetResponse
+    */
   def get(req: GetRequest): Future[GetResponse] = injectFuture[GetResponse](client.get(req, _))
 
-  /**
-   * Executes a Scala DSL get and returns a scala Future with the GetResponse.
-   *
-   * @param builder a GetDefinition from the Scala DSL
-   *
-   * @return a Future providing an GetResponse
-   */
+  /** Executes a Scala DSL get and returns a scala Future with the GetResponse.
+    *
+    * @param builder a GetDefinition from the Scala DSL
+    *
+    * @return a Future providing an GetResponse
+    */
   def execute(builder: GetDefinition): Future[GetResponse] = get(builder)
   @deprecated("use execute method", "1.0")
   def get(builder: GetDefinition): Future[GetResponse] = get(builder.build)
@@ -318,7 +309,7 @@ object ElasticClient {
 
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
-    for ( address <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
+    for (address <- addresses) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
     fromClient(client, DefaultTimeout)
   }
 

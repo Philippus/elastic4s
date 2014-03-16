@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{Matchers, Assertions, FlatSpec, OneInstancePerTest}
+import org.scalatest.{ Matchers, Assertions, FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.mapping.FieldType._
 import ElasticDsl._
@@ -9,11 +9,11 @@ import ElasticDsl._
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
   "the index dsl" should "generate json to include mapping properties" in {
     val req = create.index("users").shards(2).mappings(
-      "tweets" as(
+      "tweets" as (
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
-        ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
+      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       map("users").as(
         "name" typed IpType nullValue "127.0.0.1" boost 1.0,
         "location" typed IntegerType nullValue 0,
@@ -21,7 +21,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "picture" typed AttachmentType,
         "age" typed FloatType,
         "area" typed GeoShapeType
-      ) all false analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
+      ) all false analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_mappings.json")
   }
@@ -61,7 +61,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
 
   it should "supported nested fields" in {
     val req = create.index("users").shards(2).mappings(
-      "tweets" as(
+      "tweets" as (
         id typed StringType analyzer KeywordAnalyzer,
         "name" typed StringType analyzer KeywordAnalyzer,
         "locations" typed GeoPointType validate true normalize true,
@@ -69,14 +69,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "size" typed LongType,
         "read" typed BooleanType,
         "content" typed StringType,
-        "user" nested(
+        "user" nested (
           "name" typed StringType,
           "email" typed StringType,
           "last" nested {
             "lastLogin" typed DateType
           }
-          )
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        )
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_nested.json")
   }
@@ -88,31 +88,31 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
 
   it should "support inner objects" in {
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
-        "person" inner(
-          "name" inner(
+      "tweet" as (
+        "person" inner (
+          "name" inner (
             "first_name" typed StringType analyzer KeywordAnalyzer,
             "last_name" typed StringType analyzer KeywordAnalyzer,
             "byte" typed ByteType,
             "short" typed ShortType
-            ),
-          "sid" typed StringType index "not_analyzed"
           ),
-        "message" typed StringType
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+            "sid" typed StringType index "not_analyzed"
+        ),
+            "message" typed StringType
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_inner_object.json")
   }
 
   it should "support disabled inner objects" in {
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
-        "person" inner(
+      "tweet" as (
+        "person" inner (
           "name" typed ObjectType enabled false,
           "sid" typed StringType index "not_analyzed"
-          ),
-        "message" typed StringType
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        ),
+          "message" typed StringType
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_inner_object_disabled.json")
   }
@@ -120,49 +120,49 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support multi field type" in {
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (
-        "name" multi(
+        "name" multi (
           "name" typed StringType index "analyzed",
           "untouched" typed StringType index "not_analyzed"
-          )
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        )
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
   }
 
   it should "support multi field type with path" in {
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
-        "first_name" typed ObjectType as(
+      "tweet" as (
+        "first_name" typed ObjectType as (
           "first_name" typed TokenCountType index "analyzed",
           "any_name" typed StringType index "analyzed"
-          ),
-        "last_name" typed MultiFieldType path "just_name" as(
-          "last_name" typed StringType index "analyzed",
-          "any_name" typed StringType index "analyzed"
+        ),
+          "last_name" typed MultiFieldType path "just_name" as (
+            "last_name" typed StringType index "analyzed",
+            "any_name" typed StringType index "analyzed"
           )
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_field_type_2.json")
   }
 
   it should "support copy to a single field" in {
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
+      "tweet" as (
         "first_name" typed StringType index "analyzed" copyTo "full_name",
         "last_name" typed StringType index "analyzed" copyTo "full_name",
         "full_name" typed StringType index "analyzed"
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
   }
 
   it should "support copy to multiple fields" in {
     val req = create.index("tweets").shards(2).mappings(
-      "tweet" as(
+      "tweet" as (
         "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
         "meta_data" typed StringType index "analyzed",
         "article_info" typed StringType index "analyzed"
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
@@ -170,10 +170,10 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support completion type" in {
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (
-          "name" typed StringType index "analyzed",
-          "ac" typed CompletionType indexAnalyzer "simple" searchAnalyzer "simple"
-            payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+        "name" typed StringType index "analyzed",
+        "ac" typed CompletionType indexAnalyzer "simple" searchAnalyzer "simple"
+        payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_completion_type.json")
   }

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FlatSpec, OneInstancePerTest}
+import org.scalatest.{ FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.search.sort.SortOrder
-import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import org.elasticsearch.index.query.{MatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s.SuggestMode.{ Missing, Popular }
+import org.elasticsearch.index.query.{ MatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag }
 import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
@@ -16,103 +16,103 @@ import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
 import org.elasticsearch.search.aggregations.bucket.terms.Terms
 
 /** @author Stephen Samuel */
-class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest  {
+class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
   "the search dsl" should "accept wilcards for index and types" in {
     val req = search in "*" types "*" limit 10
     req._builder.toString should matchJsonResource("/json/search/search_test1.json")
   }
 
   it should "accept sequences for indexes" in {
-    val req = search in("twitter", "other") types "*" limit 5 query "coldplay"
+    val req = search in ("twitter", "other") types "*" limit 5 query "coldplay"
     req._builder.toString should matchJsonResource("/json/search/search_test2.json")
   }
 
   it should "accept sequences for type" in {
-    val req = search in "*" types("users", "tweets") from 5 query "sammy"
+    val req = search in "*" types ("users", "tweets") from 5 query "sammy"
     req._builder.toString should matchJsonResource("/json/search/search_test3.json")
   }
 
   it should "use limit and and offset when specified" in {
-    val req = search in "*" types("users", "tweets") limit 6 from 9 query "coldplay"
+    val req = search in "*" types ("users", "tweets") limit 6 from 9 query "coldplay"
     req._builder.toString should matchJsonResource("/json/search/search_test4.json")
   }
 
   it should "use fetchSource when specified" in {
-    val req = search in "*" types("users", "tweets") fetchSource false query "coldplay"
+    val req = search in "*" types ("users", "tweets") fetchSource false query "coldplay"
     req._builder.toString should matchJsonResource("/json/search/search_test_fetch_source.json")
   }
 
   it should "use preference when specified" in {
-    val req = search in "*" types("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
+    val req = search in "*" types ("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
     req._builder.toString should matchJsonResource("/json/search/search_preference_primary_first.json")
   }
 
   it should "use custom preference when specified" in {
-    val req = search in "*" types("users", "tweets") query "coldplay" preference Preference.Custom("custom")
+    val req = search in "*" types ("users", "tweets") query "coldplay" preference Preference.Custom("custom")
     req._builder.toString should matchJsonResource("/json/search/search_preference_custom.json")
   }
 
   it should "generate json for a raw query" in {
-    val req = search in "*" types("users", "tweets") limit 5 rawQuery {
-        """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
-      } searchType SearchType.Scan
+    val req = search in "*" types ("users", "tweets") limit 5 rawQuery {
+      """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+    } searchType SearchType.Scan
     req._builder.toString should matchJsonResource("/json/search/search_test5.json")
   }
 
   it should "generate json for a prefix query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       prefix("bands" -> "coldplay") boost 5 rewrite "yes"
     } searchType SearchType.Scan
     req._builder.toString should matchJsonResource("/json/search/search_test5.json")
   }
 
   it should "generate json for a term query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       term("singer", "chris martin") boost 1.6
     } searchType SearchType.DfsQueryAndFetch
     req._builder.toString should matchJsonResource("/json/search/search_term.json")
   }
 
   it should "generate json for a range query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       range("coldplay") includeLower true includeUpper true from 4 to 10 boost 1.2
     } searchType SearchType.QueryThenFetch
     req._builder.toString should matchJsonResource("/json/search/search_range.json")
   }
 
   it should "generate json for a wildcard query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       wildcard("name", "*coldplay") boost 7.6 rewrite "no"
     }
     req._builder.toString should matchJsonResource("/json/search/search_wildcard.json")
   }
 
   it should "generate json for a string query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       query("coldplay") allowLeadingWildcard true analyzeWildcard true analyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer"
     } searchType SearchType.DfsQueryThenFetch
     req._builder.toString should matchJsonResource("/json/search/search_string.json")
   }
 
   it should "generate json for a regex query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       ElasticDsl.regex("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION rewrite "rewrite-to"
     } searchType SearchType.DfsQueryAndFetch
     req._builder.toString should matchJsonResource("/json/search/search_regex.json")
   }
 
   it should "generate json for a min score" in {
-    val req = search in "*" types("users", "tweets") query "coldplay" minScore 0.5
+    val req = search in "*" types ("users", "tweets") query "coldplay" minScore 0.5
     req._builder.toString should matchJsonResource("/json/search/search_minscore.json")
   }
 
   it should "generate json for an index boost" in {
-    val req = search in "*" types("users", "tweets") query "coldplay" indexBoost("index1" -> 1.4, "index2" -> 1.3)
+    val req = search in "*" types ("users", "tweets") query "coldplay" indexBoost ("index1" -> 1.4, "index2" -> 1.3)
     req._builder.toString should matchJsonResource("/json/search/search_indexboost.json")
   }
 
   it should "generate json for a bpoosting query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       boosting positive {
         query("coldplay")
       } negative {
@@ -123,14 +123,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a id query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
-      ids("1", "2", "3") boost 1.6 types("a", "b")
+    val req = search in "*" types ("users", "tweets") limit 5 query {
+      ids("1", "2", "3") boost 1.6 types ("a", "b")
     }
     req._builder.toString should matchJsonResource("/json/search/search_id.json")
   }
 
   it should "generate json for a match query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       matchQuery("name", "coldplay")
         .cutoffFrequency(3.4)
         .fuzzyTranspositions(true)
@@ -148,14 +148,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a match query with default as or" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       matches("drummmer" -> "will") boost 4 operator "OR"
     }
     req._builder.toString should matchJsonResource("/json/search/search_match_or.json")
   }
 
   it should "generate json for a fuzzy query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       fuzzy("drummmer", "will") boost 4 maxExpansions 10 prefixLength 10 transpositions true
     } searchType SearchType.Count
     req._builder.toString should matchJsonResource("/json/search/search_fuzzy.json")
@@ -173,14 +173,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a match all query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       matchall boost 4 normsField "norm-field"
     } searchType SearchType.QueryAndFetch
     req._builder.toString should matchJsonResource("/json/search/search_match_all.json")
   }
 
   it should "generate json for a hasChild query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       hasChildQuery("sometype") query {
         "coldplay"
       } boost 1.2 scoreType "type"
@@ -189,7 +189,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a topChildren query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       topChildren("sometype") query {
         "coldplay"
       } boost 1.2 factor 3 incrementalFactor 2 score "max"
@@ -198,7 +198,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a hasParent query" in {
-    val req = search in "*" types("users", "tweets") limit 5 query {
+    val req = search in "*" types ("users", "tweets") limit 5 query {
       hasParentQuery("sometype") query {
         "coldplay"
       } boost 1.2 scoreType "type"
@@ -207,7 +207,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a boolean compound query" in {
-    val req = search in "*" types("bands", "artists") limit 5 query {
+    val req = search in "*" types ("bands", "artists") limit 5 query {
       bool {
         must(
           ElasticDsl.regex("drummmer" -> "will*") boost 5,
@@ -225,10 +225,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
           ElasticDsl.regex("drummmer" -> "will*") boost 5,
           term("singer" -> "chris")
         ) should {
-          term("bassist" -> "berryman")
-        } not {
-          term("singer" -> "anderson")
-        }
+            term("bassist" -> "berryman")
+          } not {
+            term("singer" -> "anderson")
+          }
       } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
     } preference Preference.Local
     req._builder.toString should matchJsonResource("/json/search/search_boolean2.json")
@@ -339,7 +339,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for id filter" in {
     val req = search in "music" types "bands" filter {
-      idsFilter("a", "b", "c") withIds("q", "r") filterName "some-name"
+      idsFilter("a", "b", "c") withIds ("q", "r") filterName "some-name"
     } preference Preference.PrimaryFirst
     req._builder.toString should matchJsonResource("/json/search/search_id_filter.json")
   }
@@ -419,30 +419,30 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for geo sort" in {
     val req = search in "music" types "bands" sort {
       by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode
-        MultiMode.Sum point(56.6, 78.8) nested "nested-path" mode MultiMode.Max geoDistance GeoDistance.ARC
+        MultiMode.Sum point (56.6, 78.8) nested "nested-path" mode MultiMode.Max geoDistance GeoDistance.ARC
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_geo.json")
   }
 
   it should "generate correct json for multiple sorts" in {
-    val req = search in "music" types "bands" sort(
+    val req = search in "music" types "bands" sort (
       by script "document.score" as "java" order SortOrder.ASC,
       by.score order SortOrder.DESC,
       by field "dancer" order SortOrder.DESC
-      )
+    )
     req._builder.toString should matchJsonResource("/json/search/search_sort_multiple.json")
   }
 
   it should "generate correct json for facets" in {
-    val req = search in "music" types "bands" facets(
+    val req = search in "music" types "bands" facets (
       facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
-        .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
+      .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
       facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey" nested "some-nested",
       facet geodistance "distance" field "location" geoDistance GeoDistance
-        .FACTOR range 20d -> 30d range 30d -> 40d point(45.4, 54d) valueField "myvalue" global true facetFilter {
+      .FACTOR range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
         termFilter("location", "europe") cache true cacheKey "cache-key"
       } addUnboundedFrom 100 addUnboundedTo 900 geohash "ABC" valueScript "some.script" lang "java" geoDistance GeoDistance
-        .PLANE)
+      .PLANE)
     req._builder.toString should matchJsonResource("/json/search/search_facets.json")
   }
 
@@ -500,7 +500,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for flt query" in {
     val req = search in "music" types "bands" query {
-      fuzzylikethis text "text like this one" fields("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 boost 1.2
+      fuzzylikethis text "text like this one" fields ("name", "location") analyzer WhitespaceAnalyzer ignoreTF true prefixLength 4 maxQueryTerms 2 boost 1.2
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_flt.json")
   }
@@ -530,7 +530,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multi match query" in {
     val req = search in "music" types "bands" query {
-      multiMatchQuery("this is my query") fields("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery
+      multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery
         MatchQueryBuilder.ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_multi_match.json")
@@ -540,10 +540,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search in "music" types "bands" filter {
       bool(
         should(
-          geoDistance("distance") point(10.5d, 35.0d) method GeoDistance
+          geoDistance("distance") point (10.5d, 35.0d) method GeoDistance
             .FACTOR cache true cacheKey "mycache" geohash "geo1234" distance "120mi"
         ) not (
-          geoDistance("distance") lat 45.4d lon 76.6d distance(45, DistanceUnit.YARD)
+            geoDistance("distance") lat 45.4d lon 76.6d distance (45, DistanceUnit.YARD)
           )
       )
     }
@@ -556,7 +556,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     }
     req._builder.toString should matchJsonResource("/json/search/search_rescore.json")
   }
-
 
   it should "generate correct json for function score query" in {
     val req = search in "music" types "bands" query {
@@ -572,7 +571,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geo polygon filter" in {
     val req = search in "music" types "bands" filter {
-      geoPolygon("distance") point(10, 10) point(20, 20) point(30, 30) cache true cacheKey "key" point "123456"
+      geoPolygon("distance") point (10, 10) point (20, 20) point (30, 30) cache true cacheKey "key" point "123456"
     }
     req._builder.toString should matchJsonResource("/json/search/search_filter_geo_polygon.json")
   }
@@ -600,11 +599,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_facets_histogram.json")
   }
 
-
   it should "generate correct json for datehistogram facet" in {
     val req = search in "music" types "bands" facets {
       facet datehistogram "years" interval "year" comparator
-      org.elasticsearch.search.facet.datehistogram.DateHistogramFacet.ComparatorType.COUNT valueField
+        org.elasticsearch.search.facet.datehistogram.DateHistogramFacet.ComparatorType.COUNT valueField
         "myvalue" keyField "mykey" global true nested "nested-path"
     }
     req._builder.toString should matchJsonResource("/json/search/search_facets_datehistogram.json")
@@ -619,7 +617,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for range aggregation" in {
     val req = search in "music" types "bands" aggs {
-      aggregation range "range_agg" field "score" range(10.0, 15.0)
+      aggregation range "range_agg" field "score" range (10.0, 15.0)
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_range.json")
   }
@@ -633,15 +631,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for filter aggregation" in {
     val req = search in "music" types "bands" aggs {
-      aggregation filter "my_filter_agg" filter { bool {
-        must {
-          termFilter("name", "sammy")
-        } should {
-          termFilter("location", "oxford")
-        } not {
-          termFilter("type", "rap")
+      aggregation filter "my_filter_agg" filter {
+        bool {
+          must {
+            termFilter("name", "sammy")
+          } should {
+            termFilter("location", "oxford")
+          } not {
+            termFilter("type", "rap")
+          }
         }
-      }
       }
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_filter.json")
@@ -656,39 +655,38 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geodistance aggregation" in {
     val req = search in "music" types "bands" aggs {
-      aggregation geodistance "geo_agg" field "geo_point" point(45.0, 27.0) geoDistance GeoDistance.ARC range (1.0, 1.0)
+      aggregation geodistance "geo_agg" field "geo_point" point (45.0, 27.0) geoDistance GeoDistance.ARC range (1.0, 1.0)
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_geodistance.json")
   }
 
   it should "generate correct json for sub aggregation" in {
     val req = search in "music" types "bands" aggs {
-      aggregation datehistogram "days" field "date" interval DateHistogram.Interval.DAY aggs(
+      aggregation datehistogram "days" field "date" interval DateHistogram.Interval.DAY aggs (
         aggregation terms "keywords" field "keyword" size 5,
         aggregation terms "countries" field "country")
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
   }
 
-
-    it should "generate correct json for highlighting" in {
-    val req = search in "music" types "bands" highlighting(
+  it should "generate correct json for highlighting" in {
+    val req = search in "music" types "bands" highlighting (
       options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder
-        .Score preTags "<b>" postTags "</b>" encoder HighlightEncoder.Html,
+      .Score preTags "<b>" postTags "</b>" encoder HighlightEncoder.Html,
       "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
       "type" numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
-      )
+    )
     req._builder.toString should matchJsonResource("/json/search/search_highlighting.json")
   }
 
   it should "generate correct json for multiple suggestions" in {
-    val req = search in "music" types "bands" query "coldplay" suggestions(
+    val req = search in "music" types "bands" query "coldplay" suggestions (
       suggest as "my-suggestion-1" on "clocks by culdpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
       suggest as "my-suggestion-2" on "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
       suggest as "my-suggestion-3" on "bountiful day by u22" from "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein",
       suggest as "my-suggestion-4" on "whatever some text" from "names" maxTermFreq 0.5 minWordLength 5 mode SuggestMode
-        .Always
-      )
+      .Always
+    )
 
     // -- disabled due to bug in elastic search
     // req._builder.toString should matchJsonResource("/json/search/search_suggestions_multiple.json")
@@ -696,7 +694,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   // for backwards compatibility default suggester is the term suggester
   it should "generate correct json for suggestions" in {
-    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions (
       suggest as "suggestion-1" on "clocks by culdpaly" from "name" maxEdits 2,
       suggest as "suggestion-2" on "aqualuck by jethro toll" from "name"
     )
@@ -704,7 +702,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for suggestions of multiple suggesters" in {
-    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
+    val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions (
       suggest using term as "suggestion-term" on "culdpaly" field "name" maxEdits 2,
       suggest using phrase as "suggestion-phrase" on "aqualuck by jethro toll" field "name",
       suggest using completion as "suggestion-completion" on "cold" field "ac"
@@ -724,21 +722,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for a query filter" in {
-    val req = search in "*" types("users", "tweets") filter {
+    val req = search in "*" types ("users", "tweets") filter {
       queryFilter("coldplay").cache(true).filterName("sammysfilter")
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_filter.json")
   }
 
   it should "generate correct json for a SpanTermQueryDefinition" in {
-    val req = search in "*" types("users", "tweets") query {
+    val req = search in "*" types ("users", "tweets") query {
       spanTermQuery("name", "coldplay").boost(123)
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_span_term.json")
   }
 
   it should "generate correct json for a geo distance range filter" in {
-    val req = search in "*" types("users", "tweets") filter {
+    val req = search in "*" types ("users", "tweets") filter {
       geoDistanceRangeFilter("postcode")
         .cache(true)
         .cacheKey("cacheybaby")
@@ -753,7 +751,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for a simple string query" in {
-    val req = search in "*" types("users", "tweets") query {
+    val req = search in "*" types ("users", "tweets") query {
       simpleStringQuery("coldplay")
         .analyzer("whitespace")
         .defaultOperator("AND")
@@ -763,5 +761,4 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_simple_string_query.json")
   }
 }
-
 

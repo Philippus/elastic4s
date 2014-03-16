@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.query.FilterBuilder
 import org.elasticsearch.cluster.metadata.AliasAction
-import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesAction, GetAliasesRequest}
-import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesAction}
+import org.elasticsearch.action.admin.indices.alias.get.{ GetAliasesAction, GetAliasesRequest }
+import org.elasticsearch.action.admin.indices.alias.{ IndicesAliasesRequest, IndicesAliasesAction }
 
 trait AliasesDsl {
   def aliases = new AliasesExpectsAction
@@ -26,7 +26,7 @@ trait AliasesDsl {
   }
 
   class GetAliasDefinition(aliases: Seq[String])
-    extends IndicesRequestDefinition(GetAliasesAction.INSTANCE) {
+      extends IndicesRequestDefinition(GetAliasesAction.INSTANCE) {
     val request = new GetAliasesRequest(aliases.toArray)
     def build = request
     def on(indexes: String*): GetAliasDefinition = {
@@ -36,7 +36,7 @@ trait AliasesDsl {
   }
 
   class MutateAliasDefinition(aliasAction: AliasAction)
-    extends IndicesRequestDefinition(IndicesAliasesAction.INSTANCE) {
+      extends IndicesRequestDefinition(IndicesAliasesAction.INSTANCE) {
     def routing(route: String) = new MutateAliasDefinition(aliasAction.routing(route))
     def filter(filter: FilterBuilder) = new MutateAliasDefinition(aliasAction.filter(filter))
     def build = new IndicesAliasesRequest().addAliasAction(aliasAction)

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.facet.{FacetBuilder, FacetBuilders}
+import org.elasticsearch.search.facet.{ FacetBuilder, FacetBuilders }
 import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.search.facet.histogram.HistogramFacet
 import org.elasticsearch.search.facet.datehistogram.DateHistogramFacet
@@ -142,7 +142,7 @@ class HistogramFacetDefinition(name: String, interval: Long) extends FacetDefini
 
 class DateHistogramFacetDefinition(name: String, interval: String) extends FacetDefinition {
   val builder = FacetBuilders.dateHistogramFacet(name).interval(interval)
-   def global(global: Boolean): DateHistogramFacetDefinition = {
+  def global(global: Boolean): DateHistogramFacetDefinition = {
     builder.global(global)
     this
   }
@@ -163,7 +163,6 @@ class DateHistogramFacetDefinition(name: String, interval: String) extends Facet
     this
   }
 }
-
 
 class FilterFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.filterFacet(name)

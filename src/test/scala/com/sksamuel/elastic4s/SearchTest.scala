@@ -9,26 +9,26 @@ import org.elasticsearch.common.Priority
 class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
-    index into "music/bands" fields(
+    index into "music/bands" fields (
       "name" -> "coldplay",
       "singer" -> "chris martin",
       "drummer" -> "will champion",
       "guitar" -> "johnny buckland"
-      )
+    )
   }
   client.execute {
-    index into "music/artists" fields(
+    index into "music/artists" fields (
       "name" -> "kate bush",
       "singer" -> "kate bush"
-      )
+    )
   }
   client.execute {
-    index into "music/bands" fields(
+    index into "music/bands" fields (
       "name" -> "jethro tull",
       "singer" -> "ian anderson",
       "guitar" -> "martin barre",
       "keyboards" -> "johnny smith"
-      ) id 45
+    ) id 45
   }
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet

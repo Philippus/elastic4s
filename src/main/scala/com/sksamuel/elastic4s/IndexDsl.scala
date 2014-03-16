@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.{IndexAction, IndexRequest}
+import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
+import org.elasticsearch.action.index.{ IndexAction, IndexRequest }
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
-import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Source}
+import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource, Source }
 
 /** @author Stephen Samuel */
 trait IndexDsl {
@@ -38,7 +38,7 @@ trait IndexDsl {
 
     def _fieldsAsXContent: XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
-      for ( tuple <- _fields ) {
+      for (tuple <- _fields) {
         source.field(tuple._1, tuple._2)
       }
       source.endObject()

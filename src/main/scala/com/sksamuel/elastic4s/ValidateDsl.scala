@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder}
+import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryAction, ValidateQueryRequestBuilder }
 
 /** @author Stephen Samuel */
 trait ValidateDsl extends QueryDsl {
@@ -13,17 +13,16 @@ trait ValidateDsl extends QueryDsl {
   }
 
   class ValidateDefinition(index: String, `type`: String)
-    extends IndicesRequestDefinition(ValidateQueryAction.INSTANCE) {
+      extends IndicesRequestDefinition(ValidateQueryAction.INSTANCE) {
     val _builder = new ValidateQueryRequestBuilder(null).setIndices(index).setTypes(`type`)
     def build = _builder.request
 
-    /**
-     * Adds a single string query to this search
-     *
-     * @param string the query string
-     *
-     * @return this
-     */
+    /** Adds a single string query to this search
+      *
+      * @param string the query string
+      *
+      * @return this
+      */
     def query(string: String): ValidateDefinition = {
       val q = new StringQueryDefinition(string)
       _builder.setQuery(q.builder)

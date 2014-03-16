@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.aggregations.{AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders}
-import org.elasticsearch.search.aggregations.bucket.terms.{TermsBuilder, Terms}
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramBuilder, HistogramBuilder, DateHistogram}
-import org.elasticsearch.common.geo.{GeoPoint, GeoDistance}
+import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders }
+import org.elasticsearch.search.aggregations.bucket.terms.{ TermsBuilder, Terms }
+import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogramBuilder, HistogramBuilder, DateHistogram }
+import org.elasticsearch.common.geo.{ GeoPoint, GeoDistance }
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
-
 
 /** @author Nicolas Yzet */
 
@@ -146,10 +145,9 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
   }
 }
 
-
 class HistogramAggregation(name: String) extends AggregationDefinition[HistogramAggregation, HistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.histogram(name)
-  
+
   def field(field: String): HistogramAggregation = {
     builder.field(field)
     this
@@ -161,10 +159,8 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
   }
 }
 
-
 class DateHistogramAggregation(name: String) extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.dateHistogram(name)
-
 
   def field(field: String): DateHistogramAggregation = {
     builder.field(field)
@@ -176,7 +172,7 @@ class DateHistogramAggregation(name: String) extends AggregationDefinition[DateH
     this
   }
 
-  def interval(interval: DateHistogram.Interval):  DateHistogramAggregation = {
+  def interval(interval: DateHistogram.Interval): DateHistogramAggregation = {
     builder.interval(interval)
     this
   }

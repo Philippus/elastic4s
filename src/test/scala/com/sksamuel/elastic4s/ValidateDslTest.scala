@@ -13,7 +13,7 @@ class ValidateDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept two parameters for index / type" in {
-    val req = validate in("places", "cities") query termQuery("name", "sammy")
+    val req = validate in ("places", "cities") query termQuery("name", "sammy")
     assert(req.build.indices() === Array("places"))
   }
 

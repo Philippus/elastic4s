@@ -20,7 +20,7 @@ trait GetDsl extends IndexesTypesDsl {
 }
 
 case class GetDefinition(indexesTypes: IndexesTypes, id: String)
-  extends RequestDefinition(GetAction.INSTANCE) {
+    extends RequestDefinition(GetAction.INSTANCE) {
 
   private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
   def build = _builder
@@ -35,7 +35,7 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
-  def fields(fields: String *) = {
+  def fields(fields: String*) = {
     _builder.fields(fields: _*)
     this
   }

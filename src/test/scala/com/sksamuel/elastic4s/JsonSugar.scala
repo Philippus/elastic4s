@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.scalatest.Matchers
-import org.scalatest.matchers.{Matcher, MatchResult}
+import org.scalatest.matchers.{ Matcher, MatchResult }
 
 trait JsonSugar extends Matchers {
   private val mapper = new ObjectMapper()
@@ -12,7 +12,7 @@ trait JsonSugar extends Matchers {
   class JsonResourceMatcher(resourceName: String) extends Matcher[String] {
     override def apply(left: String): MatchResult = {
       val jsonResource = getClass.getResource(resourceName)
-      withClue(s"expected JSON resource [$resourceName] ") { jsonResource should not be null}
+      withClue(s"expected JSON resource [$resourceName] ") { jsonResource should not be null }
 
       val expectedJson = mapper.readTree(jsonResource)
       val actualJson = mapper.readTree(left)

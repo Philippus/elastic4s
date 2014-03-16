@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FlatSpec, OneInstancePerTest}
+import org.scalatest.{ FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -56,7 +56,7 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   }
 
   it should "accept two parameters for in" in {
-    val req = update id 65 in("places", "cities")
+    val req = update id 65 in ("places", "cities")
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "cities")
   }

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.explain.ExplainRequestBuilder
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRouting}
+import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreference, DefinitionAttributeRouting }
 
 /** @author Stephen Samuel */
 trait ExplainDsl {
@@ -15,7 +15,7 @@ trait ExplainDsl {
   }
 
   class ExplainDefinition(indexesTypes: IndexesTypes, id: Any)
-    extends DefinitionAttributeRouting with DefinitionAttributePreference {
+      extends DefinitionAttributeRouting with DefinitionAttributePreference {
     val _builder = new ExplainRequestBuilder(null, indexesTypes.index, indexesTypes.typ.get, id.toString)
     def build = _builder.request
 

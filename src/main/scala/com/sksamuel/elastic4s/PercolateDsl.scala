@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
 import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder}
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
-import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder}
+import org.elasticsearch.action.percolate.{ PercolateAction, PercolateRequestBuilder }
+import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
+import org.elasticsearch.action.index.{ IndexAction, IndexRequestBuilder }
 import org.elasticsearch.percolator.PercolatorService
 
 /** @author Stephen Samuel */
@@ -32,7 +32,7 @@ trait PercolateDsl extends QueryDsl {
         source.field("query", _query.builder)
 
       source.startObject("doc")
-      for ( tuple <- _fields ) {
+      for (tuple <- _fields) {
         source.field(tuple._1, tuple._2)
       }
       source.endObject().endObject()
@@ -71,7 +71,7 @@ trait PercolateDsl extends QueryDsl {
     def build = {
       val source = XContentFactory.jsonBuilder()
         .startObject().field("query", _query.builder)
-      for ( tuple <- _fields ) {
+      for (tuple <- _fields) {
         source.field(tuple._1, tuple._2)
       }
       source.endObject()
