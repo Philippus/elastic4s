@@ -98,6 +98,21 @@ trait IndexDsl {
             val values = arr.map(new SimpleFieldValue(None, _))
             new ArrayFieldValue(name, values)
 
+          case (name: String, s: Seq[_]) =>
+            s.headOption match {
+              case Some(m: Map[_, _]) =>
+                val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
+                new ArrayFieldValue(name, nested)
+
+              case Some(a: Any) =>
+                val values = s.map(new SimpleFieldValue(None, _))
+                new ArrayFieldValue(name, values)
+
+              case _ =>
+                // can't work out or empty - map to empty
+                new ArrayFieldValue(name, Seq())
+            }
+
           case (name: String, a: Any) =>
             new SimpleFieldValue(Some(name), a)
 

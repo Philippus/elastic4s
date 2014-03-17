@@ -94,12 +94,51 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     checkRequest(req, "twitter", "tweets", "/json/index/array.json")
   }
 
+  it should "generate array fields when using seqs" in {
+    val req = index into "twitter/tweets" fields Map(
+      "user" -> "sammy",
+      "post_date" -> "2011-11-15T14:12:12",
+      "message" -> "Array message",
+      "tags" -> Seq(
+        "array",
+        "search",
+        "test"
+      )
+    )
+
+    checkRequest(req, "twitter", "tweets", "/json/index/array.json")
+  }
+
   it should "generate array of nested fields" in {
     val req = index into "twitter/tweets" fields Map(
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
       "message" -> "Array of nested message",
       "tags" -> Array(
+        Map(
+          "id" -> 642,
+          "text" -> "array"
+        ),
+        Map(
+          "id" -> 883,
+          "text" -> "search"
+        ),
+        Map(
+          "id" -> 231,
+          "text" -> "test"
+        )
+      )
+    )
+
+    checkRequest(req, "twitter", "tweets", "/json/index/array_nested.json")
+  }
+
+  it should "generate array of nested fields when using seqs" in {
+    val req = index into "twitter/tweets" fields Map(
+      "user" -> "sammy",
+      "post_date" -> "2011-11-15T14:12:12",
+      "message" -> "Array of nested message",
+      "tags" -> Seq(
         Map(
           "id" -> 642,
           "text" -> "array"
