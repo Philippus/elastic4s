@@ -7,7 +7,7 @@ Lets index a very simple document that has a single field, a name.
 
 ```scala
 index into "family" -> "soprano" fields {
-    "head" -> "tony"
+  "head" -> "tony"
 }
 ```
 
@@ -15,7 +15,7 @@ Very SQL like as you can see. We can also specify the id.
 
 ```scala
 index into "family" -> "soprano" fields {
-    "boss" -> "tony"
+  "boss" -> "tony"
 } id 1234
 ```
 
@@ -24,17 +24,41 @@ Multiple fields? Easy.
 
 ```scala
 index into "family" -> "soprano" fields (
-    "boss" -> "tony",
-    "consigliere" -> "salvidor",
-    "underboss" -> "bobby"
+  "boss" -> "tony",
+  "consigliere" -> "silvio",
+  "underboss" -> "bobby"
 ) id 1234
 ```
 
-If we have a nested structure, we can specifiy nested fields using dot notation.
+If we have a nested structure, we can specifiy nested fields using nested `Map`s:
 
 ```scala
 index into "family" -> "soprano" fields (
-    "boss" -> "tony",
-    "boss.age" -> "56"
+  "boss" -> Map(
+    "name" -> "tony",
+    "age" -> "56"
+  )
 )
 ```
+
+Similarly arrays can be specified using `Array`s or `Seq`s:
+
+```scala
+index into "family" -> "soprano" fields (
+  "boss" -> "tony",
+  "members" -> Array(
+    "tony",
+    "salvidor",
+    "bobby"
+  ),
+  "crews" -> Seq(
+    "gualtieri",
+    "baccalieri",
+    "barese",
+    "moltisanti"
+  )
+)
+```
+
+
+More examples can be found in [IndexDslTest.scala](../src/test/scala/com/sksamuel/elastic4s/IndexDslTest.scala).
