@@ -1,3 +1,4 @@
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
@@ -7,8 +8,6 @@ organization := "com.sksamuel.elastic4s"
 version := "1.0.1.1"
 
 scalaVersion := "2.10.3"
-
-crossScalaVersions := Seq("2.10.3", "2.11.0-RC1")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -43,7 +42,7 @@ libraryDependencies ++= Seq(
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.6.6"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.0"    % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.1.0"  % "test"
 )
 
 ScoverageSbtPlugin.instrumentSettings
