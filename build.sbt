@@ -1,4 +1,3 @@
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
@@ -75,7 +74,12 @@ pomExtra := {
       <developer>
         <id>sksamuel</id>
         <name>sksamuel</name>
-        <url>http://github.com/elastic4s</url>
+        <url>http://github.com/fehmicansaglam</url>
+      </developer>
+      <developer>
+        <id>fehmicansaglam</id>
+        <name>fehmicansaglam</name>
+        <url>http://github.com/fehmicansaglam</url>
       </developer>
     </developers>
 }
