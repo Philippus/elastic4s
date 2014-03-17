@@ -74,7 +74,7 @@ pomExtra := {
       <developer>
         <id>sksamuel</id>
         <name>sksamuel</name>
-        <url>http://github.com/fehmicansaglam</url>
+        <url>http://github.com/sksamuel</url>
       </developer>
       <developer>
         <id>fehmicansaglam</id>
