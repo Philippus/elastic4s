@@ -8,20 +8,23 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder
 trait SuggestionDsl {
 
   sealed trait Suggester[S <: SuggestionDefinition]
-  object term extends Suggester[TermSuggestionDefinition]
-  object phrase extends Suggester[PhraseSuggestionDefinition]
-  object completion extends Suggester[CompletionSuggestionDefinition]
+  case object term extends Suggester[TermSuggestionDefinition]
+  case object phrase extends Suggester[PhraseSuggestionDefinition]
+  case object completion extends Suggester[CompletionSuggestionDefinition]
 
   object suggest {
 
-    def using[S <: SuggestionDefinition](suggester: Suggester[S]) = new {
-      def as(name: String): S = suggester match {
-        case `term` => new TermSuggestionDefinition(name)
-        case `phrase` => new PhraseSuggestionDefinition(name)
-        case `completion` => new CompletionSuggestionDefinition(name)
-      }
+    class SuggestAs[S <: SuggestionDefinition](f: String => S) {
+      def as(name: String): S = f(name)
     }
 
+    def using[S <: SuggestionDefinition](suggester: Suggester[S]): SuggestAs[S] = suggester match {
+      case `term` => new SuggestAs(name => new TermSuggestionDefinition(name))
+      case `phrase` => new SuggestAs(name => new PhraseSuggestionDefinition(name))
+      case `completion` => new SuggestAs(name => new CompletionSuggestionDefinition(name))
+    }
+
+    /** used for backwards compatibility */
     def as(name: String) = using(term) as name
   }
 
