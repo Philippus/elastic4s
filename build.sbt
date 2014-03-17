@@ -5,7 +5,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.0.1.1"
+version := "1.0.1.2"
 
 scalaVersion := "2.10.3"
 
