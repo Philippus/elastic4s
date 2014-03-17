@@ -7,6 +7,7 @@ import org.elasticsearch.action.index.{ IndexAction, IndexRequest }
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
 import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource, Source }
+import scala.collection.mutable
 
 /** @author Stephen Samuel */
 trait IndexDsl {
@@ -24,7 +25,7 @@ trait IndexDsl {
       extends RequestDefinition(IndexAction.INSTANCE) with BulkCompatibleDefinition {
 
     private val _request = new IndexRequest(index, `type`)
-    private val _fields = new ListBuffer[(String, Any)]
+    private val _fields = mutable.Buffer[FieldValue]()
     private var _source: Option[DocumentSource] = None
     private var _map: Option[DocumentMap] = None
 
@@ -38,9 +39,7 @@ trait IndexDsl {
 
     def _fieldsAsXContent: XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
-      for (tuple <- _fields) {
-        source.field(tuple._1, tuple._2)
-      }
+      _fields.foreach(_.output(source))
       source.endObject()
     }
 
@@ -84,12 +83,32 @@ trait IndexDsl {
       this
     }
 
-    def fields(map: Map[String, Any]): IndexDefinition = fields(map.toList)
-    def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toIterable)
-    def fields(iterable: Iterable[(String, Any)]): IndexDefinition = {
-      this._fields ++= iterable
+    def fields(fields: Map[String, Any]): IndexDefinition = {
+      def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
+        fields map {
+          case (name: String, nest: Map[_, _]) =>
+            val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
+            new NestedFieldValue(Some(name), nestedFields)
+          case (name: String, nest: Array[Map[_, _]]) =>
+            val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
+            new ArrayFieldValue(name, nested)
+
+          case (name: String, arr: Array[Any]) =>
+            val values = arr.map(new SimpleFieldValue(None, _))
+            new ArrayFieldValue(name, values)
+
+          case (name: String, a: Any) =>
+            new SimpleFieldValue(Some(name), a)
+        }
+      }.toSeq
+
+      _fields ++= mapFields(fields)
+
       this
     }
+
+    def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toMap)
+    def fields(_fields: Iterable[(String, Any)]): IndexDefinition = fields(_fields.toMap)
 
     def doc(source: DocumentSource) = {
       this._source = Option(source)
@@ -103,5 +122,39 @@ trait IndexDsl {
 
     @deprecated("renamed to doc", "1.0")
     def source(source: Source) = doc(source)
+  }
+
+  trait FieldValue {
+    def output(source: XContentBuilder)
+  }
+
+  class SimpleFieldValue(name: Option[String], value: Any) extends FieldValue {
+    def output(source: XContentBuilder) {
+      name match {
+        case Some(n) => source.field(n, value)
+        case None => source.value(value)
+      }
+    }
+  }
+
+  class ArrayFieldValue(name: String, values: Seq[FieldValue]) extends FieldValue {
+    def output(source: XContentBuilder) {
+      source.startArray(name)
+      values.foreach(_.output(source))
+      source.endArray()
+    }
+  }
+
+  class NestedFieldValue(name: Option[String], values: Seq[FieldValue]) extends FieldValue {
+    def output(source: XContentBuilder) {
+      name match {
+        case Some(n) => source.startObject(n)
+        case None => source.startObject()
+      }
+
+      values.foreach(_.output(source))
+
+      source.endObject()
+    }
   }
 }
