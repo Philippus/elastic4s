@@ -122,4 +122,25 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     )
     req._fieldsAsXContent.string should matchJsonResource("/json/index/nested_array.json")
   }
+
+  it should "null blah" in {
+    val req = index into "twitter/tweet" id 9999 fields Map(
+      "user" -> "sammy",
+      "message" -> null
+    )
+
+    req._fieldsAsXContent.string should matchJsonResource("/json/index/null.json")
+  }
+
+  it should "nested null blah" in {
+    val req = index into "twitter/tweet" id 9999 fields Map(
+      "user" -> Map(
+        "handle" -> "sammy",
+        "name" -> null
+      ),
+      "message" -> "Message with nested null"
+    )
+
+    req._fieldsAsXContent.string should matchJsonResource("/json/index/nested_null.json")
+  }
 }

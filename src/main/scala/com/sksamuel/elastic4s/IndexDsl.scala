@@ -86,6 +86,7 @@ trait IndexDsl {
     def fields(fields: Map[String, Any]): IndexDefinition = {
       def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
         fields map {
+
           case (name: String, nest: Map[_, _]) =>
             val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
             new NestedFieldValue(Some(name), nestedFields)
@@ -99,6 +100,8 @@ trait IndexDsl {
 
           case (name: String, a: Any) =>
             new SimpleFieldValue(Some(name), a)
+
+          case (name: String, _) => new NullFieldValue(name)
         }
       }.toSeq
 
@@ -126,6 +129,12 @@ trait IndexDsl {
 
   trait FieldValue {
     def output(source: XContentBuilder)
+  }
+
+  class NullFieldValue(name: String) extends FieldValue {
+    def output(source: XContentBuilder) {
+      source.nullField(name)
+    }
   }
 
   class SimpleFieldValue(name: Option[String], value: Any) extends FieldValue {
