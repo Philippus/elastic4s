@@ -72,14 +72,22 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition)
       extends RequestDefinition(DeleteByQueryAction.INSTANCE) {
 
-    private val builder = new DeleteByQueryRequestBuilder(null).setIndices(indexesTypes.indexes: _*)
-      .setTypes(indexesTypes.types: _*)
-      .setQuery(q.builder)
+    private val builder: DeleteByQueryRequestBuilder =
+      new DeleteByQueryRequestBuilder(null)
+        .setIndices(indexesTypes.indexes: _*)
+        .setTypes(indexesTypes.types: _*)
 
     def types(types: String*): DeleteByQueryDefinition = {
       builder.setTypes(types.toSeq: _*)
       this
     }
-    def build = builder.request()
+
+    def build = {
+      val req = builder.request()
+
+      // need to set the query on the request - workaround for ES internals
+      val qsb = new QuerySourceBuilder().setQuery(q.builder)
+      req.source(qsb)
+    }
   }
 }

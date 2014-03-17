@@ -66,13 +66,11 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
     blockUntilCount(2, "places")
   }
 
-  // todo looks like elasticsearch bug
-  //  it should "remove a document when deleting by query" in {
-  //    client.sync.execute {
-  //      // delete from "places" types "cities" where "continent:Europe"
-  //      delete from Seq("places") types Seq("cities") where "continent:Europe"
-  //    }
-  //    refresh("places")
-  //    blockUntilCount(1, "places")
-  //  }
+  it should "remove a document when deleting by query" in {
+    client.sync.execute {
+      delete from "places" types "cities" where matchQuery("continent", "Europe")
+    }
+    refresh("places")
+    blockUntilCount(1, "places")
+  }
 }
