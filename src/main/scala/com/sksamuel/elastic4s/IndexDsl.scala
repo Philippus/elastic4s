@@ -86,10 +86,10 @@ trait IndexDsl {
     def fields(fields: Map[String, Any]): IndexDefinition = {
       def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
         fields map {
-
           case (name: String, nest: Map[_, _]) =>
             val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
             new NestedFieldValue(Some(name), nestedFields)
+
           case (name: String, nest: Array[Map[_, _]]) =>
             val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
             new ArrayFieldValue(name, nested)
