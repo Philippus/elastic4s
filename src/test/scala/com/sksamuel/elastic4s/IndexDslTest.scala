@@ -15,7 +15,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate with index & type as a tuple" in {
-    val req = index into "twitter" -> "tweets" fields Map(
+    val req = index into "twitter" -> "tweets" fields (
       "name" -> "sksamuel"
     )
 
@@ -23,7 +23,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate with a string id" in {
-    val req = index into "twitter/tweets" id "test-id" fields Map(
+    val req = index into "twitter/tweets" id "test-id" fields (
       "name" -> "sksamuel"
     )
 
@@ -31,7 +31,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate with a numeric id" in {
-    val req = index into "twitter/tweets" id 1234 fields Map(
+    val req = index into "twitter/tweets" id 1234 fields (
       "name" -> "sksamuel"
     )
 
@@ -39,7 +39,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate including routing and ttl" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "name" -> "sksamuel"
     ) routing "users" ttl 100000
 
@@ -47,7 +47,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate for multiple fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "post_date" -> "2009-11-15T14:12:12",
       "message" -> "trying out Elastic Search Scala DSL"
@@ -56,8 +56,8 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     checkRequest(req, "twitter", "tweets", "/json/index/simple_multiple.json")
   }
 
-  it should "generate for multiple fields when using a seq" in {
-    val req = index into "twitter/tweets" fields Seq(
+  it should "generate for multiple fields when using a map" in {
+    val req = index into "twitter/tweets" fields Map(
       "user" -> "sammy",
       "post_date" -> "2009-11-15T14:12:12",
       "message" -> "trying out Elastic Search Scala DSL"
@@ -67,7 +67,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate nested fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> Map(
         "handle" -> "sammy",
         "name" -> "Sam"
@@ -80,7 +80,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate array fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
       "message" -> "Array message",
@@ -95,7 +95,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate array fields when using seqs" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
       "message" -> "Array message",
@@ -110,7 +110,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate array of nested fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
       "message" -> "Array of nested message",
@@ -134,7 +134,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate array of nested fields when using seqs" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "post_date" -> "2011-11-15T14:12:12",
       "message" -> "Array of nested message",
@@ -158,7 +158,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate nested field of arrays" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> Map(
         "handle" -> "sammy",
         "name" -> "Sam",
@@ -175,7 +175,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate null fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> "sammy",
       "message" -> null
     )
@@ -184,7 +184,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
   }
 
   it should "generate nested null fields" in {
-    val req = index into "twitter/tweets" fields Map(
+    val req = index into "twitter/tweets" fields (
       "user" -> Map(
         "handle" -> "sammy",
         "name" -> null
