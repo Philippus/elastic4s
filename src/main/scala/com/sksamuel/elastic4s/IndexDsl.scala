@@ -143,17 +143,17 @@ trait IndexDsl {
   }
 
   trait FieldValue {
-    def output(source: XContentBuilder)
+    def output(source: XContentBuilder): Unit
   }
 
   class NullFieldValue(name: String) extends FieldValue {
-    def output(source: XContentBuilder) {
+    def output(source: XContentBuilder): Unit = {
       source.nullField(name)
     }
   }
 
   class SimpleFieldValue(name: Option[String], value: Any) extends FieldValue {
-    def output(source: XContentBuilder) {
+    def output(source: XContentBuilder): Unit = {
       name match {
         case Some(n) => source.field(n, value)
         case None => source.value(value)
@@ -162,7 +162,7 @@ trait IndexDsl {
   }
 
   class ArrayFieldValue(name: String, values: Seq[FieldValue]) extends FieldValue {
-    def output(source: XContentBuilder) {
+    def output(source: XContentBuilder): Unit = {
       source.startArray(name)
       values.foreach(_.output(source))
       source.endArray()
@@ -170,7 +170,7 @@ trait IndexDsl {
   }
 
   class NestedFieldValue(name: Option[String], values: Seq[FieldValue]) extends FieldValue {
-    def output(source: XContentBuilder) {
+    def output(source: XContentBuilder): Unit = {
       name match {
         case Some(n) => source.startObject(n)
         case None => source.startObject()
