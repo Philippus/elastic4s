@@ -62,3 +62,48 @@ index into "family" -> "soprano" fields (
 
 
 More examples can be found in [IndexDslTest.scala](../src/test/scala/com/sksamuel/elastic4s/IndexDslTest.scala).
+
+### Indexing with Explicit Fields
+
+Sometimes it is necessary to be able to explicitly specify fields, this can be done like:
+
+```scala
+index into "family" -> "soprano" fieldValues (
+  SimpleFieldValue("boss", "tony"),
+  ArrayFieldValue("members", Array(
+    SimpleFieldValue("tony"),
+    SimpleFieldValue("salvidor"),
+    SimpleFieldValue("bobby")
+  )),
+  ArrayFieldValue("crews", Seq(
+    SimpleFieldValue("gualtieri"),
+    SimpleFieldValue("baccalieri"),
+    SimpleFieldValue("barese"),
+    SimpleFieldValue("moltisanti")
+  ))
+)
+```
+
+### Custom Field Types
+
+Custom field types can be defined by extending `FieldValue`:
+
+```scala
+case class CustomDateFieldValue(name: String, date: Date) extends FieldValue {
+  private val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+
+  def output(source: XContentBuilder): Unit = {
+    source.field(name, dateFormat.format(date))
+  }
+}
+```
+
+This can then be used when indexing:
+
+```scala
+index into "twitter/tweets" fieldValues (
+  SimpleFieldValue("user", "tony.soprano"),
+  CustomDateFieldValue("post_date", new Date()),
+  SimpleFieldValue("message", "Spending time with the family")
+)
+```

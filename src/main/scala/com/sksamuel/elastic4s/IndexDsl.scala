@@ -88,35 +88,36 @@ trait IndexDsl {
         fields map {
           case (name: String, nest: Map[_, _]) =>
             val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
-            new NestedFieldValue(Some(name), nestedFields)
+            NestedFieldValue(Some(name), nestedFields)
 
           case (name: String, nest: Array[Map[_, _]]) =>
             val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-            new ArrayFieldValue(name, nested)
+            ArrayFieldValue(name, nested)
 
           case (name: String, arr: Array[Any]) =>
             val values = arr.map(new SimpleFieldValue(None, _))
-            new ArrayFieldValue(name, values)
+            ArrayFieldValue(name, values)
 
           case (name: String, s: Seq[_]) =>
             s.headOption match {
               case Some(m: Map[_, _]) =>
                 val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-                new ArrayFieldValue(name, nested)
+                ArrayFieldValue(name, nested)
 
               case Some(a: Any) =>
                 val values = s.map(new SimpleFieldValue(None, _))
-                new ArrayFieldValue(name, values)
+                ArrayFieldValue(name, values)
 
               case _ =>
                 // can't work out or empty - map to empty
-                new ArrayFieldValue(name, Seq())
+                ArrayFieldValue(name, Seq())
             }
 
           case (name: String, a: Any) =>
-            new SimpleFieldValue(Some(name), a)
+            SimpleFieldValue(Some(name), a)
 
-          case (name: String, _) => new NullFieldValue(name)
+          case (name: String, _) =>
+            NullFieldValue(name)
         }
       }.toSeq
 
@@ -127,6 +128,11 @@ trait IndexDsl {
 
     def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toMap)
     def fields(_fields: Iterable[(String, Any)]): IndexDefinition = fields(_fields.toMap)
+
+    def fieldValues(fields: FieldValue*): IndexDefinition = {
+      _fields ++= fields
+      this
+    }
 
     def doc(source: DocumentSource) = {
       this._source = Option(source)
@@ -146,13 +152,13 @@ trait IndexDsl {
     def output(source: XContentBuilder): Unit
   }
 
-  class NullFieldValue(name: String) extends FieldValue {
+  case class NullFieldValue(name: String) extends FieldValue {
     def output(source: XContentBuilder): Unit = {
       source.nullField(name)
     }
   }
 
-  class SimpleFieldValue(name: Option[String], value: Any) extends FieldValue {
+  case class SimpleFieldValue(name: Option[String], value: Any) extends FieldValue {
     def output(source: XContentBuilder): Unit = {
       name match {
         case Some(n) => source.field(n, value)
@@ -161,7 +167,12 @@ trait IndexDsl {
     }
   }
 
-  class ArrayFieldValue(name: String, values: Seq[FieldValue]) extends FieldValue {
+  object SimpleFieldValue {
+    def apply(name: String, value: Any): SimpleFieldValue = apply(Some(name), value)
+    def apply(value: Any): SimpleFieldValue = apply(None, value)
+  }
+
+  case class ArrayFieldValue(name: String, values: Seq[FieldValue]) extends FieldValue {
     def output(source: XContentBuilder): Unit = {
       source.startArray(name)
       values.foreach(_.output(source))
@@ -169,7 +180,7 @@ trait IndexDsl {
     }
   }
 
-  class NestedFieldValue(name: Option[String], values: Seq[FieldValue]) extends FieldValue {
+  case class NestedFieldValue(name: Option[String], values: Seq[FieldValue]) extends FieldValue {
     def output(source: XContentBuilder): Unit = {
       name match {
         case Some(n) => source.startObject(n)
@@ -180,5 +191,10 @@ trait IndexDsl {
 
       source.endObject()
     }
+  }
+
+  object NestedFieldValue {
+    def apply(name: String, values: Seq[FieldValue]): NestedFieldValue = apply(Some(name), values)
+    def apply(values: Seq[FieldValue]): NestedFieldValue = apply(None, values)
   }
 }

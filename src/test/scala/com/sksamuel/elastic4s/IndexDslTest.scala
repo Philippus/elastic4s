@@ -3,6 +3,9 @@ package com.sksamuel.elastic4s
 import org.scalatest.{ Matchers, FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
+import org.elasticsearch.common.xcontent.XContentBuilder
+import java.util.{ Calendar, GregorianCalendar, Date }
+import java.text.SimpleDateFormat
 
 /** @author Stephen Samuel */
 class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
@@ -72,8 +75,8 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
         "handle" -> "sammy",
         "name" -> "Sam"
       ),
-      "post_date" -> "2011-11-15T14:12:12",
-      "message" -> "Nested message"
+        "post_date" -> "2011-11-15T14:12:12",
+        "message" -> "Nested message"
     )
 
     checkRequest(req, "twitter", "tweets", "/json/index/nested.json")
@@ -167,8 +170,8 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
           "scala"
         )
       ),
-      "post_date" -> "2011-11-15T14:12:12",
-      "message" -> "Nested array message"
+        "post_date" -> "2011-11-15T14:12:12",
+        "message" -> "Nested array message"
     )
 
     checkRequest(req, "twitter", "tweets", "/json/index/nested_array.json")
@@ -189,10 +192,38 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
         "handle" -> "sammy",
         "name" -> null
       ),
-      "message" -> "Message with nested null"
+        "message" -> "Message with nested null"
     )
 
     checkRequest(req, "twitter", "tweets", "/json/index/nested_null.json")
+  }
+
+  it should "field values" in {
+    val req = index into "twitter/tweets" fieldValues (
+      SimpleFieldValue("user", "sammy"),
+      SimpleFieldValue("post_date", "2009-11-15T14:12:12"),
+      SimpleFieldValue("message", "trying out Elastic Search Scala DSL")
+    )
+
+    checkRequest(req, "twitter", "tweets", "/json/index/simple_multiple.json")
+  }
+
+  it should "custom field values" in {
+    val cal = new GregorianCalendar()
+    cal.set(Calendar.YEAR, 2009)
+    cal.set(Calendar.MONTH, 10)
+    cal.set(Calendar.DAY_OF_MONTH, 15)
+    cal.set(Calendar.HOUR_OF_DAY, 14)
+    cal.set(Calendar.MINUTE, 12)
+    cal.set(Calendar.SECOND, 12)
+
+    val req = index into "twitter/tweets" fieldValues (
+      SimpleFieldValue("user", "sammy"),
+      CustomDateFieldValue("post_date", cal.getTime),
+      SimpleFieldValue("message", "trying out Elastic Search Scala DSL")
+    )
+
+    checkRequest(req, "twitter", "tweets", "/json/index/simple_multiple.json")
   }
 
   private def checkRequest(req: IndexDefinition,
@@ -223,5 +254,13 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     }
 
     req._fieldsAsXContent.string should matchJsonResource(expectedJsonResource)
+  }
+
+  case class CustomDateFieldValue(name: String, date: Date) extends FieldValue {
+    private val dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+
+    def output(source: XContentBuilder): Unit = {
+      source.field(name, dateFormat.format(date))
+    }
   }
 }
