@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{ HasParentFilterBuilder, HasChildFilterBuilder, FilterBuilders }
+import org.elasticsearch.index.query.{ HasParentFilterBuilder, HasChildFilterBuilder, NestedFilterBuilder, FilterBuilders }
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import com.sksamuel.elastic4s.DefinitionAttributes._
@@ -29,6 +29,14 @@ trait FilterDsl {
       new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, query.builder))
     def filter(filter: FilterDefinition) =
       new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
+  }
+
+  def nestedFilter(path: String) = new NestedFilterExpectsQueryOrFilter(path)
+  class NestedFilterExpectsQueryOrFilter(path: String) {
+    def query(query: QueryDefinition) =
+      new NestedFilterDefinition(FilterBuilders.nestedFilter(path, query.builder))
+    def filter(filter: FilterDefinition) =
+      new NestedFilterDefinition(FilterBuilders.nestedFilter(path, filter.builder))
   }
 
   def matchAllFilter = new MatchAllFilter
@@ -247,6 +255,18 @@ class HasParentFilterDefinition(val builder: HasParentFilterBuilder)
   val _builder = builder
   def name(name: String): HasParentFilterDefinition = {
     builder.filterName(name)
+    this
+  }
+}
+
+class NestedFilterDefinition(val builder: NestedFilterBuilder)
+    extends FilterDefinition
+    with DefinitionAttributeCache
+    with DefinitionAttributeCacheKey
+    with DefinitionAttributeFilterName {
+  val _builder = builder
+  def join(join: Boolean): NestedFilterDefinition = {
+    builder.join(join)
     this
   }
 }
