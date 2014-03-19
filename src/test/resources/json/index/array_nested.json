@@ -1,0 +1,19 @@
+{
+    "user": "sammy",
+    "post_date": "2011-11-15T14:12:12",
+    "message": "Array of nested message",
+    "tags": [
+        {
+            "id": 642,
+            "text": "array"
+        },
+        {
+            "id": 883,
+            "text": "search"
+        },
+        {
+            "id": 231,
+            "text": "test"
+        }
+    ]
+}
