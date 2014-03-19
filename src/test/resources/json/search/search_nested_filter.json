@@ -1,0 +1,14 @@
+{
+    "post_filter": {
+        "nested": {
+            "filter": {
+                "term": {
+                    "name": "chris"
+                }
+            },
+            "path": "singer",
+            "_name": "my-filter6",
+            "join": true
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "post_filter": {
+        "nested": {
+            "query": {
+                "term": {
+                    "name": "chris"
+                }
+            },
+            "path": "singer"
+        }
+    }
+}

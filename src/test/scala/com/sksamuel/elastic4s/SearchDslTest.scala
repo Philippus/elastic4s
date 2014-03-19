@@ -319,6 +319,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_hasparent_filter.json")
   }
 
+  it should "generate json for nested filter with filter" in {
+    val req = search in "music" types "bands" filter {
+      nestedFilter("singer") filter {
+        termFilter("name", "chris")
+      } filterName "my-filter6" join true
+    } preference Preference.Primary
+    req._builder.toString should matchJsonResource("/json/search/search_nested_filter.json")
+  }
+
   it should "generate json for has child filter with query" in {
     val req = search in "music" types "bands" filter {
       hasChildFilter("singer") query {
@@ -335,6 +344,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       }
     } preference Preference.Primary
     req._builder.toString should matchJsonResource("/json/search/search_hasparent_filter_query.json")
+  }
+
+  it should "generate json for nested filter with query" in {
+    val req = search in "music" types "bands" filter {
+      nestedFilter("singer") query {
+        termQuery("name", "chris")
+      }
+    } preference Preference.Primary
+    req._builder.toString should matchJsonResource("/json/search/search_nested_filter_query.json")
   }
 
   it should "generate json for id filter" in {
