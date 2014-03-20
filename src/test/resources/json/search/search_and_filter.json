@@ -1,0 +1,21 @@
+{
+   "post_filter":{
+      "and":{
+         "filters":[
+            {
+               "term":{
+                  "singer":"chris"
+               }
+            },
+            {
+               "term":{
+                  "singer":"sammy"
+               }
+            }
+         ],
+         "_name":"my-filter",
+         "_cache":true,
+         "_cache_key":"chris-and-sammy"
+      }
+   }
+}

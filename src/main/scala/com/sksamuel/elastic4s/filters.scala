@@ -46,6 +46,9 @@ trait FilterDsl {
   class NotExpectsFilter {
     def filter(filter: FilterDefinition) = new NotFilterDefinition(filter)
   }
+  def or(filters: FilterDefinition*) = new OrFilterDefinition(filters: _*)
+  def and(filters: FilterDefinition*) = new AndFilterDefinition(filters: _*)
+
   def numericRangeFilter(field: String) = new NumericRangeFilter(field)
   def rangeFilter(field: String) = new RangeFilter(field)
 
@@ -372,6 +375,30 @@ class NotFilterDefinition(filter: FilterDefinition)
     with DefinitionAttributeFilterName {
   val builder = FilterBuilders.notFilter(filter.builder)
   val _builder = builder
+}
+
+class OrFilterDefinition(filters: FilterDefinition*)
+    extends FilterDefinition
+    with DefinitionAttributeCache
+    with DefinitionAttributeCacheKey {
+  val builder = FilterBuilders.orFilter(filters.map(_.builder).toArray: _*)
+  val _builder = builder
+  def name(name: String) = {
+    builder.filterName(name)
+    this
+  }
+}
+
+class AndFilterDefinition(filters: FilterDefinition*)
+    extends FilterDefinition
+    with DefinitionAttributeCache
+    with DefinitionAttributeCacheKey {
+  val builder = FilterBuilders.andFilter(filters.map(_.builder).toArray: _*)
+  val _builder = builder
+  def name(name: String) = {
+    builder.filterName(name)
+    this
+  }
 }
 
 class GeoDistanceFilter(name: String)
