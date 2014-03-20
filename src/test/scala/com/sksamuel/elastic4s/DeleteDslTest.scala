@@ -3,6 +3,9 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
+import org.elasticsearch.index.VersionType
+import org.elasticsearch.action.support.replication.ReplicationType
+import org.elasticsearch.action.WriteConsistencyLevel
 
 /** @author Stephen Samuel */
 class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -47,6 +50,21 @@ class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(req.build.indices() === Array("places"))
   }
 
+  it should "accept routing key" in {
+    val req = delete from "places/cities" where "paris" routing "my-route"
+    assert(req.build.routing() === "my-route")
+  }
+
+  it should "accept replication type" in {
+    val req = delete from "places/cities" where "paris" replicationType ReplicationType.SYNC
+    assert(req.build.replicationType() === ReplicationType.SYNC)
+  }
+
+  it should "accept consistency level" in {
+    val req = delete from "places/cities" where "paris" consistencyLevel WriteConsistencyLevel.ONE
+    assert(req.build.consistencyLevel() === WriteConsistencyLevel.ONE)
+  }
+
   "a delete by id request" should "accept tuple for from" in {
     val req = delete id 141212 from "places" -> "cities"
     assert(req.build.index() === "places")
@@ -81,5 +99,21 @@ class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
     val req = delete id 141212 from "places" types "type1"
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "type1")
+  }
+
+  it should "accept routing key" in {
+    val req = delete id 141212 from "places" types "type1" routing "my-route"
+    assert(req.build.routing() === "my-route")
+  }
+
+  it should "accept version and version type" in {
+    val req = delete id 141212 from "places" types "type1" version 53423 versionType VersionType.EXTERNAL
+    assert(req.build.version() === 53423)
+    assert(req.build.versionType() === VersionType.EXTERNAL)
+  }
+
+  it should "accept refresh" in {
+    val req = delete id 141212 from "places" types "type1" refresh true
+    assert(req.build.refresh() === true)
   }
 }
