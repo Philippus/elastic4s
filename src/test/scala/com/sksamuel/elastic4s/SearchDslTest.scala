@@ -778,5 +778,27 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     }
     req._builder.toString should matchJsonResource("/json/search/search_simple_string_query.json")
   }
+
+  it should "generate json for or filter" in {
+    val req = search in "music" types "bands" filter {
+      or(
+        termFilter("singer", "chris"),
+        termFilter("singer", "sammy")
+      ) cache (true) cacheKey "chris-or-sammy" name "my-filter"
+
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_or_filter.json")
+  }
+
+  it should "generate json for and filter" in {
+    val req = search in "music" types "bands" filter {
+      and(
+        termFilter("singer", "chris"),
+        termFilter("singer", "sammy")
+      ) cache (true) cacheKey "chris-and-sammy" name "my-filter"
+
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_and_filter.json")
+  }
 }
 
