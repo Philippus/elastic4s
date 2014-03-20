@@ -6,7 +6,8 @@
                 "martin"
             ],
             "_name": "my-filter",
-            "_cache_key": "band-singers"
+            "_cache_key": "band-singers",
+            "execution": "fielddata"
         }
     }
 }

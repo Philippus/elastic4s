@@ -67,6 +67,8 @@ trait FilterDsl {
 
   def termsFilter(field: String, values: Any*): TermsFilterDefinition = new TermsFilterDefinition(field, values.map(_.toString): _*)
 
+  def termsLookupFilter(field: String): TermsLookupFilterDefinition = new TermsLookupFilterDefinition(field)
+
   def typeFilter(`type`: String): TypeFilterDefinition = new TypeFilterDefinition(`type`)
   def missingFilter(field: String): MissingFilterDefinition = new MissingFilterDefinition(field)
   def idsFilter(ids: String*): IdFilterDefinition = new IdFilterDefinition(ids: _*)
@@ -242,6 +244,10 @@ class RangeFilter(field: String)
     builder.gte(gte)
     this
   }
+  def execution(execution: String): RangeFilter = {
+    builder.setExecution(execution)
+    this
+  }
 }
 
 class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
@@ -306,6 +312,46 @@ class TermsFilterDefinition(field: String, value: String*)
   val _builder = builder
   def name(name: String) = {
     builder.filterName(name)
+    this
+  }
+  def execution(execution: String) = {
+    builder.execution(execution)
+    this
+  }
+}
+
+class TermsLookupFilterDefinition(field: String)
+    extends FilterDefinition
+    with DefinitionAttributeCache
+    with DefinitionAttributeCacheKey {
+  val builder = FilterBuilders.termsLookupFilter(field)
+  val _builder = builder
+  def name(name: String) = {
+    builder.filterName(name)
+    this
+  }
+  def index(index: String) = {
+    builder.lookupIndex(index)
+    this
+  }
+  def lookupType(`type`: String) = {
+    builder.lookupType(`type`)
+    this
+  }
+  def id(id: String) = {
+    builder.lookupId(id)
+    this
+  }
+  def path(path: String) = {
+    builder.lookupPath(path)
+    this
+  }
+  def routing(routing: String) = {
+    builder.lookupRouting(routing)
+    this
+  }
+  def lookupCache(cache: Boolean) = {
+    builder.lookupCache(cache)
     this
   }
 }
