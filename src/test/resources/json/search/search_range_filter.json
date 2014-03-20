@@ -8,7 +8,8 @@
                 "include_upper": true
             },
             "_cache": true,
-            "_cache_key": "key"
+            "_cache_key": "key",
+            "execution": "fielddata"
         }
     }
 }

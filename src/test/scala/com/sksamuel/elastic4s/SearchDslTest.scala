@@ -282,9 +282,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for terms filter" in {
     val req = search in "music" types "bands" filter {
-      termsFilter("singer", "chris", "martin") cacheKey "band-singers" name "my-filter"
+      termsFilter("singer", "chris", "martin") cacheKey "band-singers" name "my-filter" execution ("fielddata")
     } preference Preference.Shards("a")
     req._builder.toString should matchJsonResource("/json/search/search_terms_filter.json")
+  }
+
+  it should "generate json for terms lookup filter" in {
+    val req = search in "music" types "bands" filter {
+      termsLookupFilter("user") index "users" lookupType "user" id "2" path "followers" routing "user-2" lookupCache true cache true cacheKey "user-lookup-for-id-2" name "users-lookup"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_terms_lookup_filter.json")
   }
 
   it should "generate json for regex filter" in {
@@ -392,7 +399,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for type range filter" in {
     val req = search in "music" types "bands" filter {
-      rangeFilter("released") cache true cacheKey "key" includeLower true includeUpper true gte "2010-01-01" lte "2012-12-12"
+      rangeFilter("released") cache true cacheKey "key" includeLower true includeUpper true gte "2010-01-01" lte "2012-12-12" execution ("fielddata")
     } preference new Shards("5", "7")
     req._builder.toString should matchJsonResource("/json/search/search_range_filter.json")
   }
