@@ -4,6 +4,9 @@ import org.elasticsearch.client.Requests
 import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequestBuilder, DeleteByQueryAction }
 import org.elasticsearch.action.delete.DeleteAction
 import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.index.VersionType
+import org.elasticsearch.action.support.replication.ReplicationType
+import org.elasticsearch.action.WriteConsistencyLevel
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
@@ -58,6 +61,26 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       builder.`type`(_type)
       this
     }
+    def routing(routing: String): DeleteByIdDefinition = {
+      builder.routing(routing)
+      this
+    }
+    def parent(parent: String): DeleteByIdDefinition = {
+      builder.parent(parent)
+      this
+    }
+    def version(version: Int): DeleteByIdDefinition = {
+      builder.version(version)
+      this
+    }
+    def versionType(versionType: VersionType): DeleteByIdDefinition = {
+      builder.versionType(versionType)
+      this
+    }
+    def refresh(refresh: Boolean): DeleteByIdDefinition = {
+      builder.refresh(refresh)
+      this
+    }
     def build = builder
   }
 
@@ -79,6 +102,18 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
     def types(types: String*): DeleteByQueryDefinition = {
       builder.setTypes(types.toSeq: _*)
+      this
+    }
+    def routing(routing: String): DeleteByQueryDefinition = {
+      builder.setRouting(routing)
+      this
+    }
+    def replicationType(repType: ReplicationType): DeleteByQueryDefinition = {
+      builder.setReplicationType(repType)
+      this
+    }
+    def consistencyLevel(consistencyLevel: WriteConsistencyLevel): DeleteByQueryDefinition = {
+      builder.setConsistencyLevel(consistencyLevel)
       this
     }
 
