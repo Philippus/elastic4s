@@ -1,0 +1,28 @@
+{
+    "mappings": {
+        "tags": {
+            "_all": {
+                "enabled": true
+            },
+            "_source": {
+                "enabled": true
+            },
+            "dynamic": "dynamic",
+            "numeric_detection": true,
+            "properties": {
+                "_parent": {
+                    "type": "docs"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "settings": {
+        "index": {
+            "number_of_replicas": 1,
+            "number_of_shards": 5
+        }
+    }
+}
