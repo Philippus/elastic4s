@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import scala.concurrent._
 import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
 import org.elasticsearch.action.count.{ CountRequest, CountResponse }
+import org.elasticsearch.action.explain.ExplainResponse
 import org.elasticsearch.action.search.{ MultiSearchResponse, SearchRequest, SearchResponse }
 import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryResponse, ValidateQueryRequest }
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
@@ -171,6 +172,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[MultiGetResponse](client.multiGet(req.build, _))
   }
 
+  def execute(req: ExplainDefinition): Future[ExplainResponse] = {
+    injectFuture[ExplainResponse](client.explain(req.build, _))
+  }
+
   def bulk(requests: BulkCompatibleDefinition*): Future[BulkResponse] = {
     val bulk = client.prepareBulk()
     requests.foreach {
@@ -279,6 +284,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def optimize(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse = execute(o)
     def execute(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse =
       Await.result(client.optimize(o), duration)
+
+    def execute(definition: ExplainDefinition)(implicit duration: Duration): ExplainResponse =
+      Await.result(client.execute(definition), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
   }
