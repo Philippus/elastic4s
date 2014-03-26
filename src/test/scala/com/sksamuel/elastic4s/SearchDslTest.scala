@@ -537,22 +537,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_query_terms.json")
   }
 
-  it should "generate correct json for custom boost query" in {
-    val req = search in "music" types "bands" query {
-      customBoost query {
-        ElasticDsl.regex("place", "Lon.*")
-      } boostFactor 10.0
-    }
-    req._builder.toString should matchJsonResource("/json/search/search_query_customboost.json")
-  }
-
-  it should "generate correct json for custom score query" in {
-    val req = search in "music" types "bands" query {
-      customScore script "somescript" lang "java" query "coldplay" boost 45.4
-    }
-    req._builder.toString should matchJsonResource("/json/search/search_query_custom_score.json")
-  }
-
   it should "generate correct json for multi match query" in {
     val req = search in "music" types "bands" query {
       multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery

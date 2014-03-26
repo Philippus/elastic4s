@@ -4,7 +4,6 @@ import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
 import org.elasticsearch.action.index.{ IndexAction, IndexRequest }
-import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
 import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource, Source }
 import scala.collection.mutable
