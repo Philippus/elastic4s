@@ -29,14 +29,6 @@ trait QueryDsl {
     def query(q: String): CommonQueryDefinition = text(q)
   }
 
-  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
-  def customScore = new CustomScoreDefinition
-  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
-  def customBoost = new CustomBoostExpectingQuery
-  @deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
-  class CustomBoostExpectingQuery {
-    def query(query: QueryDefinition) = new CustomBoostFactorQueryDefinition(query)
-  }
   def constantScore = new ConstantScoreExpectsQueryOrFilter
   class ConstantScoreExpectsQueryOrFilter {
     def query(query: QueryDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))
@@ -321,34 +313,6 @@ class HasParentQueryDefinition(`type`: String, q: QueryDefinition)
   }
 }
 
-@deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
-class CustomScoreDefinition extends QueryDefinition {
-  private var _query: QueryDefinition = _
-  private var _boost: Double = _
-  private var _lang: String = _
-  private var _script: String = _
-  def builder = {
-    require(_query != null, "must specify query for custom score query")
-    QueryBuilders.customScoreQuery(_query.builder).script(_script).lang(_lang).boost(_boost.toFloat)
-  }
-  def query(query: QueryDefinition): CustomScoreDefinition = {
-    this._query = query
-    this
-  }
-  def boost(b: Double): CustomScoreDefinition = {
-    _boost = b
-    this
-  }
-  def script(script: String): CustomScoreDefinition = {
-    _script = script
-    this
-  }
-  def lang(lang: String): CustomScoreDefinition = {
-    _lang = lang
-    this
-  }
-}
-
 class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
@@ -408,15 +372,6 @@ class CommonQueryDefinition(name: String, text: String)
   }
   def lowFreqOperator(operator: String): CommonQueryDefinition = {
     builder.lowFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
-    this
-  }
-}
-
-@deprecated("@deprecated use functionScoreQuery instead", "0.90.8")
-class CustomBoostFactorQueryDefinition(query: QueryDefinition) extends QueryDefinition {
-  val builder = QueryBuilders.customBoostFactorQuery(query.builder)
-  def boostFactor(b: Double): CustomBoostFactorQueryDefinition = {
-    builder.boostFactor(b.toFloat)
     this
   }
 }
