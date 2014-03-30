@@ -13,6 +13,7 @@ trait IndexDsl {
 
   def insert: IndexExpectsInto = index
   def index: IndexExpectsInto = new IndexExpectsInto
+  def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
 
   class IndexExpectsInto {
     def into(index: String): IndexDefinition = into(index.split("/").head, index.split("/").last)

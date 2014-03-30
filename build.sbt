@@ -1,3 +1,4 @@
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
