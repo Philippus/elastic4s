@@ -17,20 +17,12 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-##### 1.0 is here !!
+The latest release is 1.1.0.0 which is compatible with Elasticsearch 1.1.0.
+For releases that are compatible with earlier versions of Elasticsearch,
+[search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). 
+The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c. 
+For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
-The latest release is 1.0.1.1 which is compatible with elasticsearch 1.0.1
-For releases that are compatible with earlier versions of elasticsearch,
-[search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
-
-
-```scala
-resolvers += "Sonatype Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-
-libraryDependencies ++= Seq(
-  "com.sksamuel.elastic4s" %% "elastic4s" % "1.0.1.1"
-)
-```
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
