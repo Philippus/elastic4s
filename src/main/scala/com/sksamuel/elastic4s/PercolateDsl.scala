@@ -21,6 +21,7 @@ trait PercolateDsl extends QueryDsl {
   class PercolateDefinition(index: String) extends RequestDefinition(PercolateAction.INSTANCE) {
 
     private val _fields = new ListBuffer[(String, Any)]
+    private var _rawDoc: Option[String] = None
     private[this] var _query: QueryDefinition = _
 
     def build = new PercolateRequestBuilder(null).setSource(_doc).setIndices(index).setDocumentType("doc").request()
@@ -31,12 +32,25 @@ trait PercolateDsl extends QueryDsl {
       if (_query != null)
         source.field("query", _query.builder)
 
-      source.startObject("doc")
-      for (tuple <- _fields) {
-        source.field(tuple._1, tuple._2)
+      _rawDoc match {
+        case Some(doc) => {
+          source.rawField("doc", doc.getBytes("UTF-8"))
+        }
+        case None => {
+          source.startObject("doc")
+          for (tuple <- _fields) {
+            source.field(tuple._1, tuple._2)
+          }
+          source.endObject()
+        }
       }
-      source.endObject().endObject()
+      source.endObject()
       source
+    }
+
+    def rawDoc(json: String): PercolateDefinition = {
+      this._rawDoc = Some(json)
+      this
     }
 
     def doc(fields: (String, Any)*): PercolateDefinition = {

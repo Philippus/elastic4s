@@ -15,4 +15,9 @@ class PercolateDslTest extends FlatSpec with MockitoSugar with JsonSugar with On
     val req = percolate in "captains" doc "name" -> "cook" query { term("color" -> "blue") }
     req._doc.string should matchJsonResource("/json/percolate/percolate_request.json")
   }
+
+  it should "should use raw doc for a percolate request" in {
+    val req = percolate in "captains" rawDoc { """{ "name": "cook" }""" } query { term("color" -> "blue") }
+    req._doc.string should matchJsonResource("/json/percolate/percolate_request.json")
+  }
 }
