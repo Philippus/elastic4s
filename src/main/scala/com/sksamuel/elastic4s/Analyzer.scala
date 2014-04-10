@@ -13,6 +13,7 @@ case object KeywordAnalyzer extends Analyzer("keyword")
 case object PatternAnalyzer extends Analyzer("pattern")
 case object SnowballAnalyzer extends Analyzer("snowball")
 case class CustomAnalyzer(override val name: String) extends Analyzer(name)
+case class CharFilterAnalyzer(override val name: String) extends Analyzer(name)
 
 abstract class LanguageAnalyzer(name: String) extends Analyzer(name: String)
 
@@ -90,13 +91,27 @@ case class SnowballAnalyzerDefinition(override val name: String,
   }
 }
 
-case class CustomAnalyzerDefinition(override val name: String,
-                                    tokenizer: Tokenizer,
-                                    filters: TokenFilter*) extends AnalyzerDefinition(name) {
+abstract class BaseCustomAnalyzerDefinition(override val name: String,
+                                            tokenizer: Tokenizer,
+                                            filters: TokenFilter*) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
     source.field("filter", filters.map(_.name): _*)
+  }
+}
+
+case class CustomAnalyzerDefinition(override val name: String,
+                                    tokenizer: Tokenizer,
+                                    filters: TokenFilter*) extends BaseCustomAnalyzerDefinition(name, tokenizer, filters: _*)
+
+case class CharFilterAnalyzerDefinition(override val name: String,
+                                        charfilters: Iterable[CharacterFilterDefinition],
+                                        tokenizer: Tokenizer,
+                                        filters: TokenFilter*) extends BaseCustomAnalyzerDefinition(name, tokenizer, filters: _*) {
+  override def build(source: XContentBuilder): Unit = {
+    super.build(source)
+    source.field("char_filter", charfilters.map(_.name) toArray: _*)
   }
 }
 
