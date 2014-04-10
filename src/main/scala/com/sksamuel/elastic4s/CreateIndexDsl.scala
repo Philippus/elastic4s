@@ -64,6 +64,18 @@ trait CreateIndexDsl {
       _analysis.foreach(analysis => {
         source.startObject("analysis")
 
+        val charfilters = analysis.charfilters
+        if (!charfilters.isEmpty) {
+          source.startObject("char_filter")
+          charfilters.foreach(charfilter => {
+            source.startObject(charfilter.name)
+            source.field("type", charfilter.filterType)
+            charfilter.build(source)
+            source.endObject()
+          })
+          source.endObject()
+        }
+
         source.startObject("analyzer")
         analysis.analyzers.foreach(analyzer => {
           source.startObject(analyzer.name)
@@ -113,6 +125,11 @@ trait CreateIndexDsl {
 }
 
 class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
+  def charfilters: Iterable[CharacterFilterDefinition] =
+    analyzers
+      .filter(_.isInstanceOf[CharFilterAnalyzerDefinition])
+      .map(_.asInstanceOf[CharFilterAnalyzerDefinition])
+      .flatMap(_.charfilters)
 
   def tokenizers: Iterable[Tokenizer] =
     analyzers
