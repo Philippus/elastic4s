@@ -56,7 +56,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2"))
       ),
       CharFilterAnalyzerDefinition(
-        "analzerWithCharFilter",
+        "analyzerWithCharFilter",
         Seq(MappingCharFilterDefinition("default_charfilter", Map("ph" -> "f", "qu" -> "q"))),
         StandardTokenizer,
         StandardTokenFilter

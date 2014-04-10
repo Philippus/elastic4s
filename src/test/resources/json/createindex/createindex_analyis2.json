@@ -42,7 +42,7 @@
                         "stemmerTokenFilter"
                     ]
                 },
-                "analzerWithCharFilter": {
+                "analyzerWithCharFilter": {
                      "type": "custom",
                      "tokenizer": "standard",
                      "filter": [ "standard" ],
