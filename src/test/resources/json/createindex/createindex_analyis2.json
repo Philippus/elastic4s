@@ -5,6 +5,17 @@
             "number_of_replicas": 1
         },
         "analysis": {
+            "char_filter" : {
+                "mapping_charfilter": {
+                    "type": "mapping",
+                    "mappings": [ "ph=>f", "qu=>q" ]
+                },
+                "pattern_replace_charfilter": {
+                    "type": "pattern_replace",
+                    "pattern": "sample(.*)",
+                    "replacement": "replacedSample $1"
+                }
+            },
             "analyzer": {
                 "patternAnalyzer": {
                     "type": "pattern",
@@ -34,6 +45,11 @@
                         "myTokenFilter5",
                         "myEdgeNGramTokenFilter",
                         "stemmerTokenFilter"
+                    ],
+                    "char_filter": [
+                        "html_strip",
+                        "mapping_charfilter",
+                        "pattern_replace_charfilter"
                     ]
                 }
             },
