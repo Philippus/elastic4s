@@ -1,6 +1,6 @@
 language: scala
-script: "sbt clean coveralls"
 scala:
-   - 2.10.3
+  - 2.10.3
 jdk:
-   - oraclejdk7
+  - oraclejdk7
+  - openjdk7
