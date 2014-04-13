@@ -1,8 +1,10 @@
 ## Analyzers
 
-Analyzers are created from a single Tokenizer, zero or more TokenFilter and one or more CharFilters and have a name that is used to refer to them. 
+Analyzers are created from a single Tokenizer, zero or more TokenFilters and zero or more CharFilters and have a name that is used to refer to them.
 
-Tokenizers split the incoming string into tokens. A very simple example (but common use case) is to split a string into tokens on whitespace. So "Tony Mowbray" would be split into "Tony" and "Mowbray". 
+Character filters are used to preprocess the string of characters before it is passed to the tokenizer. A character filter may be used to strip out HTML markup, or to convert ```&``` characters to the word ```and```.
+
+Tokenizers split the incoming string into tokens. A very simple example (but common use case) is to split a string into tokens on whitespace. So "Tony Mowbray" would be split into "Tony" and "Mowbray".
 
 TokenFilters apply after the tokenizer, and can modify the incoming tokens. So if we applied a reverse TokenFilter, then ["Tony", "Mowbray"] would become ["ynot", "yarbwom"].
 
@@ -60,8 +62,8 @@ create.index("people").mappings(
   CustomAnalyzerDefinition(
     "custom1",
     WhitespaceTokenizer,
-    LowercaseTokenizer,
-    ReverseTokenizer
+    LowercaseTokenFilter,
+    ReverseTokenFilter
   )
 )
 ```
@@ -99,7 +101,14 @@ create.index("users").mappings(
     StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
     ReverseTokenFilter,
     LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false),
-    StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2"))
+    StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+    HtmlStripCharFilter,
+    MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
+    PatternReplaceCharFilter(
+      "pattern_replace_charfilter",
+      pattern = "sample(.*)",
+      replacement = "replacedSample $1"
+    )
   )
 )
 ```

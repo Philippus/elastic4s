@@ -53,7 +53,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         ReverseTokenFilter,
         LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false),
         EdgeNGramTokenFilter("myEdgeNGramTokenFilter", minGram = 3, maxGram = 50),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2"))
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        HtmlStripCharFilter,
+        MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
+        PatternReplaceCharFilter(
+          "pattern_replace_charfilter",
+          pattern = "sample(.*)",
+          replacement = "replacedSample $1"
+        )
       )
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_analyis2.json")

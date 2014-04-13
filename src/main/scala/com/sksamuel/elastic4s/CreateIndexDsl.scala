@@ -64,6 +64,18 @@ trait CreateIndexDsl {
       _analysis.foreach(analysis => {
         source.startObject("analysis")
 
+        val charFilterDefinitions = analysis.charFilterDefinitions
+        if (charFilterDefinitions.size > 0) {
+          source.startObject("char_filter")
+          charFilterDefinitions.foreach { filter =>
+            source.startObject(filter.name)
+            source.field("type", filter.filterType)
+            filter.build(source)
+            source.endObject()
+          }
+          source.endObject()
+        }
+
         source.startObject("analyzer")
         analysis.analyzers.foreach(analyzer => {
           source.startObject(analyzer.name)
@@ -83,11 +95,12 @@ trait CreateIndexDsl {
           source.endObject()
         }
 
-        val filters = analysis.filters
-        if (filters.size > 0) {
+        val tokenFilterDefinitions = analysis.tokenFilterDefinitions
+        if (tokenFilterDefinitions.size > 0) {
           source.startObject("filter")
-          analysis.filters.foreach(filter => {
+          tokenFilterDefinitions.foreach(filter => {
             source.startObject(filter.name)
+            source.field("type", filter.filterType)
             filter.build(source)
             source.endObject()
           })
@@ -121,11 +134,20 @@ class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
       .map(_.tokenizer)
       .filter(_.customized)
 
-  def filters: Iterable[TokenFilter] =
+  def tokenFilterDefinitions: Iterable[TokenFilterDefinition] =
     analyzers
       .filter(_.isInstanceOf[CustomAnalyzerDefinition])
       .map(_.asInstanceOf[CustomAnalyzerDefinition])
       .flatMap(_.filters)
-      .filter(_.customized)
+      .filter(_.isInstanceOf[TokenFilterDefinition])
+      .map(_.asInstanceOf[TokenFilterDefinition])
+
+  def charFilterDefinitions: Iterable[CharFilterDefinition] =
+    analyzers
+      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
+      .map(_.asInstanceOf[CustomAnalyzerDefinition])
+      .flatMap(_.filters)
+      .filter(_.isInstanceOf[CharFilterDefinition])
+      .map(_.asInstanceOf[CharFilterDefinition])
 
 }

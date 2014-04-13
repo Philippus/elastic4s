@@ -92,11 +92,18 @@ case class SnowballAnalyzerDefinition(override val name: String,
 
 case class CustomAnalyzerDefinition(override val name: String,
                                     tokenizer: Tokenizer,
-                                    filters: TokenFilter*) extends AnalyzerDefinition(name) {
+                                    filters: AnalyzerFilter*) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
-    source.field("filter", filters.map(_.name): _*)
+    val tokenFilters = filters.filter(_.isInstanceOf[TokenFilter])
+    val charFilters = filters.filter(_.isInstanceOf[CharFilter])
+    if (!tokenFilters.isEmpty) {
+      source.field("filter", tokenFilters.map(_.name): _*)
+    }
+    if (!charFilters.isEmpty) {
+      source.field("char_filter", charFilters.map(_.name): _*)
+    }
   }
 }
 

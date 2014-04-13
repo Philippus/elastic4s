@@ -2,153 +2,200 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-/** @author Stephen Samuel */
-abstract class TokenFilter(val name: String) {
-  def build(source: XContentBuilder): Unit = {}
-  def customized = false
+sealed trait TokenFilter extends AnalyzerFilter
+
+sealed trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
+
+case object ReverseTokenFilter extends TokenFilter {
+  val name = "reverse"
 }
 
-case object ReverseTokenFilter extends TokenFilter("reverse")
-case object TrimTokenFilter extends TokenFilter("trim")
-case object StandardTokenFilter extends TokenFilter("standard")
-case object AsciiFoldingTokenFilter extends TokenFilter("asciifolding")
-case object LowercaseTokenFilter extends TokenFilter("lowercase")
-case object KStemTokenFilter extends TokenFilter("kstem")
-case object PorterStemTokenFilter extends TokenFilter("porterStem")
-case object UniqueTokenFilter extends TokenFilter("unique")
-
-abstract class CustomizedTokenFilter(override val name: String) extends TokenFilter(name) {
-  override def customized = true
+case object TrimTokenFilter extends TokenFilter {
+  val name = "trim"
 }
 
-case class TruncateTokenFilter(override val name: String,
-                               length: Int = 10) extends CustomizedTokenFilter(name) {
+case object StandardTokenFilter extends TokenFilter {
+  val name = "standard"
+}
+
+case object AsciiFoldingTokenFilter extends TokenFilter {
+  val name = "asciifolding"
+}
+
+case object LowercaseTokenFilter extends TokenFilter {
+  val name = "lowercase"
+}
+
+case object KStemTokenFilter extends TokenFilter {
+  val name = "kstem"
+}
+
+case object PorterStemTokenFilter extends TokenFilter {
+  val name = "porterStem"
+}
+
+case object UniqueTokenFilter extends TokenFilter {
+  val name = "unique"
+}
+
+case class TruncateTokenFilter(val name: String, length: Int = 10)
+    extends TokenFilterDefinition {
+
+  val filterType = "truncate"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "truncate")
     source.field("length", length)
   }
 }
 
-case class LengthTokenFilter(override val name: String,
-                             min: Int = 0,
-                             max: Int = Integer.MAX_VALUE) extends CustomizedTokenFilter(name) {
+case class LengthTokenFilter(val name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
+    extends TokenFilterDefinition {
+
+  val filterType = "length"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "length")
     if (min > 0) source.field("min", min)
     if (max < Integer.MAX_VALUE) source.field("max", max)
   }
 }
 
-case class UniqueTokenFilter(override val name: String,
-                             onlyOnSamePosition: Boolean = false) extends CustomizedTokenFilter(name) {
+case class UniqueTokenFilter(val name: String, onlyOnSamePosition: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "unique"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "unique")
     source.field("only_on_same_position", onlyOnSamePosition)
   }
 }
 
-case class KeywordMarkerTokenFilter(override val name: String,
+case class KeywordMarkerTokenFilter(val name: String,
                                     keywords: Iterable[String] = Nil,
-                                    ignoreCase: Boolean = false) extends CustomizedTokenFilter(name) {
+                                    ignoreCase: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "keyword_marker"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "keyword_marker")
     if (keywords.size > 0) source.field("keywords", keywords.toArray[String]: _*)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
 }
 
-case class ElisionTokenFilter(override val name: String,
-                              articles: Iterable[String]) extends CustomizedTokenFilter(name) {
+case class ElisionTokenFilter(val name: String, articles: Iterable[String])
+    extends TokenFilterDefinition {
+
+  val filterType = "elision"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "elision")
     source.field("articles", articles.toArray[String]: _*)
   }
 }
 
-case class LimitTokenFilter(override val name: String,
+case class LimitTokenFilter(val name: String,
                             maxTokenCount: Int = 1,
-                            consumeAllTokens: Boolean = false) extends CustomizedTokenFilter(name) {
+                            consumeAllTokens: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "stop"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "stop")
     if (maxTokenCount > 1) source.field("max_token_count", maxTokenCount)
     if (consumeAllTokens) source.field("consume_all_tokens", consumeAllTokens)
   }
 }
 
-case class StopTokenFilter(override val name: String,
+case class StopTokenFilter(val name: String,
                            stopwords: Iterable[String] = Nil,
                            enablePositionIncrements: Boolean = true,
-                           ignoreCase: Boolean = false) extends CustomizedTokenFilter(name) {
+                           ignoreCase: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "stop"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "stop")
     source.field("stopwords", stopwords.toArray[String]: _*)
     source.field("enable_position_increments", enablePositionIncrements)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
 }
 
-case class PatternCaptureTokenFilter(override val name: String,
+case class PatternCaptureTokenFilter(val name: String,
                                      patterns: Iterable[String],
-                                     preserveOriginal: Boolean = true) extends CustomizedTokenFilter(name) {
+                                     preserveOriginal: Boolean = true)
+    extends TokenFilterDefinition {
+
+  val filterType = "pattern_capture"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "pattern_capture")
     source.field("patterns", patterns.toArray[String]: _*)
     source.field("preserve_original", preserveOriginal)
   }
 }
 
-case class PatternReplaceTokenFilter(override val name: String,
-                                     pattern: String,
-                                     replacement: String) extends CustomizedTokenFilter(name) {
+case class PatternReplaceTokenFilter(val name: String, pattern: String, replacement: String)
+    extends TokenFilterDefinition {
+
+  val filterType = "pattern_replace"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "pattern_replace")
     source.field("pattern", pattern)
     source.field("replacement", replacement)
   }
 }
 
-case class CommongGramsTokenFilter(override val name: String,
+case class CommongGramsTokenFilter(val name: String,
                                    commonWords: Iterable[String],
                                    ignoreCase: Boolean = false,
-                                   queryMode: Boolean = false) extends CustomizedTokenFilter(name) {
+                                   queryMode: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "common_grams"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "common_grams")
     source.field("common_words", commonWords.toArray[String]: _*)
     source.field("ignore_case", ignoreCase)
     source.field("query_mode", queryMode)
   }
 }
 
-case class EdgeNGramTokenFilter(override val name: String,
-                                minGram: Int = 1,
-                                maxGram: Int = 2) extends CustomizedTokenFilter(name) {
+case class EdgeNGramTokenFilter(val name: String, minGram: Int = 1, maxGram: Int = 2)
+    extends TokenFilterDefinition {
+
+  val filterType = "edgeNGram"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "edgeNGram")
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
   }
 }
 
-case class SnowballTokenFilter(override val name: String,
-                               language: String = "English") extends CustomizedTokenFilter(name) {
+case class SnowballTokenFilter(val name: String, language: String = "English")
+    extends TokenFilterDefinition {
+
+  val filterType = "snowball"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "snowball")
     source.field("language", language)
   }
 }
 
-case class StemmerTokenFilter(override val name: String,
-                              lang: String) extends CustomizedTokenFilter(name) {
+case class StemmerTokenFilter(val name: String, lang: String)
+    extends TokenFilterDefinition {
+
+  val filterType = "stemmer"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "stemmer")
     source.field("name", lang)
   }
 }
 
-case class StemmerOverrideTokenFilter(override val name: String,
-                                      rules: Array[String]) extends CustomizedTokenFilter(name) {
+case class StemmerOverrideTokenFilter(val name: String, rules: Array[String])
+    extends TokenFilterDefinition {
+
+  val filterType = "stemmer_override"
+
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "stemmer_override")
     source.field("rules", rules: _*)
   }
 }
