@@ -17,7 +17,7 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-The latest release is 1.1.0.0 which is compatible with Elasticsearch 1.1.0.
+The latest release is 1.1.1.0 which is compatible with Elasticsearch 1.1.1.
 For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). 
 The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c. 
@@ -356,7 +356,7 @@ Note: Only available for scala 2.10.
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "1.0.1.1"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.1.1.0"
 ```
 
 For Maven users simply add:
@@ -365,7 +365,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>1.0.1.1</version>
+    <version>1.1.1.0</version>
 </dependency>
 ```
 
