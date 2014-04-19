@@ -600,6 +600,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_filter_bool.json")
   }
 
+  it should "generate correct json for range facet" in {
+    val req = search in "music" types "bands" facets {
+      facet range "year" field "years" range (100 -> 160) to (100) from (160)
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_facets_range.json")
+  }
+
   it should "generate correct json for histogram facet" in {
     val req = search in "music" types "bands" facets {
       facet histogram "years" interval 100 comparator

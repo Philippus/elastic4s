@@ -49,7 +49,7 @@ We might want to return facets from our search. Naturally in London we'd want to
 ```scala
 search in "places"->"cities" query "london" facets (
     facet terms "landmark" field "type",
-    facet range "age" field "year" range (1000->1200) range(1200->1400) range(1600->1800)
+    facet range "age" field "year" range (1000->1200) to(1200) from(1400)
 )
 ```
 
