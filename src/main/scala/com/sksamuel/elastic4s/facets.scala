@@ -94,6 +94,16 @@ class RangeFacetDefinition(name: String) extends FacetDefinition {
     builder.addRange(from, to)
     this
   }
+  def to(n: Int): RangeFacetDefinition = to(n.toString)
+  def to(n: String): RangeFacetDefinition = {
+    builder.addUnboundedTo(n)
+    this
+  }
+  def from(n: Int): RangeFacetDefinition = from(n.toString)
+  def from(n: String): RangeFacetDefinition = {
+    builder.addUnboundedFrom(n)
+    this
+  }
   def global(global: Boolean): RangeFacetDefinition = {
     builder.global(global)
     this
