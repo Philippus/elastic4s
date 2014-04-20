@@ -7,7 +7,9 @@ organization := "com.sksamuel.elastic4s"
 
 version := "1.1.1.0"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
+
+crossScalaVersions := Seq("2.10.4", "2.11.0")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -42,7 +44,7 @@ libraryDependencies ++= Seq(
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.6.6"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.1.2"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.1.3"  % "test"
 )
 
 ScoverageSbtPlugin.instrumentSettings
