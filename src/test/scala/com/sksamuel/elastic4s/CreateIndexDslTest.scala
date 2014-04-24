@@ -184,4 +184,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_completion_type.json")
   }
+
+  it should "support creating parent mappings" in {
+    val req = create.index("docsAndTags").mappings(
+      "tags" as (
+        "tag" typed StringType
+      ) all false parent "docs"
+    )
+    req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
+  }
+
 }

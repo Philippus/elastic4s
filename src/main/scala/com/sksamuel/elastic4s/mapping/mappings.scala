@@ -25,6 +25,7 @@ class MappingDefinition(val `type`: String) {
   var _analyzer: Option[String] = None
   var _boostName: Option[String] = None
   var _boostValue: Double = 0
+  var _parent: Option[String] = None
   var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
   var _routing: Option[RoutingDefinition] = None
@@ -49,6 +50,12 @@ class MappingDefinition(val `type`: String) {
     _boostValue = value
     this
   }
+
+  def parent(parent: String): MappingDefinition = {
+    _parent = Some(parent)
+    this
+  }
+
   def dynamic(dynamic: DynamicMapping): MappingDefinition = {
     _dynamic = dynamic
     this
@@ -121,6 +128,9 @@ class MappingDefinition(val `type`: String) {
     )
 
     _analyzer.foreach(arg => source.startObject("_analyzer").field("path", arg).endObject())
+
+    _parent.foreach(arg => source.startObject("_parent").field("type", arg).endObject())
+
     if (_size) source.startObject("_size").field("enabled", true).endObject()
 
     source.startObject("properties")
