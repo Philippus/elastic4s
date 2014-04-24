@@ -93,6 +93,16 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     req._source.string should matchJsonResource("/json/createindex/createindex_settings.json")
   }
 
+  it should "support creating parent mappings" in {
+    val req = create.index("docsAndTags").mappings(
+      "tags" as (
+        "tag" typed StringType,
+        "_parent" typed ParentType("docs")
+      )
+    )
+    req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
+  }
+
   it should "support inner objects" in {
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (

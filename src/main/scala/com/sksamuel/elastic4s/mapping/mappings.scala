@@ -175,6 +175,7 @@ private[mapping] class FieldDefinition(val name: String) {
   def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
+  def typed(ft: ParentType) = new ParentFieldDefinition(ft)
 
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
   def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields: _*)
@@ -188,6 +189,15 @@ abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends
   }
 
   private[mapping] def build(source: XContentBuilder): Unit
+}
+
+/** @author Jack Viers and Trent Johnson */
+final class ParentFieldDefinition(`type`: FieldType) extends TypedFieldDefinition(`type`, "_parent") {
+  def build(source: XContentBuilder) = {
+    source.startObject(name)
+    insertType(source)
+    source.endObject()
+  }
 }
 
 /** @author Fehmi Can Saglam */

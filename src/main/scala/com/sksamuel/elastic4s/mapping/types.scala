@@ -22,4 +22,6 @@ object FieldType {
   case object ShortType extends FieldType("short")
   case object StringType extends FieldType("string")
   case object TokenCountType extends FieldType("token_count")
+  case class ParentType(_parent: String) extends FieldType(_parent)
 }
+
