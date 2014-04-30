@@ -1,0 +1,11 @@
+{
+    "facets": {
+        "grades-by-teacher": {
+            "terms_stats": {
+                "key_field": "teacher",
+                "value_field": "grade"
+            },
+            "global": true
+        }
+    }
+}

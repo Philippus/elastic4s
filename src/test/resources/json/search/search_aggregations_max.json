@@ -1,0 +1,11 @@
+{
+    "aggregations": {
+        "grades_max": {
+            "max": {
+                "field": "grade",
+                "script": "doc['grade'].value",
+                "lang": "lua"
+            }
+        }
+    }
+}

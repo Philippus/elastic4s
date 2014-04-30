@@ -1,0 +1,16 @@
+{
+    "query": {
+        "query_string": {
+            "query": "teacher:Smith"
+        }
+    },
+    "facets": {
+        "class-grades": {
+            "statistical": {
+                "field": "grade"
+            },
+            "nested": "nested-path",
+            "global": false
+        }
+    }
+}
