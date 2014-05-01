@@ -1,6 +1,6 @@
 resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
-addSbtPlugin("com.sksamuel.scoverage" %% "sbt-scoverage" % "0.95.3")
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.4")
 
 addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")
 
