@@ -34,17 +34,17 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
 libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.1.1",
-  "org.slf4j"                      %  "slf4j-api"                   % "1.6.6",
+  "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "commons-io"                     %  "commons-io"                  % "2.4",
-  "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.1.3"  % "optional",
-  "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.1.3"  % "optional",
-  "com.fasterxml.jackson.jaxrs"    %  "jackson-jaxrs-json-provider" % "2.1.3"  % "optional",
-  "com.fasterxml.jackson.datatype" %  "jackson-datatype-hibernate4" % "2.1.2"  % "optional",
-  "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.1.3"  % "optional" exclude ("org.scalatest", "scalatest_2.10.0"),
+  "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.0-rc2"  % "optional",
+  "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.0-rc1"  % "optional",
+  "com.fasterxml.jackson.jaxrs"    %  "jackson-jaxrs-json-provider" % "2.4.0-rc1"  % "optional",
+  "com.fasterxml.jackson.datatype" %  "jackson-datatype-hibernate4" % "2.4.0-rc1"  % "optional",
+  "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.0-rc1"  % "optional" exclude ("org.scalatest", "scalatest_2.10.0"),
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
-  "org.slf4j"                      %  "log4j-over-slf4j"            % "1.6.6"  % "test",
+  "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.1.3"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.1.5"  % "test"
 )
 
 ScoverageSbtPlugin.instrumentSettings
