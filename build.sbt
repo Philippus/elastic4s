@@ -5,7 +5,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.1.1.0"
+version := "1.1.1.1"
 
 scalaVersion := "2.10.4"
 
@@ -38,8 +38,6 @@ libraryDependencies ++= Seq(
   "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.0-rc2"  % "optional",
   "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.0-rc1"  % "optional",
-  "com.fasterxml.jackson.jaxrs"    %  "jackson-jaxrs-json-provider" % "2.4.0-rc1"  % "optional",
-  "com.fasterxml.jackson.datatype" %  "jackson-datatype-hibernate4" % "2.4.0-rc1"  % "optional",
   "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.0-rc1"  % "optional" exclude ("org.scalatest", "scalatest_2.10.0"),
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
