@@ -1,0 +1,11 @@
+{
+    "aggregations": {
+        "grades_avg": {
+            "avg": {
+                "field": "grade",
+                "script": "doc['grade'].value",
+                "lang": "lua"
+            }
+        }
+    }
+}

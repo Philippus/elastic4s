@@ -463,6 +463,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet
       .ComparatorType.REVERSE_TERM size 10 regex "qwer" script "some-script" nested "nested-path" lang "french",
       facet range "years-active" field "year" range 10 -> 20 global true valueField "myvalue" keyField "mykey" nested "some-nested",
+      facet statistical "sales-biz" field "sales" global true nested "if-nested",
+      facet termsStats "sales-by-artist" keyField "artist" valueField "sales" global true,
       facet geodistance "distance" field "location" geoDistance GeoDistance
       .FACTOR range 20d -> 30d range 30d -> 40d point (45.4, 54d) valueField "myvalue" global true facetFilter {
         termFilter("location", "europe") cache true cacheKey "cache-key"
@@ -491,6 +493,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       } global true nested "path.nested"
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_facets.json")
+  }
+
+  it should "generate correct json for statistical facets" in {
+    val req = search in "school" types "student" query "teacher:Smith" facets {
+      facet statistical "class-grades" field "grade" global false nested "nested-path"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_statistical_facets.json")
+  }
+
+  it should "generate correct json for terms_stats facets" in {
+    val req = search in "school" types "student" facets {
+      facet termsStats "grades-by-teacher" keyField "teacher" valueField "grade" global true
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_terms_stats_facets.json")
   }
 
   it should "generate correct json for geo bounding box filter" in {
@@ -683,6 +699,55 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         aggregation terms "countries" field "country")
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
+  }
+
+  it should "generate correct json for min aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation min "grades_min" field "grade" script "doc['grade'].value" lang "lua" param ("apple", "bad")
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_min.json")
+  }
+
+  it should "generate correct json for max aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation max "grades_max" field "grade" script "doc['grade'].value" lang "lua"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_max.json")
+  }
+
+  it should "generate correct json for sum aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation sum "grades_sum" field "grade" script "doc['grade'].value" lang "lua" params (Map("classsize" -> 30, "room" -> "101A"))
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_sum.json")
+  }
+
+  it should "generate correct json for avg aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation avg "grades_avg" field "grade" script "doc['grade'].value" lang "lua"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_avg.json")
+  }
+
+  it should "generate correct json for stats aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation stats "grades_stats" field "grade" script "doc['grade'].value" lang "lua"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_stats.json")
+  }
+
+  it should "generate correct json for extendedstats aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation extendedstats "grades_extendedstats" field "grade" script "doc['grade'].value" lang "lua"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
+  }
+
+  it should "generate correct json for value count aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation count "grades_count" field "grade" script "doc['grade'].value" lang "lua"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_count.json")
   }
 
   it should "generate correct json for highlighting" in {

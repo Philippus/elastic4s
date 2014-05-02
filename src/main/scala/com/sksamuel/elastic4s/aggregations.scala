@@ -8,6 +8,8 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
+import org.elasticsearch.search.aggregations.metrics
+import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
 
 /** @author Nicolas Yzet */
 
@@ -22,6 +24,13 @@ trait AggregationDsl {
     def datehistogram(name: String) = new DateHistogramAggregation(name)
     def filter(name: String) = new FilterAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
+    def min(name: String) = new MinAggregationDefinition(name)
+    def max(name: String) = new MaxAggregationDefinition(name)
+    def sum(name: String) = new SumAggregationDefinition(name)
+    def avg(name: String) = new AvgAggregationDefinition(name)
+    def stats(name: String) = new StatsAggregationDefinition(name)
+    def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
+    def count(name: String) = new ValueCountAggregationDefinition(name)
   }
 }
 
@@ -44,6 +53,39 @@ trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: Aggreg
   def aggs(a: AbstractAggregationDefinition*): Self = aggregations(a)
 
   def aggs(a: Iterable[AbstractAggregationDefinition]): Self = aggregations(a)
+}
+
+trait MetricsAggregationDefinition[+Self <: MetricsAggregationDefinition[Self, B], B <: MetricsAggregationBuilder[B]] extends AbstractAggregationDefinition {
+  val aggregationBuilder: B
+
+  def builder = aggregationBuilder
+}
+
+trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggregationDefinition[Self, B], B <: ValuesSourceMetricsAggregationBuilder[B]] extends MetricsAggregationDefinition[Self, B] {
+  def field(field: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+    builder.field(field)
+    this
+  }
+
+  def lang(lang: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+    builder.lang(lang)
+    this
+  }
+
+  def param(name: String, value: Any): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+    builder.param(name, value)
+    this
+  }
+
+  def params(map: Map[String, Any]): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+    for (entry <- map) param(entry._1, entry._2)
+    this
+  }
+
+  def script(script: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+    builder.script(script)
+    this
+  }
 }
 
 class TermAggregationDefinition(name: String) extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
@@ -222,5 +264,33 @@ class FilterAggregationDefinition(name: String) extends AggregationDefinition[Fi
     builder.filter(block.builder)
     this
   }
+}
+
+class MinAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[MinAggregationDefinition, metrics.min.MinBuilder] {
+  val aggregationBuilder = AggregationBuilders.min(name)
+}
+
+class MaxAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[MaxAggregationDefinition, metrics.max.MaxBuilder] {
+  val aggregationBuilder = AggregationBuilders.max(name)
+}
+
+class SumAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[SumAggregationDefinition, metrics.sum.SumBuilder] {
+  val aggregationBuilder = AggregationBuilders.sum(name)
+}
+
+class AvgAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[AvgAggregationDefinition, metrics.avg.AvgBuilder] {
+  val aggregationBuilder = AggregationBuilders.avg(name)
+}
+
+class StatsAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[StatsAggregationDefinition, metrics.stats.StatsBuilder] {
+  val aggregationBuilder = AggregationBuilders.stats(name)
+}
+
+class ExtendedStatsAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[ExtendedStatsAggregationDefinition, metrics.stats.extended.ExtendedStatsBuilder] {
+  val aggregationBuilder = AggregationBuilders.extendedStats(name)
+}
+
+class ValueCountAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[ValueCountAggregationDefinition, metrics.valuecount.ValueCountBuilder] {
+  val aggregationBuilder = AggregationBuilders.count(name)
 }
 

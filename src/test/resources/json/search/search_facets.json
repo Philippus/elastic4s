@@ -31,6 +31,20 @@
             "nested": "some-nested",
             "global": true
         },
+        "sales-biz": {
+            "statistical": {
+                "field": "sales"
+            },
+            "nested": "if-nested",
+            "global": true
+        },
+        "sales-by-artist": {
+            "terms_stats": {
+                "key_field": "artist",
+                "value_field": "sales"
+            },
+            "global": true
+        },
         "distance": {
             "geo_distance": {
                 "location": "ABC",

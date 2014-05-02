@@ -5,6 +5,7 @@ import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.search.facet.histogram.HistogramFacet
 import org.elasticsearch.search.facet.datehistogram.DateHistogramFacet
 import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.search.facet.termsstats.TermsStatsFacet
 
 /** @author Stephen Samuel */
 trait FacetDsl {
@@ -22,6 +23,8 @@ trait FacetDsl {
     }
     def filter(name: String) = new FilterFacetDefinition(name)
     def query(name: String) = new QueryFacetDefinition(name)
+    def statistical(name: String) = new StatisticalFacetDefinition(name)
+    def termsStats(name: String) = new TermsStatsFacetDefinition(name)
     def geodistance(name: String) = new GeoDistanceFacetDefinition(name)
   }
 }
@@ -210,6 +213,58 @@ class QueryFacetDefinition(name: String) extends FacetDefinition {
   }
   def facetFilter(block: => FilterDefinition): QueryFacetDefinition = {
     builder.facetFilter(block.builder)
+    this
+  }
+}
+
+class StatisticalFacetDefinition(name: String) extends FacetDefinition {
+  val builder = FacetBuilders.statisticalFacet(name)
+  def field(field: String): StatisticalFacetDefinition = {
+    builder.field(field)
+    this
+  }
+  def global(global: Boolean): StatisticalFacetDefinition = {
+    builder.global(global)
+    this
+  }
+  def nested(nested: String): StatisticalFacetDefinition = {
+    builder.nested(nested)
+    this
+  }
+}
+
+class TermsStatsFacetDefinition(name: String) extends FacetDefinition {
+  val builder = FacetBuilders.termsStatsFacet(name)
+  def facetFilter(block: => FilterDefinition): TermsStatsFacetDefinition = {
+    builder.facetFilter(block.builder)
+    this
+  }
+  def global(global: Boolean): TermsStatsFacetDefinition = {
+    builder.global(global)
+    this
+  }
+  def keyField(keyField: String): TermsStatsFacetDefinition = {
+    builder.keyField(keyField)
+    this
+  }
+  def order(order: TermsStatsFacet.ComparatorType): TermsStatsFacetDefinition = {
+    builder.order(order)
+    this
+  }
+  def shardSize(shardSize: Int): TermsStatsFacetDefinition = {
+    builder.shardSize(shardSize)
+    this
+  }
+  def size(size: Int): TermsStatsFacetDefinition = {
+    builder.size(size)
+    this
+  }
+  def valueField(valueField: String): TermsStatsFacetDefinition = {
+    builder.valueField(valueField)
+    this
+  }
+  def valueScript(valueScript: String): TermsStatsFacetDefinition = {
+    builder.valueScript(valueScript)
     this
   }
 }
