@@ -51,12 +51,32 @@
                         "mapping_charfilter",
                         "pattern_replace_charfilter"
                     ]
+                },
+                "myAnalyzer4": {
+                    "type": "custom",
+                    "tokenizer": "myTokenizer4"
+                },
+                "myAnalyzer5": {
+                    "type": "custom",
+                    "tokenizer": "myTokenizer5"
                 }
             },
             "tokenizer": {
                 "myTokenizer1": {
                     "type": "standard",
                     "max_token_length": 900
+                },
+                "myTokenizer4": {
+                    "type": "edgeNGram",
+                    "min_gram": 3,
+                    "max_gram": 17,
+                    "token_chars": ["digit", "letter"]
+                },
+                "myTokenizer5": {
+                    "type": "nGram",
+                    "min_gram": 4,
+                    "max_gram": 18,
+                    "token_chars": ["letter", "punctuation"]
                 }
             },
             "filter": {
