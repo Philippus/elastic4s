@@ -61,7 +61,14 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           pattern = "sample(.*)",
           replacement = "replacedSample $1"
         )
-      )
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer4",
+        EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter"))
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer5",
+        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_analyis2.json")
   }

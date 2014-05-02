@@ -62,22 +62,24 @@ case class KeywordTokenizer(override val name: String,
 case class NGramTokenizer(override val name: String,
                           minGram: Int = 1,
                           maxGram: Int = 2,
-                          tokenChers: Array[Char] = Array()) extends CustomizedTokenizer(name) {
+                          tokenChars: Iterable[String] = Nil) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "nGram")
-    source.field("minGram", minGram)
-    source.field("maxGram", maxGram)
+    source.field("min_gram", minGram)
+    source.field("max_gram", maxGram)
+    source.field("token_chars", tokenChars.toArray[String]: _*)
   }
 }
 
 case class EdgeNGramTokenizer(override val name: String,
                               minGram: Int = 1,
                               maxGram: Int = 2,
-                              tokenChars: Array[Char] = Array()) extends CustomizedTokenizer(name) {
+                              tokenChars: Iterable[String] = Nil) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "edgeNGram")
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
+    source.field("token_chars", tokenChars.toArray[String]: _*)
   }
 }
 
