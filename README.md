@@ -17,7 +17,7 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-The latest release is 0.90.10.0 which is compatible with elasticsearch 0.90.10. For releases that are compatible with earlier versions of elasticsearch, [search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
+The latest release is 0.90.13.1 which is compatible with elasticsearch 0.90.13. For releases that are compatible with earlier versions of elasticsearch, [search maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.sksamuel.elastic4s%22%20AND%20a%3A%22elastic4s_2.10%22). The general format is that release 0.90.x.y is compatible with elasticsearch 0.90.x.
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
@@ -351,7 +351,7 @@ Note: Only available for scala 2.10.
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s_2.10" % "0.90.10.0"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "0.90.13.1"
 ```
 
 For Maven users simply add:
@@ -360,7 +360,7 @@ For Maven users simply add:
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>0.90.10.0</version>
+    <version>0.90.13.1</version>
 </dependency>
 ```
 
