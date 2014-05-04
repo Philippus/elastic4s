@@ -23,6 +23,12 @@ For releases that are compatible with earlier versions of Elasticsearch,
 The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c. 
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
+|Elastic4s Release|Target Elasticsearch version|
+|-------|---------------------|
+|1.1.1.1|1.1.1|
+|1.0.3.0|1.0.3|
+|0.98.13.1|0.98.13|
+
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
