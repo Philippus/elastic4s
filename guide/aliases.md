@@ -24,5 +24,16 @@ val resp = client.execute {
 }
 ```
 
+Multiple operations on aliases can be executed atomically:
+
+```scala
+val resp = client.execute {
+  aliases(
+    aliases remove "places" on "old_locations",
+    aliases add "places" on "new_locations"
+  )
+}
+```
+
 
 For more information on the options for aliases, consult the official ElasticSearch [docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html).
