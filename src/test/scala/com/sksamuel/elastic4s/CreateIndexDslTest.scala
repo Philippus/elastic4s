@@ -169,12 +169,13 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with OneInstancePerT
   }
 
   it should "support creating parent mappings" in {
+    val json = mapper.readTree(getClass.getResource("/json/createindex/create_parent_mappings.json"))
     val req = create.index("docsAndTags").mappings(
       "tags" as (
         "tag" typed StringType
       ) all false parent "docs"
     )
-    req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
+    assert(json === mapper.readTree(req._source.string))
   }
 
 }

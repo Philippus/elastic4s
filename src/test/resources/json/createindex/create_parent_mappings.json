@@ -1,4 +1,10 @@
 {
+    "settings": {
+        "index": {
+            "number_of_shards": 5,
+            "number_of_replicas": 1
+        }
+    },
     "mappings": {
         "tags": {
             "_all": {
@@ -10,19 +16,12 @@
             "_parent": {
                 "type": "docs"
             },
-            "dynamic": "dynamic",
             "numeric_detection": true,
             "properties": {
                 "tag": {
                     "type": "string"
                 }
             }
-        }
-    },
-    "settings": {
-        "index": {
-            "number_of_replicas": 1,
-            "number_of_shards": 5
         }
     }
 }
