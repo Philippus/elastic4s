@@ -27,7 +27,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |-------|---------------------|
 |1.1.1.1|1.1.1|
 |1.0.3.0|1.0.3|
-|0.98.13.1|0.98.13|
+|0.90.13.1|0.90.13|
 
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
