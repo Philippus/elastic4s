@@ -19,7 +19,7 @@ val resp = client.bulk {
 }
 ```
 
-And multiple deletin:g
+And multiple deleting:
 
 ```scala
 val resp = client.bulk {
