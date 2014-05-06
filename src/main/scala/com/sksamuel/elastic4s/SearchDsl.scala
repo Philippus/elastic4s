@@ -251,6 +251,11 @@ trait SearchDsl
       this
     }
 
+    def trackScores(enabled: Boolean): SearchDefinition = {
+      _builder.setTrackScores(enabled)
+      this
+    }
+
     def types(types: String*): SearchDefinition = {
       _builder.setTypes(types: _*)
       this

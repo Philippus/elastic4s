@@ -1,0 +1,15 @@
+{
+  "sort": [
+    {
+      "_script": {
+        "script": "doc.score",
+        "type": "number",
+        "reverse": true,
+        "params": {
+          "param1": "value1",
+          "param2": "value2"
+        }
+      }
+    }
+  ]
+}
