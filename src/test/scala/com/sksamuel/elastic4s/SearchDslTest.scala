@@ -441,6 +441,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_sort_script.json")
   }
 
+  it should "generate correct json for script sort with params" in {
+    val req = search in "music" types "bands" sort {
+      by script "doc.score" typed "number" order SortOrder.DESC params Map("param1" -> "value1", "param2" -> "value2")
+    } preference new Preference.Custom("custom-node")
+    req._builder.toString should matchJsonResource("/json/search/search_sort_script_params.json")
+  }
+
   it should "generate correct json for geo sort" in {
     val req = search in "music" types "bands" sort {
       by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode

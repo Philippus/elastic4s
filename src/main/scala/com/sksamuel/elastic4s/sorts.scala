@@ -61,18 +61,23 @@ class FieldSortDefinition(field: String) extends SortDefinition {
   }
 }
 class ScriptSortDefinition(script: String) extends SortDefinition {
-  def builder = SortBuilders
-    .scriptSort(script, _type)
-    .setNestedPath(_nestedPath)
-    .lang(_lang)
-    .order(_order)
-    .sortMode(_sortmode)
+  def builder = {
+    val b = SortBuilders
+      .scriptSort(script, _type)
+      .setNestedPath(_nestedPath)
+      .lang(_lang)
+      .order(_order)
+      .sortMode(_sortmode)
+    _params.foreach(pair => b.param(pair._1, pair._2))
+    b
+  }
   var _type = "string"
   var _missing: AnyRef = null
   var _nestedPath: String = null
   var _order: SortOrder = null
   var _sortmode: String = null
   var _lang: String = null
+  var _params: Map[String, String] = Map.empty
   def sortMode(sortmode: String): ScriptSortDefinition = {
     _sortmode = sortmode
     this
@@ -92,6 +97,14 @@ class ScriptSortDefinition(script: String) extends SortDefinition {
   }
   def order(order: SortOrder): ScriptSortDefinition = {
     _order = order
+    this
+  }
+  def param(key: String, value: String): ScriptSortDefinition = {
+    _params + (key -> value)
+    this
+  }
+  def params(map: Map[String, String]): ScriptSortDefinition = {
+    _params = map
     this
   }
 }
