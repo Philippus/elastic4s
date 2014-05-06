@@ -458,6 +458,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_sort_multiple.json")
   }
 
+  it should "generate json for field sort with score tracking enabled" in {
+    val req = search in "music" types "bands" trackScores true sort {
+      by field "singer" order SortOrder.DESC
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_sort_track_scores.json")
+  }
+
   it should "generate correct json for facets" in {
     val req = search in "music" types "bands" facets (
       facet terms "type" allTerms true exclude "pop" fields "type" executionHint "hinty" global true order TermsFacet

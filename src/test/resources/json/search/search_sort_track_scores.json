@@ -1,0 +1,11 @@
+{
+    "sort": [
+        {
+            "singer": {
+                "order": "desc"
+            }
+        }
+    ],
+    "track_scores": true
+}
+
