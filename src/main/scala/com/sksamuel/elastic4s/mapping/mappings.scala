@@ -188,7 +188,7 @@ private[mapping] class FieldDefinition(val name: String) {
 
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
   def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields: _*)
-  def multi(fields: StringFieldDefinition*) = new MultiFieldDefinition(name).as(fields: _*)
+  def multi(fields: TypedFieldDefinition*) = new MultiFieldDefinition(name).as(fields: _*)
 }
 
 abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends FieldDefinition(name) {
