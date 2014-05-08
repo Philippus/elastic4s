@@ -53,3 +53,11 @@ val resp = client.execute {
 ```
 
 Now document 5 will had have its field `birthplace` set to `iowa`, which is of course Captain Kirk's birthplace.
+
+If you want to do a script update with params then you can do:
+
+```scala
+val resp = client.sync.execute {
+  update id 98 in "scifi/battlestargalactica" script "ctx._source.tags += tag" params(Map("tag"->"space"))
+}
+````
