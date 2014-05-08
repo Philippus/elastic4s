@@ -61,7 +61,8 @@ trait UpdateDsl extends IndexesTypesDsl {
       _builder.setRouting(routing)
       this
     }
-    def params(map: Map[String, AnyRef]): UpdateDefinition = {
+    def params(entries: (String, Any)*): UpdateDefinition = params(entries.toMap)
+    def params(map: Map[String, Any]): UpdateDefinition = {
       map.foreach(arg => _builder.addScriptParam(arg._1, arg._2))
       this
     }
