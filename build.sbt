@@ -5,7 +5,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.1.1.2-SNAPSHOT"
+version := "1.1.1.2"
 
 scalaVersion := "2.10.4"
 
@@ -26,6 +26,8 @@ publishTo <<= version {
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
+resolvers += "Artifactory Realm" at "http://localhost:8081/artifactory/libs-snapshot-local"
+
 publishArtifact in Test := false
 
 parallelExecution in Test := false
@@ -42,7 +44,7 @@ libraryDependencies ++= Seq(
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.1.5"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.1.6"  % "test"
 )
 
 ScoverageSbtPlugin.instrumentSettings
