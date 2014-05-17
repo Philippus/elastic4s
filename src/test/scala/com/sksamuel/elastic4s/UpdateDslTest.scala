@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ FlatSpec, OneInstancePerTest }
+import org.scalatest.{ Entry, Matchers, FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
 import com.sksamuel.elastic4s.source.DocumentSource
+import java.util
 
 /** @author Stephen Samuel */
-class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
+class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest with Matchers {
 
   val mapper = new ObjectMapper()
 
@@ -41,6 +42,15 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest {
   it should "should support docAsUpdate" in {
     val updateDef = update id 14 in "scifi/startrek" docAsUpsert true
     assert(updateDef.build.docAsUpsert())
+  }
+
+  it should "should support docAsUpsert with nested object" in {
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
+      "captain" -> Map("james" -> "kirk")
+    )
+    val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
+    sourceMap should contain key "captain"
+    sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))
   }
 
   it should "should support source" in {

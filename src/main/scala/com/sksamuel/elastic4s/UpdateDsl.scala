@@ -28,11 +28,9 @@ trait UpdateDsl extends IndexesTypesDsl {
 
     def build = _builder.request
 
-    private def fieldsAsXContent(fields: Iterable[(String, Any)]): XContentBuilder = {
+    private def _fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
-      for (tuple <- fields) {
-        source.field(tuple._1, tuple._2)
-      }
+      fields.foreach(_.output(source))
       source.endObject()
     }
 
@@ -47,12 +45,13 @@ trait UpdateDsl extends IndexesTypesDsl {
       _builder.setDocAsUpsert(true)
       doc(iterable)
     }
-    def doc(map: Map[String, Any]): UpdateDefinition = doc(map.toList)
-    def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toIterable)
-    def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = {
-      _builder.setDoc(fieldsAsXContent(iterable))
+    def doc(map: Map[String, Any]): UpdateDefinition = {
+      _builder.setDoc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
       this
     }
+    def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
+    def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = doc(iterable.toMap)
+
     def doc(source: DocumentSource) = {
       _builder.setDoc(source.json)
       this
@@ -95,11 +94,11 @@ trait UpdateDsl extends IndexesTypesDsl {
       _builder.setScriptLang(scriptLang)
       this
     }
-    def upsert(map: Map[String, Any]): UpdateDefinition = upsert(map.toList)
-    def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toIterable)
-    def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = {
-      _builder.setUpsert(fieldsAsXContent(iterable))
+    def upsert(map: Map[String, Any]): UpdateDefinition = {
+      _builder.setUpsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
       this
     }
+    def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toMap)
+    def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = upsert(iterable.toMap)
   }
 }
