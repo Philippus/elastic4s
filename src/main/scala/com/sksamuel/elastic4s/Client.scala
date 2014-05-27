@@ -21,7 +21,6 @@ import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRespon
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.action.{ ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener }
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
@@ -151,13 +150,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def delete(d: DeleteByIdDefinition): Future[DeleteResponse] = execute(d)
 
   @deprecated("use execute method", "1.0")
-  def optimize(d: OptimizeDefinition): Future[OptimizeResponse] = execute(d)
-  @deprecated("use execute method", "1.0")
-  def optimize(indexes: String*): Future[OptimizeResponse] = {
-    injectFuture[OptimizeResponse](client.admin.indices.prepareOptimize(indexes: _*).execute)
-  }
-
-  @deprecated("use execute method", "1.0")
   def delete(d: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = execute(d)
 
   def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] =
@@ -198,9 +190,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   @deprecated("use execute method", "1.0")
   def percolate(percolate: PercolateDefinition): Future[PercolateResponse] = execute(percolate)
-
-  @deprecated("use execute method", "1.0")
-  def deleteIndex(d: DeleteIndexDefinition): Future[DeleteIndexResponse] = execute(d)
 
   def searchScroll(scrollId: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
