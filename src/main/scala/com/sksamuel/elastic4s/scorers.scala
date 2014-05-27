@@ -16,7 +16,7 @@ trait ScoreDsl {
   def randomScore(seed: Long) = new RandomScoreDefinition(seed)
   def scriptScore(script: String) = new ScriptScoreDefinition(script)
   def gaussianScore(field: String, origin: String, scale: String) = new GaussianDecayScoreDefinition(field, origin, scale)
-  def linearScore(field: String, origin: String, scale: String) =  new LinearDecayScoreDefinition(field, origin, scale)
+  def linearScore(field: String, origin: String, scale: String) = new LinearDecayScoreDefinition(field, origin, scale)
   def exponentialScore(field: String, origin: String, scale: String) = new ExponentialDecayScoreDefinition(field, origin, scale)
   def factorScore(boost: Double) = new FactorScoreDefinition(boost)
   def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)

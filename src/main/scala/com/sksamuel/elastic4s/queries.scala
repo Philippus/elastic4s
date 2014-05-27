@@ -187,29 +187,18 @@ trait QueryDefinition {
 }
 
 class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, FilterDefinition])
-    extends QueryDefinition {
+    extends QueryDefinition
+    with DefinitionAttributeBoost
+    with DefinitionAttributeBoostMode
+    with DefinitionAttributeMaxBoost
+    with DefinitionAttributeScoreMode {
 
   val builder = if (queryOrFilter.isLeft)
     new FunctionScoreQueryBuilder(queryOrFilter.left.get.builder)
   else
     new FunctionScoreQueryBuilder(queryOrFilter.right.get.builder)
+  val _builder = builder
 
-  def boost(boost: Double): FunctionScoreQueryDefinition = {
-    builder.boost(boost.toFloat)
-    this
-  }
-  def boostMode(boostMode: String): FunctionScoreQueryDefinition = {
-    builder.boostMode(boostMode)
-    this
-  }
-  def maxBoost(maxBoost: Double): FunctionScoreQueryDefinition = {
-    builder.maxBoost(maxBoost.toFloat)
-    this
-  }
-  def scoreMode(scoreMode: String): FunctionScoreQueryDefinition = {
-    builder.scoreMode(scoreMode)
-    this
-  }
   def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
     scorers.foreach(scorer => scorer._filter match {
       case None => builder.add(scorer.builder)
@@ -252,6 +241,7 @@ class MultiMatchQueryDefinition(text: String)
     builder.minimumShouldMatch(minimumShouldMatch.toString)
     this
   }
+  @deprecated("@deprecated use a tieBreaker of 1.0f to disable dis-max query or select the appropriate Type", "1.2.0")
   def useDisMax(useDisMax: Boolean): MultiMatchQueryDefinition = {
     builder.useDisMax(java.lang.Boolean.valueOf(useDisMax))
     this
