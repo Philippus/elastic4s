@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import scala.concurrent.duration._
-import com.sksamuel.elastic4s.mapping.MappingDsl
+import com.sksamuel.elastic4s.mappings.MappingDsl
 
 /** @author Stephen Samuel */
 object ElasticDsl

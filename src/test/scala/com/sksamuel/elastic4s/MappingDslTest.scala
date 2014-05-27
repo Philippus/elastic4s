@@ -13,4 +13,12 @@ class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
       mapping("index")
     }
   }
+
+  it should "accept a get mapping request in infix form" in {
+    "the mapping dsl" should "accept a get mapping request" in {
+      client.execute {
+        mapping from "index"
+      }
+    }
+  }
 }

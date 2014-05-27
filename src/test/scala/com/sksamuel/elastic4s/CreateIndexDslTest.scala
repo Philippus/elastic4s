@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.{ Matchers, Assertions, FlatSpec, OneInstancePerTest }
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.mapping.FieldType._
+import com.sksamuel.elastic4s.mappings.FieldType._
 import ElasticDsl._
 
 /** @author Stephen Samuel */

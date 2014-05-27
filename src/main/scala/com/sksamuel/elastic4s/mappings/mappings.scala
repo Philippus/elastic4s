@@ -1,10 +1,10 @@
-package com.sksamuel.elastic4s.mapping
+package com.sksamuel.elastic4s.mappings
 
 import scala.collection.mutable.ListBuffer
 import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
-import com.sksamuel.elastic4s.mapping.attributes._
+import com.sksamuel.elastic4s.mappings.attributes._
 import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.mapping.FieldType._
+import com.sksamuel.elastic4s.mappings.FieldType._
 
 /** @author Stephen Samuel */
 trait MappingDsl {
@@ -13,6 +13,11 @@ trait MappingDsl {
   implicit def map(`type`: String) = new MappingDefinition(`type`)
 
   def mapping(indexes: String*) = new GetMappingDefinition(indexes)
+  def mapping = MapExpectsFrom
+}
+
+case object MapExpectsFrom {
+  def from(index: String): GetMappingDefinition = GetMappingDefinition(Seq(index))
 }
 
 case class GetMappingDefinition(indexes: Seq[String])
@@ -168,7 +173,7 @@ case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
 case object False extends DynamicMapping
 
-private[mapping] class FieldDefinition(val name: String) {
+private[mappings] class FieldDefinition(val name: String) {
 
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -201,7 +206,7 @@ abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends
     source.field("type", `type`.elastic)
   }
 
-  private[mapping] def build(source: XContentBuilder): Unit
+  private[mappings] def build(source: XContentBuilder): Unit
 }
 
 /** @author Fehmi Can Saglam */

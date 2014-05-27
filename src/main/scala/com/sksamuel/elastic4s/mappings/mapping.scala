@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.mapping
+package com.sksamuel.elastic4s.mappings
 
 /** @author Stephen Samuel */
 sealed abstract class YesNo(val value: String)

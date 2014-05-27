@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
-import com.sksamuel.elastic4s.mapping.FieldType.StringType
+import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */

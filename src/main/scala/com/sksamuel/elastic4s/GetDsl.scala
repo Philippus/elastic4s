@@ -3,17 +3,15 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.client.Requests
 import org.elasticsearch.action.get._
 import org.elasticsearch.search.fetch.source.FetchSourceContext
-import com.sksamuel.elastic4s.mapping.GetMappingDefinition
 
 /** @author Stephen Samuel */
 trait GetDsl extends IndexesTypesDsl {
 
-  def get = new GetExpectsIdOrMapping
+  def get = new GetExpectsId
   def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
   implicit def any2get(id: Any) = new GetWithIdExpectsFrom(id.toString)
-  class GetExpectsIdOrMapping {
+  class GetExpectsId {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
-    def mapping(name: String) = new GetMappingDefinition(Seq(name))
   }
   class GetWithIdExpectsFrom(id: String) {
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
