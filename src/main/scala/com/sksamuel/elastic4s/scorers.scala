@@ -7,20 +7,19 @@ import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuild
 import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.factor.FactorBuilder
+import org.elasticsearch.index.query.functionscore.fieldvaluefactor.FieldValueFactorFunctionBuilder
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 
 /** @author Stephen Samuel */
 trait ScoreDsl {
 
   def randomScore(seed: Long) = new RandomScoreDefinition(seed)
   def scriptScore(script: String) = new ScriptScoreDefinition(script)
-  def gaussianScore(field: String, origin: String, scale: String) =
-    new GaussianDecayScoreDefinition(field, origin, scale)
-  def linearScore(field: String, origin: String, scale: String) =
-    new LinearDecayScoreDefinition(field, origin, scale)
-  def exponentialScore(field: String, origin: String, scale: String) =
-    new ExponentialDecayScoreDefinition(field, origin, scale)
-  def factorScore(boost: Double) =
-    new FactorScoreDefinition(boost)
+  def gaussianScore(field: String, origin: String, scale: String) = new GaussianDecayScoreDefinition(field, origin, scale)
+  def linearScore(field: String, origin: String, scale: String) =  new LinearDecayScoreDefinition(field, origin, scale)
+  def exponentialScore(field: String, origin: String, scale: String) = new ExponentialDecayScoreDefinition(field, origin, scale)
+  def factorScore(boost: Double) = new FactorScoreDefinition(boost)
+  def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)
 }
 
 class FactorScoreDefinition(boost: Double) extends ScoreDefinition[FactorScoreDefinition] {
@@ -33,6 +32,18 @@ trait ScoreDefinition[T] {
   def filter(filter: FilterDefinition): T = {
     this._filter = Option(filter)
     this.asInstanceOf[T]
+  }
+}
+
+class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[FieldValueFactorDefinition] {
+  override val builder = new FieldValueFactorFunctionBuilder(fieldName: String)
+  def factor(f: Double): this.type = {
+    builder.factor(f.toFloat)
+    this
+  }
+  def modifier(m: FieldValueFactorFunction.Modifier): this.type = {
+    builder.modifier(m)
+    this
   }
 }
 

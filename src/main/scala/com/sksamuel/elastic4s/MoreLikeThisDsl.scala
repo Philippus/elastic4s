@@ -48,7 +48,6 @@ trait MoreLikeThisDsl {
       this
     }
     def minWordLength(minWordLen: Int) = {
-
       _builder.minWordLength(minWordLen)
       this
     }
