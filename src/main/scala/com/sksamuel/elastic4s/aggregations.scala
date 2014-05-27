@@ -211,6 +211,11 @@ class DateHistogramAggregation(name: String) extends AggregationDefinition[DateH
     this
   }
 
+  def extendedBounds(minMax: (String, String)): DateHistogramAggregation = {
+    builder.extendedBounds(minMax._1, minMax._2)
+    this
+  }
+
   def interval(interval: Long): DateHistogramAggregation = {
     builder.interval(interval)
     this
