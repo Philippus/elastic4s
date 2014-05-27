@@ -30,7 +30,7 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
-import com.sksamuel.elastic4s.mapping.MappingDefinition
+import com.sksamuel.elastic4s.mapping.{GetMappingDefinition, MappingDefinition}
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import scala.deprecated
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
@@ -218,7 +218,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
   def execute(get: GetMappingDefinition): Future[GetMappingsResponse] = {
-    injectFuture[GetMappingsResponse](client.admin().indices().prepareGetMappings(get.indexes).execute)
+    injectFuture[GetMappingsResponse](client.admin().indices().prepareGetMappings(get.indexes: _*).execute)
   }
 
   def close(): Unit = client.close()
