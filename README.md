@@ -25,8 +25,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.1.1.2|1.1.1|
-|1.0.3.0|1.0.3|
+|1.2.0.0|1.2.x|
+|1.1.2.0|1.1.x|
+|1.0.3.0|1.0.x|
 |0.90.13.1|0.90.13|
 
 
