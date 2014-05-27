@@ -250,10 +250,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       Await.result(client.execute(requestDefinition), duration)
 
     @deprecated("use execute method", "1.0")
-    def deleteIndex(deleteIndex: DeleteIndexDefinition)(implicit duration: Duration): DeleteIndexResponse =
-      Await.result(client.deleteIndex(deleteIndex), duration)
-
-    @deprecated("use execute method", "1.0")
     def percolate(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
       Await.result(client.percolate(percolateDef), duration)
 
@@ -279,15 +275,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
       Await.result(client.execute(search), duration)
 
-    @deprecated("use execute method", "1.0")
-    def search(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse = execute(searches: _*)
     def execute(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
       Await.result(client.execute(new MultiSearchDefinition(searches)), duration)
 
-    @deprecated("use execute method", "1.0")
-    def optimize(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse = execute(o)
     def execute(o: OptimizeDefinition)(implicit duration: Duration): OptimizeResponse =
-      Await.result(client.optimize(o), duration)
+      Await.result(client.execute(o), duration)
 
     def execute(definition: ExplainDefinition)(implicit duration: Duration): ExplainResponse =
       Await.result(client.execute(definition), duration)

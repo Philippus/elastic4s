@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
+import org.elasticsearch.common.xcontent.XContentBuilder
 
 /** @author liorh  */
 object FieldsMapper {

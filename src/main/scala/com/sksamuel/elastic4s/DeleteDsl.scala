@@ -43,9 +43,6 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       new DeleteByIdDefinition(IndexesTypes(indexes.toSeq, _types.toSeq), id)
   }
 
-  @deprecated("use delete from <from> from <index/type>", "0.90.8")
-  implicit def string2where(from: String): DeleteByQueryExpectsWhere =
-    new DeleteByQueryExpectsWhere(IndexesTypes(from))
   implicit def string2indextype(index: String): IndexType = new IndexType(index)
   implicit def string2indextype(indexes: String*): IndexType = new IndexType(indexes: _*)
   class IndexType(indexes: String*) {

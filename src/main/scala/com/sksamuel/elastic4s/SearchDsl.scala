@@ -16,9 +16,6 @@ trait SearchDsl
     with SuggestionDsl
     with IndexesTypesDsl {
 
-  @deprecated("use select or search", "1.0")
-  def find = new SearchExpectsIndex
-
   def select: SearchExpectsIndex = search
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search: SearchExpectsIndex = new SearchExpectsIndex

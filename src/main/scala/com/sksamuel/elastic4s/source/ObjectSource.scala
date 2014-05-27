@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 /** @author Stephen Samuel */
-class ObjectSource(any: AnyRef) extends Source {
+class ObjectSource(any: AnyRef) extends DocumentSource {
   def json: String = ObjectSource.mapper.writeValueAsString(any)
 }
 object ObjectSource {

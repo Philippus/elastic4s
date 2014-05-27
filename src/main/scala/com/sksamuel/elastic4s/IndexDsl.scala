@@ -112,9 +112,5 @@ trait IndexDsl {
       _fields ++= fields
       this
     }
-
-    @deprecated("renamed to doc", "1.0")
-    def source(source: Source) = doc(source)
   }
-
 }
