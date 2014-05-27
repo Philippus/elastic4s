@@ -10,6 +10,7 @@ import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanc
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.metrics
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
+import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 
 /** @author Nicolas Yzet */
 
@@ -28,6 +29,7 @@ trait AggregationDsl {
     def max(name: String) = new MaxAggregationDefinition(name)
     def sum(name: String) = new SumAggregationDefinition(name)
     def avg(name: String) = new AvgAggregationDefinition(name)
+    def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
     def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)
@@ -262,6 +264,46 @@ class FilterAggregationDefinition(name: String) extends AggregationDefinition[Fi
 
   def filter(block: => FilterDefinition): FilterAggregationDefinition = {
     builder.filter(block.builder)
+    this
+  }
+}
+
+class SigTermsAggregationDefinition(name: String) extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
+  val aggregationBuilder = AggregationBuilders.significantTerms(name)
+  def exclude(regex: String): this.type = {
+    aggregationBuilder.exclude(regex: String)
+    this
+  }
+  def minDocCount(minDocCount: Int): this.type = {
+    aggregationBuilder.minDocCount(minDocCount)
+    this
+  }
+  def executionHint(regex: String): this.type = {
+    aggregationBuilder.executionHint(regex)
+    this
+  }
+  def size(size: Int): this.type = {
+    aggregationBuilder.size(size)
+    this
+  }
+  def include(include: String): this.type = {
+    aggregationBuilder.include(include)
+    this
+  }
+  def field(field: String): this.type = {
+    aggregationBuilder.field(field)
+    this
+  }
+  def shardMinDocCount(shardMinDocCount: Int): this.type = {
+    aggregationBuilder.shardMinDocCount(shardMinDocCount)
+    this
+  }
+  def backgroundFilter(backgroundFilter: FilterDefinition): this.type = {
+    aggregationBuilder.backgroundFilter(backgroundFilter.builder)
+    this
+  }
+  def shardSize(shardSize: Int): this.type = {
+    aggregationBuilder.shardSize(shardSize)
     this
   }
 }
