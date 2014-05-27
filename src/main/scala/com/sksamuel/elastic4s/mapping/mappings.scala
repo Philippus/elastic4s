@@ -11,7 +11,11 @@ trait MappingDsl {
   def id: FieldDefinition = "_id"
   implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
   implicit def map(`type`: String) = new MappingDefinition(`type`)
+
+  def mapping(indexes: String*) = new GetMappingDefinition(indexes)
 }
+
+case class GetMappingDefinition(indexes: Seq[String])
 
 class MappingDefinition(val `type`: String) {
 

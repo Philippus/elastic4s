@@ -33,6 +33,7 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import com.sksamuel.elastic4s.mapping.MappingDefinition
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import scala.deprecated
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -162,8 +163,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] =
     injectFuture[ValidateQueryResponse](client.admin.indices.validateQuery(req, _))
 
-  def execute(req: UpdateRequest): Future[UpdateResponse] =
-    injectFuture[UpdateResponse](client.update(req, _))
+  def execute(req: UpdateRequest): Future[UpdateResponse] = injectFuture[UpdateResponse](client.update(req, _))
 
   def execute(req: MoreLikeThisRequest): Future[SearchResponse] =
     injectFuture[SearchResponse](client.moreLikeThis(req, _))
@@ -216,6 +216,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def open(index: String): Future[OpenIndexResponse] =
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
+
+  def execute(get: GetMappingDefinition): Future[GetMappingsResponse] = {
+    injectFuture[GetMappingsResponse](client.admin().indices().prepareGetMappings(get.indexes).execute)
+  }
 
   def close(): Unit = client.close()
 
