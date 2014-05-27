@@ -27,6 +27,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     .put("path.home", homeDir.getAbsolutePath)
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
+    .put("script.disable_dynamic", false)
 
   implicit val client = ElasticClient.local(settings.build)
 
