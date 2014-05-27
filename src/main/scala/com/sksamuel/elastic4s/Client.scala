@@ -279,8 +279,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   private def injectFuture[A](f: ActionListener[A] => Unit) = {
     val p = Promise[A]()
     f(new ActionListener[A] {
-      def onFailure(e: Throwable): Unit = p.failure(e)
-      def onResponse(response: A): Unit = p.success(response)
+      def onFailure(e: Throwable): Unit = p.tryFailure(e)
+      def onResponse(response: A): Unit = p.trySuccess(response)
     })
     p.future
   }
