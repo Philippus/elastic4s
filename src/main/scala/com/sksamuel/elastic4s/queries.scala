@@ -49,10 +49,8 @@ trait QueryDsl {
     def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
   }
 
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition =
-    new FunctionScoreQueryDefinition(Left(query))
-  def functionScoreQuery(filter: FilterDefinition): FunctionScoreQueryDefinition =
-    new FunctionScoreQueryDefinition(Right(filter))
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(Left(query))
+  def functionScoreQuery(filter: FilterDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(Right(filter))
 
   @deprecated("ambigious, use filteredQuery", "0.90.3.3")
   def filter = filterQuery

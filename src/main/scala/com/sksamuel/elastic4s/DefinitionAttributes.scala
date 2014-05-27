@@ -15,7 +15,7 @@ object DefinitionAttributes {
   trait DefinitionAttributeBoostMode {
     val _builder: { def boostMode(mode: String): Any }
 
-    def boost(mode: String): this.type = {
+    def boostMode(mode: String): this.type = {
       _builder.boostMode(mode)
       this
     }
