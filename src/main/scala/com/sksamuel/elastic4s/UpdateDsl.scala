@@ -39,18 +39,18 @@ trait UpdateDsl extends IndexesTypesDsl {
       this
     }
 
-    def docAsUpsert(map: Map[String, Any]): UpdateDefinition = docAsUpsert(map.toList)
-    def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toIterable)
-    def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = {
+    def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toMap)
+    def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = docAsUpsert(iterable.toMap)
+    def docAsUpsert(map: Map[String, Any]): UpdateDefinition = {
       _builder.setDocAsUpsert(true)
-      doc(iterable)
+      doc(map)
     }
+    def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
+    def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = doc(iterable.toMap)
     def doc(map: Map[String, Any]): UpdateDefinition = {
       _builder.setDoc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
       this
     }
-    def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
-    def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = doc(iterable.toMap)
 
     def doc(source: DocumentSource) = {
       _builder.setDoc(source.json)

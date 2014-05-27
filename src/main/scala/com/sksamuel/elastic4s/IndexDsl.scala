@@ -43,17 +43,38 @@ trait IndexDsl {
       source.endObject()
     }
 
+    def doc(source: DocumentSource) = {
+      this._source = Option(source)
+      this
+    }
+
+    def doc(map: DocumentMap) = {
+      this._map = Option(map)
+      this
+    }
+
     def id(id: Any): IndexDefinition = {
       _request.id(id.toString)
       this
     }
-    def routing(routing: String): IndexDefinition = {
-      _request.routing(routing)
+
+    def opType(opType: IndexRequest.OpType): IndexDefinition = {
+      _request.opType(opType)
       this
     }
 
     def parent(parent: String): IndexDefinition = {
       _request.parent(parent)
+      this
+    }
+
+    def refresh(refresh: Boolean): IndexDefinition = {
+      _request.refresh(refresh)
+      this
+    }
+
+    def routing(routing: String): IndexDefinition = {
+      _request.routing(routing)
       this
     }
 
@@ -68,10 +89,6 @@ trait IndexDsl {
     }
 
     def update(update: Boolean): IndexDefinition = opType(OpType.CREATE)
-    def opType(opType: IndexRequest.OpType): IndexDefinition = {
-      _request.opType(opType)
-      this
-    }
 
     def version(version: Int): IndexDefinition = {
       _request.version(version)
@@ -93,16 +110,6 @@ trait IndexDsl {
 
     def fieldValues(fields: FieldValue*): IndexDefinition = {
       _fields ++= fields
-      this
-    }
-
-    def doc(source: DocumentSource) = {
-      this._source = Option(source)
-      this
-    }
-
-    def doc(map: DocumentMap) = {
-      this._map = Option(map)
       this
     }
 
