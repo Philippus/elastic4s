@@ -5,7 +5,7 @@ import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
 import org.elasticsearch.action.index.{ IndexAction, IndexRequest }
 import scala.collection.JavaConverters._
-import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource, Source }
+import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource }
 import scala.collection.mutable
 
 /** @author Stephen Samuel */

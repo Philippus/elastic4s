@@ -14,7 +14,7 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "an index request" should "index from jackson source when used" in {
     val json = mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
     client.execute {
-      index into "electronics/phone" source JacksonSource(json)
+      index into "electronics/phone" doc JacksonSource(json)
     }
     blockUntilCount(1, "electronics")
   }
@@ -26,8 +26,8 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
     val one = new Phone("One", "HTC")
 
     client.bulk(
-      index into "electronics/phone" source ObjectSource(iPhone),
-      index into "electronics/phone" source ObjectSource(one)
+      index into "electronics/phone" doc ObjectSource(iPhone),
+      index into "electronics/phone" doc ObjectSource(one)
     )
     blockUntilCount(3, "electronics")
   }
@@ -38,7 +38,9 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a delete index request" should "delete the index" in {
     assert(client.sync.exists("electronics").isExists)
-    client.sync.deleteIndex("electronics")
+    client.sync.execute {
+      delete index "electronics"
+    }
     assert(!client.sync.exists("electronics").isExists)
     client.close()
   }
