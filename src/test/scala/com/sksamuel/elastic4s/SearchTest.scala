@@ -45,7 +45,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(1 === resp.getHits.totalHits())
   }
 
-  "a search index" should "find an indexed document in the given type only" in {
+  it should "find an indexed document in the given type only" in {
     val resp1 = client.sync.execute {
       search in "music" -> "bands" query "kate"
     }
@@ -55,5 +55,12 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar {
       search in "music" -> "artists" query "kate"
     }
     assert(1 === resp2.getHits.totalHits())
+  }
+
+  it should "return specified fields" in {
+    val resp1 = client.sync.execute {
+      search in "music/bands" query "jethro" fields "singer"
+    }
+    assert(resp1.getHits.getHits.exists(_.getFields.get("singer").getValues.contains("ian anderson")))
   }
 }
