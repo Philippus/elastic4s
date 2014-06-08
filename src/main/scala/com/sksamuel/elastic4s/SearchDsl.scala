@@ -73,6 +73,9 @@ trait SearchDsl
     }
     def build = _builder.request()
 
+    private var includes: Array[String] = Array.empty
+    private var excludes: Array[String] = Array.empty
+
     /** Adds a single string query to this search
       *
       * @param string the query string
@@ -265,6 +268,18 @@ trait SearchDsl
 
     def fetchSource(fetch: Boolean): SearchDefinition = {
       _builder.setFetchSource(fetch)
+      this
+    }
+
+    def sourceInclude(includes: String*): this.type = {
+      this.includes = includes.toArray
+      _builder.setFetchSource(this.includes, this.excludes)
+      this
+    }
+
+    def sourceExclude(excludes: String*): this.type = {
+      this.excludes = excludes.toArray
+      _builder.setFetchSource(this.includes, this.excludes)
       this
     }
   }
