@@ -19,8 +19,8 @@ JSON libraries such as Jackson without having to unmarshall.
 
 The latest release is 1.1.1.0 which is compatible with Elasticsearch 1.1.1. There are releases for both Scala 2.10 and Scala 2.11.
 For releases that are compatible with earlier versions of Elasticsearch,
-[search maven central](http://search.maven.org/#search%7Cga%7C1%7Celastic4s). 
-The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c. 
+[search maven central](http://search.maven.org/#search%7Cga%7C1%7Celastic4s).
+The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c.
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
@@ -335,6 +335,22 @@ All operations are normally async. To switch to a sync client called .sync on th
 ```scala
 val resp = client.sync.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }
 resp.isInstanceOf[IndexResponse] // true
+```
+
+## Helpers
+
+Helpers provide higher level APIs to work with Elasticsearch.
+
+### Reindexing data
+
+Use the ```reindex``` helper to reindex data from source index to target index.
+
+```scala
+client.reindex(
+  sourceIndex = "sourceIndex",
+  targetIndex = "targetIndex",
+  chunkSize = 500,
+  scroll = "5m")
 ```
 
 ## DSL Completeness

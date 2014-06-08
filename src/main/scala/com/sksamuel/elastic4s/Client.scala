@@ -33,6 +33,7 @@ import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import scala.deprecated
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
+import com.sksamuel.elastic4s.source.DocumentSource
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
@@ -222,6 +223,34 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
 
+  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext): Future[Unit] = {
+    execute {
+      ElasticDsl.search in sourceIndex limit (chunkSize) scroll (scroll) searchType (SearchType.Scan) query (matchall)
+    } flatMap { response =>
+
+      def _scroll(scrollId: String): Future[Unit] = {
+        searchScroll(scrollId, scroll) flatMap { response =>
+          val hits = response.getHits().hits
+          if (hits.length > 0) {
+            hits.map(_.sourceAsString).grouped(chunkSize).foreach { sources =>
+              bulk {
+                sources map { source =>
+                  index into targetIndex doc (new { val json = source } with DocumentSource)
+                }: _*
+              }
+            }
+            _scroll(response.getScrollId)
+          } else {
+            Future.successful()
+          }
+        }
+      }
+
+      val scrollId = response.getScrollId
+      _scroll(scrollId)
+    }
+  }
+
   def java = client
   def admin = client.admin
 
@@ -274,6 +303,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       Await.result(client.execute(definition), duration)
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
+
+    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext, duration: Duration): Unit = {
+      Await.result(client.reindex(sourceIndex, targetIndex, chunkSize, scroll), duration)
+    }
   }
 
   private def injectFuture[A](f: ActionListener[A] => Unit) = {
