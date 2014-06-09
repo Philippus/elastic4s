@@ -341,6 +341,6 @@ object ElasticClient {
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
   def local(settings: Settings, timeout: Long = DefaultTimeout): ElasticClient =
-    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
+    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node(), timeout)
 
 }
