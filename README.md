@@ -17,7 +17,7 @@ JSON libraries such as Jackson without having to unmarshall.
 
 #### Release
 
-The latest release is 1.1.1.0 which is compatible with Elasticsearch 1.1.1. There are releases for both Scala 2.10 and Scala 2.11.
+The latest release is 1.2.1.1 which is compatible with Elasticsearch 1.2.1. There are releases for both Scala 2.10 and Scala 2.11.
 For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search%7Cga%7C1%7Celastic4s).
 The general format is that release a.b.c.d is compatible with Elasticsearch a.b.c.
@@ -25,10 +25,10 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.2.1.0|1.2.x|
-|1.1.2.0|1.1.x|
-|1.0.3.0|1.0.x|
-|0.90.13.1|0.90.13|
+|1.2.x.x|1.2.x|
+|1.1.x.x|1.1.x|
+|1.0.x.x|1.0.x|
+|0.90.13.x|0.90.13|
 
 
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
