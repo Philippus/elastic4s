@@ -225,12 +225,12 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext): Future[Unit] = {
     execute {
-      ElasticDsl.search in sourceIndex limit (chunkSize) scroll (scroll) searchType (SearchType.Scan) query (matchall)
+      ElasticDsl.search in sourceIndex limit chunkSize scroll scroll searchType SearchType.Scan query matchall
     } flatMap { response =>
 
       def _scroll(scrollId: String): Future[Unit] = {
         searchScroll(scrollId, scroll) flatMap { response =>
-          val hits = response.getHits().hits
+          val hits = response.getHits.hits
           if (hits.length > 0) {
             hits.map(_.sourceAsString).grouped(chunkSize).foreach { sources =>
               bulk {
@@ -306,6 +306,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext, duration: Duration): Unit = {
       Await.result(client.reindex(sourceIndex, targetIndex, chunkSize, scroll), duration)
+    }
+
+    def execute(get: GetMappingDefinition)(implicit duration: Duration): GetMappingsResponse = {
+      Await.result(client.execute(get), duration)
     }
   }
 
