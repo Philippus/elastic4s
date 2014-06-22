@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ Matchers, FlatSpec }
+import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
-import org.elasticsearch.common.Priority
+import org.scalatest.{FlatSpec, Matchers}
 
 /** @author Stephen Samuel */
 class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
