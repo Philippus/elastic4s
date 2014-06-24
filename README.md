@@ -79,7 +79,7 @@ to the Elasticsearch documentation as the DSL closely mirrors the standard Java 
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
-| Get Mapping       )                       | `mapping from <index>` |
+| Get Mapping                               | `mapping from <index>` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
 | [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
 | [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
@@ -93,9 +93,10 @@ to the Elasticsearch documentation as the DSL closely mirrors the standard Java 
 | Register Query                            | `<id> into <index> query { <queryblock> }` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
-| Index Status                              | `status(<index>)` |
+| Index Status                              | `status <index>` |
 | [Add Alias](guide/aliases.md)             | `aliases add "<alias>" on "<index>"` |
 | [Remove Alias](guide/aliases.md)          | `aliases remove "<alias>" on "<index>"` |
+| Update mapping                            | `update mapping </index/type> add { mappings block }` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

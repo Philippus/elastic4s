@@ -22,6 +22,7 @@ object ElasticDsl
     with MultiGetDsl
     with OptimizeDsl
     with PercolateDsl
+    with PutMappingDsl
     with SearchDsl
     with ScoreDsl
     with UpdateDsl
