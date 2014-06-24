@@ -96,7 +96,7 @@ to the Elasticsearch documentation as the DSL closely mirrors the standard Java 
 | Index Status                              | `status <index>` |
 | [Add Alias](guide/aliases.md)             | `aliases add "<alias>" on "<index>"` |
 | [Remove Alias](guide/aliases.md)          | `aliases remove "<alias>" on "<index>"` |
-| Update mapping                            | `update mapping </index/type> add { mappings block }` |
+| Put  mapping                              | `put mapping </index/type> add { mappings block }` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

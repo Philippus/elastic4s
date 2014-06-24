@@ -23,7 +23,7 @@ class PutMappingDefinition(indexes: IndexesTypes)
     .setIndices(indexes.index)
     .setType(indexes.typ.getOrElse("Must specify type for put mapping"))
 
-  def fields(fields: TypedFieldDefinition*): this.type = {
+  def add(fields: TypedFieldDefinition*): this.type = {
     val xcontent = XContentFactory.jsonBuilder().startObject()
     xcontent.startObject("properties")
     for ( field <- fields ) {

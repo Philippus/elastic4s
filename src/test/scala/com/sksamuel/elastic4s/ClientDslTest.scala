@@ -36,7 +36,7 @@ class ClientDslTest extends FunSuite with ElasticSugar {
 
   test("async accepts update mapping") {
     client.execute {
-      put mapping "gameofthrones/places" fields(
+      put mapping "gameofthrones/places" add(
         "name" typed StringType,
         "location" typed GeoPointType
         )
@@ -45,7 +45,7 @@ class ClientDslTest extends FunSuite with ElasticSugar {
 
   test("sync accepts update mapping") {
     client.sync.execute {
-      put mapping "gameofthrones/places" fields(
+      put mapping "gameofthrones/places" add(
         "name" typed StringType,
         "location" typed GeoPointType
         )
