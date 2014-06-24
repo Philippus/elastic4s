@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.source.DocumentSource
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.{UpdateAction, UpdateRequestBuilder}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.action.update.{ UpdateAction, UpdateRequestBuilder }
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
@@ -19,7 +19,7 @@ trait UpdateDsl extends IndexesTypesDsl {
   }
 
   class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
-    extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
+      extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
 
     val _builder = new UpdateRequestBuilder(null)
       .setIndex(indexesTypes.index)

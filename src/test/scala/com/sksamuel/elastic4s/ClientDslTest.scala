@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.mappings.FieldType.{StringType, GeoPointType, DateType}
+import com.sksamuel.elastic4s.mappings.FieldType.{ StringType, GeoPointType, DateType }
 import org.elasticsearch.common.Priority
 import org.scalatest.FunSuite
 import ElasticDsl._
@@ -9,10 +9,10 @@ import ElasticDsl._
 class ClientDslTest extends FunSuite with ElasticSugar {
 
   client.execute {
-    index into "gameofthrones/characters" fields(
+    index into "gameofthrones/characters" fields (
       "name" -> "tyrion",
       "rating" -> "kick ass"
-      )
+    )
   }
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
@@ -36,19 +36,19 @@ class ClientDslTest extends FunSuite with ElasticSugar {
 
   test("async accepts update mapping") {
     client.execute {
-      put mapping "gameofthrones/places" add(
+      put mapping "gameofthrones/places" add (
         "name" typed StringType,
         "location" typed GeoPointType
-        )
+      )
     }
   }
 
   test("sync accepts update mapping") {
     client.sync.execute {
-      put mapping "gameofthrones/places" add(
+      put mapping "gameofthrones/places" add (
         "name" typed StringType,
         "location" typed GeoPointType
-        )
+      )
     }
   }
 }

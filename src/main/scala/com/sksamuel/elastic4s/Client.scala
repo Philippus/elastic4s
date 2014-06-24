@@ -1,35 +1,35 @@
 package com.sksamuel.elastic4s
 
 import scala.concurrent._
-import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
-import org.elasticsearch.action.count.{CountRequest, CountResponse}
+import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.action.count.{ CountRequest, CountResponse }
 import org.elasticsearch.action.explain.ExplainResponse
-import org.elasticsearch.action.search.{MultiSearchResponse, SearchRequest, SearchResponse}
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryResponse, ValidateQueryRequest}
+import org.elasticsearch.action.search.{ MultiSearchResponse, SearchRequest, SearchResponse }
+import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryResponse, ValidateQueryRequest }
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
-import org.elasticsearch.common.settings.{Settings, ImmutableSettings}
+import org.elasticsearch.common.settings.{ Settings, ImmutableSettings }
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.node.{ Node, NodeBuilder }
 import org.elasticsearch.client.Client
 import org.elasticsearch.action.get._
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
-import org.elasticsearch.action.update.{UpdateResponse, UpdateRequest}
+import org.elasticsearch.action.update.{ UpdateResponse, UpdateRequest }
 import scala.concurrent.duration._
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.percolate.PercolateResponse
 import ElasticDsl._
 import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
-import org.elasticsearch.action.{ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener}
+import org.elasticsearch.action.{ ActionRequestBuilder, ActionResponse, ActionRequest, ActionListener }
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
-import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, MappingDefinition}
+import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import com.sksamuel.elastic4s.source.DocumentSource
@@ -226,8 +226,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
 
-  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")
-             (implicit ec: ExecutionContext): Future[Unit] = {
+  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext): Future[Unit] = {
     execute {
       ElasticDsl.search in sourceIndex limit chunkSize scroll scroll searchType SearchType.Scan query matchall
     } flatMap { response =>
@@ -310,8 +309,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
 
-    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")
-               (implicit ec: ExecutionContext, duration: Duration): Unit = {
+    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext, duration: Duration): Unit = {
       Await.result(client.reindex(sourceIndex, targetIndex, chunkSize, scroll), duration)
     }
 
@@ -350,7 +348,7 @@ object ElasticClient {
 
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
-    for ( address <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
+    for (address <- addresses) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
     fromClient(client, DefaultTimeout)
   }
 

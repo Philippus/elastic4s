@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.{ Matchers, FlatSpec }
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
 import org.elasticsearch.common.Priority
@@ -66,7 +66,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
 
   it should "support source includes" in {
     val resp1 = client.sync.execute {
-      search in "music/bands" query "jethro" sourceInclude("keyboards", "guit*")
+      search in "music/bands" query "jethro" sourceInclude ("keyboards", "guit*")
     }
     import scala.collection.JavaConverters._
     val map = resp1.getHits.getHits()(0).sourceAsMap.asScala
@@ -78,7 +78,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
 
   it should "support source excludes" in {
     val resp1 = client.sync.execute {
-      search in "music/bands" query "jethro" sourceExclude("na*", "guit*")
+      search in "music/bands" query "jethro" sourceExclude ("na*", "guit*")
     }
     import scala.collection.JavaConverters._
     val map = resp1.getHits.getHits()(0).sourceAsMap.asScala

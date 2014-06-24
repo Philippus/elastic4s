@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeIndexesOptions, DefinitionAttributeIgnoreConflicts}
+import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributeIndexesOptions, DefinitionAttributeIgnoreConflicts }
 import com.sksamuel.elastic4s.mappings.TypedFieldDefinition
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequestBuilder, PutMappingRequest}
+import org.elasticsearch.action.admin.indices.mapping.put.{ PutMappingRequestBuilder, PutMappingRequest }
 import org.elasticsearch.common.xcontent.XContentFactory
 
 /** @author Stephen Samuel */
@@ -14,8 +14,8 @@ trait PutMappingDsl {
 }
 
 class PutMappingDefinition(indexes: IndexesTypes)
-  extends DefinitionAttributeIgnoreConflicts
-  with DefinitionAttributeIndexesOptions {
+    extends DefinitionAttributeIgnoreConflicts
+    with DefinitionAttributeIndexesOptions {
 
   def build: PutMappingRequest = _builder.request
 
@@ -26,7 +26,7 @@ class PutMappingDefinition(indexes: IndexesTypes)
   def add(fields: TypedFieldDefinition*): this.type = {
     val xcontent = XContentFactory.jsonBuilder().startObject()
     xcontent.startObject("properties")
-    for ( field <- fields ) {
+    for (field <- fields) {
       field.build(xcontent)
     }
     xcontent.endObject()
