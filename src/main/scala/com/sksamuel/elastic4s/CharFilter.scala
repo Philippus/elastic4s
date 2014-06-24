@@ -19,18 +19,18 @@ case object HtmlStripCharFilter extends CharFilter {
   val name = "html_strip"
 }
 
-case class MappingCharFilter(val name: String, mappings: (String, String)*)
+case class MappingCharFilter(name: String, mappings: (String, String)*)
     extends CharFilterDefinition {
 
   val filterType = "mapping"
 
   def build(source: XContentBuilder): Unit = {
-    source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v" }) toArray: _*)
+    source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v"}).toArray: _*)
   }
 
 }
 
-case class PatternReplaceCharFilter(val name: String, pattern: String, replacement: String)
+case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)
     extends CharFilterDefinition {
 
   val filterType = "pattern_replace"
