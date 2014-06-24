@@ -5,9 +5,9 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.2.1.1"
+version := "1.2.1.2"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.1"
 
 crossScalaVersions := Seq("2.10.4", "2.11.1")
 
@@ -38,14 +38,14 @@ libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.2.1",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "commons-io"                     %  "commons-io"                  % "2.4",
-  "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.0"  ,
-  "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.0"  ,
+  "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.1"  ,
+  "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.1.1"  ,
   "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.0-rc2"  exclude ("org" +
     ".scalatest", "scalatest_2.10.0"),
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.1.6"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.2.0"  % "test"
 )
 
 ScoverageSbtPlugin.instrumentSettings
