@@ -43,4 +43,21 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
     refresh("transport")
     blockUntilCount(3, "transport", "air")
   }
+
+  "a sync bulk request" should "execute all index queries" in {
+    client.sync.bulk(
+      index into "transport/air" id 5 fields "company" -> "aeromexico",
+      index into "transport/air" id 6 fields "company" -> "alaska air",
+      index into "transport/air" id 7 fields "company" -> "hawaiian air",
+      index into "transport/air" id 8 fields "company" -> "aerotaxi"
+    )
+  }
+
+  "a sync bulk request" should "execute all delete queries" in {
+    client.sync.bulk(
+      delete(8) from "transport/air",
+      delete id 5 from "transport/air"
+    )
+  }
+
 }
