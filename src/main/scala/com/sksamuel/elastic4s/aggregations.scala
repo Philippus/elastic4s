@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders }
 import org.elasticsearch.search.aggregations.bucket.terms.{ TermsBuilder, Terms }
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogramBuilder, HistogramBuilder, DateHistogram }
@@ -33,6 +34,7 @@ trait AggregationDsl {
     def stats(name: String) = new StatsAggregationDefinition(name)
     def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)
+    def cardinality(name: String) = new CardinalityAggregationDefinition(name)
   }
 }
 
@@ -86,6 +88,29 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
 
   def script(script: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
     builder.script(script)
+    this
+  }
+}
+
+trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggregationDefinition[Self]] extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
+
+  def field(field: String): CardinalityMetricsAggregationDefinition[Self] = {
+    builder.field(field)
+    this
+  }
+
+  def script(script: String): CardinalityMetricsAggregationDefinition[Self] = {
+    builder.script(script)
+    this
+  }
+
+  def rehash(rehash: Boolean): CardinalityMetricsAggregationDefinition[Self] = {
+    builder.rehash(rehash)
+    this
+  }
+
+  def precisionThreshold(precisionThreshold: Long): CardinalityMetricsAggregationDefinition[Self] = {
+    builder.precisionThreshold(precisionThreshold)
     this
   }
 }
@@ -341,3 +366,6 @@ class ValueCountAggregationDefinition(name: String) extends ValuesSourceMetricsA
   val aggregationBuilder = AggregationBuilders.count(name)
 }
 
+class CardinalityAggregationDefinition(name: String) extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
+  val aggregationBuilder = AggregationBuilders.cardinality(name)
+}

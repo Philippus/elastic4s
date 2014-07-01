@@ -764,6 +764,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_count.json")
   }
 
+  it should "generate correct json for cardinality aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation cardinality "grades_cardinality" field "grade" rehash true precisionThreshold 40000
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_cardinality.json")
+  }
+
   it should "generate correct json for highlighting" in {
     val req = search in "music" types "bands" highlighting (
       options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder

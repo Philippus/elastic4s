@@ -1,0 +1,11 @@
+{
+    "aggregations" : {
+        "grades_cardinality" : {
+            "cardinality" : {
+                "field" : "grade",
+                "precision_threshold" : 40000,
+                "rehash" : true
+            }
+        }
+    }
+}
