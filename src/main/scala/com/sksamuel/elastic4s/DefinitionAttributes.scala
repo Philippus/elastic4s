@@ -1,9 +1,21 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.IndicesOptions
+import org.elasticsearch.action.support.replication.ReplicationType
+import org.elasticsearch.common.unit.TimeValue
 
 /** @author Stephen Samuel */
 object DefinitionAttributes {
+
+  trait DefinitionAttributeConsistencyLevel {
+    val _builder: { def setConsistencyLevel(level: WriteConsistencyLevel): Any }
+
+    def consistencyLevel(level: WriteConsistencyLevel): this.type = {
+      _builder.setConsistencyLevel(level)
+      this
+    }
+  }
 
   trait DefinitionAttributeIgnoreConflicts {
     val _builder: { def setIgnoreConflicts(ignoreConflicts: Boolean): Any }
@@ -221,11 +233,34 @@ object DefinitionAttributes {
     }
   }
 
+  trait DefinitionAttributeReplicationType {
+    val _builder: { def setReplicationType(replicationType: ReplicationType): Any }
+
+    def replicationType(replicationType: ReplicationType): this.type = {
+      _builder.setReplicationType(replicationType)
+      this
+    }
+  }
+
   trait DefinitionAttributeRealtime {
     val _builder: { def setRealtime(realtime: Boolean): Any }
 
     def realtime(realtime: Boolean): this.type = {
       _builder.setRealtime(realtime)
+      this
+    }
+  }
+
+  trait DefinitionAttributeTimeout {
+    val _builder: { def setTimeout(value: String): Any; def setTimeout(value: TimeValue): Any }
+
+    def timeout(value: TimeValue): this.type = {
+      _builder.setTimeout(value)
+      this
+    }
+
+    def timeout(value: String): this.type = {
+      _builder.setTimeout(value)
       this
     }
   }

@@ -172,6 +172,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[PutMappingResponse](client.admin.indices.putMapping(put.build, _))
   }
 
+  @deprecated("Use bulk dsl with execute method", "1.3")
   def bulk(requests: BulkCompatibleDefinition*): Future[BulkResponse] = {
     val bulk = client.prepareBulk()
     requests.foreach {
@@ -180,6 +181,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       case update: UpdateDefinition => bulk.add(update.build)
     }
     injectFuture[BulkResponse](bulk.execute)
+  }
+
+  def execute(bulk: BulkDefinition): Future[BulkResponse] = {
+    injectFuture[BulkResponse](client.bulk(bulk._builder.request, _))
   }
 
   @deprecated("use the sync client", "0.90.5")

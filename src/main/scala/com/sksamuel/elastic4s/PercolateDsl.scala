@@ -33,16 +33,14 @@ trait PercolateDsl extends QueryDsl {
         source.field("query", _query.builder)
 
       _rawDoc match {
-        case Some(doc) => {
+        case Some(doc) =>
           source.rawField("doc", doc.getBytes("UTF-8"))
-        }
-        case None => {
+        case None =>
           source.startObject("doc")
           for (tuple <- _fields) {
             source.field(tuple._1, tuple._2)
           }
           source.endObject()
-        }
       }
       source.endObject()
       source

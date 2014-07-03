@@ -8,7 +8,7 @@ import ElasticDsl._
 /** @author Stephen Samuel */
 class ClientDslTest extends FunSuite with ElasticSugar {
 
-  client.execute {
+  client.sync.execute {
     index into "gameofthrones/characters" fields (
       "name" -> "tyrion",
       "rating" -> "kick ass"
