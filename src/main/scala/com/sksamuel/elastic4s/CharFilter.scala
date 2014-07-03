@@ -25,7 +25,7 @@ case class MappingCharFilter(name: String, mappings: (String, String)*)
   val filterType = "mapping"
 
   def build(source: XContentBuilder): Unit = {
-    source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v"}).toArray: _*)
+    source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v" }).toArray: _*)
   }
 
 }

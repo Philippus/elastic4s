@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders }
 import org.elasticsearch.search.aggregations.bucket.terms.{ TermsBuilder, Terms }
-import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogramBuilder, HistogramBuilder, DateHistogram }
+import org.elasticsearch.search.aggregations.bucket.histogram.{ Histogram, DateHistogramBuilder, HistogramBuilder, DateHistogram }
 import org.elasticsearch.common.geo.{ GeoPoint, GeoDistance }
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
@@ -250,6 +250,47 @@ class DateHistogramAggregation(name: String) extends AggregationDefinition[DateH
     builder.interval(interval)
     this
   }
+
+  def minDocCount(minDocCount: Long) = {
+    builder.minDocCount(minDocCount)
+    this
+  }
+
+  def preZone(preZone: String) = {
+    builder.preZone(preZone)
+    this
+  }
+
+  def postZone(postZone: String) = {
+    builder.postZone(postZone)
+    this
+  }
+
+  def preOffset(preOffset: Long) = {
+    builder.preOffset(preOffset)
+    this
+  }
+
+  def postOffset(postOffset: Long) = {
+    builder.preOffset(postOffset)
+    this
+  }
+
+  def order(order: Histogram.Order) = {
+    builder.order(order)
+    this
+  }
+
+  def preZoneAdjustLargeInterval(preZoneAdjustLargeInterval: Boolean) = {
+    builder.preZoneAdjustLargeInterval(preZoneAdjustLargeInterval)
+    this
+  }
+
+  def format(format: String) = {
+    builder.format(format)
+    this
+  }
+
 }
 
 class GeoDistanceAggregationDefinition(name: String) extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {

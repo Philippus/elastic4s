@@ -3,7 +3,8 @@
         "years": {
             "date_histogram": {
                 "field": "date",
-                "interval": "1y"
+                "interval": "1y",
+                "min_doc_count":0
             }
         }
     }
