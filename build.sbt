@@ -1,5 +1,5 @@
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-
+import io.jenner.sbt.JennerSbtPlugin.Keys._
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
@@ -54,6 +54,10 @@ instrumentSettings
 scalariformSettings
 
 jennerSettings
+
+jennerProjectId := "xx"
+
+jennerApiKey := "xx"
 
 ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(AlignParameters, true)
