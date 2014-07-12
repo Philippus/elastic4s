@@ -330,6 +330,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def bulk(requests: BulkCompatibleDefinition*)(implicit duration: Duration): BulkResponse = {
       Await.result(client.bulk(requests: _*), duration)
     }
+
+    def execute(bulk: BulkDefinition)(implicit duration: Duration): BulkResponse = {
+      Await.result(client.execute(bulk), duration)
+    }
   }
 
   private def injectFuture[A](f: ActionListener[A] => Unit) = {
