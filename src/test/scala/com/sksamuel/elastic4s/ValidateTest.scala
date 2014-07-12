@@ -11,7 +11,7 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   implicit val duration: Duration = 10.seconds
 
-  client.execute {
+  client.sync.execute {
     index into "food/pasta" fields (
       "name" -> "maccaroni",
       "color" -> "yellow"

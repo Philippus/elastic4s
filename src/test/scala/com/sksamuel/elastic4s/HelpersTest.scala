@@ -7,21 +7,21 @@ import org.scalatest.{ FlatSpec, Matchers }
 /** @author Stephen Samuel */
 class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
-  client.execute {
+  client.sync.execute {
     index into "starcraft/races" fields (
       "name" -> "zerg",
       "base" -> "hatchery"
     )
   }
 
-  client.execute {
+  client.sync.execute {
     index into "starcraft/units" fields (
       "name" -> "hydra",
       "race" -> "zerg"
     )
   }
 
-  client.execute {
+  client.sync.execute {
     index into "starcraft/bands" fields (
       "name" -> "protoss",
       "base" -> "nexus"
