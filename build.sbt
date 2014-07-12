@@ -1,4 +1,5 @@
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
@@ -48,11 +49,8 @@ libraryDependencies ++= Seq(
   "org.scalatest"                  %% "scalatest"                   % "2.2.0"  % "test"
 )
 
-ScoverageSbtPlugin.instrumentSettings
+instrumentSettings
 
-CoverallsPlugin.singleProject
-
-// scalariform settings
 scalariformSettings
 
 ScalariformKeys.preferences := ScalariformKeys.preferences.value
