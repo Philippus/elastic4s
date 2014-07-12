@@ -11,9 +11,11 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   implicit val duration: Duration = 10.seconds
 
-  client.bulk(
+  client.execute(
+    bulk(
     index into "scifi/startrek" fields "character" -> "kirk" id 5,
     index into "scifi/starwars" fields "character" -> "lando" id 8
+    )
   )
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
