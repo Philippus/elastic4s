@@ -55,9 +55,9 @@ scalariformSettings
 
 jennerSettings
 
-jennerProjectId := "xx"
+jennerProjectId := "42da7926-fbb5-4c8e-9b2d-b659ab3f5948"
 
-jennerApiKey := "xx"
+jennerApiKey := "35fd177d-96f5-4f4c-a20f-c434515dd802"
 
 ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(AlignParameters, true)
