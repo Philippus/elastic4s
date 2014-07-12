@@ -53,7 +53,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     var backoff = 0
     var actual = 0l
 
-    while (backoff <= 128 && actual != expected) {
+    while (backoff <= 32 && actual != expected) {
       if (backoff > 0)
         Thread.sleep(backoff * 100)
       backoff = if (backoff == 0) 1 else backoff * 2
