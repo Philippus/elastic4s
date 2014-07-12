@@ -326,6 +326,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
       Await.result(client.execute(put), duration)
     }
 
+    @deprecated("use execute method", "1.0")
     def bulk(requests: BulkCompatibleDefinition*)(implicit duration: Duration): BulkResponse = {
       Await.result(client.bulk(requests: _*), duration)
     }
