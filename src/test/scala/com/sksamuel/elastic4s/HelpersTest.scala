@@ -8,41 +8,37 @@ import org.scalatest.{ FlatSpec, Matchers }
 class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    index into "music/bands" fields (
-      "name" -> "coldplay",
-      "singer" -> "chris martin",
-      "drummer" -> "will champion",
-      "guitar" -> "johnny buckland"
+    index into "starcraft/races" fields (
+      "name" -> "zerg",
+      "base" -> "hatchery"
     )
   }
 
   client.execute {
-    index into "music/artists" fields (
-      "name" -> "kate bush",
-      "singer" -> "kate bush"
+    index into "starcraft/units" fields (
+      "name" -> "hydra",
+      "race" -> "zerg"
     )
   }
 
   client.execute {
-    index into "music/bands" fields (
-      "name" -> "jethro tull",
-      "singer" -> "ian anderson",
-      "guitar" -> "martin barre",
-      "keyboards" -> "johnny smith"
+    index into "starcraft/bands" fields (
+      "name" -> "protoss",
+      "base" -> "nexus"
     ) id 45
   }
 
-  blockUntilCount(3, "music")
+  blockUntilCount(3, "starcraft")
 
   "reindex" should "reindex all documents from source to target" in {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    client.sync.reindex("music", "tracks")
+    client.sync.reindex("starcraft", "games")
 
-    blockUntilCount(3, "tracks")
+    blockUntilCount(3, "games")
 
     val resp = client.sync.execute {
-      search in "tracks" query "anderson"
+      search in "games" query "protoss"
     }
     resp.getHits.totalHits() shouldBe 1
   }

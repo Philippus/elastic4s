@@ -53,6 +53,8 @@ instrumentSettings
 
 scalariformSettings
 
+jennerSettings
+
 ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(AlignParameters, true)
   .setPreference(DoubleIndentClassDeclaration, true)
