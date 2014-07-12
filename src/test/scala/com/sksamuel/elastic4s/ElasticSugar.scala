@@ -10,9 +10,8 @@ import org.elasticsearch.indices.IndexMissingException
 import org.scalatest.{ Suite, BeforeAndAfterAll }
 
 /** @author Stephen Samuel */
-trait ElasticSugar extends BeforeAndAfterAll with Logging {
 
-  this: Suite =>
+object TestElasticNode extends Logging {
 
   val tempFile = File.createTempFile("elasticsearchtests", "tmp")
   val homeDir = new File(tempFile.getParent + "/" + UUID.randomUUID().toString)
@@ -30,6 +29,13 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     .put("script.disable_dynamic", false)
 
   implicit val client = ElasticClient.local(settings.build)
+}
+
+trait ElasticSugar extends BeforeAndAfterAll with Logging {
+
+  this: Suite =>
+
+  val client = TestElasticNode.client
 
   def refresh(indexes: String*) {
     val i = indexes.size match {

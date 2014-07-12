@@ -4,7 +4,7 @@ import org.elasticsearch.action.admin.indices.delete.{ DeleteIndexAction, Delete
 
 /** @author Stephen Samuel */
 trait DeleteIndexDsl {
-  @deprecated
+  @deprecated("use the dsl", "1.0")
   implicit def string2delete(name: String) = new DeleteIndexDefinition(name)
   def deleteIndex(names: String*) = new DeleteIndexDefinition(names: _*)
 }

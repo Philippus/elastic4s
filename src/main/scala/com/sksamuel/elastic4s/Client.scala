@@ -251,7 +251,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
             }
             _scroll(response.getScrollId)
           } else {
-            Future.successful()
+            Future.successful(())
           }
         }
       }
