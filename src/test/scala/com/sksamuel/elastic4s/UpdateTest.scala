@@ -13,8 +13,8 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute(
     bulk(
-    index into "scifi/startrek" fields "character" -> "kirk" id 5,
-    index into "scifi/starwars" fields "character" -> "lando" id 8
+      index into "scifi/startrek" fields "character" -> "kirk" id 5,
+      index into "scifi/starwars" fields "character" -> "lando" id 8
     )
   )
 
