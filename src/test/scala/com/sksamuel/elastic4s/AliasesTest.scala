@@ -9,22 +9,23 @@ import scala.collection.JavaConversions._
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
 
 class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
-  client.bulk(
-    index into "waterways/rivers" id 11 fields (
+  client.sync.execute(bulk(
+    index into "waterways/rivers" id 11 fields(
       "name" -> "River Lune",
       "country" -> "England"
-    ),
-    index into "waterways/rivers" id 12 fields (
+      ),
+    index into "waterways/rivers" id 12 fields(
       "name" -> "River Dee",
       "country" -> "England"
-    ),
-    index into "waterways/rivers" id 21 fields (
+      ),
+    index into "waterways/rivers" id 21 fields(
       "name" -> "River Dee",
       "country" -> "Wales"
-    ),
-    index into "waterways_updated/rivers" id 31 fields (
+      ),
+    index into "waterways_updated/rivers" id 31 fields(
       "name" -> "Thames",
       "country" -> "England"
+      )
     )
   )
 
