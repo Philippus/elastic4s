@@ -67,5 +67,18 @@ trait MoreLikeThisDsl {
       _builder.maxDocFreq(maxDocFreq)
       this
     }
+
+    def limit(sizeHint: Int) = size(sizeHint)
+
+    def size(sizeHint: Int) = {
+      _builder.searchSize(sizeHint)
+      this
+    }
+
+    def start(i: Int) = from(i)
+    def from(i: Int) = {
+      _builder.searchFrom(i)
+      this
+    }
   }
 }
