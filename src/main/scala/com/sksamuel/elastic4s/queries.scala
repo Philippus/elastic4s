@@ -85,6 +85,8 @@ trait QueryDsl {
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
 
+  def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields : _*)
+
   def nested(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
   def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
@@ -198,6 +200,91 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
       case None => builder.add(scorer.builder)
       case Some(filter) => builder.add(filter.builder, scorer.builder)
     })
+    this
+  }
+}
+
+class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
+  val _builder = QueryBuilders.moreLikeThisQuery(fields : _*)
+  val builder = _builder
+
+  def analyser(analyser: String) = {
+    _builder.analyzer(analyser)
+    this
+  }
+
+  def ids(ids: String*) = {
+    _builder.ids(ids : _*)
+    this
+  }
+
+  def exclude() = {
+    _builder.exclude(true)
+    this
+  }
+
+  def notExclude() = {
+    _builder.exclude(false)
+    this
+  }
+
+  def failOnUnsupportedField() = {
+    _builder.failOnUnsupportedField(true)
+    this
+  }
+
+  def notFailOnUnsupportedField() = {
+    _builder.failOnUnsupportedField(false)
+    this
+  }
+
+  def likeText(text: String) = {
+    _builder.likeText(text)
+    this
+  }
+
+  def minTermFreq(freq: Int) = {
+    _builder.minTermFreq(freq)
+    this
+  }
+
+  def stopWords(stopWords: String*) = {
+    _builder.stopWords(stopWords: _*)
+    this
+  }
+
+  def percentTermsToMatch(percentTermsToMatch: Double) = {
+    _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
+    this
+  }
+
+  def maxWordLength(maxWordLen: Int) = {
+    _builder.maxWordLength(maxWordLen)
+    this
+  }
+
+  def minWordLength(minWordLen: Int) = {
+    _builder.minWordLength(minWordLen)
+    this
+  }
+
+  def boostTerms(boostTerms: Double) = {
+    _builder.boostTerms(boostTerms.toFloat)
+    this
+  }
+
+  def maxQueryTerms(maxQueryTerms: Int) = {
+    _builder.maxQueryTerms(maxQueryTerms)
+    this
+  }
+
+  def minDocFreq(minDocFreq: Int) = {
+    _builder.minDocFreq(minDocFreq)
+    this
+  }
+
+  def maxDocFreq(maxDocFreq: Int) = {
+    _builder.maxDocFreq(maxDocFreq)
     this
   }
 }
