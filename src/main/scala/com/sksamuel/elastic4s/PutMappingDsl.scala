@@ -19,7 +19,7 @@ class PutMappingDefinition(indexes: IndexesTypes)
 
   def build: PutMappingRequest = _builder.request
 
-  val _builder = new PutMappingRequestBuilder(null)
+  val _builder = new PutMappingRequestBuilder(ProxyClients.indices)
     .setIndices(indexes.index)
     .setType(indexes.typ.getOrElse("Must specify type for put mapping"))
 

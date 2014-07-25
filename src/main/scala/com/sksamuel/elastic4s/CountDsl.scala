@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.count.{ CountAction, CountRequestBuilder }
-import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
+import org.elasticsearch.action.count.CountRequestBuilder
 import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
 
 /** @author Stephen Samuel */
 trait CountDsl {
@@ -16,9 +16,9 @@ trait CountDsl {
   def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
 
-  class CountDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(CountAction.INSTANCE) {
+  class CountDefinition(indexesTypes: IndexesTypes) {
 
-    val _builder = new CountRequestBuilder(null)
+    val _builder = new CountRequestBuilder(ProxyClients.client)
       .setIndices(indexesTypes.indexes: _*)
       .setTypes(indexesTypes.types: _*)
       .setQuery(QueryBuilders.matchAllQuery())

@@ -19,7 +19,7 @@ trait ExplainDsl {
       extends DefinitionAttributeRouting
       with DefinitionAttributePreference {
 
-    val _builder = new ExplainRequestBuilder(null, indexesTypes.index, indexesTypes.typ.get, id.toString)
+    val _builder = new ExplainRequestBuilder(ProxyClients.client, indexesTypes.index, indexesTypes.typ.get, id.toString)
 
     def build = _builder.request
 

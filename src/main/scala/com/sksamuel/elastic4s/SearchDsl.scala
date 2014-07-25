@@ -26,10 +26,9 @@ trait SearchDsl
     def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
   }
 
-  class MultiSearchDefinition(searches: Iterable[SearchDefinition])
-      extends RequestDefinition(MultiSearchAction.INSTANCE) {
+  class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
     def build = {
-      val builder = new MultiSearchRequestBuilder(null)
+      val builder = new MultiSearchRequestBuilder(ProxyClients.client)
       searches foreach (builder add _.build)
       builder.request()
     }
@@ -64,10 +63,10 @@ trait SearchDsl
     }
   }
 
-  class SearchDefinition(indexesTypes: IndexesTypes) extends RequestDefinition(SearchAction.INSTANCE) {
+  class SearchDefinition(indexesTypes: IndexesTypes) {
 
     val _builder = {
-      new SearchRequestBuilder(null)
+      new SearchRequestBuilder(ProxyClients.client)
         .setIndices(indexesTypes.indexes: _*)
         .setTypes(indexesTypes.types: _*)
     }
@@ -98,10 +97,13 @@ trait SearchDsl
       this
     }
 
+    @deprecated("Facets are deprecated, use aggregations", "1.3.0")
     def facets(iterable: Iterable[FacetDefinition]): SearchDefinition = {
       iterable.foreach(facet => _builder.addFacet(facet.builder))
       this
     }
+
+    @deprecated("Facets are deprecated, use aggregations", "1.3.0")
     def facets(f: FacetDefinition*): SearchDefinition = facets(f.toIterable)
 
     def aggregations(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = {

@@ -11,12 +11,12 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   implicit val duration: Duration = 10.seconds
 
-  client.sync.execute(
+  client.execute(
     bulk(
       index into "scifi/startrek" fields "character" -> "kirk" id 5,
       index into "scifi/starwars" fields "character" -> "lando" id 8
     )
-  )
+  ).await
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
@@ -26,17 +26,17 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "an update request" should "add a field when a script assigns a value" in {
 
-    client.sync.execute {
+    client.execute {
       update id 5 in "scifi/startrek" script "ctx._source.birthplace = 'iowa'"
-    }
+    }.await
     refresh("scifi")
 
     var k = 0
     var hits = 0l
     while (k < 10 && hits == 0) {
-      val resp = client.sync.search {
+      val resp = client.execute {
         search in "scifi" types "startrek" term "birthplace" -> "iowa"
-      }
+      }.await
       hits = resp.getHits.totalHits()
       Thread.sleep(k * 200)
       k = k + 1
@@ -46,20 +46,20 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "support doc based update" in {
 
-    client.sync.execute {
+    client.execute {
       update(8).in("scifi/starwars").doc(
         "character" -> "lando",
         "location" -> "cloud city"
       )
-    }
+    }.await
     refresh("scifi")
 
     var k = 0
     var hits = 0l
     while (k < 10 && hits == 0) {
-      val resp = client.sync.search {
+      val resp = client.execute {
         search in "scifi" types "starwars" term "location" -> "cloud"
-      }
+      }.await
       hits = resp.getHits.totalHits()
       Thread.sleep(k * 200)
       k = k + 1
@@ -68,19 +68,19 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "keep existing fields with partial update" in {
-    client.sync.execute {
+    client.execute {
       update(5).in("scifi/startrek").docAsUpsert(
         "bestmate" -> "spock"
       )
-    }
+    }.await
     refresh("scifi")
 
     var k = 0
     var hits = 0l
     while (k < 10 && hits == 0) {
-      val resp = client.sync.search {
+      val resp = client.execute {
         search in "scifi" types "startrek" term "character" -> "kirk"
-      }
+      }.await
       hits = resp.getHits.totalHits()
       Thread.sleep(k * 200)
       k = k + 1
@@ -90,19 +90,19 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "insert non existent doc when using docAsUpsert" in {
 
-    client.sync.execute {
+    client.execute {
       update(14).in("scifi/starwars").doc(
         "character" -> "chewie"
       ).docAsUpsert
-    }
+    }.await
     refresh("scifi")
 
     var k = 0
     var hits = 0l
     while (k < 10 && hits == 0) {
-      val resp = client.sync.search {
+      val resp = client.execute {
         search in "scifi" types "starwars" term "character" -> "chewie"
-      }
+      }.await
       hits = resp.getHits.totalHits()
       Thread.sleep(k * 200)
       k = k + 1
@@ -112,11 +112,11 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "not insert non existent doc when using doc" in {
     val e = intercept[RuntimeException] {
-      client.sync.execute {
+      client.execute {
         update(55).in("scifi/lostinspace").doc(
           "character" -> "smith"
         )
-      }
+      }.await
       refresh("scifi")
     }
     assert(e != null)

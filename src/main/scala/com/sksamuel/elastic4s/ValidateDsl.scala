@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryAction, ValidateQueryRequestBuilder }
+import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryRequestBuilder
+import org.elasticsearch.client.Client
 
 /** @author Stephen Samuel */
 trait ValidateDsl extends QueryDsl {
@@ -12,9 +13,8 @@ trait ValidateDsl extends QueryDsl {
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
 
-  class ValidateDefinition(index: String, `type`: String)
-      extends IndicesRequestDefinition(ValidateQueryAction.INSTANCE) {
-    val _builder = new ValidateQueryRequestBuilder(null).setIndices(index).setTypes(`type`)
+  class ValidateDefinition(index: String, `type`: String) {
+    val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices).setIndices(index).setTypes(`type`)
     def build = _builder.request
 
     /** Adds a single string query to this search

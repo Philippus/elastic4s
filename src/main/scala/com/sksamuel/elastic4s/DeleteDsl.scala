@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.client.Requests
-import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequestBuilder, DeleteByQueryAction }
-import org.elasticsearch.action.delete.DeleteAction
-import org.elasticsearch.action.support.QuerySourceBuilder
-import org.elasticsearch.index.VersionType
-import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
+import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder
+import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.action.support.replication.ReplicationType
+import org.elasticsearch.client.Requests
+import org.elasticsearch.index.VersionType
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
@@ -51,8 +50,7 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       new DeleteByQueryExpectsWhere(IndexesTypes(indexes, types.toSeq))
   }
 
-  class DeleteByIdDefinition(indexType: IndexesTypes, id: Any)
-      extends RequestDefinition(DeleteAction.INSTANCE) with BulkCompatibleDefinition {
+  class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompatibleDefinition {
     private val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
     def types(_type: String): DeleteByIdDefinition = {
       builder.`type`(_type)
@@ -89,11 +87,10 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
 
-  class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition)
-      extends RequestDefinition(DeleteByQueryAction.INSTANCE) {
+  class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition) {
 
     private val builder: DeleteByQueryRequestBuilder =
-      new DeleteByQueryRequestBuilder(null)
+      new DeleteByQueryRequestBuilder(ProxyClients.client)
         .setIndices(indexesTypes.indexes: _*)
         .setTypes(indexesTypes.types: _*)
 

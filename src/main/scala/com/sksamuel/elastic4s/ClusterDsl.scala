@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.cluster.health.{ ClusterHealthRequest, ClusterHealthAction }
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
 
 trait ClusterDsl {
-  def clusterHealth = new ClusterHealth()
+  def clusterHealth = new ClusterHealthDefinition()
+  def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
+}
 
-  def clusterHealth(indices: String*) = new ClusterHealth(indices: _*)
-
-  class ClusterHealth(indices: String*) extends ClusterRequestDefinition(ClusterHealthAction.INSTANCE) {
-    def build = new ClusterHealthRequest(indices: _*)
-  }
+class ClusterHealthDefinition(indices: String*) {
+  def build = new ClusterHealthRequest(indices: _*)
 }

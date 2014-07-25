@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.settings.ImmutableSettings
 import java.io.File
-import ElasticDsl._
 import java.util.UUID
-import scala.concurrent.{Future, Await}
-import scala.concurrent.duration._
+
+import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{ Suite, BeforeAndAfterAll }
+import org.scalatest.{ BeforeAndAfterAll, Suite }
 
 /** @author Stephen Samuel */
 
@@ -27,6 +26,7 @@ object TestElasticNode extends Logging {
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
     .put("script.disable_dynamic", false)
+    .put("es.logger.level", "DEBUG")
 
   implicit val client = ElasticClient.local(settings.build)
 }
@@ -46,10 +46,6 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     listener.actionGet()
   }
 
-  implicit class RichFuture[T](future: Future[T]) {
-    def await(duration: Duration) = Await.result(future, duration)
-  }
-
   def blockUntilCount(expected: Long,
                       index: String,
                       types: String*) {
@@ -57,14 +53,14 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     var backoff = 0
     var actual = 0l
 
-    while (backoff <= 32 && actual != expected) {
+    while (backoff <= 50 && actual != expected) {
       if (backoff > 0)
-        Thread.sleep(backoff * 100)
-      backoff = if (backoff == 0) 1 else backoff * 2
+        Thread.sleep(100)
+      backoff = backoff + 1
       try {
-        actual = Await.result(client execute {
+        actual = client.execute {
           count from index types types
-        }, 5 seconds).getCount
+        }.await.getCount
       } catch {
         case e: IndexMissingException => 0
       }

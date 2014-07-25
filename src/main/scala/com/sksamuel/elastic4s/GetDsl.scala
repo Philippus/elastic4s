@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
-import org.elasticsearch.action.get._
 import org.elasticsearch.search.fetch.source.FetchSourceContext
 
 /** @author Stephen Samuel */
@@ -19,8 +18,7 @@ trait GetDsl extends IndexesTypesDsl {
   }
 }
 
-case class GetDefinition(indexesTypes: IndexesTypes, id: String)
-    extends RequestDefinition(GetAction.INSTANCE) {
+case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
 
   private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
   def build = _builder

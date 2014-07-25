@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.source.DocumentSource
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.{ UpdateAction, UpdateRequestBuilder }
+import org.elasticsearch.action.update.UpdateRequestBuilder
 import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.script.ScriptService.ScriptType
 
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
@@ -18,10 +19,9 @@ trait UpdateDsl extends IndexesTypesDsl {
     def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
   }
 
-  class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
-      extends RequestDefinition(UpdateAction.INSTANCE) with BulkCompatibleDefinition {
+  class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompatibleDefinition {
 
-    val _builder = new UpdateRequestBuilder(null)
+    val _builder = new UpdateRequestBuilder(ProxyClients.client)
       .setIndex(indexesTypes.index)
       .setType(indexesTypes.typ.orNull)
       .setId(id)
@@ -35,7 +35,7 @@ trait UpdateDsl extends IndexesTypesDsl {
     }
 
     def script(script: String): UpdateDefinition = {
-      _builder.setScript(script)
+      _builder.setScript(script, ScriptType.INLINE)
       this
     }
 

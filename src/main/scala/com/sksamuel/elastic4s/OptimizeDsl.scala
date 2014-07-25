@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
-import org.elasticsearch.action.admin.indices.optimize.OptimizeAction
 
 /** @author Stephen Samuel */
 trait OptimizeDsl {
@@ -14,7 +13,7 @@ trait OptimizeDsl {
     def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
 
-  class OptimizeDefinition(indexes: String*) extends IndicesRequestDefinition(OptimizeAction.INSTANCE) {
+  class OptimizeDefinition(indexes: String*) {
 
     private val builder = Requests.optimizeRequest(indexes: _*)
     def build = builder

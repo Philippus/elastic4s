@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin.SnapshotDsl
 
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import com.sksamuel.elastic4s.mappings.MappingDsl
 
@@ -34,6 +35,9 @@ trait ElasticDsl
 
   implicit val duration: Duration = 10.seconds
 
+  implicit class RichFuture[T](future: Future[T]) {
+    def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)
+  }
 }
 
 object ElasticDsl extends ElasticDsl

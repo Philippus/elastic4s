@@ -11,12 +11,12 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   implicit val duration: Duration = 10.seconds
 
-  client.sync.execute {
+  client.execute {
     index into "food/pasta" fields (
       "name" -> "maccaroni",
       "color" -> "yellow"
     )
-  }
+  }.await
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
@@ -26,9 +26,9 @@ class ValidateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a validate query" should "return valid when the query is valid" in {
 
-    val resp = client.sync.execute {
+    val resp = client.execute {
       validate in "food/pasta" query "maccaroni"
-    }
+    }.await
     assert(true === resp.isValid)
   }
 }

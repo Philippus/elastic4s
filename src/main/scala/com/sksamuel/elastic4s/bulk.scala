@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributeConsistencyLevel, DefinitionAttributeRefresh, DefinitionAttributeReplicationType, DefinitionAttributeTimeout }
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.action.bulk.BulkRequestBuilder
+import org.elasticsearch.action.WriteConsistencyLevel
+import org.elasticsearch.action.bulk.BulkRequest
+import org.elasticsearch.action.support.replication.ReplicationType
+import org.elasticsearch.common.unit.TimeValue
 
 /** @author Stephen Samuel */
 trait BulkCompatibleDefinition
@@ -12,13 +14,34 @@ trait BulkDsl {
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = new BulkDefinition(requests)
 }
 
-class BulkDefinition(requests: Seq[BulkCompatibleDefinition])
-    extends DefinitionAttributeRefresh
-    with DefinitionAttributeConsistencyLevel
-    with DefinitionAttributeTimeout
-    with DefinitionAttributeReplicationType {
+class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
 
-  val _builder = new BulkRequestBuilder(null)
+  def timeout(value: String): this.type = {
+    _builder.timeout(value)
+    this
+  }
+
+  def timeout(value: TimeValue): this.type = {
+    _builder.timeout(value)
+    this
+  }
+
+  def replicationType(replicationType: ReplicationType): this.type = {
+    _builder.replicationType(replicationType)
+    this
+  }
+
+  def refresh(refresh: Boolean): this.type = {
+    _builder.refresh(refresh)
+    this
+  }
+
+  def consistencyLevel(level: WriteConsistencyLevel): this.type = {
+    _builder.consistencyLevel(level)
+    this
+  }
+
+  val _builder = new BulkRequest()
   requests.foreach {
     case index: IndexDefinition => _builder.add(index.build)
     case delete: DeleteByIdDefinition => _builder.add(delete.build)

@@ -1,40 +1,28 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.FlatSpec
-import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
-import org.elasticsearch.common.Priority
+import com.sksamuel.elastic4s.ElasticDsl._
+import org.scalatest.{ FlatSpec, Matchers }
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.Matchers
+import org.scalatest.mock.MockitoSugar
 
 /** @author Stephen Samuel */
 class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar with ElasticSugar {
 
   client.execute {
-    index into "beer/lager" fields (
-      "name" -> "coors light",
-      "brand" -> "coors"
-    ) id 4
-  }
-  client.execute {
-    index into "beer/lager" fields (
-      "name" -> "bud lite",
-      "brand" -> "bud"
-    ) id 8
-  }
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+    bulk(
+      index into "beer/lager" fields ("name" -> "coors light", "brand" -> "coors") id 4,
+      index into "beer/lager" fields ("name" -> "bud lite", "brand" -> "bud") id 8
+    )
+  }.await
 
   refresh("beer")
   blockUntilCount(2, "beer")
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   "A Get request" should "retrieve a document by id" in {
 
-    val resp = client.sync.execute {
+    val resp = client.execute {
       get id 8 from "beer/lager"
-    }
+    }.await
     assert("8" === resp.getId)
   }
 

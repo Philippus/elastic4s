@@ -1,19 +1,19 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.mappings.FieldType.{ StringType, GeoPointType, DateType }
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.mappings.FieldType.{ GeoPointType, StringType }
 import org.elasticsearch.common.Priority
 import org.scalatest.FunSuite
-import ElasticDsl._
 
 /** @author Stephen Samuel */
 class ClientDslTest extends FunSuite with ElasticSugar {
 
-  client.sync.execute {
+  client.execute {
     index into "gameofthrones/characters" fields (
       "name" -> "tyrion",
       "rating" -> "kick ass"
     )
-  }
+  }.await
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
@@ -22,14 +22,8 @@ class ClientDslTest extends FunSuite with ElasticSugar {
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
-  test("sync compiles with mapping from") {
-    client.execute {
-      mapping from "gameofthrones"
-    }
-  }
-
   test("async compiles with mapping from") {
-    client.sync.execute {
+    client.execute {
       mapping from "gameofthrones"
     }
   }
@@ -43,12 +37,4 @@ class ClientDslTest extends FunSuite with ElasticSugar {
     }
   }
 
-  test("sync accepts update mapping") {
-    client.sync.execute {
-      put mapping "gameofthrones/places" add (
-        "name" typed StringType,
-        "location" typed GeoPointType
-      )
-    }
-  }
 }

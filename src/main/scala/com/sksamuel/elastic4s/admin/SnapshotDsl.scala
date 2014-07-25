@@ -8,12 +8,12 @@ import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotR
 
 /** @author Stephen Samuel
   *
-  *        DSL Syntax:
+  * DSL Syntax:
   *
-  *        repository create <repo> settings <settings>
-  *        snapshot create <name> in <repo>
-  *        snapshot delete <name> in <repo>
-  *        snapshot restore <name> from <repo>
+  * repository create <repo> settings <settings>
+  * snapshot create <name> in <repo>
+  * snapshot delete <name> in <repo>
+  * snapshot restore <name> from <repo>
   *
   */
 trait SnapshotDsl {
@@ -50,7 +50,7 @@ trait SnapshotDsl {
 }
 
 class CreateRepositoryDefinition(name: String, `type`: String) {
-  val request = new PutRepositoryRequestBuilder(null, name).setType(`type`)
+  val request = new PutRepositoryRequestBuilder(ProxyClients.cluster, name).setType(`type`)
   def build = request.request()
   def settings(map: Map[String, AnyRef]): this.type = {
     import scala.collection.JavaConverters._
@@ -60,12 +60,12 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
 }
 
 class DeleteSnapshotDefinition(name: String, repo: String) {
-  val request = new DeleteSnapshotRequestBuilder(null, repo, name)
+  val request = new DeleteSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
   def build = request.request()
 }
 
 class CreateSnapshotDefinition(name: String, repo: String) {
-  val request = new CreateSnapshotRequestBuilder(null, repo, name)
+  val request = new CreateSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
   def build = request.request()
 
   def partial(p: Boolean): this.type = {
@@ -101,7 +101,7 @@ class CreateSnapshotDefinition(name: String, repo: String) {
 }
 
 class RestoreSnapshotDefinition(name: String, repo: String) {
-  val request = new RestoreSnapshotRequestBuilder(null, repo, name)
+  val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
   def build = request.request()
 
   def restoreGlobalState(global: Boolean): this.type = {

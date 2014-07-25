@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
-  client.sync.execute(
+  client.execute(
     bulk(
       index into "places/cities" id 99 fields (
         "name" -> "London",
@@ -24,14 +23,10 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
         "continent" -> "Europe"
       )
     )
-  )
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+  ).await
 
   refresh("places")
   blockUntilCount(3, "places")
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   "an index" should "do nothing when deleting a document where the id does not exist using where" in {
     client.execute {
@@ -69,9 +64,9 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "remove a document when deleting by query" in {
-    client.sync.execute {
+    client.execute {
       delete from "places" types "cities" where matchQuery("continent", "Europe")
-    }
+    }.await
     refresh("places")
     blockUntilCount(1, "places")
   }

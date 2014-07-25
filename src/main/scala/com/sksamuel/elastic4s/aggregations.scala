@@ -266,12 +266,12 @@ class DateHistogramAggregation(name: String) extends AggregationDefinition[DateH
     this
   }
 
-  def preOffset(preOffset: Long) = {
+  def preOffset(preOffset: String) = {
     builder.preOffset(preOffset)
     this
   }
 
-  def postOffset(postOffset: Long) = {
+  def postOffset(postOffset: String) = {
     builder.preOffset(postOffset)
     this
   }

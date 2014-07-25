@@ -10,11 +10,11 @@ import scala.concurrent.duration._
 
 class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with ElasticDsl {
 
-  client.sync.execute(bulk(
+  client.execute(bulk(
     index into "pizza/toppings" fields ("name" -> "chicken"),
     index into "pizza/toppings" fields ("name" -> "pepperoni"),
     index into "pizza/toppings" fields ("name" -> "onions")
-  ))
+  )).await
 
   client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
@@ -39,14 +39,14 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
         snapshot create "snap1" in "_snapshot" waitForCompletion true
       }.await(10.seconds)
 
-      client.sync.execute(bulk(
+      client.execute(bulk(
         index into "pizza/toppings" fields ("name" -> "spicy meatballs")
-      ))
+      )).await
 
       refresh("pizza")
       blockUntilCount(4, "pizza")
 
-      client.close("pizza")
+      client.close("pizza").await
 
       client.execute {
         snapshot restore "snap1" from "_snapshot"

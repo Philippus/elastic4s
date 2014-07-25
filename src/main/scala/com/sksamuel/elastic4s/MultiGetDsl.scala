@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.get.{ MultiGetRequest, MultiGetAction, MultiGetRequestBuilder }
-import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributeRefresh, DefinitionAttributePreference }
+import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreference, DefinitionAttributeRefresh }
+import org.elasticsearch.action.get.{ MultiGetRequest, MultiGetRequestBuilder }
 
 /** @author Stephen Samuel */
 trait MultiGetDsl extends GetDsl {
@@ -9,11 +9,10 @@ trait MultiGetDsl extends GetDsl {
 }
 
 class MultiGetDefinition(gets: Iterable[GetDefinition])
-    extends RequestDefinition(MultiGetAction.INSTANCE)
-    with DefinitionAttributePreference
+    extends DefinitionAttributePreference
     with DefinitionAttributeRefresh {
 
-  val _builder = new MultiGetRequestBuilder(null)
+  val _builder = new MultiGetRequestBuilder(ProxyClients.client)
   gets.foreach(get => _builder.add(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id))
   def build: MultiGetRequest = _builder.request()
 

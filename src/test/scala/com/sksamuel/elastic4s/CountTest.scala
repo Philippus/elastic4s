@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.common.Priority
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
-import org.elasticsearch.common.Priority
-import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.action.count.CountRequestBuilder
 
 /** @author Stephen Samuel */
 class CountTest extends FlatSpec with MockitoSugar with ElasticSugar {

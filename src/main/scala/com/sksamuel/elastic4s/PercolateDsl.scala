@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s
 
-import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.percolate.{ PercolateAction, PercolateRequestBuilder }
-import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
-import org.elasticsearch.action.index.{ IndexAction, IndexRequestBuilder }
+import org.elasticsearch.action.index.IndexRequestBuilder
+import org.elasticsearch.action.percolate.PercolateRequestBuilder
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import org.elasticsearch.percolator.PercolatorService
+
+import scala.collection.mutable.ListBuffer
 
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
@@ -18,13 +19,13 @@ trait PercolateDsl extends QueryDsl {
     def in(index: String) = new PercolateDefinition(index)
   }
 
-  class PercolateDefinition(index: String) extends RequestDefinition(PercolateAction.INSTANCE) {
+  class PercolateDefinition(index: String) {
 
     private val _fields = new ListBuffer[(String, Any)]
     private var _rawDoc: Option[String] = None
     private[this] var _query: QueryDefinition = _
 
-    def build = new PercolateRequestBuilder(null).setSource(_doc).setIndices(index).setDocumentType("doc").request()
+    def build = new PercolateRequestBuilder(ProxyClients.client).setSource(_doc).setIndices(index).setDocumentType("doc").request()
 
     private[elastic4s] def _doc: XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
@@ -77,7 +78,7 @@ trait PercolateDsl extends QueryDsl {
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  class RegisterDefinition(index: String, id: String) extends RequestDefinition(IndexAction.INSTANCE) {
+  class RegisterDefinition(index: String, id: String) {
     private[this] var _query: QueryDefinition = _
     private val _fields = new ListBuffer[(String, Any)]
     def build = {
@@ -87,7 +88,7 @@ trait PercolateDsl extends QueryDsl {
         source.field(tuple._1, tuple._2)
       }
       source.endObject()
-      new IndexRequestBuilder(null).setIndex(index)
+      new IndexRequestBuilder(ProxyClients.client).setIndex(index)
         .setType(PercolatorService.TYPE_NAME).setId(id).setRefresh(true)
         .setSource(source).request
     }

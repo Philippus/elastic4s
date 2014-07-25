@@ -23,7 +23,7 @@ trait CreateIndexDsl {
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
 
-  class CreateIndexDefinition(name: String) extends IndicesRequestDefinition(CreateIndexAction.INSTANCE) {
+  class CreateIndexDefinition(name: String) {
 
     val _mappings = new ListBuffer[MappingDefinition]
     val _settings = new IndexSettings
