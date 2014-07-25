@@ -46,5 +46,6 @@ class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
     case index: IndexDefinition => _builder.add(index.build)
     case delete: DeleteByIdDefinition => _builder.add(delete.build)
     case update: UpdateDefinition => _builder.add(update.build)
+    case register : RegisterDefinition => _builder.add(register.build)
   }
 }

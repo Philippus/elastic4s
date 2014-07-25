@@ -78,7 +78,7 @@ trait PercolateDsl extends QueryDsl {
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  class RegisterDefinition(index: String, id: String) {
+  class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefinition {
     private[this] var _query: QueryDefinition = _
     private val _fields = new ListBuffer[(String, Any)]
     def build = {

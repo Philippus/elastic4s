@@ -29,11 +29,11 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
 
       // clean up from previous tests
       client.execute {
-        snapshot delete "snap1" in "_snapshot"
+        snapshot delete "snap" in "_snapshot"
       }.await(10.seconds)
 
       client.execute {
-        snapshot create "snap1" in "_snapshot" index "pizza" waitForCompletion true
+        snapshot create "snap" in "_snapshot" index "pizza" waitForCompletion true
       }.await(10.seconds)
 
       client.execute(bulk(
@@ -46,7 +46,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
       client.close("pizza").await
 
       client.execute {
-        snapshot restore "snap1" from "_snapshot"
+        snapshot restore "snap" from "_snapshot"
       }.await(10.seconds)
 
       // the doc added after the snapshot should be gone now
