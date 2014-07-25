@@ -339,9 +339,10 @@ See more information on the [bulk page](guide/bulk.md).
 
 ## Synchronous Operations
 
-All operations are normally async. To switch to a sync client called .sync on the client object. Then all requests will block until the operations has completed. Eg,
+All operations are normally async. Sometimes you might want to block, when doing snapshots or other maintainence. You can call `.await` on any operation to block until the result is ready. 
+
 ```scala
-val resp = client.sync.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }
+val resp = client.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }.await
 resp.isInstanceOf[IndexResponse] // true
 ```
 
