@@ -2,9 +2,7 @@ language: scala
 scala:
 - 2.10.3
 script:
-- sbt clean scoverage:test
-after_success:
-- sbt jenner
+- sbt clean test
 jdk:
 - oraclejdk7
 - openjdk7
