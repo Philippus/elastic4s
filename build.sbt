@@ -5,11 +5,11 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.2.3.0"
+version := "1.3.0.0"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.10.4", "2.11.1")
+crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -35,7 +35,7 @@ parallelExecution in Test := false
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
 libraryDependencies ++= Seq(
-  "org.elasticsearch"              %  "elasticsearch"               % "1.2.3",
+  "org.elasticsearch"              %  "elasticsearch"               % "1.3.0",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.1"  % "optional" ,
