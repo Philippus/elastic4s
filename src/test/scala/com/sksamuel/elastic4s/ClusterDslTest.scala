@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.{ Matchers, FlatSpec }
 import ElasticDsl._
 
 class ClusterDslTest extends FlatSpec with Matchers {

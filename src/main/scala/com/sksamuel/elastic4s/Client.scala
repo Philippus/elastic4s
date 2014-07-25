@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
+
 import scala.concurrent._
 import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
 import org.elasticsearch.action.count.{ CountRequest, CountResponse }
@@ -100,6 +102,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def execute(req: SearchRequest): Future[SearchResponse] = injectFuture[SearchResponse](client.search(req, _))
 
   def execute(req: SearchRequest, callback: ActionListener[SearchResponse]) = client.search(req, callback)
+
+  def execute(req: CreateRepositoryDefinition) : Future[PutRepositoryResponse] = {
+    injectFuture[PutRepositoryResponse](client.admin.cluster.putRepository(req.build, _))
+  }
 
   /** Executes a Scala DSL search and returns a scala Future with the SearchResponse.
     *

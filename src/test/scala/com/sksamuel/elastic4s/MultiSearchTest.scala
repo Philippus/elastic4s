@@ -3,16 +3,16 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /** @author Stephen Samuel */
 class MultiSearchTest
-  extends FlatSpec
-  with ElasticSugar
-  with Matchers
-  with ScalaFutures {
+    extends FlatSpec
+    with ElasticSugar
+    with Matchers
+    with ScalaFutures {
 
   override implicit def patienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
 
@@ -32,10 +32,10 @@ class MultiSearchTest
     } yield blockUntilCount(2, "jtull")
 
     val futureResponse = futureInserts flatMap { _ =>
-      client search(
+      client search (
         search in "jtull/albums" query "aqualung",
         search in "jtull/albums" query "passion"
-        )
+      )
     }
 
     whenReady(futureResponse) { response =>

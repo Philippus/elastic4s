@@ -8,8 +8,8 @@ import com.sksamuel.elastic4s.mappings.MappingDefinition
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
 
-  def create = new CreateIndexExpectsName
-  class CreateIndexExpectsName {
+  def create = new CreateExpectsIndexOrSnapshot
+  class CreateExpectsIndexOrSnapshot {
     def index(name: String) = new CreateIndexDefinition(name)
   }
 
