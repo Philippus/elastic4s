@@ -18,11 +18,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     )
   ).await
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   blockUntilCount(2, "scifi")
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   "an update request" should "add a field when a script assigns a value" in {
 

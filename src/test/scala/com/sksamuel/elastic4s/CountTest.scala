@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.common.Priority
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
@@ -18,12 +17,8 @@ class CountTest extends FlatSpec with MockitoSugar with ElasticSugar {
     index into "london/pubs" fields "name" -> "blue bell"
   }
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   refresh("london")
   blockUntilCount(3, "london")
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   "a count request" should "return total count when no query is specified" in {
     val resp = client.sync.execute {

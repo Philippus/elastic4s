@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
+
 import scala.concurrent.duration._
-import org.elasticsearch.common.Priority
 
 /** @author Stephen Samuel */
 class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -15,12 +15,8 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
     index into "transport/air" fields "company" -> "delta" id 99
   }.await
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   refresh("transport")
   blockUntilCount(1, "transport")
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   "a bulk request" should "execute all index queries" in {
 

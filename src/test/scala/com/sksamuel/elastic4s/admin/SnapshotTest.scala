@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 package admin
 
 import org.apache.commons.io.FileUtils
-import org.elasticsearch.common.Priority
 import org.scalatest.FreeSpec
 import org.scalatest.mock.MockitoSugar
 
@@ -15,8 +14,6 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
     index into "pizza/toppings" fields ("name" -> "pepperoni"),
     index into "pizza/toppings" fields ("name" -> "onions")
   )).await
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   refresh("pizza")
   blockUntilCount(3, "pizza")
@@ -36,7 +33,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
       }.await(10.seconds)
 
       client.execute {
-        snapshot create "snap1" in "_snapshot" waitForCompletion true
+        snapshot create "snap1" in "_snapshot" index "pizza" waitForCompletion true
       }.await(10.seconds)
 
       client.execute(bulk(

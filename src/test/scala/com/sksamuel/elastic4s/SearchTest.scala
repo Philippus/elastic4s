@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ Matchers, FlatSpec }
+import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
-import org.elasticsearch.common.Priority
+import org.scalatest.{ FlatSpec, Matchers }
+import scala.collection.JavaConverters._
 
 /** @author Stephen Samuel */
 class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -31,44 +31,39 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
     ) id 45
   }
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   refresh("music")
   blockUntilCount(3, "music")
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   "a search query" should "find an indexed document that matches a string query" in {
-    val resp = client.sync.execute {
+    val resp = client.execute {
       search in "music" -> "bands" query "anderson"
-    }
+    }.await
     assert(1 === resp.getHits.totalHits())
   }
 
   it should "find an indexed document in the given type only" in {
-    val resp1 = client.sync.execute {
+    val resp1 = client.execute {
       search in "music" -> "bands" query "kate"
-    }
+    }.await
     assert(0 === resp1.getHits.totalHits())
 
-    val resp2 = client.sync.execute {
+    val resp2 = client.execute {
       search in "music" -> "artists" query "kate"
-    }
+    }.await
     assert(1 === resp2.getHits.totalHits())
   }
 
   it should "return specified fields" in {
-    val resp1 = client.sync.execute {
+    val resp1 = client.execute {
       search in "music/bands" query "jethro" fields "singer"
-    }
+    }.await
     assert(resp1.getHits.getHits.exists(_.getFields.get("singer").getValues.contains("ian anderson")))
   }
 
   it should "support source includes" in {
-    val resp1 = client.sync.execute {
+    val resp1 = client.execute {
       search in "music/bands" query "jethro" sourceInclude ("keyboards", "guit*")
-    }
-    import scala.collection.JavaConverters._
+    }.await
     val map = resp1.getHits.getHits()(0).sourceAsMap.asScala
     map.contains("keyboards") shouldBe true
     map.contains("guitar") shouldBe true
@@ -77,10 +72,9 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
   }
 
   it should "support source excludes" in {
-    val resp1 = client.sync.execute {
+    val resp1 = client.execute {
       search in "music/bands" query "jethro" sourceExclude ("na*", "guit*")
-    }
-    import scala.collection.JavaConverters._
+    }.await
     val map = resp1.getHits.getHits()(0).sourceAsMap.asScala
     map.contains("keyboards") shouldBe true
     map.contains("guitar") shouldBe false

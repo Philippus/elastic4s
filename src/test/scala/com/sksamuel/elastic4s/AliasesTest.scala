@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
+import org.elasticsearch.index.query.FilterBuilders
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import ElasticDsl._
-import org.elasticsearch.common.Priority
-import org.elasticsearch.index.query.FilterBuilders
+
 import scala.collection.JavaConversions._
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
 
 class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
@@ -18,8 +18,6 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
       index into "waterways_updated/rivers" id 31 fields ("name" -> "Thames", "country" -> "England")
     )
   ).await
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   refresh("waterways")
   blockUntilCount(3, "waterways")

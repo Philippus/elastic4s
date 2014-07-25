@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.{ GeoPointType, StringType }
-import org.elasticsearch.common.Priority
 import org.scalatest.FunSuite
 
 /** @author Stephen Samuel */
@@ -15,12 +14,8 @@ class ClientDslTest extends FunSuite with ElasticSugar {
     )
   }.await
 
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-
   refresh("gameofthrones")
   blockUntilCount(1, "gameofthrones")
-
-  client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 
   test("async compiles with mapping from") {
     client.execute {
