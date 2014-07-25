@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 package admin
 
-import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequestBuilder, PutRepositoryRequest}
-import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequest, CreateSnapshotRequestBuilder}
+import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder
+import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequestBuilder
+import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequestBuilder
+import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotRequestBuilder
 
 /** @author Stephen Samuel
   *
@@ -19,67 +21,112 @@ trait SnapshotDsl {
   def repository = RepositoryPrefix
 
   object RepositoryPrefix {
-    def create(name: String) = new CreateRepositoryDefinition(name)
+    def create(name: String) = new CreateRepositoryExpectsType(name)
   }
 
-  class CreateRepositoryDefinition(name: String) {
-    val request = new PutRepositoryRequestBuilder(null, name)
-    def build = request.request()
-    def `type`(_type: String): this.type = {
-      request.setType(_type)
-      this
-    }
-    def settings(map: Map[String, AnyRef]): this.type = {
-      import scala.collection.JavaConverters._
-      request.setSettings(map.asJava)
-      this
-    }
+  class CreateRepositoryExpectsType(name: String) {
+    def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
   }
 
   def snapshot = SnapshotPrefix
 
   object SnapshotPrefix {
     def create(name: String) = new CreateSnapshotExpectsIn(name)
+    def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
+    def delete(name: String) = new DeleteSnapshotExpectsIn(name)
   }
 
   class CreateSnapshotExpectsIn(name: String) {
     def in(repo: String) = new CreateSnapshotDefinition(name, repo)
   }
 
-  class CreateSnapshotDefinition(name: String, repo: String) {
-    val request = new CreateSnapshotRequestBuilder(null, repo, name)
-    def build = request.request()
+  class RestoreSnapshotExpectsFrom(name: String) {
+    def from(repo: String) = new RestoreSnapshotDefinition(name, repo)
+  }
 
-    def partial(p: Boolean): this.type = {
-      request.setPartial(p)
-      this
-    }
-
-    def includeGlobalState(global: Boolean): this.type = {
-      request.setIncludeGlobalState(global)
-      this
-    }
-
-    def waitForCompletion(waitForCompletion: Boolean): this.type = {
-      request.setWaitForCompletion(waitForCompletion)
-      this
-    }
-
-    def index(index: String): this.type = {
-      request.setIndices(index)
-      this
-    }
-
-    def indexes(indexes: String*): this.type = {
-      request.setIndices(indexes: _*)
-      this
-    }
-
-    def settings(map: Map[String, AnyRef]): this.type = {
-      import scala.collection.JavaConverters._
-      request.setSettings(map.asJava)
-      this
-    }
+  class DeleteSnapshotExpectsIn(name: String) {
+    def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
   }
 }
 
+class CreateRepositoryDefinition(name: String, `type`: String) {
+  val request = new PutRepositoryRequestBuilder(null, name).setType(`type`)
+  def build = request.request()
+  def settings(map: Map[String, AnyRef]): this.type = {
+    import scala.collection.JavaConverters._
+    request.setSettings(map.asJava)
+    this
+  }
+}
+
+class DeleteSnapshotDefinition(name: String, repo: String) {
+  val request = new DeleteSnapshotRequestBuilder(null, repo, name)
+  def build = request.request()
+}
+
+class CreateSnapshotDefinition(name: String, repo: String) {
+  val request = new CreateSnapshotRequestBuilder(null, repo, name)
+  def build = request.request()
+
+  def partial(p: Boolean): this.type = {
+    request.setPartial(p)
+    this
+  }
+
+  def includeGlobalState(global: Boolean): this.type = {
+    request.setIncludeGlobalState(global)
+    this
+  }
+
+  def waitForCompletion(waitForCompletion: Boolean): this.type = {
+    request.setWaitForCompletion(waitForCompletion)
+    this
+  }
+
+  def index(index: String): this.type = {
+    request.setIndices(index)
+    this
+  }
+
+  def indexes(indexes: String*): this.type = {
+    request.setIndices(indexes: _*)
+    this
+  }
+
+  def settings(map: Map[String, AnyRef]): this.type = {
+    import scala.collection.JavaConverters._
+    request.setSettings(map.asJava)
+    this
+  }
+}
+
+class RestoreSnapshotDefinition(name: String, repo: String) {
+  val request = new RestoreSnapshotRequestBuilder(null, repo, name)
+  def build = request.request()
+
+  def restoreGlobalState(global: Boolean): this.type = {
+    request.setRestoreGlobalState(global)
+    this
+  }
+
+  def waitForCompletion(waitForCompletion: Boolean): this.type = {
+    request.setWaitForCompletion(waitForCompletion)
+    this
+  }
+
+  def index(index: String): this.type = {
+    request.setIndices(index)
+    this
+  }
+
+  def indexes(indexes: String*): this.type = {
+    request.setIndices(indexes: _*)
+    this
+  }
+
+  def settings(map: Map[String, AnyRef]): this.type = {
+    import scala.collection.JavaConverters._
+    request.setSettings(map.asJava)
+    this
+  }
+}

@@ -4,7 +4,7 @@ import org.elasticsearch.common.settings.ImmutableSettings
 import java.io.File
 import ElasticDsl._
 import java.util.UUID
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import org.elasticsearch.indices.IndexMissingException
 import org.scalatest.{ Suite, BeforeAndAfterAll }
@@ -44,6 +44,10 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     }
     val listener = client.client.admin().indices().prepareRefresh(i: _*).execute()
     listener.actionGet()
+  }
+
+  implicit class RichFuture[T](future: Future[T]) {
+    def await(duration: Duration) = Await.result(future, duration)
   }
 
   def blockUntilCount(expected: Long,

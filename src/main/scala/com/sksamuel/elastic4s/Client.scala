@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.admin.{DeleteSnapshotDefinition, RestoreSnapshotDefinition, CreateRepositoryDefinition, CreateSnapshotDefinition}
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse
+import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotResponse
+import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotResponse
 
 import scala.concurrent._
 import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
@@ -110,6 +113,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(req: CreateSnapshotDefinition) : Future[CreateSnapshotResponse] = {
     injectFuture[CreateSnapshotResponse](client.admin.cluster.createSnapshot(req.build, _))
+  }
+
+  def execute(req: RestoreSnapshotDefinition) : Future[RestoreSnapshotResponse] = {
+    injectFuture[RestoreSnapshotResponse](client.admin.cluster.restoreSnapshot(req.build, _))
+  }
+
+  def execute(req: DeleteSnapshotDefinition) : Future[DeleteSnapshotResponse] = {
+    injectFuture[DeleteSnapshotResponse](client.admin.cluster.deleteSnapshot(req.build, _))
   }
 
   /** Executes a Scala DSL search and returns a scala Future with the SearchResponse.
