@@ -30,6 +30,11 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
+  def parent(p: String) = {
+    _builder.parent(p)
+    this
+  }
+
   def realtime(r: Boolean) = {
     _builder.realtime(r)
     this

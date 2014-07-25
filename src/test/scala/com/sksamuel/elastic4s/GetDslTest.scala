@@ -46,4 +46,16 @@ class GetDslTest extends FlatSpec with Matchers with ElasticSugar {
     req.build.fields() should be(null)
     req.build.fetchSourceContext().fetchSource should be(false)
   }
+
+  it should "should support routing" in {
+    val req = get id 123 from "places/cities" routing "aroundwego"
+    assert(req.build.routing() === "aroundwego")
+  }
+
+  it should "should support parent" in {
+    val req = get id 123 from "places/cities" parent "whosyour"
+    // NOTE: parent just alternately sets "routing"
+    assert(req.build.routing() === "whosyour")
+  }
+
 }
