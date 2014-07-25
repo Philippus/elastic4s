@@ -48,8 +48,6 @@ libraryDependencies ++= Seq(
   "org.scalatest"                  %% "scalatest"                   % "2.2.0"  % "test"
 )
 
-instrumentSettings
-
 scalariformSettings
 
 ScalariformKeys.preferences := ScalariformKeys.preferences.value
