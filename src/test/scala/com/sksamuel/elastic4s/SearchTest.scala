@@ -9,27 +9,25 @@ import scala.collection.JavaConverters._
 class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    index into "music/bands" fields (
-      "name" -> "coldplay",
-      "singer" -> "chris martin",
-      "drummer" -> "will champion",
-      "guitar" -> "johnny buckland"
+    bulk(
+      index into "music/bands" fields (
+        "name" -> "coldplay",
+        "singer" -> "chris martin",
+        "drummer" -> "will champion",
+        "guitar" -> "johnny buckland"
+      ),
+      index into "music/artists" fields (
+        "name" -> "kate bush",
+        "singer" -> "kate bush"
+      ),
+      index into "music/bands" fields (
+        "name" -> "jethro tull",
+        "singer" -> "ian anderson",
+        "guitar" -> "martin barre",
+        "keyboards" -> "johnny smith"
+      ) id 45
     )
-  }
-  client.execute {
-    index into "music/artists" fields (
-      "name" -> "kate bush",
-      "singer" -> "kate bush"
-    )
-  }
-  client.execute {
-    index into "music/bands" fields (
-      "name" -> "jethro tull",
-      "singer" -> "ian anderson",
-      "guitar" -> "martin barre",
-      "keyboards" -> "johnny smith"
-    ) id 45
-  }
+  }.await
 
   refresh("music")
   blockUntilCount(3, "music")
