@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.admin.{DeleteSnapshotDefinition, RestoreSnapshotDefinition, CreateRepositoryDefinition, CreateSnapshotDefinition}
+import com.sksamuel.elastic4s.admin.{ DeleteSnapshotDefinition, RestoreSnapshotDefinition, CreateRepositoryDefinition, CreateSnapshotDefinition }
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotResponse
@@ -107,19 +107,19 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(req: SearchRequest, callback: ActionListener[SearchResponse]) = client.search(req, callback)
 
-  def execute(req: CreateRepositoryDefinition) : Future[PutRepositoryResponse] = {
+  def execute(req: CreateRepositoryDefinition): Future[PutRepositoryResponse] = {
     injectFuture[PutRepositoryResponse](client.admin.cluster.putRepository(req.build, _))
   }
 
-  def execute(req: CreateSnapshotDefinition) : Future[CreateSnapshotResponse] = {
+  def execute(req: CreateSnapshotDefinition): Future[CreateSnapshotResponse] = {
     injectFuture[CreateSnapshotResponse](client.admin.cluster.createSnapshot(req.build, _))
   }
 
-  def execute(req: RestoreSnapshotDefinition) : Future[RestoreSnapshotResponse] = {
+  def execute(req: RestoreSnapshotDefinition): Future[RestoreSnapshotResponse] = {
     injectFuture[RestoreSnapshotResponse](client.admin.cluster.restoreSnapshot(req.build, _))
   }
 
-  def execute(req: DeleteSnapshotDefinition) : Future[DeleteSnapshotResponse] = {
+  def execute(req: DeleteSnapshotDefinition): Future[DeleteSnapshotResponse] = {
     injectFuture[DeleteSnapshotResponse](client.admin.cluster.deleteSnapshot(req.build, _))
   }
 

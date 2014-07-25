@@ -1,0 +1,39 @@
+Snapshot
+========
+
+Before we can create a snapshot we must register a repository where snapshots will be stored, specifying the type (eg 'fs' for filesystem) and optionally some settings. 
+We should specify at least the location of the repository. Full settings can be found [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshots.html).
+
+This example creates a repostory called "_snapshot" located at "/mount/backup"
+
+```scala
+client.execute {
+  repository create "_snapshot" `type` "fs" settings Map("location" -> "/mount/backup")
+}
+```
+
+At some moment in time we can request a snapshot by specifying a name for the snapshot and the repository to save the snapshot to.
+In this example waitForCompletion is set which will not complete the future until the the snapshot is completed.
+If this is set to false (the default), the future will complete as soon as the request has been received.
+
+```scala
+client.execute {
+  snapshot create "snap1" in "_snapshot" waitForCompletion true
+}
+```
+
+Later on we can restore the snapshot with:
+
+```scala
+client.execute {
+  snapshot restore "snap1" from "_snapshot"
+}
+```
+
+Snapshots can be deleted thus:
+
+```scala
+client.execute {
+  snapshot delete "snap1" in "_snapshot"
+}
+```

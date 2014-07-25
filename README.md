@@ -96,7 +96,11 @@ to the Elasticsearch documentation as the DSL closely mirrors the standard Java 
 | Index Status                              | `status <index>` |
 | [Add Alias](guide/aliases.md)             | `aliases add "<alias>" on "<index>"` |
 | [Remove Alias](guide/aliases.md)          | `aliases remove "<alias>" on "<index>"` |
-| Put  mapping                              | `put mapping </index/type> add { mappings block }` |
+| Put mapping                               | `put mapping </index/type> add { mappings block }` |
+| [Create Repository](guide/snapshot.md)    | `repository create <repo> type <type> settings <settings>` |
+| [Create Snapshot](guide/snapshot.md)      | `snapshot create <name> in <repo> ...` |
+| [Delete Snapshot](guide/snapshot.md)      | `snapshot delete <name> in <repo> ...` |
+| [Restore Snapshot](guide/snapshot.md)     | `snapshot restore <name> from <repo> ...` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

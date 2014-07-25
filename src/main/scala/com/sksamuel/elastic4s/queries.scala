@@ -85,7 +85,7 @@ trait QueryDsl {
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
   def matchall = new MatchAllQueryDefinition
 
-  def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields : _*)
+  def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
   def nested(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
@@ -205,7 +205,7 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
 }
 
 class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
-  val _builder = QueryBuilders.moreLikeThisQuery(fields : _*)
+  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
   val builder = _builder
 
   def analyser(analyser: String) = {
@@ -214,7 +214,7 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
   }
 
   def ids(ids: String*) = {
-    _builder.ids(ids : _*)
+    _builder.ids(ids: _*)
     this
   }
 

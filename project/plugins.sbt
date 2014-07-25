@@ -2,11 +2,7 @@ resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositori
 
 addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.99.8")
 
-addSbtPlugin("io.jenner" %% "sbt-jenner" % "0.5.0")
-
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
-
-addSbtPlugin("com.sksamuel.scapegoat" % "sbt-scapegoat" % "0.1.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
 
