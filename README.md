@@ -307,7 +307,7 @@ If you want to return documents that are "similar" to   a current document we ca
 
 ```scala
 client.execute {
-    morelike id 4 from "beers/lager" percentTermsToMatch 0.5
+  morelike id 4 from "beers/lager" percentTermsToMatch 0.5
 }
 ```
 
@@ -321,13 +321,15 @@ Elastic has predicted our wishes and created the bulk API.
 To do this we simply combine index, delete and update operations into a sequence and execute using the bulk method in the client.
 
 ```scala
-client.bulk {
-   index into "bands/rock" fields "name"->"coldplay",
-   index into "bands/rock" fields "name"->"kings of leon",
-   index into "bands/pop" fields (
+client.execute {
+  bulk(
+    index into "bands/rock" fields "name"->"coldplay",
+    index into "bands/rock" fields "name"->"kings of leon",
+    index into "bands/pop" fields (
       "name"->"elton john",
-      "best_album"->"goodbye yellow brick road"
-   )
+      "best_album"->"tumbleweed connection"
+    )
+  )
 }
 ```
 A single HTTP or TCP request is now needed for 4 operations.
