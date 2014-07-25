@@ -8,6 +8,7 @@ import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.search.facet.termsstats.TermsStatsFacet
 
 /** @author Stephen Samuel */
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 trait FacetDsl {
   def facet = new FacetExpectingType
   class FacetExpectingType {
@@ -29,10 +30,12 @@ trait FacetDsl {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 trait FacetDefinition {
   val builder: FacetBuilder
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class TermFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.termsFacet(name)
   def allTerms(allTerms: Boolean): TermFacetDefinition = {
@@ -86,6 +89,7 @@ class TermFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class RangeFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.rangeFacet(name)
   def range(from: Double, to: Double): RangeFacetDefinition = {
@@ -129,6 +133,7 @@ class RangeFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class HistogramFacetDefinition(name: String, interval: Long) extends FacetDefinition {
   val builder = FacetBuilders.histogramFacet(name).interval(interval)
   def global(global: Boolean): HistogramFacetDefinition = {
@@ -153,6 +158,7 @@ class HistogramFacetDefinition(name: String, interval: Long) extends FacetDefini
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class DateHistogramFacetDefinition(name: String, interval: String) extends FacetDefinition {
   val builder = FacetBuilders.dateHistogramFacet(name).interval(interval)
   def global(global: Boolean): DateHistogramFacetDefinition = {
@@ -177,6 +183,7 @@ class DateHistogramFacetDefinition(name: String, interval: String) extends Facet
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class FilterFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.filterFacet(name)
   def global(global: Boolean): FilterFacetDefinition = {
@@ -197,6 +204,7 @@ class FilterFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class QueryFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.queryFacet(name)
   def global(global: Boolean): QueryFacetDefinition = {
@@ -217,6 +225,7 @@ class QueryFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class StatisticalFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.statisticalFacet(name)
   def field(field: String): StatisticalFacetDefinition = {
@@ -233,6 +242,7 @@ class StatisticalFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class TermsStatsFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.termsStatsFacet(name)
   def facetFilter(block: => FilterDefinition): TermsStatsFacetDefinition = {
@@ -269,6 +279,7 @@ class TermsStatsFacetDefinition(name: String) extends FacetDefinition {
   }
 }
 
+@deprecated("Facets are deprecated, use aggregations", "1.3.0")
 class GeoDistanceFacetDefinition(name: String) extends FacetDefinition {
   val builder = FacetBuilders.geoDistanceFacet(name)
   def global(global: Boolean): GeoDistanceFacetDefinition = {
