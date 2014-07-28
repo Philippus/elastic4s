@@ -38,7 +38,7 @@ case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
 }
 
-case class TruncateTokenFilter(val name: String, length: Int = 10)
+case class TruncateTokenFilter(name: String, length: Int = 10)
     extends TokenFilterDefinition {
 
   val filterType = "truncate"
@@ -48,7 +48,7 @@ case class TruncateTokenFilter(val name: String, length: Int = 10)
   }
 }
 
-case class LengthTokenFilter(val name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
+case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
     extends TokenFilterDefinition {
 
   val filterType = "length"
@@ -59,7 +59,7 @@ case class LengthTokenFilter(val name: String, min: Int = 0, max: Int = Integer.
   }
 }
 
-case class UniqueTokenFilter(val name: String, onlyOnSamePosition: Boolean = false)
+case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
     extends TokenFilterDefinition {
 
   val filterType = "unique"
@@ -69,7 +69,7 @@ case class UniqueTokenFilter(val name: String, onlyOnSamePosition: Boolean = fal
   }
 }
 
-case class KeywordMarkerTokenFilter(val name: String,
+case class KeywordMarkerTokenFilter(name: String,
                                     keywords: Iterable[String] = Nil,
                                     ignoreCase: Boolean = false)
     extends TokenFilterDefinition {
@@ -82,7 +82,7 @@ case class KeywordMarkerTokenFilter(val name: String,
   }
 }
 
-case class ElisionTokenFilter(val name: String, articles: Iterable[String])
+case class ElisionTokenFilter(name: String, articles: Iterable[String])
     extends TokenFilterDefinition {
 
   val filterType = "elision"
@@ -92,7 +92,7 @@ case class ElisionTokenFilter(val name: String, articles: Iterable[String])
   }
 }
 
-case class LimitTokenFilter(val name: String,
+case class LimitTokenFilter(name: String,
                             maxTokenCount: Int = 1,
                             consumeAllTokens: Boolean = false)
     extends TokenFilterDefinition {
@@ -105,7 +105,7 @@ case class LimitTokenFilter(val name: String,
   }
 }
 
-case class StopTokenFilter(val name: String,
+case class StopTokenFilter(name: String,
                            stopwords: Iterable[String] = Nil,
                            enablePositionIncrements: Boolean = true,
                            ignoreCase: Boolean = false)
@@ -120,7 +120,7 @@ case class StopTokenFilter(val name: String,
   }
 }
 
-case class PatternCaptureTokenFilter(val name: String,
+case class PatternCaptureTokenFilter(name: String,
                                      patterns: Iterable[String],
                                      preserveOriginal: Boolean = true)
     extends TokenFilterDefinition {
@@ -133,7 +133,7 @@ case class PatternCaptureTokenFilter(val name: String,
   }
 }
 
-case class PatternReplaceTokenFilter(val name: String, pattern: String, replacement: String)
+case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String)
     extends TokenFilterDefinition {
 
   val filterType = "pattern_replace"
@@ -144,7 +144,7 @@ case class PatternReplaceTokenFilter(val name: String, pattern: String, replacem
   }
 }
 
-case class CommongGramsTokenFilter(val name: String,
+case class CommongGramsTokenFilter(name: String,
                                    commonWords: Iterable[String],
                                    ignoreCase: Boolean = false,
                                    queryMode: Boolean = false)
@@ -159,7 +159,7 @@ case class CommongGramsTokenFilter(val name: String,
   }
 }
 
-case class EdgeNGramTokenFilter(val name: String, minGram: Int = 1, maxGram: Int = 2)
+case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
     extends TokenFilterDefinition {
 
   val filterType = "edgeNGram"
@@ -170,7 +170,7 @@ case class EdgeNGramTokenFilter(val name: String, minGram: Int = 1, maxGram: Int
   }
 }
 
-case class SnowballTokenFilter(val name: String, language: String = "English")
+case class SnowballTokenFilter(name: String, language: String = "English")
     extends TokenFilterDefinition {
 
   val filterType = "snowball"
@@ -180,7 +180,7 @@ case class SnowballTokenFilter(val name: String, language: String = "English")
   }
 }
 
-case class StemmerTokenFilter(val name: String, lang: String)
+case class StemmerTokenFilter(name: String, lang: String)
     extends TokenFilterDefinition {
 
   val filterType = "stemmer"
@@ -190,7 +190,7 @@ case class StemmerTokenFilter(val name: String, lang: String)
   }
 }
 
-case class StemmerOverrideTokenFilter(val name: String, rules: Array[String])
+case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
     extends TokenFilterDefinition {
 
   val filterType = "stemmer_override"
