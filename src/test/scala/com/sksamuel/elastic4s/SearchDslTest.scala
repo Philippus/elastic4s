@@ -675,6 +675,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_daterange.json")
   }
 
+  it should "generate correct json for date range aggregation with unbounded from" in {
+    val req = search in "music" types "bands" aggs {
+      aggregation daterange "daterange_agg" field "date" unboundedFrom ("key", "now-1Y")
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_daterange_from.json")
+  }
+
+  it should "generate correct json for date range aggregation with unbounded to" in {
+    val req = search in "music" types "bands" aggs {
+      aggregation daterange "daterange_agg" field "date" unboundedTo ("key", "now")
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_daterange_to.json")
+  }
+
   it should "generate correct json for histogram aggregation" in {
     val req = search in "music" types "bands" aggs {
       aggregation histogram "score_histogram" field "score" interval 2

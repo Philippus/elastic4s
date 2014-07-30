@@ -219,6 +219,16 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
     this
   }
 
+  def unboundedFrom(key: String, from: String): DateRangeAggregation = {
+    builder.addUnboundedFrom(key, from)
+    this
+  }
+
+  def unboundedTo(key: String, to: String): DateRangeAggregation = {
+    builder.addUnboundedTo(key, to)
+    this
+  }
+
   def format(fmt: String): DateRangeAggregation = {
     builder.format(fmt)
     this
