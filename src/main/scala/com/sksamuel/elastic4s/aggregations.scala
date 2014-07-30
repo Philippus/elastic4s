@@ -22,6 +22,7 @@ trait AggregationDsl {
   class AggregationExpectingType {
     def terms(name: String) = new TermAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
+    def daterange(name: String) = new DateRangeAggregation(name)
     def histogram(name: String) = new HistogramAggregation(name)
     def datehistogram(name: String) = new DateHistogramAggregation(name)
     def filter(name: String) = new FilterAggregationDefinition(name)
@@ -205,6 +206,26 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
 
   def field(field: String): DateRangeAggregation = {
     builder.field(field)
+    this
+  }
+
+  def unboundedFrom(from: String): DateRangeAggregation = {
+    builder.addUnboundedFrom(from)
+    this
+  }
+
+  def unboundedTo(to: String): DateRangeAggregation = {
+    builder.addUnboundedTo(to)
+    this
+  }
+
+  def unboundedFrom(key: String, from: String): DateRangeAggregation = {
+    builder.addUnboundedFrom(key, from)
+    this
+  }
+
+  def unboundedTo(key: String, to: String): DateRangeAggregation = {
+    builder.addUnboundedTo(key, to)
     this
   }
 
