@@ -170,6 +170,17 @@ case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2
   }
 }
 
+case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
+    extends TokenFilterDefinition {
+
+  val filterType = "nGram"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("min_gram", minGram)
+    source.field("max_gram", maxGram)
+  }
+}
+
 case class SnowballTokenFilter(name: String, language: String = "English")
     extends TokenFilterDefinition {
 
