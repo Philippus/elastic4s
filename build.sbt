@@ -36,7 +36,7 @@ libraryDependencies += "com.fasterxml.jackson.jaxrs" % "jackson-jaxrs-json-provi
 
 libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-hibernate4" % "2.1.2"
 
-libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.10" % "2.1.3" exclude("org.scalatest", "scalatest_2.10.0")
+libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1"
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.6.6"
 
