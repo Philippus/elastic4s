@@ -5,7 +5,9 @@ organization := "com.sksamuel.elastic4s"
 
 version := "0.90.13.2-SNAPSHOT"
 
-scalaVersion := "2.10.3"
+scalaVersion  := "2.11.2"
+
+crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -48,7 +50,7 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
 libraryDependencies += "org.elasticsearch" % "elasticsearch" % "0.90.13"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP36" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 ScoverageSbtPlugin.instrumentSettings
 
