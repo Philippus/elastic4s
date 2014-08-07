@@ -30,7 +30,7 @@ resolvers += "Artifactory Realm" at "http://localhost:8081/artifactory/libs-snap
 
 publishArtifact in Test := false
 
-parallelExecution in Test := false
+parallelExecution in Test := true
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 

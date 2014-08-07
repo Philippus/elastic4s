@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s
 package admin
 
+import java.io.File
+import java.util.UUID
 import org.apache.commons.io.FileUtils
 import org.elasticsearch.common.Priority
 import org.scalatest.FreeSpec
@@ -21,7 +23,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
   refresh("pizza")
   blockUntilCount(3, "pizza")
 
-  val location = FileUtils.getTempDirectoryPath
+  val location = FileUtils.getTempDirectoryPath + File.separator + UUID.randomUUID.toString
 
   "an index" - {
     "can be snapshotted and restored" in {
@@ -30,13 +32,8 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
         repository create "_snapshot" `type` "fs" settings Map("location" -> location)
       }.await(10.seconds)
 
-      // clean up from previous tests
       client.execute {
-        snapshot delete "snap1" in "_snapshot"
-      }.await(10.seconds)
-
-      client.execute {
-        snapshot create "snap1" in "_snapshot" waitForCompletion true
+        snapshot create "snap1" in "_snapshot" index "pizza" waitForCompletion true
       }.await(10.seconds)
 
       client.sync.execute(bulk(
@@ -49,7 +46,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
       client.close("pizza")
 
       client.execute {
-        snapshot restore "snap1" from "_snapshot"
+        snapshot restore "snap1" from "_snapshot" index "pizza"
       }.await(10.seconds)
 
       // the doc added after the snapshot should be gone now
