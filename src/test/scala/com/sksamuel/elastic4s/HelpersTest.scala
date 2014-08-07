@@ -40,6 +40,7 @@ class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
     val resp = client.sync.execute {
       search in "games" query "protoss"
     }
+
     resp.getHits.totalHits() shouldBe 1
   }
 

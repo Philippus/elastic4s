@@ -262,12 +262,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
         searchScroll(scrollId, scroll) flatMap { response =>
           val hits = response.getHits.hits
           if (hits.length > 0) {
-            hits.map(_.sourceAsString).grouped(chunkSize).foreach { sources =>
+            hits.map(hit => (hit.`type`, hit.sourceAsString)).grouped(chunkSize).foreach { pairs =>
               bulk {
-                sources map { source =>
-                  index into targetIndex doc (new {
-                    val json = source
-                  } with DocumentSource)
+                pairs map {
+                  case (typ, source) =>
+                    index into targetIndex -> typ doc (new {
+                      val json = source
+                    } with DocumentSource)
                 }: _*
               }
             }

@@ -8,12 +8,12 @@ import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotR
 
 /** @author Stephen Samuel
   *
-  *        DSL Syntax:
+  *    DSL Syntax:
   *
-  *        repository create <repo> settings <settings>
-  *        snapshot create <name> in <repo>
-  *        snapshot delete <name> in <repo>
-  *        snapshot restore <name> from <repo>
+  *    repository create <repo> settings <settings>
+  *    snapshot create <name> in <repo>
+  *    snapshot delete <name> in <repo>
+  *    snapshot restore <name> from <repo>
   *
   */
 trait SnapshotDsl {

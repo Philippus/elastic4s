@@ -4,7 +4,7 @@ import org.elasticsearch.common.settings.ImmutableSettings
 import java.io.File
 import ElasticDsl._
 import java.util.UUID
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{ Future, Await }
 import scala.concurrent.duration._
 import org.elasticsearch.indices.IndexMissingException
 import org.scalatest.{ Suite, BeforeAndAfterAll }
