@@ -254,10 +254,15 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
         searchScroll(scrollId, scroll) flatMap { response =>
           val hits = response.getHits.hits
           if (hits.length > 0) {
-            hits.map(_.sourceAsString).grouped(chunkSize).foreach { sources =>
-              execute(ElasticDsl.bulk(
-                sources map (index into targetIndex doc StringDocumentSource(_)): _*
-              ))
+            hits.map(hit => (hit.`type`, hit.sourceAsString)).grouped(chunkSize).foreach { pairs =>
+              execute {
+                ElasticDsl.bulk(
+                  pairs map {
+                    case (typ, source) =>
+                      index into targetIndex -> typ doc StringDocumentSource(source)
+                  }: _*
+                )
+              }
             }
             _scroll(response.getScrollId)
           } else {
