@@ -3,7 +3,9 @@
         "index": {
             "number_of_shards": 3,
             "number_of_replicas": 4,
-            "refresh_interval": "5s"
+            "refresh_interval": "5s",
+            "compound_on_flush": false,
+            "compound_format": 0.5
         }
     }
 }

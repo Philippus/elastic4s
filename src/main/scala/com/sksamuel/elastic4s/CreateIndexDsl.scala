@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
-import scala.collection.mutable.ListBuffer
-import org.elasticsearch.action.admin.indices.create.{ CreateIndexAction, CreateIndexRequest }
 import com.sksamuel.elastic4s.mappings.MappingDefinition
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+
+import scala.collection.mutable
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
@@ -13,7 +14,25 @@ trait CreateIndexDsl {
     def index(name: String) = new CreateIndexDefinition(name)
   }
 
-  class IndexSettings(var shards: Int = 5, var replicas: Int = 1)
+  class IndexSettings {
+    private val ShardsKey = "number_of_shards"
+    private val ReplicasKey = "number_of_replicas"
+    private val RefreshIntervalKey = "refresh_interval"
+
+    val settings: mutable.Map[String, Any] = mutable.Map(
+      ShardsKey -> 5,
+      ReplicasKey -> 1
+    )
+
+    def shards: Int = settings(ShardsKey).asInstanceOf[Int]
+    def shards_=(s: Int): Unit = settings += ShardsKey -> s
+
+    def replicas: Int = settings(ReplicasKey).asInstanceOf[Int]
+    def replicas_=(r: Int): Unit = settings += ReplicasKey -> r
+
+    def refreshInterval: Option[String] = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
+    def refreshInterval_=(i: String): Unit = settings += RefreshIntervalKey -> i
+  }
 
   def analyzers(analyzers: AnalyzerDefinition*) = new AnalyzersWrapper(analyzers)
   def tokenizers(tokenizers: Tokenizer*) = new TokenizersWrapper(tokenizers)
@@ -25,7 +44,7 @@ trait CreateIndexDsl {
 
   class CreateIndexDefinition(name: String) {
 
-    val _mappings = new ListBuffer[MappingDefinition]
+    val _mappings = new mutable.ListBuffer[MappingDefinition]
     val _settings = new IndexSettings
     var _analysis: Option[AnalysisDefinition] = None
 
@@ -38,6 +57,16 @@ trait CreateIndexDsl {
 
     def replicas(replicas: Int): CreateIndexDefinition = {
       _settings.replicas = replicas
+      this
+    }
+
+    def refreshInterval(interval: String): CreateIndexDefinition = {
+      _settings.refreshInterval = interval
+      this
+    }
+
+    def indexSetting(name: String, value: Any): CreateIndexDefinition = {
+      _settings.settings += name -> value
       this
     }
 
@@ -57,8 +86,12 @@ trait CreateIndexDsl {
       source.startObject("settings")
 
       source.startObject("index")
-      source.field("number_of_shards", _settings.shards)
-      source.field("number_of_replicas", _settings.replicas)
+
+      _settings.settings foreach {
+        case (key, value) =>
+          source.field(key, value)
+      }
+
       source.endObject()
 
       _analysis.foreach(analysis => {
