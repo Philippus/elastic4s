@@ -96,8 +96,18 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "generate json to override index settings when set" in {
-    val req = create index "users" shards 3 replicas 4
+    val req = create index "users" shards 3 replicas 4 refreshInterval "5s"
     req._source.string should matchJsonResource("/json/createindex/createindex_settings.json")
+  }
+
+  it should "generate json to override index settings when set with custom settings" in {
+    val req = (create index "users"
+      shards 3
+      replicas 4
+      refreshInterval "5s"
+      indexSetting ("compound_on_flush", false)
+      indexSetting ("compound_format", 0.5))
+    req._source.string should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 
   it should "support inner objects" in {
