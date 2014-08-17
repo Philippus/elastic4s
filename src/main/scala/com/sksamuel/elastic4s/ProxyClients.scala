@@ -11,6 +11,7 @@ object ProxyClients {
   lazy val client: Client = proxy[Client]
   lazy val indices: IndicesAdminClient = proxy[IndicesAdminClient]
 
+  @SuppressWarnings(Array("all"))
   private def proxy[T: Manifest] = java.lang.reflect.Proxy.newProxyInstance(
     getClass.getClassLoader,
     Array[Class[_]](manifest.runtimeClass.asInstanceOf[Class[T]]),

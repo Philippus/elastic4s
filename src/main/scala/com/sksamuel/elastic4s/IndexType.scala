@@ -2,14 +2,14 @@ package com.sksamuel.elastic4s
 
 /** @author Stephen Samuel */
 case class IndexesTypes(indexes: Seq[String], types: Seq[String]) {
-  def index = indexes.head
+  def index = indexes.headOption.getOrElse(throw new RuntimeException("Specify at least one index"))
   def typ = types.headOption
 }
 object IndexesTypes {
-  def apply(indexes: Iterable[String]): IndexesTypes = indexes.size match {
-    case 0 => throw new RuntimeException("Could not parse into index/type")
-    case 1 => apply(indexes.head)
-    case _ => apply(indexes.toSeq, Nil)
+  def apply(indexes: Iterable[String]): IndexesTypes = indexes match {
+    case Nil => throw new RuntimeException("Could not parse into index/type")
+    case List(index) => apply(index)
+    case more => apply(more.toSeq, Nil)
   }
   def apply(tuple: (String, String)): IndexesTypes = apply(tuple._1, tuple._2)
   def apply(index: String, `type`: String): IndexesTypes = IndexesTypes(List(index), List(`type`))

@@ -31,7 +31,8 @@ trait OptimizeDsl {
       this
     }
     def waitForMerge(waitForMerge: Boolean): OptimizeDefinition = {
-      builder.waitForMerge()
+      if (waitForMerge)
+        builder.waitForMerge()
       this
     }
   }

@@ -5,6 +5,7 @@ import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequ
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequestBuilder
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequestBuilder
 import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotRequestBuilder
+import scala.collection.JavaConverters._
 
 /** @author Stephen Samuel
   *
@@ -53,7 +54,6 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
   val request = new PutRepositoryRequestBuilder(ProxyClients.cluster, name).setType(`type`)
   def build = request.request()
   def settings(map: Map[String, AnyRef]): this.type = {
-    import scala.collection.JavaConverters._
     request.setSettings(map.asJava)
     this
   }
@@ -94,7 +94,6 @@ class CreateSnapshotDefinition(name: String, repo: String) {
   }
 
   def settings(map: Map[String, AnyRef]): this.type = {
-    import scala.collection.JavaConverters._
     request.setSettings(map.asJava)
     this
   }

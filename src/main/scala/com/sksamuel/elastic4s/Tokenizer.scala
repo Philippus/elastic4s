@@ -4,6 +4,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder
 
 /** @author Stephen Samuel */
 abstract class Tokenizer(val name: String) {
+  @SuppressWarnings(Array("all"))
   def build(source: XContentBuilder): Unit = {}
   def customized: Boolean = false
 }

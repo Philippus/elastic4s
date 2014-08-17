@@ -161,26 +161,21 @@ trait CreateIndexDsl {
 class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
 
   def tokenizers: Iterable[Tokenizer] =
-    analyzers
-      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
-      .map(_.asInstanceOf[CustomAnalyzerDefinition])
-      .map(_.tokenizer)
-      .filter(_.customized)
+    analyzers.collect {
+      case custom: CustomAnalyzerDefinition => custom
+    }.map(_.tokenizer).filter(_.customized)
 
   def tokenFilterDefinitions: Iterable[TokenFilterDefinition] =
-    analyzers
-      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
-      .map(_.asInstanceOf[CustomAnalyzerDefinition])
-      .flatMap(_.filters)
-      .filter(_.isInstanceOf[TokenFilterDefinition])
-      .map(_.asInstanceOf[TokenFilterDefinition])
+    analyzers.collect {
+      case custom: CustomAnalyzerDefinition => custom
+    }.flatMap(_.filters).collect {
+      case token: TokenFilterDefinition => token
+    }
 
   def charFilterDefinitions: Iterable[CharFilterDefinition] =
-    analyzers
-      .filter(_.isInstanceOf[CustomAnalyzerDefinition])
-      .map(_.asInstanceOf[CustomAnalyzerDefinition])
-      .flatMap(_.filters)
-      .filter(_.isInstanceOf[CharFilterDefinition])
-      .map(_.asInstanceOf[CharFilterDefinition])
-
+    analyzers.collect {
+      case custom: CustomAnalyzerDefinition => custom
+    }.flatMap(_.filters).collect {
+      case char: CharFilterDefinition => char
+    }
 }

@@ -30,7 +30,7 @@ object FieldsMapper {
 
           case _ =>
             // can't work out or empty - map to empty
-            ArrayFieldValue(name, Seq())
+            ArrayFieldValue(name, Seq.empty)
         }
 
       case (name: String, a: Any) =>

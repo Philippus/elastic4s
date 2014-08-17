@@ -56,6 +56,8 @@ ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(MultilineScaladocCommentsStartOnFirstLine, true)
   .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
 
+scapegoatDisabledInspections := Seq("VarUse")
+
 pomExtra := {
   <url>https://github.com/sksamuel/elastic4s</url>
     <licenses>

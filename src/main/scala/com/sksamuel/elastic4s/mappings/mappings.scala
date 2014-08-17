@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributeIndexesOptions, DefinitionAttributeIgnoreConflicts }
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings.attributes._
-import org.elasticsearch.action.admin.indices.mapping.put.{ PutMappingRequest, PutMappingRequestBuilder }
 import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 
 import scala.collection.mutable.ListBuffer
@@ -176,6 +174,7 @@ case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
 case object False extends DynamicMapping
 
+@SuppressWarnings(Array("all"))
 private[mappings] class FieldDefinition(val name: String) {
 
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
@@ -558,7 +557,7 @@ final class MultiFieldDefinition(name: String)
     source.startObject(name)
     insertType(source)
     super[AttributePath].insert(source)
-    if (!_fields.isEmpty) {
+    if (_fields.nonEmpty) {
       source.startObject("fields")
       for (field <- _fields) {
         field.build(source)

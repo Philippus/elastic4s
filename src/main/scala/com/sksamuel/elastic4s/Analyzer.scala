@@ -96,12 +96,12 @@ case class CustomAnalyzerDefinition(override val name: String,
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
-    val tokenFilters = filters.filter(_.isInstanceOf[TokenFilter])
-    val charFilters = filters.filter(_.isInstanceOf[CharFilter])
-    if (!tokenFilters.isEmpty) {
+    val tokenFilters = filters.collect { case token: TokenFilter => token }
+    val charFilters = filters.collect { case char: CharFilter => char }
+    if (tokenFilters.nonEmpty) {
       source.field("filter", tokenFilters.map(_.name): _*)
     }
-    if (!charFilters.isEmpty) {
+    if (charFilters.nonEmpty) {
       source.field("char_filter", charFilters.map(_.name): _*)
     }
   }

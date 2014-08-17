@@ -89,7 +89,7 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     this
   }
 
-  def update(update: Boolean): IndexDefinition = opType(OpType.CREATE)
+  def update(update: Boolean): IndexDefinition = if (update) opType(OpType.CREATE) else opType(OpType.INDEX)
 
   def version(version: Int): IndexDefinition = {
     _request.version(version)
