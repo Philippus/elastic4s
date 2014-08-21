@@ -210,3 +210,30 @@ case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
     source.field("rules", rules: _*)
   }
 }
+
+case class WordDelimiterTokenFilter(name: String,
+                                    generateWordParts: Boolean = true,
+                                    generateNumberParts: Boolean = true,
+                                    catenateWords: Boolean = false,
+                                    catenateNumbers: Boolean = false,
+                                    catenateAll: Boolean = false,
+                                    splitOnCaseChange: Boolean = true,
+                                    preserveOriginal: Boolean = false,
+                                    splitOnNumerics: Boolean = true,
+                                    stemEnglishPossesive: Boolean = true)
+    extends TokenFilterDefinition {
+
+  val filterType = "word_delimiter"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("generate_word_parts", generateWordParts)
+    source.field("generate_number_parts", generateNumberParts)
+    source.field("catenate_words", catenateWords)
+    source.field("catenate_numbers", catenateNumbers)
+    source.field("catenate_all", catenateAll)
+    source.field("split_on_case_change", splitOnCaseChange)
+    source.field("preserve_original", preserveOriginal)
+    source.field("split_on_numerics", splitOnNumerics)
+    source.field("stem_english_possessive", stemEnglishPossesive)
+  }
+}
