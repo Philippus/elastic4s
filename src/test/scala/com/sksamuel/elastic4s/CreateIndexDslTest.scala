@@ -44,7 +44,19 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         LengthTokenFilter("myTokenFilter2", 0, max = 10),
         UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
         StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
-        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep")
+        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
+        WordDelimiterTokenFilter(
+          "myWordDelimiterTokenFilter",
+          generateWordParts = true,
+          generateNumberParts = true,
+          catenateWords = false,
+          catenateNumbers = false,
+          catenateAll = false,
+          splitOnCaseChange = true,
+          preserveOriginal = false,
+          splitOnNumerics = true,
+          stemEnglishPossesive = true
+        )
       ),
       CustomAnalyzerDefinition(
         "myAnalyzer3",

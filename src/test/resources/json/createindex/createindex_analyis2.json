@@ -33,7 +33,8 @@
                         "myTokenFilter2",
                         "myTokenFilter3",
                         "myFrenchStemmerTokenFilter",
-                        "prTokenFilter"
+                        "prTokenFilter",
+                        "myWordDelimiterTokenFilter"
                     ]
                 },
                 "myAnalyzer3": {
@@ -96,6 +97,18 @@
                     "type": "pattern_replace",
                     "pattern": "pattern",
                     "replacement": "rep"
+                },
+                "myWordDelimiterTokenFilter": {
+                    "type": "word_delimiter",
+                    "generate_word_parts": true,
+                    "generate_number_parts": true,
+                    "catenate_words": false,
+                    "catenate_numbers": false,
+                    "catenate_all": false,
+                    "split_on_case_change": true,
+                    "preserve_original": false,
+                    "split_on_numerics": true,
+                    "stem_english_possessive": true
                 },
                 "myTokenFilter1": {
                     "type": "stop",
