@@ -26,8 +26,6 @@ publishTo <<= version {
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-resolvers += "Artifactory Realm" at "http://localhost:8081/artifactory/libs-snapshot-local"
-
 publishArtifact in Test := false
 
 parallelExecution in Test := false
