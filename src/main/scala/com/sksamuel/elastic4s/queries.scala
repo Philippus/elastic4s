@@ -465,7 +465,7 @@ class DisMaxDefinition extends QueryDefinition {
 
 class FilteredQueryDefinition extends QueryDefinition {
   def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
-  private var _query: QueryBuilder = null
+  private var _query: QueryBuilder = QueryBuilders.matchAllQuery
   private var _filter: FilterBuilder = null
   private var _boost: Double = -1d
   def boost(boost: Double): FilteredQueryDefinition = {
@@ -473,7 +473,7 @@ class FilteredQueryDefinition extends QueryDefinition {
     this
   }
   def query(query: => QueryDefinition): FilteredQueryDefinition = {
-    _query = Option(query).map(_.builder).orNull
+    _query = Option(query).map(_.builder).getOrElse(_query)
     this
   }
   def filter(filter: => FilterDefinition): FilteredQueryDefinition = {
