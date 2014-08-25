@@ -1,17 +1,17 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
-import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders }
-import org.elasticsearch.search.aggregations.bucket.terms.{ TermsBuilder, Terms }
-import org.elasticsearch.search.aggregations.bucket.histogram.{ Histogram, DateHistogramBuilder, HistogramBuilder, DateHistogram }
-import org.elasticsearch.common.geo.{ GeoPoint, GeoDistance }
+import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
+import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
-import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
-import org.elasticsearch.search.aggregations.metrics
-import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
+import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
+import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
+import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
+import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders, metrics }
+import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Nicolas Yzet */
 
@@ -36,6 +36,7 @@ trait AggregationDsl {
     def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)
     def cardinality(name: String) = new CardinalityAggregationDefinition(name)
+    def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 }
 
@@ -430,4 +431,30 @@ class ValueCountAggregationDefinition(name: String) extends ValuesSourceMetricsA
 
 class CardinalityAggregationDefinition(name: String) extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
   val aggregationBuilder = AggregationBuilders.cardinality(name)
+}
+
+class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefinition {
+  val builder = AggregationBuilders.topHits(name)
+
+  def from(from: Int): this.type = {
+    builder.setFrom(from)
+    this
+  }
+
+  def size(size: Int): this.type = {
+    builder.setSize(size)
+    this
+  }
+
+  def sort(sorts: SortDefinition*): this.type = sort2(sorts.map(_.builder): _*)
+  def sort2(sorts: SortBuilder*): this.type = {
+    sorts.foreach(builder addSort)
+    this
+  }
+
+  def fetchSource(includes: Array[String], excludes: Array[String]): this.type = {
+    builder.setFetchSource(includes, excludes)
+    this
+  }
+
 }
