@@ -8,8 +8,8 @@ case class IndexesTypes(indexes: Seq[String], types: Seq[String]) {
 object IndexesTypes {
   def apply(indexes: Iterable[String]): IndexesTypes = indexes.size match {
     case 0 => throw new RuntimeException("Could not parse into index/type")
-    case 1 => apply(index)
-    case _ => apply(more.toSeq, Nil)
+    case 1 => apply(indexes.head)
+    case _ => apply(indexes.toSeq, Nil)
   }
   def apply(tuple: (String, String)): IndexesTypes = apply(tuple._1, tuple._2)
   def apply(index: String, `type`: String): IndexesTypes = IndexesTypes(List(index), List(`type`))
