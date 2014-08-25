@@ -720,6 +720,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
+  it should "generate correct json for top hits aggregation" in {
+    val req = search in "music" types "bands" aggs {
+      aggregation terms "top-tags" field "tags" size 3 order Terms.Order.count(false) aggregations (
+        aggregation topHits ("top_tag_hits") size 1 sort { by field "last_activity_date" order SortOrder.DESC } fetchSource (Array("title"), Array.empty)
+      )
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_top_hits.json")
+  }
+
   it should "generate correct json for geodistance aggregation" in {
     val req = search in "music" types "bands" aggs {
       aggregation geodistance "geo_agg" field "geo_point" point (45.0, 27.0) geoDistance GeoDistance.ARC range (1.0, 1.0)

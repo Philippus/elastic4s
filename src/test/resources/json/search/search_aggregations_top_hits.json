@@ -1,0 +1,31 @@
+{
+    "aggregations": {
+        "top-tags": {
+            "terms": {
+                "field": "tags",
+                "size": 3,
+                "order":{"_count":"desc"}
+            },
+            "aggregations": {
+                "top_tag_hits": {
+                    "top_hits": {
+                        "size" : 1,
+                        "_source": {
+                            "includes": [
+                                "title"
+                            ],
+                            "excludes": []
+                        },
+                        "sort": [
+                            {
+                                "last_activity_date": {
+                                    "order": "desc"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
