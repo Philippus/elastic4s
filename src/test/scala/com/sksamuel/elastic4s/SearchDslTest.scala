@@ -905,5 +905,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     }
     req._builder.toString should matchJsonResource("/json/search/search_and_filter.json")
   }
+
+  it should "generate correct json for default filtered query" in {
+    val req = filteredQuery filter termFilter("singer", "lemmy")
+
+    req.builder.toString should matchJsonResource("/json/search/search_default_query.json")
+  }
 }
 
