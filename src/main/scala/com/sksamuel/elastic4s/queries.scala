@@ -303,16 +303,21 @@ class MultiMatchQueryDefinition(text: String)
     builder.maxExpansions(maxExpansions)
     this
   }
+
   def fields(_fields: Iterable[String]) = {
     for (f <- _fields) builder.field(f)
     this
   }
+
   def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
+
   def boost(boost: Double): MultiMatchQueryDefinition = {
     builder.boost(boost.toFloat)
     this
   }
+
   def analyzer(a: Analyzer): MultiMatchQueryDefinition = analyzer(a.name)
+
   def analyzer(a: String): MultiMatchQueryDefinition = {
     builder.analyzer(a)
     this
@@ -322,21 +327,38 @@ class MultiMatchQueryDefinition(text: String)
     builder.minimumShouldMatch(minimumShouldMatch.toString)
     this
   }
+
   @deprecated("@deprecated use a tieBreaker of 1.0f to disable dis-max query or select the appropriate Type", "1.2.0")
   def useDisMax(useDisMax: Boolean): MultiMatchQueryDefinition = {
     builder.useDisMax(java.lang.Boolean.valueOf(useDisMax))
     this
   }
+
   def lenient(l: Boolean): MultiMatchQueryDefinition = {
     builder.lenient(l)
     this
   }
+
   def zeroTermsQuery(q: MatchQueryBuilder.ZeroTermsQuery): MultiMatchQueryDefinition = {
     builder.zeroTermsQuery(q)
     this
   }
+
   def tieBreaker(tieBreaker: Double): MultiMatchQueryDefinition = {
     builder.tieBreaker(java.lang.Float.valueOf(tieBreaker.toFloat))
+    this
+  }
+
+  def operator(op: MatchQueryBuilder.Operator): MultiMatchQueryDefinition = {
+    builder.operator(op)
+    this
+  }
+
+  def operator(op: String): MultiMatchQueryDefinition = {
+    op match {
+      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
+      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
+    }
     this
   }
 }

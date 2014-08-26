@@ -18,7 +18,8 @@
             "tie_breaker": 4.5,
             "lenient": true,
             "cutoff_frequency": 1.7,
-            "zero_terms_query": "ALL"
+            "zero_terms_query": "ALL",
+            "operator": "AND"
         }
     }
 }
