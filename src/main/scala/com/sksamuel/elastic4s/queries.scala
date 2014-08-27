@@ -208,6 +208,12 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
   val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
   val builder = _builder
 
+  def analyzer(analyser: String) = {
+    _builder.analyzer(analyser)
+    this
+  }
+
+  @deprecated(message = "use analyzer instead", since = "1.3.2")
   def analyser(analyser: String) = {
     _builder.analyzer(analyser)
     this
@@ -219,12 +225,18 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
   }
 
   def exclude() = {
-    _builder.exclude(true)
+    _builder.include(false)
     this
   }
 
+  @deprecated(message = "use include instead", since = "1.3.2")
   def notExclude() = {
     _builder.exclude(false)
+    this
+  }
+
+  def include() = {
+    _builder.include(true)
     this
   }
 
@@ -270,6 +282,11 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
 
   def boostTerms(boostTerms: Double) = {
     _builder.boostTerms(boostTerms.toFloat)
+    this
+  }
+
+  def boost(boost: Double) = {
+    _builder.boost(boost.toFloat)
     this
   }
 
