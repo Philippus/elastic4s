@@ -134,8 +134,9 @@ If you need to pass settings to the client, then you need to invoke remote() wit
 For example to specify the cluster name (if you changed the default then you must specify the cluster name).
 
 ```scala
+import org.elasticsearch.common.settings.ImmutableSettings
 val settings = ImmutableSettings.settingsBuilder().put("cluster.name", "myClusterName").build()
-val client = ElasticClient.remote(settings, ("somehost", 9300))
+val client = ElasticClient.remote(settings.build(), ("somehost", 9300))
 ```
 
 If you already have a handle to a Node in the Java API then you can create a client from it easily:
