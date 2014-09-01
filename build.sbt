@@ -38,12 +38,11 @@ libraryDependencies ++= Seq(
   "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.1"  % "optional" ,
   "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.1.1"  % "optional" ,
-  "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.0-rc2"  % "optional"  exclude ("org" +
-    ".scalatest", "scalatest_2.10.0") ,
+  "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.0-rc2"  % "optional"  exclude ("org.scalatest", "scalatest_2.10.0"),
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.2.0"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.2.1"  % "test"
 )
 
 scalariformSettings
