@@ -14,7 +14,7 @@ import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotR
 import org.elasticsearch.action.admin.indices.alias.get.{ GetAliasesRequest, GetAliasesResponse }
 import org.elasticsearch.action.admin.indices.alias.{ IndicesAliasesRequest, IndicesAliasesResponse }
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
+import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
@@ -152,6 +152,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(c: CreateIndexDefinition): Future[CreateIndexResponse] =
     injectFuture[CreateIndexResponse](client.admin.indices.create(c.build, _))
+  def execute(req: CreateIndexRequest): Future[CreateIndexResponse] =
+    injectFuture[CreateIndexResponse](client.admin.indices.create(req, _))
 
   def execute(c: CountDefinition): Future[CountResponse] =
     injectFuture[CountResponse](client.count(c.build, _))
