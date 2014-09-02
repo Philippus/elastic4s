@@ -120,6 +120,50 @@ case class StopTokenFilter(name: String,
   }
 }
 
+case class NamedStopTokenFilter(name: String, stopwords: String,
+                                enablePositionIncrements: Boolean = true,
+                                ignoreCase: Boolean = false)
+    extends TokenFilterDefinition {
+
+  val filterType = "stop"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("stopwords", stopwords)
+    source.field("enable_position_increments", enablePositionIncrements)
+    if (ignoreCase) source.field("ignore_case", ignoreCase)
+  }
+}
+
+object NamedStopTokenFilter {
+  val Arabic = "_arabic_"
+  val Armenian = "_armenian_"
+  val Basque = "_basque_"
+  val Brazilian = "_brazilian_"
+  val Bulgarian = "_bulgarian_"
+  val Catalan = "_catalan_"
+  val Czech = "_czech_"
+  val Danish = "_danish_"
+  val Dutch = "_dutch_"
+  val English = "_english_"
+  val Finnish = "_finnish_"
+  val French = "_french_"
+  val Galician = "_galician_"
+  val German = "_german_"
+  val Greek = "_greek_"
+  val Hindi = "_hindi_"
+  val Hungarian = "_hungarian_"
+  val Indonesian = "_indonesian_"
+  val Italian = "_italian_"
+  val Norwegian = "_norwegian_"
+  val Persian = "_persian_"
+  val Portuguese = "_portuguese_"
+  val Romanian = "_romanian_"
+  val Russian = "_russian_"
+  val Spanish = "_spanish_"
+  val Swedish = "_swedish_"
+  val Turkish = "_turkish_"
+}
+
 case class PatternCaptureTokenFilter(name: String,
                                      patterns: Iterable[String],
                                      preserveOriginal: Boolean = true)
