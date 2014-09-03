@@ -34,6 +34,16 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
+#### Dependencies
+
+Starting from version 1.2.1.3, elastic4s requires the following dependencies:
+
+
+* "com.fasterxml.jackson.core"     %  "jackson-core"         % "2.4.1"
+* "com.fasterxml.jackson.core"     %  "jackson-databind"     % "2.4.1"
+* "com.fasterxml.jackson.module"   %% "jackson-module-scala" % "2.4.1"
+
+
 ## Introduction
 
 The basic format of the DSL is to create requests (eg a search request or delete request)
