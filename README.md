@@ -36,7 +36,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 #### Dependencies
 
-Starting from version 1.2.1.3, elastic4s requires the following dependencies:
+Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSource, the following dependencies are required:
 
 
 * "com.fasterxml.jackson.core"     %  "jackson-core"         % "2.4.1"
