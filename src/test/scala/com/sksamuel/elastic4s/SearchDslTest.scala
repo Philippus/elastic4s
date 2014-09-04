@@ -530,6 +530,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_filter_geo_boundingbox.json")
   }
 
+  it should "generate correct json for geo bounding box filter2" in {
+    val req = search in "music" types "bands" filter {
+      geoboxFilter("box") left 40.6 top 56.5 bottom 12.55 right 45.5 cache true cacheKey "somecachekey"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_filter_geo_boundingbox.json")
+  }
+
+  it should "generate correct json for geo bounding box filter3" in {
+    val req = search in "music" types "bands" filter {
+      geoboxFilter("box") top 56.5 left 40.6 right 45.5 bottom 12.55 cache true cacheKey "somecachekey"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_filter_geo_boundingbox.json")
+  }
+
   it should "generate correct json for dismax query" in {
     val req = search in "music" types "bands" query {
       dismax boost 4.5 query "coldplay" query "london" tieBreaker 1.2

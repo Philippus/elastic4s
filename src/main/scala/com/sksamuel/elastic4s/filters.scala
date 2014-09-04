@@ -491,22 +491,22 @@ class GeoBoundingBoxFilter(name: String)
   private var _bottom: Double = _
   def left(left: Double): GeoBoundingBoxFilter = {
     _left = left
-    builder.topLeft(_left, _top)
+    builder.topLeft(_top, _left)
     this
   }
   def top(top: Double): GeoBoundingBoxFilter = {
     _top = top
-    builder.topLeft(_left, _top)
+    builder.topLeft(_top, _left)
     this
   }
   def right(right: Double): GeoBoundingBoxFilter = {
     _right = right
-    builder.bottomRight(_left, _top)
+    builder.bottomRight(_bottom, _right)
     this
   }
   def bottom(bottom: Double): GeoBoundingBoxFilter = {
     _bottom = bottom
-    builder.bottomRight(_right, _bottom)
+    builder.bottomRight(_bottom, _right)
     this
   }
 }
