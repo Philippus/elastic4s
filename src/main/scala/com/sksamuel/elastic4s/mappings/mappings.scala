@@ -39,6 +39,7 @@ class MappingDefinition(val `type`: String) {
   var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
   var _routing: Option[RoutingDefinition] = None
+  var _ttl = false
 
   def all(enabled: Boolean): MappingDefinition = {
     _all = enabled
@@ -75,6 +76,11 @@ class MappingDefinition(val `type`: String) {
       case true => Dynamic
       case false => False
     }
+    this
+  }
+
+  def ttl(enabled: Boolean): MappingDefinition = {
+    _ttl = enabled
     this
   }
 
@@ -123,6 +129,7 @@ class MappingDefinition(val `type`: String) {
 
     source.startObject("_all").field("enabled", _all).endObject()
     source.startObject("_source").field("enabled", _source).endObject()
+    source.startObject("_ttl").field("enabled", _ttl).endObject()
     if (dynamic_date_formats.size > 0)
       source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
     if (date_detection) source.field("date_detection", date_detection)
