@@ -9,6 +9,7 @@ import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanc
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
+import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
 import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders, metrics }
 import org.elasticsearch.search.sort.SortBuilder
@@ -26,6 +27,7 @@ trait AggregationDsl {
     def histogram(name: String) = new HistogramAggregation(name)
     def datehistogram(name: String) = new DateHistogramAggregation(name)
     def filter(name: String) = new FilterAggregationDefinition(name)
+    def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
     def min(name: String) = new MinAggregationDefinition(name)
     def max(name: String) = new MaxAggregationDefinition(name)
@@ -313,6 +315,20 @@ class DateHistogramAggregation(name: String) extends AggregationDefinition[DateH
     this
   }
 
+}
+
+class GeoBoundsAggregationDefinition(name: String) extends AggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
+  val aggregationBuilder = AggregationBuilders.geoBounds(name)
+
+  def field(field: String): GeoBoundsAggregationDefinition = {
+    builder.field(field)
+    this
+  }
+
+  def wrapLongitude(wrapLongitude: Boolean): GeoBoundsAggregationDefinition = {
+    builder.wrapLongitude(wrapLongitude)
+    this
+  }
 }
 
 class GeoDistanceAggregationDefinition(name: String) extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {

@@ -1,0 +1,10 @@
+{
+    "aggregations": {
+        "geo_agg": {
+            "geo_bounds": {
+                "field": "geo_point",
+                "wrap_longitude": true
+            }
+        }
+    }
+}
