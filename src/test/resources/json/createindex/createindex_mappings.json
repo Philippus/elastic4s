@@ -22,6 +22,9 @@
             "_size": {
                 "enabled": true
             },
+            "_ttl": {
+                "enabled": false
+            },
             "properties": {
                 "_id": {
                     "type": "string",
@@ -49,6 +52,9 @@
             },
             "_source": {
                 "enabled": true
+            },
+            "_ttl": {
+                "enabled": false
             },
             "dynamic_date_formats": [
                 "mm/yyyy",

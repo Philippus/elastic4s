@@ -22,6 +22,9 @@
             "_size": {
                 "enabled": true
             },
+            "_ttl": {
+                "enabled": false
+            },
             "properties": {
                 "first_name": {
                     "type": "string",
