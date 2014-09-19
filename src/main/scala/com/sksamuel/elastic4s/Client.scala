@@ -247,7 +247,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
 
-  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext): Future[Unit] = {
+  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m", preserveId: Boolean = true)(implicit ec: ExecutionContext): Future[Unit] = {
     execute {
       ElasticDsl.search in sourceIndex limit chunkSize scroll scroll searchType SearchType.Scan query matchall
     } flatMap { response =>
@@ -256,17 +256,17 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
         searchScroll(scrollId, scroll) flatMap { response =>
           val hits = response.getHits.hits
           if (hits.length > 0) {
-            hits.map(hit => (hit.`type`, hit.sourceAsString)).grouped(chunkSize).foreach { pairs =>
+            Future.sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
               execute {
                 ElasticDsl.bulk(
                   pairs map {
-                    case (typ, source) =>
-                      index into targetIndex -> typ doc StringDocumentSource(source)
+                    case (typ, _id, source) =>
+                      val expr = index into targetIndex -> typ
+                      (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
                   }: _*
                 )
               }
-            }
-            _scroll(response.getScrollId)
+            }).flatMap(_ => _scroll(response.getScrollId))
           } else {
             Future.successful(())
           }
