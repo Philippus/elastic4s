@@ -114,14 +114,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     injectFuture[DeleteSnapshotResponse](client.admin.cluster.deleteSnapshot(req.build, _))
   }
 
-  /** Executes a Scala DSL search and returns a scala Future with the SearchResponse.
-    *
-    * @param sdef a SearchDefinition from the Scala DSL
-    *
-    * @return a Future providing an SearchResponse
-    */
-  def exeute(sdef: SearchDefinition): Future[SearchResponse] = execute(sdef.build)
-
   /** Executes a Java API CountRequest and returns a scala Future with the CountResponse.
     *
     * @param req a CountRequest from the Java client

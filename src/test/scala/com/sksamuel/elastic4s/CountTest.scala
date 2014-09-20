@@ -7,30 +7,32 @@ import org.scalatest.mock.MockitoSugar
 /** @author Stephen Samuel */
 class CountTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
-  client.sync.execute {
+  client.execute {
     index into "london/landmarks" fields "name" -> "hampton court palace"
-  }
-  client.sync.execute {
+  }.await
+
+  client.execute {
     index into "london/landmarks" fields "name" -> "tower of london"
-  }
-  client.sync.execute {
+  }.await
+
+  client.execute {
     index into "london/pubs" fields "name" -> "blue bell"
-  }
+  }.await
 
   refresh("london")
   blockUntilCount(3, "london")
 
   "a count request" should "return total count when no query is specified" in {
-    val resp = client.sync.execute {
+    val resp = client.execute {
       count from "london"
-    }
+    }.await
     assert(3 === resp.getCount)
   }
 
   "a count request" should "return the document count for the correct type" in {
-    val resp = client.sync.execute {
+    val resp = client.execute {
       count from "london" -> "landmarks"
-    }
+    }.await
     assert(2 === resp.getCount)
   }
 

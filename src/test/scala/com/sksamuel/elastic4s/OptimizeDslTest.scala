@@ -8,24 +8,24 @@ import com.sksamuel.elastic4s.ElasticDsl._
 class OptimizeDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   // not testing the output of these; they are here just to test the DSL in the client
-  client.sync.execute {
+  client.execute {
     create index "test1"
-  }
-  client.sync.execute {
+  }.await
+  client.execute {
     create index "test2"
-  }
+  }.await
   client.execute {
     optimize index "test1"
-  }
+  }.await
   client.execute {
     optimize("test1", "test2")
-  }
-  client.sync.execute {
+  }.await
+  client.execute {
     optimize index Seq("test1", "test2")
-  }
-  client.sync.execute {
+  }.await
+  client.execute {
     optimize("test1")
-  }
+  }.await
 
   "an optimize request" should "accept var args" in {
     val opt = optimize("index1", "index2").maxSegments(5)
