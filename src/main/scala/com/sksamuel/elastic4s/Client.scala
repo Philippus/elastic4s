@@ -304,6 +304,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
     def execute(gets: MultiGetDefinition)(implicit duration: Duration): MultiGetResponse =
       Await.result(client.execute(gets), duration)
 
+    @deprecated("use execute", "1.3.3")
     def search(searches: SearchDefinition)(implicit duration: Duration): SearchResponse = execute(searches)
 
     def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
