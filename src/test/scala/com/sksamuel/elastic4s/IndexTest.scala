@@ -35,15 +35,15 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   "an index exists request" should "return true for an existing index" in {
-    assert(client.sync.exists("electronics").isExists)
+    assert(client.exists("electronics").await.isExists)
   }
 
   "a delete index request" should "delete the index" in {
-    assert(client.sync.exists("electronics").isExists)
-    client.sync.execute {
+    assert(client.exists("electronics").await.isExists)
+    client.execute {
       delete index "electronics"
-    }
-    assert(!client.sync.exists("electronics").isExists)
+    }.await
+    assert(!client.exists("electronics").await.isExists)
     client.close()
   }
 }
