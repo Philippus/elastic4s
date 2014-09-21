@@ -39,6 +39,7 @@ class MappingDefinition(val `type`: String) {
   var _dynamic: DynamicMapping = Dynamic
   var _meta: Map[String, Any] = Map.empty
   var _routing: Option[RoutingDefinition] = None
+  var _timestamp: Option[TimestampDefinition] = None
   var _ttl = false
 
   def all(enabled: Boolean): MappingDefinition = {
@@ -76,6 +77,15 @@ class MappingDefinition(val `type`: String) {
       case true => Dynamic
       case false => False
     }
+    this
+  }
+
+  def timestamp(
+    enabled: Boolean,
+    path: Option[String] = None,
+    format: Option[String] = None,
+    default: Option[String] = None) = {
+    this._timestamp = Some(TimestampDefinition(enabled, path, format, default))
     this
   }
 
@@ -126,10 +136,8 @@ class MappingDefinition(val `type`: String) {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(`type`)
-
     source.startObject("_all").field("enabled", _all).endObject()
     source.startObject("_source").field("enabled", _source).endObject()
-    source.startObject("_ttl").field("enabled", _ttl).endObject()
     if (dynamic_date_formats.size > 0)
       source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
     if (date_detection) source.field("date_detection", date_detection)
@@ -149,6 +157,22 @@ class MappingDefinition(val `type`: String) {
     _parent.foreach(arg => source.startObject("_parent").field("type", arg).endObject())
 
     if (_size) source.startObject("_size").field("enabled", true).endObject()
+
+    _timestamp.foreach { timestamp =>
+      source.startObject("_timestamp").field("enabled", timestamp.enabled)
+      timestamp.path.foreach { path =>
+        source.field("path", path)
+      }
+      timestamp.format.foreach { format =>
+        source.field("format", format)
+      }
+      timestamp.default.foreach { default =>
+        source.field("default", default)
+      }
+      source.endObject()
+    }
+
+    source.startObject("_ttl").field("enabled", _ttl).endObject()
 
     source.startObject("properties")
     for (field <- _fields) {
@@ -578,3 +602,9 @@ final class MultiFieldDefinition(name: String)
 case class RoutingDefinition(
   required: Boolean,
   path: Option[String])
+
+case class TimestampDefinition(
+  enabled: Boolean,
+  path: Option[String],
+  format: Option[String],
+  default: Option[String])

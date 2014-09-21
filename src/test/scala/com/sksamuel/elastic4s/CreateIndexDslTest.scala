@@ -223,4 +223,37 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
   }
 
+  it should "generate json to enable timestamp" in {
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
+        "name" typed GeoPointType latLon true geohash true,
+        "content" typed DateType nullValue "no content"
+      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp true
+    )
+    req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_1.json")
+  }
+
+  it should "generate json to enable timestamp with path and format" in {
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
+        "name" typed GeoPointType latLon true geohash true,
+        "content" typed DateType nullValue "no content"
+      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, path = Some("post_date"), format = Some("YYYY-MM-dd"))
+    )
+    req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_2.json")
+  }
+
+  it should "generate json to enable timestamp with path and format and default null" in {
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
+        "name" typed GeoPointType latLon true geohash true,
+        "content" typed DateType nullValue "no content"
+      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, default = Some(null))
+    )
+    req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_3.json")
+  }
+
 }
