@@ -8,7 +8,7 @@ import ElasticDsl._
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
   "the index dsl" should "generate json to include mapping properties" in {
-    val req = create.index("users").shards(2).mappings(
+    val req = create.index("users").mappings(
       "tweets" as (
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
@@ -86,7 +86,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "supported nested fields" in {
-    val req = create.index("users").shards(2).mappings(
+    val req = create.index("users").mappings(
       "tweets" as (
         id typed StringType analyzer KeywordAnalyzer,
         "name" typed StringType analyzer KeywordAnalyzer,
@@ -118,7 +118,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support inner objects" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "person" inner (
           "name" inner (
@@ -136,7 +136,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support disabled inner objects" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "person" inner (
           "name" typed ObjectType enabled false,
@@ -149,7 +149,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support multi field type" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "name" multi (
           "name" typed StringType index "analyzed",
@@ -161,7 +161,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support multi field type with path" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "first_name" typed ObjectType as (
           "first_name" typed TokenCountType index "analyzed",
@@ -177,7 +177,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support copy to a single field" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "first_name" typed StringType index "analyzed" copyTo "full_name",
         "last_name" typed StringType index "analyzed" copyTo "full_name",
@@ -188,7 +188,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support copy to multiple fields" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
         "meta_data" typed StringType index "analyzed",
@@ -199,7 +199,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support completion type" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         "name" typed StringType index "analyzed",
         "ac" typed CompletionType indexAnalyzer "simple" searchAnalyzer "simple"
@@ -219,7 +219,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "generate json to enable timestamp" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
@@ -230,7 +230,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "generate json to enable timestamp with path and format" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
@@ -241,7 +241,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "generate json to enable timestamp with path and format and default null" in {
-    val req = create.index("tweets").shards(2).mappings(
+    val req = create.index("tweets").mappings(
       "tweet" as (
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,

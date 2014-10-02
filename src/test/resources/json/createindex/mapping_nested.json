@@ -1,9 +1,5 @@
 {
-    "settings": {
-        "index": {
-            "number_of_shards": 2
-        }
-    },
+    "settings": {},
     "mappings": {
         "tweets": {
             "_all": {
