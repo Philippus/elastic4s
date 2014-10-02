@@ -85,14 +85,16 @@ trait CreateIndexDsl {
 
       source.startObject("settings")
 
-      source.startObject("index")
+      if (_settings.settings.size > 0) {
+        source.startObject("index")
 
-      _settings.settings foreach {
-        case (key, value) =>
-          source.field(key, value)
+        _settings.settings foreach {
+          case (key, value) =>
+            source.field(key, value)
+        }
+
+        source.endObject()
       }
-
-      source.endObject()
 
       _analysis.foreach(analysis => {
         source.startObject("analysis")
