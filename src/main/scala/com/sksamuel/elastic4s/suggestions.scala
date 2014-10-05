@@ -11,6 +11,7 @@ trait SuggestionDsl {
   case object term extends Suggester[TermSuggestionDefinition]
   case object phrase extends Suggester[PhraseSuggestionDefinition]
   case object completion extends Suggester[CompletionSuggestionDefinition]
+  case object fuzzyCompletion extends Suggester
 
   object suggest {
 
@@ -22,6 +23,7 @@ trait SuggestionDsl {
       case `term` => new SuggestAs(name => new TermSuggestionDefinition(name))
       case `phrase` => new SuggestAs(name => new PhraseSuggestionDefinition(name))
       case `completion` => new SuggestAs(name => new CompletionSuggestionDefinition(name))
+      case `fuzzyCompletion` => new SuggestAs(name => new FuzzyCompletionSuggestionDefinition(name))
     }
 
     /** used for backwards compatibility */
