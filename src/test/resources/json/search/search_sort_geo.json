@@ -2,7 +2,13 @@
     "sort": [
         {
             "_geo_distance": {
-                "location": "ABCDEFG",
+                "location": [
+                    {
+                        "lat": 56.6,
+                        "lon": 78.8
+                    },
+                    "ABCDEFG"
+                ],
                 "distance_type": "arc",
                 "reverse": true,
                 "mode": "max",
