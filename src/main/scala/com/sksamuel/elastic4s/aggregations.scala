@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
+import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
@@ -23,6 +24,7 @@ trait AggregationDsl {
 
   class AggregationExpectingType {
     def avg(name: String) = new AvgAggregationDefinition(name)
+    def children(name: String) = new ChildrenAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)
     def cardinality(name: String) = new CardinalityAggregationDefinition(name)
     def datehistogram(name: String) = new DateHistogramAggregation(name)
@@ -237,6 +239,16 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
 
   def format(fmt: String): DateRangeAggregation = {
     builder.format(fmt)
+    this
+  }
+}
+
+class ChildrenAggregationDefinition(name: String)
+  extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
+  val aggregationBuilder = AggregationBuilders.children(name)
+
+  def childType(childType: String): this.type = {
+    builder.childType(childType)
     this
   }
 }
