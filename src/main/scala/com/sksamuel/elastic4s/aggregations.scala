@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
@@ -21,23 +22,24 @@ trait AggregationDsl {
   def agg = aggregation
 
   class AggregationExpectingType {
-    def terms(name: String) = new TermAggregationDefinition(name)
-    def range(name: String) = new RangeAggregationDefinition(name)
-    def daterange(name: String) = new DateRangeAggregation(name)
-    def histogram(name: String) = new HistogramAggregation(name)
-    def datehistogram(name: String) = new DateHistogramAggregation(name)
-    def filter(name: String) = new FilterAggregationDefinition(name)
-    def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
-    def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def min(name: String) = new MinAggregationDefinition(name)
-    def max(name: String) = new MaxAggregationDefinition(name)
-    def sum(name: String) = new SumAggregationDefinition(name)
     def avg(name: String) = new AvgAggregationDefinition(name)
-    def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
-    def stats(name: String) = new StatsAggregationDefinition(name)
-    def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)
     def cardinality(name: String) = new CardinalityAggregationDefinition(name)
+    def datehistogram(name: String) = new DateHistogramAggregation(name)
+    def daterange(name: String) = new DateRangeAggregation(name)
+    def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
+    def filter(name: String) = new FilterAggregationDefinition(name)
+    def filters(name: String) = new FiltersAggregationDefinition(name)
+    def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
+    def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
+    def histogram(name: String) = new HistogramAggregation(name)
+    def max(name: String) = new MaxAggregationDefinition(name)
+    def min(name: String) = new MinAggregationDefinition(name)
+    def range(name: String) = new RangeAggregationDefinition(name)
+    def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
+    def stats(name: String) = new StatsAggregationDefinition(name)
+    def sum(name: String) = new SumAggregationDefinition(name)
+    def terms(name: String) = new TermAggregationDefinition(name)
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 }
@@ -183,6 +185,7 @@ class RangeAggregationDefinition(name: String) extends AggregationDefinition[Ran
     this
   }
 }
+
 
 class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
   val aggregationBuilder = AggregationBuilders.dateRange(name)
@@ -371,11 +374,27 @@ class GeoDistanceAggregationDefinition(name: String) extends AggregationDefiniti
 class FilterAggregationDefinition(name: String) extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filter(name)
 
-  def filter(block: => FilterDefinition): FilterAggregationDefinition = {
+  def filter(block: => FilterDefinition): this.type = {
     builder.filter(block.builder)
     this
   }
 }
+
+class FiltersAggregationDefinition(name: String)
+  extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
+  val aggregationBuilder = AggregationBuilders.filters(name)
+
+  def filter(block: => FilterDefinition): this.type = {
+    builder.filter(block.builder)
+    this
+  }
+
+  def filter(key: String, block: => FilterDefinition): this.type = {
+    builder.filter(key, block.builder)
+    this
+  }
+}
+
 
 class SigTermsAggregationDefinition(name: String) extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
   val aggregationBuilder = AggregationBuilders.significantTerms(name)
