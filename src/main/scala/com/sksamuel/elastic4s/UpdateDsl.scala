@@ -106,6 +106,11 @@ trait UpdateDsl extends IndexesTypesDsl {
     def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toMap)
     def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = upsert(iterable.toMap)
 
+    def scriptedUpsert(upsert: Boolean): this.type = {
+      _builder.setScriptedUpsert(upsert)
+      this
+    }
+
     def version(version: Long): UpdateDefinition = {
       _builder.setVersion(version)
       this
