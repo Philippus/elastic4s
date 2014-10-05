@@ -253,6 +253,16 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
     builder.interval(interval)
     this
   }
+
+  def postOffset(postOffset: Long): HistogramAggregation = {
+    builder.postOffset(postOffset)
+    this
+  }
+
+  def preOffset(preOffset: Long): HistogramAggregation = {
+    builder.preOffset(preOffset)
+    this
+  }
 }
 
 class DateHistogramAggregation(name: String) extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
