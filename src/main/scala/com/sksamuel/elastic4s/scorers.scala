@@ -47,7 +47,7 @@ class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[Fiel
   }
 }
 
-class RandomScoreDefinition(seed: Long) extends ScoreDefinition[RandomScoreDefinition] {
+class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefinition] {
   val builder = new RandomScoreFunctionBuilder().seed(seed)
 }
 

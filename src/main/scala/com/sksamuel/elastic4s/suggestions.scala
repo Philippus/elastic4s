@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.suggest.SuggestBuilder
+import org.elasticsearch.search.suggest.{SuggestBuilders, SuggestBuilder}
 import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder
 
@@ -63,7 +63,7 @@ trait SuggestionDefinition {
 
 class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
 
-  val builder = SuggestBuilder.termSuggestion(name)
+  val builder = SuggestBuilders.termSuggestion(name)
 
   def maxEdits(maxEdits: Int): TermSuggestionDefinition = {
     builder.maxEdits(maxEdits)
@@ -114,7 +114,7 @@ class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
 
 class PhraseSuggestionDefinition(name: String) extends SuggestionDefinition {
 
-  val builder = SuggestBuilder.phraseSuggestion(name)
+  val builder = SuggestBuilders.phraseSuggestion(name)
 
   def gramSize(gramSize: Int): PhraseSuggestionDefinition = {
     builder.gramSize(gramSize)
