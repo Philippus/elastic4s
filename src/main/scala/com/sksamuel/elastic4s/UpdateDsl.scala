@@ -39,6 +39,11 @@ trait UpdateDsl extends IndexesTypesDsl {
       this
     }
 
+    def detectNoop(detectNoop: Boolean): this.type = {
+      _builder.setDetectNoop(detectNoop)
+      this
+    }
+
     def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toMap)
     def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = docAsUpsert(iterable.toMap)
     def docAsUpsert(map: Map[String, Any]): UpdateDefinition = {
