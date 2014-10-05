@@ -48,7 +48,8 @@ libraryDependencies ++= Seq(
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
-  "org.scalatest"                  %% "scalatest"                   % "2.2.1"  % "test"
+  "org.scalatest"                  %% "scalatest"                   % "2.2.1"  % "test",
+  "org.codehaus.groovy"            % "groovy"                       % "2.3.7"  % "test"
 )
 
 scalariformSettings
