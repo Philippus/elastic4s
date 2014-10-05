@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryRequestBuilder
-import org.elasticsearch.client.Client
 
 /** @author Stephen Samuel */
 trait ValidateDsl extends QueryDsl {

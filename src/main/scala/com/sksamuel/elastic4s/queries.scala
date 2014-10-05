@@ -4,7 +4,6 @@ import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
-import scala.Some
 import org.elasticsearch.common.unit.Fuzziness
 
 /** @author Stephen Samuel */
@@ -213,7 +212,6 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
     this
   }
 
-  @deprecated(message = "use analyzer instead", since = "1.3.2")
   def analyser(analyser: String) = {
     _builder.analyzer(analyser)
     this

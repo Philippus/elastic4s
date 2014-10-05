@@ -1,27 +1,29 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.{ DecayFunctionBuilder, ScoreFunctionBuilder }
-import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.factor.FactorBuilder
 import org.elasticsearch.index.query.functionscore.fieldvaluefactor.FieldValueFactorFunctionBuilder
-import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
+import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
+import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
+import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBuilder
+import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
+import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ScoreFunctionBuilder}
 
 /** @author Stephen Samuel */
 trait ScoreDsl {
 
-  def randomScore(seed: Long) = new RandomScoreDefinition(seed)
+  def randomScore(seed: Int) = new RandomScoreDefinition(seed)
   def scriptScore(script: String) = new ScriptScoreDefinition(script)
   def gaussianScore(field: String, origin: String, scale: String) = new GaussianDecayScoreDefinition(field, origin, scale)
   def linearScore(field: String, origin: String, scale: String) = new LinearDecayScoreDefinition(field, origin, scale)
   def exponentialScore(field: String, origin: String, scale: String) = new ExponentialDecayScoreDefinition(field, origin, scale)
+  @deprecated("since 1.4.0", "1.4.0")
   def factorScore(boost: Double) = new FactorScoreDefinition(boost)
   def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)
 }
 
+@deprecated("since 1.4.0", "1.4.0")
 class FactorScoreDefinition(boost: Double) extends ScoreDefinition[FactorScoreDefinition] {
   val builder = new FactorBuilder().boostFactor(boost.toFloat)
 }
