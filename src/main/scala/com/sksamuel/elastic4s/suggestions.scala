@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.suggest.{SuggestBuilders, SuggestBuilder}
+import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder
+import org.elasticsearch.search.suggest.SuggestBuilders
 
 /** @author Stephen Samuel */
 trait SuggestionDsl {
@@ -159,9 +159,33 @@ class PhraseSuggestionDefinition(name: String) extends SuggestionDefinition {
 }
 
 class CompletionSuggestionDefinition(name: String) extends SuggestionDefinition {
-
-  val builder = new CompletionSuggestionBuilder(name)
+  val builder = SuggestBuilders.completionSuggestion(name)
 }
+
+class FuzzyCompletionSuggestionDefinition(name: String) extends SuggestionDefinition {
+  val builder = SuggestBuilders.fuzzyCompletionSuggestion(name)
+  def fuzziness(fuzziness: Fuzziness): this.type = {
+    builder.setFuzziness(fuzziness)
+    this
+  }
+  def fuzzyMinLength(fuzzyMinLength: Int): this.type = {
+    builder.setFuzzyMinLength(fuzzyMinLength)
+    this
+  }
+  def fuzzyPrefixLength(fuzzyPrefixLength: Int): this.type = {
+    builder.setFuzzyPrefixLength(fuzzyPrefixLength)
+    this
+  }
+  def fuzzyTranspositions(fuzzyTranspositions: Boolean): this.type = {
+    builder.setFuzzyTranspositions(fuzzyTranspositions)
+    this
+  }
+  def unicodeAware(unicodeAware: Boolean): this.type = {
+    builder.setUnicodeAware(unicodeAware)
+    this
+  }
+}
+
 
 sealed abstract class SuggestMode(val elastic: String)
 object SuggestMode {
