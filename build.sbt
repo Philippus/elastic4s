@@ -39,7 +39,7 @@ jennerProjectId := "7b0a65b8-7c9a-4f25-864c-3f3e009752b9"
 jennerApiKey := "04ba7a59-5bad-4862-9bc2-a7e1aa0b93ab"
 
 libraryDependencies ++= Seq(
-  "org.elasticsearch"              %  "elasticsearch"               % "1.3.2",
+  "org.elasticsearch"              %  "elasticsearch"               % "1.4.0.Beta1",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.2"  % "optional" ,
