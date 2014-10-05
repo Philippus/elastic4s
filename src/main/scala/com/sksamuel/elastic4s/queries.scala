@@ -189,10 +189,10 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
     with DefinitionAttributeMaxBoost
     with DefinitionAttributeScoreMode {
 
-  val builder = if (queryOrFilter.isLeft)
-    new FunctionScoreQueryBuilder(queryOrFilter.left.get.builder)
-  else
-    new FunctionScoreQueryBuilder(queryOrFilter.right.get.builder)
+  val builder = queryOrFilter match {
+    case Left(query) => new FunctionScoreQueryBuilder(query.builder)
+    case Right(filter) => new FunctionScoreQueryBuilder(filter.builder)
+  }
   val _builder = builder
 
   def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
