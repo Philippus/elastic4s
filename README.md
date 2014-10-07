@@ -1,17 +1,23 @@
 elastic4s - Elasticsearch Scala Client
 =========
 
-Elastic4s is a concise, idiomatic, asynchronous, type safe Scala Client for Elasticsearch.
-It provides a Scala DSL to construct your queries and (hopefully!) reducing errors and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflows.
-Due to its typesafe nature elastic4s is also a good way to learn the options available for any operation,
-as your IDE can use the type information to show you what methods are available.
-Elastic4s also allows you to index JSON documents from standard
-JSON libraries such as Jackson without having to unmarshall.
+Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of leveraging Scala to
+create a concise, idiomatic, reactive, type safe DSL to write Elasticsearch queries. The Java client, which can of
+course be used directly in Scala, is more verbose due to Java's verbose nature. Scala lets us do better.
+
+Elastic4s's DSL allows you to to construct your queries with syntatic and semantic errors manifested at compile time,
+and uses standard Scala futures to enable you to easily integrate into your existing asynchronous frameworks.
+Due to its typesafe nature Elastic4s is also a good way to learn the options/commands available for any operation,
+as your IDE can use the types to show you what methods are available.
+
+Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into
+Java collections. It also allows you to index documents directly without having to extract and set fields manually -
+eg from a case class, a JSON document, or a Map (or a custom source).
 
 #### Key points
 
-* Typesafe DSL
-* Uses Scala futures
+* Typesafe concise DSL
+* Reactive / Uses Scala futures
 * Supports Scala collections
 * Wraps Java library
 
@@ -24,40 +30,39 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
+|1.4.x|1.4.x|
 |1.3.x|1.3.x|
 |1.2.x.x|1.2.x|
 |1.1.x.x|1.1.x|
 |1.0.x.x|1.0.x|
 |0.90.13.x|0.90.13|
 
-
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
 #### Dependencies
 
-Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSource, the following dependencies are required:
-
+Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSource, the following dependencies are required in your project:
 
 * "com.fasterxml.jackson.core"     %  "jackson-core"         % "2.4.1"
 * "com.fasterxml.jackson.core"     %  "jackson-databind"     % "2.4.1"
 * "com.fasterxml.jackson.module"   %% "jackson-module-scala" % "2.4.1"
 
-
 ## Introduction
 
-The basic format of the DSL is to create requests (eg a search request or delete request)
-and pass them in to the execute methods on the client, which returns a response object.
-All requests on the standard client are asynchronous and will return a standard Scala 2.10 Future[T]
-where T is the response type appropriate to your request - eg a SearchResponse for a SearchRequest.
-The response objects are the same type as in the Java API.
+The basic format of the DSL is that requests (eg a search request, a delete request, an update request, etc) are created using the DSL,
+and then they are passed to the `execute` method on the client instance, which will return a response.
 
-All the DSL constructs exist in the ElasticDsl object which needs to be imported.
-The standard client is a class called ElasticClient.
-To create a client use the methods on the ElasticClient companion object.
+All requests on the client are asynchronous and will return a standard Scala `Future[T]` where T is the response type
+appropriate to your request. For example a search request will return a response of type `SearchResponse`.
+The response objects are, for the most part, the exact same type the Java API returns.
+This is because there is mostly no reason to wrap these.
+
+All the DSL keywords are located in the `ElasticDsl` trait which needs to be imported or extended.
+The standard client is a class called `ElasticClient`. To create a client use the methods on the `ElasticClient` companion object.
 
 An example is worth 1000 characters so here is a quick example of how to create a local node with a client
- and index a one field document:
+ and index a one field document. Then we will search for that document using a simple text query.
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -66,13 +71,16 @@ import com.sksamuel.elastic4s.ElasticDsl._
 object Test extends App {
 
   val client = ElasticClient.local
-  client execute { index into "bands/singers" fields "name"->"chris martin" }
+
+  // await is a helper method to make this operation synchronous instead of asynchronous.
+  // You would normally avoid doing this is a real program as it will block the executing thread.
+  client.execute { index into "bands/artists" fields "name"->"coldplay" }.await
+
+  val resp = client.execute { search in "bands/artists" query "coldplay" }.await
+  println(resp)
 
 }
 ```
-
-In general the format of the DSL is to call the execute method on the client and
-pass in a block that returns a request of the type you wish to execute.
 
 For more in depth examples keep reading.
 
@@ -349,7 +357,7 @@ See more information on the [bulk page](guide/bulk.md).
 
 ## Synchronous Operations
 
-All operations are normally async. Sometimes you might want to block, when doing snapshots or other maintainence. You can call `.await` on any operation to block until the result is ready. 
+All operations are normally async. Sometimes you might want to block, when doing snapshots or other maintainence. You can call `.await` on any operation to block until the result is ready.
 
 ```scala
 val resp = client.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }.await
