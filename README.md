@@ -75,8 +75,8 @@ object Test extends App {
 
   val client = ElasticClient.local
 
-  // await is a helper method to make this operation synchronous instead of asynchronous.
-  // You would normally avoid doing this is a real program as it will block the executing thread.
+  // await is a helper method to make this operation synch instead of asynch
+  // You would normally avoid doing this is a real program as it will block
   client.execute { index into "bands/artists" fields "name"->"coldplay" }.await
 
   val resp = client.execute { search in "bands/artists" query "coldplay" }.await
