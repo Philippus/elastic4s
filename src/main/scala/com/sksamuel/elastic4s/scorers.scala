@@ -8,7 +8,7 @@ import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuild
 import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBuilder
 import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ScoreFunctionBuilder}
+import org.elasticsearch.index.query.functionscore.{ DecayFunctionBuilder, ScoreFunctionBuilder }
 
 /** @author Stephen Samuel */
 trait ScoreDsl {

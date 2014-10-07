@@ -8,6 +8,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.3")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "0.99.9")
 
-addSbtPlugin("com.sksamuel.scapegoat" % "sbt-scapegoat" % "0.94.5")
-
 addSbtPlugin("io.jenner" % "sbt-jenner" % "0.15.0")

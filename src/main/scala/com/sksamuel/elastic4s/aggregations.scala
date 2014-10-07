@@ -188,7 +188,6 @@ class RangeAggregationDefinition(name: String) extends AggregationDefinition[Ran
   }
 }
 
-
 class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
   val aggregationBuilder = AggregationBuilders.dateRange(name)
 
@@ -244,7 +243,7 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
 }
 
 class ChildrenAggregationDefinition(name: String)
-  extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
+    extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
   val aggregationBuilder = AggregationBuilders.children(name)
 
   def childType(childType: String): this.type = {
@@ -403,7 +402,7 @@ class FilterAggregationDefinition(name: String) extends AggregationDefinition[Fi
 }
 
 class FiltersAggregationDefinition(name: String)
-  extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
+    extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filters(name)
 
   def filter(block: => FilterDefinition): this.type = {
@@ -416,7 +415,6 @@ class FiltersAggregationDefinition(name: String)
     this
   }
 }
-
 
 class SigTermsAggregationDefinition(name: String) extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
   val aggregationBuilder = AggregationBuilders.significantTerms(name)

@@ -188,7 +188,6 @@ class FuzzyCompletionSuggestionDefinition(name: String) extends SuggestionDefini
   }
 }
 
-
 sealed abstract class SuggestMode(val elastic: String)
 object SuggestMode {
   case object Missing extends SuggestMode("missing")
