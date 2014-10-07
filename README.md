@@ -1,6 +1,9 @@
 elastic4s - Elasticsearch Scala Client
 =========
 
+[![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
+[![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
+
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of leveraging Scala to
 create a concise, idiomatic, reactive, type safe DSL to write Elasticsearch requests. The Java client, which can of
 course be used directly in Scala, is more verbose due to Java's verbose nature. Scala lets us do better.
@@ -37,9 +40,6 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |1.1.x.x|1.1.x|
 |1.0.x.x|1.0.x|
 |0.90.13.x|0.90.13|
-
-[![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
-[![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
 #### Dependencies
 
