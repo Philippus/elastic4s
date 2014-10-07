@@ -403,9 +403,8 @@ See more information on the [bulk page](guide/bulk.md).
 
 ## Synchronous Operations
 
-All operations are normally asynchrounous.
-Sometimes you might want to block, when doing snapshots or when creating the initial index.
-You can call `.await` on any operation to block until the result is ready.
+All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots
+or when creating the initial index. You can call `.await` on any operation to block until the result is ready.
 This is especially useful when testing.
 
 ```scala
@@ -417,9 +416,9 @@ resp.isInstanceOf[IndexResponse] // true
 
 Helpers provide higher level APIs to work with Elasticsearch.
 
-### Reindexing data
+#### Reindexing data
 
-Use the ```reindex``` helper to reindex data from source index to target index.
+Use the `reindex` helper to reindex data from source index to target index.
 
 ```scala
 client.reindex(
@@ -454,7 +453,7 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.2.1.2"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.3.2"
 ```
 
 For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
@@ -463,11 +462,12 @@ For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>1.1.1.0</version>
+    <version>1.3.2</version>
 </dependency>
 ```
 
-You can always find the latest version on [maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
+The above is just an example and is not always up to date. Check the latest released version on
+[maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
 
 ## Building and Testing
 
@@ -481,8 +481,8 @@ And to test
 sbt test
 ```
 
-Integration tests run on a locally built elastic that is brought up and torn
-down as part of the tests inside your standard /tmp folder. There is no need to configure anything externally.
+Integration tests run on a local elastic that is created and torn down as part of the tests inside your standard temp
+folder. There is no need to configure anything externally.
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
