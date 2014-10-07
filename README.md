@@ -2,17 +2,18 @@ elastic4s - Elasticsearch Scala Client
 =========
 
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of leveraging Scala to
-create a concise, idiomatic, reactive, type safe DSL to write Elasticsearch queries. The Java client, which can of
+create a concise, idiomatic, reactive, type safe DSL to write Elasticsearch requests. The Java client, which can of
 course be used directly in Scala, is more verbose due to Java's verbose nature. Scala lets us do better.
 
-Elastic4s's DSL allows you to to construct your queries with syntatic and semantic errors manifested at compile time,
-and uses standard Scala futures to enable you to easily integrate into your existing asynchronous frameworks.
-Due to its typesafe nature Elastic4s is also a good way to learn the options/commands available for any operation,
-as your IDE can use the types to show you what methods are available.
+Elastic4s's DSL allows you to to construct your requests with syntatic and semantic errors manifested at compile time,
+and uses standard Scala futures to enable you to easily integrate into your existing asynchronous frameworks. The aim of
+the DSL is that requests are written in an SQL-like way, while staying true to the JSON schema used by the Elasticsearch
+REST interface.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into
 Java collections. It also allows you to index documents directly without having to extract and set fields manually -
-eg from a case class, a JSON document, or a Map (or a custom source).
+eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature Elastic4s is also a
+good way to learn the options/commands available for any operation, as your IDE can use the types to show you what methods are available.
 
 #### Key points
 
@@ -20,6 +21,7 @@ eg from a case class, a JSON document, or a Map (or a custom source).
 * Reactive / Uses Scala futures
 * Supports Scala collections
 * Wraps Java library
+* SQL-like requests
 
 #### Release
 
@@ -51,7 +53,8 @@ Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSour
 ## Introduction
 
 The basic format of the DSL is that requests (eg a search request, a delete request, an update request, etc) are created using the DSL,
-and then they are passed to the `execute` method on the client instance, which will return a response.
+and then they are passed to the `execute` method on the client instance, which will return a response. The requests are
+written in a style that is similar to SQL. Eg, `search in "index/type" query "findme"`
 
 All requests on the client are asynchronous and will return a standard Scala `Future[T]` where T is the response type
 appropriate to your request. For example a search request will return a response of type `SearchResponse`.
