@@ -17,9 +17,11 @@ case class Band(name:String, albums:Seq[String], label:String) extends DocumentM
 And then using that class with `doc` in an index request.
 
 ```scala
+case class Band(name: String, albums: Seq[String], label: String)
 val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
 
 client.execute {
+  // the band object will be implicitly converted into a DocumentSource
   index into "music/bands" doc band
 }
 ```
@@ -38,5 +40,5 @@ This uses the Scala extension in Jackson and so supports scala collections, opti
 
 ```scala
 val anyOldObject = ... // anything that extends from AnyRef
-client.execute { index into "electronics/phones" doc ObjectSource(anyOldObject) }
+client.execute { index into "electronics/phones" doc anyOldObject }
 ```

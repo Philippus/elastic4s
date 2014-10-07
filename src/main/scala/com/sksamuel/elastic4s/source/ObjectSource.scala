@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 class ObjectSource(any: AnyRef) extends DocumentSource {
   def json: String = ObjectSource.mapper.writeValueAsString(any)
 }
+
 object ObjectSource {
   val mapper = new ObjectMapper
   mapper.registerModule(DefaultScalaModule)

@@ -217,34 +217,40 @@ custom analyzers. For more details [read about the DSL support for analyzers](gu
 
 ## Indexing
 
-To index a document we need to specify the index and type and optionally the id. We must also include at least one field.
+To index a document we need to specify the index and type and optionally we can set an id.
+If we don't include an id then elasticsearch will generate one for us.
+We must also include at least one field. Fields are specified as standard tuples.
 
 ```scala
 client.execute {
-    index into "places/cities" id "uk" fields (
-        "name" -> "London",
-        "country" -> "United Kingdom",
-        "continent" -> "Europe",
-        "status" -> "Awesome"
-    )
+  index into "places/cities" id "uk" fields (
+    "name" -> "London",
+    "country" -> "United Kingdom",
+    "continent" -> "Europe",
+    "status" -> "Awesome"
+  )
 }
 ```
 
 There are many additional options we can set such as routing, version, parent, timestamp and op type.
-See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options.
+See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options, all of
+which exist in the DSL as keywords that reflect their name in the official API.
 
 Sometimes it is useful to seperate the knowledge of the type from the indexing logic. For this we can use the
-DocumentSource or DocumentMap abstraction. A quick example.
+`DocumentSource` or `DocumentMap` abstractions. A quick example.
 
 ```scala
+case class Band(name: String, albums: Seq[String], label: String)
 val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
 
 client.execute {
+  // the band object will be implicitly converted into a DocumentSource
   index into "music/bands" doc band
 }
 ```
 
-More details on the [document traits](guide/source.md) page.
+Here Elastic4s has implicitly converted your case class into a DocumentSource and all fields would be indexed against
+the field name. You can control this at a more fine grained level if required. More details on the [document traits](guide/source.md) page.
 
 Beautiful!
 
