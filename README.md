@@ -7,8 +7,7 @@ course be used directly in Scala, is more verbose due to Java's verbose nature. 
 
 Elastic4s's DSL allows you to to construct your requests with syntatic and semantic errors manifested at compile time,
 and uses standard Scala futures to enable you to easily integrate into your existing asynchronous frameworks. The aim of
-the DSL is that requests are written in an SQL-like way, while staying true to the JSON schema used by the Elasticsearch
-REST interface.
+the DSL is that requests are written in an SQL-like way, while staying true to the Java API.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into
 Java collections. It also allows you to index documents directly without having to extract and set fields manually -
@@ -89,10 +88,9 @@ For more in depth examples keep reading.
 
 ## Syntax
 
-Here is a list of the common operations and the syntax used to create requests.
-
-For more details on each operation click through to the readme page. For options that are not yet documented, refer
-to the Elasticsearch documentation as the DSL closely mirrors the standard Java API.
+Here is a list of the common requests and the syntax used to create them. For more details on each request click
+through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation as
+the DSL closely mirrors the standard Java API / REST API.
 
 | Operation                                 | Samuel Normal Form Syntax |
 |-------------------------------------------|----------------|
@@ -127,7 +125,7 @@ Please also note [some java interoperability notes](guide/javainterop.md).
 
 ## Client
 
-A locally configured node and client can be created simply by invoking ```local``` on the client companion object:
+A locally configured node and client can be created simply by invoking `local` on the `ElasticClient` object:
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -165,22 +163,29 @@ val node = ... // node from the java API somewhere
 val client = ElasticClient.fromNode(node)
 ```
 
-
 ## Create Index
 
- To create an index that is fully dynamic we can simply use
+All documents in Elasticsearch are stored in an index. We do not need to tell Elasticsearch in advance what an index
+will look like (eg what fields it will contain) as Elasticsearch will adapt the index as more documents are added,
+but we must create at least create the index.
+
+To create an index called "places" that is fully dynamic we can simply use:
 
 ```scala
 client.execute { create index "places" }
 ```
 
-This will create an index called places. We can optionally set the number of shards and / or replicas
+We can optionally set the number of shards and / or replicas
 
 ```scala
 client.execute { create index "places" shards 3 replicas 2 }
 ```
 
-Sometimes we want to specify the properties of the types in the index. This allows us to override a fields type, the analyzer used, whether we should store that field, etc. To do this we add mappings
+Sometimes we want to specify the properties of the fields in the index in advance.
+This allows us to manually set the type of the field (where Elasticsearch might infer something else) or set the analyzer used,
+or multiple other options
+
+To do this we add mappings:
 
 ```scala
 import com.sksamuel.elastic4s.mapping.FieldType._
@@ -197,13 +202,18 @@ client.execute {
 }
 ```
 
-Then Elasticsearch is configured with those mappings for those fields only. It is still fully dynamic and other fields will be created as needed with default options.
+Then Elasticsearch is configured with those mappings for those fields only.
+It is still fully dynamic and other fields will be created as needed with default options. Only the fields mentioned
+will be "fixed".
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
 ## Analyzers
 
-Elasticsearch allows us to register (create) custom analyzers. For more details [read here](guide/analyzers.md).
+Analyzers control how Elasticsearch parses the fields for indexing. For example, you might decide that you want
+whitespace to be important, so that "band of brothers" is indexed as a single "word" rather than the default which is
+to split on whitespace. There are many advanced options available in analayzers. Elasticsearch also allows us to create
+custom analyzers. For more details [read about the DSL support for analyzers](guide/analyzers.md).
 
 ## Indexing
 
