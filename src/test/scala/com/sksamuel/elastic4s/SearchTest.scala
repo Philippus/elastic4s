@@ -16,7 +16,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
         "drummer" -> "will champion",
         "guitar" -> "johnny buckland"
       ),
-      index into "music/artists" fields (
+      index into "music/performers" fields (
         "name" -> "kate bush",
         "singer" -> "kate bush"
       ),
@@ -46,7 +46,7 @@ class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Match
     assert(0 === resp1.getHits.totalHits())
 
     val resp2 = client.execute {
-      search in "music" -> "artists" query "kate"
+      search in "music" -> "performers" query "kate"
     }.await
     assert(1 === resp2.getHits.totalHits())
   }
