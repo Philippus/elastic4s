@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.admin.{ CreateRepositoryDefinition, CreateSnapshotDefinition, DeleteSnapshotDefinition, RestoreSnapshotDefinition }
+import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
 import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse

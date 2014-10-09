@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.admin.SnapshotDsl
+import com.sksamuel.elastic4s.admin.{IndexTemplateDsl, SnapshotDsl}
 import com.sksamuel.elastic4s.mappings.MappingDsl
 import com.sksamuel.elastic4s.source.ObjectSource
 
@@ -31,7 +31,7 @@ trait ElasticDsl
     with SearchDsl
     with ScoreDsl
     with SnapshotDsl
-    with TemplateDsl
+    with IndexTemplateDsl
     with UpdateDsl
     with ValidateDsl {
 

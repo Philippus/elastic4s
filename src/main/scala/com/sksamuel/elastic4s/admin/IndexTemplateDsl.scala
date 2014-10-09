@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.ProxyClients
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder}
 import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateRequest, PutIndexTemplateRequestBuilder}

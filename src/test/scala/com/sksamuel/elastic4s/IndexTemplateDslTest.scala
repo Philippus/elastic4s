@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.admin.IndexTemplateDsl
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.FreeSpec
 import org.scalatest.mock.MockitoSugar
