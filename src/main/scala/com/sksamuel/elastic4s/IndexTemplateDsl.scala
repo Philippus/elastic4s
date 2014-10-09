@@ -9,22 +9,20 @@ import scala.collection.mutable.ListBuffer
 trait IndexTemplateDsl {
   def template = TemplateExpectsCreateOrDelete
   object TemplateExpectsCreateOrDelete {
-    def create(name: String) = new CreateIndexTemplateDefinition(name)
+    def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
+    class CreateIndexTemplateExpectsPattern(name: String) {
+      def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
+    }
     def delete(name: String) = new DeleteIndexTemplateDefinition(name)
   }
 }
 
-class CreateIndexTemplateDefinition(name: String) {
+class CreateIndexTemplateDefinition(name: String, pattern: String) {
 
   val _mappings = new ListBuffer[MappingDefinition]
-  val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, name)
+  val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, name).setTemplate(pattern)
 
   def build: PutIndexTemplateRequest = _builder.request
-
-  def pattern(pattern: String): this.type = {
-    _builder.setTemplate(pattern)
-    this
-  }
 
   def mappings(mappings: MappingDefinition*): this.type = {
     for ( mapping <- mappings ) {
