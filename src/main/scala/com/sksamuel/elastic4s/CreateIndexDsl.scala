@@ -9,11 +9,6 @@ import scala.collection.mutable
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
 
-  def index = IndexExpectsCreate
-  object IndexExpectsCreate {
-    def create(name: String) = new CreateIndexDefinition(name)
-  }
-
   def create = CreateExpectsIndex
   object CreateExpectsIndex {
     def index(name: String) = new CreateIndexDefinition(name)
