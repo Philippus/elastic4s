@@ -121,7 +121,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Delete Snapshot](guide/snapshot.md)      | `snapshot delete <name> in <repo> ...` |
 | [Restore Snapshot](guide/snapshot.md)     | `snapshot restore <name> from <repo> ...` |
 | Index Templates      | `template create <name> pattern <pattern> mappings {...}`
-                         `template delete <name>` |
+|                      | `template delete <name>` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
