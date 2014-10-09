@@ -4,7 +4,8 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.admin.{ CreateRepositoryDefinition, CreateSnapshotDefinition, DeleteSnapshotDefinition, RestoreSnapshotDefinition }
 import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
 import com.sksamuel.elastic4s.source.StringDocumentSource
-import org.elasticsearch.action.ActionListener
+import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse
+import org.elasticsearch.action.{ActionFuture, ActionListener}
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
@@ -25,6 +26,7 @@ import org.elasticsearch.action.admin.indices.optimize.{ OptimizeRequest, Optimi
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse
+import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateResponse
 import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryRequest, ValidateQueryResponse }
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.count.{ CountRequest, CountResponse }
@@ -182,6 +184,14 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(p: PercolateDefinition): Future[PercolateResponse] = {
     injectFuture[PercolateResponse](client.percolate(p.build, _))
+  }
+
+  def execute(req: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
+    injectFuture[PutIndexTemplateResponse](client.admin.indices.putTemplate(req.build, _))
+  }
+
+  def execute(req: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
+    injectFuture[DeleteIndexTemplateResponse](client.admin.indices.deleteTemplate(req.build, _))
   }
 
   @deprecated("Use bulk dsl with execute method", "1.3")

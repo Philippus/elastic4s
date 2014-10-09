@@ -1,32 +1,40 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeIndexesOptions, DefinitionAttributeIgnoreConflicts}
-import com.sksamuel.elastic4s.mappings.TypedFieldDefinition
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequestBuilder, PutMappingRequest}
-import org.elasticsearch.common.xcontent.XContentFactory
+import com.sksamuel.elastic4s.mappings.MappingDefinition
+import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder}
+import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateRequest, PutIndexTemplateRequestBuilder}
+
+import scala.collection.mutable.ListBuffer
 
 trait IndexTemplateDsl {
-
+  def template = TemplateExpectsCreateOrDelete
+  object TemplateExpectsCreateOrDelete {
+    def create(name: String) = new CreateIndexTemplateDefinition(name)
+    def delete(name: String) = new DeleteIndexTemplateDefinition(name)
+  }
 }
 
-class PutMappingDefinition(indexes: IndexesTypes)
-  extends DefinitionAttributeIgnoreConflicts
-  with DefinitionAttributeIndexesOptions {
+class CreateIndexTemplateDefinition(name: String) {
 
-  def build: PutMappingRequest = _builder.request
+  val _mappings = new ListBuffer[MappingDefinition]
+  val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, name)
 
-  val _builder = new PutMappingRequestBuilder(ProxyClients.indices)
-    .setIndices(indexes.index)
-    .setType(indexes.typ.getOrElse("Must specify type for put mapping"))
+  def build: PutIndexTemplateRequest = _builder.request
 
-  def add(fields: TypedFieldDefinition*): this.type = {
-    val xcontent = XContentFactory.jsonBuilder().startObject()
-    xcontent.startObject("properties")
-    for (field <- fields) {
-      field.build(xcontent)
-    }
-    xcontent.endObject()
-    _builder.setSource(xcontent)
+  def pattern(pattern: String): this.type = {
+    _builder.setTemplate(pattern)
     this
   }
+
+  def mappings(mappings: MappingDefinition*): this.type = {
+    for ( mapping <- mappings ) {
+      _builder.addMapping("", mapping.build)
+    }
+    this
+  }
+}
+
+class DeleteIndexTemplateDefinition(name: String) {
+  def build: DeleteIndexTemplateRequest = _builder.request
+  val _builder = new DeleteIndexTemplateRequestBuilder(ProxyClients.indices, name)
 }

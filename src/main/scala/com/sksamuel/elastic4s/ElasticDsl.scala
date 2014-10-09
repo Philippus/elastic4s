@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin.SnapshotDsl
+import com.sksamuel.elastic4s.mappings.MappingDsl
 import com.sksamuel.elastic4s.source.ObjectSource
 
-import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
-import com.sksamuel.elastic4s.mappings.MappingDsl
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
@@ -31,6 +31,7 @@ trait ElasticDsl
     with SearchDsl
     with ScoreDsl
     with SnapshotDsl
+    with TemplateDsl
     with UpdateDsl
     with ValidateDsl {
 
