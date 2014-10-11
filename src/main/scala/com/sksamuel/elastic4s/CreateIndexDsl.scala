@@ -40,6 +40,7 @@ trait CreateIndexDsl {
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
 
   class CreateIndexDefinition(name: String) {
+    require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
     val _mappings = new mutable.ListBuffer[MappingDefinition]
     val _settings = new IndexSettings
