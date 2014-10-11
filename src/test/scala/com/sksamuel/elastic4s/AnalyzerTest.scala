@@ -13,10 +13,15 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
         "stop" typed StringType analyzer StopAnalyzer,
-        "pattern" typed StringType analyzer CustomAnalyzer("pattern1")
+        "standard1" typed StringType analyzer CustomAnalyzer("standard1"),
+        "simple1" typed StringType analyzer SimpleAnalyzer,
+        "pattern" typed StringType analyzer CustomAnalyzer("pattern1"),
+        "ngram1" typed StringType analyzer CustomAnalyzer("ngram1")
         )
     } analysis (
-      PatternAnalyzerDefinition("pattern1", "\\d", false)
+      PatternAnalyzerDefinition("pattern1", "\\d", false),
+      CustomAnalyzerDefinition("ngram1", NGramTokenizer),
+      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
       )
   }.await
 
@@ -24,7 +29,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     index into "analyzer/test" fields(
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
-      "whitespace" -> "and and and",
+      "whitespace" -> "and and and qwerty uiop",
+      "standard1" -> "aaaaaaaaaaa",
+      "simple" -> "LOWER-CASED",
+      "ngram1" -> "starcraft",
       "stop" -> "and and and",
       "pattern" -> "abc123def"
       )
@@ -41,11 +49,28 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     }
   }
 
+  "NGramTokenizer" - {
+    "should index n-combinations" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("ngram1" -> "cr")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
   "SnowballAnalyzer" - {
     "should stem words" in {
       client.execute {
         search in "analyzer/test" query termQuery("snowball" -> "sky")
       }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+
+  "StandardAnalyzer" - {
+    "should honour max token length" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("standard1" -> "aaaaaaaaaaa")
+      }.await.getHits.getTotalHits shouldBe 0
     }
   }
 
@@ -65,10 +90,23 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     }
   }
 
+  "SimpleAnalyzer" - {
+    "should split on non-letter" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("simple" -> "lower")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
   "WhitespaceAnalyzer" - {
     "should include stop words" in {
       client.execute {
         search in "analyzer/test" query termQuery("whitespace" -> "and")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+    "should split on whitespace" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("whitespace" -> "uiop")
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
