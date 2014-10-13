@@ -54,6 +54,9 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       client.execute {
         search in "analyzer/test" query termQuery("ngram1" -> "cr")
       }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("ngram1" -> "craf")
+      }.await.getHits.getTotalHits shouldBe 0
     }
   }
 
