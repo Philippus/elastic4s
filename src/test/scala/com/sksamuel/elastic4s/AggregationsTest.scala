@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import org.elasticsearch.search.aggregations.bucket.range.InternalRange
+import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.scalatest.{FreeSpec, Matchers}
@@ -27,7 +29,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       index into "aggregations/breakingbad" fields("name" -> "huell", "job" -> "heavy", "age" -> 43),
       index into "aggregations/breakingbad" fields("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
       index into "aggregations/breakingbad" fields("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
-      index into "aggregations/breakingbad" fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 16)
+      index into "aggregations/breakingbad" fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
     )
   ).await
 
@@ -74,7 +76,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       }.await
       resp.getHits.getTotalHits shouldBe 10
       val agg = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalAvg]
-      agg.getValue shouldBe 44.4
+      agg.getValue shouldBe 45.4
     }
     "should only include matching documents in the query" in {
       val resp = client.execute {
@@ -86,6 +88,23 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       resp.getHits.getTotalHits shouldBe 3
       val agg = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalAvg]
       agg.getValue shouldBe 55
+    }
+  }
+
+  "range aggregation" - {
+    "should range by field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation range "agg1" field "age" ranges(20.0 -> 30.0, 30.0 -> 40.0, 40.0 -> 50.0, 50.0 -> 60.0)
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalRange[Bucket]]
+      aggs.getBuckets.size shouldBe 4
+      aggs.getBucketByKey("20.0-30.0").getDocCount shouldBe 1
+      aggs.getBucketByKey("30.0-40.0").getDocCount shouldBe 1
+      aggs.getBucketByKey("40.0-50.0").getDocCount shouldBe 3
+      aggs.getBucketByKey("50.0-60.0").getDocCount shouldBe 4
     }
   }
 }

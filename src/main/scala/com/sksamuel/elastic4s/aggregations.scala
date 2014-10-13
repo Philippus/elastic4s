@@ -199,6 +199,12 @@ class RangeAggregationDefinition(name: String) extends AggregationDefinition[Ran
     this
   }
 
+  def ranges(ranges: (Double, Double)*): this.type = {
+    for ( range <- ranges )
+      builder.addRange(range._1, range._2)
+    this
+  }
+
   def range(key: String, from: Double, to: Double): RangeAggregationDefinition = {
     builder.addRange(key, from, to)
     this
