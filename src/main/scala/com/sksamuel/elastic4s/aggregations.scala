@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
+import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode
 import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
@@ -9,6 +10,7 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
+import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
@@ -130,6 +132,26 @@ class TermAggregationDefinition(name: String) extends AggregationDefinition[Term
 
   def size(size: Int): TermAggregationDefinition = {
     builder.size(size)
+    this
+  }
+
+  def minDocCount(minDocCount: Int): this.type = {
+    builder.minDocCount(minDocCount)
+    this
+  }
+
+  def showTermDocCountError(showTermDocCountError: Boolean): this.type = {
+    builder.showTermDocCountError(showTermDocCountError)
+    this
+  }
+
+  def collectMode(mode: SubAggCollectionMode): this.type = {
+    builder.collectMode(mode)
+    this
+  }
+
+  def valueType(valueType: ValueType): this.type = {
+    builder.valueType(valueType)
     this
   }
 
