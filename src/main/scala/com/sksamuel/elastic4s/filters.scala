@@ -75,8 +75,11 @@ trait FilterDsl {
 
   def bool(block: => BoolFilterDefinition): FilterDefinition = block
   def must(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().must(queries: _*)
+  def must(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().must(queries)
   def should(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().should(queries: _*)
+  def should(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().should(queries)
   def not(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().not(queries: _*)
+  def not(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().not(queries)
 }
 
 trait FilterDefinition {
@@ -89,11 +92,23 @@ class BoolFilterDefinition extends FilterDefinition {
     filters.foreach(builder must _.builder)
     this
   }
+  def must(filters: Iterable[FilterDefinition]) = {
+    filters.foreach(builder must _.builder)
+    this
+  }
   def should(filters: FilterDefinition*) = {
     filters.foreach(builder should _.builder)
     this
   }
+  def should(filters: Iterable[FilterDefinition]) = {
+    filters.foreach(builder should _.builder)
+    this
+  }
   def not(filters: FilterDefinition*) = {
+    filters.foreach(builder mustNot _.builder)
+    this
+  }
+  def not(filters: Iterable[FilterDefinition]) = {
     filters.foreach(builder mustNot _.builder)
     this
   }

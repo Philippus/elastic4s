@@ -133,8 +133,11 @@ trait QueryDsl {
 
   def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
   def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
+  def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
+  def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
+  def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
 
 class BoolQueryDefinition extends QueryDefinition {
@@ -151,11 +154,23 @@ class BoolQueryDefinition extends QueryDefinition {
     queries.foreach(builder must _.builder)
     this
   }
+  def must(queries: Iterable[QueryDefinition]) = {
+    queries.foreach(builder must _.builder)
+    this
+  }
   def not(queries: QueryDefinition*) = {
     queries.foreach(builder mustNot _.builder)
     this
   }
+  def not(queries: Iterable[QueryDefinition]) = {
+    queries.foreach(builder mustNot _.builder)
+    this
+  }
   def should(queries: QueryDefinition*) = {
+    queries.foreach(builder should _.builder)
+    this
+  }
+  def should(queries: Iterable[QueryDefinition]) = {
     queries.foreach(builder should _.builder)
     this
   }
