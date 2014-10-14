@@ -6,6 +6,9 @@ import org.elasticsearch.search.aggregations.bucket.range.InternalRange
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
+import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
+import org.elasticsearch.search.aggregations.metrics.max.InternalMax
+import org.elasticsearch.search.aggregations.metrics.min.InternalMin
 import org.scalatest.{FreeSpec, Matchers}
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
@@ -88,6 +91,45 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       resp.getHits.getTotalHits shouldBe 3
       val agg = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalAvg]
       agg.getValue shouldBe 55
+    }
+  }
+
+  "cardinality aggregation" - {
+    "should count distinct values" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation cardinality "agg1" field "job"
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalCardinality]
+      aggs.getValue shouldBe 5
+    }
+  }
+
+  "max aggregation" - {
+    "should count max value for field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation max "agg1" field "age"
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalMax]
+      aggs.getValue shouldBe 60
+    }
+  }
+
+  "min aggregation" - {
+    "should count min value for field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation min "agg1" field "age"
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalMin]
+      aggs.getValue shouldBe 26
     }
   }
 
