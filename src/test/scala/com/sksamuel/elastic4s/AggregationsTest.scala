@@ -9,6 +9,8 @@ import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
 import org.elasticsearch.search.aggregations.metrics.max.InternalMax
 import org.elasticsearch.search.aggregations.metrics.min.InternalMin
+import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
+import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
 import org.scalatest.{FreeSpec, Matchers}
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
@@ -130,6 +132,32 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       resp.getHits.getTotalHits shouldBe 10
       val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalMin]
       aggs.getValue shouldBe 26
+    }
+  }
+
+  "sum aggregation" - {
+    "should sum values for field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation sum "agg1" field "age"
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalSum]
+      aggs.getValue shouldBe 454.0
+    }
+  }
+
+  "value count aggregation" - {
+    "should sum values for field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation count "agg1" field "age"
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalValueCount]
+      aggs.getValue shouldBe 10
     }
   }
 
