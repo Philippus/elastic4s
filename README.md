@@ -4,18 +4,15 @@ elastic4s - Elasticsearch Scala Client
 [![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
 [![Coverage Status](https://coveralls.io/repos/sksamuel/elastic4s/badge.png?branch=master)](https://coveralls.io/r/sksamuel/elastic4s?branch=master)
 
-Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of leveraging Scala to
-create a concise, idiomatic, reactive, type safe DSL to write Elasticsearch requests. The Java client, which can of
-course be used directly in Scala, is more verbose due to Java's verbose nature. Scala lets us do better.
+Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java's nature. Scala lets us do better.
 
-Elastic4s's DSL allows you to to construct your requests with syntatic and semantic errors manifested at compile time,
-and uses standard Scala futures to enable you to easily integrate into your existing asynchronous frameworks. The aim of
+Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time,
+and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of
 the DSL is that requests are written in an SQL-like way, while staying true to the Java API.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into
 Java collections. It also allows you to index documents directly without having to extract and set fields manually -
-eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature Elastic4s is also a
-good way to learn the options/commands available for any operation, as your IDE can use the types to show you what methods are available.
+eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
 #### Key points
 
