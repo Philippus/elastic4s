@@ -16,7 +16,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder 
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
-import org.elasticsearch.search.aggregations.{ AbstractAggregationBuilder, AggregationBuilder, AggregationBuilders, metrics }
+import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Nicolas Yzet */
@@ -54,7 +54,24 @@ trait AbstractAggregationDefinition {
   def builder: AbstractAggregationBuilder
 }
 
-trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]] extends AbstractAggregationDefinition {
+abstract class AggregationResult[T <: AbstractAggregationDefinition] {
+  type Result <: Aggregation
+}
+
+object AggregationResults {
+  implicit object TermsAggregationResult extends AggregationResult[TermAggregationDefinition] {
+    override type Result = org.elasticsearch.search.aggregations.bucket.terms.Terms
+  }
+  implicit object DateHistogramAggregationResult extends AggregationResult[DateHistogramAggregation] {
+    override type Result = org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
+  }
+  implicit object CountAggregationResult extends AggregationResult[ValueCountAggregationDefinition] {
+    override type Result = org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount
+  }
+}
+
+trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]]
+  extends AbstractAggregationDefinition {
   val aggregationBuilder: B
 
   def builder = aggregationBuilder
