@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
-import org.elasticsearch.search.aggregations.bucket.significant.SignificantStringTerms
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
@@ -27,13 +26,13 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute(
     bulk(
-      index into "aggregations/breakingbad" fields("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50),
-      index into "aggregations/breakingbad" fields("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55),
+      index into "aggregations/breakingbad" fields("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50, "actor" -> "bryan"),
+      index into "aggregations/breakingbad" fields("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55, "actor" -> "dean"),
       index into "aggregations/breakingbad" fields("name" -> "jesse pinkman", "job" -> "meth sidekick", "age" -> 30),
       index into "aggregations/breakingbad" fields("name" -> "gus fring", "job" -> "meth kingpin", "age" -> 60),
-      index into "aggregations/breakingbad" fields("name" -> "steven gomez", "job" -> "dea agent", "age" -> 50, "status" -> "dead"),
+      index into "aggregations/breakingbad" fields("name" -> "steven gomez", "job" -> "dea agent", "age" -> 50),
       index into "aggregations/breakingbad" fields("name" -> "saul goodman", "job" -> "lawyer", "age" -> 55),
-      index into "aggregations/breakingbad" fields("name" -> "huell", "job" -> "heavy", "age" -> 43, "status" -> "alive"),
+      index into "aggregations/breakingbad" fields("name" -> "Huell Babineaux", "job" -> "heavy", "age" -> 43, "actor" -> "lavell"),
       index into "aggregations/breakingbad" fields("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
       index into "aggregations/breakingbad" fields("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
       index into "aggregations/breakingbad" fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
@@ -115,12 +114,12 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
     "should return documents missing a value" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
-          aggregation missing "agg1" field "status"
+          aggregation missing "agg1" field "actor"
         }
       }.await
       resp.getHits.getTotalHits shouldBe 10
       val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalMissing]
-      aggs.getDocCount shouldBe 8
+      aggs.getDocCount shouldBe 7
     }
   }
 
