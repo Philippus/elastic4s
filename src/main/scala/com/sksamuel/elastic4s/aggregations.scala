@@ -8,6 +8,7 @@ import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
+import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
@@ -24,13 +25,14 @@ trait AggregationDsl {
     def terms(name: String) = new TermAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
     def daterange(name: String) = new DateRangeAggregation(name)
-    def histogram(name: String) = new HistogramAggregation(name)
     def datehistogram(name: String) = new DateHistogramAggregation(name)
     def filter(name: String) = new FilterAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def min(name: String) = new MinAggregationDefinition(name)
+    def global(name: String) = new GlobalAggregationDefinition(name)
+    def histogram(name: String) = new HistogramAggregation(name)
     def max(name: String) = new MaxAggregationDefinition(name)
+    def min(name: String) = new MinAggregationDefinition(name)
     def sum(name: String) = new SumAggregationDefinition(name)
     def avg(name: String) = new AvgAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
@@ -447,6 +449,10 @@ class ValueCountAggregationDefinition(name: String) extends ValuesSourceMetricsA
 
 class CardinalityAggregationDefinition(name: String) extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
   val aggregationBuilder = AggregationBuilders.cardinality(name)
+}
+
+class GlobalAggregationDefinition(name: String) extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
+  val aggregationBuilder = AggregationBuilders.global(name)
 }
 
 class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefinition {
