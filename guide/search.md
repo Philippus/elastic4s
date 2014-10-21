@@ -81,3 +81,29 @@ We can specify multiple includes/excludes and they recognize regular expressions
 docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-source-filtering.html)
 
 Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
+
+#### Script Fields
+
+We can specify the values of named fields a search query returns throught the use of the `scriptfields` method:
+
+```scala
+search in "sesportfolio" types "positions" query matchall size 256 sort {
+        by field "date" order SortOrder.ASC
+      } scriptfields(
+          "balance" script "portfolioscript" lang "native" params Map("fieldName" -> "rate_of_return"),
+          field name "date" script "doc['date'].value" lang "groovy"
+        )
+```
+
+There are two valid forms of scriptfield DSL expressions:
+
+  ```
+      <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
+  ```
+or
+
+  ```
+      field name <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
+  ```
+
+See the [script fields](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-script-fields.html) section of the elasticsearch guide for greater detail of the use of script fields in searches.
