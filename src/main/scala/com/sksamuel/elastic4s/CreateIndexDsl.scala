@@ -9,8 +9,7 @@ import scala.collection.mutable
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
 
-  def create = CreateExpectsIndex
-  object CreateExpectsIndex {
+  case object create {
     def index(name: String) = new CreateIndexDefinition(name)
   }
 

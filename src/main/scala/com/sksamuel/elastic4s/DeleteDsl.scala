@@ -10,10 +10,7 @@ import org.elasticsearch.index.VersionType
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-  def delete: DeleteExpectsIdOrFromOrIndex = new DeleteExpectsIdOrFromOrIndex
-  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-
-  class DeleteExpectsIdOrFromOrIndex {
+  case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
     def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
     def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
@@ -21,6 +18,7 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
   }
+  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
     def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)

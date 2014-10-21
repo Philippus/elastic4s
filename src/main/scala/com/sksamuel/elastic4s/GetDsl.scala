@@ -6,12 +6,12 @@ import org.elasticsearch.search.fetch.source.FetchSourceContext
 /** @author Stephen Samuel */
 trait GetDsl extends IndexesTypesDsl {
 
-  def get = new GetExpectsId
-  def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
-  implicit def any2get(id: Any) = new GetWithIdExpectsFrom(id.toString)
-  class GetExpectsId {
+  case object get {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
   }
+  def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
+  implicit def any2get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
+
   class GetWithIdExpectsFrom(id: String) {
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
     def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))

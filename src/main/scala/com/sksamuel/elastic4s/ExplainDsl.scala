@@ -7,8 +7,7 @@ import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreferen
 /** @author Stephen Samuel */
 trait ExplainDsl {
 
-  def explain = new ExplainExpectsId
-  class ExplainExpectsId {
+  case object explain {
     def id(id: Any) = new ExplainExpectsIndex(id)
   }
   class ExplainExpectsIndex(id: Any) {

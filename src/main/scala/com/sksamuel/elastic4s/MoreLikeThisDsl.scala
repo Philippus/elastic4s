@@ -5,9 +5,8 @@ import org.elasticsearch.client.Requests
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
 
-  def mlt = new MltExpectingId
-  def morelike = new MltExpectingId
-  class MltExpectingId {
+  def morelike = mlt
+  case object mlt {
     def id(id: Any) = new MltExpectsIndex(id.toString)
   }
 

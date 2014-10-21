@@ -7,8 +7,8 @@ import org.elasticsearch.common.xcontent.XContentFactory
 
 /** @author Stephen Samuel */
 trait PutMappingDsl {
-  def put = new PutExpectsMapping
-  class PutExpectsMapping {
+
+  case object put {
     def mapping(indexes: IndexesTypes) = new PutMappingDefinition(indexes)
   }
 }

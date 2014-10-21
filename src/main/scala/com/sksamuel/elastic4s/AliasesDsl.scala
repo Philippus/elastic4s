@@ -7,14 +7,12 @@ import org.elasticsearch.index.query.FilterBuilder
 
 trait AliasesDsl {
 
-  def aliases = AliasesExpectsAction
-  def aliases(aliasMutations: MutateAliasDefinition*) = new IndicesAliasesRequestDefinition(aliasMutations: _*)
-
-  object AliasesExpectsAction {
+  case object aliases {
     def add(alias: String) = new AddAliasExpectsIndex(alias)
     def remove(alias: String) = new RemoveAliasExpectsIndex(alias)
     def get(aliases: String*) = new GetAliasDefinition(aliases)
   }
+  def aliases(aliasMutations: MutateAliasDefinition*) = new IndicesAliasesRequestDefinition(aliasMutations: _*)
 
   class AddAliasExpectsIndex(alias: String) {
     def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))

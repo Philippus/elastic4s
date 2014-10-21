@@ -5,10 +5,9 @@ import org.elasticsearch.search.highlight.HighlightBuilder
 /** @author Stephen Samuel */
 trait HighlightDsl {
 
-  implicit def string2highlightfield(name: String) = new HighlightDefinition(name)
+  implicit def string2highlightfield(name: String): HighlightDefinition = new HighlightDefinition(name)
 
-  def highlight = new HighlightExpectsField
-  class HighlightExpectsField {
+  case object highlight {
     def field(name: String) = new HighlightDefinition(name)
   }
   def highlight(field: String) = new HighlightDefinition(field)

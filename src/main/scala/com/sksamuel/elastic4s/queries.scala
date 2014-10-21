@@ -10,8 +10,8 @@ import org.elasticsearch.common.unit.Fuzziness
 
 trait QueryDsl {
 
-  implicit def string2query(string: String) = new SimpleStringQueryDefinition(string)
-  implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
+  implicit def string2query(string: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(string)
+  implicit def tuple2query(kv: (String, String)): TermQueryDefinition = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
 

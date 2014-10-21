@@ -10,11 +10,10 @@ import org.elasticsearch.script.ScriptService.ScriptType
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
 
-  def update = new UpdateExpectsId
-  def update(id: Any) = new UpdateExpectsIndex(id.toString)
-  class UpdateExpectsId {
+  case object update {
     def id(id: Any) = new UpdateExpectsIndex(id.toString)
   }
+  def update(id: Any) = new UpdateExpectsIndex(id.toString)
   class UpdateExpectsIndex(id: String) {
     def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
   }
