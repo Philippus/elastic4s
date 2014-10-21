@@ -24,12 +24,23 @@ trait CountDsl {
 
     def build = _builder.request()
 
-    def routing(routing: String): CountDefinition = {
+    def routing(routing: String): this.type = {
       _builder.setRouting(routing)
       this
     }
-    def minScore(minScore: Double): CountDefinition = {
+
+    def minScore(minScore: Double): this.type = {
       _builder.setMinScore(minScore.toFloat)
+      this
+    }
+
+    def preference(pref: String): this.type = {
+      _builder.setPreference(pref)
+      this
+    }
+
+    def terminateAfter(termAfter: Int): this.type = {
+      _builder.setTerminateAfter(termAfter)
       this
     }
 
