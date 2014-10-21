@@ -84,26 +84,20 @@ Other options provided are highlighting, suggestions, filters, scrolling, index 
 
 #### Script Fields
 
-We can specify the values of named fields a search query returns throught the use of the `scriptfields` method:
+We can use script fields to evaluate a field for each hit. Script fields can even operate on fields that are not stored. Script fields can include parameters which can be accessed when the script is evaluted.
+
+We can specify the script fields in a search query through the use of the `scriptfields` method:
 
 ```scala
-search in "sesportfolio" types "positions" query matchall size 256 sort {
-        by field "date" order SortOrder.ASC
-      } scriptfields(
-          "balance" script "portfolioscript" lang "native" params Map("fieldName" -> "rate_of_return"),
-          field name "date" script "doc['date'].value" lang "groovy"
-        )
+search in "tubestops" query "wimbledon" scriptfields (
+  script field "fare_cost" script "doc['zone'] * fare_per_zone" params Map("fare_per_zone" -> 3.00)
+)
 ```
 
-There are two valid forms of scriptfield DSL expressions:
+The general form of scriptfield DSL expressions is:
 
-  ```
-      <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-  ```
-or
-
-  ```
-      field name <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-  ```
+```
+script field <field_name> script <script> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
+```
 
 See the [script fields](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-script-fields.html) section of the elasticsearch guide for greater detail of the use of script fields in searches.
