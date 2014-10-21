@@ -311,7 +311,8 @@ final class StringFieldDefinition(name: String)
     with AttributePostingsFormat
     with AttributeDocValuesFormat
     with AttributeSimilarity
-    with AttributeCopyTo {
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -334,6 +335,7 @@ final class StringFieldDefinition(name: String)
     super[AttributeStore].insert(source)
     super[AttributeTermVector].insert(source)
     super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
@@ -350,7 +352,8 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
     with AttributePrecisionStep
     with AttributeStore
     with AttributeDocValuesFormat
-    with AttributeCopyTo {
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -366,6 +369,7 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
     super[AttributePrecisionStep].insert(source)
     super[AttributeStore].insert(source)
     super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
@@ -390,7 +394,8 @@ final class DateFieldDefinition(name: String)
     with AttributePrecisionStep
     with AttributeStore
     with AttributeDocValuesFormat
-    with AttributeCopyTo {
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -407,6 +412,7 @@ final class DateFieldDefinition(name: String)
     super[AttributePrecisionStep].insert(source)
     super[AttributeStore].insert(source)
     super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
@@ -421,7 +427,8 @@ final class BooleanFieldDefinition(name: String)
     with AttributeIncludeInAll
     with AttributePostingsFormat
     with AttributeDocValuesFormat
-    with AttributeCopyTo {
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -435,6 +442,7 @@ final class BooleanFieldDefinition(name: String)
     super[AttributePostingsFormat].insert(source)
     super[AttributeStore].insert(source)
     super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
@@ -510,7 +518,8 @@ final class IpFieldDefinition(name: String)
     with AttributeBoost
     with AttributeNullValue[String]
     with AttributeIncludeInAll
-    with AttributeCopyTo {
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -523,6 +532,7 @@ final class IpFieldDefinition(name: String)
     super[AttributePrecisionStep].insert(source)
     super[AttributeStore].insert(source)
     super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
