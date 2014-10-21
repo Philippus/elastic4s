@@ -7,6 +7,7 @@ import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuil
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
 import org.elasticsearch.search.aggregations.bucket.missing.MissingBuilder
+import org.elasticsearch.search.aggregations.bucket.nested.NestedBuilder
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
@@ -41,6 +42,7 @@ trait AggregationDsl {
     def max(name: String) = new MaxAggregationDefinition(name)
     def min(name: String) = new MinAggregationDefinition(name)
     def missing(name: String) = new MissingAggregationDefinition(name)
+    def nested(name: String) = new NestedAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
@@ -568,4 +570,13 @@ class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefi
     this
   }
 
+}
+
+class NestedAggregationDefinition(name: String) extends AggregationDefinition[NestedAggregationDefinition, NestedBuilder] {
+  val aggregationBuilder = AggregationBuilders.nested(name)
+
+  def path(path: String): NestedAggregationDefinition = {
+    builder.path(path)
+    this
+  }
 }
