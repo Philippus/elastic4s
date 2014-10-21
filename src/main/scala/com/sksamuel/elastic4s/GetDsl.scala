@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
+import org.elasticsearch.index.VersionType
 import org.elasticsearch.search.fetch.source.FetchSourceContext
 
 /** @author Stephen Samuel */
@@ -23,26 +24,6 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
   private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
   def build = _builder
 
-  def routing(r: String) = {
-    _builder.routing(r)
-    this
-  }
-
-  def parent(p: String) = {
-    _builder.parent(p)
-    this
-  }
-
-  def realtime(r: Boolean) = {
-    _builder.realtime(r)
-    this
-  }
-
-  def fields(fields: String*) = {
-    _builder.fields(fields: _*)
-    this
-  }
-
   def fetchSourceContext(context: Boolean) = {
     _builder.fetchSourceContext(new FetchSourceContext(context))
     this
@@ -53,9 +34,51 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     this
   }
 
+  def fields(fields: String*) = {
+    _builder.fields(fields: _*)
+    this
+  }
+
+  def parent(p: String) = {
+    _builder.parent(p)
+    this
+  }
+
+  def ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields: Boolean) = {
+    _builder.ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields)
+    this
+  }
+
+  def version(version: Long) = {
+    _builder.version(version)
+    this
+  }
+
+  def versionType(versionType: VersionType) = {
+    _builder.versionType(versionType)
+    this
+  }
+
   def preference(pref: Preference): GetDefinition = preference(pref.elastic)
   def preference(pref: String): GetDefinition = {
     _builder.preference(pref)
     this
   }
+
+  def realtime(r: Boolean) = {
+    _builder.realtime(r)
+    this
+  }
+
+  def refresh(refresh: Boolean) = {
+    _builder.refresh(refresh)
+    this
+  }
+
+  def routing(r: String) = {
+    _builder.routing(r)
+    this
+  }
+
+
 }
