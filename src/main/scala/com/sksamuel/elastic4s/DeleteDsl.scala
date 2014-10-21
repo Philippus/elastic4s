@@ -54,12 +54,16 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       builder.`type`(_type)
       this
     }
+    def parent(parent: String): DeleteByIdDefinition = {
+      builder.parent(parent)
+      this
+    }
     def routing(routing: String): DeleteByIdDefinition = {
       builder.routing(routing)
       this
     }
-    def parent(parent: String): DeleteByIdDefinition = {
-      builder.parent(parent)
+    def refresh(refresh: Boolean): DeleteByIdDefinition = {
+      builder.refresh(refresh)
       this
     }
     def version(version: Int): DeleteByIdDefinition = {
@@ -68,10 +72,6 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     }
     def versionType(versionType: VersionType): DeleteByIdDefinition = {
       builder.versionType(versionType)
-      this
-    }
-    def refresh(refresh: Boolean): DeleteByIdDefinition = {
-      builder.refresh(refresh)
       this
     }
     def build = builder

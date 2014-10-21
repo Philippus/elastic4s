@@ -16,16 +16,20 @@ trait OptimizeDsl {
     private val builder = Requests.optimizeRequest(indexes: _*)
     def build = builder
 
-    def maxSegments(maxSegments: Int): OptimizeDefinition = {
-      builder.maxNumSegments(maxSegments)
-      this
-    }
     def flush(flush: Boolean): OptimizeDefinition = {
       builder.flush(flush)
       this
     }
+    def maxSegments(maxSegments: Int): OptimizeDefinition = {
+      builder.maxNumSegments(maxSegments)
+      this
+    }
     def onlyExpungeDeletes(onlyExpungeDeletes: Boolean): OptimizeDefinition = {
       builder.onlyExpungeDeletes(onlyExpungeDeletes)
+      this
+    }
+    def force(force: Boolean): OptimizeDefinition = {
+      builder.force(force)
       this
     }
     def waitForMerge(waitForMerge: Boolean): OptimizeDefinition = {
