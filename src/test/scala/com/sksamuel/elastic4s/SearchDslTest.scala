@@ -282,7 +282,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for terms filter" in {
     val req = search in "music" types "bands" filter {
-      termsFilter("singer", "chris", "martin") cacheKey "band-singers" name "my-filter" execution ("fielddata")
+      termsFilter("singer", "chris", "martin") cacheKey "band-singers" name "my-filter" execution "fielddata"
     } preference Preference.Shards("a")
     req._builder.toString should matchJsonResource("/json/search/search_terms_filter.json")
   }
@@ -399,7 +399,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for type range filter" in {
     val req = search in "music" types "bands" filter {
-      rangeFilter("released") cache true cacheKey "key" includeLower true includeUpper true gte "2010-01-01" lte "2012-12-12" execution ("fielddata")
+      rangeFilter("released") cache true cacheKey "key" includeLower true includeUpper true gte "2010-01-01" lte "2012-12-12" execution "fielddata"
     } preference new Shards("5", "7")
     req._builder.toString should matchJsonResource("/json/search/search_range_filter.json")
   }
@@ -646,7 +646,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for range facet" in {
     val req = search in "music" types "bands" facets {
-      facet range "year" field "years" range (100 -> 160) to (100) from (160)
+      facet range "year" field "years" range (100 -> 160) to 100 from 160
     }
     req._builder.toString should matchJsonResource("/json/search/search_facets_range.json")
   }
@@ -737,7 +737,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for top hits aggregation" in {
     val req = search in "music" types "bands" aggs {
       aggregation terms "top-tags" field "tags" size 3 order Terms.Order.count(false) aggregations (
-        aggregation topHits ("top_tag_hits") size 1 sort { by field "last_activity_date" order SortOrder.DESC } fetchSource (Array("title"), Array.empty)
+        aggregation topHits "top_tag_hits" size 1 sort { by field "last_activity_date" order SortOrder.DESC } fetchSource (Array("title"), Array.empty)
       )
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_top_hits.json")
@@ -782,7 +782,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for sum aggregation" in {
     val req = search in "school" types "student" aggs {
-      aggregation sum "grades_sum" field "grade" script "doc['grade'].value" lang "lua" params (Map("classsize" -> 30, "room" -> "101A"))
+      aggregation sum "grades_sum" field "grade" script "doc['grade'].value" lang "lua" params Map("classsize" -> 30, "room" -> "101A")
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_sum.json")
   }
@@ -868,8 +868,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       search in "sesportfolio" types "positions" query matchall size 256 sort {
         by field "date" order SortOrder.ASC
       } scriptfields (
-        "balance" script "portfolioscript" lang "native" params Map("fieldName" -> "rate_of_return"),
-        field name "date" script "doc['date'].value" lang "groovy"
+        script field "balance" script "portfolioscript" lang "native" params Map("fieldName" -> "rate_of_return"),
+        script field "date" script "doc['date'].value" lang "groovy"
       )
     req._builder.toString should matchJsonResource("/json/search/search_script_field_poc.json")
   }
@@ -939,7 +939,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       or(
         termFilter("singer", "chris"),
         termFilter("singer", "sammy")
-      ) cache (true) cacheKey "chris-or-sammy" name "my-filter"
+      ) cache true cacheKey "chris-or-sammy" name "my-filter"
 
     }
     req._builder.toString should matchJsonResource("/json/search/search_or_filter.json")
@@ -950,7 +950,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       and(
         termFilter("singer", "chris"),
         termFilter("singer", "sammy")
-      ) cache (true) cacheKey "chris-and-sammy" name "my-filter"
+      ) cache true cacheKey "chris-and-sammy" name "my-filter"
 
     }
     req._builder.toString should matchJsonResource("/json/search/search_and_filter.json")

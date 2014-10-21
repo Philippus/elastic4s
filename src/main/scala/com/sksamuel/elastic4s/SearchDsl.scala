@@ -2,8 +2,9 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
+import org.elasticsearch.search.sort.SortBuilder
+
 import scala.collection.JavaConversions._
 
 /** @author Stephen Samuel */
@@ -17,11 +18,10 @@ trait SearchDsl
     with SuggestionDsl
     with IndexesTypesDsl {
 
-  def select: SearchExpectsIndex = search
+  def select = search
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
-  def search: SearchExpectsIndex = new SearchExpectsIndex
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
-  class SearchExpectsIndex {
+  case object search {
     def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
     def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
     def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
@@ -64,43 +64,27 @@ trait SearchDsl
     }
   }
 
-  /** The following three case classes guarantee DSL syntax discipline while specifying 'script_fields' clause in a search specification
-    *
-    * The script field DSL grammar is script_field ::= field name <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-    *
-    * See the definition of the [[field]] method below
-    */
-  case class ExpectsScriptFieldName() {
-    def name(n: String): ExpectsScriptName = ExpectsScriptName(fieldName = n)
-  }
-
-  case class ExpectsScriptName(fieldName: String) {
-    def script(s: String): ScriptFieldDefinition =
-      ScriptFieldDefinition(fieldName = fieldName, scriptName = s)
-  }
-
-  case class ScriptFieldDefinition(fieldName: String = "", scriptName: String = "", language: Option[String] = None, parameters: Option[Map[String, AnyRef]] = None) {
-    def lang(l: String): ScriptFieldDefinition = ScriptFieldDefinition(fieldName = fieldName, scriptName = scriptName, language = Option(l))
-    def params(p: Map[String, AnyRef]): ScriptFieldDefinition = ScriptFieldDefinition(fieldName = fieldName, scriptName = scriptName, language = language, parameters = Option(p))
-
-  }
-
   /** This method initiates a correct script field DSL expression
-    *
-    * @return [[ExpectsScriptFieldName]]
     */
-  def field: ExpectsScriptFieldName = ExpectsScriptFieldName()
+  case object script {
+    def field(n: String): ExpectsScript = ExpectsScript(field = n)
+  }
 
-  /** This implicit class provides an alternative 'grammar rule' for a script field DSL expression:
-    * <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-    *
-    * This approach bypasses the [[ExpectsScriptFieldName]] and [[ExpectsScriptName]], but does introduce an implicit String conversion.
-    *
-    * @param fieldName : The literal name of the script field
-    */
-  implicit class ScriptName(fieldName: String) {
-    def script(s: String): ScriptFieldDefinition =
-      ScriptFieldDefinition(fieldName = fieldName, scriptName = s)
+  case class ExpectsScript(field: String) {
+    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = field, script = script)
+  }
+
+  case class ScriptFieldDefinition(field: String,
+                                   script: String,
+                                   language: Option[String] = None,
+                                   parameters: Option[Map[String, AnyRef]] = None) {
+    def lang(l: String): ScriptFieldDefinition = copy(language = Option(l))
+    def params(p: Map[String, Any]): ScriptFieldDefinition = {
+      copy(parameters = Some(p.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
+    }
+    def params(ps: (String, Any)*): ScriptFieldDefinition = {
+      copy(parameters = Some(ps.toMap.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
+    }
   }
 
   class SearchDefinition(indexesTypes: IndexesTypes) {
@@ -118,8 +102,6 @@ trait SearchDsl
     /** Adds a single string query to this search
       *
       * @param string the query string
-      *
-      * @return this
       */
     def query(string: String): SearchDefinition = query(new StringQueryDefinition(string))
     def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
