@@ -13,6 +13,7 @@ import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanc
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
+import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
@@ -37,6 +38,7 @@ trait AggregationDsl {
     def filters(name: String) = new FiltersAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
+    def global(name: String) = new GlobalAggregationDefinition(name)
     def histogram(name: String) = new HistogramAggregation(name)
     def max(name: String) = new MaxAggregationDefinition(name)
     def min(name: String) = new MinAggregationDefinition(name)
@@ -542,6 +544,10 @@ class ValueCountAggregationDefinition(name: String) extends ValuesSourceMetricsA
 
 class CardinalityAggregationDefinition(name: String) extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
   val aggregationBuilder = AggregationBuilders.cardinality(name)
+}
+
+class GlobalAggregationDefinition(name: String) extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
+  val aggregationBuilder = AggregationBuilders.global(name)
 }
 
 class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefinition {
