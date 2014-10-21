@@ -1,0 +1,7 @@
+{
+    "aggregations": {
+        "global_agg": {
+            "global": { }
+        }
+    }
+}
