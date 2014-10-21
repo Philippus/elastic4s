@@ -75,7 +75,7 @@ object AggregationResults {
 }
 
 trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]]
-  extends AbstractAggregationDefinition {
+    extends AbstractAggregationDefinition {
   val aggregationBuilder: B
 
   def builder = aggregationBuilder
@@ -149,7 +149,7 @@ trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggrega
 }
 
 class MissingAggregationDefinition(name: String) extends AggregationDefinition[MissingAggregationDefinition, MissingBuilder] {
-   val aggregationBuilder = AggregationBuilders.missing(name)
+  val aggregationBuilder = AggregationBuilders.missing(name)
 
   def field(field: String): this.type = {
     builder.field(field)
@@ -232,7 +232,7 @@ class RangeAggregationDefinition(name: String) extends AggregationDefinition[Ran
   }
 
   def ranges(ranges: (Double, Double)*): this.type = {
-    for ( range <- ranges )
+    for (range <- ranges)
       builder.addRange(range._1, range._2)
     this
   }

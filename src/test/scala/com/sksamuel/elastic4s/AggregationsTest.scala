@@ -12,7 +12,7 @@ import org.elasticsearch.search.aggregations.metrics.max.InternalMax
 import org.elasticsearch.search.aggregations.metrics.min.InternalMin
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{ FreeSpec, Matchers }
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
 
@@ -20,22 +20,22 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
     create index "aggregations" mappings {
       "breakingbad" as (
         "job" typed StringType analyzer KeywordAnalyzer
-        )
+      )
     }
   }.await
 
   client.execute(
     bulk(
-      index into "aggregations/breakingbad" fields("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50, "actor" -> "bryan"),
-      index into "aggregations/breakingbad" fields("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55, "actor" -> "dean"),
-      index into "aggregations/breakingbad" fields("name" -> "jesse pinkman", "job" -> "meth sidekick", "age" -> 30),
-      index into "aggregations/breakingbad" fields("name" -> "gus fring", "job" -> "meth kingpin", "age" -> 60),
-      index into "aggregations/breakingbad" fields("name" -> "steven gomez", "job" -> "dea agent", "age" -> 50),
-      index into "aggregations/breakingbad" fields("name" -> "saul goodman", "job" -> "lawyer", "age" -> 55),
-      index into "aggregations/breakingbad" fields("name" -> "Huell Babineaux", "job" -> "heavy", "age" -> 43, "actor" -> "lavell"),
-      index into "aggregations/breakingbad" fields("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
-      index into "aggregations/breakingbad" fields("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
-      index into "aggregations/breakingbad" fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
+      index into "aggregations/breakingbad" fields ("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50, "actor" -> "bryan"),
+      index into "aggregations/breakingbad" fields ("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55, "actor" -> "dean"),
+      index into "aggregations/breakingbad" fields ("name" -> "jesse pinkman", "job" -> "meth sidekick", "age" -> 30),
+      index into "aggregations/breakingbad" fields ("name" -> "gus fring", "job" -> "meth kingpin", "age" -> 60),
+      index into "aggregations/breakingbad" fields ("name" -> "steven gomez", "job" -> "dea agent", "age" -> 50),
+      index into "aggregations/breakingbad" fields ("name" -> "saul goodman", "job" -> "lawyer", "age" -> 55),
+      index into "aggregations/breakingbad" fields ("name" -> "Huell Babineaux", "job" -> "heavy", "age" -> 43, "actor" -> "lavell"),
+      index into "aggregations/breakingbad" fields ("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
+      index into "aggregations/breakingbad" fields ("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
+      index into "aggregations/breakingbad" fields ("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
     )
   ).await
 
@@ -179,7 +179,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
     "should range by field" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
-          aggregation range "agg1" field "age" ranges(20.0 -> 30.0, 30.0 -> 40.0, 40.0 -> 50.0, 50.0 -> 60.0)
+          aggregation range "agg1" field "age" ranges (20.0 -> 30.0, 30.0 -> 40.0, 40.0 -> 50.0, 50.0 -> 60.0)
         }
       }.await
       resp.getHits.getTotalHits shouldBe 10

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.admin.{IndexTemplateDsl, SnapshotDsl}
+import com.sksamuel.elastic4s.admin.{ IndexTemplateDsl, SnapshotDsl }
 import com.sksamuel.elastic4s.mappings.MappingDsl
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 /** @author Stephen Samuel */
 trait ElasticDsl

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 /** @author Stephen Samuel */
 class PercolateTest extends FlatSpec with Matchers with MockitoSugar with ElasticSugar {

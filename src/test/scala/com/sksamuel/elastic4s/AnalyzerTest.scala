@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{ FreeSpec, Matchers }
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     create index "analyzer" mappings {
-      "test" as(
+      "test" as (
         "keyword" typed StringType analyzer KeywordAnalyzer,
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
@@ -17,16 +17,16 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "simple1" typed StringType analyzer SimpleAnalyzer,
         "pattern" typed StringType analyzer CustomAnalyzer("pattern1"),
         "ngram1" typed StringType analyzer CustomAnalyzer("ngram1")
-        )
+      )
     } analysis (
       PatternAnalyzerDefinition("pattern1", "\\d", false),
       CustomAnalyzerDefinition("ngram1", NGramTokenizer),
       CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
-      )
+    )
   }.await
 
   client.execute {
-    index into "analyzer/test" fields(
+    index into "analyzer/test" fields (
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",
@@ -35,7 +35,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "ngram1" -> "starcraft",
       "stop" -> "and and and",
       "pattern" -> "abc123def"
-      )
+    )
   }.await
 
   refresh("analyzer")
@@ -67,7 +67,6 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
-
 
   "StandardAnalyzer" - {
     "should honour max token length" in {
