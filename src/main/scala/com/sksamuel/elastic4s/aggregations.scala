@@ -24,10 +24,8 @@ import org.elasticsearch.search.sort.SortBuilder
 /** @author Nicolas Yzet */
 
 trait AggregationDsl {
-  def aggregation = new AggregationExpectingType
   def agg = aggregation
-
-  class AggregationExpectingType {
+  case object aggregation {
     def avg(name: String) = new AvgAggregationDefinition(name)
     def children(name: String) = new ChildrenAggregationDefinition(name)
     def count(name: String) = new ValueCountAggregationDefinition(name)

@@ -6,8 +6,7 @@ import org.elasticsearch.common.geo.GeoDistance
 /** @author Stephen Samuel */
 trait SortDsl {
 
-  def by = new ExpectsSort
-  class ExpectsSort {
+  case object by {
 
     def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
     def prefix(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)

@@ -19,9 +19,7 @@ import scala.collection.JavaConverters._
   */
 trait SnapshotDsl {
 
-  def repository = RepositoryPrefix
-
-  object RepositoryPrefix {
+  case object repository {
     def create(name: String) = new CreateRepositoryExpectsType(name)
   }
 
@@ -29,9 +27,7 @@ trait SnapshotDsl {
     def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
   }
 
-  def snapshot = SnapshotPrefix
-
-  object SnapshotPrefix {
+  case object snapshot {
     def create(name: String) = new CreateSnapshotExpectsIn(name)
     def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
     def delete(name: String) = new DeleteSnapshotExpectsIn(name)
