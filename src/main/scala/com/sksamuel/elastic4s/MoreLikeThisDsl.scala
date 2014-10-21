@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.client.Requests
+import org.elasticsearch.search.Scroll
 
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
@@ -24,58 +25,70 @@ class MoreLikeThisDefinition(index: String, `type`: String, id: String) {
   private val _builder = Requests.moreLikeThisRequest(index).`type`(`type`).id(id)
   def build = _builder
 
-  def fields(fields: String*) = {
-    _builder.fields(fields: _*)
-    this
-  }
-  def minTermFreq(freq: Int) = {
-    _builder.minTermFreq(freq)
-    this
-  }
-  def stopWords(stopWords: String*) = {
-    _builder.stopWords(stopWords: _*)
-    this
-  }
-  def percentTermsToMatch(percentTermsToMatch: Double) = {
-    _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
-    this
-  }
-
-  def maxWordLength(maxWordLen: Int) = {
-    _builder.maxWordLength(maxWordLen)
-    this
-  }
-  def minWordLength(minWordLen: Int) = {
-    _builder.minWordLength(minWordLen)
-    this
-  }
-  def boostTerms(boostTerms: Double) = {
+  def boostTerms(boostTerms: Double): this.type = {
     _builder.boostTerms(boostTerms.toFloat)
     this
   }
-  def maxQueryTerms(maxQueryTerms: Int) = {
+  def fields(fields: String*): this.type = {
+    _builder.fields(fields: _*)
+    this
+  }
+  def from(i: Int): this.type = {
+    _builder.searchFrom(i)
+    this
+  }
+  def include(include: Boolean): this.type = {
+    _builder.include(include)
+    this
+  }
+  def limit(sizeHint: Int): this.type = size(sizeHint)
+  def minTermFreq(freq: Int): this.type = {
+    _builder.minTermFreq(freq)
+    this
+  }
+  def maxQueryTerms(maxQueryTerms: Int): this.type = {
     _builder.maxQueryTerms(maxQueryTerms)
     this
   }
-  def minDocFreq(minDocFreq: Int) = {
-    _builder.minDocFreq(minDocFreq)
+  def maxWordLength(maxWordLen: Int): this.type = {
+    _builder.maxWordLength(maxWordLen)
     this
   }
-  def maxDocFreq(maxDocFreq: Int) = {
+  def minWordLength(minWordLen: Int): this.type = {
+    _builder.minWordLength(minWordLen)
+    this
+  }
+  def maxDocFreq(maxDocFreq: Int): this.type = {
     _builder.maxDocFreq(maxDocFreq)
     this
   }
-
-  def limit(sizeHint: Int) = size(sizeHint)
-
-  def size(sizeHint: Int) = {
+  def minDocFreq(minDocFreq: Int): this.type = {
+    _builder.minDocFreq(minDocFreq)
+    this
+  }
+  def percentTermsToMatch(percentTermsToMatch: Double): this.type = {
+    _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
+    this
+  }
+  def routing(routing: String): this.type = {
+    _builder.routing(routing)
+    this
+  }
+  def size(sizeHint: Int): this.type = {
     _builder.searchSize(sizeHint)
     this
   }
-
-  def start(i: Int) = from(i)
-  def from(i: Int) = {
-    _builder.searchFrom(i)
+  def start(i: Int): this.type = from(i)
+  def stopWords(stopWords: String*): this.type = {
+    _builder.stopWords(stopWords: _*)
+    this
+  }
+  def searchSize(searchSize: Int): this.type = {
+    _builder.searchSize(searchSize)
+    this
+  }
+  def searchScroll(searchScroll: Scroll): this.type = {
+    _builder.searchScroll(searchScroll)
     this
   }
 }
