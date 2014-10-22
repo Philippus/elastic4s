@@ -5,8 +5,6 @@ import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
-import scala.collection.JavaConversions._
-
 /** @author Stephen Samuel */
 trait SearchDsl
     extends QueryDsl
@@ -14,6 +12,7 @@ trait SearchDsl
     with FacetDsl
     with AggregationDsl
     with HighlightDsl
+    with ScriptFieldDsl
     with SortDsl
     with SuggestionDsl
     with IndexesTypesDsl {
@@ -61,29 +60,6 @@ trait SearchDsl
     def scoreMode(scoreMode: String): RescoreDefinition = {
       builder.setScoreMode(scoreMode)
       this
-    }
-  }
-
-  /** This method initiates a correct script field DSL expression
-    */
-  case object script {
-    def field(n: String): ExpectsScript = ExpectsScript(field = n)
-  }
-
-  case class ExpectsScript(field: String) {
-    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = field, script = script)
-  }
-
-  case class ScriptFieldDefinition(field: String,
-                                   script: String,
-                                   language: Option[String] = None,
-                                   parameters: Option[Map[String, AnyRef]] = None) {
-    def lang(l: String): ScriptFieldDefinition = copy(language = Option(l))
-    def params(p: Map[String, Any]): ScriptFieldDefinition = {
-      copy(parameters = Some(p.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
-    }
-    def params(ps: (String, Any)*): ScriptFieldDefinition = {
-      copy(parameters = Some(ps.toMap.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
     }
   }
 
@@ -147,11 +123,12 @@ trait SearchDsl
       * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
       * @return this, an instance of [[SearchDefinition]]
       */
-    def scriptfields(sfieldDefs: ScriptFieldDefinition*) = {
+    def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
+      import scala.collection.JavaConverters._
       sfieldDefs.foreach {
-        case ScriptFieldDefinition(name, script, Some(lang), Some(params)) => _builder.addScriptField(name, lang, script, params)
-        case ScriptFieldDefinition(name, script, Some(lang), None) => _builder.addScriptField(name, lang, script, Map.empty[String, AnyRef])
-        case ScriptFieldDefinition(name, script, None, Some(params)) => _builder.addScriptField(name, script, params)
+        case ScriptFieldDefinition(name, script, Some(lang), Some(params)) => _builder.addScriptField(name, lang, script, params.asJava)
+        case ScriptFieldDefinition(name, script, Some(lang), None) => _builder.addScriptField(name, lang, script, Map.empty[String, AnyRef].asJava)
+        case ScriptFieldDefinition(name, script, None, Some(params)) => _builder.addScriptField(name, script, params.asJava)
         case ScriptFieldDefinition(name, script, None, None) => _builder.addScriptField(name, script)
       }
       this
