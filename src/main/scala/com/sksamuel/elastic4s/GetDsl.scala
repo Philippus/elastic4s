@@ -80,5 +80,4 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     this
   }
 
-
 }

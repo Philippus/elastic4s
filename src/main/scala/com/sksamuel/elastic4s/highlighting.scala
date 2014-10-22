@@ -12,7 +12,8 @@ trait HighlightDsl {
   }
   def highlight(field: String) = new HighlightDefinition(field)
 
-  case object options {
+  def options = new HighlightOptionsDefinition
+  class HighlightOptionsDefinition {
 
     var _preTags: Seq[String] = Nil
     var _postTags: Seq[String] = Nil
