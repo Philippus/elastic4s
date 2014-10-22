@@ -937,8 +937,6 @@ class StringQueryDefinition(query: String)
   val builder = QueryBuilders.queryString(query)
   val _builder = builder
 
-  @deprecated("@deprecated use analyzer instead", "1.0.1.1")
-  def anaylyzer(analyzer: Analyzer): StringQueryDefinition = this.analyzer(analyzer)
   def analyzer(analyzer: Analyzer): StringQueryDefinition = {
     builder.analyzer(analyzer.name)
     this
