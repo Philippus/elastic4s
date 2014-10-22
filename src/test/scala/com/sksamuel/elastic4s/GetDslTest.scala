@@ -26,7 +26,7 @@ class GetDslTest extends FlatSpec with Matchers with ElasticSugar {
   }
 
   it should "accept one field" in {
-    val req = get id 123 from "places/cities" fields ("name")
+    val req = get id 123 from "places/cities" fields "name"
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "cities")
     req.build.fields() should equal(Array("name"))
@@ -40,7 +40,7 @@ class GetDslTest extends FlatSpec with Matchers with ElasticSugar {
   }
 
   it should "disable fetchSource" in {
-    val req = get id 123 from "places/cities" fetchSourceContext (false)
+    val req = get id 123 from "places/cities" fetchSourceContext false
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "cities")
     req.build.fields() should be(null)

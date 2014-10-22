@@ -7,11 +7,6 @@ import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
 /** @author Stephen Samuel */
 trait CountDsl {
 
-  case object count {
-    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-    def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
-    def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
-  }
   def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
 

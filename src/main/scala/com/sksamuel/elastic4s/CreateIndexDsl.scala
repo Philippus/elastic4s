@@ -9,10 +9,6 @@ import scala.collection.mutable
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
 
-  case object create {
-    def index(name: String) = new CreateIndexDefinition(name)
-  }
-
   class IndexSettings {
     private val ShardsKey = "number_of_shards"
     private val ReplicasKey = "number_of_replicas"

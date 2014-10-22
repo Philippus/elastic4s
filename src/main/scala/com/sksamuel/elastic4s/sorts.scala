@@ -4,22 +4,6 @@ import org.elasticsearch.search.sort.{ SortOrder, SortBuilder, SortBuilders }
 import org.elasticsearch.common.geo.GeoDistance
 
 /** @author Stephen Samuel */
-trait SortDsl {
-
-  case object by {
-
-    def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
-    def prefix(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
-
-    def score = new ScoreSortDefinition
-
-    def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
-    def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
-
-    def script(script: String) = new ScriptSortDefinition(script)
-  }
-}
-
 sealed abstract class MultiMode(val elastic: String)
 case object MultiMode {
   case object Min extends MultiMode("min")

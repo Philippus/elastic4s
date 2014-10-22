@@ -6,11 +6,6 @@ import org.elasticsearch.search.Scroll
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
 
-  def morelike = mlt
-  case object mlt {
-    def id(id: Any) = new MltExpectsIndex(id.toString)
-  }
-
   class MltExpectsIndex(id: String) {
     def in(in: String) = in.split("/").toList match {
       case idx :: Nil => new MoreLikeThisDefinition(idx, null, id)

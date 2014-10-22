@@ -14,10 +14,6 @@ trait PercolateDsl extends QueryDsl {
   implicit def string2register(id: String): RegisterExpectsIndex = new RegisterExpectsIndex(id)
   implicit def string2percolate(index: String): PercolateDefinition = new PercolateDefinition(index)
 
-  case object percolate {
-    def in(index: String) = new PercolateDefinition(index)
-  }
-
   class PercolateDefinition(index: String) {
 
     private val _fields = new ListBuffer[(String, Any)]

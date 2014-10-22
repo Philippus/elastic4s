@@ -7,13 +7,9 @@ import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateReq
 
 import scala.collection.mutable.ListBuffer
 
-trait IndexTemplateDsl {
-  case object template {
-    def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
-    class CreateIndexTemplateExpectsPattern(name: String) {
-      def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
-    }
-    def delete(name: String) = new DeleteIndexTemplateDefinition(name)
+trait TemplateDsl {
+  class CreateIndexTemplateExpectsPattern(name: String) {
+    def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
   }
 }
 

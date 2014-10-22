@@ -10,21 +10,13 @@ trait SearchDsl
     extends QueryDsl
     with FilterDsl
     with FacetDsl
-    with AggregationDsl
     with HighlightDsl
     with ScriptFieldDsl
-    with SortDsl
     with SuggestionDsl
     with IndexesTypesDsl {
 
-  def select = search
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
-  case object search {
-    def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
-    def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
-    def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
-  }
 
   class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
     def build = {

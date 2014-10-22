@@ -5,10 +5,6 @@ import org.elasticsearch.client.Requests
 /** @author Stephen Samuel */
 trait OptimizeDsl {
 
-  case object optimize {
-    def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
-    def index(indexes: String*): OptimizeDefinition = index(indexes)
-  }
   def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
 
   class OptimizeDefinition(indexes: String*) {

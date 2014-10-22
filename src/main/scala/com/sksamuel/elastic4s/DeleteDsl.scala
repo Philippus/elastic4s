@@ -10,14 +10,6 @@ import org.elasticsearch.index.VersionType
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-  case object delete {
-    def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-    def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
-    def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
-    def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
-    def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
-    def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
-  }
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {

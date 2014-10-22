@@ -2,12 +2,6 @@ package com.sksamuel.elastic4s
 
 trait ScriptFieldDsl {
 
-  /** This method initiates a correct script field DSL expression
-    */
-  case object script {
-    def field(n: String): ExpectsScript = ExpectsScript(field = n)
-  }
-
   case class ExpectsScript(field: String) {
     def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = field, script = script)
   }

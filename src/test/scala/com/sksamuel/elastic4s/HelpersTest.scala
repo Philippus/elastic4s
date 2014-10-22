@@ -8,24 +8,11 @@ import org.scalatest.{ FlatSpec, Matchers }
 class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    index into "starcraft/races" fields (
-      "name" -> "zerg",
-      "base" -> "hatchery"
+    bulk(
+      index into "starcraft/races" fields("name" -> "zerg", "base" -> "hatchery"),
+      index into "starcraft/units" fields("name" -> "hydra", "race" -> "zerg"),
+      index into "starcraft/bands" fields("name" -> "protoss", "base" -> "nexus") id 45
     )
-  }.await
-
-  client.execute {
-    index into "starcraft/units" fields (
-      "name" -> "hydra",
-      "race" -> "zerg"
-    )
-  }.await
-
-  client.execute {
-    index into "starcraft/bands" fields (
-      "name" -> "protoss",
-      "base" -> "nexus"
-    ) id 45
   }.await
 
   blockUntilCount(3, "starcraft")

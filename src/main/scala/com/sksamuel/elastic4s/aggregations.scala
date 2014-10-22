@@ -22,36 +22,6 @@ import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Nicolas Yzet */
-
-trait AggregationDsl {
-  def agg = aggregation
-  case object aggregation {
-    def avg(name: String) = new AvgAggregationDefinition(name)
-    def children(name: String) = new ChildrenAggregationDefinition(name)
-    def count(name: String) = new ValueCountAggregationDefinition(name)
-    def cardinality(name: String) = new CardinalityAggregationDefinition(name)
-    def datehistogram(name: String) = new DateHistogramAggregation(name)
-    def daterange(name: String) = new DateRangeAggregation(name)
-    def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
-    def filter(name: String) = new FilterAggregationDefinition(name)
-    def filters(name: String) = new FiltersAggregationDefinition(name)
-    def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
-    def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def global(name: String) = new GlobalAggregationDefinition(name)
-    def histogram(name: String) = new HistogramAggregation(name)
-    def max(name: String) = new MaxAggregationDefinition(name)
-    def min(name: String) = new MinAggregationDefinition(name)
-    def missing(name: String) = new MissingAggregationDefinition(name)
-    def nested(name: String) = new NestedAggregationDefinition(name)
-    def range(name: String) = new RangeAggregationDefinition(name)
-    def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
-    def stats(name: String) = new StatsAggregationDefinition(name)
-    def sum(name: String) = new SumAggregationDefinition(name)
-    def terms(name: String) = new TermAggregationDefinition(name)
-    def topHits(name: String) = new TopHitsAggregationDefinition(name)
-  }
-}
-
 trait AbstractAggregationDefinition {
   def builder: AbstractAggregationBuilder
 }
