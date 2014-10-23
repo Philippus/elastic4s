@@ -391,6 +391,23 @@ class MultiMatchQueryDefinition(text: String)
     }
     this
   }
+
+  def matchType(t: MultiMatchQueryBuilder.Type): MultiMatchQueryDefinition = {
+    builder.`type`(t)
+    this
+  }
+
+  def matchType(t: String): MultiMatchQueryDefinition = {
+    val mt = t match {
+      case "most_fields" => MultiMatchQueryBuilder.Type.MOST_FIELDS
+      case "cross_fields" => MultiMatchQueryBuilder.Type.CROSS_FIELDS
+      case "phrase" => MultiMatchQueryBuilder.Type.PHRASE
+      case "phrase_prefix" => MultiMatchQueryBuilder.Type.PHRASE_PREFIX
+      case _ => MultiMatchQueryBuilder.Type.BEST_FIELDS
+    }
+
+    matchType(mt)
+  }
 }
 
 class FuzzyDefinition(name: String, value: Any)

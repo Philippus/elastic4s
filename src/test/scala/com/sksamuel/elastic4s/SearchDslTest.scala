@@ -1,19 +1,20 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ FlatSpec, OneInstancePerTest }
-import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.search.sort.SortOrder
+import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.SuggestMode.{ Missing, Popular }
-import org.elasticsearch.index.query.{ MatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag }
-import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
-import org.elasticsearch.search.facet.terms.TermsFacet
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
-import com.sksamuel.elastic4s.Preference.Shards
 import org.elasticsearch.index.query.MatchQueryBuilder.{ Operator, ZeroTermsQuery }
+import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
+import org.elasticsearch.index.query.{ MatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag }
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
 import org.elasticsearch.search.aggregations.bucket.terms.Terms
+import org.elasticsearch.search.facet.histogram.HistogramFacet.ComparatorType
+import org.elasticsearch.search.facet.terms.TermsFacet
+import org.elasticsearch.search.sort.SortOrder
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{ FlatSpec, OneInstancePerTest }
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
@@ -584,7 +585,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for multi match query" in {
     val req = search in "music" types "bands" query {
       multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery
-        MatchQueryBuilder.ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator Operator.AND
+        MatchQueryBuilder.ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator Operator.AND matchType Type.CROSS_FIELDS
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_multi_match.json")
   }
