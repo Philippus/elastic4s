@@ -9,9 +9,9 @@ class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
 
   client.execute {
     bulk(
-      index into "starcraft/races" fields("name" -> "zerg", "base" -> "hatchery"),
-      index into "starcraft/units" fields("name" -> "hydra", "race" -> "zerg"),
-      index into "starcraft/bands" fields("name" -> "protoss", "base" -> "nexus") id 45
+      index into "starcraft/races" fields ("name" -> "zerg", "base" -> "hatchery"),
+      index into "starcraft/units" fields ("name" -> "hydra", "race" -> "zerg"),
+      index into "starcraft/bands" fields ("name" -> "protoss", "base" -> "nexus") id 45
     )
   }.await
 

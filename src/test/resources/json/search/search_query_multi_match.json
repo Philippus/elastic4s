@@ -19,7 +19,8 @@
             "lenient": true,
             "cutoff_frequency": 1.7,
             "zero_terms_query": "ALL",
-            "operator": "AND"
+            "operator": "AND",
+            "type": "cross_fields"
         }
     }
 }
