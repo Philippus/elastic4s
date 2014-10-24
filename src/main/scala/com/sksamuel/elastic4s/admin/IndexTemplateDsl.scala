@@ -2,19 +2,14 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.ProxyClients
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder}
-import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateRequest, PutIndexTemplateRequestBuilder}
+import org.elasticsearch.action.admin.indices.template.delete.{ DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder }
+import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateRequest, PutIndexTemplateRequestBuilder }
 
 import scala.collection.mutable.ListBuffer
 
-trait IndexTemplateDsl {
-  def template = TemplateExpectsCreateOrDelete
-  object TemplateExpectsCreateOrDelete {
-    def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
-    class CreateIndexTemplateExpectsPattern(name: String) {
-      def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
-    }
-    def delete(name: String) = new DeleteIndexTemplateDefinition(name)
+trait TemplateDsl {
+  class CreateIndexTemplateExpectsPattern(name: String) {
+    def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
   }
 }
 
@@ -26,7 +21,7 @@ class CreateIndexTemplateDefinition(name: String, pattern: String) {
   def build: PutIndexTemplateRequest = _builder.request
 
   def mappings(mappings: MappingDefinition*): this.type = {
-    for ( mapping <- mappings ) {
+    for (mapping <- mappings) {
       _builder.addMapping("", mapping.build)
     }
     this

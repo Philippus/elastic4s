@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
 import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse
-import org.elasticsearch.action.{ActionFuture, ActionListener}
+import org.elasticsearch.action.{ ActionFuture, ActionListener }
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse

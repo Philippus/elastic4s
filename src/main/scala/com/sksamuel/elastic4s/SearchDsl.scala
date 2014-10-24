@@ -2,30 +2,21 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
-import scala.collection.JavaConversions._
+import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Stephen Samuel */
 trait SearchDsl
     extends QueryDsl
     with FilterDsl
     with FacetDsl
-    with AggregationDsl
     with HighlightDsl
-    with SortDsl
+    with ScriptFieldDsl
     with SuggestionDsl
     with IndexesTypesDsl {
 
-  def select: SearchExpectsIndex = search
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
-  def search: SearchExpectsIndex = new SearchExpectsIndex
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
-  class SearchExpectsIndex {
-    def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
-    def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
-    def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
-  }
 
   class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
     def build = {
@@ -64,45 +55,6 @@ trait SearchDsl
     }
   }
 
-  /** The following three case classes guarantee DSL syntax discipline while specifying 'script_fields' clause in a search specification
-    *
-    * The script field DSL grammar is script_field ::= field name <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-    *
-    * See the definition of the [[field]] method below
-    */
-  case class ExpectsScriptFieldName() {
-    def name(n: String): ExpectsScriptName = ExpectsScriptName(fieldName = n)
-  }
-
-  case class ExpectsScriptName(fieldName: String) {
-    def script(s: String): ScriptFieldDefinition =
-      ScriptFieldDefinition(fieldName = fieldName, scriptName = s)
-  }
-
-  case class ScriptFieldDefinition(fieldName: String = "", scriptName: String = "", language: Option[String] = None, parameters: Option[Map[String, AnyRef]] = None) {
-    def lang(l: String): ScriptFieldDefinition = ScriptFieldDefinition(fieldName = fieldName, scriptName = scriptName, language = Option(l))
-    def params(p: Map[String, AnyRef]): ScriptFieldDefinition = ScriptFieldDefinition(fieldName = fieldName, scriptName = scriptName, language = language, parameters = Option(p))
-
-  }
-
-  /** This method initiates a correct script field DSL expression
-    *
-    * @return [[ExpectsScriptFieldName]]
-    */
-  def field: ExpectsScriptFieldName = ExpectsScriptFieldName()
-
-  /** This implicit class provides an alternative 'grammar rule' for a script field DSL expression:
-    * <field_name> script <script_name> (lang <lang_name>){0,1} (params <Map[String,Any]>){0,1}
-    *
-    * This approach bypasses the [[ExpectsScriptFieldName]] and [[ExpectsScriptName]], but does introduce an implicit String conversion.
-    *
-    * @param fieldName : The literal name of the script field
-    */
-  implicit class ScriptName(fieldName: String) {
-    def script(s: String): ScriptFieldDefinition =
-      ScriptFieldDefinition(fieldName = fieldName, scriptName = s)
-  }
-
   class SearchDefinition(indexesTypes: IndexesTypes) {
 
     val _builder = {
@@ -118,8 +70,6 @@ trait SearchDsl
     /** Adds a single string query to this search
       *
       * @param string the query string
-      *
-      * @return this
       */
     def query(string: String): SearchDefinition = query(new StringQueryDefinition(string))
     def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
@@ -165,11 +115,12 @@ trait SearchDsl
       * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
       * @return this, an instance of [[SearchDefinition]]
       */
-    def scriptfields(sfieldDefs: ScriptFieldDefinition*) = {
+    def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
+      import scala.collection.JavaConverters._
       sfieldDefs.foreach {
-        case ScriptFieldDefinition(name, script, Some(lang), Some(params)) => _builder.addScriptField(name, lang, script, params)
-        case ScriptFieldDefinition(name, script, Some(lang), None) => _builder.addScriptField(name, lang, script, Map.empty[String, AnyRef])
-        case ScriptFieldDefinition(name, script, None, Some(params)) => _builder.addScriptField(name, script, params)
+        case ScriptFieldDefinition(name, script, Some(lang), Some(params)) => _builder.addScriptField(name, lang, script, params.asJava)
+        case ScriptFieldDefinition(name, script, Some(lang), None) => _builder.addScriptField(name, lang, script, Map.empty[String, AnyRef].asJava)
+        case ScriptFieldDefinition(name, script, None, Some(params)) => _builder.addScriptField(name, script, params.asJava)
         case ScriptFieldDefinition(name, script, None, None) => _builder.addScriptField(name, script)
       }
       this

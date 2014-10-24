@@ -5,13 +5,6 @@ import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryReques
 /** @author Stephen Samuel */
 trait ValidateDsl extends QueryDsl {
 
-  def validate = new ValidateExpectsIn
-  class ValidateExpectsIn {
-    def in(value: String): ValidateDefinition = in(value.split("/").toSeq)
-    def in(value: Seq[String]): ValidateDefinition = in((value(0), value(1)))
-    def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
-  }
-
   class ValidateDefinition(index: String, `type`: String) {
     val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices).setIndices(index).setTypes(`type`)
     def build = _builder.request

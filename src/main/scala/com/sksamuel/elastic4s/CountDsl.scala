@@ -7,12 +7,6 @@ import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
 /** @author Stephen Samuel */
 trait CountDsl {
 
-  def count = new CountExpectsIndex
-  class CountExpectsIndex {
-    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-    def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
-    def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
-  }
   def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
 
@@ -25,12 +19,23 @@ trait CountDsl {
 
     def build = _builder.request()
 
-    def routing(routing: String): CountDefinition = {
+    def routing(routing: String): this.type = {
       _builder.setRouting(routing)
       this
     }
-    def minScore(minScore: Double): CountDefinition = {
+
+    def minScore(minScore: Double): this.type = {
       _builder.setMinScore(minScore.toFloat)
+      this
+    }
+
+    def preference(pref: String): this.type = {
+      _builder.setPreference(pref)
+      this
+    }
+
+    def terminateAfter(termAfter: Int): this.type = {
+      _builder.setTerminateAfter(termAfter)
       this
     }
 

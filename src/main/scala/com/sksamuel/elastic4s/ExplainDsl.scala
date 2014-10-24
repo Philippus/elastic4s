@@ -7,10 +7,6 @@ import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreferen
 /** @author Stephen Samuel */
 trait ExplainDsl {
 
-  def explain = new ExplainExpectsId
-  class ExplainExpectsId {
-    def id(id: Any) = new ExplainExpectsIndex(id)
-  }
   class ExplainExpectsIndex(id: Any) {
     def in(indexesTypes: IndexesTypes): ExplainDefinition = new ExplainDefinition(indexesTypes, id)
   }
@@ -23,7 +19,7 @@ trait ExplainDsl {
 
     def build = _builder.request
 
-    def query(string: String): ExplainDefinition = {
+    def query(string: String): this.type = {
       val q = new StringQueryDefinition(string)
       // need to set the query on the request - workaround for ES internals
       _builder.request.source(new QuerySourceBuilder().setQuery(q.builder))
@@ -31,10 +27,20 @@ trait ExplainDsl {
       this
     }
 
-    def query(block: => QueryDefinition): ExplainDefinition = {
+    def query(block: => QueryDefinition): this.type = {
       // need to set the query on the request - workaround for ES internals
       _builder.request.source(new QuerySourceBuilder().setQuery(block.builder))
       _builder.setQuery(block.builder)
+      this
+    }
+
+    def fetchSource(fetchSource: Boolean): this.type = {
+      _builder.setFetchSource(fetchSource)
+      this
+    }
+
+    def parent(parent: String): this.type = {
+      _builder.setParent(parent)
       this
     }
   }

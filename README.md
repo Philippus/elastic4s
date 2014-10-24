@@ -71,8 +71,8 @@ object Test extends App {
 
   val client = ElasticClient.local
 
-  // await is a helper method to make this operation synch instead of asynch
-  // You would normally avoid doing this is a real program as it will block
+  // await is a helper method to make this operation sync instead of async
+  // You would normally avoid doing this in a real program as it will block
   client.execute { index into "bands/artists" fields "name"->"coldplay" }.await
 
   val resp = client.execute { search in "bands/artists" query "coldplay" }.await
@@ -110,15 +110,21 @@ the DSL closely mirrors the standard Java API / REST API.
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
 | Index Status                              | `status <index>` |
-| [Add Alias](guide/aliases.md)             | `aliases add "<alias>" on "<index>"` |
-| [Remove Alias](guide/aliases.md)          | `aliases remove "<alias>" on "<index>"` |
+| [Add Alias](guide/aliases.md)             | 1.4+ `add aliases "<alias>" on "<index>"` |
+|                                           | 1.3- `aliases add "<alias>" on "<index>"` |
+| [Remove Alias](guide/aliases.md)          | 1.4+ `remove aliases "<alias>" on "<index>"` |
+|                                           | 1.3- `aliases remove "<alias>" on "<index>"` |
 | Put mapping                               | `put mapping </index/type> add { mappings block }` |
-| [Create Repository](guide/snapshot.md)    | `repository create <repo> type <type> settings <settings>` |
-| [Create Snapshot](guide/snapshot.md)      | `snapshot create <name> in <repo> ...` |
-| [Delete Snapshot](guide/snapshot.md)      | `snapshot delete <name> in <repo> ...` |
-| [Restore Snapshot](guide/snapshot.md)     | `snapshot restore <name> from <repo> ...` |
-| Index Templates      | `template create <name> pattern <pattern> mappings {...}`
-|                      | `template delete <name>` |
+| [Create Repository](guide/snapshot.md)    | 1.4+ `create repository <repo> type <type> settings <settings>` |
+|                                           | 1.3- `repository create <repo> type <type> settings <settings>` |
+| [Create Snapshot](guide/snapshot.md)      | 1.4+ `create snapshot <name> in <repo> ...` |
+|                                           | 1.3- `snapshot create <name> in <repo> ...` |
+| [Delete Snapshot](guide/snapshot.md)      | 1.4+ `delete snapshot <name> in <repo> ...` |
+|                                           | 1.3- `snapshot delete <name> in <repo> ...` |
+| [Restore Snapshot](guide/snapshot.md)     | 1.4+ `restore snapshot <name> from <repo> ...` |
+|                                           | 1.3- `snapshot restore <name> from <repo> ...` |
+| Index Templates      | `create template <name> pattern <pattern> mappings {...}`
+|                      | `delete template <name>` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

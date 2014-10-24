@@ -1,0 +1,47 @@
+{
+    "settings": {},
+    "mappings": {
+        "tweet": {
+            "_all": {
+                "enabled": true
+            },
+            "_source": {
+                "enabled": true
+            },
+            "numeric_detection": true,
+            "dynamic": "dynamic",
+            "_boost": {
+                "name": "myboost",
+                "null_value": 1.2
+            },
+            "_size": {
+                "enabled": true
+            },
+            "_ttl": {
+                "enabled": false
+            },
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "index": "analyzed",
+                    "fields": {
+                        "raw": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "meta_data": {
+                    "type": "string",
+                    "index": "analyzed"
+                },
+                "article_info": {
+                    "type": "string",
+                    "index": "analyzed"
+                }
+            }
+        }
+      }
+    }
+  }
+}

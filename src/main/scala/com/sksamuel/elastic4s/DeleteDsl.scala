@@ -10,17 +10,7 @@ import org.elasticsearch.index.VersionType
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-  def delete: DeleteExpectsIdOrFromOrIndex = new DeleteExpectsIdOrFromOrIndex
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-
-  class DeleteExpectsIdOrFromOrIndex {
-    def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-    def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
-    def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
-    def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
-    def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
-    def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
-  }
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
     def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
@@ -56,12 +46,16 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       builder.`type`(_type)
       this
     }
+    def parent(parent: String): DeleteByIdDefinition = {
+      builder.parent(parent)
+      this
+    }
     def routing(routing: String): DeleteByIdDefinition = {
       builder.routing(routing)
       this
     }
-    def parent(parent: String): DeleteByIdDefinition = {
-      builder.parent(parent)
+    def refresh(refresh: Boolean): DeleteByIdDefinition = {
+      builder.refresh(refresh)
       this
     }
     def version(version: Int): DeleteByIdDefinition = {
@@ -70,10 +64,6 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     }
     def versionType(versionType: VersionType): DeleteByIdDefinition = {
       builder.versionType(versionType)
-      this
-    }
-    def refresh(refresh: Boolean): DeleteByIdDefinition = {
-      builder.refresh(refresh)
       this
     }
     def build = builder

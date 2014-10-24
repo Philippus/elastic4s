@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{OneInstancePerTest, FlatSpec}
+import org.scalatest.{ OneInstancePerTest, FlatSpec }
 import org.scalatest.mock.MockitoSugar
 
 class SourceTest extends FlatSpec with MockitoSugar with ElasticSugar with ElasticDsl {

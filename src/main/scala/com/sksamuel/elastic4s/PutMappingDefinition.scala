@@ -6,13 +6,6 @@ import org.elasticsearch.action.admin.indices.mapping.put.{ PutMappingRequestBui
 import org.elasticsearch.common.xcontent.XContentFactory
 
 /** @author Stephen Samuel */
-trait PutMappingDsl {
-  def put = new PutExpectsMapping
-  class PutExpectsMapping {
-    def mapping(indexes: IndexesTypes) = new PutMappingDefinition(indexes)
-  }
-}
-
 class PutMappingDefinition(indexes: IndexesTypes)
     extends DefinitionAttributeIgnoreConflicts
     with DefinitionAttributeIndexesOptions {

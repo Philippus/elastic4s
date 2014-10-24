@@ -10,8 +10,8 @@ import org.elasticsearch.common.unit.Fuzziness
 
 trait QueryDsl {
 
-  implicit def string2query(string: String) = new SimpleStringQueryDefinition(string)
-  implicit def tuple2query(kv: (String, String)) = new TermQueryDefinition(kv._1, kv._2)
+  implicit def string2query(string: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(string)
+  implicit def tuple2query(kv: (String, String)): TermQueryDefinition = new TermQueryDefinition(kv._1, kv._2)
 
   def query = this
 
@@ -390,6 +390,23 @@ class MultiMatchQueryDefinition(text: String)
       case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
     }
     this
+  }
+
+  def matchType(t: MultiMatchQueryBuilder.Type): MultiMatchQueryDefinition = {
+    builder.`type`(t)
+    this
+  }
+
+  def matchType(t: String): MultiMatchQueryDefinition = {
+    val mt = t match {
+      case "most_fields" => MultiMatchQueryBuilder.Type.MOST_FIELDS
+      case "cross_fields" => MultiMatchQueryBuilder.Type.CROSS_FIELDS
+      case "phrase" => MultiMatchQueryBuilder.Type.PHRASE
+      case "phrase_prefix" => MultiMatchQueryBuilder.Type.PHRASE_PREFIX
+      case _ => MultiMatchQueryBuilder.Type.BEST_FIELDS
+    }
+
+    matchType(mt)
   }
 }
 
@@ -937,8 +954,6 @@ class StringQueryDefinition(query: String)
   val builder = QueryBuilders.queryString(query)
   val _builder = builder
 
-  @deprecated("@deprecated use analyzer instead", "1.0.1.1")
-  def anaylyzer(analyzer: Analyzer): StringQueryDefinition = this.analyzer(analyzer)
   def analyzer(analyzer: Analyzer): StringQueryDefinition = {
     builder.analyzer(analyzer.name)
     this

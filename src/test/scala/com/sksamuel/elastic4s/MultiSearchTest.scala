@@ -14,7 +14,7 @@ class MultiSearchTest
     with Matchers
     with ScalaFutures {
 
-  override implicit def patienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
+  override implicit def patienceConfig: PatienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
 
   "a multi search request" should "find matching documents for all queries" in {
 

@@ -41,11 +41,6 @@ trait FilterDsl {
 
   def matchAllFilter = new MatchAllFilter
 
-  def not = new NotExpectsFilter
-  def not(filter: FilterDefinition) = new NotFilterDefinition(filter)
-  class NotExpectsFilter {
-    def filter(filter: FilterDefinition) = new NotFilterDefinition(filter)
-  }
   def or(filters: FilterDefinition*) = new OrFilterDefinition(filters: _*)
   def and(filters: FilterDefinition*) = new AndFilterDefinition(filters: _*)
 
@@ -78,6 +73,9 @@ trait FilterDsl {
   def must(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().must(queries)
   def should(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().should(queries: _*)
   def should(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().should(queries)
+
+  case object not { def filter(filter: FilterDefinition) = new NotFilterDefinition(filter) }
+  def not(filter: FilterDefinition) = new NotFilterDefinition(filter)
   def not(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().not(queries: _*)
   def not(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().not(queries)
 }

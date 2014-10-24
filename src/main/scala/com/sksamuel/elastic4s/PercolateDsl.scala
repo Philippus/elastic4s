@@ -10,14 +10,9 @@ import scala.collection.mutable.ListBuffer
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
 
-  implicit def any2register(id: AnyVal) = new RegisterExpectsIndex(id.toString)
-  implicit def string2register(id: String) = new RegisterExpectsIndex(id)
-  implicit def string2percolate(index: String) = new PercolateDefinition(index)
-
-  def percolate = new PercolateExpectsIndex
-  class PercolateExpectsIndex {
-    def in(index: String) = new PercolateDefinition(index)
-  }
+  implicit def any2register(id: AnyVal): RegisterExpectsIndex = new RegisterExpectsIndex(id.toString)
+  implicit def string2register(id: String): RegisterExpectsIndex = new RegisterExpectsIndex(id)
+  implicit def string2percolate(index: String): PercolateDefinition = new PercolateDefinition(index)
 
   class PercolateDefinition(index: String) {
 
@@ -69,8 +64,7 @@ trait PercolateDsl extends QueryDsl {
     }
   }
 
-  def register = new RegisterExpectsId
-  class RegisterExpectsId {
+  case object register {
     def id(id: Any) = new RegisterExpectsIndex(id.toString)
   }
 

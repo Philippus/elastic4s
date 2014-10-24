@@ -11,16 +11,7 @@ import scala.collection.mutable
 
 /** @author Stephen Samuel */
 trait IndexDsl {
-
-  def insert: IndexExpectsInto = index
-  def index: IndexExpectsInto = new IndexExpectsInto
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
-
-  class IndexExpectsInto {
-    def into(index: String): IndexDefinition = into(index.split("/").head, index.split("/").last)
-    def into(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
-    def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
-  }
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
