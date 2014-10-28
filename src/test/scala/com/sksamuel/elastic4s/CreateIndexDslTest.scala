@@ -204,7 +204,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support multi fields" in {
-    val req = create.index("tweets").mappings(
+    val req = create.index("tweets").shards(2).mappings(
       "tweet" as (
         "title" typed StringType index "analyzed" fields (
           "raw" typed StringType index "not_analyzed"),
