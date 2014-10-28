@@ -1,0 +1,16 @@
+{
+    "aggregations": {
+        "nested_agg": {
+            "nested": {
+                "path": "nested_obj"
+            },
+            "aggregations": {
+                "my_nested_terms_agg": {
+                    "terms": {
+                        "field": "keyword"
+                    }
+                }
+            }
+        }
+    }
+}

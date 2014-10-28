@@ -3,11 +3,13 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
+import org.elasticsearch.search.aggregations.bucket.nested.NestedBuilder
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
+import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
@@ -24,15 +26,17 @@ trait AggregationDsl {
     def terms(name: String) = new TermAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
     def daterange(name: String) = new DateRangeAggregation(name)
-    def histogram(name: String) = new HistogramAggregation(name)
     def datehistogram(name: String) = new DateHistogramAggregation(name)
     def filter(name: String) = new FilterAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def min(name: String) = new MinAggregationDefinition(name)
+    def global(name: String) = new GlobalAggregationDefinition(name)
+    def histogram(name: String) = new HistogramAggregation(name)
     def max(name: String) = new MaxAggregationDefinition(name)
+    def min(name: String) = new MinAggregationDefinition(name)
     def sum(name: String) = new SumAggregationDefinition(name)
     def avg(name: String) = new AvgAggregationDefinition(name)
+    def nested(name: String) = new NestedAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
     def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
@@ -449,6 +453,10 @@ class CardinalityAggregationDefinition(name: String) extends CardinalityMetricsA
   val aggregationBuilder = AggregationBuilders.cardinality(name)
 }
 
+class GlobalAggregationDefinition(name: String) extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
+  val aggregationBuilder = AggregationBuilders.global(name)
+}
+
 class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefinition {
   val builder = AggregationBuilders.topHits(name)
 
@@ -473,4 +481,13 @@ class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefi
     this
   }
 
+}
+
+class NestedAggregationDefinition(name: String) extends AggregationDefinition[NestedAggregationDefinition, NestedBuilder] {
+  val aggregationBuilder = AggregationBuilders.nested(name)
+
+  def path(path: String): NestedAggregationDefinition = {
+    builder.path(path)
+    this
+  }
 }
