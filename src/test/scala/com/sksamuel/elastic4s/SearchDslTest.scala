@@ -809,6 +809,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
   }
 
+  it should "generate correct json for percentiles aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation percentiles "grades_percentiles" field "grade" percents (95, 99, 99.9) compression (200)
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentiles.json")
+  }
+
+  it should "generate correct json for percentileranks aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation percentileranks "grades_percentileranks" field "grade" percents (95, 99, 99.9) compression (200)
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
+  }
+
   it should "generate correct json for value count aggregation" in {
     val req = search in "school" types "student" aggs {
       aggregation count "grades_count" field "grade" script "doc['grade'].value" lang "lua"
