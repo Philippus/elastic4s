@@ -36,6 +36,8 @@ trait AggregationDsl {
     def min(name: String) = new MinAggregationDefinition(name)
     def sum(name: String) = new SumAggregationDefinition(name)
     def avg(name: String) = new AvgAggregationDefinition(name)
+    def percentiles(name: String) = new PercentilesAggregationDefinition(name)
+    def percentileranks(name: String) = new PercentileRanksAggregationDefinition(name)
     def nested(name: String) = new NestedAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
@@ -74,27 +76,29 @@ trait MetricsAggregationDefinition[+Self <: MetricsAggregationDefinition[Self, B
 }
 
 trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggregationDefinition[Self, B], B <: ValuesSourceMetricsAggregationBuilder[B]] extends MetricsAggregationDefinition[Self, B] {
-  def field(field: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+  self: Self =>
+
+  def field(field: String): Self = {
     builder.field(field)
     this
   }
 
-  def lang(lang: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+  def lang(lang: String): Self = {
     builder.lang(lang)
     this
   }
 
-  def param(name: String, value: Any): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+  def param(name: String, value: Any): Self = {
     builder.param(name, value)
     this
   }
 
-  def params(map: Map[String, Any]): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+  def params(map: Map[String, Any]): Self = {
     for (entry <- map) param(entry._1, entry._2)
     this
   }
 
-  def script(script: String): ValuesSourceMetricsAggregationDefinition[Self, B] = {
+  def script(script: String): Self = {
     builder.script(script)
     this
   }
@@ -439,6 +443,34 @@ class AvgAggregationDefinition(name: String) extends ValuesSourceMetricsAggregat
 
 class StatsAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[StatsAggregationDefinition, metrics.stats.StatsBuilder] {
   val aggregationBuilder = AggregationBuilders.stats(name)
+}
+
+class PercentilesAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[PercentilesAggregationDefinition, metrics.percentiles.PercentilesBuilder] {
+  val aggregationBuilder = AggregationBuilders.percentiles(name)
+
+  def percents(percents: Double*): PercentilesAggregationDefinition = {
+    builder.percentiles(percents: _*)
+    this
+  }
+
+  def compression(compression: Double): PercentilesAggregationDefinition = {
+    builder.compression(compression)
+    this
+  }
+}
+
+class PercentileRanksAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[PercentileRanksAggregationDefinition, metrics.percentiles.PercentileRanksBuilder] {
+  val aggregationBuilder = AggregationBuilders.percentileRanks(name)
+
+  def percents(percents: Double*): PercentileRanksAggregationDefinition = {
+    builder.percentiles(percents: _*)
+    this
+  }
+
+  def compression(compression: Double): PercentileRanksAggregationDefinition = {
+    builder.compression(compression)
+    this
+  }
 }
 
 class ExtendedStatsAggregationDefinition(name: String) extends ValuesSourceMetricsAggregationDefinition[ExtendedStatsAggregationDefinition, metrics.stats.extended.ExtendedStatsBuilder] {
