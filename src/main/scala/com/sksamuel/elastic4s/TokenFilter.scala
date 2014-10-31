@@ -38,6 +38,18 @@ case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
 }
 
+case class SynonymTokenFilter(name: String, path: String, ignoreCase: Boolean = false, expand: Boolean = true)
+    extends TokenFilterDefinition {
+
+  val filterType = "synonym"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("synonyms_path", path)
+    source.field("ignore_case", ignoreCase)
+    source.field("expand", expand)
+  }
+}
+
 case class TruncateTokenFilter(name: String, length: Int = 10)
     extends TokenFilterDefinition {
 
