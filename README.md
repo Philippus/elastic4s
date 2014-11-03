@@ -24,7 +24,7 @@ eg from a case class, a JSON document, or a Map (or a custom source). Due to its
 
 #### Release
 
-The latest release is 1.3.2 which is compatible with Elasticsearch 1.3.x. There are releases for both Scala 2.10 and Scala 2.11.
+The latest release is 1.3.3 which is compatible with Elasticsearch 1.3.x. There are releases for both Scala 2.10 and Scala 2.11.
 For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
@@ -32,7 +32,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
 |1.4.0.Beta1|1.4.x|
-|1.3.2|1.3.x|
+|1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
 |1.0.3.0|1.0.x|
