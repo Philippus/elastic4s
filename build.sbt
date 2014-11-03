@@ -5,7 +5,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.3.2"
+version := "1.3.2.1-despegar"
 
 scalaVersion := "2.11.2"
 
@@ -17,13 +17,11 @@ publishMavenStyle := true
 
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
-publishTo <<= version {
-  (v: String) =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
+publishTo := {
+  if(version.value.endsWith("SNAPSHOT"))
+    Some("Nexus snapshots" at "http://nexus.despegar.it:8080/nexus/content/repositories/snapshots/")
+  else
+    Some("Nexus releases" at "http://nexus.despegar.it:8080/nexus/content/repositories/releases/")
 }
 
 publishArtifact in Test := false
