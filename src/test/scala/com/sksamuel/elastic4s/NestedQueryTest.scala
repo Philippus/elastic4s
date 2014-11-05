@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.NestedType
-import org.scalatest.{Matchers, FreeSpec}
+import org.scalatest.{ Matchers, FreeSpec }
 
 class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
 
@@ -15,13 +15,13 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
   }.await
 
   client.execute(
-    index into "nested/show" fields(
+    index into "nested/show" fields (
       "name" -> "game of thrones",
       "actor" -> Seq(
         Map("name" -> "peter dinklage", "birthplace" -> "Morristown"),
         Map("name" -> "pedro pascal", "birthplace" -> "Santiago")
       )
-      )
+    )
   ).await
 
   refresh("nested")
