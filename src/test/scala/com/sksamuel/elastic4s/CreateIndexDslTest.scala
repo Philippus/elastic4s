@@ -203,6 +203,18 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
 
+  it should "support multi fields" in {
+    val req = create.index("tweets").shards(2).mappings(
+      "tweet" as (
+        "title" typed StringType index "analyzed" fields (
+          "raw" typed StringType index "not_analyzed"),
+          "meta_data" typed StringType index "analyzed",
+          "article_info" typed StringType index "analyzed"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+    )
+    req._source.string should matchJsonResource("/json/createindex/mapping_multi_fields.json")
+  }
+
   it should "support completion type" in {
     val req = create.index("tweets").shards(2).mappings(
       "tweet" as (

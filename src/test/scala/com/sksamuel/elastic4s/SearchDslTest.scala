@@ -808,6 +808,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
   }
 
+  it should "generate correct json for percentiles aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation percentiles "grades_percentiles" field "grade" percents (95, 99, 99.9) compression (200)
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentiles.json")
+  }
+
+  it should "generate correct json for percentileranks aggregation" in {
+    val req = search in "school" types "student" aggs {
+      aggregation percentileranks "grades_percentileranks" field "grade" percents (95, 99, 99.9) compression (200)
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
+  }
+
   it should "generate correct json for value count aggregation" in {
     val req = search in "school" types "student" aggs {
       aggregation count "grades_count" field "grade" script "doc['grade'].value" lang "lua"
@@ -820,6 +834,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       aggregation cardinality "grades_cardinality" field "grade" rehash true precisionThreshold 40000
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_cardinality.json")
+  }
+
+  it should "generate correct json for nested aggregation" in {
+    val req = search in "music" types "bands" aggs {
+      aggregation nested "nested_agg" path "nested_obj" aggs {
+        aggregation terms "my_nested_terms_agg" field "keyword"
+      }
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_nested.json")
   }
 
   it should "generate correct json for highlighting" in {
@@ -941,5 +964,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
     req.builder.toString should matchJsonResource("/json/search/search_default_query.json")
   }
+
+  it should "generate correct json for global aggregation" in {
+    val req = search in "music" types "bands" aggs {
+      aggregation global "global_agg"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_aggregations_global.json")
+  }
+
 }
 

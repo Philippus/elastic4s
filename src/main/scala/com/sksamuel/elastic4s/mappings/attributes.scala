@@ -577,4 +577,24 @@ object attributes {
     }
   }
 
+  trait AttributeFields extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _fields: Seq[TypedFieldDefinition] = Nil
+
+    def fields(fields: TypedFieldDefinition*): this.type = {
+      _fields = fields
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      if (!_fields.isEmpty) {
+        source.startObject("fields")
+        for (field <- _fields) {
+          field.build(source)
+        }
+        source.endObject()
+      }
+    }
+  }
+
 }
