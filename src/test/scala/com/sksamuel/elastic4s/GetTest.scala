@@ -10,7 +10,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
   client.execute {
     bulk(
-      index into "beer/lager" fields("name" -> "coors light", "brand" -> "coors", "ingredients" -> Seq("hops",
+      index into "beer/lager" fields ("name" -> "coors light", "brand" -> "coors", "ingredients" -> Seq("hops",
         "barley",
         "water",
         "yeast")) id 4,

@@ -1,0 +1,14 @@
+{
+    "query": {
+        "multi_match": {
+            "query" : "this is my query",
+            "fields":[
+                "name",
+                "location",
+                "genre"
+            ],
+            "type": "best_fields",
+            "minimum_should_match": "2<-1 5<80%"
+        }
+   }
+}
