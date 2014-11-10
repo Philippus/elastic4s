@@ -372,6 +372,11 @@ class MultiMatchQueryDefinition(text: String)
     this
   }
 
+  def minimumShouldMatch(minimumShouldMatch: String): MultiMatchQueryDefinition = {
+    builder.minimumShouldMatch(minimumShouldMatch: String)
+    this
+  }
+
   @deprecated("@deprecated use a tieBreaker of 1.0f to disable dis-max query or select the appropriate Type", "1.2.0")
   def useDisMax(useDisMax: Boolean): MultiMatchQueryDefinition = {
     builder.useDisMax(java.lang.Boolean.valueOf(useDisMax))
