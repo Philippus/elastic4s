@@ -109,9 +109,9 @@ the DSL closely mirrors the standard Java API / REST API.
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
 | Index Status                              | `status <index>` |
-| [Add Alias](guide/aliases.md)             | 1.4+ `add aliases "<alias>" on "<index>"` |
+| [Add Alias](guide/aliases.md)             | 1.4+ `add alias "<alias>" on "<index>"` |
 |                                           | 1.3- `aliases add "<alias>" on "<index>"` |
-| [Remove Alias](guide/aliases.md)          | 1.4+ `remove aliases "<alias>" on "<index>"` |
+| [Remove Alias](guide/aliases.md)          | 1.4+ `remove alias "<alias>" on "<index>"` |
 |                                           | 1.3- `aliases remove "<alias>" on "<index>"` |
 | Put mapping                               | `put mapping </index/type> add { mappings block }` |
 | [Create Repository](guide/snapshot.md)    | 1.4+ `create repository <repo> type <type> settings <settings>` |
