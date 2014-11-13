@@ -79,7 +79,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "moving_alias" should "move from 'waterways' to 'waterways_updated'" in {
     val resp = client.execute {
-      get alias "moving_alias" on("waterways", "waterways_updated")
+      get alias "moving_alias" on ("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(resp, "waterways", Set("moving_alias"))
@@ -93,7 +93,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
     }.await
 
     val respAfterMovingAlias = client.execute {
-      get alias "moving_alias" on("waterways", "waterways_updated")
+      get alias "moving_alias" on ("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(respAfterMovingAlias, "waterways_updated", Set("moving_alias"))
