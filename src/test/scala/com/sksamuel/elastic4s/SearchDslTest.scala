@@ -226,9 +226,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
           regexQuery("drummmer" -> "will*") boost 5,
           termQuery("singer" -> "chris")
         ) should {
-          termQuery("bassist" -> "berryman")
+            termQuery("bassist" -> "berryman")
           } not {
-          termQuery("singer" -> "anderson")
+            termQuery("singer" -> "anderson")
           }
       } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
     } preference Preference.Local
@@ -818,14 +818,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for percentiles aggregation" in {
     val req = search in "school" types "student" aggs {
-      aggregation percentiles "grades_percentiles" field "grade" percents(95, 99, 99.9) compression 200
+      aggregation percentiles "grades_percentiles" field "grade" percents (95, 99, 99.9) compression 200
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentiles.json")
   }
 
   it should "generate correct json for percentileranks aggregation" in {
     val req = search in "school" types "student" aggs {
-      aggregation percentileranks "grades_percentileranks" field "grade" percents(95, 99, 99.9) compression 200
+      aggregation percentileranks "grades_percentileranks" field "grade" percents (95, 99, 99.9) compression 200
     }
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
   }

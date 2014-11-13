@@ -30,12 +30,12 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
   "nested object" - {
     "should be searchable by nested field" in {
       val resp1 = client.execute {
-        search in "nested/show" query nested("actor").query(termQuery("actor.name" -> "dinklage"))
+        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage"))
       }.await
       resp1.getHits.totalHits() shouldEqual 1
 
       val resp2 = client.execute {
-        search in "nested/show" query nested("actor").query(termQuery("actor.name" -> "simon"))
+        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "simon"))
       }.await
       resp2.getHits.totalHits() shouldEqual 0
     }
