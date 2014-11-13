@@ -8,7 +8,7 @@ import ElasticDsl._
 class ExplainDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "an explain request" should "accept tuple for index type" in {
-    val req = explain id 123 in "places" -> "cities" query regex("name", "col.pla.")
+    val req = explain id 123 in "places" -> "cities" query regexQuery("name", "col.pla.")
     assert(req.build.id() === "123")
     assert(req.build.index() === "places")
     assert(req.build.`type`() === "cities")
