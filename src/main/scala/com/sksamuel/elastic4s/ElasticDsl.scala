@@ -151,6 +151,10 @@ trait ElasticDsl
     def alias(alias: String) = new RemoveAliasExpectsIndex(alias)
   }
 
+  case object register {
+    def id(id: Any) = new RegisterExpectsIndex(id.toString)
+  }
+
   case object repository {
     @deprecated("use `create repository` instead of `repository create` for a more readable dsl", "1.4.0.Beta2")
     def create(name: String) = new CreateRepositoryExpectsType(name)

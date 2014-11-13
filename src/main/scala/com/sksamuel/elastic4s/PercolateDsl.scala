@@ -10,9 +10,26 @@ import scala.collection.mutable.ListBuffer
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
 
-  implicit def any2register(id: AnyVal): RegisterExpectsIndex = new RegisterExpectsIndex(id.toString)
-  implicit def string2register(id: String): RegisterExpectsIndex = new RegisterExpectsIndex(id)
-  implicit def string2percolate(index: String): PercolateDefinition = new PercolateDefinition(IndexesTypes(index))
+  @deprecated("Use the register id X into Y syntax", "1.4.1")
+  implicit def any2register(id: AnyVal): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id.toString)
+
+  @deprecated("Use the register id X into Y syntax", "1.4.1")
+  implicit def string2register(id: String): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id)
+
+  @deprecated("Use the percolate in X", "1.4.1")
+  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new
+      PercolateDefinitionImplicit(IndexesTypes(index))
+
+  class PercolateDefinitionImplicit(indexType: IndexesTypes) extends PercolateDefinition(indexType) {
+    @deprecated("Use the percolate in X", "1.4.1")
+    override def doc(fields: (String, Any)*): PercolateDefinition = super.doc(fields: _*)
+    @deprecated("Use the percolate in X", "1.4.1")
+    override def doc(fields: Map[String, Any]): PercolateDefinition = super.doc(fields)
+    @deprecated("Use the percolate in X", "1.4.1")
+    override def query(string: String): PercolateDefinition = super.query(string)
+    @deprecated("Use the percolate in X", "1.4.1")
+    override def query(block: => QueryDefinition): PercolateDefinition = super.query(block)
+  }
 
   class PercolateDefinition(indexType: IndexesTypes) {
 
@@ -64,11 +81,13 @@ trait PercolateDsl extends QueryDsl {
     }
   }
 
-  case object register {
-    def id(id: Any) = new RegisterExpectsIndex(id.toString)
+  class RegisterExpectsIndex(id: String) {
+    def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  class RegisterExpectsIndex(id: String) {
+  @deprecated("Use the register id X into Y syntax", "1.4.0")
+  class RegisterExpectsIndexImplicit(id: String) {
+    @deprecated("Use the register id X into Y syntax", "1.4.0")
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
