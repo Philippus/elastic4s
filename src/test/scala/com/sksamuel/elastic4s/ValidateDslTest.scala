@@ -8,7 +8,7 @@ import ElasticDsl._
 class ValidateDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a validate request" should "accept tuple for index type" in {
-    val req = validate in "places" -> "cities" query regex("name", "col.pla.")
+    val req = validate in "places" -> "cities" query regexQuery("name", "col.pla.")
     assert(req.build.indices() === Array("places"))
   }
 

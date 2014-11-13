@@ -12,7 +12,7 @@ class ExplainTest
     with OneInstancePerTest
     with ScalaFutures {
 
-  override implicit def patienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
+  override implicit def patienceConfig: ExplainTest.this.type#PatienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
 
   client.execute {
     index into "queens/england" fields ("name" -> "qe2") id 8

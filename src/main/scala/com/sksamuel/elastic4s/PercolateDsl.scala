@@ -12,15 +12,15 @@ trait PercolateDsl extends QueryDsl {
 
   implicit def any2register(id: AnyVal): RegisterExpectsIndex = new RegisterExpectsIndex(id.toString)
   implicit def string2register(id: String): RegisterExpectsIndex = new RegisterExpectsIndex(id)
-  implicit def string2percolate(index: String): PercolateDefinition = new PercolateDefinition(index)
+  implicit def string2percolate(index: String): PercolateDefinition = new PercolateDefinition(IndexesTypes(index))
 
-  class PercolateDefinition(index: String) {
+  class PercolateDefinition(indexType: IndexesTypes) {
 
     private val _fields = new ListBuffer[(String, Any)]
     private var _rawDoc: Option[String] = None
     private[this] var _query: QueryDefinition = _
 
-    def build = new PercolateRequestBuilder(ProxyClients.client).setSource(_doc).setIndices(index).setDocumentType("doc").request()
+    def build = new PercolateRequestBuilder(ProxyClients.client).setSource(_doc).setIndices(indexType.index).setDocumentType(indexType.types.head).request()
 
     private[elastic4s] def _doc: XContentBuilder = {
       val source = XContentFactory.jsonBuilder().startObject()
