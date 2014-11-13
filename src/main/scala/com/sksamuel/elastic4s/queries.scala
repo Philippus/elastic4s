@@ -90,8 +90,8 @@ trait QueryDsl {
   def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
   @deprecated("use nestedQuery", "1.4.0")
-  def nested(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
-  def nestedQuery(path: String) = nested(path)
+  def nested(path: String): NestedQueryDefinition = nestedQuery(path)
+  def nestedQuery(path: String) : NestedQueryDefinition = new NestedQueryDefinition(path)
 
   def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
 
