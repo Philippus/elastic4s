@@ -17,8 +17,7 @@ trait PercolateDsl extends QueryDsl {
   implicit def string2register(id: String): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id)
 
   @deprecated("Use the percolate in X", "1.4.1")
-  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new
-      PercolateDefinitionImplicit(IndexesTypes(index))
+  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new PercolateDefinitionImplicit(IndexesTypes(index))
 
   class PercolateDefinitionImplicit(indexType: IndexesTypes) extends PercolateDefinition(indexType) {
     @deprecated("Use the percolate in X", "1.4.1")
@@ -85,7 +84,6 @@ trait PercolateDsl extends QueryDsl {
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  @deprecated("Use the register id X into Y syntax", "1.4.0")
   class RegisterExpectsIndexImplicit(id: String) {
     @deprecated("Use the register id X into Y syntax", "1.4.0")
     def into(index: String) = new RegisterDefinition(index, id)

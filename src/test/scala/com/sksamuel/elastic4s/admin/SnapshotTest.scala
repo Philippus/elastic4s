@@ -29,11 +29,11 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
     "can be snapshotted and restored" in {
 
       client.execute {
-        repository create "_snapshot" `type` "fs" settings Map("location" -> location.getAbsolutePath)
+        create repository "_snapshot" `type` "fs" settings Map("location" -> location.getAbsolutePath)
       }.await(10.seconds)
 
       client.execute {
-        snapshot create "snap" in "_snapshot" index "pizza" waitForCompletion true
+        create snapshot "snap" in "_snapshot" index "pizza" waitForCompletion true
       }.await(10.seconds)
 
       client.execute(bulk(
@@ -46,7 +46,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
       client.close("pizza").await
 
       client.execute {
-        snapshot restore "snap" from "_snapshot" index "pizza"
+        restore snapshot "snap" from "_snapshot" index "pizza"
       }.await(10.seconds)
 
       // the doc added after the snapshot should be gone now
