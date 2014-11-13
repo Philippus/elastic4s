@@ -192,7 +192,7 @@ or multiple other options
 To do this we add mappings:
 
 ```scala
-import com.sksamuel.elastic4s.mapping.FieldType._
+import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.StopAnalyzer
 
 client.execute {
