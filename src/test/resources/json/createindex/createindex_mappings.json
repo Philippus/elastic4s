@@ -78,7 +78,8 @@
                     "type": "attachment"
                 },
                 "age": {
-                    "type": "float"
+                    "type": "float",
+                    "index_name" : "indexName"
                 },
                 "area": {
                     "type": "geo_shape"

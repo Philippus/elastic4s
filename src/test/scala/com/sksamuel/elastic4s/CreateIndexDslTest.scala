@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ Matchers, Assertions, FlatSpec, OneInstancePerTest }
-import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
-import ElasticDsl._
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
+
   "the index dsl" should "generate json to include mapping properties" in {
     val req = create.index("users").mappings(
       "tweets" as (
@@ -19,7 +20,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "location" typed IntegerType nullValue 0,
         "email" typed BinaryType,
         "picture" typed AttachmentType,
-        "age" typed FloatType,
+        "age" typed FloatType indexName "indexName",
         "area" typed GeoShapeType
       ) all false analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
     )
