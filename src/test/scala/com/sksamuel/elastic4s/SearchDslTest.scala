@@ -414,7 +414,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for field sort" in {
     val req = search in "music" types "bands" sort {
-      by field "singer" ignoreUnmapped true missing "no-singer" order SortOrder.DESC mode MultiMode
+      by field "singer" missing "no-singer" order SortOrder.DESC mode MultiMode
         .Avg nestedPath "nest"
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_field.json")
@@ -584,7 +584,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multi match query" in {
     val req = search in "music" types "bands" query {
-      multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 useDisMax true tieBreaker 4.5 zeroTermsQuery
+      multiMatchQuery("this is my query") fields("name", "location", "genre") analyzer WhitespaceAnalyzer boost 3.4 cutoffFrequency 1.7 fuzziness "something" prefixLength 4 minimumShouldMatch 2 tieBreaker 4.5 zeroTermsQuery
         MatchQueryBuilder.ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator Operator.AND matchType Type.CROSS_FIELDS
     }
     req._builder.toString should matchJsonResource("/json/search/search_query_multi_match.json")

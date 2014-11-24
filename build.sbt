@@ -1,4 +1,5 @@
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
@@ -31,8 +32,6 @@ publishArtifact in Test := false
 parallelExecution in Test := false
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
-
-instrumentSettings
 
 libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.4.0",
