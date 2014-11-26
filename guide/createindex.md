@@ -13,7 +13,7 @@ Lets start by defining an index called `places` that has a single type (`city`) 
 ```scala
 // imports - will be omitted for other examples
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.mapping.FieldType._
+import com.sksamuel.elastic4s.mappings.FieldType._
 
 client.execute {
   create index "places" mappings (
