@@ -47,17 +47,14 @@ Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSour
 
 ## Introduction
 
-The basic format of the DSL is that requests (eg a search request, a delete request, an update request, etc) are created using the DSL,
-and then they are passed to the `execute` method on the client instance, which will return a response. The requests are
-written in a style that is similar to SQL. Eg, `search in "index/type" query "findme"`
+The basic usage of the Scala driver is that you create an instance of `ElasticClient` and then invoke the various `execute` methods with the requests you want to perform. The execute methods are asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a search request will return a response of type `SearchResponse` which contains the results of the search.
 
-All requests on the client are asynchronous and will return a standard Scala `Future[T]` where T is the response type
-appropriate to your request. For example a search request will return a response of type `SearchResponse`.
+Requests, such as inserting a document, searching, creating an index, etc, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, one would do: `search in "index/type" query "findthistext"`
+
 The response objects are, for the most part, the exact same type the Java API returns.
 This is because there is mostly no reason to wrap these.
 
 All the DSL keywords are located in the `ElasticDsl` trait which needs to be imported or extended.
-The standard client is a class called `ElasticClient`. To create a client use the methods on the `ElasticClient` companion object.
 
 An example is worth 1000 characters so here is a quick example of how to create a local node with a client
  and index a one field document. Then we will search for that document using a simple text query.
