@@ -14,7 +14,6 @@
             "max_expansions": 4,
             "minimum_should_match": "2",
             "fuzzy_rewrite": "some-rewrite",
-            "use_dis_max": true,
             "tie_breaker": 4.5,
             "lenient": true,
             "cutoff_frequency": 1.7,

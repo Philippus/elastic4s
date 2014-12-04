@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-sealed trait TokenFilter extends AnalyzerFilter
+trait TokenFilter extends AnalyzerFilter
 
 sealed trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
 
@@ -36,6 +36,18 @@ case object PorterStemTokenFilter extends TokenFilter {
 
 case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
+}
+
+case class SynonymTokenFilter(name: String, path: String, ignoreCase: Boolean = false, expand: Boolean = true)
+    extends TokenFilterDefinition {
+
+  val filterType = "synonym"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("synonyms_path", path)
+    source.field("ignore_case", ignoreCase)
+    source.field("expand", expand)
+  }
 }
 
 case class TruncateTokenFilter(name: String, length: Int = 10)

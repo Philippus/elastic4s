@@ -10,7 +10,10 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
   client.execute {
     bulk(
-      index into "beer/lager" fields ("name" -> "coors light", "brand" -> "coors") id 4,
+      index into "beer/lager" fields ("name" -> "coors light", "brand" -> "coors", "ingredients" -> Seq("hops",
+        "barley",
+        "water",
+        "yeast")) id 4,
       index into "beer/lager" fields ("name" -> "bud lite", "brand" -> "bud") id 8
     )
   }.await
@@ -47,7 +50,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
     whenReady(resp) { result =>
       result.isExists should be(true)
       result.getId shouldBe "8"
-      result.getSource should not be (null)
+      result.getSource should not be null
       result.getFields should have size 0
     }
   }
@@ -69,39 +72,50 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
   it should "retrieve a document asynchronously by id w/ name and w/o source" in {
 
     val resp = client.execute {
-      get id 8 from "beer/lager" fields ("name")
+      get id 8 from "beer/lager" fields "name"
     }
 
     whenReady(resp) { result =>
       result.isExists should be(true)
       result.getId shouldBe "8"
       result.getSource should be(null)
-      result.getFields should (contain key ("name") and not contain key("brand"))
+      result.getFields should (contain key "name" and not contain key("brand"))
     }
   }
 
   it should "retrieve a document asynchronously by id w/ name and brand and source" in {
 
     val resp = client.execute {
-      get id 4 from "beer/lager" fields ("name") fetchSourceContext true
+      get id 4 from "beer/lager" fields "name" fetchSourceContext true
     }
 
     whenReady(resp) { result =>
       result.isExists should be(true)
       result.getId shouldBe "4"
-      result.getSource should not be (null)
-      result.getFields should (contain key ("name") and not contain key("brand"))
+      result.getSource should not be null
+      result.getFields should (contain key "name" and not contain key("brand"))
     }
   }
 
   it should "not retrieve any documents w/ unknown id" in {
 
     val resp = client.execute {
-      get id 1 from "beer/lager" fields ("name") fetchSourceContext true
+      get id 1 from "beer/lager" fields "name" fetchSourceContext true
     }
 
     whenReady(resp) { result =>
       result.isExists should be(false)
+    }
+  }
+
+  import scala.collection.JavaConverters._
+
+  it should "retrieve multi value fields" in {
+    val resp = client.execute {
+      get id 4 from "beer/lager" fields "ingredients"
+    }
+    whenReady(resp) {
+      result => println(result.getField("ingredients").getValues.asScala)
     }
   }
 

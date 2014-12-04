@@ -24,15 +24,15 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
   blockUntilCount(1, "waterways_updated")
 
   client.execute {
-    aliases add "aquatic_locations" on "waterways"
+    add alias "aquatic_locations" on "waterways"
   }.await
 
   client.execute {
-    aliases add "english_waterways" on "waterways" filter FilterBuilders.termFilter("country", "england")
+    add alias "english_waterways" on "waterways" filter FilterBuilders.termFilter("country", "england")
   }.await
 
   client.execute {
-    aliases add "moving_alias" on "waterways"
+    add alias "moving_alias" on "waterways"
   }.await
 
   "waterways index" should "return 'River Dee' in England and Wales for search" in {
@@ -63,7 +63,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "be in query for alias" in {
     val resp = client.execute {
-      aliases get "english_waterways"
+      get alias "english_waterways"
     }.await
 
     compareAliasesForIndex(resp, "waterways", Set("english_waterways"))
@@ -71,7 +71,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "be in query for alias on waterways" in {
     val resp = client.execute {
-      aliases get "english_waterways" on "waterways"
+      get alias "english_waterways" on "waterways"
     }.await
 
     compareAliasesForIndex(resp, "waterways", Set("english_waterways"))
@@ -79,7 +79,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "moving_alias" should "move from 'waterways' to 'waterways_updated'" in {
     val resp = client.execute {
-      aliases get "moving_alias" on ("waterways", "waterways_updated")
+      get alias "moving_alias" on ("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(resp, "waterways", Set("moving_alias"))
@@ -87,13 +87,13 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     client.execute {
       aliases(
-        aliases remove "moving_alias" on "waterways",
-        aliases add "moving_alias" on "waterways_updated"
+        remove alias "moving_alias" on "waterways",
+        add alias "moving_alias" on "waterways_updated"
       )
     }.await
 
     val respAfterMovingAlias = client.execute {
-      aliases get "moving_alias" on ("waterways", "waterways_updated")
+      get alias "moving_alias" on ("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(respAfterMovingAlias, "waterways_updated", Set("moving_alias"))

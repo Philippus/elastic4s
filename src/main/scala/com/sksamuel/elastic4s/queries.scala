@@ -15,6 +15,7 @@ trait QueryDsl {
 
   def query = this
 
+  @deprecated("use boostingQuery", "1.4.0")
   def boosting: BoostingQueryDefinition = boostingQuery
   def boostingQuery: BoostingQueryDefinition = new BoostingQueryDefinition
 
@@ -51,8 +52,10 @@ trait QueryDsl {
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(Left(query))
   def functionScoreQuery(filter: FilterDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(Right(filter))
 
-  def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
   def filteredQuery = new FilteredQueryDefinition
+
+  @deprecated("use fuzzyQuery", "1.4.0")
+  def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
   def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
 
   def hasChildQuery = new HasChildExpectsType
@@ -86,19 +89,26 @@ trait QueryDsl {
 
   def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
-  def nested(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
+  @deprecated("use nestedQuery", "1.4.0")
+  def nested(path: String): NestedQueryDefinition = nestedQuery(path)
+  def nestedQuery(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
   def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
 
+  @deprecated("use rangeQuery", "1.4.0")
   def range(field: String): RangeQueryDefinition = rangeQuery(field)
   def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
+  @deprecated("use regexQuery", "1.4.0")
   def regex(tuple: (String, Any)): RegexQueryDefinition = regex(tuple._1, tuple._2)
+  @deprecated("use regexQuery", "1.4.0")
   def regex(field: String, value: Any): RegexQueryDefinition = regexQuery(field, value)
   def regexQuery(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
 
+  @deprecated("use prefixQuery", "1.4.0")
   def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple)
+  @deprecated("use prefixQuery", "1.4.0")
   def prefix(field: String, value: Any): PrefixQueryDefinition = prefixQuery(field, value)
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
@@ -109,7 +119,9 @@ trait QueryDsl {
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
 
+  @deprecated("use termQuery", "1.4.0")
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
+  @deprecated("use termQuery", "1.4.0")
   def term(field: String, value: Any): TermQueryDefinition = termQuery(field, value)
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
@@ -122,7 +134,9 @@ trait QueryDsl {
     def query(q: QueryDefinition) = new TopChildrenQueryDefinition(`type`, q)
   }
 
+  @deprecated("use wildcardQuery", "1.4.0")
   def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple)
+  @deprecated("use wildcardQuery", "1.4.0")
   def wildcard(field: String, value: Any): WildcardQueryDefinition = wildcardQuery(field, value)
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
@@ -355,6 +369,11 @@ class MultiMatchQueryDefinition(text: String)
 
   def minimumShouldMatch(minimumShouldMatch: Int): MultiMatchQueryDefinition = {
     builder.minimumShouldMatch(minimumShouldMatch.toString)
+    this
+  }
+
+  def minimumShouldMatch(minimumShouldMatch: String): MultiMatchQueryDefinition = {
+    builder.minimumShouldMatch(minimumShouldMatch: String)
     this
   }
 
@@ -925,7 +944,7 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
     this
   }
 
-  def fields(fields: String*): SimpleStringQueryDefinition = {
+  def asfields(fields: String*): SimpleStringQueryDefinition = {
     fields foreach field
     this
   }

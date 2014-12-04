@@ -24,15 +24,14 @@ eg from a case class, a JSON document, or a Map (or a custom source). Due to its
 
 #### Release
 
-The latest release is 1.3.2 which is compatible with Elasticsearch 1.3.x. There are releases for both Scala 2.10 and Scala 2.11.
-For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.4.0 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.4.0.Beta1|1.4.x|
-|1.3.2|1.3.x|
+|1.4.0|1.4.x|
+|1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
 |1.0.3.0|1.0.x|
@@ -48,17 +47,14 @@ Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSour
 
 ## Introduction
 
-The basic format of the DSL is that requests (eg a search request, a delete request, an update request, etc) are created using the DSL,
-and then they are passed to the `execute` method on the client instance, which will return a response. The requests are
-written in a style that is similar to SQL. Eg, `search in "index/type" query "findme"`
+The basic usage of the Scala driver is that you create an instance of `ElasticClient` and then invoke the various `execute` methods with the requests you want to perform. The execute methods are asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a search request will return a response of type `SearchResponse` which contains the results of the search.
 
-All requests on the client are asynchronous and will return a standard Scala `Future[T]` where T is the response type
-appropriate to your request. For example a search request will return a response of type `SearchResponse`.
+Requests, such as inserting a document, searching, creating an index, etc, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, one would do: `search in "index/type" query "findthistext"`
+
 The response objects are, for the most part, the exact same type the Java API returns.
 This is because there is mostly no reason to wrap these.
 
 All the DSL keywords are located in the `ElasticDsl` trait which needs to be imported or extended.
-The standard client is a class called `ElasticClient`. To create a client use the methods on the `ElasticClient` companion object.
 
 An example is worth 1000 characters so here is a quick example of how to create a local node with a client
  and index a one field document. Then we will search for that document using a simple text query.
@@ -110,9 +106,9 @@ the DSL closely mirrors the standard Java API / REST API.
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
 | Index Status                              | `status <index>` |
-| [Add Alias](guide/aliases.md)             | 1.4+ `add aliases "<alias>" on "<index>"` |
+| [Add Alias](guide/aliases.md)             | 1.4+ `add alias "<alias>" on "<index>"` |
 |                                           | 1.3- `aliases add "<alias>" on "<index>"` |
-| [Remove Alias](guide/aliases.md)          | 1.4+ `remove aliases "<alias>" on "<index>"` |
+| [Remove Alias](guide/aliases.md)          | 1.4+ `remove alias "<alias>" on "<index>"` |
 |                                           | 1.3- `aliases remove "<alias>" on "<index>"` |
 | Put mapping                               | `put mapping </index/type> add { mappings block }` |
 | [Create Repository](guide/snapshot.md)    | 1.4+ `create repository <repo> type <type> settings <settings>` |
@@ -193,7 +189,7 @@ or multiple other options
 To do this we add mappings:
 
 ```scala
-import com.sksamuel.elastic4s.mapping.FieldType._
+import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.StopAnalyzer
 
 client.execute {
@@ -458,7 +454,7 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.3.2"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.4.0"
 ```
 
 For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
@@ -467,7 +463,7 @@ For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.10</artifactId>
-    <version>1.3.2</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 

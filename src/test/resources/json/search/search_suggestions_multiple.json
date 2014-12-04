@@ -1,1 +1,43 @@
-{}
+{
+    "query": {"query_string": {"query": "coldplay"}},
+    "suggest": {
+        "my-suggestion-1": {
+            "text": "clocks by culdpaly",
+            "term": {
+                "field": "names",
+                "shard_size": 2,
+                "suggest_mode": "popular",
+                "accuracy": 0.6,
+                "max_edits": 4
+            }
+        },
+        "my-suggestion-2": {
+            "text": "aqualuck by jethro toll",
+            "term": {
+                "field": "names",
+                "size": 5,
+                "suggest_mode": "missing",
+                "prefix_length": 3,
+                "min_doc_freq": 0.2
+            }
+        },
+        "my-suggestion-3": {
+            "text": "bountiful day by u22",
+            "term": {
+                "analyzer": "standard",
+                "field": "names",
+                "string_distance": "levenstein",
+                "max_inspections": 3
+            }
+        },
+        "my-suggestion-4": {
+            "text": "whatever some text",
+            "term": {
+                "field": "names",
+                "suggest_mode": "always",
+                "max_term_freq": 0.5,
+                "min_word_length": 5
+            }
+        }
+    }
+}

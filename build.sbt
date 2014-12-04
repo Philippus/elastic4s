@@ -1,15 +1,16 @@
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+
 import scalariform.formatter.preferences._
 
 name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.4.0.Beta2"
+version := "1.4.0"
 
 scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.10.4", "2.11.2")
+crossScalaVersions := Seq("2.10.4", "2.11.4")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -32,14 +33,8 @@ parallelExecution in Test := false
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
-instrumentSettings
-
-jennerProjectId := "7b0a65b8-7c9a-4f25-864c-3f3e009752b9"
-
-jennerApiKey := "04ba7a59-5bad-4862-9bc2-a7e1aa0b93ab"
-
 libraryDependencies ++= Seq(
-  "org.elasticsearch"              %  "elasticsearch"               % "1.4.0.Beta1",
+  "org.elasticsearch"              %  "elasticsearch"               % "1.4.0",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.3"  % "optional" ,

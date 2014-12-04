@@ -65,6 +65,8 @@ trait ElasticDsl
     def min(name: String) = new MinAggregationDefinition(name)
     def missing(name: String) = new MissingAggregationDefinition(name)
     def nested(name: String) = new NestedAggregationDefinition(name)
+    def percentiles(name: String) = new PercentilesAggregationDefinition(name)
+    def percentileranks(name: String) = new PercentileRanksAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
@@ -147,6 +149,10 @@ trait ElasticDsl
 
   case object remove {
     def alias(alias: String) = new RemoveAliasExpectsIndex(alias)
+  }
+
+  case object register {
+    def id(id: Any) = new RegisterExpectsIndex(id.toString)
   }
 
   case object repository {
