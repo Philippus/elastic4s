@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
 import com.sksamuel.elastic4s.source.StringDocumentSource
+import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
+import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse
 import org.elasticsearch.action.{ ActionFuture, ActionListener }
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
@@ -216,6 +218,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
   def exists(indexes: String*): Future[IndicesExistsResponse] =
     injectFuture[IndicesExistsResponse](client.admin.indices.prepareExists(indexes: _*).execute)
 
+  def typesExist(indices: String*)(types: String*): Future[TypesExistsResponse] =
+    injectFuture[TypesExistsResponse](client.admin.indices.prepareTypesExists(indices: _*).setTypes(types: _*).execute)
+
   def searchScroll(scrollId: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
 
@@ -244,6 +249,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def segments(indexes: String*): Future[IndicesSegmentResponse] =
     injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
+
+  def deleteMapping(indexes: String*)(types: String*) =
+    injectFuture[DeleteMappingResponse](client.admin.indices.prepareDeleteMapping(indexes: _*).setType(types: _*).execute)
 
   def putMapping(indexes: String*)(mapping: MappingDefinition) =
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
