@@ -5,34 +5,34 @@ import com.sksamuel.elastic4s.mappings.MappingDsl
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with ExplainDsl
-    with FacetDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with ExplainDsl
+  with FacetDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl {
 
   case object add {
     def alias(alias: String) = new AddAliasExpectsIndex(alias)
@@ -146,6 +146,10 @@ trait ElasticDsl
 
   case object put {
     def mapping(indexes: IndexesTypes) = new PutMappingDefinition(indexes)
+  }
+
+  case object recover {
+    def index(indexes: String*) = new IndexRecoveryDefinition(indexes: _*)
   }
 
   case object remove {
