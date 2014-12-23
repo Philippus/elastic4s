@@ -26,6 +26,7 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.optimize.{ OptimizeRequest, OptimizeResponse }
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.action.admin.indices.recovery.RecoveryResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateResponse
@@ -156,6 +157,9 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
   def execute(i: IndexStatusDefinition): Future[IndicesStatusResponse] =
     injectFuture[IndicesStatusResponse](client.admin.indices.status(i.build, _))
+
+  def execute(i: IndexRecoveryDefinition): Future[RecoveryResponse] =
+    injectFuture[RecoveryResponse](client.admin.indices.recoveries(i.build, _))
 
   def execute(req: ValidateQueryRequest): Future[ValidateQueryResponse] =
     injectFuture[ValidateQueryResponse](client.admin.indices.validateQuery(req, _))

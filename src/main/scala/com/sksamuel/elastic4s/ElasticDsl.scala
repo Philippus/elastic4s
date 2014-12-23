@@ -20,6 +20,7 @@ trait ElasticDsl
     with ExplainDsl
     with FacetDsl
     with GetDsl
+    with IndexRecoveryDsl
     with IndexStatusDsl
     with MappingDsl
     with MoreLikeThisDsl
