@@ -144,8 +144,12 @@ To connect to a remote elastic cluster then you need to use the remote() call sp
 ```scala
 // single node
 val client = ElasticClient.remote("host1", 9300)
-// or for multiple nodes
-val client = ElasticClient.remote("host1" -> 9300, "host2" -> 9300)
+```
+
+For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format elasticsearch://host:port(,host:port,...) (Note, no parameters can be added). For example:
+```scala
+val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876")
+val client = ElasticClient.remote(uri)
 ```
 
 If you need to pass settings to the client, then you need to invoke remote() with a settings object.
