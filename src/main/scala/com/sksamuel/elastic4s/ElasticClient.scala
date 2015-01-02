@@ -52,7 +52,7 @@ import scala.concurrent._
 import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Long) {
+class ElasticClient(val client: org.elasticsearch.client.Client) {
 
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
   def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
@@ -370,12 +370,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client, var timeout: Lo
 
 object ElasticClient {
 
-  val DefaultTimeout = 5000
+  def fromClient(client: Client): ElasticClient = fromClient(client)
+  @deprecated("timeout is no longer needed, it is now ignored, so you can use the fromClient(client) method instead", "1.4.2")
+  def fromClient(client: Client, timeout: Long = 0): ElasticClient = new ElasticClient(client)
 
-  def fromClient(client: Client): ElasticClient = fromClient(client, DefaultTimeout)
-  def fromClient(client: Client, timeout: Long = DefaultTimeout): ElasticClient = new ElasticClient(client, timeout)
-  def fromNode(node: Node): ElasticClient = fromNode(node, DefaultTimeout)
-  def fromNode(node: Node, timeout: Long = DefaultTimeout): ElasticClient = fromClient(node.client, timeout)
+  def fromNode(node: Node): ElasticClient = fromNode(node)
+  @deprecated("timeout is no longer needed, it is now ignored, so you can use the fromNode(client) method instead", "1.4.2")
+  def fromNode(node: Node, timeout: Long = 0): ElasticClient = fromClient(node.client)
 
   def remote(host: String, port: Int): ElasticClient = remote((host, port))
   def remote(addresses: (String, Int)*): ElasticClient =
@@ -384,11 +385,12 @@ object ElasticClient {
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
     for (address <- addresses) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
-    fromClient(client, DefaultTimeout)
+    fromClient(client)
   }
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
-  def local(settings: Settings, timeout: Long = DefaultTimeout): ElasticClient =
+  @deprecated("timeout is no longer needed, it is now ignored, so you can use the local(client) method instead", "1.4.2")
+  def local(settings: Settings, timeout: Long = 0): ElasticClient =
     fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node(), timeout)
 
 }
