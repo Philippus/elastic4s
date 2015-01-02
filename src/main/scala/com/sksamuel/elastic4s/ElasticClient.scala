@@ -384,19 +384,18 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
 
 object ElasticClient {
 
-  def fromClient(client: Client): ElasticClient = fromClient(client)
+  def fromClient(client: Client): ElasticClient = new ElasticClient(client)
   @deprecated("timeout is no longer needed, it is ignored, so you can use the fromClient(client) method instead",
     "1.4.2")
-  def fromClient(client: Client, timeout: Long = 0): ElasticClient = new ElasticClient(client)
+  def fromClient(client: Client, timeout: Long): ElasticClient = fromClient(client)
 
-  def fromNode(node: Node): ElasticClient = fromNode(node)
+  def fromNode(node: Node): ElasticClient = fromClient(node.client)
   @deprecated("timeout is no longer needed, it is ignored, so you can use the fromNode(client) method instead", "1.4.2")
-  def fromNode(node: Node, timeout: Long = 0): ElasticClient = fromClient(node.client)
+  def fromNode(node: Node, timeout: Long): ElasticClient = fromNode(node)
 
-  /**
-   * Connect this client to the single remote elasticsearch process.
-   * Note: Remote means out of process, it can of course be on the local machine.
-   */
+  /** Connect this client to the single remote elasticsearch process.
+    * Note: Remote means out of process, it can of course be on the local machine.
+    */
   def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
   def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
 
@@ -407,10 +406,10 @@ object ElasticClient {
     fromClient(client)
   }
 
-  @deprecated("Prefer the methods that use ElasticsearchUri", "1.4.2")
+  @deprecated("For multiple hosts, prefer the methods that use ElasticsearchUri", "1.4.2")
   def remote(addresses: (String, Int)*): ElasticClient = remote(ImmutableSettings.builder().build(), addresses: _*)
 
-  @deprecated("Prefer the methods that use ElasticsearchUri", "1.4.2")
+  @deprecated("For multiple hosts, Prefer the methods that use ElasticsearchUri", "1.4.2")
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
     for ( (host, port) <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
@@ -418,9 +417,12 @@ object ElasticClient {
   }
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
+  def local(settings: Settings): ElasticClient = {
+    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
+  }
   @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
-  def local(settings: Settings, timeout: Long = 0): ElasticClient =
-    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node(), timeout)
+  def local(settings: Settings, timeout: Long): ElasticClient = local(settings)
+
 }
 
 object ElasticsearchClientUri {
