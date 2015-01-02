@@ -1,52 +1,55 @@
 package com.sksamuel.elastic4s
 
+import java.net.URI
+
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
+import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, MappingDefinition}
 import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse
-import org.elasticsearch.action.{ ActionFuture, ActionListener }
+import org.elasticsearch.action.{ActionFuture, ActionListener}
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotResponse
-import org.elasticsearch.action.admin.indices.alias.get.{ GetAliasesRequest, GetAliasesResponse }
-import org.elasticsearch.action.admin.indices.alias.{ IndicesAliasesRequest, IndicesAliasesResponse }
+import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
+import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
-import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
+import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
-import org.elasticsearch.action.admin.indices.optimize.{ OptimizeRequest, OptimizeResponse }
+import org.elasticsearch.action.admin.indices.optimize.{OptimizeRequest, OptimizeResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.recovery.RecoveryResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateResponse
-import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryRequest, ValidateQueryResponse }
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.bulk.BulkResponse
-import org.elasticsearch.action.count.{ CountRequest, CountResponse }
-import org.elasticsearch.action.delete.{ DeleteRequest, DeleteResponse }
-import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequest, DeleteByQueryResponse }
+import org.elasticsearch.action.count.{CountRequest, CountResponse}
+import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
 import org.elasticsearch.action.explain.ExplainResponse
 import org.elasticsearch.action.get._
-import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.action.percolate.PercolateResponse
-import org.elasticsearch.action.search.{ MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse }
-import org.elasticsearch.action.update.{ UpdateRequest, UpdateResponse }
+import org.elasticsearch.action.search.{MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse}
+import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
+import org.elasticsearch.bootstrap.Elasticsearch
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.settings.{ ImmutableSettings, Settings }
+import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.node.{ Node, NodeBuilder }
+import org.elasticsearch.node.{Node, NodeBuilder}
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -255,13 +258,22 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
     injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
 
   def deleteMapping(indexes: String*)(types: String*) =
-    injectFuture[DeleteMappingResponse](client.admin.indices.prepareDeleteMapping(indexes: _*).setType(types: _*).execute)
+    injectFuture[DeleteMappingResponse](client
+      .admin
+      .indices
+      .prepareDeleteMapping(indexes: _*)
+      .setType(types: _*)
+      .execute)
 
   def putMapping(indexes: String*)(mapping: MappingDefinition) =
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
 
-  def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m", preserveId: Boolean = true)(implicit ec: ExecutionContext): Future[Unit] = {
+  def reindex(sourceIndex: String,
+              targetIndex: String,
+              chunkSize: Int = 500,
+              scroll: String = "5m",
+              preserveId: Boolean = true)(implicit ec: ExecutionContext): Future[Unit] = {
     execute {
       ElasticDsl.search in sourceIndex limit chunkSize scroll scroll searchType SearchType.Scan query matchall
     } flatMap { response =>
@@ -270,7 +282,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
         searchScroll(scrollId, scroll) flatMap { response =>
           val hits = response.getHits.hits
           if (hits.length > 0) {
-            Future.sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
+            Future
+              .sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
               execute {
                 ElasticDsl.bulk(
                   pairs map {
@@ -280,7 +293,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
                   }: _*
                 )
               }
-            }).flatMap(_ => _scroll(response.getScrollId))
+            })
+              .flatMap(_ => _scroll(response.getScrollId))
           } else {
             Future.successful(())
           }
@@ -340,7 +354,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
 
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
 
-    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext, duration: Duration): Unit = {
+    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")
+               (implicit ec: ExecutionContext, duration: Duration): Unit = {
       Await.result(client.reindex(sourceIndex, targetIndex, chunkSize, scroll), duration)
     }
 
@@ -365,32 +380,64 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
     })
     p.future
   }
-
 }
 
 object ElasticClient {
 
   def fromClient(client: Client): ElasticClient = fromClient(client)
-  @deprecated("timeout is no longer needed, it is now ignored, so you can use the fromClient(client) method instead", "1.4.2")
+  @deprecated("timeout is no longer needed, it is ignored, so you can use the fromClient(client) method instead",
+    "1.4.2")
   def fromClient(client: Client, timeout: Long = 0): ElasticClient = new ElasticClient(client)
 
   def fromNode(node: Node): ElasticClient = fromNode(node)
-  @deprecated("timeout is no longer needed, it is now ignored, so you can use the fromNode(client) method instead", "1.4.2")
+  @deprecated("timeout is no longer needed, it is ignored, so you can use the fromNode(client) method instead", "1.4.2")
   def fromNode(node: Node, timeout: Long = 0): ElasticClient = fromClient(node.client)
 
-  def remote(host: String, port: Int): ElasticClient = remote((host, port))
-  def remote(addresses: (String, Int)*): ElasticClient =
-    remote(ImmutableSettings.builder().build(), addresses: _*)
+  /**
+   * Connect this client to the single remote elasticsearch process.
+   * Note: Remote means out of process, it can of course be on the local machine.
+   */
+  def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
+  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
 
+  def remote(settings: Settings, host: String, port: Int): ElasticClient = remote(settings, host, port)
+  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
+    val client = new TransportClient(settings)
+    for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    fromClient(client)
+  }
+
+  @deprecated("Prefer the methods that use ElasticsearchUri", "1.4.2")
+  def remote(addresses: (String, Int)*): ElasticClient = remote(ImmutableSettings.builder().build(), addresses: _*)
+
+  @deprecated("Prefer the methods that use ElasticsearchUri", "1.4.2")
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
-    for (address <- addresses) client.addTransportAddress(new InetSocketTransportAddress(address._1, address._2))
+    for ( (host, port) <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
-  @deprecated("timeout is no longer needed, it is now ignored, so you can use the local(client) method instead", "1.4.2")
+  @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
   def local(settings: Settings, timeout: Long = 0): ElasticClient =
     fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node(), timeout)
-
 }
+
+object ElasticsearchClientUri {
+  private val PREFIX = "elasticsearch://"
+  def apply(str: String): ElasticsearchClientUri = {
+    require(str != null && str.trim.nonEmpty, "Invalid uri, must be in format host:port,host:port,...")
+    val withoutPrefix = str.replace(PREFIX, "")
+    val hosts = withoutPrefix.split(',').map { host =>
+      val parts = host.split(':')
+      if (parts.size == 2) {
+        parts(0) -> parts(1).toInt
+      } else {
+        throw new IllegalArgumentException("Invalid uri, must be in format host:port,host:port,...")
+      }
+    }
+    ElasticsearchClientUri(str, hosts.toList)
+  }
+}
+
+case class ElasticsearchClientUri(uri: String, hosts: List[(String, Int)])
