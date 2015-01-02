@@ -11,7 +11,7 @@ import scala.collection.mutable.ListBuffer
 trait MappingDsl {
   def id: FieldDefinition = "_id"
   implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
-  implicit def map(`type`: String) = new MappingDefinition(`type`)
+  implicit def map(`type`: String): MappingDefinition = new MappingDefinition(`type`)
 
   def mapping(indexes: String*) = new GetMappingDefinition(indexes)
   def mapping = MapExpectsFrom
