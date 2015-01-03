@@ -39,11 +39,11 @@ trait ElasticDsl
   }
 
   case object aliases {
-    @deprecated("use `add aliases` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
+    @deprecated("use `add alias` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
     def add(alias: String) = new AddAliasExpectsIndex(alias)
-    @deprecated("use `remove aliases` instead of `aliases remove` for a more readable dsl", "1.4.0.Beta2")
+    @deprecated("use `remove alias` instead of `aliases remove` for a more readable dsl", "1.4.0.Beta2")
     def remove(alias: String) = new RemoveAliasExpectsIndex(alias)
-    @deprecated("use `get aliases` instead of `aliases get` for a more readable dsl", "1.4.0.Beta2")
+    @deprecated("use `get alias` instead of `aliases get` for a more readable dsl", "1.4.0.Beta2")
     def get(aliases: String*) = new GetAliasDefinition(aliases)
   }
 
