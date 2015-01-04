@@ -206,7 +206,7 @@ case object Dynamic extends DynamicMapping
 case object False extends DynamicMapping
 
 @SuppressWarnings(Array("all"))
-private[mappings] class FieldDefinition(val name: String) {
+class FieldDefinition(val name: String) {
 
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
