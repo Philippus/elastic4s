@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import java.net.URI
-
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
@@ -44,7 +42,6 @@ import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.action.percolate.PercolateResponse
 import org.elasticsearch.action.search.{ MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse }
 import org.elasticsearch.action.update.{ UpdateRequest, UpdateResponse }
-import org.elasticsearch.bootstrap.Elasticsearch
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.settings.{ ImmutableSettings, Settings }
