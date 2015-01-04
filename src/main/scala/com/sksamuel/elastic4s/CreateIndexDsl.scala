@@ -74,7 +74,7 @@ class CreateIndexDefinition(name: String) {
     this
   }
 
-  def analysis(analyzers: AnalyzerDefinition*) = analysis(analyzers)
+  def analysis(analyzers: AnalyzerDefinition*): this.type = analysis(analyzers)
 
   def _source: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
