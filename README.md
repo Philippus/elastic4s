@@ -23,13 +23,13 @@ eg from a case class, a JSON document, or a Map (or a custom source). Due to its
 
 #### Release
 
-The latest release is 1.4.3 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.4.6 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.4.3|1.4.x|
+|1.4.6|1.4.x|
 |1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
@@ -40,9 +40,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSource, the following dependencies are required in your project:
 
-* "com.fasterxml.jackson.core"     %  "jackson-core"         % "2.4.1"
-* "com.fasterxml.jackson.core"     %  "jackson-databind"     % "2.4.1"
-* "com.fasterxml.jackson.module"   %% "jackson-module-scala" % "2.4.1"
+* "com.fasterxml.jackson.core"     %  "jackson-core"         % "2.4.2"
+* "com.fasterxml.jackson.core"     %  "jackson-databind"     % "2.4.2"
+* "com.fasterxml.jackson.module"   %% "jackson-module-scala" % "2.4.2"
 
 ## Introduction
 
