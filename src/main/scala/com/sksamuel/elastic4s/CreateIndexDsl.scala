@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.mutable
 
@@ -69,10 +69,12 @@ class CreateIndexDefinition(name: String) {
     this
   }
 
-  def analysis(analyzers: AnalyzerDefinition*) = {
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): this.type = {
     _analysis = Some(new AnalysisDefinition(analyzers))
     this
   }
+
+  def analysis(analyzers: AnalyzerDefinition*) = analysis(analyzers)
 
   def _source: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
@@ -143,7 +145,7 @@ class CreateIndexDefinition(name: String) {
 
     if (_mappings.size > 0) {
       source.startObject("mappings")
-      for (mapping <- _mappings) {
+      for ( mapping <- _mappings ) {
         mapping.build(source)
       }
       source.endObject()
@@ -153,7 +155,7 @@ class CreateIndexDefinition(name: String) {
   }
 }
 
-class AnalysisDefinition(val analyzers: Iterable[AnalyzerDefinition]) {
+case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition]) {
 
   def tokenizers: Iterable[Tokenizer] =
     analyzers.collect {
