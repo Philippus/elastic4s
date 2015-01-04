@@ -41,35 +41,6 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
       new DeleteByQueryExpectsWhere(IndexesTypes(indexes, types.toSeq))
   }
 
-  class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompatibleDefinition {
-    private val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
-    def types(_type: String): DeleteByIdDefinition = {
-      builder.`type`(_type)
-      this
-    }
-    def parent(parent: String): DeleteByIdDefinition = {
-      builder.parent(parent)
-      this
-    }
-    def routing(routing: String): DeleteByIdDefinition = {
-      builder.routing(routing)
-      this
-    }
-    def refresh(refresh: Boolean): DeleteByIdDefinition = {
-      builder.refresh(refresh)
-      this
-    }
-    def version(version: Int): DeleteByIdDefinition = {
-      builder.version(version)
-      this
-    }
-    def versionType(versionType: VersionType): DeleteByIdDefinition = {
-      builder.versionType(versionType)
-      this
-    }
-    def build = builder
-  }
-
   class DeleteByQueryExpectsWhere(indexesTypes: IndexesTypes) {
     def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
     def types(_types: Iterable[String]): DeleteByQueryExpectsWhere =
@@ -77,37 +48,66 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def where(query: String): DeleteByQueryDefinition = where(new SimpleStringQueryDefinition(query))
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
+}
 
-  class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition) {
+class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompatibleDefinition {
+  private val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
+  def types(_type: String): DeleteByIdDefinition = {
+    builder.`type`(_type)
+    this
+  }
+  def parent(parent: String): DeleteByIdDefinition = {
+    builder.parent(parent)
+    this
+  }
+  def routing(routing: String): DeleteByIdDefinition = {
+    builder.routing(routing)
+    this
+  }
+  def refresh(refresh: Boolean): DeleteByIdDefinition = {
+    builder.refresh(refresh)
+    this
+  }
+  def version(version: Int): DeleteByIdDefinition = {
+    builder.version(version)
+    this
+  }
+  def versionType(versionType: VersionType): DeleteByIdDefinition = {
+    builder.versionType(versionType)
+    this
+  }
+  def build = builder
+}
 
-    private val builder: DeleteByQueryRequestBuilder =
-      new DeleteByQueryRequestBuilder(ProxyClients.client)
-        .setIndices(indexesTypes.indexes: _*)
-        .setTypes(indexesTypes.types: _*)
+class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition) {
 
-    def types(types: String*): DeleteByQueryDefinition = {
-      builder.setTypes(types.toSeq: _*)
-      this
-    }
-    def routing(routing: String): DeleteByQueryDefinition = {
-      builder.setRouting(routing)
-      this
-    }
-    def replicationType(repType: ReplicationType): DeleteByQueryDefinition = {
-      builder.setReplicationType(repType)
-      this
-    }
-    def consistencyLevel(consistencyLevel: WriteConsistencyLevel): DeleteByQueryDefinition = {
-      builder.setConsistencyLevel(consistencyLevel)
-      this
-    }
+  private val builder: DeleteByQueryRequestBuilder =
+    new DeleteByQueryRequestBuilder(ProxyClients.client)
+      .setIndices(indexesTypes.indexes: _*)
+      .setTypes(indexesTypes.types: _*)
 
-    def build = {
-      val req = builder.request()
+  def types(types: String*): DeleteByQueryDefinition = {
+    builder.setTypes(types.toSeq: _*)
+    this
+  }
+  def routing(routing: String): DeleteByQueryDefinition = {
+    builder.setRouting(routing)
+    this
+  }
+  def replicationType(repType: ReplicationType): DeleteByQueryDefinition = {
+    builder.setReplicationType(repType)
+    this
+  }
+  def consistencyLevel(consistencyLevel: WriteConsistencyLevel): DeleteByQueryDefinition = {
+    builder.setConsistencyLevel(consistencyLevel)
+    this
+  }
 
-      // need to set the query on the request - workaround for ES internals
-      val qsb = new QuerySourceBuilder().setQuery(q.builder)
-      req.source(qsb)
-    }
+  def build = {
+    val req = builder.request()
+
+    // need to set the query on the request - workaround for ES internals
+    val qsb = new QuerySourceBuilder().setQuery(q.builder)
+    req.source(qsb)
   }
 }

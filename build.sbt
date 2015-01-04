@@ -6,13 +6,13 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.4.4"
+version := "1.4.5"
 
 scalaVersion := "2.11.2"
 
 crossScalaVersions := Seq("2.10.4", "2.11.4")
 
-scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+scalacOptions := Seq("-unchecked", "-encoding", "utf8")
 
 publishMavenStyle := true
 

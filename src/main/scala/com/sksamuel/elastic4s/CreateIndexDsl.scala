@@ -9,23 +9,6 @@ import scala.collection.mutable
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
 
-  class IndexSettings {
-    private val ShardsKey = "number_of_shards"
-    private val ReplicasKey = "number_of_replicas"
-    private val RefreshIntervalKey = "refresh_interval"
-
-    val settings: mutable.Map[String, Any] = mutable.Map()
-
-    def shards: Option[Int] = settings.get(ShardsKey).map(_.asInstanceOf[Int])
-    def shards_=(s: Int): Unit = settings += ShardsKey -> s
-
-    def replicas: Option[Int] = settings.get(ReplicasKey).map(_.asInstanceOf[Int])
-    def replicas_=(r: Int): Unit = settings += ReplicasKey -> r
-
-    def refreshInterval: Option[String] = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
-    def refreshInterval_=(i: String): Unit = settings += RefreshIntervalKey -> i
-  }
-
   def analyzers(analyzers: AnalyzerDefinition*) = new AnalyzersWrapper(analyzers)
   def tokenizers(tokenizers: Tokenizer*) = new TokenizersWrapper(tokenizers)
   def filters(filters: TokenFilter*) = new TokenFiltersWrapper(filters)
@@ -33,123 +16,140 @@ trait CreateIndexDsl {
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
+}
 
-  class CreateIndexDefinition(name: String) {
-    require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
+class IndexSettings {
+  private val ShardsKey = "number_of_shards"
+  private val ReplicasKey = "number_of_replicas"
+  private val RefreshIntervalKey = "refresh_interval"
 
-    val _mappings = new mutable.ListBuffer[MappingDefinition]
-    val _settings = new IndexSettings
-    var _analysis: Option[AnalysisDefinition] = None
+  val settings: mutable.Map[String, Any] = mutable.Map()
 
-    def build = new CreateIndexRequest(name).source(_source)
+  def shards: Option[Int] = settings.get(ShardsKey).map(_.asInstanceOf[Int])
+  def shards_=(s: Int): Unit = settings += ShardsKey -> s
 
-    def shards(shards: Int): CreateIndexDefinition = {
-      _settings.shards = shards
-      this
-    }
+  def replicas: Option[Int] = settings.get(ReplicasKey).map(_.asInstanceOf[Int])
+  def replicas_=(r: Int): Unit = settings += ReplicasKey -> r
 
-    def replicas(replicas: Int): CreateIndexDefinition = {
-      _settings.replicas = replicas
-      this
-    }
+  def refreshInterval: Option[String] = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
+  def refreshInterval_=(i: String): Unit = settings += RefreshIntervalKey -> i
+}
 
-    def refreshInterval(interval: String): CreateIndexDefinition = {
-      _settings.refreshInterval = interval
-      this
-    }
+class CreateIndexDefinition(name: String) {
+  require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
-    def indexSetting(name: String, value: Any): CreateIndexDefinition = {
-      _settings.settings += name -> value
-      this
-    }
+  val _mappings = new mutable.ListBuffer[MappingDefinition]
+  val _settings = new IndexSettings
+  var _analysis: Option[AnalysisDefinition] = None
 
-    def mappings(mappings: MappingDefinition*): CreateIndexDefinition = {
-      _mappings ++= mappings
-      this
-    }
+  def build = new CreateIndexRequest(name).source(_source)
 
-    def analysis(analyzers: AnalyzerDefinition*) = {
-      _analysis = Some(new AnalysisDefinition(analyzers))
-      this
-    }
+  def shards(shards: Int): CreateIndexDefinition = {
+    _settings.shards = shards
+    this
+  }
 
-    def _source: XContentBuilder = {
-      val source = XContentFactory.jsonBuilder().startObject()
+  def replicas(replicas: Int): CreateIndexDefinition = {
+    _settings.replicas = replicas
+    this
+  }
 
-      source.startObject("settings")
+  def refreshInterval(interval: String): CreateIndexDefinition = {
+    _settings.refreshInterval = interval
+    this
+  }
 
-      if (_settings.settings.size > 0) {
-        source.startObject("index")
+  def indexSetting(name: String, value: Any): CreateIndexDefinition = {
+    _settings.settings += name -> value
+    this
+  }
 
-        _settings.settings foreach {
-          case (key, value) =>
-            source.field(key, value)
-        }
+  def mappings(mappings: MappingDefinition*): CreateIndexDefinition = {
+    _mappings ++= mappings
+    this
+  }
 
-        source.endObject()
-      }
+  def analysis(analyzers: AnalyzerDefinition*) = {
+    _analysis = Some(new AnalysisDefinition(analyzers))
+    this
+  }
 
-      _analysis.foreach(analysis => {
-        source.startObject("analysis")
+  def _source: XContentBuilder = {
+    val source = XContentFactory.jsonBuilder().startObject()
 
-        val charFilterDefinitions = analysis.charFilterDefinitions
-        if (charFilterDefinitions.size > 0) {
-          source.startObject("char_filter")
-          charFilterDefinitions.foreach { filter =>
-            source.startObject(filter.name)
-            source.field("type", filter.filterType)
-            filter.build(source)
-            source.endObject()
-          }
-          source.endObject()
-        }
+    source.startObject("settings")
 
-        source.startObject("analyzer")
-        analysis.analyzers.foreach(analyzer => {
-          source.startObject(analyzer.name)
-          analyzer.build(source)
-          source.endObject()
-        })
-        source.endObject()
+    if (_settings.settings.size > 0) {
+      source.startObject("index")
 
-        val tokenizers = analysis.tokenizers
-        if (tokenizers.size > 0) {
-          source.startObject("tokenizer")
-          tokenizers.foreach(tokenizer => {
-            source.startObject(tokenizer.name)
-            tokenizer.build(source)
-            source.endObject()
-          })
-          source.endObject()
-        }
-
-        val tokenFilterDefinitions = analysis.tokenFilterDefinitions
-        if (tokenFilterDefinitions.size > 0) {
-          source.startObject("filter")
-          tokenFilterDefinitions.foreach(filter => {
-            source.startObject(filter.name)
-            source.field("type", filter.filterType)
-            filter.build(source)
-            source.endObject()
-          })
-          source.endObject()
-        }
-
-        source.endObject()
-      })
-
-      source.endObject() // end settings
-
-      if (_mappings.size > 0) {
-        source.startObject("mappings")
-        for (mapping <- _mappings) {
-          mapping.build(source)
-        }
-        source.endObject()
+      _settings.settings foreach {
+        case (key, value) =>
+          source.field(key, value)
       }
 
       source.endObject()
     }
+
+    _analysis.foreach(analysis => {
+      source.startObject("analysis")
+
+      val charFilterDefinitions = analysis.charFilterDefinitions
+      if (charFilterDefinitions.size > 0) {
+        source.startObject("char_filter")
+        charFilterDefinitions.foreach { filter =>
+          source.startObject(filter.name)
+          source.field("type", filter.filterType)
+          filter.build(source)
+          source.endObject()
+        }
+        source.endObject()
+      }
+
+      source.startObject("analyzer")
+      analysis.analyzers.foreach(analyzer => {
+        source.startObject(analyzer.name)
+        analyzer.build(source)
+        source.endObject()
+      })
+      source.endObject()
+
+      val tokenizers = analysis.tokenizers
+      if (tokenizers.size > 0) {
+        source.startObject("tokenizer")
+        tokenizers.foreach(tokenizer => {
+          source.startObject(tokenizer.name)
+          tokenizer.build(source)
+          source.endObject()
+        })
+        source.endObject()
+      }
+
+      val tokenFilterDefinitions = analysis.tokenFilterDefinitions
+      if (tokenFilterDefinitions.size > 0) {
+        source.startObject("filter")
+        tokenFilterDefinitions.foreach(filter => {
+          source.startObject(filter.name)
+          source.field("type", filter.filterType)
+          filter.build(source)
+          source.endObject()
+        })
+        source.endObject()
+      }
+
+      source.endObject()
+    })
+
+    source.endObject() // end settings
+
+    if (_mappings.size > 0) {
+      source.startObject("mappings")
+      for (mapping <- _mappings) {
+        mapping.build(source)
+      }
+      source.endObject()
+    }
+
+    source.endObject()
   }
 }
 
