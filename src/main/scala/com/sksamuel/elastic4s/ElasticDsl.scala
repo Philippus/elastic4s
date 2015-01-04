@@ -1,39 +1,37 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.mappings.{DeleteMappingDefinition, GetMappingDefinition, FieldDefinition, MappingDsl}
+import com.sksamuel.elastic4s.mappings.{ DeleteMappingDefinition, GetMappingDefinition, FieldDefinition, MappingDsl }
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-  extends IndexDsl
-  with AliasesDsl
-  with BulkDsl
-  with ClusterDsl
-  with CountDsl
-  with CreateIndexDsl
-  with DeleteIndexDsl
-  with DeleteDsl
-  with ExplainDsl
-  with FacetDsl
-  with GetDsl
-  with IndexRecoveryDsl
-  with IndexStatusDsl
-  with MappingDsl
-  with MoreLikeThisDsl
-  with MultiGetDsl
-  with OptimizeDsl
-  with PercolateDsl
-  with SearchDsl
-  with ScoreDsl
-  with SnapshotDsl
-  with TemplateDsl
-  with UpdateDsl
-  with ValidateDsl
-  with ElasticImplicits {
+    extends IndexDsl
+    with AliasesDsl
+    with BulkDsl
+    with ClusterDsl
+    with CountDsl
+    with CreateIndexDsl
+    with DeleteIndexDsl
+    with DeleteDsl
+    with FacetDsl
+    with GetDsl
+    with IndexRecoveryDsl
+    with IndexStatusDsl
+    with MappingDsl
+    with MoreLikeThisDsl
+    with MultiGetDsl
+    with OptimizeDsl
+    with PercolateDsl
+    with SearchDsl
+    with ScoreDsl
+    with SnapshotDsl
+    with TemplateDsl
+    with UpdateDsl
+    with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = new AddAliasExpectsIndex(alias)
@@ -127,7 +125,7 @@ trait ElasticDsl
   case object get {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
     def alias(aliases: String*) = new GetAliasDefinition(aliases)
-    def mapping(indexType: IndexType): GetMappingDefinition =  new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
+    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
   }
