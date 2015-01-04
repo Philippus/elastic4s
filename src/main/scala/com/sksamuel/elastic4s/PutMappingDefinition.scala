@@ -6,18 +6,24 @@ import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequestBuil
 import org.elasticsearch.common.xcontent.XContentFactory
 
 /** @author Stephen Samuel */
-class PutMappingDefinition(indexes: IndexesTypes)
+class PutMappingDefinition(indexType: IndexType)
   extends DefinitionAttributeIgnoreConflicts
   with DefinitionAttributeIndexesOptions {
 
   def build: PutMappingRequest = _builder.request
 
   val _builder = new PutMappingRequestBuilder(ProxyClients.indices)
-    .setIndices(indexes.index)
-    .setType(indexes.typ.getOrElse("Must specify type for put mapping"))
+    .setIndices(indexType.index)
+    .setType(indexType.`type`)
 
-  def add(fields: TypedFieldDefinition*): this.type = add(fields)
-  def add(fields: Iterable[TypedFieldDefinition]): this.type = {
+  @deprecated("use as instead of add", "1.4.4")
+  def add(fields: TypedFieldDefinition*): this.type = as(fields)
+
+  @deprecated("use as instead of add", "1.4.4")
+  def add(fields: Iterable[TypedFieldDefinition]): this.type = as(fields)
+
+  def as(fields: TypedFieldDefinition*): this.type = add(fields)
+  def as(fields: Iterable[TypedFieldDefinition]): this.type = {
     val xcontent = XContentFactory.jsonBuilder().startObject()
     xcontent.startObject("properties")
     for ( field <- fields ) {

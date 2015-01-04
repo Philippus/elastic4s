@@ -1,38 +1,39 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.mappings.MappingDsl
+import com.sksamuel.elastic4s.mappings.{DeleteMappingDefinition, GetMappingDefinition, FieldDefinition, MappingDsl}
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with ExplainDsl
-    with FacetDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with ExplainDsl
+  with FacetDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = new AddAliasExpectsIndex(alias)
@@ -111,15 +112,24 @@ trait ElasticDsl
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
     def snapshot(name: String) = new DeleteSnapshotExpectsIn(name)
     def template(name: String) = new DeleteIndexTemplateDefinition(name)
+    def mapping(indexes: String*) = DeleteMappingDefinition(indexes)
+    def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
   }
 
   case object explain {
     def id(id: Any) = new ExplainExpectsIndex(id)
   }
 
+  case object field {
+    def name(name: String): FieldDefinition = new FieldDefinition(name)
+  }
+
   case object get {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
     def alias(aliases: String*) = new GetAliasDefinition(aliases)
+    def mapping(indexType: IndexType): GetMappingDefinition =  new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
+    def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
+    def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
   }
 
   @deprecated("use index keyword", "1.4.0")
@@ -145,7 +155,7 @@ trait ElasticDsl
   }
 
   case object put {
-    def mapping(indexes: IndexesTypes) = new PutMappingDefinition(indexes)
+    def mapping(indexType: IndexType) = new PutMappingDefinition(indexType)
   }
 
   case object recover {

@@ -2,51 +2,51 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.mappings.{ GetMappingDefinition, MappingDefinition }
+import com.sksamuel.elastic4s.mappings.{DeleteMappingDefinition, GetMappingDefinition, MappingDefinition}
 import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplateResponse
-import org.elasticsearch.action.{ ActionFuture, ActionListener }
+import org.elasticsearch.action.{ActionFuture, ActionListener}
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotResponse
-import org.elasticsearch.action.admin.indices.alias.get.{ GetAliasesRequest, GetAliasesResponse }
-import org.elasticsearch.action.admin.indices.alias.{ IndicesAliasesRequest, IndicesAliasesResponse }
+import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
+import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
-import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
+import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
-import org.elasticsearch.action.admin.indices.optimize.{ OptimizeRequest, OptimizeResponse }
+import org.elasticsearch.action.admin.indices.optimize.{OptimizeRequest, OptimizeResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.recovery.RecoveryResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.status.IndicesStatusResponse
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateResponse
-import org.elasticsearch.action.admin.indices.validate.query.{ ValidateQueryRequest, ValidateQueryResponse }
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.bulk.BulkResponse
-import org.elasticsearch.action.count.{ CountRequest, CountResponse }
-import org.elasticsearch.action.delete.{ DeleteRequest, DeleteResponse }
-import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequest, DeleteByQueryResponse }
+import org.elasticsearch.action.count.{CountRequest, CountResponse}
+import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequest, DeleteByQueryResponse}
 import org.elasticsearch.action.explain.ExplainResponse
 import org.elasticsearch.action.get._
-import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.action.percolate.PercolateResponse
-import org.elasticsearch.action.search.{ MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse }
-import org.elasticsearch.action.update.{ UpdateRequest, UpdateResponse }
+import org.elasticsearch.action.search.{MultiSearchRequest, MultiSearchResponse, SearchRequest, SearchResponse}
+import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.settings.{ ImmutableSettings, Settings }
+import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.node.{ Node, NodeBuilder }
+import org.elasticsearch.node.{Node, NodeBuilder}
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -240,8 +240,18 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def open(index: String): Future[OpenIndexResponse] =
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
+  def execute(delete: DeleteMappingDefinition): Future[DeleteMappingResponse] = {
+    injectFuture[DeleteMappingResponse](client.admin().indices()
+      .prepareDeleteMapping(delete.indexes.toSeq: _*)
+      .setType(delete.types.toSeq: _*)
+      .execute)
+  }
+
   def execute(get: GetMappingDefinition): Future[GetMappingsResponse] = {
-    injectFuture[GetMappingsResponse](client.admin().indices().prepareGetMappings(get.indexes: _*).execute)
+    injectFuture[GetMappingsResponse](client.admin().indices()
+      .prepareGetMappings(get.indexes.toSeq: _*)
+      .setTypes(get.types.toSeq: _*)
+      .execute)
   }
 
   def execute(u: UpdateDefinition): Future[UpdateResponse] = injectFuture[UpdateResponse](client.update(u.build, _))
@@ -254,6 +264,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def segments(indexes: String*): Future[IndicesSegmentResponse] =
     injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
 
+  @deprecated("use the dsl syntax, client execute { delete mapping index / type }", "1.4.4")
   def deleteMapping(indexes: String*)(types: String*) =
     injectFuture[DeleteMappingResponse](client
       .admin
@@ -262,6 +273,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
       .setType(types: _*)
       .execute)
 
+  @deprecated("use the dsl syntax, client execute { put mapping index / type as {...} }", "1.4.4")
   def putMapping(indexes: String*)(mapping: MappingDefinition) =
     injectFuture[PutMappingResponse](client.admin.indices.preparePutMapping(indexes: _*)
       .setType(mapping.`type`).setSource(mapping.build).execute)
@@ -281,16 +293,16 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
           if (hits.length > 0) {
             Future
               .sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
-                execute {
-                  ElasticDsl.bulk(
-                    pairs map {
-                      case (typ, _id, source) =>
-                        val expr = index into targetIndex -> typ
-                        (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
-                    }: _*
-                  )
-                }
-              })
+              execute {
+                ElasticDsl.bulk(
+                  pairs map {
+                    case (typ, _id, source) =>
+                      val expr = index into targetIndex -> typ
+                      (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
+                  }: _*
+                )
+              }
+            })
               .flatMap(_ => _scroll(response.getScrollId))
           } else {
             Future.successful(())
@@ -312,57 +324,88 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   @deprecated("Use .await() on future of async client", "1.3.0")
   class SyncClient(client: ElasticClient)(implicit duration: Duration) {
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(i: IndexDefinition)(implicit duration: Duration) = Await.result(client.execute(i), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(c: CountDefinition)(implicit duration: Duration) = Await.result(client.execute(c), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(d: DeleteIndexDefinition)(implicit duration: Duration) = Await.result(client.execute(d), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(c: CreateIndexDefinition)(implicit duration: Duration) = Await.result(client.execute(c), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(c: MoreLikeThisDefinition)(implicit duration: Duration) = Await.result(client.execute(c), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(c: UpdateDefinition)(implicit duration: Duration) = Await.result(client.execute(c), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(c: ValidateDefinition)(implicit duration: Duration) = Await.result(client.execute(c), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(o: OptimizeDefinition)(implicit duration: Duration) = Await.result(client.execute(o), duration)
+
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(get: GetDefinition)(implicit duration: Duration) = Await.result(client.execute(get), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(percolateDef: PercolateDefinition)(implicit duration: Duration): PercolateResponse =
       Await.result(client.execute(percolateDef), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(registerDef: RegisterDefinition)(implicit duration: Duration): IndexResponse =
       Await.result(client.execute(registerDef), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(ddef: DeleteByIdDefinition)(implicit duration: Duration): DeleteResponse =
       Await.result(client.execute(ddef), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(ddef: DeleteByQueryDefinition)(implicit duration: Duration): DeleteByQueryResponse =
       Await.result(client.execute(ddef), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(gets: MultiGetDefinition)(implicit duration: Duration): MultiGetResponse =
       Await.result(client.execute(gets), duration)
 
     @deprecated("use execute", "1.3.3")
     def search(searches: SearchDefinition)(implicit duration: Duration): SearchResponse = execute(searches)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(search: SearchDefinition)(implicit duration: Duration): SearchResponse =
       Await.result(client.execute(search), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(searches: SearchDefinition*)(implicit duration: Duration): MultiSearchResponse =
       Await.result(client.execute(new MultiSearchDefinition(searches)), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(definition: ExplainDefinition)(implicit duration: Duration): ExplainResponse =
       Await.result(client.execute(definition), duration)
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def exists(indexes: String*): IndicesExistsResponse = Await.result(client.exists(indexes: _*), duration)
 
-    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")(implicit ec: ExecutionContext, duration: Duration): Unit = {
+    @deprecated("Use .await() on future of async client", "1.4.4")
+    def reindex(sourceIndex: String, targetIndex: String, chunkSize: Int = 500, scroll: String = "5m")
+               (implicit ec: ExecutionContext, duration: Duration): Unit = {
       Await.result(client.reindex(sourceIndex, targetIndex, chunkSize, scroll), duration)
     }
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(get: GetMappingDefinition)(implicit duration: Duration): GetMappingsResponse = {
       Await.result(client.execute(get), duration)
     }
 
+    @deprecated("Use .await() on future of async client", "1.3.0")
     def execute(put: PutMappingDefinition)(implicit duration: Duration): PutMappingResponse = {
       Await.result(client.execute(put), duration)
     }
 
+    @deprecated("Use .await() on future of async client", "1.4.4")
     def execute(bulk: BulkDefinition)(implicit duration: Duration): BulkResponse = {
       Await.result(client.execute(bulk), duration)
     }
@@ -402,7 +445,7 @@ object ElasticClient {
   def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
-    for ((host, port) <- uri.hosts) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
 
@@ -412,7 +455,7 @@ object ElasticClient {
   @deprecated("For multiple hosts, Prefer the methods that use ElasticsearchUri", "1.4.2")
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
-    for ((host, port) <- addresses) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    for ( (host, port) <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
 

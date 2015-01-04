@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 /** @author Stephen Samuel */
+case class IndexType(index: String, `type`: String)
 case class IndexesTypes(indexes: Seq[String], types: Seq[String]) {
   def index = indexes.headOption.getOrElse(throw new RuntimeException("Specify at least one index"))
   def typ = types.headOption

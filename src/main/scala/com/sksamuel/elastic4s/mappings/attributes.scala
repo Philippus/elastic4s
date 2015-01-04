@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.Analyzer
 /** @author Fehmi Can Saglam */
 object attributes {
 
-  sealed trait Attribute { self: TypedFieldDefinition =>
+  sealed trait Attribute { self: FieldDefinition =>
 
     protected def insert(source: XContentBuilder): Unit
   }
@@ -43,11 +43,13 @@ object attributes {
 
     private[this] var _store: Option[String] = None
 
+    def stored(param: YesNo): this.type = store(param)
     def store(store: YesNo): this.type = {
       _store = Some(store.value)
       this
     }
 
+    def stored(param: Boolean): this.type = store(param)
     def store(param: Boolean): this.type = {
       _store = Some(YesNo(param).value)
       this
@@ -198,7 +200,7 @@ object attributes {
     }
   }
 
-  trait AttributeAnalyzer extends Attribute { self: TypedFieldDefinition =>
+  trait AttributeAnalyzer extends Attribute { self: FieldDefinition =>
 
     private[this] var _analyzer: Option[String] = None
 
@@ -587,7 +589,7 @@ object attributes {
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
-      if (!_fields.isEmpty) {
+      if (_fields.nonEmpty) {
         source.startObject("fields")
         for (field <- _fields) {
           field.build(source)

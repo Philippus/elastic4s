@@ -13,16 +13,23 @@ trait MappingDsl {
   def id: FieldDefinition = "_id"
   implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
   implicit def map(`type`: String): MappingDefinition = new MappingDefinition(`type`)
-
-  def mapping(indexes: String*) = new GetMappingDefinition(indexes)
-  def mapping = MapExpectsFrom
 }
 
-case object MapExpectsFrom {
-  def from(index: String): GetMappingDefinition = GetMappingDefinition(Seq(index))
+case class GetMappingDefinition(indexes: Iterable[String]) {
+  var types: Iterable[String] = Nil
+  def types(types: String*): this.type = {
+    this.types = types
+    this
+  }
 }
 
-case class GetMappingDefinition(indexes: Seq[String])
+case class DeleteMappingDefinition(indexes: Iterable[String]) {
+  var types: Iterable[String] = Nil
+  def types(types: String*): this.type = {
+    this.types = types
+    this
+  }
+}
 
 class MappingDefinition(val `type`: String) {
 
@@ -205,7 +212,27 @@ case object Strict extends DynamicMapping
 case object Dynamic extends DynamicMapping
 case object False extends DynamicMapping
 
-class FieldDefinition(name: String) {
+class FieldDefinition(name: String) extends AttributeAnalyzer {
+
+  def withType(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
+  def withType(ft: BinaryType.type) = new BinaryFieldDefinition(name)
+  def withType(ft: BooleanType.type) = new BooleanFieldDefinition(name)
+  def withType(ft: ByteType.type) = new ByteFieldDefinition(name)
+  def withType(ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def withType(ft: DateType.type) = new DateFieldDefinition(name)
+  def withType(ft: DoubleType.type) = new DoubleFieldDefinition(name)
+  def withType(ft: FloatType.type) = new FloatFieldDefinition(name)
+  def withType(ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
+  def withType(ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
+  def withType(ft: IntegerType.type) = new IntegerFieldDefinition(name)
+  def withType(ft: IpType.type) = new IpFieldDefinition(name)
+  def withType(ft: LongType.type) = new LongFieldDefinition(name)
+  def withType(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
+  def withType(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
+  def withType(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
+  def withType(ft: ShortType.type) = new ShortFieldDefinition(name)
+  def withType(ft: StringType.type) = new StringFieldDefinition(name)
+  def withType(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -300,8 +327,8 @@ final class StringFieldDefinition(name: String)
   with AttributeBoost
   with AttributeNullValue[String]
   with AttributeOmitNorms
-  with AttributeIndexOptions
   with AttributeAnalyzer
+  with AttributeIndexOptions
   with AttributeIndexAnalyzer
   with AttributeSearchAnalyzer
   with AttributeIncludeInAll
