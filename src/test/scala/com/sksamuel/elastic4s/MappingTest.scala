@@ -16,6 +16,8 @@ class MappingTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
         field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
         field name "b" withType StringType
       )
+    } analysis {
+      CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
     }
   }.await
 
@@ -83,6 +85,7 @@ class MappingTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
   }
 
   "a delete mapping" should "remove mappings and data" in {
+
     client.execute {
       delete mapping "q" / "r"
     }.await
