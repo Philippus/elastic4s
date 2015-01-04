@@ -6,7 +6,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.4.2"
+version := "1.4.3"
 
 scalaVersion := "2.11.2"
 
@@ -32,8 +32,6 @@ publishArtifact in Test := false
 parallelExecution in Test := false
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
-
-val jacksonVersion = "2.4.2"
 
 libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.4.0",
