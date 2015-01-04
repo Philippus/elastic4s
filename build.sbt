@@ -33,6 +33,8 @@ parallelExecution in Test := false
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
+val jacksonVersion = "2.4.2"
+
 libraryDependencies ++= Seq(
   "org.elasticsearch"              %  "elasticsearch"               % "1.4.0",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",

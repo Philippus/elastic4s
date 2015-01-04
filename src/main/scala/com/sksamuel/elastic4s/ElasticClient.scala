@@ -396,9 +396,13 @@ object ElasticClient {
     * Note: Remote means out of process, it can of course be on the local machine.
     */
   def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
-  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
+  def remote(settings: Settings, host: String, port: Int): ElasticClient = {
+    val client = new TransportClient(settings)
+    client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    fromClient(client)
+  }
 
-  def remote(settings: Settings, host: String, port: Int): ElasticClient = remote(settings, host, port)
+  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
     for ((host, port) <- uri.hosts) client.addTransportAddress(new InetSocketTransportAddress(host, port))
