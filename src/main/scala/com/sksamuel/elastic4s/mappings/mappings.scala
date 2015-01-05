@@ -82,7 +82,7 @@ class MappingDefinition(val `type`: String) {
   var _routing: Option[RoutingDefinition] = None
   var _timestamp: Option[TimestampDefinition] = None
   var _ttl = false
-  var _useTtl = false
+  var _useTtl = true
 
   def useTtl(useTtl: Boolean): this.type = {
     _useTtl = useTtl
