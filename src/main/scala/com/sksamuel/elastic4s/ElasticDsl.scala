@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.mappings.{ DeleteMappingDefinition, GetMappingDefinition, FieldDefinition, MappingDsl }
+import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
@@ -136,6 +136,10 @@ trait ElasticDsl
     def into(index: String): IndexDefinition = into(index.split("/").head, index.split("/").last)
     def into(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
     def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
+  }
+
+  case object map {
+    def as(name: String) = new MappingDefinition(name)
   }
 
   def mlt = morelike

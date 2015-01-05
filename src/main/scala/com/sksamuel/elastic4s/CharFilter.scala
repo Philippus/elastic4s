@@ -27,7 +27,6 @@ case class MappingCharFilter(name: String, mappings: (String, String)*)
   def build(source: XContentBuilder): Unit = {
     source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v" }).toArray: _*)
   }
-
 }
 
 case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)

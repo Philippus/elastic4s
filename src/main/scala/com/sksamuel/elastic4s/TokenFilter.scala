@@ -119,7 +119,7 @@ case class LimitTokenFilter(name: String,
 
 case class StopTokenFilter(name: String,
                            stopwords: Iterable[String] = Nil,
-                           enablePositionIncrements: Boolean = true,
+                           enablePositionIncrements: Boolean = false, // ignored now as of 1.4.0
                            ignoreCase: Boolean = false)
     extends TokenFilterDefinition {
 
@@ -127,7 +127,7 @@ case class StopTokenFilter(name: String,
 
   override def build(source: XContentBuilder): Unit = {
     source.field("stopwords", stopwords.toArray[String]: _*)
-    source.field("enable_position_increments", enablePositionIncrements)
+    if (enablePositionIncrements) source.field("enable_position_increments", enablePositionIncrements)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
 }

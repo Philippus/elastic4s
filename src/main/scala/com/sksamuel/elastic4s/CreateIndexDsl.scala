@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.mutable
 
@@ -145,7 +145,7 @@ class CreateIndexDefinition(name: String) {
 
     if (_mappings.size > 0) {
       source.startObject("mappings")
-      for (mapping <- _mappings) {
+      for ( mapping <- _mappings ) {
         mapping.build(source)
       }
       source.endObject()

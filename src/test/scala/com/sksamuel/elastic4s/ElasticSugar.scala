@@ -6,7 +6,9 @@ import java.util.UUID
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{ BeforeAndAfterAll, Suite }
+import org.scalatest.{BeforeAndAfterAll, Suite}
+
+import scala.util.Try
 
 /** @author Stephen Samuel */
 
@@ -28,7 +30,14 @@ object TestElasticNode extends Logging {
     .put("script.disable_dynamic", false)
     .put("es.logger.level", "DEBUG")
 
-  implicit val client = ElasticClient.local(settings.build)
+  //implicit val client = ElasticClient.local(settings.build)
+  implicit val client = ElasticClient.remote(settings.build, "localhost", 9300)
+
+  Try {
+    client.execute {
+      delete index "analyzer"
+    }.await
+  }
 }
 
 trait ElasticSugar extends BeforeAndAfterAll with Logging {
