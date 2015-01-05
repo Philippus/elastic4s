@@ -1,17 +1,27 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource }
-import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.index.IndexRequest.OpType
+import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import org.elasticsearch.index.VersionType
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait IndexDsl {
+
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
+
+  implicit object IndexDefinitionExecutable
+      extends Executable[IndexDefinition, IndexResponse] {
+    override def apply(c: Client, t: IndexDefinition): Future[IndexResponse] = {
+      injectFuture(c.index(t.build, _))
+    }
+  }
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {

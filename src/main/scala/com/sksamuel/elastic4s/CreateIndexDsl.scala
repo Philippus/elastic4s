@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
+import org.elasticsearch.client.Client
+import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 
 import scala.collection.mutable
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
@@ -16,6 +18,13 @@ trait CreateIndexDsl {
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
+
+  implicit object CreateIndexDefinitionExecutable
+      extends Executable[CreateIndexDefinition, CreateIndexResponse] {
+    override def apply(c: Client, t: CreateIndexDefinition): Future[CreateIndexResponse] = {
+      injectFuture(c.admin.indices.create(t.build, _))
+    }
+  }
 }
 
 class IndexSettings {
@@ -145,7 +154,7 @@ class CreateIndexDefinition(name: String) {
 
     if (_mappings.size > 0) {
       source.startObject("mappings")
-      for ( mapping <- _mappings ) {
+      for (mapping <- _mappings) {
         mapping.build(source)
       }
       source.endObject()

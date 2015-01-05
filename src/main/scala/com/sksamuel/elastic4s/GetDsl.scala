@@ -1,8 +1,11 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.client.Requests
+import org.elasticsearch.action.get.GetResponse
+import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.search.fetch.source.FetchSourceContext
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait GetDsl extends IndexesTypesDsl {
@@ -13,6 +16,13 @@ trait GetDsl extends IndexesTypesDsl {
   class GetWithIdExpectsFrom(id: String) {
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
     def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))
+  }
+
+  implicit object GetDslExecutable
+      extends Executable[GetDefinition, GetResponse] {
+    override def apply(c: Client, t: GetDefinition): Future[GetResponse] = {
+      injectFuture(c.get(t.build, _))
+    }
   }
 }
 
@@ -76,5 +86,8 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     _builder.routing(r)
     this
   }
+}
 
+object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse] {
+  override def apply(client: Client, t: GetDefinition): Future[GetResponse] = injectFuture(client.get(t.build, _))
 }

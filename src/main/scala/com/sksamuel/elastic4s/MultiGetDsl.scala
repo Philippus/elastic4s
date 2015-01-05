@@ -1,11 +1,22 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreference, DefinitionAttributeRefresh }
-import org.elasticsearch.action.get.{ MultiGetRequest, MultiGetRequestBuilder }
+import org.elasticsearch.action.get.{ MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse }
+import org.elasticsearch.client.Client
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait MultiGetDsl extends GetDsl {
+
   def multiget(gets: GetDefinition*) = new MultiGetDefinition(gets)
+
+  implicit object MultiGetDefinitionExecutable
+      extends Executable[MultiGetDefinition, MultiGetResponse] {
+    override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResponse] = {
+      injectFuture(c.multiGet(t.build, _))
+    }
+  }
 }
 
 class MultiGetDefinition(gets: Iterable[GetDefinition])

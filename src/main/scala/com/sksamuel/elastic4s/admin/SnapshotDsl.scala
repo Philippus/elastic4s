@@ -1,20 +1,23 @@
 package com.sksamuel.elastic4s
 package admin
 
-import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequestBuilder
-import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotRequestBuilder
-import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequestBuilder
-import org.elasticsearch.action.admin.cluster.snapshots.restore.RestoreSnapshotRequestBuilder
+import org.elasticsearch.action.admin.cluster.repositories.put.{ PutRepositoryResponse, PutRepositoryRequestBuilder }
+import org.elasticsearch.action.admin.cluster.snapshots.create.{ CreateSnapshotRequestBuilder, CreateSnapshotResponse }
+import org.elasticsearch.action.admin.cluster.snapshots.delete.{ DeleteSnapshotRequestBuilder, DeleteSnapshotResponse }
+import org.elasticsearch.action.admin.cluster.snapshots.restore.{ RestoreSnapshotRequestBuilder, RestoreSnapshotResponse }
+import org.elasticsearch.client.Client
+
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 /** @author Stephen Samuel
   *
-  * DSL Syntax:
+  *        DSL Syntax:
   *
-  * repository create <repo> settings <settings>
-  * snapshot create <name> in <repo>
-  * snapshot delete <name> in <repo>
-  * snapshot restore <name> from <repo>
+  *        repository create <repo> settings <settings>
+  *        snapshot create <name> in <repo>
+  *        snapshot delete <name> in <repo>
+  *        snapshot restore <name> from <repo>
   *
   */
 trait SnapshotDsl {
@@ -33,6 +36,34 @@ trait SnapshotDsl {
 
   class DeleteSnapshotExpectsIn(name: String) {
     def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
+  }
+
+  implicit object DeleteSnapshotDefinitionExecutable
+      extends Executable[DeleteSnapshotDefinition, DeleteSnapshotResponse] {
+    override def apply(c: Client, t: DeleteSnapshotDefinition): Future[DeleteSnapshotResponse] = {
+      injectFuture(c.admin.cluster.deleteSnapshot(t.build, _))
+    }
+  }
+
+  implicit object RestoreSnapshotDefinitionExecutable
+      extends Executable[RestoreSnapshotDefinition, RestoreSnapshotResponse] {
+    override def apply(c: Client, t: RestoreSnapshotDefinition): Future[RestoreSnapshotResponse] = {
+      injectFuture(c.admin.cluster.restoreSnapshot(t.build, _))
+    }
+  }
+
+  implicit object CreateSnapshotDefinitionExecutable
+      extends Executable[CreateSnapshotDefinition, CreateSnapshotResponse] {
+    override def apply(c: Client, t: CreateSnapshotDefinition): Future[CreateSnapshotResponse] = {
+      injectFuture(c.admin.cluster.createSnapshot(t.build, _))
+    }
+  }
+
+  implicit object CreateRepositoryDefinitionExecutable
+      extends Executable[CreateRepositoryDefinition, PutRepositoryResponse] {
+    override def apply(c: Client, t: CreateRepositoryDefinition): Future[PutRepositoryResponse] = {
+      injectFuture(c.admin.cluster.putRepository(t.build, _))
+    }
   }
 }
 

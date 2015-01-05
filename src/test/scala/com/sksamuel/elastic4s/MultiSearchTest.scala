@@ -32,10 +32,12 @@ class MultiSearchTest
     } yield blockUntilCount(2, "jtull")
 
     val futureResponse = futureInserts flatMap { _ =>
-      client execute (
-        search in "jtull/albums" query "aqualung",
-        search in "jtull/albums" query "passion"
-      )
+      client execute {
+        multi(
+          search in "jtull/albums" query "aqualung",
+          search in "jtull/albums" query "passion"
+        )
+      }
     }
 
     whenReady(futureResponse) { response =>

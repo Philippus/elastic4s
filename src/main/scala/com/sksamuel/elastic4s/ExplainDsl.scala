@@ -1,12 +1,24 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.explain.ExplainRequestBuilder
-import org.elasticsearch.action.support.QuerySourceBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreference, DefinitionAttributeRouting }
+import org.elasticsearch.action.explain.{ ExplainRequestBuilder, ExplainResponse }
+import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.client.Client
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
-class ExplainExpectsIndex(id: Any) {
-  def in(indexesTypes: IndexesTypes): ExplainDefinition = new ExplainDefinition(indexesTypes, id)
+trait ExplainDsl {
+  implicit object ExplainDefinitionExecutable
+      extends Executable[ExplainDefinition, ExplainResponse] {
+    override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
+      injectFuture(c.explain(t.build, _))
+    }
+  }
+
+  class ExplainExpectsIndex(id: Any) {
+    def in(indexesTypes: IndexesTypes): ExplainDefinition = new ExplainDefinition(indexesTypes, id)
+  }
 }
 
 class ExplainDefinition(indexesTypes: IndexesTypes, id: Any)

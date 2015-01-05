@@ -1,9 +1,12 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
+import org.elasticsearch.client.Client
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait SearchDsl
@@ -21,10 +24,26 @@ trait SearchDsl
   def rescore(query: QueryDefinition): RescoreDefinition = {
     new RescoreDefinition(query)
   }
+
+  def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
+
+  implicit object SearchDefinitionExecutable
+      extends Executable[SearchDefinition, SearchResponse] {
+    override def apply(c: Client, t: SearchDefinition): Future[SearchResponse] = {
+      injectFuture(c.search(t.build, _))
+    }
+  }
+
+  implicit object MultiSearchDefinitionExecutable
+      extends Executable[MultiSearchDefinition, MultiSearchResponse] {
+    override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
+      injectFuture(c.multiSearch(t.build, _))
+    }
+  }
 }
 
 class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
-  def build = {
+  def build: MultiSearchRequest = {
     val builder = new MultiSearchRequestBuilder(ProxyClients.client)
     searches foreach (builder add _.build)
     builder.request()

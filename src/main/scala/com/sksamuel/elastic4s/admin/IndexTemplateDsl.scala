@@ -1,15 +1,32 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.ProxyClients
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.elasticsearch.action.admin.indices.template.delete.{ DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder }
-import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateRequest, PutIndexTemplateRequestBuilder }
+import com.sksamuel.elastic4s.{ Executable, ProxyClients }
+import org.elasticsearch.action.admin.indices.template.delete.{ DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse }
+import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse }
+import org.elasticsearch.client.Client
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 
 trait TemplateDsl {
+
   class CreateIndexTemplateExpectsPattern(name: String) {
     def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
+  }
+
+  implicit object CreateIndexTemplateDefinitionExecutable
+      extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse] {
+    override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
+      injectFuture(c.admin.indices.putTemplate(t.build, _))
+    }
+  }
+
+  implicit object DeleteIndexTemplateDefinitionExecutable
+      extends Executable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
+    override def apply(c: Client, t: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
+      injectFuture(c.admin.indices.deleteTemplate(t.build, _))
+    }
   }
 }
 

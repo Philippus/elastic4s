@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.client.Requests
+import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.search.Scroll
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
@@ -13,6 +16,14 @@ trait MoreLikeThisDsl {
       case _ => throw new RuntimeException
     }
   }
+
+  implicit object MoreLikeThisDefinitionExecutable
+      extends Executable[MoreLikeThisDefinition, SearchResponse] {
+    override def apply(c: Client, t: MoreLikeThisDefinition): Future[SearchResponse] = {
+      injectFuture(c.moreLikeThis(t.build, _))
+    }
+  }
+
 }
 
 class MoreLikeThisDefinition(index: String, `type`: String, id: String) {

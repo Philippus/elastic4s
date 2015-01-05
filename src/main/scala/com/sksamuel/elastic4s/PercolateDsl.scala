@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.index.IndexRequestBuilder
-import org.elasticsearch.action.percolate.PercolateRequestBuilder
+import org.elasticsearch.action.index.{ IndexRequestBuilder, IndexResponse }
+import org.elasticsearch.action.percolate.{ PercolateRequestBuilder, PercolateResponse }
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import org.elasticsearch.percolator.PercolatorService
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
@@ -37,6 +39,20 @@ trait PercolateDsl extends QueryDsl {
   class RegisterExpectsIndexImplicit(id: String) {
     @deprecated("Use the register id X into Y syntax", "1.4.0")
     def into(index: String) = new RegisterDefinition(index, id)
+  }
+
+  implicit object RegisterDefinitionExecutable
+      extends Executable[RegisterDefinition, IndexResponse] {
+    override def apply(c: Client, t: RegisterDefinition): Future[IndexResponse] = {
+      injectFuture(c.index(t.build, _))
+    }
+  }
+
+  implicit object PercolateDefinitionExecutable
+      extends Executable[PercolateDefinition, PercolateResponse] {
+    override def apply(c: Client, t: PercolateDefinition): Future[PercolateResponse] = {
+      injectFuture(c.percolate(t.build, _))
+    }
   }
 }
 
@@ -77,7 +93,11 @@ class PercolateDefinition(indexType: IndexesTypes) {
   private var _rawDoc: Option[String] = None
   private[this] var _query: QueryDefinition = _
 
-  def build = new PercolateRequestBuilder(ProxyClients.client).setSource(_doc).setIndices(indexType.index).setDocumentType(indexType.types.head).request()
+  def build = new PercolateRequestBuilder(ProxyClients.client)
+    .setSource(_doc)
+    .setIndices(indexType.index)
+    .setDocumentType(indexType.types.head)
+    .request()
 
   private[elastic4s] def _doc: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()

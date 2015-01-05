@@ -18,6 +18,7 @@ trait ElasticDsl
     with DeleteIndexDsl
     with DeleteDsl
     with FacetDsl
+    with ExplainDsl
     with GetDsl
     with IndexRecoveryDsl
     with IndexStatusDsl
@@ -31,6 +32,7 @@ trait ElasticDsl
     with SnapshotDsl
     with TemplateDsl
     with UpdateDsl
+    with ValidateDsl
     with ElasticImplicits {
 
   case object add {
@@ -125,7 +127,8 @@ trait ElasticDsl
   case object get {
     def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
     def alias(aliases: String*) = new GetAliasDefinition(aliases)
-    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
+    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index))
+      .types(indexType.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
   }
@@ -218,8 +221,6 @@ trait ElasticDsl
     def in(value: Seq[String]): ValidateDefinition = in((value(0), value(1)))
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
-
-  implicit val duration: Duration = 10.seconds
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)

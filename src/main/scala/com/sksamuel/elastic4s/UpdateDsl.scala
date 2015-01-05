@@ -3,17 +3,28 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.source.DocumentSource
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.UpdateRequestBuilder
+import org.elasticsearch.action.update.{ UpdateRequestBuilder, UpdateResponse }
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.script.ScriptService.ScriptType
 
+import scala.concurrent.Future
+
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
+
   @deprecated("use `update id <id>`", "1.4.5")
   def update(id: Any) = new UpdateExpectsIndex(id.toString)
   class UpdateExpectsIndex(id: String) {
     def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
+  }
+
+  implicit object UpdateDefinitionExecutable
+      extends Executable[UpdateDefinition, UpdateResponse] {
+    override def apply(c: Client, t: UpdateDefinition): Future[UpdateResponse] = {
+      injectFuture(c.update(t.build, _))
+    }
   }
 }
 

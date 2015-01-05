@@ -1,14 +1,23 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.count.CountRequestBuilder
+import org.elasticsearch.action.count.{ CountRequestBuilder, CountResponse }
 import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.client.Client
 import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait CountDsl {
 
   def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
+
+  implicit object CountDefinitionExecutable extends Executable[CountDefinition, CountResponse] {
+    override def apply(client: Client, t: CountDefinition): Future[CountResponse] = injectFuture(client
+      .count(t.build, _))
+  }
+
 }
 
 class CountDefinition(indexesTypes: IndexesTypes) {
