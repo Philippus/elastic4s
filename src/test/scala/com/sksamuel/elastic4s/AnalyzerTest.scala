@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{ FreeSpec, Matchers }
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     create index "analyzer" mappings {
-      "test" as(
+      "test" as (
         "keyword" typed StringType analyzer KeywordAnalyzer,
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
@@ -18,20 +18,20 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "pattern" typed StringType analyzer CustomAnalyzer("pattern1"),
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
         "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer
-        )
-    } analysis(
+      )
+    } analysis (
       PatternAnalyzerDefinition("pattern1", "\\d", false),
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
       CustomAnalyzerDefinition("my_ngram",
         StandardTokenizer,
         LowercaseTokenFilter,
         NGramTokenFilter("my_ngram_filter", minGram = 2, maxGram = 5)),
-      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
-      )
+        CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
+    )
   }.await
 
   client.execute {
-    index into "analyzer/test" fields(
+    index into "analyzer/test" fields (
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",
@@ -41,7 +41,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "custom_ngram" -> "dyson dc50i",
       "stop" -> "and and and",
       "pattern" -> "abc123def"
-      )
+    )
   }.await
 
   refresh("analyzer")
