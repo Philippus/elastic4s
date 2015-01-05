@@ -151,7 +151,8 @@ trait ElasticDsl
     }
 
     def alias(aliases: String*) = new GetAliasDefinition(aliases)
-    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
+    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index))
+      .types(indexType.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
   }
@@ -255,6 +256,7 @@ trait ElasticDsl
     def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
     def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
     def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
+    def in(indexType: IndexType): SearchDefinition = new SearchDefinition(IndexesTypes(indexType))
   }
 
   case object template {

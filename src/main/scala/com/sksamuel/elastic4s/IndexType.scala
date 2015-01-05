@@ -14,6 +14,7 @@ object IndexesTypes {
   }
   def apply(tuple: (String, String)): IndexesTypes = apply(tuple._1, tuple._2)
   def apply(index: String, `type`: String): IndexesTypes = IndexesTypes(List(index), List(`type`))
+  def apply(indexType: IndexType): IndexesTypes = IndexesTypes(indexType.index, indexType.`type`)
   def apply(string: String): IndexesTypes = {
     string.split("/") match {
       case Array(index) => IndexesTypes(Array(index), Nil)

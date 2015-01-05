@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.FlatSpec
+import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.mock.MockitoSugar
 import com.fasterxml.jackson.databind.ObjectMapper
 import ElasticDsl._
-import com.sksamuel.elastic4s.source.{ ObjectSource, JacksonSource }
+import com.sksamuel.elastic4s.source.{ObjectSource, JacksonSource}
 
 /** @author Stephen Samuel */
-class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   val mapper = new ObjectMapper()
 
@@ -32,6 +32,17 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar {
       )
     )
     blockUntilCount(3, "electronics")
+  }
+
+  it should "index numbers" in {
+    client.execute {
+      index into "electronics/phone" fields Map("screensize" -> 5)
+    }
+    blockUntilCount(4, "electronics")
+
+    client.execute {
+      search in "electronics" / "phone" query termQuery("screensize", 5)
+    }.await.getHits.getTotalHits shouldBe 1
   }
 
   "an index exists request" should "return true for an existing index" in {

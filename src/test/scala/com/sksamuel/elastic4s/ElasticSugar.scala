@@ -6,7 +6,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.{ BeforeAndAfterAll, Suite }
 
 /** @author Stephen Samuel */
 
