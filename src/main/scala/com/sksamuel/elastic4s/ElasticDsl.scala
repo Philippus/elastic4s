@@ -5,35 +5,35 @@ import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-  extends IndexDsl
-  with AliasesDsl
-  with BulkDsl
-  with ClusterDsl
-  with CountDsl
-  with CreateIndexDsl
-  with DeleteIndexDsl
-  with DeleteDsl
-  with FacetDsl
-  with ExplainDsl
-  with GetDsl
-  with IndexRecoveryDsl
-  with IndexStatusDsl
-  with MappingDsl
-  with MoreLikeThisDsl
-  with MultiGetDsl
-  with OptimizeDsl
-  with PercolateDsl
-  with SearchDsl
-  with ScoreDsl
-  with SnapshotDsl
-  with TemplateDsl
-  with UpdateDsl
-  with ValidateDsl
-  with ElasticImplicits {
+    extends IndexDsl
+    with AliasesDsl
+    with BulkDsl
+    with ClusterDsl
+    with CountDsl
+    with CreateIndexDsl
+    with DeleteIndexDsl
+    with DeleteDsl
+    with FacetDsl
+    with ExplainDsl
+    with GetDsl
+    with IndexRecoveryDsl
+    with IndexStatusDsl
+    with MappingDsl
+    with MoreLikeThisDsl
+    with MultiGetDsl
+    with OptimizeDsl
+    with PercolateDsl
+    with SearchDsl
+    with ScoreDsl
+    with SnapshotDsl
+    with TemplateDsl
+    with UpdateDsl
+    with ValidateDsl
+    with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -181,7 +181,7 @@ trait ElasticDsl
     }
   }
 
-  case object mapping {
+  case object m {
     def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
       new MappingDefinition(name)

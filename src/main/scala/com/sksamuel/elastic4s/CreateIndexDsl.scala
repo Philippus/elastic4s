@@ -155,7 +155,9 @@ class CreateIndexDefinition(name: String) {
     if (_mappings.size > 0) {
       source.startObject("mappings")
       for (mapping <- _mappings) {
+        source.startObject(mapping.`type`)
         mapping.build(source)
+        source.endObject()
       }
       source.endObject()
     }
