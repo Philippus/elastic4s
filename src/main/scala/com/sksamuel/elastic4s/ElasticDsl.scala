@@ -174,6 +174,11 @@ trait ElasticDsl
     def into(kv: (String, String)): IndexDefinition = {
       into(kv._1, kv._2)
     }
+
+    def into(indexType: IndexType): IndexDefinition = {
+      require(indexType != null, "indexType must not be null or empty")
+      new IndexDefinition(indexType.index, indexType.`type`)
+    }
   }
 
   case object map {
