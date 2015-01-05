@@ -96,6 +96,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Delete Template                           | `delete template <name>` |
 | [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
+| Get Alias                                 | `get alias <name> on <index>` |
 | Get Mapping                               | `get mapping <index> / <type>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index Status                              | `status <index>` |
@@ -438,7 +439,7 @@ This can be done by calling .java on the client object to get the underlying jav
 or .admin to get the admin based client, eg, the following request is a Java API request.
 
 ```scala
-client.admin.cluster.prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+client.admin.cluster.prepareHealth.setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 ```
 
 This way you can still access everything the normal Java client covers in the cases
@@ -449,7 +450,7 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.4.1"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.4.7"
 ```
 
 For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
