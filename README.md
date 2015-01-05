@@ -106,6 +106,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
 | Register Query                            | `register id <id> into <index> query { <queryblock> }` |
+| Recovery Index                            | `recover index <name>` |
 | [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
