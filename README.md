@@ -5,31 +5,27 @@ elastic4s - Elasticsearch Scala Client
 
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java's nature. Scala lets us do better.
 
-Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time,
-and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of
-the DSL is that requests are written in an SQL-like way, while staying true to the Java API.
+Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in an SQL-like way, while staying true to the Java API or Rest API.
 
-Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into
-Java collections. It also allows you to index documents directly without having to extract and set fields manually -
-eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
+Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index documents directly without having to extract and set fields manually - eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
 #### Key points
 
 * Typesafe concise DSL
-* Reactive / Uses Scala futures
-* Supports Scala collections
-* Wraps Java library
-* SQL-like requests
+* Reactive / Scala futures
+* Scala collections
+* Leverages Java library
+* SQL-style requests
 
 #### Release
 
-The latest release is 1.4.6 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.4.7 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.4.6|1.4.x|
+|1.4.7|1.4.x|
 |1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
@@ -48,10 +44,10 @@ Starting from version 1.2.1.3, if you want to use Jackson for JSON in ObjectSour
 
 The basic usage of the Scala driver is that you create an instance of `ElasticClient` and then invoke the various `execute` methods with the requests you want to perform. The execute methods are asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a search request will return a response of type `SearchResponse` which contains the results of the search.
 
-Requests, such as inserting a document, searching, creating an index, etc, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, one would do: `search in "index/type" query "findthistext"`
+Requests, such as inserting a document, searching, creating an index, etc, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: `search in "index/type" query "findthistext"`
 
 The response objects are, for the most part, the exact same type the Java API returns.
-This is because there is mostly no reason to wrap these.
+This is because there is mostly no reason to wrap these as they are fairly easy to use in Scala.
 
 All the DSL keywords are located in the `ElasticDsl` trait which needs to be imported or extended.
 
@@ -66,8 +62,8 @@ object Test extends App {
 
   val client = ElasticClient.local
 
-  // await is a helper method to make this operation sync instead of async
-  // You would normally avoid doing this in a real program as it will block
+  // await is a helper method to make this operation synchronous instead of async
+  // You would normally avoid doing this in a real program as it will block your thread
   client.execute { index into "bands/artists" fields "name"->"coldplay" }.await
 
   val resp = client.execute { search in "bands/artists" query "coldplay" }.await
@@ -84,42 +80,37 @@ Here is a list of the common requests and the syntax used to create them. For mo
 through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation as
 the DSL closely mirrors the standard Java API / REST API.
 
-| Operation                                 | Samuel Normal Form Syntax |
+| Operation                                 | Syntax |
 |-------------------------------------------|----------------|
-| [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
-| [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
-| [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
-| [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
-| Get Mapping                               | `mapping from <index>` |
+| [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
+| [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
+| [Create Repository](guide/snapshot.md)    | `create repository <repo> type <type> settings <settings>` |
+| [Create Snapshot](guide/snapshot.md)      | `create snapshot <name> in <repo> ...` |
+| Create Template                           | `create template <name> pattern <pattern> mappings {...}` |
 | [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
 | [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
 | [Delete index](guide/delete.md)           | `delete index <index> [settings]`
+| Delete Mapping                            | `delete mapping <index/type>` |
+| [Delete Snapshot](guide/snapshot.md)      | `delete snapshot <name> in <repo> ...` |
+| Delete Template                           | `delete template <name>` |
 | [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
+| [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
+| Get Mapping                               | `get mapping <index> / <type>` |
+| [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
+| Index Status                              | `status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
-| [Multisearch](guide/multisearch.md)       | `execute ( search in <index/type> query, search in <index/type> query, ...)`|
-| [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
+| [Multisearch](guide/multisearch.md)       | `multi ( search in <index/type> query, search in <index/type> query, ...)`|
 | [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
-| Register Query                            | `<id> into <index> query { <queryblock> }` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
+| Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
+| Register Query                            | `register id <id> into <index> query { <queryblock> }` |
+| [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
+| [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
+| [Search](guide/search.md)                 | `search in <index/type> query ... filter ... sort ...` |
 | [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
-| Index Status                              | `status <index>` |
-| [Add Alias](guide/aliases.md)             | 1.4+ `add alias "<alias>" on "<index>"` |
-|                                           | 1.3- `aliases add "<alias>" on "<index>"` |
-| [Remove Alias](guide/aliases.md)          | 1.4+ `remove alias "<alias>" on "<index>"` |
-|                                           | 1.3- `aliases remove "<alias>" on "<index>"` |
-| Put mapping                               | `put mapping </index/type> add { mappings block }` |
-| [Create Repository](guide/snapshot.md)    | 1.4+ `create repository <repo> type <type> settings <settings>` |
-|                                           | 1.3- `repository create <repo> type <type> settings <settings>` |
-| [Create Snapshot](guide/snapshot.md)      | 1.4+ `create snapshot <name> in <repo> ...` |
-|                                           | 1.3- `snapshot create <name> in <repo> ...` |
-| [Delete Snapshot](guide/snapshot.md)      | 1.4+ `delete snapshot <name> in <repo> ...` |
-|                                           | 1.3- `snapshot delete <name> in <repo> ...` |
-| [Restore Snapshot](guide/snapshot.md)     | 1.4+ `restore snapshot <name> from <repo> ...` |
-|                                           | 1.3- `snapshot restore <name> from <repo> ...` |
-| Index Templates      | `create template <name> pattern <pattern> mappings {...}`
-|                      | `delete template <name>` |
+| [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
