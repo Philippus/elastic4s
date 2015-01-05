@@ -12,7 +12,7 @@ class IndexTemplateTest extends FlatSpec with MockitoSugar with ElasticSugar wit
 
     client.execute {
       create template "brewery_template" pattern "*" mappings (
-        "brewery" as(
+        mapping name "brewery" as(
           "year_founded" typed IntegerType,
           "location" typed GeoPointType
           )
@@ -25,6 +25,8 @@ class IndexTemplateTest extends FlatSpec with MockitoSugar with ElasticSugar wit
         "location" -> "33.9253, 18.4239"
         )
     }.await
+
+    blockUntilCount(1, "test", "brewery")
 
     client.execute {
       search in "test" / "brewery" query termQuery("year_founded", 1829)

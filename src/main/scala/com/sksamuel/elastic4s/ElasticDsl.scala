@@ -181,8 +181,8 @@ trait ElasticDsl
     }
   }
 
-  case object map {
-    def as(name: String) = {
+  case object mapping {
+    def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
       new MappingDefinition(name)
     }
