@@ -5,38 +5,41 @@ import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
-    def alias(alias: String) = new AddAliasExpectsIndex(alias)
+    def alias(alias: String) = {
+      require(alias.nonEmpty, "alias name must not be null or empty")
+      new AddAliasExpectsIndex(alias)
+    }
   }
 
   case object aliases {
@@ -97,10 +100,26 @@ trait ElasticDsl
   }
 
   case object create {
-    def index(name: String) = new CreateIndexDefinition(name)
-    def snapshot(name: String) = new CreateSnapshotExpectsIn(name)
-    def repository(name: String) = new CreateRepositoryExpectsType(name)
-    def template(name: String) = new CreateIndexTemplateExpectsPattern(name)
+
+    def index(name: String) = {
+      require(name.nonEmpty, "index name must not be null or empty")
+      new CreateIndexDefinition(name)
+    }
+
+    def snapshot(name: String) = {
+      require(name.nonEmpty, "snapshot name must not be null or empty")
+      new CreateSnapshotExpectsIn(name)
+    }
+
+    def repository(name: String) = {
+      require(name.nonEmpty, "repository name must not be null or empty")
+      new CreateRepositoryExpectsType(name)
+    }
+
+    def template(name: String) = {
+      require(name.nonEmpty, "template name must not be null or empty")
+      new CreateIndexTemplateExpectsPattern(name)
+    }
   }
 
   case object delete {
@@ -125,10 +144,14 @@ trait ElasticDsl
   }
 
   case object get {
-    def id(id: Any) = new GetWithIdExpectsFrom(id.toString)
+
+    def id(id: Any) = {
+      require(id.toString.nonEmpty, "id must not be null or empty")
+      new GetWithIdExpectsFrom(id.toString)
+    }
+
     def alias(aliases: String*) = new GetAliasDefinition(aliases)
-    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index))
-      .types(indexType.`type`)
+    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index)).types(indexType.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
   }
@@ -136,18 +159,35 @@ trait ElasticDsl
   @deprecated("use index keyword", "1.4.0")
   def insert = index
   case object index {
-    def into(index: String): IndexDefinition = into(index.split("/").head, index.split("/").last)
-    def into(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
-    def into(kv: (String, String)): IndexDefinition = into(kv._1, kv._2)
+
+    def into(index: String): IndexDefinition = {
+      require(index.nonEmpty, "index must not be null or empty")
+      into(index.split("/").head, index.split("/").last)
+    }
+
+    def into(index: String, `type`: String): IndexDefinition = {
+      require(index.nonEmpty, "index must not be null or empty")
+      new IndexDefinition(index, `type`)
+    }
+
+    def into(kv: (String, String)): IndexDefinition = {
+      into(kv._1, kv._2)
+    }
   }
 
   case object map {
-    def as(name: String) = new MappingDefinition(name)
+    def as(name: String) = {
+      require(name.nonEmpty, "mapping name must not be null or empty")
+      new MappingDefinition(name)
+    }
   }
 
   def mlt = morelike
   case object morelike {
-    def id(id: Any) = new MltExpectsIndex(id.toString)
+    def id(id: Any) = {
+      require(id.toString.nonEmpty, "id must not be null or empty")
+      new MltExpectsIndex(id.toString)
+    }
   }
 
   case object optimize {
@@ -156,7 +196,10 @@ trait ElasticDsl
   }
 
   case object percolate {
-    def in(index: String) = new PercolateDefinition(index)
+    def in(index: String) = {
+      require(index.nonEmpty, "index must not be null or empty")
+      new PercolateDefinition(index)
+    }
   }
 
   case object put {
@@ -168,11 +211,17 @@ trait ElasticDsl
   }
 
   case object remove {
-    def alias(alias: String) = new RemoveAliasExpectsIndex(alias)
+    def alias(alias: String) = {
+      require(alias.nonEmpty, "alias must not be null or empty")
+      new RemoveAliasExpectsIndex(alias)
+    }
   }
 
   case object register {
-    def id(id: Any) = new RegisterExpectsIndex(id.toString)
+    def id(id: Any) = {
+      require(id.toString.nonEmpty, "id must not be null or empty")
+      new RegisterExpectsIndex(id.toString)
+    }
   }
 
   case object repository {
@@ -181,7 +230,10 @@ trait ElasticDsl
   }
 
   case object restore {
-    def snapshot(name: String) = new RestoreSnapshotExpectsFrom(name)
+    def snapshot(name: String) = {
+      require(name.nonEmpty, "snapshot name must not be null or empty")
+      new RestoreSnapshotExpectsFrom(name)
+    }
   }
 
   case object script {
@@ -213,11 +265,17 @@ trait ElasticDsl
   }
 
   case object update {
-    def id(id: Any) = new UpdateExpectsIndex(id.toString)
+    def id(id: Any) = {
+      require(id.toString.nonEmpty, "id must not be null or empty")
+      new UpdateExpectsIndex(id.toString)
+    }
   }
 
   case object validate {
-    def in(value: String): ValidateDefinition = in(value.split("/").toSeq)
+    def in(value: String): ValidateDefinition = {
+      require(value.nonEmpty, "value must not be null or empty")
+      in(value.split("/").toSeq)
+    }
     def in(value: Seq[String]): ValidateDefinition = in((value(0), value(1)))
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
