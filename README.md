@@ -19,13 +19,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.4.7 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.4.8 which is compatible with Elasticsearch 1.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.4.7|1.4.x|
+|1.4.8|1.4.x|
 |1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
@@ -450,16 +450,16 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.4.7"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.4.8"
 ```
 
-For Maven users simply add (replace 2.10 with 2.11 for Scala 2.11):
+For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
 
 ```xml
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
-    <artifactId>elastic4s_2.10</artifactId>
-    <version>1.4.1</version>
+    <artifactId>elastic4s_2.11</artifactId>
+    <version>1.4.8</version>
 </dependency>
 ```
 
