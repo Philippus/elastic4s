@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.elastic4s.{ Executable, ProxyClients }
 import org.elasticsearch.action.admin.indices.template.delete.{ DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse }
+import org.elasticsearch.action.admin.indices.template.get.{ GetIndexTemplatesResponse, GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder }
 import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse }
 import org.elasticsearch.client.Client
 
@@ -28,6 +29,13 @@ trait TemplateDsl {
       injectFuture(c.admin.indices.deleteTemplate(t.build, _))
     }
   }
+
+  implicit object GetTemplateDefinitionExecutable
+      extends Executable[GetTemplateDefinition, GetIndexTemplatesResponse] {
+    override def apply(c: Client, t: GetTemplateDefinition): Future[GetIndexTemplatesResponse] = {
+      injectFuture(c.admin.indices.getTemplates(t.build, _))
+    }
+  }
 }
 
 class CreateIndexTemplateDefinition(name: String, pattern: String) {
@@ -51,4 +59,9 @@ class CreateIndexTemplateDefinition(name: String, pattern: String) {
 class DeleteIndexTemplateDefinition(name: String) {
   def build: DeleteIndexTemplateRequest = _builder.request
   val _builder = new DeleteIndexTemplateRequestBuilder(ProxyClients.indices, name)
+}
+
+class GetTemplateDefinition(name: String) {
+  def build: GetIndexTemplatesRequest = _builder.request
+  val _builder = new GetIndexTemplatesRequestBuilder(ProxyClients.indices, name)
 }

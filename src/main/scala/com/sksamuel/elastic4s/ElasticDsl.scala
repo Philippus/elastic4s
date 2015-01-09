@@ -155,6 +155,8 @@ trait ElasticDsl
       .types(indexType.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
+
+    def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
   }
 
   @deprecated("use index keyword", "1.4.0")
