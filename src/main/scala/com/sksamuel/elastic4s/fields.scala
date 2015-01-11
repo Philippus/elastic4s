@@ -18,15 +18,15 @@ object FieldsMapper {
         val values = arr.map(new SimpleFieldValue(None, _))
         ArrayFieldValue(name, values)
 
-      case (name: String, s: Seq[_]) =>
+      case (name: String, s: Iterable[_]) =>
         s.headOption match {
           case Some(m: Map[_, _]) =>
             val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-            ArrayFieldValue(name, nested)
+            ArrayFieldValue(name, nested.toSeq)
 
           case Some(a: Any) =>
             val values = s.map(new SimpleFieldValue(None, _))
-            ArrayFieldValue(name, values)
+            ArrayFieldValue(name, values.toSeq)
 
           case _ =>
             // can't work out or empty - map to empty
