@@ -3,13 +3,15 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.source.DocumentSource
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.{ UpdateRequestBuilder, UpdateResponse }
+import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.script.ScriptService.ScriptType
 
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
@@ -21,7 +23,7 @@ trait UpdateDsl extends IndexesTypesDsl {
   }
 
   implicit object UpdateDefinitionExecutable
-      extends Executable[UpdateDefinition, UpdateResponse] {
+    extends Executable[UpdateDefinition, UpdateResponse] {
     override def apply(c: Client, t: UpdateDefinition): Future[UpdateResponse] = {
       injectFuture(c.update(t.build, _))
     }
@@ -104,6 +106,12 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
     this
   }
+
+  def timeout(duration: FiniteDuration): this.type = {
+    _builder.setTimeout(TimeValue.timeValueMillis(duration.toMillis))
+    this
+  }
+
   def lang(scriptLang: String): this.type = {
     _builder.setScriptLang(scriptLang)
     this
