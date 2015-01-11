@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.delete.DeleteResponse
-import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryResponse}
+import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequestBuilder, DeleteByQueryResponse }
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.client.{Client, Requests}
+import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future
@@ -53,14 +53,14 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   }
 
   implicit object DeleteByIdDefinitionExecutable
-    extends Executable[DeleteByIdDefinition, DeleteResponse] {
+      extends Executable[DeleteByIdDefinition, DeleteResponse] {
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
       injectFuture(c.delete(t.build, _))
     }
   }
 
   implicit object DeleteByQueryDefinitionExecutable
-    extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse] {
+      extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse] {
     override def apply(c: Client, t: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
       injectFuture(c.deleteByQuery(t.build, _))
     }

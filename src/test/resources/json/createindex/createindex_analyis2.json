@@ -1,10 +1,13 @@
 {
     "settings": {
         "analysis": {
-            "char_filter" : {
+            "char_filter": {
                 "mapping_charfilter": {
                     "type": "mapping",
-                    "mappings": [ "ph=>f", "qu=>q" ]
+                    "mappings": [
+                        "ph=>f",
+                        "qu=>q"
+                    ]
                 },
                 "pattern_replace_charfilter": {
                     "type": "pattern_replace",
@@ -67,13 +70,19 @@
                     "type": "edgeNGram",
                     "min_gram": 3,
                     "max_gram": 17,
-                    "token_chars": ["digit", "letter"]
+                    "token_chars": [
+                        "digit",
+                        "letter"
+                    ]
                 },
                 "myTokenizer5": {
                     "type": "nGram",
                     "min_gram": 4,
                     "max_gram": 18,
-                    "token_chars": ["letter", "punctuation"]
+                    "token_chars": [
+                        "letter",
+                        "punctuation"
+                    ]
                 }
             },
             "filter": {
@@ -119,7 +128,8 @@
                 "myEdgeNGramTokenFilter": {
                     "type": "edgeNGram",
                     "min_gram": 3,
-                    "max_gram": 50
+                    "max_gram": 50,
+                    "side": "front"
                 },
                 "stemmerTokenFilter": {
                     "type": "stemmer_override",
