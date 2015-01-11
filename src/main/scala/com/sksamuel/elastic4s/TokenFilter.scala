@@ -215,7 +215,7 @@ case class CommongGramsTokenFilter(name: String,
   }
 }
 
-case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
+case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2, side: String = "front")
     extends TokenFilterDefinition {
 
   val filterType = "edgeNGram"
@@ -223,6 +223,7 @@ case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2
   override def build(source: XContentBuilder): Unit = {
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
+    source.field("side", side)
   }
 }
 
