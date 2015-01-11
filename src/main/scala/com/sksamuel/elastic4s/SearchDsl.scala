@@ -2,21 +2,23 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 /** @author Stephen Samuel */
 trait SearchDsl
-    extends QueryDsl
-    with FilterDsl
-    with FacetDsl
-    with HighlightDsl
-    with ScriptFieldDsl
-    with SuggestionDsl
-    with IndexesTypesDsl {
+  extends QueryDsl
+  with FilterDsl
+  with FacetDsl
+  with HighlightDsl
+  with ScriptFieldDsl
+  with SuggestionDsl
+  with IndexesTypesDsl {
 
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
@@ -28,14 +30,14 @@ trait SearchDsl
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
   implicit object SearchDefinitionExecutable
-      extends Executable[SearchDefinition, SearchResponse] {
+    extends Executable[SearchDefinition, SearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[SearchResponse] = {
       injectFuture(c.search(t.build, _))
     }
   }
 
   implicit object MultiSearchDefinitionExecutable
-      extends Executable[MultiSearchDefinition, MultiSearchResponse] {
+    extends Executable[MultiSearchDefinition, MultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
       injectFuture(c.multiSearch(t.build, _))
     }
@@ -279,6 +281,16 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
 
   def minScore(score: Double): SearchDefinition = {
     _builder.setMinScore(score.toFloat)
+    this
+  }
+
+  def timeout(duration: FiniteDuration): this.type = {
+    _builder.setTimeout(TimeValue.timeValueMillis(duration.toMillis))
+    this
+  }
+
+  def stats(groups: String*): this.type = {
+    _builder.setStats(groups: _*)
     this
   }
 
