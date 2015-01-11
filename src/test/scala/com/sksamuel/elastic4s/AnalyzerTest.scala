@@ -18,6 +18,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "pattern1" typed StringType analyzer CustomAnalyzer("pattern1"),
         "pattern2" typed StringType analyzer CustomAnalyzer("pattern2"),
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
+        "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
         "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer
         )
     } analysis(
@@ -28,6 +29,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         StandardTokenizer,
         LowercaseTokenFilter,
         NGramTokenFilter("my_ngram_filter", minGram = 2, maxGram = 5)),
+      CustomAnalyzerDefinition("edgengram",
+        StandardTokenizer,
+        LowercaseTokenFilter,
+        EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
       CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
       )
   }.await
@@ -41,6 +46,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "simple" -> "LOWER-CASED",
       "ngram" -> "starcraft",
       "custom_ngram" -> "dyson dc50i",
+      "edgengram" -> "gameofthrones",
       "stop" -> "and and and",
       "pattern1" -> "abc123def",
       "pattern2" -> "jethro tull,coldplay"
@@ -77,6 +83,32 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       client.execute {
         search in "analyzer/test" query matchQuery("custom_ngram" -> "dc50")
       }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "custom EdgeNGram Tokenizer" - {
+    "should support side option" in {
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "es")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "nes")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "ones")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "rones")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "hrones")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "thrones")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query matchQuery("edgengram" -> "ga")
+      }.await.getHits.getTotalHits shouldBe 0
     }
   }
 
