@@ -1,15 +1,19 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ Matchers, FlatSpec }
-import org.scalatest.mock.MockitoSugar
 import com.fasterxml.jackson.databind.ObjectMapper
-import ElasticDsl._
-import com.sksamuel.elastic4s.source.{ ObjectSource, JacksonSource }
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.source.{JacksonSource, ObjectSource}
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FlatSpec, Matchers}
 
 /** @author Stephen Samuel */
 class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   val mapper = new ObjectMapper()
+
+  client.execute {
+    create.index("electronics").mappings("phone" ttl true)
+  }.await
 
   "an index request" should "index from jackson source when used" in {
     val json = mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
@@ -43,6 +47,15 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matche
     client.execute {
       search in "electronics" / "phone" query termQuery("screensize", 5)
     }.await.getHits.getTotalHits shouldBe 1
+  }
+
+  it should "expire a document once the TTL has passed" in {
+    import scala.concurrent.duration._
+    client.execute {
+      index into "electronics/phone" fields "vender" -> "blackberry" ttl 1.seconds
+    }
+    blockUntilCount(5, "electronics")
+    blockUntilCount(4, "electronics")
   }
 
   "an index exists request" should "return true for an existing index" in {
