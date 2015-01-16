@@ -104,7 +104,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  def filter(block: => FilterDefinition): SearchDefinition = {
+  def postFilter(block: => FilterDefinition): SearchDefinition = {
     _builder.setPostFilter(block.builder)
     this
   }
