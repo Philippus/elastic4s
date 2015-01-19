@@ -283,6 +283,7 @@ trait ElasticDsl
   }
 
   case object validate {
+    def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)
     def in(value: String): ValidateDefinition = {
       require(value.nonEmpty, "value must not be null or empty")
       in(value.split("/").toSeq)
