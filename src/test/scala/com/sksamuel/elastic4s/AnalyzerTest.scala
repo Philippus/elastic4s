@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{ FreeSpec, Matchers }
+import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     create index "analyzer" mappings {
-      "test" as (
+      "test" as(
         "keyword" typed StringType analyzer KeywordAnalyzer,
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
@@ -20,8 +20,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
         "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
         "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer
-      )
-    } analysis (
+        )
+    } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", false),
       PatternAnalyzerDefinition("pattern2", ",", false),
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
@@ -29,16 +29,16 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         StandardTokenizer,
         LowercaseTokenFilter,
         NGramTokenFilter("my_ngram_filter", minGram = 2, maxGram = 5)),
-        CustomAnalyzerDefinition("edgengram",
-          StandardTokenizer,
-          LowercaseTokenFilter,
-          EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
-          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
-    )
+      CustomAnalyzerDefinition("edgengram",
+        StandardTokenizer,
+        LowercaseTokenFilter,
+        EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
+      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
+      )
   }.await
 
   client.execute {
-    index into "analyzer/test" fields (
+    index into "analyzer" / "test" fields(
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",
@@ -50,7 +50,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "stop" -> "and and and",
       "pattern1" -> "abc123def",
       "pattern2" -> "jethro tull,coldplay"
-    )
+      )
   }.await
 
   refresh("analyzer")
@@ -59,7 +59,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "KeywordAnalyzer" - {
     "should index entire string as a single token" in {
       client.execute {
-        search in "analyzer/test" query termQuery("keyword" -> "feather")
+        search in "analyzer" / "test" query termQuery("keyword" -> "feather")
       }.await.getHits.getTotalHits shouldBe 0
     }
   }
@@ -81,7 +81,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         search in "analyzer/test" query matchQuery("custom_ngram" -> "dy")
       }.await.getHits.getTotalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("custom_ngram" -> "dc50")
+        search in "analyzer" / "test" query matchQuery("custom_ngram" -> "dc50")
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
