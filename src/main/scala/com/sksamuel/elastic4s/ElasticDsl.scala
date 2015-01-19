@@ -126,6 +126,7 @@ trait ElasticDsl
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
     def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
+    def from(indexType: IndexType): DeleteByQueryExpectsWhere = from(IndexesTypes(indexType))
     def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)

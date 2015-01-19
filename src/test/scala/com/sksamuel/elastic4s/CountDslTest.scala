@@ -10,6 +10,7 @@ class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "a count request" should "accept tuple for from" in {
     val req = count from "places" -> "cities" where "name" -> "sammy"
     assert(req.build.indices() === Array("places"))
+    assert(req.build.types() === Array("cities"))
   }
 
   it should "accept indextype" in {
