@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.client.{Client, Requests}
+import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.search.Scroll
 
 import scala.concurrent.Future
@@ -11,8 +11,7 @@ trait MoreLikeThisDsl {
 
   class MltExpectsIndex(id: String) {
 
-    def in(indexType: IndexType): MoreLikeThisDefinition = new
-        MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
+    def in(indexType: IndexType): MoreLikeThisDefinition = new MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
 
     def in(in: String): MoreLikeThisDefinition = in.split("/").toList match {
       case indx :: Nil => new MoreLikeThisDefinition(indx, null, id)
@@ -22,7 +21,7 @@ trait MoreLikeThisDsl {
   }
 
   implicit object MoreLikeThisDefinitionExecutable
-    extends Executable[MoreLikeThisDefinition, SearchResponse] {
+      extends Executable[MoreLikeThisDefinition, SearchResponse] {
     override def apply(c: Client, t: MoreLikeThisDefinition): Future[SearchResponse] = {
       injectFuture(c.moreLikeThis(t.build, _))
     }
