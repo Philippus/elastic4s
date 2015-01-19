@@ -5,35 +5,35 @@ import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -94,6 +94,7 @@ trait ElasticDsl
   }
 
   case object count {
+    def from(indexType: IndexType): CountDefinition = from(IndexesTypes(indexType))
     def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
     def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
     def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))

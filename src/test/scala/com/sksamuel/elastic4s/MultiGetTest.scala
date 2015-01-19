@@ -5,7 +5,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
 /** @author Stephen Samuel */
-class MultiGetDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
     index into "coldplay/albums" fields ("name" -> "mylo xyloto") id 5
