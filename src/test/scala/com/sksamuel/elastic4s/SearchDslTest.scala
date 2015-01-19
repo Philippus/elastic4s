@@ -18,6 +18,7 @@ import org.scalatest.{ FlatSpec, OneInstancePerTest }
 
 /** @author Stephen Samuel */
 class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
+
   "the search dsl" should "accept wilcards for index and types" in {
     val req = search in "*" types "*" limit 10
     req._builder.toString should matchJsonResource("/json/search/search_test1.json")
