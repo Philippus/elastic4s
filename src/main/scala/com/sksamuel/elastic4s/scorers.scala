@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.factor.FactorBuilder
+import org.elasticsearch.index.query.functionscore.weight.WeightBuilder
 import org.elasticsearch.index.query.functionscore.fieldvaluefactor.FieldValueFactorFunctionBuilder
 import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
 import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
@@ -21,11 +22,16 @@ trait ScoreDsl {
   @deprecated("since 1.4.0", "1.4.0")
   def factorScore(boost: Double) = new FactorScoreDefinition(boost)
   def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)
+  def weightScore(boost: Double) = new WeightScoreDefinition(boost)
 }
 
 @deprecated("since 1.4.0", "1.4.0")
 class FactorScoreDefinition(boost: Double) extends ScoreDefinition[FactorScoreDefinition] {
   val builder = new FactorBuilder().boostFactor(boost.toFloat)
+}
+
+class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightScoreDefinition] {
+  val builder = new WeightBuilder().setWeight(boost.toFloat)
 }
 
 trait ScoreDefinition[T] {
