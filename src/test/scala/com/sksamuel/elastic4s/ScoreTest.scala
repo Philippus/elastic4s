@@ -36,4 +36,9 @@ class ScoreTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstan
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()
     actual should matchJsonResource("/json/score/score_script.json")
   }
+  it should "generate correct json for a weight function scorer" in {
+    val req = weightScore(1.5)
+    val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()
+    actual should matchJsonResource("/json/score/score_weight.json")
+  }
 }
