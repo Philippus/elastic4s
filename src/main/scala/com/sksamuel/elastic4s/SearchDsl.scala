@@ -27,6 +27,7 @@ trait SearchDsl
     new RescoreDefinition(query)
   }
 
+  def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = new MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
   implicit object SearchDefinitionExecutable
