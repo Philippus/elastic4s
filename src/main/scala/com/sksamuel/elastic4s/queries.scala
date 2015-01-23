@@ -125,6 +125,8 @@ trait QueryDsl {
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
 
+  def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new SpanMultiTermQueryDefinition(query)
+
   @deprecated("use termQuery", "1.4.0")
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
   @deprecated("use termQuery", "1.4.0")
@@ -435,6 +437,10 @@ class MultiMatchQueryDefinition(text: String)
   }
 }
 
+class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends QueryDefinition {
+  override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
+}
+
 class FuzzyDefinition(name: String, value: Any)
   extends QueryDefinition
   with DefinitionAttributePrefixLength
@@ -498,7 +504,7 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
 }
 
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
-  extends QueryDefinition
+  extends MultiTermQueryDefinition
   with DefinitionAttributePrefixLength
   with DefinitionAttributeBoost {
 
@@ -644,6 +650,10 @@ class SpanTermQueryDefinition(field: String, value: Any) extends QueryDefinition
   }
 }
 
+trait MultiTermQueryDefinition extends QueryDefinition {
+  override def builder: MultiTermQueryBuilder
+}
+
 class WildcardQueryDefinition(field: String, query: Any)
   extends QueryDefinition
   with DefinitionAttributeRewrite
@@ -653,7 +663,7 @@ class WildcardQueryDefinition(field: String, query: Any)
 }
 
 class PrefixQueryDefinition(field: String, prefix: Any)
-  extends QueryDefinition with DefinitionAttributeRewrite with DefinitionAttributeBoost {
+  extends MultiTermQueryDefinition with DefinitionAttributeRewrite with DefinitionAttributeBoost {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
 }
