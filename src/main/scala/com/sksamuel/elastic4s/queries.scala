@@ -124,8 +124,10 @@ trait QueryDsl {
 
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
+  def spanNotQuery = new SpanNotQueryDefinition
 
-  def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new SpanMultiTermQueryDefinition(query)
+  def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new
+      SpanMultiTermQueryDefinition(query)
 
   @deprecated("use termQuery", "1.4.0")
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
@@ -698,6 +700,34 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
   }
   def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
     builder.disableCoord(disableCoord)
+    this
+  }
+}
+
+class SpanNotQueryDefinition extends QueryDefinition {
+  val builder = QueryBuilders.spanNotQuery()
+  def boost(boost: Double): this.type = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def dist(dist: Int): this.type = {
+    builder.dist(dist)
+    this
+  }
+  def exclude(query: SpanTermQueryDefinition): this.type = {
+    builder.exclude(query.builder)
+    this
+  }
+  def include(query: SpanTermQueryDefinition): this.type = {
+    builder.include(query.builder)
+    this
+  }
+  def pre(pre: Int): this.type = {
+    builder.pre(pre)
+    this
+  }
+  def post(post: Int): this.type = {
+    builder.post(post)
     this
   }
 }
