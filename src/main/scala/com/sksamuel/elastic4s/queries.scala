@@ -56,7 +56,7 @@ trait QueryDsl {
 
   @deprecated("use fuzzyQuery", "1.4.0")
   def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
-  def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
+  def fuzzyQuery(name: String, value: Any) = new FuzzyQueryDefinition(name, value)
 
   def indicesQuery(indices: String*) = new {
     def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
@@ -447,8 +447,8 @@ class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends Span
   override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
 }
 
-class FuzzyDefinition(name: String, value: Any)
-    extends QueryDefinition
+class FuzzyQueryDefinition(name: String, value: Any)
+    extends MultiTermQueryDefinition
     with DefinitionAttributePrefixLength
     with DefinitionAttributeBoost {
 
@@ -510,7 +510,7 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
 }
 
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
-    extends MultiTermQueryDefinition
+    extends QueryDefinition
     with DefinitionAttributePrefixLength
     with DefinitionAttributeBoost {
 
@@ -669,12 +669,16 @@ class WildcardQueryDefinition(field: String, query: Any)
 }
 
 class PrefixQueryDefinition(field: String, prefix: Any)
-    extends MultiTermQueryDefinition with DefinitionAttributeRewrite with DefinitionAttributeBoost {
+    extends MultiTermQueryDefinition
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeBoost {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
 }
+
 class RegexQueryDefinition(field: String, regex: Any)
-    extends QueryDefinition with DefinitionAttributeRewrite
+    extends MultiTermQueryDefinition
+    with DefinitionAttributeRewrite
     with DefinitionAttributeBoost {
   val builder = QueryBuilders.regexpQuery(field, regex.toString)
   val _builder = builder
@@ -778,7 +782,7 @@ class MatchAllQueryDefinition extends QueryDefinition {
   }
 }
 
-class RangeQueryDefinition(field: String) extends QueryDefinition with DefinitionAttributeBoost {
+class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.rangeQuery(field)
   val _builder = builder
@@ -1043,6 +1047,16 @@ class QueryStringQueryDefinition(query: String)
   val builder = QueryBuilders.queryString(query)
   val _builder = builder
 
+  def analyzer(analyzer: String): this.type = {
+    builder.analyzer(analyzer)
+    this
+  }
+
+  def analyzer(analyzer: Analyzer): this.type = {
+    builder.analyzer(analyzer.name)
+    this
+  }
+
   def defaultOperator(op: String): this.type = {
     op.toUpperCase match {
       case "AND" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
@@ -1121,22 +1135,22 @@ class QueryStringQueryDefinition(query: String)
     this
   }
 
-  def defaultField(field: String): QueryStringQueryDefinition = {
+  def defaultField(field: String): this.type = {
     builder.defaultField(field)
     this
   }
 
-  def analyzeWildcard(analyzeWildcard: Boolean): QueryStringQueryDefinition = {
+  def analyzeWildcard(analyzeWildcard: Boolean): this.type = {
     builder.analyzeWildcard(analyzeWildcard)
     this
   }
 
-  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): QueryStringQueryDefinition = {
+  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): this.type = {
     builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
     this
   }
 
-  def operator(op: String): QueryStringQueryDefinition = {
+  def operator(op: String): this.type = {
     op.toLowerCase match {
       case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
       case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
