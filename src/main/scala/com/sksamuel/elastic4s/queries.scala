@@ -122,6 +122,12 @@ trait QueryDsl {
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
   def stringQuery(q: String) = new StringQueryDefinition(q)
 
+  def spanFirstQuery = new {
+    def query(spanQuery: SpanQueryDefinition) = new {
+      def end(end: Int) = new SpanFirstQueryDefinition(spanQuery, end)
+    }
+  }
+
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
   def spanNotQuery = new SpanNotQueryDefinition
@@ -439,7 +445,7 @@ class MultiMatchQueryDefinition(text: String)
   }
 }
 
-class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends QueryDefinition {
+class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends SpanQueryDefinition {
   override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
 }
 
@@ -633,7 +639,7 @@ class BoostingQueryDefinition extends QueryDefinition {
   }
 }
 
-class SpanOrQueryDefinition extends QueryDefinition with DefinitionAttributeBoost {
+class SpanOrQueryDefinition extends SpanQueryDefinition with DefinitionAttributeBoost {
   val builder = QueryBuilders.spanOrQuery
   val _builder = builder
   def clause(spans: SpanTermQueryDefinition*): SpanOrQueryDefinition = {
@@ -644,7 +650,7 @@ class SpanOrQueryDefinition extends QueryDefinition with DefinitionAttributeBoos
   }
 }
 
-class SpanTermQueryDefinition(field: String, value: Any) extends QueryDefinition {
+class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
   val builder = QueryBuilders.spanTermQuery(field, value.toString)
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
@@ -704,6 +710,14 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
   }
 }
 
+trait SpanQueryDefinition extends QueryDefinition {
+  override def builder: SpanQueryBuilder
+}
+
+class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extends QueryDefinition {
+  val builder = QueryBuilders.spanFirstQuery(query.builder, end)
+}
+
 class SpanNotQueryDefinition extends QueryDefinition {
   val builder = QueryBuilders.spanNotQuery()
   def boost(boost: Double): this.type = {
@@ -714,11 +728,11 @@ class SpanNotQueryDefinition extends QueryDefinition {
     builder.dist(dist)
     this
   }
-  def exclude(query: SpanTermQueryDefinition): this.type = {
+  def exclude(query: SpanQueryDefinition): this.type = {
     builder.exclude(query.builder)
     this
   }
-  def include(query: SpanTermQueryDefinition): this.type = {
+  def include(query: SpanQueryDefinition): this.type = {
     builder.include(query.builder)
     this
   }
