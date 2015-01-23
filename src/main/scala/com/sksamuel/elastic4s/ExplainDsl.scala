@@ -30,7 +30,7 @@ class ExplainDefinition(indexesTypes: IndexesTypes, id: Any)
   def build = _builder.request
 
   def query(string: String): this.type = {
-    val q = new StringQueryDefinition(string)
+    val q = new QueryStringQueryDefinition(string)
     // need to set the query on the request - workaround for ES internals
     _builder.request.source(new QuerySourceBuilder().setQuery(q.builder))
     _builder.setQuery(q.builder.buildAsBytes)

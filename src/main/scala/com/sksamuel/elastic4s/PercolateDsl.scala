@@ -76,7 +76,7 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
     this
   }
   def query(string: String) = {
-    _query = new StringQueryDefinition(string)
+    _query = new QueryStringQueryDefinition(string)
     this
   }
   def fields(map: Map[String, Any]): RegisterDefinition = fields(map.toList)
@@ -134,7 +134,7 @@ class PercolateDefinition(indexType: IndexesTypes) {
     this
   }
 
-  def query(string: String): PercolateDefinition = query(new StringQueryDefinition(string))
+  def query(string: String): PercolateDefinition = query(new QueryStringQueryDefinition(string))
   def query(block: => QueryDefinition) = {
     _query = block
     this

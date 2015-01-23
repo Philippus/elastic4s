@@ -94,7 +94,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     *
     * @param string the query string
     */
-  def query(string: String): SearchDefinition = query(new StringQueryDefinition(string))
+  def query(string: String): SearchDefinition = query(new QueryStringQueryDefinition(string))
   def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
   def query2(block: => QueryBuilder): SearchDefinition = {
     _builder.setQuery(block)

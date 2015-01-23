@@ -25,8 +25,8 @@ trait QueryDsl {
     def field(name: String) = new CommonQueryExpectsText(name)
   }
   class CommonQueryExpectsText(name: String) {
-    def text(q: String): CommonQueryDefinition = new CommonQueryDefinition(name, q)
-    def query(q: String): CommonQueryDefinition = text(q)
+    def text(q: String): CommonTermsQueryDefinition = new CommonTermsQueryDefinition(name, q)
+    def query(q: String): CommonTermsQueryDefinition = text(q)
   }
 
   def constantScore = new ConstantScoreExpectsQueryOrFilter
@@ -60,7 +60,7 @@ trait QueryDsl {
   def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
   def fuzzyQuery(name: String, value: Any) = new FuzzyDefinition(name, value)
 
-  def indicesQuery(indices: String*) = new Any {
+  def indicesQuery(indices: String*) = new {
     def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
   }
 
@@ -99,7 +99,8 @@ trait QueryDsl {
   def nested(path: String): NestedQueryDefinition = nestedQuery(path)
   def nestedQuery(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
-  def query(q: String): StringQueryDefinition = new StringQueryDefinition(q)
+  def query(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
+  def queryStringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
 
   @deprecated("use rangeQuery", "1.4.0")
   def range(field: String): RangeQueryDefinition = rangeQuery(field)
@@ -120,7 +121,7 @@ trait QueryDsl {
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
-  def stringQuery(q: String) = new StringQueryDefinition(q)
+  def stringQuery(q: String) = new QueryStringQueryDefinition(q)
 
   def spanFirstQuery = new {
     def query(spanQuery: SpanQueryDefinition) = new {
@@ -541,27 +542,27 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   }
 }
 
-class CommonQueryDefinition(name: String, text: String)
+class CommonTermsQueryDefinition(name: String, text: String)
   extends QueryDefinition with DefinitionAttributeBoost with DefinitionAttributeCutoffFrequency {
   val builder = QueryBuilders.commonTerms(name, text)
   val _builder = builder
-  def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Double): CommonQueryDefinition = {
+  def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Double): CommonTermsQueryDefinition = {
     builder.highFreqMinimumShouldMatch(highFreqMinimumShouldMatch.toString)
     this
   }
-  def highFreqOperator(operator: String): CommonQueryDefinition = {
+  def highFreqOperator(operator: String): CommonTermsQueryDefinition = {
     builder.highFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
     this
   }
-  def analyzer(analyzer: Analyzer): CommonQueryDefinition = {
+  def analyzer(analyzer: Analyzer): CommonTermsQueryDefinition = {
     builder.analyzer(analyzer.name)
     this
   }
-  def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Double): CommonQueryDefinition = {
+  def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Double): CommonTermsQueryDefinition = {
     builder.lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch.toString)
     this
   }
-  def lowFreqOperator(operator: String): CommonQueryDefinition = {
+  def lowFreqOperator(operator: String): CommonTermsQueryDefinition = {
     builder.lowFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
     this
   }
@@ -1037,7 +1038,7 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
   }
 }
 
-class StringQueryDefinition(query: String)
+class QueryStringQueryDefinition(query: String)
   extends QueryDefinition
   with DefinitionAttributeRewrite
   with DefinitionAttributeBoost {
@@ -1045,67 +1046,101 @@ class StringQueryDefinition(query: String)
   val builder = QueryBuilders.queryString(query)
   val _builder = builder
 
-  def analyzer(analyzer: Analyzer): StringQueryDefinition = {
-    builder.analyzer(analyzer.name)
+
+  def defaultOperator(op: String): this.type = {
+    op.toUpperCase match {
+      case "AND" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
+      case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
+    }
     this
   }
 
-  def defaultField(field: String): StringQueryDefinition = {
-    builder.defaultField(field)
+  def defaultOperator(op: QueryStringQueryBuilder.Operator): this.type = {
+    builder.defaultOperator(op)
     this
   }
 
-  def analyzeWildcard(analyzeWildcard: Boolean): StringQueryDefinition = {
-    builder.analyzeWildcard(analyzeWildcard)
+  def asfields(fields: String*): this.type = {
+    fields foreach field
     this
   }
 
-  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): StringQueryDefinition = {
-    builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
+  def lowercaseExpandedTerms(lowercaseExpandedTerms: Boolean): this.type = {
+    builder.lowercaseExpandedTerms(lowercaseExpandedTerms)
     this
   }
 
-  def allowLeadingWildcard(allowLeadingWildcard: Boolean): StringQueryDefinition = {
-    builder.allowLeadingWildcard(allowLeadingWildcard)
-    this
-  }
-
-  def enablePositionIncrements(enablePositionIncrements: Boolean): StringQueryDefinition = {
-    builder.enablePositionIncrements(enablePositionIncrements)
-    this
-  }
-
-  def field(name: String): StringQueryDefinition = {
-    builder.field(name)
-    this
-  }
-
-  def field(name: String, boost: Double): StringQueryDefinition = {
-    builder.field(name, boost.toFloat)
-    this
-  }
-
-  def fuzzyPrefixLength(fuzzyPrefixLength: Int): StringQueryDefinition = {
+  def fuzzyPrefixLength(fuzzyPrefixLength: Int): this.type = {
     builder.fuzzyPrefixLength(fuzzyPrefixLength)
     this
   }
 
-  def fuzzyRewrite(fuzzyRewrite: String): StringQueryDefinition = {
-    builder.fuzzyRewrite(fuzzyRewrite)
-    this
-  }
-
-  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): StringQueryDefinition = {
+  def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): this.type = {
     builder.fuzzyMaxExpansions(fuzzyMaxExpansions)
     this
   }
 
-  def lenient(l: Boolean): StringQueryDefinition = {
-    builder.lenient(java.lang.Boolean.valueOf(l))
+  def fuzzyRewrite(fuzzyRewrite: String): this.type = {
+    builder.fuzzyRewrite(fuzzyRewrite)
     this
   }
 
-  def operator(op: String): StringQueryDefinition = {
+  def tieBreaker(tieBreaker: Double): this.type = {
+    builder.tieBreaker(tieBreaker.toFloat)
+    this
+  }
+
+  def allowLeadingWildcard(allowLeadingWildcard: Boolean): this.type = {
+    builder.allowLeadingWildcard(allowLeadingWildcard)
+    this
+  }
+
+  def lenient(lenient: Boolean): this.type = {
+    builder.lenient(lenient)
+    this
+  }
+
+  def minimumShouldMatch(minimumShouldMatch: Int): this.type = {
+    builder.minimumShouldMatch(minimumShouldMatch.toString)
+    this
+  }
+
+  def enablePositionIncrements(enablePositionIncrements: Boolean): this.type = {
+    builder.enablePositionIncrements(enablePositionIncrements)
+    this
+  }
+
+  def quoteFieldSuffix(quoteFieldSuffix: String): this.type = {
+    builder.quoteFieldSuffix(quoteFieldSuffix)
+    this
+  }
+
+  def field(name: String): this.type = {
+    builder.field(name)
+    this
+  }
+
+  def field(name: String, boost: Double): this.type = {
+    builder.field(name, boost.toFloat)
+    this
+  }
+
+  def defaultField(field: String): QueryStringQueryDefinition = {
+    builder.defaultField(field)
+    this
+  }
+
+  def analyzeWildcard(analyzeWildcard: Boolean): QueryStringQueryDefinition = {
+    builder.analyzeWildcard(analyzeWildcard)
+    this
+  }
+
+  def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): QueryStringQueryDefinition = {
+    builder.autoGeneratePhraseQueries(autoGeneratePhraseQueries)
+    this
+  }
+
+  def operator(op: String): QueryStringQueryDefinition = {
     op.toLowerCase match {
       case "and" => builder.defaultOperator(QueryStringQueryBuilder.Operator.AND)
       case _ => builder.defaultOperator(QueryStringQueryBuilder.Operator.OR)
@@ -1113,13 +1148,8 @@ class StringQueryDefinition(query: String)
     this
   }
 
-  def phraseSlop(phraseSlop: Int): StringQueryDefinition = {
+  def phraseSlop(phraseSlop: Int): QueryStringQueryDefinition = {
     builder.phraseSlop(phraseSlop)
-    this
-  }
-
-  def tieBreaker(tieBreaker: Double): StringQueryDefinition = {
-    builder.tieBreaker(tieBreaker.toFloat)
     this
   }
 }

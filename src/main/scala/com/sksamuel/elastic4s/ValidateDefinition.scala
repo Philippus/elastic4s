@@ -15,7 +15,7 @@ class ValidateDefinition(index: String, `type`: String) {
     * @return this
     */
   def query(string: String): ValidateDefinition = {
-    val q = new StringQueryDefinition(string)
+    val q = new QueryStringQueryDefinition(string)
     _builder.setQuery(q.builder)
     this
   }
