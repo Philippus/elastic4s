@@ -12,13 +12,13 @@ import scala.concurrent.duration.FiniteDuration
 
 /** @author Stephen Samuel */
 trait SearchDsl
-  extends QueryDsl
-  with FilterDsl
-  with FacetDsl
-  with HighlightDsl
-  with ScriptFieldDsl
-  with SuggestionDsl
-  with IndexesTypesDsl {
+    extends QueryDsl
+    with FilterDsl
+    with FacetDsl
+    with HighlightDsl
+    with ScriptFieldDsl
+    with SuggestionDsl
+    with IndexesTypesDsl {
 
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
@@ -31,14 +31,14 @@ trait SearchDsl
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
   implicit object SearchDefinitionExecutable
-    extends Executable[SearchDefinition, SearchResponse] {
+      extends Executable[SearchDefinition, SearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[SearchResponse] = {
       injectFuture(c.search(t.build, _))
     }
   }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse] {
+      extends Executable[MultiSearchDefinition, MultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
       injectFuture(c.multiSearch(t.build, _))
     }
@@ -107,7 +107,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
 
   def filter(filter: FilterDefinition): this.type = postFilter(filter)
 
-  def postFilter(block: => FilterDefinition): SearchDefinition = {
+  def postFilter(block: => FilterDefinition): this.type = {
     _builder.setPostFilter(block.builder)
     this
   }
