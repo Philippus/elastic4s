@@ -92,8 +92,8 @@ case class PathHierarchyTokenizer(override val name: String,
                                   skip: Int = 0) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "path_hierarchy")
-    source.field("delimiter", delimiter)
-    source.field("replacement", replacement)
+    source.field("delimiter", delimiter.toString)
+    source.field("replacement", replacement.toString)
     if (bufferSize > 1024) source.field("buffer_size", bufferSize)
     if (reverse) source.field("reverse", reverse)
     if (skip > 0) source.field("skip", skip)
