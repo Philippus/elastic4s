@@ -47,26 +47,28 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     listener.actionGet()
   }
 
-  def blockUntilCount(expected: Long,
-                      index: String,
-                      types: String*) {
-
+  def blockUntil(explain: String)(predicate: () ⇒ Boolean): Unit = {
     var backoff = 0
-    var actual = 0l
+    var done = false
 
-    while (backoff <= 50 && actual != expected) {
-      if (backoff > 0)
-        Thread.sleep(100)
+    while (backoff <= 50 && !done) {
+      if (backoff > 0) Thread.sleep(100)
       backoff = backoff + 1
       try {
-        actual = client.execute {
-          count from index types types
-        }.await.getCount
+        done = predicate()
       } catch {
-        case e: IndexMissingException => 0
+        case e: Throwable ⇒ //ignore
       }
     }
 
-    require(expected == actual, s"Block failed waiting on count: Expected was $expected but actual was $actual")
+    require(done, s"Failed waiting on: $explain")
   }
+
+  def blockUntilCount(expected: Long, index: String, types: String*): Unit =
+    blockUntil(s"Expected count of $expected") { () ⇒
+      val actual = client.execute {
+        count from index types types
+      }.await.getCount
+      expected == actual
+    }
 }
