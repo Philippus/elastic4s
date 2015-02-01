@@ -57,7 +57,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
       try {
         done = predicate()
       } catch {
-        case e: Throwable ⇒ //ignore
+        case e: Throwable ⇒ logger.warn("problem while testing predicate", e)
       }
     }
 
