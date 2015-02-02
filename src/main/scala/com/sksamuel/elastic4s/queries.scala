@@ -749,7 +749,7 @@ class SpanNotQueryDefinition extends QueryDefinition {
   }
 }
 
-class SpanNearQueryDefinition extends QueryDefinition {
+class SpanNearQueryDefinition extends SpanQueryDefinition {
   val builder = QueryBuilders.spanNearQuery()
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
