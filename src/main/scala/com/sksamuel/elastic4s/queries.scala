@@ -130,6 +130,7 @@ trait QueryDsl {
   def spanOrQuery = new SpanOrQueryDefinition
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
   def spanNotQuery = new SpanNotQueryDefinition
+  def spanNearQuery = new SpanNearQueryDefinition
 
   def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new SpanMultiTermQueryDefinition(query)
 
@@ -744,6 +745,30 @@ class SpanNotQueryDefinition extends QueryDefinition {
   }
   def post(post: Int): this.type = {
     builder.post(post)
+    this
+  }
+}
+
+class SpanNearQueryDefinition extends SpanQueryDefinition {
+  val builder = QueryBuilders.spanNearQuery()
+  def boost(boost: Double): this.type = {
+    builder.boost(boost.toFloat)
+    this
+  }
+  def inOrder(inOrder: Boolean): this.type = {
+    builder.inOrder(inOrder)
+    this
+  }
+  def collectPayloads(collectPayloads: Boolean): this.type = {
+    builder.collectPayloads(collectPayloads)
+    this
+  }
+  def clause(query: SpanQueryDefinition): this.type = {
+    builder.clause(query.builder)
+    this
+  }
+  def slop(slop: Int): this.type = {
+    builder.slop(slop)
     this
   }
 }
