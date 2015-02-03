@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.source.ObjectSource
 
 import scala.concurrent.duration._
 import scala.concurrent.{ Await, Future }

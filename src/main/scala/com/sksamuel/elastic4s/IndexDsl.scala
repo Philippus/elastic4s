@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.{ DocumentMap, DocumentSource }
+import com.sksamuel.elastic4s.source.{Indexable, DocumentMap, DocumentSource}
 import org.elasticsearch.action.index.IndexRequest.OpType
-import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
+import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
 import scala.collection.JavaConverters._
@@ -18,7 +18,7 @@ trait IndexDsl {
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
 
   implicit object IndexDefinitionExecutable
-      extends Executable[IndexDefinition, IndexResponse] {
+    extends Executable[IndexDefinition, IndexResponse] {
     override def apply(c: Client, t: IndexDefinition): Future[IndexResponse] = {
       injectFuture(c.index(t.build, _))
     }
@@ -30,14 +30,20 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
   private val _request = new IndexRequest(index, `type`)
   private val _fields = mutable.Buffer[FieldValue]()
   private var _source: Option[DocumentSource] = None
+  private var _json: Option[String] = None
   private var _map: Option[DocumentMap] = None
 
   def build = _source match {
     case Some(src) => _request.source(src.json)
-    case None => _map match {
-      case Some(map) => _request.source(map.map.asJava)
-      case None => _request.source(_fieldsAsXContent)
-    }
+    case None =>
+      _json match {
+        case Some(json) => _request.source(json)
+        case None =>
+          _map match {
+            case Some(map) => _request.source(map.map.asJava)
+            case None => _request.source(_fieldsAsXContent)
+          }
+      }
   }
 
   def _fieldsAsXContent: XContentBuilder = {
@@ -46,12 +52,17 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     source.endObject()
   }
 
-  def doc(source: DocumentSource) = {
+  def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
+    this._json = Option(indexable.json(t))
+    this
+  }
+
+  def doc(source: DocumentSource): this.type = {
     this._source = Option(source)
     this
   }
 
-  def doc(map: DocumentMap) = {
+  def doc(map: DocumentMap): this.type = {
     this._map = Option(map)
     this
   }

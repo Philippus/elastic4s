@@ -12,3 +12,7 @@ case class StringDocumentSource(str: String) extends DocumentSource {
 trait DocumentMap {
   def map: Map[String, Any]
 }
+
+trait Indexable[T] {
+  def json(t: T): String
+}

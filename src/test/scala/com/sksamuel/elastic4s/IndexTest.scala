@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.source.{ JacksonSource, ObjectSource }
+import com.sksamuel.elastic4s.source.{Indexable, JacksonSource, ObjectSource}
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 /** @author Stephen Samuel */
 class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -49,13 +49,31 @@ class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matche
     }.await.getHits.getTotalHits shouldBe 1
   }
 
+  it should "index from indexable typeclass" in {
+
+    case class Phone(name: String, speed: String)
+    implicit object PhoneIndexable extends Indexable[Phone] {
+      override def json(t: Phone): String = s"""{ "name" : "${t.name}", "speed" : "${t.speed}" }"""
+    }
+    val phone = Phone("nokia blabble", "4g")
+
+    client.execute {
+      index into "electronics/phone" source phone
+    }
+    blockUntilCount(5, "electronics")
+
+    client.execute {
+      search in "electronics" / "phone" query termQuery("speed", "4g")
+    }.await.getHits.getTotalHits shouldBe 1
+  }
+
   it should "expire a document once the TTL has passed" in {
     import scala.concurrent.duration._
     client.execute {
       index into "electronics/phone" fields "vender" -> "blackberry" ttl 1.seconds
     }
+    blockUntilCount(6, "electronics")
     blockUntilCount(5, "electronics")
-    blockUntilCount(4, "electronics")
   }
 
   "an index exists request" should "return true for an existing index" in {

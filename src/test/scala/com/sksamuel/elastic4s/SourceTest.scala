@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.source.ObjectSource
 import org.scalatest.{ OneInstancePerTest, FlatSpec }
 import org.scalatest.mock.MockitoSugar
 
@@ -9,6 +10,6 @@ class SourceTest extends FlatSpec with MockitoSugar with ElasticSugar with Elast
   val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
 
   client.execute {
-    index into "music/bands" doc band
+    index into "music/bands" doc ObjectSource(band)
   }
 }
