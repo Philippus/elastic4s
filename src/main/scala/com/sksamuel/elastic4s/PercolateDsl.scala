@@ -12,13 +12,13 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
 
-  @deprecated("Use the register id X into Y syntax", "1.4.1")
+  @deprecated("Use the `register id X into Y` syntax", "1.4.1")
   implicit def any2register(id: AnyVal): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id.toString)
 
-  @deprecated("Use the register id X into Y syntax", "1.4.1")
+  @deprecated("Use the `register id X into Y` syntax", "1.4.1")
   implicit def string2register(id: String): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id)
 
-  @deprecated("Use the percolate in X", "1.4.1")
+  @deprecated("Use the `percolate in X`", "1.4.1")
   implicit def string2percolate(index: String): PercolateDefinitionImplicit = new PercolateDefinitionImplicit(IndexesTypes(index))
 
   class PercolateDefinitionImplicit(indexType: IndexesTypes) extends PercolateDefinition(indexType) {
