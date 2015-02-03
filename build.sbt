@@ -6,11 +6,11 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.4.11"
+version := "1.5.0-SNAPSHOT"
 
-scalaVersion := "2.11.4"
+scalaVersion := "2.11.5"
 
-crossScalaVersions := Seq("2.11.4","2.10.4")
+crossScalaVersions := Seq("2.11.5","2.10.4")
 
 scalacOptions := Seq("-unchecked", "-encoding", "utf8")
 
