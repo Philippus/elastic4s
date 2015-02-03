@@ -295,8 +295,6 @@ trait ElasticDsl
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)
   }
-
-  implicit def product2source(obj: Product): ObjectSource = ObjectSource(obj)
 }
 
 object ElasticDsl extends ElasticDsl
