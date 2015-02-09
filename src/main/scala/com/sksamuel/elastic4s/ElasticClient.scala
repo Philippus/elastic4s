@@ -142,10 +142,10 @@ object ElasticClient {
     fromClient(client)
   }
 
-  @deprecated("For multiple hosts, prefer the methods that use ElasticsearchUri", "1.4.2")
+  @deprecated("For multiple hosts, prefer the methods that use ElasticsearchClientUri", "1.4.2")
   def remote(addresses: (String, Int)*): ElasticClient = remote(ImmutableSettings.builder().build(), addresses: _*)
 
-  @deprecated("For multiple hosts, Prefer the methods that use ElasticsearchUri", "1.4.2")
+  @deprecated("For multiple hosts, Prefer the methods that use ElasticsearchClientUri", "1.4.2")
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
     for ((host, port) <- addresses) client.addTransportAddress(new InetSocketTransportAddress(host, port))
