@@ -2,24 +2,24 @@ package com.sksamuel.elastic4s.filter
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.ElasticSugar
-import org.scalatest.{FlatSpec, Matchers, WordSpec}
+import org.scalatest.{ FlatSpec, Matchers, WordSpec }
 
 class AndOrFilterDefinitionTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute(
     bulk(
-      index into "walking" / "dead" fields(
+      index into "walking" / "dead" fields (
         "name" -> "darryl",
         "weapon" -> "crossbow"
-        ),
-      index into "walking" / "dead" fields(
+      ),
+      index into "walking" / "dead" fields (
         "name" -> "rick",
         "weapon" -> "pistol"
-        ),
-      index into "walking" / "dead" fields(
+      ),
+      index into "walking" / "dead" fields (
         "name" -> "michon",
         "weapon" -> "sword"
-        )
+      )
     )
   ).await
 
