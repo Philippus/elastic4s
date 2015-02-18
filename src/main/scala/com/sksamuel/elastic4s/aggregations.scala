@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.StringDocumentSource
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import org.elasticsearch.common.geo.{ GeoDistance, GeoPoint }
 import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode
 import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder}
+import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
 import org.elasticsearch.search.aggregations.bucket.missing.MissingBuilder
 import org.elasticsearch.search.aggregations.bucket.nested.NestedBuilder
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
@@ -14,14 +13,13 @@ import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
-import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
+import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }
 import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
-import org.elasticsearch.search.aggregations.metrics.{MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder}
+import org.elasticsearch.search.aggregations.metrics.{ MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder }
 import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
-import sun.plugin2.message.EventMessage
 
 /** @author Nicolas Yzet */
 trait AbstractAggregationDefinition {
@@ -45,13 +43,13 @@ object AggregationResults {
 }
 
 trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]]
-  extends AbstractAggregationDefinition {
+    extends AbstractAggregationDefinition {
   val aggregationBuilder: B
 
   def builder = aggregationBuilder
 
   def aggregations(it: Iterable[AbstractAggregationDefinition]): Self = {
-    it.foreach { aad => aggregationBuilder.subAggregation(aad.builder)}
+    it.foreach { aad => aggregationBuilder.subAggregation(aad.builder) }
     this.asInstanceOf[Self]
   }
 
@@ -63,14 +61,14 @@ trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: Aggreg
 }
 
 trait MetricsAggregationDefinition[+Self <: MetricsAggregationDefinition[Self, B], B <: MetricsAggregationBuilder[B]]
-  extends AbstractAggregationDefinition {
+    extends AbstractAggregationDefinition {
   val aggregationBuilder: B
 
   def builder = aggregationBuilder
 }
 
 trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggregationDefinition[Self, B], B <: ValuesSourceMetricsAggregationBuilder[B]]
-  extends MetricsAggregationDefinition[Self, B] {
+    extends MetricsAggregationDefinition[Self, B] {
   self: Self =>
 
   def field(field: String): Self = {
@@ -89,7 +87,7 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
   }
 
   def params(map: Map[String, Any]): Self = {
-    for ( entry <- map ) param(entry._1, entry._2)
+    for (entry <- map) param(entry._1, entry._2)
     this
   }
 
@@ -100,7 +98,7 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
 }
 
 trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggregationDefinition[Self]]
-  extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
+    extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
 
   def field(field: String): CardinalityMetricsAggregationDefinition[Self] = {
     builder.field(field)
@@ -124,7 +122,7 @@ trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggrega
 }
 
 class MissingAggregationDefinition(name: String)
-  extends AggregationDefinition[MissingAggregationDefinition, MissingBuilder] {
+    extends AggregationDefinition[MissingAggregationDefinition, MissingBuilder] {
   val aggregationBuilder = AggregationBuilders.missing(name)
 
   def field(field: String): this.type = {
@@ -228,7 +226,7 @@ class RangeAggregationDefinition(name: String) extends AggregationDefinition[Ran
   }
 
   def ranges(ranges: (Double, Double)*): this.type = {
-    for ( range <- ranges )
+    for (range <- ranges)
       builder.addRange(range._1, range._2)
     this
   }
@@ -299,7 +297,7 @@ class DateRangeAggregation(name: String) extends AggregationDefinition[DateRange
 }
 
 class ChildrenAggregationDefinition(name: String)
-  extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
+    extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
   val aggregationBuilder = AggregationBuilders.children(name)
 
   def childType(childType: String): this.type = {
@@ -333,7 +331,7 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
 }
 
 class DateHistogramAggregation(name: String)
-  extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
+    extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.dateHistogram(name)
 
   def field(field: String): DateHistogramAggregation = {
@@ -399,7 +397,7 @@ class DateHistogramAggregation(name: String)
 }
 
 class GeoBoundsAggregationDefinition(name: String)
-  extends AggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
+    extends AggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
   val aggregationBuilder = AggregationBuilders.geoBounds(name)
 
   def field(field: String): GeoBoundsAggregationDefinition = {
@@ -414,7 +412,7 @@ class GeoBoundsAggregationDefinition(name: String)
 }
 
 class GeoDistanceAggregationDefinition(name: String)
-  extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {
+    extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {
   val aggregationBuilder = AggregationBuilders.geoDistance(name)
 
   def range(tuple: (Double, Double)): GeoDistanceAggregationDefinition = range(tuple._1, tuple._2)
@@ -452,7 +450,7 @@ class GeoDistanceAggregationDefinition(name: String)
 }
 
 class FilterAggregationDefinition(name: String)
-  extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
+    extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filter(name)
 
   def filter(block: => FilterDefinition): this.type = {
@@ -462,7 +460,7 @@ class FilterAggregationDefinition(name: String)
 }
 
 class FiltersAggregationDefinition(name: String)
-  extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
+    extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filters(name)
 
   def filter(block: => FilterDefinition): this.type = {
@@ -477,7 +475,7 @@ class FiltersAggregationDefinition(name: String)
 }
 
 class SigTermsAggregationDefinition(name: String)
-  extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
+    extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
   val aggregationBuilder = AggregationBuilders.significantTerms(name)
   def exclude(regex: String): this.type = {
     aggregationBuilder.exclude(regex: String)
@@ -518,32 +516,32 @@ class SigTermsAggregationDefinition(name: String)
 }
 
 class MinAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[MinAggregationDefinition, metrics.min.MinBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[MinAggregationDefinition, metrics.min.MinBuilder] {
   val aggregationBuilder = AggregationBuilders.min(name)
 }
 
 class MaxAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[MaxAggregationDefinition, metrics.max.MaxBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[MaxAggregationDefinition, metrics.max.MaxBuilder] {
   val aggregationBuilder = AggregationBuilders.max(name)
 }
 
 class SumAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[SumAggregationDefinition, metrics.sum.SumBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[SumAggregationDefinition, metrics.sum.SumBuilder] {
   val aggregationBuilder = AggregationBuilders.sum(name)
 }
 
 class AvgAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[AvgAggregationDefinition, metrics.avg.AvgBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[AvgAggregationDefinition, metrics.avg.AvgBuilder] {
   val aggregationBuilder = AggregationBuilders.avg(name)
 }
 
 class StatsAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[StatsAggregationDefinition, metrics.stats.StatsBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[StatsAggregationDefinition, metrics.stats.StatsBuilder] {
   val aggregationBuilder = AggregationBuilders.stats(name)
 }
 
 class PercentilesAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[PercentilesAggregationDefinition, metrics.percentiles.PercentilesBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[PercentilesAggregationDefinition, metrics.percentiles.PercentilesBuilder] {
   val aggregationBuilder = AggregationBuilders.percentiles(name)
 
   def percents(percents: Double*): PercentilesAggregationDefinition = {
@@ -558,7 +556,7 @@ class PercentilesAggregationDefinition(name: String)
 }
 
 class PercentileRanksAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[PercentileRanksAggregationDefinition, metrics.percentiles.PercentileRanksBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[PercentileRanksAggregationDefinition, metrics.percentiles.PercentileRanksBuilder] {
   val aggregationBuilder = AggregationBuilders.percentileRanks(name)
 
   def percents(percents: Double*): PercentileRanksAggregationDefinition = {
@@ -573,22 +571,22 @@ class PercentileRanksAggregationDefinition(name: String)
 }
 
 class ExtendedStatsAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[ExtendedStatsAggregationDefinition, metrics.stats.extended.ExtendedStatsBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[ExtendedStatsAggregationDefinition, metrics.stats.extended.ExtendedStatsBuilder] {
   val aggregationBuilder = AggregationBuilders.extendedStats(name)
 }
 
 class ValueCountAggregationDefinition(name: String)
-  extends ValuesSourceMetricsAggregationDefinition[ValueCountAggregationDefinition, metrics.valuecount.ValueCountBuilder] {
+    extends ValuesSourceMetricsAggregationDefinition[ValueCountAggregationDefinition, metrics.valuecount.ValueCountBuilder] {
   val aggregationBuilder = AggregationBuilders.count(name)
 }
 
 class CardinalityAggregationDefinition(name: String)
-  extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
+    extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
   val aggregationBuilder = AggregationBuilders.cardinality(name)
 }
 
 class GlobalAggregationDefinition(name: String)
-  extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
+    extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
   val aggregationBuilder = AggregationBuilders.global(name)
 }
 
@@ -619,7 +617,7 @@ class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefi
 }
 
 class NestedAggregationDefinition(name: String)
-  extends AggregationDefinition[NestedAggregationDefinition, NestedBuilder] {
+    extends AggregationDefinition[NestedAggregationDefinition, NestedBuilder] {
   val aggregationBuilder = AggregationBuilders.nested(name)
 
   def path(path: String): NestedAggregationDefinition = {
