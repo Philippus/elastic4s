@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 
 /** @author Stephen Samuel */
 class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
+
   "an index dsl" should "generate with index & type as a delimited string" in {
     val req = index into "twitter/tweets" fields Map(
       "name" -> "sksamuel"

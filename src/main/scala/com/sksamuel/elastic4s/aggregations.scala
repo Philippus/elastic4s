@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode
 import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
@@ -20,6 +21,7 @@ import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder}
 import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
+import sun.plugin2.message.EventMessage
 
 /** @author Nicolas Yzet */
 trait AbstractAggregationDefinition {
