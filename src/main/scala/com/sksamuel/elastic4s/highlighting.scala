@@ -97,6 +97,11 @@ class HighlightDefinition(field: String) {
     this
   }
 
+  def preTag(tags: String*): this.type = {
+    builder.preTags(tags: _*)
+    this
+  }
+
   def fragmentOffset(n: Int): this.type = {
     builder.fragmentOffset(n)
     this
