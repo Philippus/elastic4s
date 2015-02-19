@@ -113,7 +113,17 @@ class HighlightDefinition(field: String) {
   }
 
   def requireFieldMatchScan(requireFieldMatch: Boolean): this.type = {
-    builder.requireFieldMatch(requireFieldMatchMaxScan)
+    builder.requireFieldMatch(requireFieldMatch)
+    this
+  }
+
+  def boundaryChars(boundaryChars: String): this.type = {
+    builder.boundaryChars(boundaryChars.toCharArray)
+    this
+  }
+
+  def forceSource(forceSource: Boolean): this.type = {
+    builder.forceSource(forceSource)
     this
   }
 
