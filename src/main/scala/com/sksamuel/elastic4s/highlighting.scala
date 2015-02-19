@@ -102,6 +102,21 @@ class HighlightDefinition(field: String) {
     this
   }
 
+  def phraseLimit(limit: Int): this.type = {
+    builder.phraseLimit(limit)
+    this
+  }
+
+  def boundaryMaxScan(boundaryMaxScan: Int): this.type = {
+    builder.boundaryMaxScan(boundaryMaxScan)
+    this
+  }
+
+  def requireFieldMatchScan(requireFieldMatch: Boolean): this.type = {
+    builder.requireFieldMatch(requireFieldMatchMaxScan)
+    this
+  }
+
   def preTag(tags: String*): this.type = {
     builder.preTags(tags: _*)
     this
