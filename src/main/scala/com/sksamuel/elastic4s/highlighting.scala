@@ -97,6 +97,11 @@ class HighlightDefinition(field: String) {
     this
   }
 
+  def query(query: QueryDefinition): this.type = {
+    builder.highlightQuery(query.builder)
+    this
+  }
+
   def preTag(tags: String*): this.type = {
     builder.preTags(tags: _*)
     this

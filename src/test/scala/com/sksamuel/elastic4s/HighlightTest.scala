@@ -76,5 +76,15 @@ class HighlightTest extends WordSpec with ElasticSugar with Matchers {
       fragments.size shouldBe 1
       fragments(0).string.trim shouldBe "<riker>frontier</em>. These are"
     }
+    "use highlight query" in {
+      val resp = client.execute {
+        search in "intros" / "tv" query "frontier" highlighting (
+          highlight field "text" fragmentSize 20 query "life"
+          )
+      }.await
+      val fragments = resp.getHits.getAt(0).highlightFields().get("text").fragments()
+      fragments.size shouldBe 1
+      fragments(0).string.trim shouldBe "out new <em>life</em> and"
+    }
   }
 }
