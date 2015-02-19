@@ -305,8 +305,7 @@ Read about [multisearch here](guide/multisearch.md).
 Elasticsearch can annotate results to show which part of the results matched the queries by using highlighting.
 Just think when you're in google and you see the snippets underneath your results - that's what highlighting does.
 
-We can use this very easily, just add a highlighting definition to your search request, where you set the field
-to be highlighted. Viz:
+We can use this very easily, just add a highlighting definition to your search request, where you set the field or fields to be highlighted. Viz:
 
 ```scala
 search in "music" / "bios" query "kate bush" highlighting (
@@ -315,7 +314,7 @@ search in "music" / "bios" query "kate bush" highlighting (
 ```
 
 All very straightforward. There are many options you can use to tweak the results. In the example above I have
-simply set the snippets to be taken from the field called "body" and to have max length 20.
+simply set the snippets to be taken from the field called "body" and to have max length 20. You can set the number of fragments to return, seperate queries to generate them and other things. See the elasticsearch page on [highlighting](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html) for more info.
 
 ## Get
 
