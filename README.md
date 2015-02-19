@@ -297,8 +297,8 @@ search in "places"->"cities" query regexQuery("country", "France")
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
 
-Read more about search syntax [here](guide/search.md)
-Read about [multisearch here](guide/multisearch.md)
+Read more about search syntax [here](guide/search.md).
+Read about [multisearch here](guide/multisearch.md).
 
 ## Get
 
