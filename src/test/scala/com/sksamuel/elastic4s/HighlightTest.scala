@@ -56,7 +56,7 @@ class HighlightTest extends WordSpec with ElasticSugar with Matchers {
       fragments.size shouldBe 1
       fragments(0).string() shouldBe "Space, the final frontier. These are the voyages"
     }
-    "use pre tags size" in {
+    "use pre tags" in {
       val resp = client.execute {
         search in "intros" / "tv" query "frontier" highlighting (
           highlight field "text" fragmentSize 20 preTag "<picard>"
@@ -65,6 +65,16 @@ class HighlightTest extends WordSpec with ElasticSugar with Matchers {
       val fragments = resp.getHits.getAt(0).highlightFields().get("text").fragments()
       fragments.size shouldBe 1
       fragments(0).string.trim shouldBe "<picard>frontier</em>. These are"
+    }
+    "use post tags" in {
+      val resp = client.execute {
+        search in "intros" / "tv" query "frontier" highlighting (
+          highlight field "text" fragmentSize 20 preTag "<riker>"
+          )
+      }.await
+      val fragments = resp.getHits.getAt(0).highlightFields().get("text").fragments()
+      fragments.size shouldBe 1
+      fragments(0).string.trim shouldBe "<riker>frontier</em>. These are"
     }
   }
 }
