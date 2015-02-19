@@ -82,22 +82,27 @@ class HighlightDefinition(field: String) {
 
   val builder = new HighlightBuilder.Field(field)
 
-  def fragmentSize(f: Int) = {
+  def fragmentSize(f: Int): this.type = {
     builder.fragmentSize(f)
     this
   }
 
-  def numberOfFragments(n: Int) = {
+  def noMatchSize(size: Int): this.type = {
+    builder.noMatchSize(size)
+    this
+  }
+
+  def numberOfFragments(n: Int): this.type = {
     builder.numOfFragments(n)
     this
   }
 
-  def fragmentOffset(n: Int) = {
+  def fragmentOffset(n: Int): this.type = {
     builder.fragmentOffset(n)
     this
   }
 
-  def highlighterType(`type`: String) = {
+  def highlighterType(`type`: String): this.type = {
     builder.highlighterType(`type`)
     this
   }
