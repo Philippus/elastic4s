@@ -127,6 +127,16 @@ class HighlightDefinition(field: String) {
     this
   }
 
+  def fragmenter(fragmenter: String): this.type = {
+    builder.fragmenter(fragmenter)
+    this
+  }
+
+  def order(order: String): this.type = {
+    builder.order(order)
+    this
+  }
+
   def preTag(tags: String*): this.type = {
     builder.preTags(tags: _*)
     this
