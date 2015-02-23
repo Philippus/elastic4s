@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
+import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.mutable
 import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 
 /** @author Stephen Samuel */
 trait CreateIndexDsl {
@@ -20,7 +21,7 @@ trait CreateIndexDsl {
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
 
   implicit object CreateIndexDefinitionExecutable
-      extends Executable[CreateIndexDefinition, CreateIndexResponse] {
+    extends Executable[CreateIndexDefinition, CreateIndexResponse] {
     override def apply(c: Client, t: CreateIndexDefinition): Future[CreateIndexResponse] = {
       injectFuture(c.admin.indices.create(t.build, _))
     }
@@ -63,7 +64,8 @@ class CreateIndexDefinition(name: String) {
     this
   }
 
-  def refreshInterval(interval: String): CreateIndexDefinition = {
+  def refreshInterval(duration: Duration): this.type = refreshInterval(duration.toMillis + "ms")
+  def refreshInterval(interval: String): this.type = {
     _settings.refreshInterval = interval
     this
   }
@@ -154,7 +156,7 @@ class CreateIndexDefinition(name: String) {
 
     if (_mappings.size > 0) {
       source.startObject("mappings")
-      for (mapping <- _mappings) {
+      for ( mapping <- _mappings ) {
         source.startObject(mapping.`type`)
         mapping.build(source)
         source.endObject()

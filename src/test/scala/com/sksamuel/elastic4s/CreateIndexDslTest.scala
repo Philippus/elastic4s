@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
@@ -33,6 +34,10 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
       StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_analyis.json")
+  }
+
+  it should "support refresh interval" in {
+    create index "test" refreshInterval 4.seconds
   }
 
   it should "support custom analyzers, tokenizers and filters" in {
