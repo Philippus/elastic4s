@@ -7,6 +7,7 @@ import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
 import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 
 /** @author Stephen Samuel */
 trait BulkCompatibleDefinition
@@ -53,6 +54,11 @@ class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
 
   def timeout(value: TimeValue): this.type = {
     _builder.timeout(value)
+    this
+  }
+
+  def timeout(duration: Duration): this.type = {
+    _builder.timeout(TimeValue.timeValueMillis(duration.toMillis))
     this
   }
 
