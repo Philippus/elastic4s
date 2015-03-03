@@ -2,20 +2,20 @@ package com.sksamuel.elastic4s.filter
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.ElasticSugar
-import org.scalatest.{WordSpec, Matchers}
+import org.scalatest.{ WordSpec, Matchers }
 
 class ExistsFilterDefinition extends WordSpec with ElasticSugar with Matchers {
 
   client.execute(
     bulk(
-      index into "person" / "interest" fields(
+      index into "person" / "interest" fields (
         "name" -> "reese",
         "weapon" -> "revolver"
-        ),
-      index into "person" / "interest" fields(
+      ),
+      index into "person" / "interest" fields (
         "name" -> "finch",
         "weapon" -> "computer"
-        )
+      )
     )
   ).await
 

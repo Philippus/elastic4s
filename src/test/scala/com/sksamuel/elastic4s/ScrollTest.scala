@@ -1,17 +1,17 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.scalatest.{WordSpec, Matchers}
+import org.scalatest.{ WordSpec, Matchers }
 
 class ScrollTest extends WordSpec with Matchers with ElasticSugar {
 
   client.execute {
     bulk(
-      index into "katebush/songs" fields("name" -> "hounds of love", "year" -> "1985"),
-      index into "katebush/songs" fields("name" -> "top of the city", "year" -> "1985"),
-      index into "katebush/songs" fields("name" -> "wuthering heights", "year" -> "1979"),
-      index into "katebush/songs" fields("name" -> "dream of sheep", "year" -> "1985"),
-      index into "katebush/songs" fields("name" -> "hello earth", "year" -> "1985")
+      index into "katebush/songs" fields ("name" -> "hounds of love", "year" -> "1985"),
+      index into "katebush/songs" fields ("name" -> "top of the city", "year" -> "1985"),
+      index into "katebush/songs" fields ("name" -> "wuthering heights", "year" -> "1979"),
+      index into "katebush/songs" fields ("name" -> "dream of sheep", "year" -> "1985"),
+      index into "katebush/songs" fields ("name" -> "hello earth", "year" -> "1985")
     )
   }.await
 
