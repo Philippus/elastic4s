@@ -47,5 +47,13 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
       }.await
       resp.getHits.totalHits shouldBe 0
     }
+    "use lowFreqMinimumShouldMatch" in {
+      val resp = client.execute {
+        search in "condiments" / "test" query {
+          commonQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
+        }
+      }.await
+      resp.getHits.totalHits shouldBe 0
+    }
   }
 }

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
+import com.sksamuel.elastic4s.mappings.PrefixTree
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
 import scala.concurrent.duration._
@@ -22,7 +23,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "email" typed BinaryType,
         "picture" typed AttachmentType,
         "age" typed FloatType indexName "indexName",
-        "area" typed GeoShapeType
+        "area" typed GeoShapeType tree PrefixTree.Quadtree precision "1m"
       ) all false analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_mappings.json")
