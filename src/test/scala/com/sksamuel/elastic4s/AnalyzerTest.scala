@@ -19,7 +19,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "pattern2" typed StringType analyzer CustomAnalyzer("pattern2"),
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
         "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
-        "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer
+        "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
+        "shingle" typed StringType analyzer CustomAnalyzer("shingle")
       )
     } analysis (
       PatternAnalyzerDefinition("pattern1", "\\d", false),
@@ -33,7 +34,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
           StandardTokenizer,
           LowercaseTokenFilter,
           EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
-          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
+          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+          CustomAnalyzerDefinition("shingle", WhitespaceTokenizer,
+            LowercaseTokenFilter, ShingleTokenFilter("filter_shingle", max_shingle_size = 3, output_unigrams = false)
+          )
     )
   }.await
 
@@ -49,7 +53,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "edgengram" -> "gameofthrones",
       "stop" -> "and and and",
       "pattern1" -> "abc123def",
-      "pattern2" -> "jethro tull,coldplay"
+      "pattern2" -> "jethro tull,coldplay",
+      "shingle" -> "please divide this sentence into shingles"
     )
   }.await
 
@@ -181,6 +186,26 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should split on whitespace" in {
       client.execute {
         search in "analyzer/test" query termQuery("whitespace" -> "uiop")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "ShingleTokenFilter(max_shingle_size = 3, output_unigrams = false)" - {
+    "should split on shingle size from 2 to 3 term" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please")
+      }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide this into")
+      }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide this")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "this sentence into")
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
