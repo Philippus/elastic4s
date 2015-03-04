@@ -546,7 +546,7 @@ class CommonTermsQueryDefinition(name: String, text: String)
     extends QueryDefinition with DefinitionAttributeBoost with DefinitionAttributeCutoffFrequency {
   val builder = QueryBuilders.commonTerms(name, text)
   val _builder = builder
-  def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Double): CommonTermsQueryDefinition = {
+  def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Int): CommonTermsQueryDefinition = {
     builder.highFreqMinimumShouldMatch(highFreqMinimumShouldMatch.toString)
     this
   }
@@ -558,7 +558,7 @@ class CommonTermsQueryDefinition(name: String, text: String)
     builder.analyzer(analyzer.name)
     this
   }
-  def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Double): CommonTermsQueryDefinition = {
+  def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Int): CommonTermsQueryDefinition = {
     builder.lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch.toString)
     this
   }

@@ -53,7 +53,7 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
           commonQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }
       }.await
-      resp.getHits.totalHits shouldBe 0
+      resp.getHits.totalHits shouldBe 1
     }
   }
 }

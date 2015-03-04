@@ -9,8 +9,8 @@
                 "boost": 12.3,
                 "cutoff_frequency": 14.4,
                 "minimum_should_match": {
-                    "low_freq": "45.2",
-                    "high_freq": "1.2"
+                    "low_freq": "3",
+                    "high_freq": "2"
                 }
             }
         }
