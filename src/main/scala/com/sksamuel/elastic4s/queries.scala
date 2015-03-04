@@ -6,6 +6,8 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import org.elasticsearch.common.unit.Fuzziness
 
+import scala.util.{Right, Left}
+
 /** @author Stephen Samuel */
 
 trait QueryDsl {
