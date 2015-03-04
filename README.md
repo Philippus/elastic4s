@@ -133,7 +133,8 @@ val settings = ImmutableSettings.settingsBuilder()
 val client = ElasticClient.local(settings.build)
 ```
 
-To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports:
+To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+
 ```scala
 // single node
 val client = ElasticClient.remote("host1", 9300)
