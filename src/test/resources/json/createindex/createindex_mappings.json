@@ -79,10 +79,12 @@
                 },
                 "age": {
                     "type": "float",
-                    "index_name" : "indexName"
+                    "index_name": "indexName"
                 },
                 "area": {
-                    "type": "geo_shape"
+                    "type": "geo_shape",
+                    "precision": "1m",
+                    "tree": "quadtree"
                 }
             }
         }
