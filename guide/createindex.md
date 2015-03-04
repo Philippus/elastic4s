@@ -93,6 +93,33 @@ client.execute {
 
 There are many options that can be specified a field or type. The [reference](#create_index_reference) section below describes how many of these features can be used. For a full list, see the methods in the DSL or see the official documentation on [mapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) (the DSL keywords will be the same or very close to the name of the optional in the REST API).
 
+## Create Geo Shape Index
+
+In the first example we created a `type` of `GeoPointType`. Elasticsearch also offers a `GeoShapeType` type, which allows you to
+store [different geojson formats](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html#_input_structure_2) like _LineString_, _Polygon_ or _Point_. Create a mapping for a `GeoShapeType` like this
+
+```scala
+client.execute {
+  create index "areas" mappings (
+    "parks" as (
+      "location" typed GeoShapeType
+    )
+  )
+}
+```
+
+Sometimes you want to be more precise about the settings for your `GeoShapeType`. Elasticsearch provides [different tree and precision settings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html#_example_4) for geo shapes. In order to add these we extend the example:
+
+```scala
+client.execute {
+  create index "areas" mappings (
+    "parks" as (
+      "location" typed GeoShapeType tree PrefixTree.Quadtree precision "1m"
+    )
+  )
+}
+```
+
 ## Create Index Reference
 
 ### Index Settings
