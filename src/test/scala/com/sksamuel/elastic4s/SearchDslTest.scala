@@ -625,7 +625,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         randomScore(1234).weight(1.2),
         scriptScore("some script here").weight(0.5),
         gaussianScore("field1", "1m", "2m").filter(termFilter("band", "coldplay")),
-        weightScore(1.2).filter(termFilter("band", "taylor swift"))
+        factorScore(1.2).filter(termFilter("band", "taylor swift"))
       )
     }
     req._builder.toString should matchJsonResource("/json/search/search_function_score.json")

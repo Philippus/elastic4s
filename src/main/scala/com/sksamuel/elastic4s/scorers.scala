@@ -41,8 +41,8 @@ trait ScoreDefinition[T] {
     this._filter = Option(filter)
     this.asInstanceOf[T]
   }
-  def weight(weight: Double): T = {
-    builder.setWeight(weight.toFloat)
+  def weight(boost: Double): T = {
+    builder.setWeight(boost.toFloat)
     this.asInstanceOf[T]
   }
 }

@@ -38,7 +38,7 @@
                             "band": "taylor swift"
                         }
                     },
-                    "weight": 1.2
+                    "boost_factor": 1.2
                 }
             ],
             "score_mode": "multiply",
