@@ -41,6 +41,10 @@ trait ScoreDefinition[T] {
     this._filter = Option(filter)
     this.asInstanceOf[T]
   }
+  def weight(weight: Double): T = {
+    builder.setWeight(weight.toFloat)
+    this.asInstanceOf[T]
+  }
 }
 
 class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[FieldValueFactorDefinition] {
