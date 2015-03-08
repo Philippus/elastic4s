@@ -10,12 +10,14 @@
                 {
                     "random_score": {
                         "seed": 1234
-                    }
+                    },
+                    "weight": 1.2
                 },
                 {
                     "script_score": {
                         "script": "some script here"
-                    }
+                    },
+                    "weight": 0.5
                 },
                 {
                     "filter": {

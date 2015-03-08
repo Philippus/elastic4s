@@ -622,8 +622,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for function score query" in {
     val req = search in "music" types "bands" query {
       functionScoreQuery("coldplay").boost(1.4).maxBoost(1.9).scoreMode("multiply").boostMode("max").scorers(
-        randomScore(1234),
-        scriptScore("some script here"),
+        randomScore(1234).weight(1.2),
+        scriptScore("some script here").weight(0.5),
         gaussianScore("field1", "1m", "2m").filter(termFilter("band", "coldplay")),
         factorScore(1.2).filter(termFilter("band", "taylor swift"))
       )
