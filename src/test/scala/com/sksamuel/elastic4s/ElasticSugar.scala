@@ -51,8 +51,8 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     var backoff = 0
     var done = false
 
-    while (backoff <= 50 && !done) {
-      if (backoff > 0) Thread.sleep(100)
+    while (backoff <= 500 && !done) {
+      if (backoff > 0) Thread.sleep(1000)
       backoff = backoff + 1
       try {
         done = predicate()
@@ -69,6 +69,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
       val actual = client.execute {
         count from index types types
       }.await.getCount
-      expected == actual
+      println(actual)
+      expected <= actual
     }
 }

@@ -16,6 +16,7 @@ class MoreLikeThisTest extends FlatSpec with MockitoSugar with ElasticSugar {
       )
     } shards 1
   }.await
+
   client.execute {
     bulk(
       index into "drinks/beer" fields ("name" -> "coors light", "brand" -> "coors") id 4,
