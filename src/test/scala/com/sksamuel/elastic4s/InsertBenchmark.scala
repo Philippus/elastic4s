@@ -12,8 +12,8 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
   import scala.concurrent.duration._
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  val n = 1000000
-  val b = 1000
+  val n = 100000
+  val b = 200
 
   val sampleBody =
     """
