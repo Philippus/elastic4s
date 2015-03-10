@@ -26,8 +26,11 @@ object TestElasticNode extends Logging {
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
     .put("script.disable_dynamic", false)
-    .put("indices.ttl.interval", "2s")
-    .put("es.logger.level", "DEBUG")
+    .put("indices.ttl.interval", "30s")
+    .put("indices.memory.index_buffer_size", "20%")
+    .put("index.translog.flush_threshold_size", "500mb")
+    .put("index.store.throttle.max_bytes_per_sec", "500mb")
+    .put("es.logger.level", "INFO")
 
   implicit val client = ElasticClient.local(settings.build)
 }
