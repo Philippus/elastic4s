@@ -221,7 +221,7 @@ We must also include at least one field. Fields are specified as standard tuples
 
 ```scala
 client.execute {
-  index into "places/cities" id "uk" fields (
+  index into "places" / "cities" id "uk" fields (
     "name" -> "London",
     "country" -> "United Kingdom",
     "continent" -> "Europe",
@@ -243,7 +243,7 @@ val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
 
 client.execute {
   // the band object will be implicitly converted into a DocumentSource
-  index into "music/bands" doc band
+  index into "music" / "bands" doc band
 }
 ```
 
@@ -260,40 +260,40 @@ in the higher complexity of the query DSL.
 
 To do a simple text search, where the query is parsed from a single string
 ```scala
-search in "places"->"cities" query "London"
+search in "places" / "cities" query "London"
 ```
 
 That is actually an example of a SimpleStringQueryDefinition. The string is implicitly converted to that type of query.
 It is the same as specifying the query type directly:
 
 ```scala
-search in "places"->"cities" query simpleStringQuery("London")
+search in "places"- / "cities" query simpleStringQuery("London")
 ```
 
 The simple string example is the only time we don't need to specify the query type.
 We can search for everything by not specifying a query at all.
 ```scala
-search in "places"->"cities"
+search in "places" / "cities"
 ```
 
 We might want to limit the number of results and / or set the offset.
 ```scala
-search in "places"->"cities" query "paris" start 5 limit 10
+search in "places" / "cities" query "paris" start 5 limit 10
 ```
 
 We can search against certain fields only:
 ```scala
-search in "places"->"cities" query termQuery("country", "France")
+search in "places" / "cities" query termQuery("country", "France")
 ```
 
 Or by a prefix:
 ```scala
-search in "places"->"cities" query prefixQuery("country", "France")
+search in "places" / "cities" query prefixQuery("country", "France")
 ```
 
 Or by a regular expression (slow, but handy sometimes!):
 ```scala
-search in "places"->"cities" query regexQuery("country", "France")
+search in "places" / "cities" query regexQuery("country", "France")
 ```
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
