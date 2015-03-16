@@ -515,6 +515,7 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
     extends QueryDefinition
     with DefinitionAttributePrefixLength
+    with DefinitionAttributeFuzziness
     with DefinitionAttributeBoost {
 
   val builder = fields.size match {
