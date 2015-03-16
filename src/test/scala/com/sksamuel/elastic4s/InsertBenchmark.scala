@@ -48,7 +48,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
       |The Kennel Club said it was awaiting a toxicology report from Belgian police. It said it had not received any other reports of sickness in dogs at Crufts.
     """.stripMargin
 
-  test("benchmarking insertion of n documents") {
+  ignore("benchmarking insertion of n documents") {
 
     val start = System.currentTimeMillis
     val executor = Executors.newFixedThreadPool(4)
