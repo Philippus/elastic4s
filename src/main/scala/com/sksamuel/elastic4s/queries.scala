@@ -515,7 +515,6 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
     extends QueryDefinition
     with DefinitionAttributePrefixLength
-    with DefinitionAttributeFuzziness
     with DefinitionAttributeBoost {
 
   val builder = fields.size match {
@@ -536,7 +535,10 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
     builder.maxQueryTerms(b)
     this
   }
-
+  def fuzziness(f: Fuzziness): this.type = {
+    _builder.fuzziness(f)
+    this
+  }
   def failOnUnsupportedField(failOnUnsupportedField: Boolean): FuzzyLikeThisDefinition = {
     builder.failOnUnsupportedField(failOnUnsupportedField)
     this
