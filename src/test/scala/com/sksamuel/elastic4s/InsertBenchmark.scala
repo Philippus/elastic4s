@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
 import java.util.concurrent.Executors
-import java.util.{Date, UUID}
+import java.util.{ Date, UUID }
 
-import org.scalatest.{Matchers, FunSuite}
+import org.scalatest.{ Matchers, FunSuite }
 
 import scala.util.Random
 
@@ -52,16 +52,16 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
 
     val start = System.currentTimeMillis
     val executor = Executors.newFixedThreadPool(4)
-    for ( k <- 0 until n / b ) {
+    for (k <- 0 until n / b) {
       executor.submit(new Runnable {
         override def run(): Unit = {
           val articles = List.fill(b)(article)
           val op = articles.map(article => {
-            index into "benchmark" / "articles" fields(
+            index into "benchmark" / "articles" fields (
               "title" -> article.title,
               "body" -> article.body,
               "date" -> article.date.toString
-              )
+            )
           })
           client.execute {
             bulk(op)
