@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{ FreeSpec, Matchers }
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
-
   client.execute {
     create index "analyzer" mappings {
       "test" as (
@@ -19,7 +18,11 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "pattern2" typed StringType analyzer CustomAnalyzer("pattern2"),
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
         "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
-        "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer
+        "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
+        "shingle" typed StringType analyzer CustomAnalyzer("shingle"),
+        "shingle2" typed StringType analyzer CustomAnalyzer("shingle2"),
+        "noshingle" typed StringType analyzer CustomAnalyzer("shingle3"),
+        "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
       )
     } analysis (
       PatternAnalyzerDefinition("pattern1", "\\d", false),
@@ -33,7 +36,19 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
           StandardTokenizer,
           LowercaseTokenFilter,
           EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
-          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10))
+          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+          CustomAnalyzerDefinition("shingle", WhitespaceTokenizer,
+            LowercaseTokenFilter, ShingleTokenFilter("filter_shingle", max_shingle_size = 3, output_unigrams = false)
+          ),
+            CustomAnalyzerDefinition("shingle2", WhitespaceTokenizer,
+              LowercaseTokenFilter, ShingleTokenFilter("filter_shingle2", max_shingle_size = 2)
+            ),
+              CustomAnalyzerDefinition("shingle3", WhitespaceTokenizer,
+                LowercaseTokenFilter, ShingleTokenFilter("filter_shingle3", output_unigrams_if_no_shingles = true)
+              ),
+                CustomAnalyzerDefinition("shingle4", WhitespaceTokenizer,
+                  LowercaseTokenFilter, ShingleTokenFilter("filter_shingle4", token_separator = "#")
+                )
     )
   }.await
 
@@ -49,7 +64,11 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "edgengram" -> "gameofthrones",
       "stop" -> "and and and",
       "pattern1" -> "abc123def",
-      "pattern2" -> "jethro tull,coldplay"
+      "pattern2" -> "jethro tull,coldplay",
+      "shingle" -> "please divide this sentence into shingles",
+      "shingle2" -> "keep unigram",
+      "noshingle" -> "keep",
+      "shingleseparator" -> "one two"
     )
   }.await
 
@@ -184,4 +203,55 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
+
+  "ShingleTokenFilter(max_shingle_size = 3, output_unigrams = false)" - {
+    "should split on shingle size from 2 to 3 term" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please")
+      }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide this into")
+      }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "please divide this")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "this sentence into")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle" -> "sentence into")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "ShingleTokenFilter(max_shingle_size = 2, output_unigrams = true)" - {
+    "should split on shingle size from 1 to 2 term " in {
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle2" -> "keep")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("shingle2" -> "keep unigram")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "ShingleTokenFilter(output_unigrams_if_no_shingles = true)" - {
+    "should keep one term field" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("noshingle" -> "keep")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "ShingleTokenFilter(token_separator = '#')" - {
+    "should use '#' in 'one two' to define shingle term as 'one#two' " in {
+      client.execute {
+        search in "analyzer/test" query termQuery("shingleseparator" -> "one#two")
+      }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
 }

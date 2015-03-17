@@ -294,3 +294,25 @@ case class WordDelimiterTokenFilter(name: String,
     source.field("stem_english_possessive", stemEnglishPossesive)
   }
 }
+
+case class ShingleTokenFilter(name: String,
+                              max_shingle_size: Int = 2,
+                              min_shingle_size: Int = 2,
+                              output_unigrams: Boolean = true,
+                              output_unigrams_if_no_shingles: Boolean = false,
+                              token_separator: String = " ",
+                              filler_token: String = "_")
+
+    extends TokenFilterDefinition {
+
+  val filterType = "shingle"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("max_shingle_size", max_shingle_size)
+    source.field("min_shingle_size", min_shingle_size)
+    source.field("output_unigrams", output_unigrams)
+    source.field("output_unigrams_if_no_shingles", output_unigrams_if_no_shingles)
+    source.field("token_separator", token_separator)
+    source.field("filler_token", filler_token)
+  }
+}
