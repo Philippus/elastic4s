@@ -6,7 +6,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.{ BeforeAndAfterAll, Suite }
 
 /** @author Stephen Samuel */
 
@@ -55,7 +55,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     var done = false
 
     while (backoff <= 500 && !done) {
-      if (backoff > 0) Thread.sleep(10000)
+      if (backoff > 0) Thread.sleep(1000)
       backoff = backoff + 1
       try {
         done = predicate()
