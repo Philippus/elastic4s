@@ -273,12 +273,6 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
     this
   }
 
-  @deprecated(message = "use include instead", since = "1.3.2")
-  def notExclude() = {
-    _builder.exclude(false)
-    this
-  }
-
   def include() = {
     _builder.include(true)
     this

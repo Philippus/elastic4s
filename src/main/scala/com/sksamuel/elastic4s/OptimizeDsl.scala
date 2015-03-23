@@ -43,9 +43,4 @@ class OptimizeDefinition(indexes: String*) {
     builder.force(force)
     this
   }
-  def waitForMerge(waitForMerge: Boolean): OptimizeDefinition = {
-    if (waitForMerge)
-      builder.waitForMerge()
-    this
-  }
 }
