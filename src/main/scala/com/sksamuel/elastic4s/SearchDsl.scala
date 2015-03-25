@@ -132,7 +132,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
 
   def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
   def sort2(sorts: SortBuilder*): SearchDefinition = {
-    sorts.foreach(_builder addSort)
+    sorts.foreach(_builder.addSort)
     this
   }
 
