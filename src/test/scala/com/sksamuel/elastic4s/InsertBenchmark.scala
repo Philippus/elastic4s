@@ -12,8 +12,8 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
   import scala.concurrent.duration._
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  val n = 1000
-  val b = 200
+  val n = 75000
+  val b = 100
 
   val sampleBody =
     """
@@ -48,7 +48,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
       |The Kennel Club said it was awaiting a toxicology report from Belgian police. It said it had not received any other reports of sickness in dogs at Crufts.
     """.stripMargin
 
-  ignore("benchmarking insertion of n documents") {
+  test("benchmarking insertion of n documents") {
 
     val start = System.currentTimeMillis
     val executor = Executors.newFixedThreadPool(4)

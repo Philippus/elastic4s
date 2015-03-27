@@ -4,35 +4,36 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -158,6 +159,8 @@ trait ElasticDsl
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
 
+    def settings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
+
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
   }
 
@@ -280,6 +283,7 @@ trait ElasticDsl
       require(id.toString.nonEmpty, "id must not be null or empty")
       new UpdateExpectsIndex(id.toString)
     }
+    def settings(index: String) = new UpdateSettingsDefinition(index)
   }
 
   case object validate {
@@ -288,7 +292,7 @@ trait ElasticDsl
       require(value.nonEmpty, "value must not be null or empty")
       in(value.split("/").toSeq)
     }
-    def in(value: Seq[String]): ValidateDefinition = in((value(0), value(1)))
+    def in(value: Seq[String]): ValidateDefinition = in((value.head, value(1)))
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
 

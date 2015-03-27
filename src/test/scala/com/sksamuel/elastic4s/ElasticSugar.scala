@@ -6,7 +6,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.indices.IndexMissingException
-import org.scalatest.{ BeforeAndAfterAll, Suite }
+import org.scalatest.{BeforeAndAfterAll, Suite}
 
 /** @author Stephen Samuel */
 
@@ -26,7 +26,7 @@ object TestElasticNode extends Logging {
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
     .put("script.disable_dynamic", false)
-    //.put("indices.ttl.interval", "60s")
+    .put("index.refresh_interval", "1s")
     //.put("indices.memory.index_buffer_size", "20%")
     //.put("index.translog.flush_threshold_size", "500mb")
     //.put("index.store.throttle.max_bytes_per_sec", "500mb")

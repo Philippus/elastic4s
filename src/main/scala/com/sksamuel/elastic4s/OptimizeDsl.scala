@@ -4,6 +4,7 @@ import org.elasticsearch.action.admin.indices.optimize.OptimizeResponse
 import org.elasticsearch.client.{ Client, Requests }
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait OptimizeDsl {
@@ -14,8 +15,7 @@ trait OptimizeDsl {
     implicit def apply(index: String): OptimizeDefinition = optimize(index)
   }
 
-  implicit object OptimizeDefinitionExecutable
-      extends Executable[OptimizeDefinition, OptimizeResponse] {
+  implicit object OptimizeDefinitionExecutable extends Executable[OptimizeDefinition, OptimizeResponse] {
     override def apply(c: Client, t: OptimizeDefinition): Future[OptimizeResponse] = {
       injectFuture(c.admin.indices.optimize(t.build, _))
     }
