@@ -4,36 +4,36 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with SettingsDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -186,6 +186,10 @@ trait ElasticDsl
       require(indexType != null, "indexType must not be null or empty")
       new IndexDefinition(indexType.index, indexType.`type`)
     }
+  }
+
+  case object inner {
+    def hits(name: String): InnerHitsDefinition = new InnerHitsDefinition(name)
   }
 
   case object m {
