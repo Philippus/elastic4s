@@ -7,10 +7,10 @@ class InnerHitDslTest extends WordSpec with ElasticDsl {
 
   "top level inner hits" should {
     "compile" in {
-      search in "index" / "type" inner(
+      search in "index" / "type" inner (
         inner hit "name" path "path",
         inner hit "name" `type` "type"
-        )
+      )
     }
   }
 }

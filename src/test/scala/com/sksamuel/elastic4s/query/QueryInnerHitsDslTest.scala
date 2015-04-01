@@ -8,7 +8,7 @@ class QueryInnerHitsDslTest extends WordSpec with ElasticDsl {
   "query inner hits" should {
     "compile" in {
       search in "index" / "type" query {
-        nestedQuery("somepath") inner {
+        nestedQuery("somepath") query "qweqwe" inner {
           inner hits "name" from 2 size 10
         }
       }
