@@ -189,7 +189,8 @@ trait ElasticDsl
   }
 
   case object inner {
-    def hits(name: String): InnerHitsDefinition = new InnerHitsDefinition(name)
+    def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)
+    def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
   }
 
   case object m {

@@ -6,6 +6,8 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.index.query.support.QueryInnerHitBuilder
+import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder
+import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
 import scala.util.{Right, Left}
 
@@ -1212,7 +1214,7 @@ class NestedQueryDefinition(path: String) extends QueryDefinition {
     this
   }
 
-  def inner(inner: InnerHitsDefinition): this.type = {
+  def inner(inner: QueryInnerHitsDefinition): this.type = {
     _inner = inner.builder
     this
   }
@@ -1233,9 +1235,9 @@ class NestedQueryDefinition(path: String) extends QueryDefinition {
   }
 }
 
-class InnerHitsDefinition(name: String) {
+class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
 
-  val builder = new QueryInnerHitBuilder().setName(name)
+  private[elastic4s] val builder = new QueryInnerHitBuilder().setName(name)
 
   def from(f: Int): this.type = {
     builder.setFrom(f)
@@ -1244,6 +1246,21 @@ class InnerHitsDefinition(name: String) {
 
   def size(s: Int): this.type = {
     builder.setSize(s)
+    this
+  }
+}
+
+class InnerHitDefinition(private[elastic4s] val name: String) {
+
+  private[elastic4s] val inner = new InnerHit
+
+  def path(p: String): this.type = {
+    inner.setPath(p)
+    this
+  }
+
+  def `type`(t: String): this.type = {
+    inner.setType(t)
     this
   }
 }
