@@ -82,6 +82,29 @@ docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/sear
 
 Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
 
+#### Inner Hits
+
+Since version 1.5.0, Elasticsearch has supported [inner hits](http://www.elastic.co/guide/en/elasticsearch/reference/1.5/search-request-inner-hits.html).
+
+To do top level inner hits in elastic4s we can do:
+
+```scala
+search in "index" / "type" inner (
+  inner hit "name" path "path",
+  inner hit "name" `type` "type"
+)
+```
+
+And to use inner hits on nested queries we can do:
+
+```scala
+search in "index" / "type" query {
+  nestedQuery("somepath") inner {
+    inner hits "name" from 2 size 10
+  }
+}
+```
+
 #### Script Fields
 
 We can use script fields to evaluate a field for each hit. Script fields can even operate on fields that are not stored. Script fields can include parameters which can be accessed when the script is evaluted.
