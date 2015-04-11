@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import scala.language.implicitConversions
+
 /** @author Stephen Samuel */
 case class IndexType(index: String, `type`: String)
 case class IndexesTypes(indexes: Seq[String], types: Seq[String]) {
