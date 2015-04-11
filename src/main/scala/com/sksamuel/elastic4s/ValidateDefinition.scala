@@ -14,14 +14,19 @@ class ValidateDefinition(index: String, `type`: String) {
     *
     * @return this
     */
-  def query(string: String): ValidateDefinition = {
+  def query(string: String): this.type = {
     val q = new QueryStringQueryDefinition(string)
     _builder.setQuery(q.builder)
     this
   }
 
-  def query(block: => QueryDefinition): ValidateDefinition = {
+  def query(block: => QueryDefinition): this.type = {
     _builder.setQuery(block.builder)
+    this
+  }
+
+  def explain(ex: Boolean): this.type = {
+    _builder.setExplain(explain)
     this
   }
 }
