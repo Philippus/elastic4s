@@ -106,7 +106,7 @@ trait QueryDsl {
   def nested(path: String): NestedQueryDefinition = nestedQuery(path)
   def nestedQuery(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
-  def query(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
+  def query(q: String): QueryStringQueryDefinition = queryStringQuery(q)
   def queryStringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
 
   @deprecated("use rangeQuery", "1.4.0")
