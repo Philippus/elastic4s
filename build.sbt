@@ -6,7 +6,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.5.2"
+version := "1.5.3"
 
 scalaVersion := "2.11.6"
 
@@ -34,12 +34,12 @@ parallelExecution in Test := false
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
 libraryDependencies ++= Seq(
-  "org.elasticsearch"              %  "elasticsearch"               % "1.5.0",
+  "org.elasticsearch"              %  "elasticsearch"               % "1.5.1",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
-  "commons-io"                     %  "commons-io"                  % "2.4",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.4"  % "optional" ,
   "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.4"  % "optional" ,
   "com.fasterxml.jackson.module"   %% "jackson-module-scala"        % "2.4.4"  % "optional"  exclude ("org.scalatest", "scalatest_2.10.0"),
+  "commons-io"                     %  "commons-io"                  % "2.4"    % "test",
   "log4j"                          %  "log4j"                       % "1.2.17" % "test",
   "org.slf4j"                      %  "log4j-over-slf4j"            % "1.7.7"  % "test",
   "org.mockito"                    %  "mockito-all"                 % "1.9.5"  % "test",
