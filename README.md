@@ -114,7 +114,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
-| [Validate](guide/validate.md)             | `validate in "index/type" query <queryblock>` |
+| [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
