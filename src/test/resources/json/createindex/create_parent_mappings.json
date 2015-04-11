@@ -15,7 +15,6 @@
                 "enabled": false
             },
             "dynamic": "dynamic",
-            "numeric_detection": true,
             "properties": {
                 "tag": {
                     "type": "string"

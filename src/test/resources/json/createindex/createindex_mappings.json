@@ -56,7 +56,6 @@
                 "dd-MM-yyyy"
             ],
             "date_detection": true,
-            "numeric_detection": true,
             "dynamic": "dynamic",
             "_analyzer": {
                 "path": "somefield"
