@@ -1,11 +1,8 @@
 {
     "mappings": {
         "tweet": {
-            "_all": {
-                "enabled": true
-            },
             "_source": {
-                "enabled": true
+                "enabled": false
             },
             "numeric_detection": true,
             "dynamic": "dynamic",
@@ -20,9 +17,6 @@
                 "enabled": true,
                 "path": "post_date",
                 "format": "YYYY-MM-dd"
-            },
-            "_ttl": {
-                "enabled": false
             },
             "properties": {
                 "_id": {

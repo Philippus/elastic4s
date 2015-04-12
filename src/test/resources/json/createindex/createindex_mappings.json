@@ -2,10 +2,7 @@
     "mappings": {
         "tweets": {
             "_all": {
-                "enabled": true
-            },
-            "_source": {
-                "enabled": true
+                "enabled": false
             },
             "numeric_detection": true,
             "dynamic": "dynamic",
@@ -15,9 +12,6 @@
             },
             "_size": {
                 "enabled": true
-            },
-            "_ttl": {
-                "enabled": false
             },
             "properties": {
                 "_id": {
@@ -42,13 +36,7 @@
         },
         "users": {
             "_all": {
-                "enabled": false
-            },
-            "_source": {
                 "enabled": true
-            },
-            "_ttl": {
-                "enabled": false
             },
             "dynamic_date_formats": [
                 "mm/yyyy",

@@ -16,7 +16,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
-      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
+      ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       map("users").as(
         "name" typed IpType nullValue "127.0.0.1" boost 1.0,
         "location" typed IntegerType nullValue 0,
@@ -24,7 +24,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "picture" typed AttachmentType,
         "age" typed FloatType indexName "indexName",
         "area" typed GeoShapeType tree PrefixTree.Quadtree precision "1m"
-      ) all false analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
+      ) all true analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_mappings.json")
   }
@@ -200,7 +200,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
         "meta_data" typed StringType index "analyzed",
         "article_info" typed StringType index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" ttl false
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
@@ -212,7 +212,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           "raw" typed StringType index "not_analyzed"),
           "meta_data" typed StringType index "analyzed",
           "article_info" typed StringType index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" ttl true
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_fields.json")
   }
@@ -232,7 +232,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = create.index("docsAndTags").mappings(
       "tags" as (
         "tag" typed StringType
-      ) all false parent "docs"
+      ) parent "docs" source true all false
     )
     req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
   }
@@ -254,7 +254,8 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
-      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, path = Some("post_date"), format = Some("YYYY-MM-dd"))
+      ) source false size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, path = Some(
+          "post_date"), format = Some("YYYY-MM-dd"))
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_2.json")
   }
@@ -265,7 +266,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
-      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, default = Some(null))
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp (true, default = Some(null))
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_3.json")
   }

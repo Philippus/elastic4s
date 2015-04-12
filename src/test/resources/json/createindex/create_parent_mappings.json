@@ -10,10 +10,6 @@
             "_parent": {
                 "type": "docs"
             },
-
-            "_ttl": {
-                "enabled": false
-            },
             "dynamic": "dynamic",
             "properties": {
                 "tag": {

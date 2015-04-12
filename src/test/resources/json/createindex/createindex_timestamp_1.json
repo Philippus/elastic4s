@@ -4,9 +4,6 @@
             "_all": {
                 "enabled": true
             },
-            "_source": {
-                "enabled": true
-            },
             "numeric_detection": true,
             "dynamic": "dynamic",
             "_boost": {
@@ -18,9 +15,6 @@
             },
             "_timestamp": {
                 "enabled": true
-            },
-            "_ttl": {
-                "enabled": false
             },
             "properties": {
                 "_id": {
