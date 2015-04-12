@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.mapping
+package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.scalatest.{ WordSpec, Matchers }
