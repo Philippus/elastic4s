@@ -1,0 +1,32 @@
+{
+  "mappings": {
+    "my_type": {
+      "_all": {"enabled": true},
+      "_source": {"enabled": true},
+      "dynamic": "dynamic",
+      "_ttl": {"enabled": false},
+      "dynamic_templates": [
+        {
+          "es": {
+            "match": "*_es",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "string",
+              "analyzer": "spanish"
+            }
+          }
+        },
+        {
+          "en": {
+            "match": "*",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "string",
+              "analyzer": "english"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

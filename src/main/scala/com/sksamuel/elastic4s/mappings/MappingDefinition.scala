@@ -24,44 +24,44 @@ class MappingDefinition(val `type`: String) {
   var _timestamp: Option[TimestampDefinition] = None
   var _ttl = false
   var _useTtl = true
-  val templates = new ListBuffer[DynamicTemplateDefinition]
+  var _templates: Iterable[DynamicTemplateDefinition] = Nil
 
   def useTtl(useTtl: Boolean): this.type = {
     _useTtl = useTtl
     this
   }
 
-  def all(enabled: Boolean): MappingDefinition = {
+  def all(enabled: Boolean): this.type = {
     _all = enabled
     this
   }
-  def analyzer(analyzer: String): MappingDefinition = {
+  def analyzer(analyzer: String): this.type = {
     _analyzer = Option(analyzer)
     this
   }
-  def analyzer(analyzer: Analyzer): MappingDefinition = {
+  def analyzer(analyzer: Analyzer): this.type = {
     _analyzer = Option(analyzer.name)
     this
   }
-  def boost(name: String): MappingDefinition = {
+  def boost(name: String): this.type = {
     _boostName = Option(name)
     this
   }
-  def boostNullValue(value: Double): MappingDefinition = {
+  def boostNullValue(value: Double): this.type = {
     _boostValue = value
     this
   }
 
-  def parent(parent: String): MappingDefinition = {
+  def parent(parent: String): this.type = {
     _parent = Some(parent)
     this
   }
 
-  def dynamic(dynamic: DynamicMapping): MappingDefinition = {
+  def dynamic(dynamic: DynamicMapping): this.type = {
     _dynamic = dynamic
     this
   }
-  def dynamic(dynamic: Boolean): MappingDefinition = {
+  def dynamic(dynamic: Boolean): this.type = {
     _dynamic = dynamic match {
       case true => Dynamic
       case false => False
@@ -72,47 +72,53 @@ class MappingDefinition(val `type`: String) {
   def timestamp(enabled: Boolean,
                 path: Option[String] = None,
                 format: Option[String] = None,
-                default: Option[String] = None) = {
+                default: Option[String] = None): this.type = {
     this._timestamp = Some(TimestampDefinition(enabled, path, format, default))
     this
   }
 
-  def ttl(enabled: Boolean): MappingDefinition = {
+  def ttl(enabled: Boolean): this.type = {
     _ttl = enabled
     this
   }
 
-  def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition = {
+  def dynamicDateFormats(dynamic_date_formats: String*): this.type = {
     this.dynamic_date_formats = dynamic_date_formats
     this
   }
-  def meta(map: Map[String, Any]): MappingDefinition = {
+  def meta(map: Map[String, Any]): this.type = {
     this._meta = map
     this
   }
-  def routing(required: Boolean, path: Option[String] = None): MappingDefinition = {
+  def routing(required: Boolean, path: Option[String] = None): this.type = {
     this._routing = Some(RoutingDefinition(required, path))
     this
   }
-  def source(source: Boolean): MappingDefinition = {
+  def source(source: Boolean): this.type = {
     this._source = source
     this
   }
-  def dateDetection(date_detection: Boolean): MappingDefinition = {
+  def dateDetection(date_detection: Boolean): this.type = {
     this.date_detection = Some(date_detection)
     this
   }
-  def numericDetection(numeric_detection: Boolean): MappingDefinition = {
+  def numericDetection(numeric_detection: Boolean): this.type = {
     this.numeric_detection = Some(numeric_detection)
     this
   }
-  def as(iterable: Iterable[TypedFieldDefinition]): MappingDefinition = {
+  def as(iterable: Iterable[TypedFieldDefinition]): this.type = {
     _fields ++= iterable
     this
   }
-  def as(fields: TypedFieldDefinition*): MappingDefinition = as(fields.toIterable)
+  def as(fields: TypedFieldDefinition*): this.type = as(fields.toIterable)
   def size(size: Boolean): MappingDefinition = {
     _size = size
+    this
+  }
+
+  def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
+  def templates(temps: DynamicTemplateDefinition*): this.type = {
+    _templates = temps
     this
   }
 
@@ -164,11 +170,13 @@ class MappingDefinition(val `type`: String) {
     if (_useTtl)
       source.startObject("_ttl").field("enabled", _ttl).endObject()
 
-    source.startObject("properties")
-    for ( field <- _fields ) {
-      field.build(source)
+    if (_fields.nonEmpty) {
+      source.startObject("properties")
+      for ( field <- _fields ) {
+        field.build(source)
+      }
+      source.endObject() // end properties
     }
-    source.endObject() // end properties
 
     if (_meta.size > 0) {
       source.startObject("_meta")
@@ -184,6 +192,12 @@ class MappingDefinition(val `type`: String) {
         source.field("path", _routing.get.path.get)
       }
       source.endObject()
+    }
+
+    if (_templates.nonEmpty) {
+      source.startArray("dynamic_templates")
+      for ( template <- _templates ) template.build(source)
+      source.endArray()
     }
   }
 }

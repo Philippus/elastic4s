@@ -12,10 +12,7 @@ class DynamicTemplateDslTest extends WordSpec with Matchers with JsonSugar {
       val temp = new DynamicTemplateDefinition("es") matching "*_es" matchMappingType "string" mapping {
         field typed StringType analyzer SpanishLanguageAnalyzer
       }
-      val str = temp.build.string()
-      println(str)
-      str should matchJsonResource("/json/mappings/dynamic_template.json")
+      temp.build.string() should matchJsonResource("/json/mappings/dynamic_template.json")
     }
   }
-
 }

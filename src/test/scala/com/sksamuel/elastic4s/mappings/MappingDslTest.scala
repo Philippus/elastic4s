@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.mappings.FieldType.{ GeoPointType, DateType }
+import com.sksamuel.elastic4s.mappings.FieldType.{DateType, GeoPointType}
+import com.sksamuel.elastic4s.{ElasticDsl, ElasticSugar}
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 

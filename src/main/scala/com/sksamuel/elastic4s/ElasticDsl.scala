@@ -282,6 +282,8 @@ trait ElasticDsl
     def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
     @deprecated("use `delete template` instead of `template delete` for a more readable dsl", "1.4.0.Beta2")
     def delete(name: String) = new DeleteIndexTemplateDefinition(name)
+
+    def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
 
   case object update {
