@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.elasticsearch.action.admin.indices.create.{ CreateIndexRequest, CreateIndexResponse }
+import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -21,7 +21,7 @@ trait CreateIndexDsl {
   class TokenFiltersWrapper(val filters: Iterable[TokenFilter])
 
   implicit object CreateIndexDefinitionExecutable
-      extends Executable[CreateIndexDefinition, CreateIndexResponse] {
+    extends Executable[CreateIndexDefinition, CreateIndexResponse] {
     override def apply(c: Client, t: CreateIndexDefinition): Future[CreateIndexResponse] = {
       injectFuture(c.admin.indices.create(t.build, _))
     }
@@ -90,73 +90,76 @@ class CreateIndexDefinition(name: String) {
   def _source: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
 
-    source.startObject("settings")
+    if (_settings.settings.nonEmpty || _analysis.nonEmpty) {
 
-    if (_settings.settings.size > 0) {
-      source.startObject("index")
+      source.startObject("settings")
 
-      _settings.settings foreach {
-        case (key, value) =>
-          source.field(key, value)
+      if (_settings.settings.nonEmpty) {
+        source.startObject("index")
+
+        _settings.settings foreach {
+          case (key, value) =>
+            source.field(key, value)
+        }
+
+        source.endObject()
       }
 
-      source.endObject()
-    }
+      _analysis.foreach(analysis => {
+        source.startObject("analysis")
 
-    _analysis.foreach(analysis => {
-      source.startObject("analysis")
-
-      val charFilterDefinitions = analysis.charFilterDefinitions
-      if (charFilterDefinitions.size > 0) {
-        source.startObject("char_filter")
-        charFilterDefinitions.foreach { filter =>
-          source.startObject(filter.name)
-          source.field("type", filter.filterType)
-          filter.build(source)
+        val charFilterDefinitions = analysis.charFilterDefinitions
+        if (charFilterDefinitions.size > 0) {
+          source.startObject("char_filter")
+          charFilterDefinitions.foreach { filter =>
+            source.startObject(filter.name)
+            source.field("type", filter.filterType)
+            filter.build(source)
+            source.endObject()
+          }
           source.endObject()
         }
-        source.endObject()
-      }
 
-      source.startObject("analyzer")
-      analysis.analyzers.foreach(analyzer => {
-        source.startObject(analyzer.name)
-        analyzer.build(source)
+        source.startObject("analyzer")
+        analysis.analyzers.foreach(analyzer => {
+          source.startObject(analyzer.name)
+          analyzer.build(source)
+          source.endObject()
+        })
+        source.endObject()
+
+        val tokenizers = analysis.tokenizers
+        if (tokenizers.size > 0) {
+          source.startObject("tokenizer")
+          tokenizers.foreach(tokenizer => {
+            source.startObject(tokenizer.name)
+            tokenizer.build(source)
+            source.endObject()
+          })
+          source.endObject()
+        }
+
+        val tokenFilterDefinitions = analysis.tokenFilterDefinitions
+        if (tokenFilterDefinitions.size > 0) {
+          source.startObject("filter")
+          tokenFilterDefinitions.foreach(filter => {
+            source.startObject(filter.name)
+            source.field("type", filter.filterType)
+            filter.build(source)
+            source.endObject()
+          })
+          source.endObject()
+        }
+
         source.endObject()
       })
-      source.endObject()
 
-      val tokenizers = analysis.tokenizers
-      if (tokenizers.size > 0) {
-        source.startObject("tokenizer")
-        tokenizers.foreach(tokenizer => {
-          source.startObject(tokenizer.name)
-          tokenizer.build(source)
-          source.endObject()
-        })
-        source.endObject()
-      }
-
-      val tokenFilterDefinitions = analysis.tokenFilterDefinitions
-      if (tokenFilterDefinitions.size > 0) {
-        source.startObject("filter")
-        tokenFilterDefinitions.foreach(filter => {
-          source.startObject(filter.name)
-          source.field("type", filter.filterType)
-          filter.build(source)
-          source.endObject()
-        })
-        source.endObject()
-      }
-
-      source.endObject()
-    })
-
-    source.endObject() // end settings
+      source.endObject() // end settings
+    }
 
     if (_mappings.size > 0) {
       source.startObject("mappings")
-      for (mapping <- _mappings) {
+      for ( mapping <- _mappings ) {
         source.startObject(mapping.`type`)
         mapping.build(source)
         source.endObject()

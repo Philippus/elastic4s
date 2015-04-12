@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mapping
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import org.scalatest.{WordSpec, Matchers}
+import org.scalatest.{ WordSpec, Matchers }
 
 class MappingDefinitionTest extends WordSpec with Matchers {
 
@@ -14,12 +14,12 @@ class MappingDefinitionTest extends WordSpec with Matchers {
     "insert date detection when set to true" in {
       val mapping = new MappingDefinition("type").dateDetection(true)
       val output = mapping.build.string()
-      output should include( """date_detection":true""")
+      output should include("""date_detection":true""")
     }
     "insert date detection when set to false" in {
       val mapping = new MappingDefinition("type").dateDetection(false)
       val output = mapping.build.string()
-      output should include( """date_detection":false""")
+      output should include("""date_detection":false""")
     }
     "not insert numeric detection by default" in {
       val mapping = new MappingDefinition("type")
@@ -29,12 +29,12 @@ class MappingDefinitionTest extends WordSpec with Matchers {
     "insert numeric detection when set to true" in {
       val mapping = new MappingDefinition("type").numericDetection(true)
       val output = mapping.build.string()
-      output should include( """numeric_detection":true""")
+      output should include("""numeric_detection":true""")
     }
     "insert numeric detection when set to false" in {
       val mapping = new MappingDefinition("type").numericDetection(false)
       val output = mapping.build.string()
-      output should include( """numeric_detection":false""")
+      output should include("""numeric_detection":false""")
     }
   }
 }

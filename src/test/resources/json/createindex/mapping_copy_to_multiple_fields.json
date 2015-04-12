@@ -1,5 +1,4 @@
 {
-    "settings": {},
     "mappings": {
         "tweet": {
             "_all": {
