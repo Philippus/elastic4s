@@ -9,8 +9,8 @@ import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait ExplainDsl {
-  implicit object ExplainDefinitionExecutable
-      extends Executable[ExplainDefinition, ExplainResponse] {
+
+  implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse] {
     override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
       injectFuture(c.explain(t.build, _))
     }

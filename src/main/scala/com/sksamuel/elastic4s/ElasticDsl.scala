@@ -194,7 +194,7 @@ trait ElasticDsl
     def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
   }
 
-  case object m {
+  case object mapping {
     def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
       new MappingDefinition(name)
