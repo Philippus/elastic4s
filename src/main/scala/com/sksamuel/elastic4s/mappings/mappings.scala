@@ -596,11 +596,13 @@ final class IpFieldDefinition(name: String)
 }
 
 final class AttachmentFieldDefinition(name: String)
-  extends TypedFieldDefinition(AttachmentType, name) {
+    extends TypedFieldDefinition(AttachmentType, name)
+    with AttributeFields {
 
   def build(source: XContentBuilder): Unit = {
     source.startObject(name)
     insertType(source)
+    super[AttributeFields].insert(source)
     source.endObject()
   }
 }
