@@ -23,9 +23,19 @@ case class DeleteMappingDefinition(indexes: Iterable[String]) {
 }
 
 sealed abstract class DynamicMapping
+
+@deprecated("Use DynamicMapping.Strict")
 case object Strict extends DynamicMapping
+@deprecated("Use DynamicMapping.Dynamic")
 case object Dynamic extends DynamicMapping
+@deprecated("Use DynamicMapping.False")
 case object False extends DynamicMapping
+
+object DynamicMapping {
+  case object Strict extends DynamicMapping
+  case object Dynamic extends DynamicMapping
+  case object False extends DynamicMapping
+}
 
 trait TypeableFields {
   val name: String

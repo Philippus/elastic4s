@@ -1,7 +1,6 @@
 {
   "mappings": {
     "my_type": {
-      "dynamic": "dynamic",
       "dynamic_templates": [
         {
           "es": {

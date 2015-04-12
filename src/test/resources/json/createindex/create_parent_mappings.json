@@ -1,21 +1,21 @@
 {
-    "mappings": {
-        "tags": {
-            "_all": {
-                "enabled": false
-            },
-            "_source": {
-                "enabled": true
-            },
-            "_parent": {
-                "type": "docs"
-            },
-            "dynamic": "dynamic",
-            "properties": {
-                "tag": {
-                    "type": "string"
-                }
-            }
+  "mappings": {
+    "tags": {
+      "_all": {
+        "enabled": false
+      },
+      "_source": {
+        "enabled": true
+      },
+      "dynamic": "strict",
+      "_parent": {
+        "type": "docs"
+      },
+      "properties": {
+        "tag": {
+          "type": "string"
         }
+      }
     }
+  }
 }

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.mappings.PrefixTree
+import com.sksamuel.elastic4s.mappings.{ DynamicMapping, Strict, PrefixTree }
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
 import scala.concurrent.duration._
@@ -162,7 +162,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           "name" typed StringType index "analyzed",
           "untouched" typed StringType index "not_analyzed"
         )
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.False
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
   }
@@ -189,7 +189,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "first_name" typed StringType index "analyzed" copyTo "full_name",
         "last_name" typed StringType index "analyzed" copyTo "full_name",
         "full_name" typed StringType index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.Dynamic
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
   }
@@ -200,7 +200,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "title" typed StringType index "analyzed" copyTo ("meta_data", "article_info"),
         "meta_data" typed StringType index "analyzed",
         "article_info" typed StringType index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost" ttl false
+      ) size true numericDetection true boostNullValue 1.2 boost "myboost" ttl false dynamic DynamicMapping.Strict
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
@@ -232,7 +232,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = create.index("docsAndTags").mappings(
       "tags" as (
         "tag" typed StringType
-      ) parent "docs" source true all false
+      ) parent "docs" source true all false dynamic DynamicMapping.Strict
     )
     req._source.string should matchJsonResource("/json/createindex/create_parent_mappings.json")
   }

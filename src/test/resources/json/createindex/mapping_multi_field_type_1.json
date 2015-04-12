@@ -2,7 +2,7 @@
     "mappings": {
         "tweet": {
             "numeric_detection": true,
-            "dynamic": "dynamic",
+            "dynamic": "false",
             "_boost": {
                 "name": "myboost",
                 "null_value": 1.2
