@@ -22,12 +22,11 @@ class MappingDefinition(val `type`: String) {
   var _meta: Map[String, Any] = Map.empty
   var _routing: Option[RoutingDefinition] = None
   var _timestamp: Option[TimestampDefinition] = None
-  var _ttl = false
-  var _useTtl = true
+  var _ttl: Option[Boolean] = None
   var _templates: Iterable[DynamicTemplateDefinition] = Nil
 
+  @deprecated("no longer used, simply set ttl or not", "1.5.4")
   def useTtl(useTtl: Boolean): this.type = {
-    _useTtl = useTtl
     this
   }
 
@@ -78,7 +77,7 @@ class MappingDefinition(val `type`: String) {
   }
 
   def ttl(enabled: Boolean): this.type = {
-    _ttl = enabled
+    _ttl = Option(enabled)
     this
   }
 
@@ -169,8 +168,7 @@ class MappingDefinition(val `type`: String) {
       json.endObject()
     }
 
-    if (_useTtl)
-      json.startObject("_ttl").field("enabled", _ttl).endObject()
+    for ( ttl <- _ttl ) json.startObject("_ttl").field("enabled", ttl).endObject()
 
     if (_fields.nonEmpty) {
       json.startObject("properties")
