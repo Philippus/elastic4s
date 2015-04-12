@@ -115,6 +115,8 @@ class MappingDefinition(val `type`: String) {
     this
   }
 
+  def dynamicTemplates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
+  def dynamicTemplates(temps: DynamicTemplateDefinition*): this.type = templates(temps)
   def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
   def templates(temps: DynamicTemplateDefinition*): this.type = {
     _templates = temps
