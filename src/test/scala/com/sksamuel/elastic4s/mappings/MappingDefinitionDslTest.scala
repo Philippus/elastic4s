@@ -41,7 +41,7 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     }
     "include dynamic templates" in {
       val req = create.index("docsAndTags").mappings(
-        "my_type" templates (
+        mapping name "my_type" templates (
           template name "es" matching "*_es" matchMappingType "string" mapping {
             field typed StringType analyzer SpanishLanguageAnalyzer
           },
