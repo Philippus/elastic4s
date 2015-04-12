@@ -7,8 +7,8 @@ import scala.collection.mutable.ListBuffer
 
 class MappingDefinition(val `type`: String) {
 
-  var _all = true
-  var _source : Option[Boolean] = None
+  var _all: Option[Boolean] = None
+  var _source: Option[Boolean] = None
   var date_detection: Option[Boolean] = None
   var numeric_detection: Option[Boolean] = None
   var _size = false
@@ -32,7 +32,7 @@ class MappingDefinition(val `type`: String) {
   }
 
   def all(enabled: Boolean): this.type = {
-    _all = enabled
+    _all = Option(enabled)
     this
   }
   def analyzer(analyzer: String): this.type = {
@@ -130,7 +130,7 @@ class MappingDefinition(val `type`: String) {
 
   def build(json: XContentBuilder): Unit = {
 
-    json.startObject("_all").field("enabled", _all).endObject()
+    for ( all <- _all ) json.startObject("_all").field("enabled", all).endObject()
     for ( source <- _source ) json.startObject("_source").field("enabled", source).endObject()
 
     if (dynamic_date_formats.nonEmpty)
