@@ -8,6 +8,7 @@ class DynamicTemplateDefinition(name: String) {
   var _unmatch: Option[String] = None
   var _path_match: Option[String] = None
   var _path_unmatch: Option[String] = None
+  var _match_pattern: Option[String] = None
   var _matchMappingType: Option[String] = None
   var _field: Option[TypedFieldDefinition] = None
 
@@ -19,6 +20,7 @@ class DynamicTemplateDefinition(name: String) {
     _unmatch.foreach(builder.field("unmatch", _))
     _path_match.foreach(builder.field("path_match", _))
     _path_unmatch.foreach(builder.field("path_unmatch", _))
+    _match_pattern.foreach(builder.field("match_pattern", _))
     _matchMappingType.foreach(builder.field("match_mapping_type", _))
     builder.startObject("mapping")
     _field.foreach(_.build(builder, false))
@@ -31,6 +33,11 @@ class DynamicTemplateDefinition(name: String) {
   def `match`(m: String): this.type = matching(m)
   def matching(m: String): this.type = {
     _match = Option(m)
+    this
+  }
+
+  def matchPattern(m: String): this.type = {
+    _match_pattern = Option(m)
     this
   }
 

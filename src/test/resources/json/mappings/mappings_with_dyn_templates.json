@@ -5,6 +5,7 @@
         {
           "es": {
             "match": "*_es",
+            "match_pattern": "regex",
             "match_mapping_type": "string",
             "mapping": {
               "type": "string",

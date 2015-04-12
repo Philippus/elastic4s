@@ -14,7 +14,7 @@ class IndexTemplateTest extends FlatSpec with MockitoSugar with ElasticSugar wit
 
     client.execute {
       create template "brewery_template" pattern "te*" mappings (
-        m name "brewery" as (
+        mapping name "brewery" as (
           "year_founded" withType StringType
         )
       )

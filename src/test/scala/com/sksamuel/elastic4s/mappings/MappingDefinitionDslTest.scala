@@ -44,7 +44,7 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
         mapping name "my_type" templates (
           template name "es" matching "*_es" matchMappingType "string" mapping {
             field typed StringType analyzer SpanishLanguageAnalyzer
-          },
+          } matchPattern "regex",
           template name "en" matching "*" matchMappingType "string" mapping {
             field typed StringType analyzer EnglishLanguageAnalyzer
           }
