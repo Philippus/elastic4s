@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 class MappingDefinition(val `type`: String) {
 
   var _all = true
-  var _source = true
+  var _source : Option[Boolean] = None
   var date_detection: Option[Boolean] = None
   var numeric_detection: Option[Boolean] = None
   var _size = false
@@ -95,7 +95,7 @@ class MappingDefinition(val `type`: String) {
     this
   }
   def source(source: Boolean): this.type = {
-    this._source = source
+    this._source = Option(source)
     this
   }
   def dateDetection(date_detection: Boolean): this.type = {
@@ -128,76 +128,78 @@ class MappingDefinition(val `type`: String) {
     builder.endObject()
   }
 
-  def build(source: XContentBuilder): Unit = {
-    source.startObject("_all").field("enabled", _all).endObject()
-    source.startObject("_source").field("enabled", _source).endObject()
-    if (dynamic_date_formats.size > 0)
-      source.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
+  def build(json: XContentBuilder): Unit = {
 
-    for ( dd <- date_detection ) source.field("date_detection", dd)
-    for ( nd <- numeric_detection ) source.field("numeric_detection", nd)
+    json.startObject("_all").field("enabled", _all).endObject()
+    for ( source <- _source ) json.startObject("_source").field("enabled", source).endObject()
 
-    source.field("dynamic", _dynamic match {
+    if (dynamic_date_formats.nonEmpty)
+      json.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
+
+    for ( dd <- date_detection ) json.field("date_detection", dd)
+    for ( nd <- numeric_detection ) json.field("numeric_detection", nd)
+
+    json.field("dynamic", _dynamic match {
       case Strict => "strict"
       case False => "false"
       case _ => "dynamic"
     })
 
     _boostName.foreach(arg =>
-      source.startObject("_boost").field("name", arg).field("null_value", _boostValue).endObject()
+      json.startObject("_boost").field("name", arg).field("null_value", _boostValue).endObject()
     )
 
-    _analyzer.foreach(arg => source.startObject("_analyzer").field("path", arg).endObject())
+    _analyzer.foreach(arg => json.startObject("_analyzer").field("path", arg).endObject())
 
-    _parent.foreach(arg => source.startObject("_parent").field("type", arg).endObject())
+    _parent.foreach(arg => json.startObject("_parent").field("type", arg).endObject())
 
-    if (_size) source.startObject("_size").field("enabled", true).endObject()
+    if (_size) json.startObject("_size").field("enabled", true).endObject()
 
     _timestamp.foreach { timestamp =>
-      source.startObject("_timestamp").field("enabled", timestamp.enabled)
+      json.startObject("_timestamp").field("enabled", timestamp.enabled)
       timestamp.path.foreach { path =>
-        source.field("path", path)
+        json.field("path", path)
       }
       timestamp.format.foreach { format =>
-        source.field("format", format)
+        json.field("format", format)
       }
       timestamp.default.foreach { default =>
-        source.field("default", default)
+        json.field("default", default)
       }
-      source.endObject()
+      json.endObject()
     }
 
     if (_useTtl)
-      source.startObject("_ttl").field("enabled", _ttl).endObject()
+      json.startObject("_ttl").field("enabled", _ttl).endObject()
 
     if (_fields.nonEmpty) {
-      source.startObject("properties")
+      json.startObject("properties")
       for ( field <- _fields ) {
-        field.build(source)
+        field.build(json)
       }
-      source.endObject() // end properties
+      json.endObject() // end properties
     }
 
     if (_meta.size > 0) {
-      source.startObject("_meta")
+      json.startObject("_meta")
       for ( meta <- _meta ) {
-        source.field(meta._1, meta._2)
+        json.field(meta._1, meta._2)
       }
-      source.endObject()
+      json.endObject()
     }
 
     if (_routing.isDefined) {
-      source.startObject("_routing").field("required", _routing.get.required)
+      json.startObject("_routing").field("required", _routing.get.required)
       if (_routing.get.path.isDefined) {
-        source.field("path", _routing.get.path.get)
+        json.field("path", _routing.get.path.get)
       }
-      source.endObject()
+      json.endObject()
     }
 
     if (_templates.nonEmpty) {
-      source.startArray("dynamic_templates")
-      for ( template <- _templates ) template.build(source)
-      source.endArray()
+      json.startArray("dynamic_templates")
+      for ( template <- _templates ) template.build(json)
+      json.endArray()
     }
   }
 }

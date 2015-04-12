@@ -2,7 +2,6 @@
   "mappings": {
     "my_type": {
       "_all": {"enabled": true},
-      "_source": {"enabled": true},
       "dynamic": "dynamic",
       "_ttl": {"enabled": false},
       "dynamic_templates": [
