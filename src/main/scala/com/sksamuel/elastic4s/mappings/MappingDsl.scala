@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{PutMappingDefinition, Executable}
+import com.sksamuel.elastic4s.{ PutMappingDefinition, Executable }
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse

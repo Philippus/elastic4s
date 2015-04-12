@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import com.sksamuel.elastic4s.{ElasticDsl, JsonSugar, SpanishLanguageAnalyzer}
-import org.scalatest.{Matchers, WordSpec}
+import com.sksamuel.elastic4s.{ ElasticDsl, JsonSugar, SpanishLanguageAnalyzer }
+import org.scalatest.{ Matchers, WordSpec }
 
 class DynamicTemplateDslTest extends WordSpec with Matchers with JsonSugar {
 
