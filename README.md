@@ -33,7 +33,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
 |1.0.3.0|1.0.x|
-|0.90.13.10|0.90.x|
+|0.90.13.2|0.90.x|
 
 #### Dependencies
 
