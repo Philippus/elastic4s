@@ -9,11 +9,11 @@ Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with
 
 Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in an SQL-like way, while staying true to the Java API or Rest API.
 
-Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index documents directly without having to extract and set fields manually - eg from a case class, a JSON document, or a Map (or a custom source). Due to its typesafe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
+Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index documents directly without having to extract and set fields manually - eg from a case class, a JSON document, or a Map (or a custom source). Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
 #### Key points
 
-* Typesafe concise DSL
+* Type safe concise DSL
 * Reactive / Scala futures
 * Scala collections
 * Leverages Java library
