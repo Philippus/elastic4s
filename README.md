@@ -167,8 +167,7 @@ val client = ElasticClient.fromNode(node)
 ## Create Index
 
 All documents in Elasticsearch are stored in an index. We do not need to tell Elasticsearch in advance what an index
-will look like (eg what fields it will contain) as Elasticsearch will adapt the index as more documents are added,
-but we must create at least create the index.
+will look like (eg what fields it will contain) as Elasticsearch will adapt the index dynamically as more documents are added, but we must at least create the index first.
 
 To create an index called "places" that is fully dynamic we can simply use:
 
