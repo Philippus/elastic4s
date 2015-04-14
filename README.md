@@ -326,7 +326,7 @@ In this example we are retrieving the document with id 'coldplay' from the bands
 
 ```scala
 client.execute {
- get id "coldplay" from "bands/rock"
+ get id "coldplay" from "bands" / "rock"
 }
 ```
 
