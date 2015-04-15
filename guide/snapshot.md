@@ -22,11 +22,19 @@ client.execute {
 }
 ```
 
-Next we can get the snapshot info with:
+Next we can get a specific snapshot's info with:
 
 ```scala
 client.execute {
   get snapshot "snap1" from "_snapshot"
+}
+```
+
+Next we can get ALL snapshots information in the repository with:
+
+```scala
+client.execute {
+  get snapshot Seq() from "_snapshot"
 }
 ```
 
