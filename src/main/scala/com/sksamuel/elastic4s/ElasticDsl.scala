@@ -163,6 +163,10 @@ trait ElasticDsl
     def settings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
+
+    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(snapshotNames.toSeq)
+    def snapshot(snapshotNames: String*): GetSnapshotsExpectsFrom = snapshot(snapshotNames)
+
   }
 
   @deprecated("use index keyword", "1.4.0")
@@ -266,6 +270,10 @@ trait ElasticDsl
     def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
     @deprecated("use `delete snapshot` instead of `snapshot delete` for a more readable dsl", "1.4.0.Beta2")
     def delete(name: String) = new DeleteSnapshotExpectsIn(name)
+    @deprecated("use `get snapshot` instead of `snapshot get` for a more readable dsl", "1.4.0.Beta2")
+    def get(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(snapshotNames.toSeq)
+    @deprecated("use `get snapshot` instead of `snapshot get` for a more readable dsl", "1.4.0.Beta2")
+    def get(snapshotNames: String*): GetSnapshotsExpectsFrom = get(snapshotNames)
   }
 
   @deprecated("use search keyword", "1.4.0.Beta2")

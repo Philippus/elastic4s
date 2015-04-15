@@ -101,6 +101,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
 | Get Alias                                 | `get alias <name> on <index>` |
 | Get Mapping                               | `get mapping <index> / <type>` |
+| Get Snapshot                              | `get snapshot <name> from <repo>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index Status                              | `status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
