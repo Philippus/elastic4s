@@ -93,7 +93,7 @@ class DeleteSnapshotDefinition(name: String, repo: String) {
   def build = request.request()
 }
 
-class GetSnapshotsDefinition(snapshotNames: Array[String] = Array[String]("_all"), repo: String) {
+class GetSnapshotsDefinition(snapshotNames: Array[String], repo: String) {
   val request = new GetSnapshotsRequestBuilder(ProxyClients.cluster, repo).setSnapshots(snapshotNames: _*)
   def build = request.request()
 }
