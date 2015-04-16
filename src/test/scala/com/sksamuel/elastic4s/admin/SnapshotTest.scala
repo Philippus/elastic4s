@@ -26,7 +26,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
   location.deleteOnExit()
 
   "an index" - {
-    "can be snapshotted and restored" in {
+    "can be snapshotted, fetched and restored" in {
 
       client.execute {
         create repository "_snapshot" `type` "fs" settings Map("location" -> location.getAbsolutePath)
@@ -34,6 +34,10 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
 
       client.execute {
         create snapshot "snap" in "_snapshot" index "pizza" waitForCompletion true
+      }.await(10.seconds)
+
+      client.execute {
+        get snapshot "snap" from "_snapshot"
       }.await(10.seconds)
 
       client.execute(bulk(

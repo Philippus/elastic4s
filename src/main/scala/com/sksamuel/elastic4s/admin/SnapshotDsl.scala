@@ -5,6 +5,7 @@ import org.elasticsearch.action.admin.cluster.repositories.put.{ PutRepositoryRe
 import org.elasticsearch.action.admin.cluster.snapshots.create.{ CreateSnapshotRequestBuilder, CreateSnapshotResponse }
 import org.elasticsearch.action.admin.cluster.snapshots.delete.{ DeleteSnapshotRequestBuilder, DeleteSnapshotResponse }
 import org.elasticsearch.action.admin.cluster.snapshots.restore.{ RestoreSnapshotRequestBuilder, RestoreSnapshotResponse }
+import org.elasticsearch.action.admin.cluster.snapshots.get.{ GetSnapshotsRequestBuilder, GetSnapshotsResponse }
 import org.elasticsearch.client.Client
 
 import scala.collection.JavaConverters._
@@ -28,6 +29,10 @@ trait SnapshotDsl {
 
   class CreateSnapshotExpectsIn(name: String) {
     def in(repo: String) = new CreateSnapshotDefinition(name, repo)
+  }
+
+  class GetSnapshotsExpectsFrom(snapshotNames: Seq[String]) {
+    def from(repo: String) = new GetSnapshotsDefinition(snapshotNames.toArray, repo)
   }
 
   class RestoreSnapshotExpectsFrom(name: String) {
@@ -59,6 +64,13 @@ trait SnapshotDsl {
     }
   }
 
+  implicit object GetSnapshotsDefinitionExecutable
+      extends Executable[GetSnapshotsDefinition, GetSnapshotsResponse] {
+    override def apply(c: Client, t: GetSnapshotsDefinition): Future[GetSnapshotsResponse] = {
+      injectFuture(c.admin.cluster.getSnapshots(t.build, _))
+    }
+  }
+
   implicit object CreateRepositoryDefinitionExecutable
       extends Executable[CreateRepositoryDefinition, PutRepositoryResponse] {
     override def apply(c: Client, t: CreateRepositoryDefinition): Future[PutRepositoryResponse] = {
@@ -78,6 +90,11 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
 
 class DeleteSnapshotDefinition(name: String, repo: String) {
   val request = new DeleteSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
+  def build = request.request()
+}
+
+class GetSnapshotsDefinition(snapshotNames: Array[String], repo: String) {
+  val request = new GetSnapshotsRequestBuilder(ProxyClients.cluster, repo).setSnapshots(snapshotNames: _*)
   def build = request.request()
 }
 
