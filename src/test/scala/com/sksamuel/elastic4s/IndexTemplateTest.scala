@@ -60,6 +60,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       year_founded.get("type") shouldBe "string"
     }
     "support template before any index creation" in {
+
       client.execute {
         create template "test" pattern "test*" mappings (
           "user" as (
@@ -68,11 +69,9 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
           )
       }.await
 
-      client.execute { create index "test" }
-
       client.execute {
         index into "test" / "user" fields (
-          "name" -> 1829
+          "name" -> 1234
           )
       }.await
     }

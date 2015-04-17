@@ -51,7 +51,7 @@ class CreateIndexTemplateDefinition(name: String, pattern: String) {
   }
 
   def mappings(mappings: MappingDefinition*): this.type = {
-    _mappings appendAll mappings.map(_.numericDetection(false).useTtl(false))
+    _mappings appendAll mappings
     this
   }
 }
