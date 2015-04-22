@@ -9,6 +9,7 @@ import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
@@ -52,15 +53,13 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
 
-  implicit object DeleteByIdDefinitionExecutable
-      extends Executable[DeleteByIdDefinition, DeleteResponse] {
+  implicit object DeleteByIdDefinitionExecutable extends Executable[DeleteByIdDefinition, DeleteResponse] {
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
       injectFuture(c.delete(t.build, _))
     }
   }
 
-  implicit object DeleteByQueryDefinitionExecutable
-      extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse] {
+  implicit object DeleteByQueryDefinitionExecutable extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse] {
     override def apply(c: Client, t: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
       injectFuture(c.deleteByQuery(t.build, _))
     }

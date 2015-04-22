@@ -20,6 +20,16 @@ trait DocumentMap {
   def map: Map[String, Any]
 }
 
+/**
+ * A Typeclass that is used by index requests to convert a type into a document for use by Elasticsearch
+ */
 trait Indexable[T] {
   def json(t: T): String
+}
+
+trait MapIndexable[T] extends Indexable[T] {
+  def map(t: T): Map[String, Any]
+  def json(t: T): String = {
+
+  }
 }
