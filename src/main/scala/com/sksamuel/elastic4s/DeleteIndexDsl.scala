@@ -10,8 +10,7 @@ trait DeleteIndexDsl {
 
   def deleteIndex(names: String*) = new DeleteIndexDefinition(names: _*)
 
-  implicit object DeleteIndexDefinitionExecutable
-      extends Executable[DeleteIndexDefinition, DeleteIndexResponse] {
+  implicit object DeleteIndexDefinitionExecutable extends Executable[DeleteIndexDefinition, DeleteIndexResponse] {
     override def apply(c: Client, t: DeleteIndexDefinition): Future[DeleteIndexResponse] = {
       injectFuture(c.admin.indices.delete(t.build, _))
     }

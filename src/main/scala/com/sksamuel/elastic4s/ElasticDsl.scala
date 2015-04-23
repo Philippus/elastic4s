@@ -19,6 +19,7 @@ trait ElasticDsl
   with FacetDsl
   with ExplainDsl
   with GetDsl
+  with IndexAdminDsl
   with IndexRecoveryDsl
   with IndexStatusDsl
   with MappingDsl
@@ -92,6 +93,10 @@ trait ElasticDsl
     def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
 
     def script(script: String) = new ScriptSortDefinition(script)
+  }
+
+  case object close {
+    def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
   }
 
   case object count {
@@ -212,6 +217,10 @@ trait ElasticDsl
       require(id.toString.nonEmpty, "id must not be null or empty")
       new MltExpectsIndex(id.toString)
     }
+  }
+
+  case object open {
+    def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
   }
 
   case object optimize {
