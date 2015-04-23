@@ -165,6 +165,8 @@ trait ElasticDsl
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
 
+    def segments(indexes: String*): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
+
     def settings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
