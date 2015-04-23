@@ -26,10 +26,3 @@ trait DocumentMap {
 trait Indexable[T] {
   def json(t: T): String
 }
-
-trait MapIndexable[T] extends Indexable[T] {
-  def map(t: T): Map[String, Any]
-  def json(t: T): String = {
-
-  }
-}
