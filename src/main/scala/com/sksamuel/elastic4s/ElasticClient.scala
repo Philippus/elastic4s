@@ -38,11 +38,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def typesExist(indices: String*)(types: String*): Future[TypesExistsResponse] =
     injectFuture[TypesExistsResponse](client.admin.indices.prepareTypesExists(indices: _*).setTypes(types: _*).execute)
 
-  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll 'id' }", "1.5.5")
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll <id> }", "1.5.5")
   def searchScroll(scrollId: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
 
-  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll 'id' }", "1.5.5")
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll <id> }", "1.5.5")
   def searchScroll(scrollId: String, keepAlive: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).setScroll(keepAlive).execute)
 
@@ -52,11 +52,13 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def refresh(indexes: String*): Future[RefreshResponse] =
     injectFuture[RefreshResponse](client.admin.indices.prepareRefresh(indexes: _*).execute)
 
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { open index <index> }", "1.5.5")
   def open(index: String): Future[OpenIndexResponse] =
     injectFuture[OpenIndexResponse](client.admin.indices.prepareOpen(index).execute)
 
   def close(): Unit = client.close()
 
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { close index <index> }", "1.5.5")
   def close(index: String): Future[CloseIndexResponse] =
     injectFuture[CloseIndexResponse](client.admin.indices.prepareClose(index).execute)
 
