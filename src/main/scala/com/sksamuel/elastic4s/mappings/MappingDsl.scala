@@ -39,11 +39,19 @@ trait MappingDsl {
 
 class PutMappingDefinition(indexType: IndexType) extends MappingDefinition(indexType.`type`) {
 
+  var ignore: Option[Boolean] = None
+
+  def ignoreConflicts(ignore: Boolean): this.type = {
+    this.ignore = Option(ignore)
+    this
+  }
+
   def request: PutMappingRequest = {
-    new PutMappingRequestBuilder(ProxyClients.indices)
+    val req = new PutMappingRequestBuilder(ProxyClients.indices)
       .setIndices(indexType.index)
       .setType(`type`)
       .setSource(super.build)
-      .request()
+    ignore.foreach(req.setIgnoreConflicts)
+    req.request()
   }
 }
