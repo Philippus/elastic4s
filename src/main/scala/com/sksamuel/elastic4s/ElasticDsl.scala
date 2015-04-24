@@ -207,6 +207,9 @@ trait ElasticDsl
       require(indexType != null, "indexType must not be null or empty")
       new IndexDefinition(indexType.index, indexType.`type`)
     }
+
+    def stats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
+    def stats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
   }
 
   case object inner {

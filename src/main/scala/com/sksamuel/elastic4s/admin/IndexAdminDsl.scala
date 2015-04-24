@@ -8,6 +8,7 @@ import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
+import org.elasticsearch.action.admin.indices.stats.{IndicesStatsRequest, IndicesStatsResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -38,6 +39,11 @@ trait IndexAdminDsl {
       injectFuture(c.admin.indices.prepareTypesExists(t.indexes: _*).setTypes(t.types: _*).execute)
     }
   }
+  implicit object IndicesStatsDefinitionExecutable extends Executable[IndicesStatsDefinition, IndicesStatsResponse] {
+    override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResponse] = {
+      injectFuture(c.admin.indices.prepareStats(t.indexes: _*).execute)
+    }
+  }
   implicit object FlushIndexDefinitionExecutable extends Executable[FlushIndexDefinition, FlushResponse] {
     override def apply(c: Client, t: FlushIndexDefinition): Future[FlushResponse] = {
       injectFuture(c.admin.indices.prepareFlush(t.indexes: _*).execute)
@@ -54,6 +60,7 @@ class OpenIndexDefinition(val index: String)
 class CloseIndexDefinition(val index: String)
 class GetSegmentsDefinition(val indexes: Seq[String])
 class FlushIndexDefinition(val indexes: Seq[String])
+class IndicesStatsDefinition(val indexes: Seq[String])
 class RefreshIndexDefinition(val indexes: Seq[String])
 class IndexExistsDefinition(val indexes: Seq[String])
 class TypesExistsDefinition(val indexes: Seq[String], val types: Seq[String])
