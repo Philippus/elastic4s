@@ -52,6 +52,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def flush(indexes: String*): Future[FlushResponse] =
     injectFuture[FlushResponse](client.admin.indices.prepareFlush(indexes: _*).execute)
 
+  @deprecated("deprecated in favour of: client.execute { refresh index <index> }", "1.5.5")
   def refresh(indexes: String*): Future[RefreshResponse] =
     injectFuture[RefreshResponse](client.admin.indices.prepareRefresh(indexes: _*).execute)
 
