@@ -86,6 +86,8 @@ the DSL closely mirrors the standard Java API / REST API.
 | Operation                                 | Syntax |
 |-------------------------------------------|----------------|
 | [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
+| Clear index cache                         | `clear cache <name>` | 
+| Close index                               | `close index <name>` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
 | [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
 | [Create Repository](guide/snapshot.md)    | `create repository <repo> type <type> settings <settings>` |
@@ -98,23 +100,28 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Delete Snapshot](guide/snapshot.md)      | `delete snapshot <name> in <repo> ...` |
 | Delete Template                           | `delete template <name>` |
 | [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
+| Flush Index                               | `flush index <name>` |
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
 | Get Alias                                 | `get alias <name> on <index>` |
 | Get Mapping                               | `get mapping <index> / <type>` |
 | Get Snapshot                              | `get snapshot <name> from <repo>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
+| Index exists                              | `index exists <name>` | 
 | Index Status                              | `status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search in <index/type> query, search in <index/type> query, ...)`|
+| Open index                                | `open index <name>` |
 | [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
 | Register Query                            | `register id <id> into <index> query { <queryblock> }` |
-| Recovery Index                            | `recover index <name>` |
+| Recover Index                             | `recover index <name>` |
+| Refresh index                             | `refresh index <name>` |
 | [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
+| Search scroll                             | `search scroll <scrollId>` |  
 | [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
 
