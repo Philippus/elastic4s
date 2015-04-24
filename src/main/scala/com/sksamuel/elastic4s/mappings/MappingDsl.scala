@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{ PutMappingDefinition, Executable }
+import com.sksamuel.elastic4s.{IndexType, Executable, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
+import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -24,9 +24,9 @@ trait MappingDsl {
     }
   }
 
-  implicit object asPutMappingDefinitionExecutable extends Executable[PutMappingDefinition, PutMappingResponse] {
+  implicit object PutMappingDefinitionExecutable extends Executable[PutMappingDefinition, PutMappingResponse] {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
-      injectFuture(c.admin.indices.putMapping(t.build, _))
+      injectFuture(c.admin.indices.putMapping(t.request, _))
     }
   }
 
@@ -34,5 +34,16 @@ trait MappingDsl {
     override def apply(c: Client, t: DeleteMappingDefinition): Future[DeleteMappingResponse] = {
       injectFuture(c.admin.indices.prepareDeleteMapping(t.indexes.toSeq: _*).setType(t.types.toSeq: _*).execute)
     }
+  }
+}
+
+class PutMappingDefinition(indexType: IndexType) extends MappingDefinition(indexType.`type`) {
+
+  def request: PutMappingRequest = {
+    new PutMappingRequestBuilder(ProxyClients.indices)
+      .setIndices(indexType.index)
+      .setType(`type`)
+      .setSource(super.build)
+      .request()
   }
 }
