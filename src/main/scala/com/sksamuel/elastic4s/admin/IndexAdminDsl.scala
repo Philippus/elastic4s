@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.Executable
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
+import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.client.Client
@@ -26,14 +27,19 @@ trait IndexAdminDsl {
       injectFuture(c.admin.indices.prepareSegments(t.indexes: _*).execute)
     }
   }
-  implicit object IndexExistsDefinition extends Executable[IndexExistsDefinition, IndicesExistsResponse] {
+  implicit object IndexExistsDefinitionExecutable extends Executable[IndexExistsDefinition, IndicesExistsResponse] {
     override def apply(c: Client, t: IndexExistsDefinition): Future[IndicesExistsResponse] = {
       injectFuture(c.admin.indices.prepareExists(t.indexes: _*).execute)
     }
   }
-  implicit object TypesExistsDefinition extends Executable[TypesExistsDefinition, TypesExistsResponse] {
+  implicit object TypesExistsDefinitionExecutable extends Executable[TypesExistsDefinition, TypesExistsResponse] {
     override def apply(c: Client, t: TypesExistsDefinition): Future[TypesExistsResponse] = {
       injectFuture(c.admin.indices.prepareTypesExists(t.indexes: _*).setTypes(t.types: _*).execute)
+    }
+  }
+  implicit object FlushIndexDefinitionExecutable extends Executable[FlushIndexDefinition, FlushResponse] {
+    override def apply(c: Client, t: FlushIndexDefinition): Future[FlushResponse] = {
+      injectFuture(c.admin.indices.prepareFlush(t.indexes: _*).execute)
     }
   }
 }
@@ -41,5 +47,6 @@ trait IndexAdminDsl {
 class OpenIndexDefinition(val index: String)
 class CloseIndexDefinition(val index: String)
 class GetSegmentsDefinition(val indexes: Seq[String])
+class FlushIndexDefinition(val indexes: Seq[String])
 class IndexExistsDefinition(val indexes: Seq[String])
 class TypesExistsDefinition(val indexes: Seq[String], val types: Seq[String])

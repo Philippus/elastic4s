@@ -152,6 +152,11 @@ trait ElasticDsl
     def name(name: String): FieldDefinition = new FieldDefinition(name)
   }
 
+  case object flush {
+    def mapping(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
+    def mapping(indexes: String*): FlushIndexDefinition = new FlushIndexDefinition(indexes)
+  }
+
   case object get {
 
     def id(id: Any) = {
