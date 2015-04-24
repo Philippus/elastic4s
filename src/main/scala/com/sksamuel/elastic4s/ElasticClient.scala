@@ -32,18 +32,19 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
     injectFuture[NodesShutdownResponse](java.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
   }
 
-  @deprecated("deprecated in favour of the typeclass approach; use client.execute { index exists <index> }", "1.5.5")
+  @deprecated("deprecated in favour of: client.execute { index exists <index> }", "1.5.5")
   def exists(indexes: String*): Future[IndicesExistsResponse] =
     injectFuture[IndicesExistsResponse](client.admin.indices.prepareExists(indexes: _*).execute)
 
+  @deprecated("deprecated in favour of: client.execute { types exist <types> in <index>> }", "1.5.5")
   def typesExist(indices: String*)(types: String*): Future[TypesExistsResponse] =
     injectFuture[TypesExistsResponse](client.admin.indices.prepareTypesExists(indices: _*).setTypes(types: _*).execute)
 
-  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll <id> }", "1.5.5")
+  @deprecated("deprecated in favour of: client.execute { search scroll <id> }", "1.5.5")
   def searchScroll(scrollId: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
 
-  @deprecated("deprecated in favour of the typeclass approach; use client.execute { search scroll <id> }", "1.5.5")
+  @deprecated("deprecated in favour of: client.execute { search scroll <id> }", "1.5.5")
   def searchScroll(scrollId: String, keepAlive: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).setScroll(keepAlive).execute)
 
