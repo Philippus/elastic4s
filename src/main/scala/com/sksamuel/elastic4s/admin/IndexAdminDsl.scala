@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.Executable
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
