@@ -250,7 +250,13 @@ trait ElasticDsl
   }
 
   case object recover {
-    def index(indexes: String*) = new IndexRecoveryDefinition(indexes: _*)
+    def index(indexes: Iterable[String]) = new IndexRecoveryDefinition(indexes.toSeq)
+    def index(indexes: String*) = new IndexRecoveryDefinition(indexes)
+  }
+
+  case object refresh {
+    def index(indexes: Iterable[String]) = new RefreshIndexDefinition(indexes.toSeq)
+    def index(indexes: String*) = new RefreshIndexDefinition(indexes)
   }
 
   case object remove {

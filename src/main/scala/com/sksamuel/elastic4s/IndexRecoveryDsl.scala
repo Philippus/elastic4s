@@ -15,7 +15,7 @@ trait IndexRecoveryDsl {
   }
 }
 
-class IndexRecoveryDefinition(indices: String*) {
+class IndexRecoveryDefinition(indices: Seq[String]) {
   private def builder = new RecoveryRequest(indices: _*)
   def build = builder
 }
