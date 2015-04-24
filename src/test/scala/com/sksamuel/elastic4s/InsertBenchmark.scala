@@ -50,8 +50,8 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
 
   ignore("benchmarking insertion of n documents") {
 
+    val executor = Executors.newFixedThreadPool(8)
     val start = System.currentTimeMillis
-    val executor = Executors.newFixedThreadPool(4)
     for (k <- 0 until n / b) {
       executor.submit(new Runnable {
         override def run(): Unit = {

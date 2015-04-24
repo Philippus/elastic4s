@@ -62,6 +62,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def close(index: String): Future[CloseIndexResponse] =
     injectFuture[CloseIndexResponse](client.admin.indices.prepareClose(index).execute)
 
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { get segments <index> }", "1.5.5")
   def segments(indexes: String*): Future[IndicesSegmentResponse] =
     injectFuture[IndicesSegmentResponse](client.admin.indices.prepareSegments(indexes: _*).execute)
 
