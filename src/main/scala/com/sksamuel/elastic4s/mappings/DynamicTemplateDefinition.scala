@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
+import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
 
 class DynamicTemplateDefinition(name: String) {
 
