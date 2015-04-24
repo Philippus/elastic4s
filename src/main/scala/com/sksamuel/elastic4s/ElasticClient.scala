@@ -48,6 +48,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
   def searchScroll(scrollId: String, keepAlive: String) =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).setScroll(keepAlive).execute)
 
+  @deprecated("deprecated in favour of: client.execute { flush index <index> }", "1.5.5")
   def flush(indexes: String*): Future[FlushResponse] =
     injectFuture[FlushResponse](client.admin.indices.prepareFlush(indexes: _*).execute)
 
