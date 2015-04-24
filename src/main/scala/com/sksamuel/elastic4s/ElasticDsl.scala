@@ -306,6 +306,13 @@ trait ElasticDsl
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
 
+  case object types {
+    def exist(types: String*) = new TypesExistExpectsIn(types)
+    class TypesExistExpectsIn(types: Seq[String]) {
+      def in(indexes: String*) = new TypesExistsDefinition(indexes, types)
+    }
+  }
+
   case object update {
     def id(id: Any) = {
       require(id.toString.nonEmpty, "id must not be null or empty")
