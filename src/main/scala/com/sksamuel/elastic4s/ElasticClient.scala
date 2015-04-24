@@ -32,6 +32,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
     injectFuture[NodesShutdownResponse](java.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
   }
 
+  @deprecated("deprecated in favour of the typeclass approach; use client.execute { index exists <index> }", "1.5.5")
   def exists(indexes: String*): Future[IndicesExistsResponse] =
     injectFuture[IndicesExistsResponse](client.admin.indices.prepareExists(indexes: _*).execute)
 
