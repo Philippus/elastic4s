@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import com.sksamuel.elastic4s.{ Executable, ProxyClients }
-import org.elasticsearch.action.admin.indices.template.delete.{ DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse }
-import org.elasticsearch.action.admin.indices.template.get.{ GetIndexTemplatesResponse, GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder }
-import org.elasticsearch.action.admin.indices.template.put.{ PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse }
+import com.sksamuel.elastic4s.{Executable, ProxyClients}
+import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse}
+import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder, GetIndexTemplatesResponse}
+import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse}
 import org.elasticsearch.client.Client
 
 import scala.collection.mutable.ListBuffer
@@ -17,36 +17,41 @@ trait TemplateDsl {
   }
 
   implicit object CreateIndexTemplateDefinitionExecutable
-      extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse] {
+    extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
-      injectFuture(c.admin.indices.putTemplate(t.build, _))
+      val req = c.admin.indices.preparePutTemplate(t.name).setTemplate(t.pattern)
+      t._mappings.foreach(mapping => {
+        req.addMapping(mapping.`type`, mapping.buildWithName)
+      })
+      injectFuture(req.execute)
     }
   }
 
   implicit object DeleteIndexTemplateDefinitionExecutable
-      extends Executable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
+    extends Executable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
     override def apply(c: Client, t: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
       injectFuture(c.admin.indices.deleteTemplate(t.build, _))
     }
   }
 
   implicit object GetTemplateDefinitionExecutable
-      extends Executable[GetTemplateDefinition, GetIndexTemplatesResponse] {
+    extends Executable[GetTemplateDefinition, GetIndexTemplatesResponse] {
     override def apply(c: Client, t: GetTemplateDefinition): Future[GetIndexTemplatesResponse] = {
       injectFuture(c.admin.indices.getTemplates(t.build, _))
     }
   }
 }
 
-class CreateIndexTemplateDefinition(name: String, pattern: String) {
+class CreateIndexTemplateDefinition(val name: String, val pattern: String) {
 
   val _mappings = new ListBuffer[MappingDefinition]
   val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, name).setTemplate(pattern)
 
   def build: PutIndexTemplateRequest = {
-    for (mapping <- _mappings) {
+    for ( mapping <- _mappings ) {
       _builder.addMapping(mapping.`type`, mapping.build)
     }
+    println(_builder.request().mappings)
     _builder.request
   }
 

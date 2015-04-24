@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.Analyzer
-import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 import scala.collection.mutable.ListBuffer
 
@@ -117,11 +117,13 @@ class MappingDefinition(val `type`: String) {
     this
   }
 
+  def fields(fields: Iterable[TypedFieldDefinition]): this.type = as(fields)
   def as(iterable: Iterable[TypedFieldDefinition]): this.type = {
     _fields ++= iterable
     this
   }
 
+  def fields(fields: TypedFieldDefinition*): this.type = as(fields: _*)
   def as(fields: TypedFieldDefinition*): this.type = as(fields.toIterable)
 
   def size(size: Boolean): MappingDefinition = {
@@ -143,16 +145,24 @@ class MappingDefinition(val `type`: String) {
     builder.endObject()
   }
 
+  def buildWithName: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject()
+    builder.startObject(`type`)
+    build(builder)
+    builder.endObject()
+    builder.endObject()
+  }
+
   def build(json: XContentBuilder): Unit = {
 
-    for (all <- _all) json.startObject("_all").field("enabled", all).endObject()
-    for (source <- _source) json.startObject("_source").field("enabled", source).endObject()
+    for ( all <- _all ) json.startObject("_all").field("enabled", all).endObject()
+    for ( source <- _source ) json.startObject("_source").field("enabled", source).endObject()
 
     if (dynamic_date_formats.nonEmpty)
       json.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
 
-    for (dd <- date_detection) json.field("date_detection", dd)
-    for (nd <- numeric_detection) json.field("numeric_detection", nd)
+    for ( dd <- date_detection ) json.field("date_detection", dd)
+    for ( nd <- numeric_detection ) json.field("numeric_detection", nd)
 
     _dynamic.foreach(dynamic => {
       json.field("dynamic", dynamic match {
@@ -181,11 +191,11 @@ class MappingDefinition(val `type`: String) {
       json.endObject()
     }
 
-    for (ttl <- _ttl) json.startObject("_ttl").field("enabled", ttl).endObject()
+    for ( ttl <- _ttl ) json.startObject("_ttl").field("enabled", ttl).endObject()
 
     if (_fields.nonEmpty) {
       json.startObject("properties")
-      for (field <- _fields) {
+      for ( field <- _fields ) {
         field.build(json)
       }
       json.endObject() // end properties
@@ -193,7 +203,7 @@ class MappingDefinition(val `type`: String) {
 
     if (_meta.nonEmpty) {
       json.startObject("_meta")
-      for (meta <- _meta) {
+      for ( meta <- _meta ) {
         json.field(meta._1, meta._2)
       }
       json.endObject()
@@ -207,7 +217,7 @@ class MappingDefinition(val `type`: String) {
 
     if (_templates.nonEmpty) {
       json.startArray("dynamic_templates")
-      for (template <- _templates) template.build(json)
+      for ( template <- _templates ) template.build(json)
       json.endArray()
     }
   }

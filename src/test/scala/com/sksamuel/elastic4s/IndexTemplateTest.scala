@@ -4,8 +4,9 @@ import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import org.elasticsearch.common.xcontent.XContentFactory
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{WordSpec, FlatSpec, Matchers}
+import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */
 class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -63,15 +64,15 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
 
       client.execute {
         create template "malbec" pattern "malbec*" mappings (
-          mapping name "user" as (
-            "name" withType StringType
+          mapping name "user" fields (
+            field name "distance" typed StringType
             )
           )
       }.await
 
       client.execute {
         index into "malbec" / "user" fields (
-          "name" -> 1234
+          "distance" -> 1234
           )
       }.await
     }
