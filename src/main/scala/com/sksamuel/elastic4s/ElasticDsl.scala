@@ -95,6 +95,11 @@ trait ElasticDsl
     def script(script: String) = new ScriptSortDefinition(script)
   }
 
+  case object clear {
+    def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
+    def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
+  }
+
   case object close {
     def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
   }
