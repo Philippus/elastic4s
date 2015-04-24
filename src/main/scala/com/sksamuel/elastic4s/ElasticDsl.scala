@@ -181,6 +181,9 @@ trait ElasticDsl
   def insert = index
   case object index {
 
+    def exists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
+    def exists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
+
     def into(index: String): IndexDefinition = {
       require(index.nonEmpty, "index must not be null or empty")
       into(index.split("/").head, index.split("/").last)
