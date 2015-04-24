@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.mappings.GetMappingDefinition
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.action.bulk.BulkResponse
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse
@@ -11,10 +10,10 @@ import org.elasticsearch.action.explain.ExplainResponse
 import org.elasticsearch.action.get.MultiGetResponse
 import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.action.percolate.PercolateResponse
-import org.elasticsearch.action.search.{ MultiSearchResponse, SearchResponse }
+import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
 
-import scala.concurrent.{ ExecutionContext, Await }
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
 
 @deprecated("Use .await() on future of async client", "1.3.0")
 class SyncClient(client: ElasticClient)(implicit duration: Duration) extends ElasticDsl {
@@ -92,11 +91,6 @@ class SyncClient(client: ElasticClient)(implicit duration: Duration) extends Ela
   @deprecated("Use .await() on future of async client", "1.4.4")
   def execute(get: GetMappingDefinition)(implicit duration: Duration): GetMappingsResponse = {
     Await.result(client.execute(get), duration)
-  }
-
-  @deprecated("Use .await() on future of async client", "1.3.0")
-  def execute(put: PutMappingDefinition)(implicit duration: Duration): PutMappingResponse = {
-    Await.result(client.execute(put), duration)
   }
 
   @deprecated("Use .await() on future of async client", "1.4.4")
