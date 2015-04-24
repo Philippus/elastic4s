@@ -158,8 +158,8 @@ trait ElasticDsl
   }
 
   case object flush {
-    def mapping(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
-    def mapping(indexes: String*): FlushIndexDefinition = new FlushIndexDefinition(indexes)
+    def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
+    def index(indexes: String*): FlushIndexDefinition = new FlushIndexDefinition(indexes)
   }
 
   case object get {
