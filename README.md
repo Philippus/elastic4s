@@ -211,8 +211,7 @@ client.execute {
 ```
 
 Then Elasticsearch is configured with those mappings for those fields only.
-It is still fully dynamic and other fields will be created as needed with default options. Only the fields mentioned
-will be "fixed".
+It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will be "fixed".
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
