@@ -126,7 +126,7 @@ class MappingDefinition(val `type`: String) {
   def fields(fields: TypedFieldDefinition*): this.type = as(fields: _*)
   def as(fields: TypedFieldDefinition*): this.type = as(fields.toIterable)
 
-  def size(size: Boolean): MappingDefinition = {
+  def size(size: Boolean): this.type = {
     _size = Option(size)
     this
   }
