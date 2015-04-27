@@ -38,34 +38,47 @@ case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
 }
 
-case class SynonymTokenFilter(name: String,
-                              path: Option[String] = None,
-                              synonyms: Set[String] = Set.empty,
-                              ignoreCase: Boolean = false,
-                              expand: Boolean = true)
+class SynonymTokenFilter(val name: String,
+                         path: Option[String],
+                         synonyms: Set[String],
+                         ignoreCase: Option[Boolean],
+                         format: Option[String],
+                         expand: Option[Boolean],
+                         tokenizer: Option[Tokenizer])
   extends TokenFilterDefinition {
 
   val filterType = "synonym"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("synonyms_path", path)
-    source.field("ignore_case", ignoreCase)
-    source.field("expand", expand)
+    path.foreach(source.field("synonyms_path", _))
+    synonyms.foreach(source.field("synonyms", _))
+    format.foreach(source.field("format", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
+    expand.foreach(source.field("expand", _))
+    tokenizer.foreach(t => source.field("tokenizer", t.name))
   }
 }
 
 object SynonymTokenFilter {
+  @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
+  def apply(name: String,
+            path: String): SynonymTokenFilter = {
+    new SynonymTokenFilter(name, Option(path), Set.empty, None, None, None, None)
+  }
+  @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
   def apply(name: String,
             path: String,
-            ignoreCase: Boolean = false,
-            expand: Boolean = true): SynonymTokenFilter = {
-    new SynonymTokenFilter(name, Some(path), Set.empty, ignoreCase, expand)
+            ignoreCase: Boolean): SynonymTokenFilter = {
+    new SynonymTokenFilter(name, Option(path), Set.empty, Some(ignoreCase), None, None, None)
   }
   def apply(name: String,
-            synonyms: Iterable[String],
-            ignoreCase: Boolean = false,
-            expand: Boolean = true): SynonymTokenFilter = {
-    new SynonymTokenFilter(name, None, synonyms.toSet, ignoreCase, expand)
+            path: Option[String] = None,
+            synonyms: Set[String] = Set.empty,
+            ignoreCase: Option[Boolean] = None,
+            format: Option[String] = None,
+            expand: Option[Boolean] = None,
+            tokenizer: Option[Tokenizer] = None): SynonymTokenFilter = {
+    new SynonymTokenFilter(name, path, synonyms.toSet, ignoreCase, format, expand, tokenizer)
   }
 }
 
