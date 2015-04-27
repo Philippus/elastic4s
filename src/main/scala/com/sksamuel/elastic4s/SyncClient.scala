@@ -10,10 +10,10 @@ import org.elasticsearch.action.explain.ExplainResponse
 import org.elasticsearch.action.get.MultiGetResponse
 import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.action.percolate.PercolateResponse
-import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
+import org.elasticsearch.action.search.{ MultiSearchResponse, SearchResponse }
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{ Await, ExecutionContext }
 
 @deprecated("Use .await() on future of async client", "1.3.0")
 class SyncClient(client: ElasticClient)(implicit duration: Duration) extends ElasticDsl {

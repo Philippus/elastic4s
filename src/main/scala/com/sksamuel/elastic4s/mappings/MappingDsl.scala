@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{IndexType, Executable, ProxyClients}
+import com.sksamuel.elastic4s.{ IndexType, Executable, ProxyClients }
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
+import org.elasticsearch.action.admin.indices.mapping.put.{ PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse }
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future

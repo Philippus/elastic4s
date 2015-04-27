@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.get.GetResponse
-import org.elasticsearch.client.{Client, Requests}
+import org.elasticsearch.client.{ Client, Requests }
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.search.fetch.source.FetchSourceContext
 

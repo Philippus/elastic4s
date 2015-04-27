@@ -14,9 +14,9 @@ import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
+import org.elasticsearch.common.settings.{ ImmutableSettings, Settings }
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.node.{ Node, NodeBuilder }
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -85,16 +85,16 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
           if (hits.length > 0) {
             Future
               .sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
-              execute {
-                ElasticDsl.bulk(
-                  pairs map {
-                    case (typ, _id, source) =>
-                      val expr = index into targetIndex -> typ
-                      (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
-                  }: _*
-                )
-              }
-            })
+                execute {
+                  ElasticDsl.bulk(
+                    pairs map {
+                      case (typ, _id, source) =>
+                        val expr = index into targetIndex -> typ
+                        (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
+                    }: _*
+                  )
+                }
+              })
               .flatMap(_ => _scroll(response.getScrollId))
           } else {
             Future.successful(())
@@ -147,7 +147,7 @@ object ElasticClient {
   def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
-    for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    for ((host, port) <- uri.hosts) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
 
@@ -157,7 +157,7 @@ object ElasticClient {
   @deprecated("For multiple hosts, Prefer the methods that use ElasticsearchClientUri", "1.4.2")
   def remote(settings: Settings, addresses: (String, Int)*): ElasticClient = {
     val client = new TransportClient(settings)
-    for ( (host, port) <- addresses ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
+    for ((host, port) <- addresses) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
 

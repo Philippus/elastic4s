@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import com.sksamuel.elastic4s.{WhitespaceAnalyzer, ElasticDsl, ElasticSugar}
+import com.sksamuel.elastic4s.{ WhitespaceAnalyzer, ElasticDsl, ElasticSugar }
 import org.scalatest.WordSpec
 
 class IndexExistsTest extends WordSpec with ElasticSugar with ElasticDsl {

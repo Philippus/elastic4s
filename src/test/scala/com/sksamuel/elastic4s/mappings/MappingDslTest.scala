@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.mappings.FieldType.{DateType, GeoPointType}
-import com.sksamuel.elastic4s.{ElasticDsl, ElasticSugar}
+import com.sksamuel.elastic4s.mappings.FieldType.{ DateType, GeoPointType }
+import com.sksamuel.elastic4s.{ ElasticDsl, ElasticSugar }
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
@@ -33,19 +33,19 @@ class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   it should "support multiple indexes" in {
     client.execute {
-      get mapping("index1", "index2")
+      get mapping ("index1", "index2")
     }
   }
 
   it should "support multiple types" in {
     client.execute {
-      get mapping "index" types("type1", "type2")
+      get mapping "index" types ("type1", "type2")
     }
   }
 
   it should "support multiple indexes and multiple types" in {
     client.execute {
-      get mapping("index1", "index2") types("type1", "type2")
+      get mapping ("index1", "index2") types ("type1", "type2")
     }
   }
 }

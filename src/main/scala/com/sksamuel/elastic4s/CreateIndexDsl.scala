@@ -178,17 +178,17 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition]) {
       case custom: CustomAnalyzerDefinition => custom
     }.map(_.tokenizer).filter(_.customized)
 
-  def tokenFilterDefinitions: Iterable[TokenFilterDefinition] =
+  def tokenFilterDefinitions: Iterable[TokenFilter  Definition] =
     analyzers.collect {
       case custom: CustomAnalyzerDefinition => custom
     }.flatMap(_.filters).collect {
-      case token: TokenFilterDefinition => token
+      case token: TokenFilter => token
     }
 
   def charFilterDefinitions: Iterable[CharFilterDefinition] =
     analyzers.collect {
       case custom: CustomAnalyzerDefinition => custom
     }.flatMap(_.filters).collect {
-      case char: CharFilterDefinition => char
+      case char: CharFilter => char
     }
 }
