@@ -2,13 +2,19 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
+trait AnalyzerDsl {
+
+}
+
+
+
 trait AnalyzerFilter {
   def name: String
 }
 
 trait AnalyzerFilterDefinition {
   def filterType: String
-  def build(source: XContentBuilder): Unit
+  protected[elastic4s] def build(source: XContentBuilder): Unit
 }
 
 sealed trait CharFilter extends AnalyzerFilter

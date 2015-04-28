@@ -219,6 +219,9 @@ case class PatternCaptureTokenFilter(name: String,
     source.field("patterns", patterns.toArray[String]: _*)
     source.field("preserve_original", preserveOriginal)
   }
+
+  def patterns(patterns: Iterable[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
+  def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
 case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String)
@@ -230,12 +233,15 @@ case class PatternReplaceTokenFilter(name: String, pattern: String, replacement:
     source.field("pattern", pattern)
     source.field("replacement", replacement)
   }
+
+  def pattern(p: String): PatternReplaceTokenFilter = copy(pattern = p)
+  def replacement(r: String): PatternReplaceTokenFilter = copy(replacement = r)
 }
 
-case class CommongGramsTokenFilter(name: String,
-                                   commonWords: Iterable[String],
-                                   ignoreCase: Boolean = false,
-                                   queryMode: Boolean = false)
+case class CommonGramsTokenFilter(name: String,
+                                  commonWords: Iterable[String] = Set.empty,
+                                  ignoreCase: Boolean = false,
+                                  queryMode: Boolean = false)
   extends TokenFilterDefinition {
 
   val filterType = "common_grams"
@@ -245,6 +251,10 @@ case class CommongGramsTokenFilter(name: String,
     source.field("ignore_case", ignoreCase)
     source.field("query_mode", queryMode)
   }
+
+  def commonWords(words: Iterable[String]): CommonGramsTokenFilter = copy(commonWords = words)
+  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase)
+  def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode)
 }
 
 case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2, side: String = "front")
@@ -257,6 +267,10 @@ case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2
     source.field("max_gram", maxGram)
     source.field("side", side)
   }
+
+  def minGram(min: Int): EdgeNGramTokenFilter = copy(minGram = min)
+  def maxGram(max: Int): EdgeNGramTokenFilter = copy(maxGram = max)
+  def side(side: String): EdgeNGramTokenFilter = copy(side = side)
 }
 
 case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
@@ -268,6 +282,9 @@ case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
   }
+
+  def minGram(min: Int): NGramTokenFilter = copy(minGram = min)
+  def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max)
 }
 
 case class SnowballTokenFilter(name: String, language: String = "English")
@@ -278,9 +295,11 @@ case class SnowballTokenFilter(name: String, language: String = "English")
   override def build(source: XContentBuilder): Unit = {
     source.field("language", language)
   }
+
+  def lang(l: String): SnowballTokenFilter = copy(language = l)
 }
 
-case class StemmerTokenFilter(name: String, lang: String)
+case class StemmerTokenFilter(name: String, lang: String = "English")
   extends TokenFilterDefinition {
 
   val filterType = "stemmer"
@@ -288,6 +307,8 @@ case class StemmerTokenFilter(name: String, lang: String)
   override def build(source: XContentBuilder): Unit = {
     source.field("name", lang)
   }
+
+  def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
 case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
@@ -298,6 +319,8 @@ case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
   override def build(source: XContentBuilder): Unit = {
     source.field("rules", rules: _*)
   }
+
+  def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)
 }
 
 case class WordDelimiterTokenFilter(name: String,
@@ -347,4 +370,35 @@ case class ShingleTokenFilter(name: String,
     source.field("token_separator", token_separator)
     source.field("filler_token", filler_token)
   }
+
+  def maxShingleSize(max: Int): ShingleTokenFilter = copy(max_shingle_size = max)
+  def minShingleSize(min: Int): ShingleTokenFilter = copy(min_shingle_size = min)
+  def outputUnigrams(b: Boolean): ShingleTokenFilter = copy(output_unigrams = b)
+  def outputUnigramsIfNoShingles(b: Boolean): ShingleTokenFilter = copy(output_unigrams_if_no_shingles = b)
+  def tokenSeperator(sep: String): ShingleTokenFilter = copy(token_separator = sep)
+  def fillerToken(filler: String): ShingleTokenFilter = copy(filler_token = filler)
+}
+
+object NGramTokenFilterExpectsName {
+  def name(name: String) = NGramTokenFilter(name)
+}
+
+object EdgeNGramTokenFilterExpectsName {
+  def name(name: String) = EdgeNGramTokenFilter(name)
+}
+
+object ShingleTokenFilterExpectsName {
+  def name(name: String) = ShingleTokenFilter(name)
+}
+
+object CommonGramsTokenFilterExpectsName {
+  def name(name: String) = CommonGramsTokenFilter(name)
+}
+
+object StemmerTokenFilterExpectsName {
+  def name(name: String) = StemmerTokenFilter(name)
+}
+
+object SnowballTokenFilterExpectsName {
+  def name(name: String) = SnowballTokenFilter(name)
 }

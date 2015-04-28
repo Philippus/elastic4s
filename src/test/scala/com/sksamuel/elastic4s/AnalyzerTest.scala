@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{ FreeSpec, Matchers }
+import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   client.execute {
     create index "analyzer" mappings {
-      "test" as (
+      "test" as(
         "keyword" typed StringType analyzer KeywordAnalyzer,
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
@@ -23,37 +23,49 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "shingle2" typed StringType analyzer CustomAnalyzer("shingle2"),
         "noshingle" typed StringType analyzer CustomAnalyzer("shingle3"),
         "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
-      )
-    } analysis (
+        )
+    } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", false),
       PatternAnalyzerDefinition("pattern2", ",", false),
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
       CustomAnalyzerDefinition("my_ngram",
         StandardTokenizer,
-        LowercaseTokenFilter,
-        NGramTokenFilter("my_ngram_filter", minGram = 2, maxGram = 5)),
-        CustomAnalyzerDefinition("edgengram",
-          StandardTokenizer,
-          LowercaseTokenFilter,
-          EdgeNGramTokenFilter("edgengram_filter", minGram = 2, maxGram = 6, side = "back")),
-          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
-          CustomAnalyzerDefinition("shingle", WhitespaceTokenizer,
-            LowercaseTokenFilter, ShingleTokenFilter("filter_shingle", max_shingle_size = 3, output_unigrams = false)
-          ),
-            CustomAnalyzerDefinition("shingle2", WhitespaceTokenizer,
-              LowercaseTokenFilter, ShingleTokenFilter("filter_shingle2", max_shingle_size = 2)
-            ),
-              CustomAnalyzerDefinition("shingle3", WhitespaceTokenizer,
-                LowercaseTokenFilter, ShingleTokenFilter("filter_shingle3", output_unigrams_if_no_shingles = true)
-              ),
-                CustomAnalyzerDefinition("shingle4", WhitespaceTokenizer,
-                  LowercaseTokenFilter, ShingleTokenFilter("filter_shingle4", token_separator = "#")
-                )
-    )
+        lowercase token filter,
+        ngram token filter name "my_ngram_filter" minGram 2 maxGram 5),
+      CustomAnalyzerDefinition("edgengram",
+        StandardTokenizer,
+        lowercase token filter,
+        edgeNGram token filter name "edgengram_filter" minGram 2 maxGram 6 side "back"),
+      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+      CustomAnalyzerDefinition(
+        "shingle",
+        WhitespaceTokenizer,
+        lowercase token filter,
+        shingle token filter name "filter_shingle" maxShingleSize 3 outputUnigrams true
+      ),
+      CustomAnalyzerDefinition(
+        "shingle2",
+        WhitespaceTokenizer,
+        lowercase token filter,
+        shingle token filter name "filter_shingle2" maxShingleSize 2
+      ),
+      CustomAnalyzerDefinition(
+        "shingle3",
+        WhitespaceTokenizer,
+        lowercase token filter,
+        shingle token filter name "filter_shingle3" outputUnigramsIfNoShingles true
+      ),
+      CustomAnalyzerDefinition(
+        "shingle4",
+        WhitespaceTokenizer,
+        lowercase token filter,
+        shingle token filter name "filter_shingle4" tokenSeperator "#"
+      )
+      )
   }.await
 
   client.execute {
-    index into "analyzer" / "test" fields (
+    index into "analyzer" / "test" fields(
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",
@@ -69,7 +81,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "shingle2" -> "keep unigram",
       "noshingle" -> "keep",
       "shingleseparator" -> "one two"
-    )
+      )
   }.await
 
   refresh("analyzer")

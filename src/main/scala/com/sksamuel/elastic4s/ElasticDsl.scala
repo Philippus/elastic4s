@@ -2,39 +2,41 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
+import org.elasticsearch.common.xcontent.XContentBuilder
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexAdminDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with SettingsDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with AnalyzerDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexAdminDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -82,6 +84,10 @@ trait ElasticDsl
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 
+  case object asciiFolding {
+    def token(stub: FilterKeyword) = AsciiFoldingTokenFilter
+  }
+
   case object by {
 
     def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
@@ -102,6 +108,10 @@ trait ElasticDsl
 
   case object close {
     def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
+  }
+
+  case object commonGrams {
+    def token(stub: FilterKeyword) = CommonGramsTokenFilterExpectsName
   }
 
   case object count {
@@ -181,7 +191,8 @@ trait ElasticDsl
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
-    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(snapshotNames.toSeq)
+    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new
+        GetSnapshotsExpectsFrom(snapshotNames.toSeq)
     def snapshot(snapshotNames: String*): GetSnapshotsExpectsFrom = snapshot(snapshotNames)
 
   }
@@ -221,6 +232,14 @@ trait ElasticDsl
     def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
   }
 
+  case object kstem {
+    def token(stub: FilterKeyword) = KStemTokenFilter
+  }
+
+  case object lowercase {
+    def token(stub: FilterKeyword) = LowercaseTokenFilter
+  }
+
   case object mapping {
     def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
@@ -234,6 +253,14 @@ trait ElasticDsl
       require(id.toString.nonEmpty, "id must not be null or empty")
       new MltExpectsIndex(id.toString)
     }
+  }
+
+  case object ngram {
+    def token(stub: FilterKeyword) = NGramTokenFilterExpectsName
+  }
+
+  case object edgeNGram {
+    def token(stub: FilterKeyword) = EdgeNGramTokenFilterExpectsName
   }
 
   case object open {
@@ -292,17 +319,12 @@ trait ElasticDsl
     }
   }
 
-  case object script {
-    def field(n: String): ExpectsScript = ExpectsScript(field = n)
+  case object reverse {
+    def token(stub: FilterKeyword) = ReverseTokenFilter
   }
 
-  case object snapshot {
-    @deprecated("use `create snapshot` instead of `snapshot create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String) = new CreateSnapshotExpectsIn(name)
-    @deprecated("use `restore snapshot` instead of `snapshot restore` for a more readable dsl", "1.4.0.Beta2")
-    def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
-    @deprecated("use `delete snapshot` instead of `snapshot delete` for a more readable dsl", "1.4.0.Beta2")
-    def delete(name: String) = new DeleteSnapshotExpectsIn(name)
+  case object script {
+    def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
 
   @deprecated("use search keyword", "1.4.0.Beta2")
@@ -315,6 +337,31 @@ trait ElasticDsl
     def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
   }
 
+  case object shingle {
+    def token(stub: FilterKeyword) = ShingleTokenFilterExpectsName
+  }
+
+  case object snapshot {
+    @deprecated("use `create snapshot` instead of `snapshot create` for a more readable dsl", "1.4.0.Beta2")
+    def create(name: String) = new CreateSnapshotExpectsIn(name)
+    @deprecated("use `restore snapshot` instead of `snapshot restore` for a more readable dsl", "1.4.0.Beta2")
+    def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
+    @deprecated("use `delete snapshot` instead of `snapshot delete` for a more readable dsl", "1.4.0.Beta2")
+    def delete(name: String) = new DeleteSnapshotExpectsIn(name)
+  }
+
+  case object snowball {
+    def token(stub: FilterKeyword) = SnowballTokenFilterExpectsName
+  }
+
+  case object standard {
+    def token(stub: FilterKeyword) = StandardTokenFilter
+  }
+
+  case object stemmer {
+    def token(stub: FilterKeyword) = StemmerTokenFilterExpectsName
+  }
+
   case object template {
     @deprecated("use `create template` instead of `template create` for a more readable dsl", "1.4.0.Beta2")
     def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
@@ -322,6 +369,10 @@ trait ElasticDsl
     def delete(name: String) = new DeleteIndexTemplateDefinition(name)
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
+  }
+
+  case object trim {
+    def token(stub: FilterKeyword) = TrimTokenFilter
   }
 
   case object types {
@@ -339,6 +390,10 @@ trait ElasticDsl
     def settings(index: String) = new UpdateSettingsDefinition(index)
   }
 
+  case object unique {
+    def token(stub: FilterKeyword) = UniqueTokenFilter
+  }
+
   case object validate {
     def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)
     def in(value: String): ValidateDefinition = {
@@ -349,9 +404,18 @@ trait ElasticDsl
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
 
+  trait FilterKeyword
+  case object filter extends FilterKeyword
+
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)
   }
 }
 
 object ElasticDsl extends ElasticDsl
+
+//mapping char filter
+//
+//htmlStrip char filter
+//
+//patternReplace char filter
