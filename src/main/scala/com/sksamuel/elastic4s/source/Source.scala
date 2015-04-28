@@ -20,4 +20,3 @@ trait DocumentMap {
   def map: Map[String, Any]
 }
 
-

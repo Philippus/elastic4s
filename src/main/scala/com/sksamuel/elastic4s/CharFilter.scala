@@ -20,7 +20,7 @@ case object HtmlStripCharFilter extends CharFilter {
 }
 
 case class MappingCharFilter(name: String, mappings: (String, String)*)
-  extends CharFilterDefinition {
+    extends CharFilterDefinition {
 
   val filterType = "mapping"
 
@@ -30,7 +30,7 @@ case class MappingCharFilter(name: String, mappings: (String, String)*)
 }
 
 case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)
-  extends CharFilterDefinition {
+    extends CharFilterDefinition {
 
   val filterType = "pattern_replace"
 

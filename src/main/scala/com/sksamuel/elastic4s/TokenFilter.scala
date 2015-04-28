@@ -45,7 +45,7 @@ class SynonymTokenFilter(val name: String,
                          format: Option[String],
                          expand: Option[Boolean],
                          tokenizer: Option[Tokenizer])
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "synonym"
 
@@ -83,7 +83,7 @@ object SynonymTokenFilter {
 }
 
 case class TruncateTokenFilter(name: String, length: Int = 10)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "truncate"
 
@@ -93,7 +93,7 @@ case class TruncateTokenFilter(name: String, length: Int = 10)
 }
 
 case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "length"
 
@@ -104,7 +104,7 @@ case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_
 }
 
 case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "unique"
 
@@ -116,7 +116,7 @@ case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
 case class KeywordMarkerTokenFilter(name: String,
                                     keywords: Iterable[String] = Nil,
                                     ignoreCase: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "keyword_marker"
 
@@ -127,7 +127,7 @@ case class KeywordMarkerTokenFilter(name: String,
 }
 
 case class ElisionTokenFilter(name: String, articles: Iterable[String])
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "elision"
 
@@ -139,7 +139,7 @@ case class ElisionTokenFilter(name: String, articles: Iterable[String])
 case class LimitTokenFilter(name: String,
                             maxTokenCount: Int = 1,
                             consumeAllTokens: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stop"
 
@@ -153,7 +153,7 @@ case class StopTokenFilter(name: String,
                            stopwords: Iterable[String] = Nil,
                            enablePositionIncrements: Boolean = false, // ignored now as of 1.4.0
                            ignoreCase: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stop"
 
@@ -167,7 +167,7 @@ case class StopTokenFilter(name: String,
 case class NamedStopTokenFilter(name: String, stopwords: String,
                                 enablePositionIncrements: Boolean = true,
                                 ignoreCase: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stop"
 
@@ -211,7 +211,7 @@ object NamedStopTokenFilter {
 case class PatternCaptureTokenFilter(name: String,
                                      patterns: Iterable[String],
                                      preserveOriginal: Boolean = true)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "pattern_capture"
 
@@ -225,7 +225,7 @@ case class PatternCaptureTokenFilter(name: String,
 }
 
 case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "pattern_replace"
 
@@ -242,7 +242,7 @@ case class CommonGramsTokenFilter(name: String,
                                   commonWords: Iterable[String] = Set.empty,
                                   ignoreCase: Boolean = false,
                                   queryMode: Boolean = false)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "common_grams"
 
@@ -258,7 +258,7 @@ case class CommonGramsTokenFilter(name: String,
 }
 
 case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2, side: String = "front")
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "edgeNGram"
 
@@ -274,7 +274,7 @@ case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2
 }
 
 case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "nGram"
 
@@ -288,7 +288,7 @@ case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
 }
 
 case class SnowballTokenFilter(name: String, language: String = "English")
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "snowball"
 
@@ -300,7 +300,7 @@ case class SnowballTokenFilter(name: String, language: String = "English")
 }
 
 case class StemmerTokenFilter(name: String, lang: String = "English")
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stemmer"
 
@@ -312,7 +312,7 @@ case class StemmerTokenFilter(name: String, lang: String = "English")
 }
 
 case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stemmer_override"
 
@@ -333,7 +333,7 @@ case class WordDelimiterTokenFilter(name: String,
                                     preserveOriginal: Boolean = false,
                                     splitOnNumerics: Boolean = true,
                                     stemEnglishPossesive: Boolean = true)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "word_delimiter"
 
@@ -358,7 +358,7 @@ case class ShingleTokenFilter(name: String,
                               token_separator: String = " ",
                               filler_token: String = "_")
 
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "shingle"
 
