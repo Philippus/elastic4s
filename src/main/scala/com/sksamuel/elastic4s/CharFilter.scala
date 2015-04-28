@@ -13,14 +13,14 @@ trait AnalyzerFilterDefinition {
 
 sealed trait CharFilter extends AnalyzerFilter
 
-sealed trait CharFilterDefinition extends CharFilter with AnalyzerFilterDefinition
+trait CharFilterDefinition extends CharFilter with AnalyzerFilterDefinition
 
 case object HtmlStripCharFilter extends CharFilter {
   val name = "html_strip"
 }
 
 case class MappingCharFilter(name: String, mappings: (String, String)*)
-    extends CharFilterDefinition {
+  extends CharFilterDefinition {
 
   val filterType = "mapping"
 
@@ -30,7 +30,7 @@ case class MappingCharFilter(name: String, mappings: (String, String)*)
 }
 
 case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)
-    extends CharFilterDefinition {
+  extends CharFilterDefinition {
 
   val filterType = "pattern_replace"
 

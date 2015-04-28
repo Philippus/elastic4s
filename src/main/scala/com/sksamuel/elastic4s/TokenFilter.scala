@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-trait TokenFilter extends AnalyzerFilter
+sealed trait TokenFilter extends AnalyzerFilter
 
-sealed trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
+trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
 
 case object ReverseTokenFilter extends TokenFilter {
   val name = "reverse"
