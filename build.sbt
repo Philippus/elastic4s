@@ -6,7 +6,7 @@ name := "elastic4s"
 
 organization := "com.sksamuel.elastic4s"
 
-version := "1.5.5"
+version := "1.5.6"
 
 scalaVersion := "2.11.6"
 
@@ -34,7 +34,7 @@ parallelExecution in Test := false
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
 
 libraryDependencies ++= Seq(
-  "org.elasticsearch"              %  "elasticsearch"               % "1.5.1",
+  "org.elasticsearch"              %  "elasticsearch"               % "1.5.2",
   "org.slf4j"                      %  "slf4j-api"                   % "1.7.7",
   "com.fasterxml.jackson.core"     %  "jackson-core"                % "2.4.4"  % "optional" ,
   "com.fasterxml.jackson.core"     %  "jackson-databind"            % "2.4.4"  % "optional" ,
