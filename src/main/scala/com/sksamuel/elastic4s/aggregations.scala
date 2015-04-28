@@ -11,7 +11,6 @@ import org.elasticsearch.search.aggregations.bucket.nested.NestedBuilder
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
-import org.elasticsearch.search.aggregations.bucket.range.ipv4.IPv4RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{ Terms, TermsBuilder }

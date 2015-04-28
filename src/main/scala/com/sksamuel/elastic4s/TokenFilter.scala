@@ -378,27 +378,3 @@ case class ShingleTokenFilter(name: String,
   def tokenSeperator(sep: String): ShingleTokenFilter = copy(token_separator = sep)
   def fillerToken(filler: String): ShingleTokenFilter = copy(filler_token = filler)
 }
-
-object NGramTokenFilterExpectsName {
-  def name(name: String) = NGramTokenFilter(name)
-}
-
-object EdgeNGramTokenFilterExpectsName {
-  def name(name: String) = EdgeNGramTokenFilter(name)
-}
-
-object ShingleTokenFilterExpectsName {
-  def name(name: String) = ShingleTokenFilter(name)
-}
-
-object CommonGramsTokenFilterExpectsName {
-  def name(name: String) = CommonGramsTokenFilter(name)
-}
-
-object StemmerTokenFilterExpectsName {
-  def name(name: String) = StemmerTokenFilter(name)
-}
-
-object SnowballTokenFilterExpectsName {
-  def name(name: String) = SnowballTokenFilter(name)
-}

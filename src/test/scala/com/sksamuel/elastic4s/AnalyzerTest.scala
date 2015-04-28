@@ -30,36 +30,36 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
       CustomAnalyzerDefinition("my_ngram",
         StandardTokenizer,
-        lowercase token filter,
-        ngram token filter name "my_ngram_filter" minGram 2 maxGram 5),
+        LowercaseTokenFilter,
+        ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
       CustomAnalyzerDefinition("edgengram",
         StandardTokenizer,
-        lowercase token filter,
-        edgeNGram token filter name "edgengram_filter" minGram 2 maxGram 6 side "back"),
+        LowercaseTokenFilter,
+        edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
       CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
       CustomAnalyzerDefinition(
         "shingle",
         WhitespaceTokenizer,
-        lowercase token filter,
-        shingle token filter name "filter_shingle" maxShingleSize 3 outputUnigrams true
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams true
       ),
       CustomAnalyzerDefinition(
         "shingle2",
         WhitespaceTokenizer,
-        lowercase token filter,
-        shingle token filter name "filter_shingle2" maxShingleSize 2
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle2" maxShingleSize 2
       ),
       CustomAnalyzerDefinition(
         "shingle3",
         WhitespaceTokenizer,
-        lowercase token filter,
-        shingle token filter name "filter_shingle3" outputUnigramsIfNoShingles true
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
       ),
       CustomAnalyzerDefinition(
         "shingle4",
         WhitespaceTokenizer,
-        lowercase token filter,
-        shingle token filter name "filter_shingle4" tokenSeperator "#"
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle4" tokenSeperator "#"
       )
       )
   }.await

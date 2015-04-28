@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
-import org.elasticsearch.common.xcontent.XContentBuilder
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -11,7 +10,6 @@ import scala.concurrent.{Await, Future}
 trait ElasticDsl
   extends IndexDsl
   with AliasesDsl
-  with AnalyzerDsl
   with BulkDsl
   with ClusterDsl
   with CountDsl
@@ -84,10 +82,6 @@ trait ElasticDsl
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 
-  case object asciiFolding {
-    def token(stub: FilterKeyword) = AsciiFoldingTokenFilter
-  }
-
   case object by {
 
     def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefix(tuple._1, tuple._2)
@@ -111,7 +105,7 @@ trait ElasticDsl
   }
 
   case object commonGrams {
-    def token(stub: FilterKeyword) = CommonGramsTokenFilterExpectsName
+    def tokenfilter(name: String) = CommonGramsTokenFilter(name)
   }
 
   case object count {
@@ -232,14 +226,6 @@ trait ElasticDsl
     def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
   }
 
-  case object kstem {
-    def token(stub: FilterKeyword) = KStemTokenFilter
-  }
-
-  case object lowercase {
-    def token(stub: FilterKeyword) = LowercaseTokenFilter
-  }
-
   case object mapping {
     def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
@@ -256,11 +242,11 @@ trait ElasticDsl
   }
 
   case object ngram {
-    def token(stub: FilterKeyword) = NGramTokenFilterExpectsName
+    def tokenfilter(name: String) = NGramTokenFilter(name)
   }
 
   case object edgeNGram {
-    def token(stub: FilterKeyword) = EdgeNGramTokenFilterExpectsName
+    def tokenfilter(name: String) = EdgeNGramTokenFilter(name)
   }
 
   case object open {
@@ -319,10 +305,6 @@ trait ElasticDsl
     }
   }
 
-  case object reverse {
-    def token(stub: FilterKeyword) = ReverseTokenFilter
-  }
-
   case object script {
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
@@ -338,7 +320,7 @@ trait ElasticDsl
   }
 
   case object shingle {
-    def token(stub: FilterKeyword) = ShingleTokenFilterExpectsName
+    def tokenfilter(name: String) = ShingleTokenFilter(name)
   }
 
   case object snapshot {
@@ -351,15 +333,11 @@ trait ElasticDsl
   }
 
   case object snowball {
-    def token(stub: FilterKeyword) = SnowballTokenFilterExpectsName
-  }
-
-  case object standard {
-    def token(stub: FilterKeyword) = StandardTokenFilter
+    def tokenfilter(name: String) = SnowballTokenFilter(name)
   }
 
   case object stemmer {
-    def token(stub: FilterKeyword) = StemmerTokenFilterExpectsName
+    def tokenfilter(name: String) = StemmerTokenFilter(name)
   }
 
   case object template {
@@ -369,10 +347,6 @@ trait ElasticDsl
     def delete(name: String) = new DeleteIndexTemplateDefinition(name)
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
-  }
-
-  case object trim {
-    def token(stub: FilterKeyword) = TrimTokenFilter
   }
 
   case object types {
@@ -390,10 +364,6 @@ trait ElasticDsl
     def settings(index: String) = new UpdateSettingsDefinition(index)
   }
 
-  case object unique {
-    def token(stub: FilterKeyword) = UniqueTokenFilter
-  }
-
   case object validate {
     def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)
     def in(value: String): ValidateDefinition = {
@@ -403,9 +373,6 @@ trait ElasticDsl
     def in(value: Seq[String]): ValidateDefinition = in((value.head, value(1)))
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
-
-  trait FilterKeyword
-  case object filter extends FilterKeyword
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)

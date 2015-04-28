@@ -2,12 +2,6 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-trait AnalyzerDsl {
-
-}
-
-
-
 trait AnalyzerFilter {
   def name: String
 }

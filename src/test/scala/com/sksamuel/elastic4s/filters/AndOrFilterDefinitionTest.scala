@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.filter
+package com.sksamuel.elastic4s.filters
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.ElasticSugar
