@@ -18,5 +18,12 @@ trait ClusterDsl {
 }
 
 class ClusterHealthDefinition(indices: String*) {
-  def build = new ClusterHealthRequest(indices: _*)
+  val _builder = new ClusterHealthRequest(indices: _*)
+
+  def build = _builder
+
+  def timeout(value: String): this.type = {
+    _builder.timeout(value)
+    this
+  }
 }
