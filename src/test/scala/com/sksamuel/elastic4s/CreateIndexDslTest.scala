@@ -2,10 +2,12 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.mappings.{ DynamicMapping, Strict, PrefixTree }
+import com.sksamuel.elastic4s.mappings.{ DynamicMapping, PrefixTree }
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
+
 import scala.concurrent.duration._
+import scala.io.Source
 
 /** @author Stephen Samuel */
 class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
@@ -271,4 +273,13 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     req._source.string should matchJsonResource("/json/createindex/createindex_timestamp_3.json")
   }
 
+  it should "accept pre-built mapping JSON" in {
+    val source = Source.fromInputStream(getClass.getResourceAsStream("/json/createindex/createindex_mappings.json")).mkString
+
+    val req = create.index("tweets").source(source).build
+
+    req.mappings().size() should equal(2)
+    req.mappings().containsKey("tweets") === true
+    req.mappings().containsKey("users") === true
+  }
 }
