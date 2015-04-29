@@ -79,7 +79,7 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     "include honor disabled timestamp" in {
       val req = create.index("docsAndTags").mappings(
         mapping name "foo" timestamp {
-          timestamp enabled false
+          timestamp(false)
         }
       )
       req._source.string should matchJsonResource("/json/mappings/timestamp_disabled.json")

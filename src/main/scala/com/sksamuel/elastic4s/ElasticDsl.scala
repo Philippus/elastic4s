@@ -353,6 +353,8 @@ trait ElasticDsl
     def enabled(en: Boolean) = TimestampDefinition(en)
   }
 
+  def timestamp(en: Boolean) = TimestampDefinition(en)
+
   case object types {
     def exist(types: String*) = new TypesExistExpectsIn(types)
     class TypesExistExpectsIn(types: Seq[String]) {
