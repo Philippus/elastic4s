@@ -52,7 +52,10 @@ class CreateIndexDefinition(name: String) {
   val _settings = new IndexSettings
   var _analysis: Option[AnalysisDefinition] = None
 
-  def build = new CreateIndexRequest(name).source(_source)
+  def build = _rawSource match {
+    case Some(s) => new CreateIndexRequest(name).source(s)
+    case None => new CreateIndexRequest(name).source(_source)
+  }
 
   def shards(shards: Int): CreateIndexDefinition = {
     _settings.shards = shards
@@ -87,7 +90,14 @@ class CreateIndexDefinition(name: String) {
 
   def analysis(analyzers: AnalyzerDefinition*): this.type = analysis(analyzers)
 
-  def _source: XContentBuilder = {
+  var _rawSource: Option[String] = None
+
+  def source(source: String): CreateIndexDefinition = {
+    _rawSource = Some(source)
+    this
+  }
+
+  private[elastic4s] def _source: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
 
     if (_settings.settings.nonEmpty || _analysis.nonEmpty) {
