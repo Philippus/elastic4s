@@ -4,37 +4,37 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexAdminDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with SettingsDsl
-    with ScoreDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexAdminDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -185,7 +185,8 @@ trait ElasticDsl
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
-    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(snapshotNames.toSeq)
+    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new
+        GetSnapshotsExpectsFrom(snapshotNames.toSeq)
     def snapshot(snapshotNames: String*): GetSnapshotsExpectsFrom = snapshot(snapshotNames)
 
   }
@@ -346,6 +347,10 @@ trait ElasticDsl
     def delete(name: String) = new DeleteIndexTemplateDefinition(name)
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
+  }
+
+  case object timestamp {
+    def enabled(en: Boolean) = TimestampDefinition(en)
   }
 
   case object types {

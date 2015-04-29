@@ -1,0 +1,10 @@
+{
+  "mappings": {
+    "foo": {
+      "_timestamp": {
+        "enabled": true,
+        "format": "qwerty"
+      }
+    }
+  }
+}

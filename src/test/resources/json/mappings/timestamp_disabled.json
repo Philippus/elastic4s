@@ -1,0 +1,9 @@
+{
+  "mappings": {
+    "foo": {
+      "_timestamp": {
+        "enabled": false
+      }
+    }
+  }
+}
