@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-sealed trait TokenFilter extends AnalyzerFilter
+trait TokenFilter extends AnalyzerFilter
 
 trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
 
