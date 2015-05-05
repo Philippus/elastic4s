@@ -11,7 +11,7 @@ trait AnalyzerFilterDefinition {
   protected[elastic4s] def build(source: XContentBuilder): Unit
 }
 
-sealed trait CharFilter extends AnalyzerFilter
+trait CharFilter extends AnalyzerFilter
 
 trait CharFilterDefinition extends CharFilter with AnalyzerFilterDefinition
 
