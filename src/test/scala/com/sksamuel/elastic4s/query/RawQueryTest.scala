@@ -18,11 +18,12 @@ class RawQueryTest extends WordSpec with ElasticSugar with Matchers {
 
   "raw query" should {
     "work!" in {
-      client.execute {
+      val hits = client.execute {
         search in "*" types("rawquerytest", "paris") limit 5 rawQuery {
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }
-      }.await.getHits.totalHits shouldBe 1
+      }.await.getHits.totalHits
+      assert(hits === 1)
     }
   }
 }
