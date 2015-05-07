@@ -6,9 +6,9 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.index.query.support.QueryInnerHitBuilder
-import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder
 import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
+import scala.language.implicitConversions
 import scala.util.{ Right, Left }
 
 /** @author Stephen Samuel */
