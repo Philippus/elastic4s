@@ -30,6 +30,7 @@ trait ElasticDsl
     with SearchDsl
     with SettingsDsl
     with ScoreDsl
+    with ScrollDsl
     with SnapshotDsl
     with TemplateDsl
     with UpdateDsl
