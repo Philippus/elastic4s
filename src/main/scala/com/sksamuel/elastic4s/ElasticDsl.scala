@@ -72,6 +72,7 @@ trait ElasticDsl
     def min(name: String) = new MinAggregationDefinition(name)
     def missing(name: String) = new MissingAggregationDefinition(name)
     def nested(name: String) = new NestedAggregationDefinition(name)
+    def reverseNested(name: String) = new ReverseNestedAggregationDefinition(name)
     def percentiles(name: String) = new PercentilesAggregationDefinition(name)
     def percentileranks(name: String) = new PercentileRanksAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
