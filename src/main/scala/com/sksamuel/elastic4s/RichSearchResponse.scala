@@ -1,21 +1,23 @@
 package com.sksamuel.elastic4s
 
 import org.apache.lucene.search.Explanation
-import org.elasticsearch.action.search.{ SearchResponse, ShardSearchFailure }
+import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.facet.Facets
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.suggest.Suggest
-import org.elasticsearch.search.{ SearchHit, SearchHitField, SearchHits, SearchShardTarget }
+import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 
 import scala.concurrent.duration._
+import scala.reflect.ClassTag
 
 class RichSearchResponse(resp: SearchResponse) {
 
   def totalHits: Long = resp.getHits.getTotalHits
   def maxScore: Float = resp.getHits.getMaxScore
   def hits: Array[RichSearchHit] = resp.getHits.getHits.map(new RichSearchHit(_))
+  def hitsAs[T](implicit reader: Reader[T], classTag: ClassTag[T]): Array[T] = hits.map(_.mapTo[T])
 
   def scrollId: String = resp.getScrollId
 
@@ -50,7 +52,7 @@ class RichSearchHit(hit: SearchHit) {
   def isSourceEmpty: Boolean = hit.isSourceEmpty
   def sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
   def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
-  def mapTo[T](implicit manifest: Manifest[T], reader: Reader[T]): T = reader.read(sourceAsString)
+  def mapTo[T](implicit reader: Reader[T]): T = reader.read(sourceAsString)
 
   def explanation: Option[Explanation] = Option(hit.explanation)
 
