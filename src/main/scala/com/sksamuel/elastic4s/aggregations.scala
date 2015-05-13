@@ -7,7 +7,7 @@ import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuil
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{ DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder }
 import org.elasticsearch.search.aggregations.bucket.missing.MissingBuilder
-import org.elasticsearch.search.aggregations.bucket.nested.NestedBuilder
+import org.elasticsearch.search.aggregations.bucket.nested.{ ReverseNestedBuilder, NestedBuilder }
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
@@ -656,6 +656,16 @@ class NestedAggregationDefinition(name: String)
   val aggregationBuilder = AggregationBuilders.nested(name)
 
   def path(path: String): NestedAggregationDefinition = {
+    builder.path(path)
+    this
+  }
+}
+
+class ReverseNestedAggregationDefinition(name: String)
+    extends AggregationDefinition[ReverseNestedAggregationDefinition, ReverseNestedBuilder] {
+  val aggregationBuilder = AggregationBuilders.reverseNested(name)
+
+  def path(path: String): ReverseNestedAggregationDefinition = {
     builder.path(path)
     this
   }
