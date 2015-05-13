@@ -17,7 +17,7 @@ class RichSearchResponse(resp: SearchResponse) {
   def scrollId: String = resp.getScrollId
   def totalShards: Int = resp.getTotalShards
   def successfulShards: Int = resp.getSuccessfulShards
-  def shardFailures: Array[ShardSearchFailure] = resp.getShardFailures
+  def shardFailures: Array[ShardSearchFailure] = Option(resp.getShardFailures).getOrElse(Array.empty)
   def tookInMillis: Long = resp.getTookInMillis
   def took: Duration = resp.getTookInMillis.millis
 }
@@ -26,10 +26,10 @@ class RichSearchHit(hit: SearchHit) {
 
   import scala.collection.JavaConverters._
 
-  def score: Float = hit.score
-  def index: String = hit.index
   def id: String = hit.id
+  def index: String = hit.index
   def `type`: String = hit.`type`()
+  def score: Float = hit.score
   def nestedIdentity: SearchHit.NestedIdentity = hit.getNestedIdentity
   def version: Long = hit.version()
   def shard: SearchShardTarget = hit.shard
