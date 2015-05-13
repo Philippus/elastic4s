@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s
 
 import org.apache.lucene.search.Explanation
-import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
+import org.elasticsearch.action.search.{ SearchResponse, ShardSearchFailure }
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.facet.Facets
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.suggest.Suggest
-import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
+import org.elasticsearch.search.{ SearchHit, SearchHitField, SearchHits, SearchShardTarget }
 
 import scala.concurrent.duration._
 
@@ -28,7 +28,7 @@ class RichSearchResponse(resp: SearchResponse) {
 
   def facets: Facets = resp.getFacets
   def aggregations: Aggregations = resp.getAggregations
-  def suggest: Suggest =resp.getSuggest
+  def suggest: Suggest = resp.getSuggest
   def isTimedOut: Boolean = resp.isTimedOut
   def isTerminatedEarly: Boolean = resp.isTerminatedEarly
 }
