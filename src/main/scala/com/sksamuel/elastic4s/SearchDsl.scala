@@ -9,6 +9,7 @@ import org.elasticsearch.search.sort.SortBuilder
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait SearchDsl
@@ -19,6 +20,8 @@ trait SearchDsl
     with ScriptFieldDsl
     with SuggestionDsl
     with IndexesTypesDsl {
+
+  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
 
   def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
