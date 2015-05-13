@@ -4,7 +4,6 @@ import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.elasticsearch.common.xcontent.XContentFactory
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ Matchers, WordSpec }
 
