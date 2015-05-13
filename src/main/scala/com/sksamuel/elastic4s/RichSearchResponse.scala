@@ -3,7 +3,10 @@ package com.sksamuel.elastic4s
 import org.apache.lucene.search.Explanation
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.bytes.BytesReference
+import org.elasticsearch.search.aggregations.Aggregations
+import org.elasticsearch.search.facet.Facets
 import org.elasticsearch.search.highlight.HighlightField
+import org.elasticsearch.search.suggest.Suggest
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 
 import scala.concurrent.duration._
@@ -15,11 +18,19 @@ class RichSearchResponse(resp: SearchResponse) {
   def hits: Array[RichSearchHit] = resp.getHits.getHits.map(new RichSearchHit(_))
 
   def scrollId: String = resp.getScrollId
+
   def totalShards: Int = resp.getTotalShards
   def successfulShards: Int = resp.getSuccessfulShards
   def shardFailures: Array[ShardSearchFailure] = Option(resp.getShardFailures).getOrElse(Array.empty)
+
   def tookInMillis: Long = resp.getTookInMillis
   def took: Duration = resp.getTookInMillis.millis
+
+  def facets: Facets = resp.getFacets
+  def aggregations: Aggregations = resp.getAggregations
+  def suggest: Suggest =resp.getSuggest
+  def isTimedOut: Boolean = resp.isTimedOut
+  def isTerminatedEarly: Boolean = resp.isTerminatedEarly
 }
 
 class RichSearchHit(hit: SearchHit) {
