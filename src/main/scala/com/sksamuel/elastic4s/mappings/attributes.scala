@@ -299,17 +299,17 @@ object attributes {
     }
   }
 
-  trait AttributeDocValuesFormat extends Attribute { self: TypedFieldDefinition =>
+  trait AttributeDocValues extends Attribute { self: TypedFieldDefinition =>
 
-    private[this] var _docValuesFormat: Option[DocValuesFormat] = None
+    private[this] var _docValues: Option[Boolean] = None
 
-    def docValuesFormat(docValuesFormat: DocValuesFormat): this.type = {
-      _docValuesFormat = Some(docValuesFormat)
+    def docValuesFormat(b: Boolean): this.type = {
+      _docValues = Some(b)
       this
     }
 
     protected override def insert(source: XContentBuilder): Unit = {
-      _docValuesFormat.foreach(arg => source.field("doc_values_format", arg.value))
+      _docValues.foreach(source.field("doc_values", _))
     }
   }
 

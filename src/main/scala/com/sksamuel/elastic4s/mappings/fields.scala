@@ -170,7 +170,7 @@ final class StringFieldDefinition(name: String)
     with AttributeIgnoreAbove
     with AttributePositionOffsetGap
     with AttributePostingsFormat
-    with AttributeDocValuesFormat
+    with AttributeDocValues
     with AttributeSimilarity
     with AttributeCopyTo
     with AttributeFields {
@@ -182,7 +182,7 @@ final class StringFieldDefinition(name: String)
     insertType(source)
     super[AttributeAnalyzer].insert(source)
     super[AttributeBoost].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeDocValues].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIndex].insert(source)
     super[AttributeIndexAnalyzer].insert(source)
@@ -216,7 +216,7 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
     with AttributePostingsFormat
     with AttributePrecisionStep
     with AttributeStore
-    with AttributeDocValuesFormat
+    with AttributeDocValues
     with AttributeCopyTo
     with AttributeFields {
 
@@ -226,7 +226,7 @@ abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
 
     insertType(source)
     super[AttributeBoost].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeDocValues].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIndex].insert(source)
     super[AttributeIndexName].insert(source)
@@ -262,7 +262,7 @@ final class DateFieldDefinition(name: String)
     with AttributePostingsFormat
     with AttributePrecisionStep
     with AttributeStore
-    with AttributeDocValuesFormat
+    with AttributeDocValues
     with AttributeCopyTo
     with AttributeFields {
 
@@ -272,7 +272,7 @@ final class DateFieldDefinition(name: String)
 
     insertType(source)
     super[AttributeBoost].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeDocValues].insert(source)
     super[AttributeFormat].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIndex].insert(source)
@@ -299,7 +299,7 @@ final class BooleanFieldDefinition(name: String)
     with AttributeNullValue[Boolean]
     with AttributeIncludeInAll
     with AttributePostingsFormat
-    with AttributeDocValuesFormat
+    with AttributeDocValues
     with AttributeCopyTo
     with AttributeFields {
 
@@ -309,7 +309,7 @@ final class BooleanFieldDefinition(name: String)
 
     insertType(source)
     super[AttributeBoost].insert(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeDocValues].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIndex].insert(source)
     super[AttributeIndexName].insert(source)
@@ -328,14 +328,14 @@ final class BinaryFieldDefinition(name: String)
     extends TypedFieldDefinition(BinaryType, name)
     with AttributeIndexName
     with AttributePostingsFormat
-    with AttributeDocValuesFormat {
+    with AttributeDocValues {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
       source.startObject(name)
 
     insertType(source)
-    super[AttributeDocValuesFormat].insert(source)
+    super[AttributeDocValues].insert(source)
     super[AttributeIndexName].insert(source)
     super[AttributePostingsFormat].insert(source)
 
