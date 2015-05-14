@@ -66,7 +66,7 @@ search in "places"->"cities" query "europe" sort (
 
 #### Aggregations
 
-[Aggregations](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) are the new [facets[(http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html). The basic way of doing aggregations in elastic4s is this:
+[Aggregations](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) are the new [facets](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html). The basic way of doing aggregations in elastic4s is this:
 
 ```scala
 client.execute {
