@@ -64,6 +64,20 @@ search in "places"->"cities" query "europe" sort (
 )
 ```
 
+#### Aggregations
+
+[http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html](Aggregations) are the new [http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html](facets). The basic way of doing aggregations in elastic4s is this:
+
+```scala
+client.execute {
+  search in "index" / "type" query <somequery> aggregations(
+    aggregation terms "agg1" field "field1" size 20,
+    aggregation avg "agg2" field "field2"
+}
+```
+
+That would create two aggregations, one for the number of terms up to the 20 most common values in "field1", and one for the avg of the values in "field2"
+
 #### Source Filtering
 
 We can control which parts of the source are returned to us using source filtering. Let's carry on our places/cities 
@@ -72,7 +86,7 @@ gps coordinates. We can specify which ones are included / excludes by using the 
 methods. This is useful functionality to trim down large documents from being sent over the wire.
 
 ```scala
-val resp1 = client.sync.execute {
+client.execute {
   search in "places/cities" query "europe" sourceInclude("gps", "populat*") sourceExclude("denonymn", "capit*")
 }
 ```
