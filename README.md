@@ -27,7 +27,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.5.9|1.5.X|
+|1.5.10|1.5.X|
 |1.4.13|1.4.x|
 |1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
@@ -476,13 +476,13 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 For gradle users, add:
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s_2.11:1.5.9'
+compile 'com.sksamuel.elastic4s:elastic4s_2.11:1.5.10'
 ```
 
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.5.9"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s" % "1.5.10"
 ```
 
 For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
@@ -491,7 +491,7 @@ For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s_2.11</artifactId>
-    <version>1.5.9</version>
+    <version>1.5.10</version>
 </dependency>
 ```
 
