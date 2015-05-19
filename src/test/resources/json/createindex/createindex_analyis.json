@@ -8,7 +8,7 @@
                         "stop1",
                         "stop2"
                     ],
-                    "max_token_length": 0
+                    "max_token_length": 255
                 },
                 "myAnalyzer1": {
                     "type": "standard",
