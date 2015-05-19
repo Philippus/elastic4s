@@ -63,7 +63,7 @@ case class StopAnalyzerDefinition(override val name: String,
 
 case class StandardAnalyzerDefinition(override val name: String,
                                       stopwords: Iterable[String] = Nil,
-                                      maxTokenLength: Int = 0) extends AnalyzerDefinition(name) {
+                                      maxTokenLength: Int = 255) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
     source.field("stopwords", stopwords.toArray[String]: _*)
