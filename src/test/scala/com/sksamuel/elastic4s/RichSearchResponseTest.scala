@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 class RichSearchResponseTest extends WordSpec with Matchers with ElasticSugar with JsonSugar {
 

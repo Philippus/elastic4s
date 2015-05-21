@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
-import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequest, ClusterHealthResponse}
+import org.elasticsearch.action.admin.cluster.health.{ ClusterHealthRequest, ClusterHealthResponse }
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsResponse
 import org.elasticsearch.client.Client
 
@@ -15,7 +15,7 @@ trait ClusterDsl {
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
   implicit object ClusterHealthDefinitionExecutable
-    extends Executable[ClusterHealthDefinition, ClusterHealthResponse] {
+      extends Executable[ClusterHealthDefinition, ClusterHealthResponse] {
     override def apply(c: Client, t: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
       injectFuture(c.admin.cluster.health(t.build, _))
     }
