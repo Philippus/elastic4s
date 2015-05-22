@@ -80,7 +80,11 @@ object Build extends Build {
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     .settings(rootSettings: _*)
     .settings(
-      name := "elastic4s"
+      name := "elastic4s",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
+      libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % JacksonVersion % "test"
     )
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
@@ -97,5 +101,4 @@ object Build extends Build {
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
       libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % JacksonVersion
     ).dependsOn(core)
-
 }

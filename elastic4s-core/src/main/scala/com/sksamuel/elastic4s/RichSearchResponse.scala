@@ -69,6 +69,3 @@ class RichSearchHit(hit: SearchHit) {
   def innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 
-trait Reader[T] {
-  def read(source: String): T
-}

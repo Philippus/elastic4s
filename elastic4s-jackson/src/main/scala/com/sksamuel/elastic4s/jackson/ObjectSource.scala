@@ -1,7 +1,8 @@
-package com.sksamuel.elastic4s.source
+package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.sksamuel.elastic4s.source.DocumentSource
 
 /** @author Stephen Samuel */
 class ObjectSource(any: Any) extends DocumentSource {

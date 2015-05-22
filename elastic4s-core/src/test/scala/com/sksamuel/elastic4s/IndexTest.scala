@@ -1,42 +1,16 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.source.{ Indexable, JacksonSource, ObjectSource }
+import com.sksamuel.elastic4s.source.Indexable
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers }
 
 /** @author Stephen Samuel */
 class IndexTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
-  val mapper = new ObjectMapper()
-
   client.execute {
     create.index("electronics").mappings("phone" ttl true)
   }.await
-
-  "an index request" should "index from jackson source when used" in {
-    val json = mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
-    client.execute {
-      index into "electronics/phone" doc JacksonSource(json)
-    }
-    blockUntilCount(1, "electronics")
-  }
-
-  it should "index from object source when used" in {
-
-    case class Phone(name: String, brand: String)
-    val iPhone = new Phone("iPhone", "apple")
-    val one = new Phone("One", "HTC")
-
-    client.execute(
-      bulk(
-        index into "electronics/phone" doc ObjectSource(iPhone),
-        index into "electronics/phone" doc ObjectSource(one)
-      )
-    )
-    blockUntilCount(3, "electronics")
-  }
 
   it should "index numbers" in {
     client.execute {
