@@ -20,7 +20,6 @@ class RichSearchResponseTest extends WordSpec with Matchers with ElasticSugar wi
 
   implicit object KillerReader extends Reader[Killer] {
     override def read[T <: Killer : Manifest](json: String): T = mapper.readValue[T](json)
-
   }
 
   "rich response" should {

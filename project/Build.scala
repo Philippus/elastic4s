@@ -100,5 +100,5 @@ object Build extends Build {
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
-    ).dependsOn(core)
+    ).dependsOn(core, testkit % "test")
 }

@@ -1,37 +1,38 @@
 package com.sksamuel.elastic4s.jackson
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.ElasticSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{WordSpec, FlatSpec, Matchers}
 
 /** @author Stephen Samuel */
-class JacksonSourceTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
+class JacksonSourceTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    create.index("electronics").mappings("phone" ttl true)
+    create.index("jacksonsource").mappings("phone" ttl true)
   }.await
 
-  "an index request" should "index from jackson source when used" in {
-    val json = JacksonJson.mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
-    client.execute {
-      index into "electronics/phone" doc JacksonSource(json)
+  "an index request" should {
+    "index from jackson source when used" in {
+      val json = JacksonJson.mapper.readTree(getClass.getResourceAsStream("/json/samsung.json"))
+      client.execute {
+        index into "jacksonsource/phone" doc JacksonSource(json)
+      }
+      blockUntilCount(1, "jacksonsource")
     }
-    blockUntilCount(1, "electronics")
-  }
+    "index from object source when used" in {
 
-  it should "index from object source when used" in {
+      case class Phone(name: String, brand: String)
+      val iPhone = new Phone("iPhone", "apple")
+      val one = new Phone("One", "HTC")
 
-    case class Phone(name: String, brand: String)
-    val iPhone = new Phone("iPhone", "apple")
-    val one = new Phone("One", "HTC")
-
-    client.execute(
-      bulk(
-        index into "electronics/phone" doc ObjectSource(iPhone),
-        index into "electronics/phone" doc ObjectSource(one)
+      client.execute(
+        bulk(
+          index into "jacksonsource/phone" doc ObjectSource(iPhone),
+          index into "jacksonsource/phone" doc ObjectSource(one)
+        )
       )
-    )
-    blockUntilCount(3, "electronics")
+      blockUntilCount(3, "jacksonsource")
+    }
   }
 }

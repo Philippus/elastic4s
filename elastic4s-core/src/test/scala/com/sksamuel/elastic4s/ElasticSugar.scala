@@ -34,7 +34,7 @@ object TestElasticNode extends Logging {
   implicit val client = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar extends BeforeAndAfterAll with Logging {
+trait ElasticSugar extends  Logging {
 
   this: Suite =>
 
@@ -53,7 +53,7 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
     var backoff = 0
     var done = false
 
-    while (backoff <= 500 && !done) {
+    while (backoff <= 16 && !done) {
       if (backoff > 0) Thread.sleep(1000)
       backoff = backoff + 1
       try {
