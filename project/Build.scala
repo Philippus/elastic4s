@@ -26,14 +26,16 @@ object Build extends Build {
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
-      "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "commons-io" % "commons-io" % "2.4" % "test",
-      "log4j" % "log4j" % "1.2.17" % "test",
-      "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
-      "org.codehaus.groovy" % "groovy" % "2.3.7" % "test"
+      "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
+      "org.slf4j"                     %  "slf4j-api"            % Slf4jVersion,
+      "com.typesafe.scala-logging"    %% "scala-logging-api"    % ScalaLoggingVersion,
+      "com.typesafe.scala-logging"    %% "scala-logging-slf4j"  % ScalaLoggingVersion,
+      "commons-io"                    %  "commons-io"           % "2.4"   % "test",
+      "log4j"                         %  "log4j"                % "1.2.17" % "test",
+      "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion % "test",
+      "org.mockito"                   %  "mockito-all"          % MockitoVersion % "test",
+      "org.scalatest"                 %% "scalatest"            % ScalatestVersion % "test",
+      "org.codehaus.groovy"           %  "groovy"               % "2.3.7" % "test"
 
     ),
     publishTo <<= version {
@@ -83,8 +85,7 @@ object Build extends Build {
       name := "elastic4s",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % JacksonVersion % "test"
+      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
     )
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
@@ -98,7 +99,6 @@ object Build extends Build {
       name := "elastic4s-jackson",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
-      libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % JacksonVersion
+      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
     ).dependsOn(core)
 }

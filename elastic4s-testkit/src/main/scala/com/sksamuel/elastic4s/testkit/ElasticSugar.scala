@@ -1,22 +1,24 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.testkit
 
 import java.io.File
 import java.util.UUID
 
+import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.typesafe.scalalogging.slf4j.StrictLogging
 import org.elasticsearch.common.settings.ImmutableSettings
-import org.scalatest.{ BeforeAndAfterAll, Suite }
 
 /** @author Stephen Samuel */
 
-object TestElasticNode extends Logging {
+object TestElasticNode extends StrictLogging {
 
   val tempFile = File.createTempFile("elasticsearchtests", "tmp")
   val homeDir = new File(tempFile.getParent + "/" + UUID.randomUUID().toString)
+  logger.info(s"Elasticsearch test-server located at $homeDir")
+
   homeDir.mkdir()
   homeDir.deleteOnExit()
   tempFile.deleteOnExit()
-  logger.info("Setting ES home dir [{}]", homeDir)
 
   val settings = ImmutableSettings.settingsBuilder()
     .put("node.http.enabled", false)
@@ -31,12 +33,10 @@ object TestElasticNode extends Logging {
     //.put("index.store.throttle.max_bytes_per_sec", "500mb")
     .put("es.logger.level", "INFO")
 
-  implicit val client = ElasticClient.local(settings.build)
+  implicit lazy val client = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar extends BeforeAndAfterAll with Logging {
-
-  this: Suite =>
+trait ElasticSugar extends StrictLogging {
 
   val client = TestElasticNode.client
 
@@ -45,32 +45,44 @@ trait ElasticSugar extends BeforeAndAfterAll with Logging {
       case 0 => Seq("_all")
       case _ => indexes
     }
-    val listener = client.client.admin().indices().prepareRefresh(i: _*).execute()
-    listener.actionGet()
+    client.execute {
+      ElasticDsl.refresh index indexes
+    }
   }
 
-  def blockUntil(explain: String)(predicate: () ⇒ Boolean): Unit = {
+  def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
+
     var backoff = 0
     var done = false
 
-    while (backoff <= 500 && !done) {
-      if (backoff > 0) Thread.sleep(1000)
+    while (backoff <= 16 && !done) {
+      if (backoff > 0) Thread.sleep(200 * backoff)
       backoff = backoff + 1
       try {
         done = predicate()
       } catch {
-        case e: Throwable ⇒ logger.warn("problem while testing predicate", e)
+        case e: Throwable => logger.warn("problem while testing predicate", e)
       }
     }
 
     require(done, s"Failed waiting on: $explain")
   }
 
-  def blockUntilCount(expected: Long, index: String, types: String*): Unit =
-    blockUntil(s"Expected count of $expected") { () ⇒
+  def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
       val actual = client.execute {
         count from index types types
       }.await.getCount
       expected <= actual
     }
+  }
+
+  def blockUntilEmpty(index: String): Unit = {
+    blockUntil(s"Expected empty index $index") { () =>
+      val actual = client.execute {
+        count from index
+      }.await.getCount
+      actual == 0
+    }
+  }
 }
