@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.client.{ Client, Requests }
+import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.search.Scroll
 
 import scala.concurrent.Future
@@ -11,7 +11,8 @@ trait MoreLikeThisDsl {
 
   class MltExpectsIndex(id: String) {
 
-    def in(indexType: IndexType): MoreLikeThisDefinition = new MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
+    def in(indexType: IndexType): MoreLikeThisDefinition = new
+        MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
 
     def in(in: String): MoreLikeThisDefinition = in.split("/").toList match {
       case indx :: Nil => new MoreLikeThisDefinition(indx, null, id)
@@ -21,7 +22,7 @@ trait MoreLikeThisDsl {
   }
 
   implicit object MoreLikeThisDefinitionExecutable
-      extends Executable[MoreLikeThisDefinition, SearchResponse] {
+    extends Executable[MoreLikeThisDefinition, SearchResponse] {
     override def apply(c: Client, t: MoreLikeThisDefinition): Future[SearchResponse] = {
       injectFuture(c.moreLikeThis(t.build, _))
     }
@@ -38,19 +39,29 @@ class MoreLikeThisDefinition(index: String, `type`: String, id: String) {
     _builder.boostTerms(boostTerms.toFloat)
     this
   }
+
   def fields(_fields: String*): this.type = fields(_fields)
+
   def fields(_fields: Iterable[String]): this.type = {
     _builder.fields(_fields.toSeq: _*)
     this
   }
+
+  def filter(query: FilterDefinition): this.type = {
+    _builder.searchSource(query.builder.buildAsBytes.array)
+    this
+  }
+
   def from(i: Int): this.type = {
     _builder.searchFrom(i)
     this
   }
+
   def include(include: Boolean): this.type = {
     _builder.include(include)
     this
   }
+
   def limit(sizeHint: Int): this.type = size(sizeHint)
   def minTermFreq(freq: Int): this.type = {
     _builder.minTermFreq(freq)
