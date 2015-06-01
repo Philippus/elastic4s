@@ -4,38 +4,38 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 
 /** @author Stephen Samuel */
 trait ElasticDsl
-    extends IndexDsl
-    with AliasesDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FacetDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexAdminDsl
-    with IndexRecoveryDsl
-    with IndexStatusDsl
-    with MappingDsl
-    with MoreLikeThisDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with SearchDsl
-    with SettingsDsl
-    with ScoreDsl
-    with ScrollDsl
-    with SnapshotDsl
-    with TemplateDsl
-    with UpdateDsl
-    with ValidateDsl
-    with ElasticImplicits {
+  extends IndexDsl
+  with AliasesDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FacetDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexAdminDsl
+  with IndexRecoveryDsl
+  with IndexStatusDsl
+  with MappingDsl
+  with MoreLikeThisDsl
+  with MultiGetDsl
+  with OptimizeDsl
+  with PercolateDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with ScrollDsl
+  with SnapshotDsl
+  with TemplateDsl
+  with UpdateDsl
+  with ValidateDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String) = {
@@ -129,12 +129,12 @@ trait ElasticDsl
       new CreateSnapshotExpectsIn(name)
     }
 
-    def repository(name: String) = {
+    def repository(name: String): CreateRepositoryExpectsType = {
       require(name.nonEmpty, "repository name must not be null or empty")
       new CreateRepositoryExpectsType(name)
     }
 
-    def template(name: String) = {
+    def template(name: String): CreateIndexTemplateExpectsPattern = {
       require(name.nonEmpty, "template name must not be null or empty")
       new CreateIndexTemplateExpectsPattern(name)
     }
@@ -148,7 +148,7 @@ trait ElasticDsl
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
-    def snapshot(name: String) = new DeleteSnapshotExpectsIn(name)
+    def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
     def template(name: String) = new DeleteIndexTemplateDefinition(name)
     def mapping(indexes: String*) = DeleteMappingDefinition(indexes)
     def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
@@ -175,9 +175,9 @@ trait ElasticDsl
       new GetWithIdExpectsFrom(id.toString)
     }
 
-    def alias(aliases: String*) = new GetAliasDefinition(aliases)
+    def alias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
 
-    def cluster(stats: StatsKeyword) = new ClusterStatsDefinition
+    def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
 
     def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index))
       .types(indexType.`type`)
@@ -190,7 +190,8 @@ trait ElasticDsl
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
-    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(snapshotNames.toSeq)
+    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new
+        GetSnapshotsExpectsFrom(snapshotNames.toSeq)
     def snapshot(snapshotNames: String*): GetSnapshotsExpectsFrom = snapshot(snapshotNames)
 
   }
@@ -237,6 +238,13 @@ trait ElasticDsl
     def name(name: String) = {
       require(name.nonEmpty, "mapping name must not be null or empty")
       new MappingDefinition(name)
+    }
+  }
+
+  case object more {
+    def like(id: Any): MltExpectsIndex = {
+      require(id.toString.nonEmpty, "id must not be null or empty")
+      new MltExpectsIndex(id.toString)
     }
   }
 

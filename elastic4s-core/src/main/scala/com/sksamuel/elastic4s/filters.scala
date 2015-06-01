@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{ HasParentFilterBuilder, HasChildFilterBuilder, NestedFilterBuilder, FilterBuilders }
+import org.elasticsearch.index.query.{HasParentFilterBuilder, HasChildFilterBuilder, NestedFilterBuilder, FilterBuilders}
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import com.sksamuel.elastic4s.DefinitionAttributes._
@@ -8,38 +8,37 @@ import com.sksamuel.elastic4s.DefinitionAttributes._
 /** @author Stephen Samuel */
 trait FilterDsl {
 
-  def existsFilter(field: String) = new ExistsFilter(field)
+  def existsFilter(field: String): ExistsFilter = new ExistsFilter(field)
 
-  def geoboxFilter(field: String) = new GeoBoundingBoxFilter(field)
-  def geoDistance(field: String) = new GeoDistanceFilter(field)
-  def geoPolygon(field: String) = new GeoPolygonFilter(field)
-  def geoDistanceRangeFilter(field: String) = new GeoDistanceRangeFilterDefinition(field)
+  def geoboxFilter(field: String): GeoBoundingBoxFilter = new GeoBoundingBoxFilter(field)
+  def geoDistance(field: String): GeoDistanceFilter = new GeoDistanceFilter(field)
+  def geoPolygon(field: String): GeoPolygonFilter = new GeoPolygonFilter(field)
+  def geoDistanceRangeFilter(field: String): GeoDistanceRangeFilterDefinition =
+    new GeoDistanceRangeFilterDefinition(field)
 
-  def hasChildFilter(`type`: String) = new HasChildExpectsQueryOrFilter(`type`)
+  def hasChildFilter(`type`: String): HasChildExpectsQueryOrFilter = new HasChildExpectsQueryOrFilter(`type`)
   class HasChildExpectsQueryOrFilter(`type`: String) {
-    def query(query: QueryDefinition) =
-      new HasChildFilterDefinition(FilterBuilders.hasChildFilter(`type`, query.builder))
-    def filter(filter: FilterDefinition) =
-      new HasChildFilterDefinition(FilterBuilders.hasChildFilter(`type`, filter.builder))
+    def query(query: QueryDefinition) = new
+        HasChildFilterDefinition(FilterBuilders.hasChildFilter(`type`, query.builder))
+    def filter(filter: FilterDefinition) = new
+        HasChildFilterDefinition(FilterBuilders.hasChildFilter(`type`, filter.builder))
   }
 
-  def hasParentFilter(`type`: String) = new HasParentExpectsQueryOrFilter(`type`)
+  def hasParentFilter(`type`: String): HasParentExpectsQueryOrFilter = new HasParentExpectsQueryOrFilter(`type`)
   class HasParentExpectsQueryOrFilter(`type`: String) {
-    def query(query: QueryDefinition) =
-      new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, query.builder))
-    def filter(filter: FilterDefinition) =
-      new HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
+    def query(query: QueryDefinition) = new
+        HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, query.builder))
+    def filter(filter: FilterDefinition) = new
+        HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
   }
 
-  def nestedFilter(path: String) = new NestedFilterExpectsQueryOrFilter(path)
+  def nestedFilter(path: String): NestedFilterExpectsQueryOrFilter = new NestedFilterExpectsQueryOrFilter(path)
   class NestedFilterExpectsQueryOrFilter(path: String) {
-    def query(query: QueryDefinition) =
-      new NestedFilterDefinition(FilterBuilders.nestedFilter(path, query.builder))
-    def filter(filter: FilterDefinition) =
-      new NestedFilterDefinition(FilterBuilders.nestedFilter(path, filter.builder))
+    def query(query: QueryDefinition) = new NestedFilterDefinition(FilterBuilders.nestedFilter(path, query.builder))
+    def filter(filter: FilterDefinition) = new NestedFilterDefinition(FilterBuilders.nestedFilter(path, filter.builder))
   }
 
-  def matchAllFilter = new MatchAllFilter
+  def matchAllFilter: MatchAllFilter = new MatchAllFilter
 
   def or(filters: FilterDefinition*): OrFilterDefinition = new OrFilterDefinition(filters: _*)
   def or(filters: Iterable[FilterDefinition]): OrFilterDefinition = new OrFilterDefinition(filters.toSeq: _*)
@@ -51,8 +50,8 @@ trait FilterDsl {
   def andFilter(filters: FilterDefinition*): AndFilterDefinition = andFilter(filters)
   def andFilter(filters: Iterable[FilterDefinition]): AndFilterDefinition = new AndFilterDefinition(filters.toSeq: _*)
 
-  def numericRangeFilter(field: String) = new NumericRangeFilter(field)
-  def rangeFilter(field: String) = new RangeFilter(field)
+  def numericRangeFilter(field: String): NumericRangeFilter = new NumericRangeFilter(field)
+  def rangeFilter(field: String): RangeFilter = new RangeFilter(field)
 
   def prefixFilter(field: String, prefix: Any): PrefixFilterDefinition = new PrefixFilterDefinition(field, prefix)
   def prefixFilter(tuple: (String, Any)): PrefixFilterDefinition = prefixFilter(tuple._1, tuple._2)
@@ -67,7 +66,8 @@ trait FilterDsl {
   def termFilter(field: String, value: Any): TermFilterDefinition = new TermFilterDefinition(field, value)
   def termFilter(tuple: (String, Any)): TermFilterDefinition = termFilter(tuple._1, tuple._2)
 
-  def termsFilter(field: String, values: Any*): TermsFilterDefinition = new TermsFilterDefinition(field, values.map(_.toString): _*)
+  def termsFilter(field: String, values: Any*): TermsFilterDefinition = new
+      TermsFilterDefinition(field, values.map(_.toString): _*)
 
   def termsLookupFilter(field: String): TermsLookupFilterDefinition = new TermsLookupFilterDefinition(field)
 
@@ -82,9 +82,9 @@ trait FilterDsl {
   def should(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().should(queries)
 
   case object not {
-    def filter(filter: FilterDefinition) = new NotFilterDefinition(filter)
+    def filter(filter: FilterDefinition): NotFilterDefinition = new NotFilterDefinition(filter)
   }
-  def not(filter: FilterDefinition) = new NotFilterDefinition(filter)
+  def not(filter: FilterDefinition): NotFilterDefinition = new NotFilterDefinition(filter)
   def not(queries: FilterDefinition*): BoolFilterDefinition = new BoolFilterDefinition().not(queries: _*)
   def not(queries: Iterable[FilterDefinition]): BoolFilterDefinition = new BoolFilterDefinition().not(queries)
 }
@@ -94,28 +94,35 @@ trait FilterDefinition {
 }
 
 class BoolFilterDefinition extends FilterDefinition {
+
   val builder = FilterBuilders.boolFilter()
-  def must(filters: FilterDefinition*) = {
+
+  def must(filters: FilterDefinition*): this.type = {
     filters.foreach(builder must _.builder)
     this
   }
-  def must(filters: Iterable[FilterDefinition]) = {
+
+  def must(filters: Iterable[FilterDefinition]): this.type = {
     filters.foreach(builder must _.builder)
     this
   }
-  def should(filters: FilterDefinition*) = {
+
+  def should(filters: FilterDefinition*): this.type = {
     filters.foreach(builder should _.builder)
     this
   }
-  def should(filters: Iterable[FilterDefinition]) = {
+
+  def should(filters: Iterable[FilterDefinition]): this.type = {
     filters.foreach(builder should _.builder)
     this
   }
-  def not(filters: FilterDefinition*) = {
+
+  def not(filters: FilterDefinition*): this.type = {
     filters.foreach(builder mustNot _.builder)
     this
   }
-  def not(filters: Iterable[FilterDefinition]) = {
+
+  def not(filters: Iterable[FilterDefinition]): this.type = {
     filters.foreach(builder mustNot _.builder)
     this
   }
@@ -146,8 +153,8 @@ class ExistsFilter(field: String) extends FilterDefinition {
 }
 
 class QueryFilterDefinition(q: QueryDefinition)
-    extends FilterDefinition
-    with DefinitionAttributeCache {
+  extends FilterDefinition
+  with DefinitionAttributeCache {
   val builder = FilterBuilders.queryFilter(q.builder)
   val _builder = builder
   def filterName(filterName: String): QueryFilterDefinition = {
@@ -173,10 +180,10 @@ class MissingFilterDefinition(field: String) extends FilterDefinition {
 }
 
 class ScriptFilterDefinition(script: String)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey
-    with DefinitionAttributeFilterName {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.scriptFilter(script)
   val _builder = builder
   def lang(lang: String): ScriptFilterDefinition = {
@@ -188,7 +195,7 @@ class ScriptFilterDefinition(script: String)
     this
   }
   def params(map: Map[String, Any]): ScriptFilterDefinition = {
-    for (entry <- map) param(entry._1, entry._2)
+    for ( entry <- map ) param(entry._1, entry._2)
     this
   }
 }
@@ -199,13 +206,13 @@ class MatchAllFilter extends FilterDefinition {
 
 @deprecated("deprecated in elasticsearch 1.0", "1.0")
 class NumericRangeFilter(field: String)
-    extends FilterDefinition
-    with DefinitionAttributeFrom
-    with DefinitionAttributeTo
-    with DefinitionAttributeLt
-    with DefinitionAttributeGt
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeFrom
+  with DefinitionAttributeTo
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.numericRangeFilter(field)
   val _builder = builder
   def filterName(filterName: String): NumericRangeFilter = {
@@ -239,14 +246,14 @@ class NumericRangeFilter(field: String)
 }
 
 class RangeFilter(field: String)
-    extends FilterDefinition
-    with DefinitionAttributeTo
-    with DefinitionAttributeFrom
-    with DefinitionAttributeLt
-    with DefinitionAttributeGt
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey
-    with DefinitionAttributeFilterName {
+  extends FilterDefinition
+  with DefinitionAttributeTo
+  with DefinitionAttributeFrom
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.rangeFilter(field)
   val _builder = builder
 
@@ -273,7 +280,7 @@ class RangeFilter(field: String)
 }
 
 class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
-    extends FilterDefinition {
+  extends FilterDefinition {
   val _builder = builder
   def name(name: String): HasChildFilterDefinition = {
     builder.filterName(name)
@@ -282,7 +289,7 @@ class HasChildFilterDefinition(val builder: HasChildFilterBuilder)
 }
 
 class HasParentFilterDefinition(val builder: HasParentFilterBuilder)
-    extends FilterDefinition {
+  extends FilterDefinition {
   val _builder = builder
   def name(name: String): HasParentFilterDefinition = {
     builder.filterName(name)
@@ -291,10 +298,10 @@ class HasParentFilterDefinition(val builder: HasParentFilterBuilder)
 }
 
 class NestedFilterDefinition(val builder: NestedFilterBuilder)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey
-    with DefinitionAttributeFilterName {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributeFilterName {
   val _builder = builder
   def join(join: Boolean): NestedFilterDefinition = {
     builder.join(join)
@@ -303,85 +310,100 @@ class NestedFilterDefinition(val builder: NestedFilterBuilder)
 }
 
 class PrefixFilterDefinition(field: String, prefix: Any)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.prefixFilter(field, prefix.toString)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
 }
 
 class TermFilterDefinition(field: String, value: Any)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.termFilter(field, value.toString)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
 }
 
-class TermsFilterDefinition(field: String, value: String*)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+class TermsFilterDefinition(field: String, value: Any*)
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.termsFilter(field, value: _*)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
-  def execution(execution: String) = {
+
+  def execution(execution: String): this.type = {
     builder.execution(execution)
     this
   }
 }
 
 class TermsLookupFilterDefinition(field: String)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.termsLookupFilter(field)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
-  def index(index: String) = {
+
+  def index(index: String): this.type = {
     builder.lookupIndex(index)
     this
   }
-  def lookupType(`type`: String) = {
+
+  def lookupType(`type`: String): this.type = {
     builder.lookupType(`type`)
     this
   }
-  def id(id: String) = {
+
+  def id(id: String): this.type = {
     builder.lookupId(id)
     this
   }
-  def path(path: String) = {
+
+  def path(path: String): this.type = {
     builder.lookupPath(path)
     this
   }
-  def routing(routing: String) = {
+
+  def routing(routing: String): this.type = {
     builder.lookupRouting(routing)
     this
   }
-  def lookupCache(cache: Boolean) = {
+
+  def lookupCache(cache: Boolean): this.type = {
     builder.lookupCache(cache)
     this
   }
 }
 
 class GeoPolygonFilter(name: String)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoPolygonFilter(name)
   val _builder = builder
   def point(geohash: String): GeoPolygonFilter = {
@@ -395,16 +417,16 @@ class GeoPolygonFilter(name: String)
 }
 
 class GeoDistanceRangeFilterDefinition(field: String)
-    extends FilterDefinition
-    with DefinitionAttributeTo
-    with DefinitionAttributeFrom
-    with DefinitionAttributeLt
-    with DefinitionAttributeGt
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey
-    with DefinitionAttributePoint {
+  extends FilterDefinition
+  with DefinitionAttributeTo
+  with DefinitionAttributeFrom
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey
+  with DefinitionAttributePoint {
   val builder = FilterBuilders.geoDistanceRangeFilter(field)
   val _builder = builder
   def geoDistance(geoDistance: GeoDistance): GeoDistanceRangeFilterDefinition = {
@@ -438,43 +460,47 @@ class GeoDistanceRangeFilterDefinition(field: String)
 }
 
 class NotFilterDefinition(filter: FilterDefinition)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeFilterName {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeFilterName {
   val builder = FilterBuilders.notFilter(filter.builder)
   val _builder = builder
 }
 
 class OrFilterDefinition(filters: FilterDefinition*)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.orFilter(filters.map(_.builder).toArray: _*)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
 }
 
 class AndFilterDefinition(filters: FilterDefinition*)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.andFilter(filters.map(_.builder).toArray: _*)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }
 }
 
 class GeoDistanceFilter(name: String)
-    extends FilterDefinition
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoDistanceFilter(name)
   val _builder = builder
   def geohash(geohash: String): GeoDistanceFilter = {
@@ -502,9 +528,9 @@ class GeoDistanceFilter(name: String)
 }
 
 class GeoBoundingBoxFilter(name: String)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
   val builder = FilterBuilders.geoBoundingBoxFilter(name)
   val _builder = builder
   private var _left: Double = _
@@ -534,12 +560,14 @@ class GeoBoundingBoxFilter(name: String)
 }
 
 class RegexFilterDefinition(field: String, regex: Any)
-    extends FilterDefinition
-    with DefinitionAttributeCache
-    with DefinitionAttributeCacheKey {
+  extends FilterDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.regexpFilter(field, regex.toString)
   val _builder = builder
-  def name(name: String) = {
+
+  def name(name: String): this.type = {
     builder.filterName(name)
     this
   }

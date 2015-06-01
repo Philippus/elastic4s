@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.mlt.MoreLikeThisRequest
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.search.Scroll
@@ -11,8 +12,7 @@ trait MoreLikeThisDsl {
 
   class MltExpectsIndex(id: String) {
 
-    def in(indexType: IndexType): MoreLikeThisDefinition = new
-        MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
+    def in(indexType: IndexType): MoreLikeThisDefinition = new MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
 
     def in(in: String): MoreLikeThisDefinition = in.split("/").toList match {
       case indx :: Nil => new MoreLikeThisDefinition(indx, null, id)
@@ -21,19 +21,17 @@ trait MoreLikeThisDsl {
     }
   }
 
-  implicit object MoreLikeThisDefinitionExecutable
-    extends Executable[MoreLikeThisDefinition, SearchResponse] {
+  implicit object MoreLikeThisDefinitionExecutable extends Executable[MoreLikeThisDefinition, SearchResponse] {
     override def apply(c: Client, t: MoreLikeThisDefinition): Future[SearchResponse] = {
       injectFuture(c.moreLikeThis(t.build, _))
     }
   }
-
 }
 
 class MoreLikeThisDefinition(index: String, `type`: String, id: String) {
 
   private val _builder = Requests.moreLikeThisRequest(index).`type`(`type`).id(id)
-  def build = _builder
+  def build: MoreLikeThisRequest = _builder
 
   def boostTerms(boostTerms: Double): this.type = {
     _builder.boostTerms(boostTerms.toFloat)
