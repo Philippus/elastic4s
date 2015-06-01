@@ -337,12 +337,14 @@ class TermFilterDefinition(field: String, value: Any)
   }
 }
 
-class TermsFilterDefinition(field: String, value: Any*)
+class TermsFilterDefinition(field: String, values: Any*)
   extends FilterDefinition
   with DefinitionAttributeCache
   with DefinitionAttributeCacheKey {
 
-  val builder = FilterBuilders.termsFilter(field, value: _*)
+  import scala.collection.JavaConverters._
+
+  val builder = FilterBuilders.termsFilter(field, values.asJava)
   val _builder = builder
 
   def name(name: String): this.type = {
