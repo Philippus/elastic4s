@@ -158,17 +158,25 @@ object attributes {
     }
   }
 
-  trait AttributeTermVector extends Attribute { self: TypedFieldDefinition =>
+  trait AttributeTermVector extends Attribute {
+    self: TypedFieldDefinition =>
 
     private[this] var _termVector: Option[TermVector] = None
+    private[this] var _termVectorString: Option[String] = None
 
     def termVector(termVector: TermVector): this.type = {
       _termVector = Some(termVector)
       this
     }
 
+    def termVector(termVector: String): this.type = {
+      _termVectorString = Some(termVector)
+      this
+    }
+
     protected override def insert(source: XContentBuilder): Unit = {
       _termVector.foreach(arg => source.field("term_vector", arg.value))
+      _termVectorString.foreach(source.field("term_vector", _))
     }
   }
 

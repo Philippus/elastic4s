@@ -18,6 +18,7 @@ object TermVector {
   case object WithOffsets extends TermVector("with_offsets")
   case object WithPositions extends TermVector("with_positions")
   case object WithPositionsOffsets extends TermVector("with_positions_offsets")
+  case object WithPositionsOffsetsPayloads extends TermVector("with_positions_offsets_payloads")
 }
 
 sealed abstract class IndexOptions(val value: String)

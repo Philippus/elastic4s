@@ -142,6 +142,8 @@ trait QueryDsl {
   def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new
       SpanMultiTermQueryDefinition(query)
 
+
+
   @deprecated("use termQuery", "1.4.0")
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
   @deprecated("use termQuery", "1.4.0")
