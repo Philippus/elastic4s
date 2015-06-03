@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.delete.DeleteResponse
-import org.elasticsearch.action.deletebyquery.{ DeleteByQueryRequestBuilder, DeleteByQueryResponse }
+import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.client.{ Client, Requests }
+import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future
@@ -17,9 +17,9 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
-    def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
-    def types(_types: Iterable[String]): DeleteByQueryExpectsWhere =
-      new DeleteByQueryExpectsWhere(IndexesTypes(indexes, _types.toSeq))
+    def types(_types: String*): DeleteByQueryExpectsClause = types(_types)
+    def types(_types: Iterable[String]): DeleteByQueryExpectsClause =
+      new DeleteByQueryExpectsClause(IndexesTypes(indexes, _types.toSeq))
   }
 
   class DeleteByIdExpectsFrom(id: Any) {
@@ -40,15 +40,16 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   implicit def string2indextype(indexes: String*): IndexesType = new IndexesType(indexes: _*)
 
   class IndexesType(indexes: String*) {
-    def types(types: String*): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(IndexesTypes(indexes, types))
-    def types(types: Iterable[String]): DeleteByQueryExpectsWhere =
-      new DeleteByQueryExpectsWhere(IndexesTypes(indexes, types.toSeq))
+    def types(types: String*): DeleteByQueryExpectsClause = new DeleteByQueryExpectsClause(IndexesTypes(indexes, types))
+    def types(types: Iterable[String]): DeleteByQueryExpectsClause =
+      new DeleteByQueryExpectsClause(IndexesTypes(indexes, types.toSeq))
   }
 
-  class DeleteByQueryExpectsWhere(indexesTypes: IndexesTypes) {
-    def types(_types: String*): DeleteByQueryExpectsWhere = types(_types)
-    def types(_types: Iterable[String]): DeleteByQueryExpectsWhere =
-      new DeleteByQueryExpectsWhere(indexesTypes.copy(types = _types.toSeq))
+  class DeleteByQueryExpectsClause(indexesTypes: IndexesTypes) {
+    def types(_types: String*): DeleteByQueryExpectsClause = types(_types)
+    def types(_types: Iterable[String]): DeleteByQueryExpectsClause = new
+        DeleteByQueryExpectsClause(indexesTypes.copy(types = _types.toSeq))
+    def id(id: Any): DeleteByIdDefinition = new DeleteByIdDefinition(indexesTypes, id)
     def where(query: String): DeleteByQueryDefinition = where(new SimpleStringQueryDefinition(query))
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }

@@ -106,6 +106,8 @@ trait ElasticDsl
     def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
   }
 
+  def closeIndex(index: String): CloseIndexDefinition = close index index
+
   case object commonGrams {
     def tokenfilter(name: String) = CommonGramsTokenFilter(name)
   }
@@ -116,6 +118,8 @@ trait ElasticDsl
     def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
     def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
   }
+
+  def countFrom(indexes: String*): CountDefinition = count from indexes
 
   case object create {
 
@@ -139,12 +143,16 @@ trait ElasticDsl
       new CreateIndexTemplateExpectsPattern(name)
     }
   }
+  def createIndex(name: String) = create index name
+  def createSnapshot(name: String) = create snapshot name
+  def createRepository(name: String) = create repository name
+  def createTemplate(name: String) = create template name
 
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-    def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsWhere = new DeleteByQueryExpectsWhere(indexesTypes)
-    def from(indexType: IndexType): DeleteByQueryExpectsWhere = from(IndexesTypes(indexType))
-    def from(index: String): DeleteByQueryExpectsWhere = from(IndexesTypes(index))
+    def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsClause = new DeleteByQueryExpectsClause(indexesTypes)
+    def from(indexType: IndexType): DeleteByQueryExpectsClause = from(IndexesTypes(indexType))
+    def from(index: String): DeleteByQueryExpectsClause = from(IndexesTypes(index))
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
@@ -152,6 +160,11 @@ trait ElasticDsl
     def template(name: String) = new DeleteIndexTemplateDefinition(name)
     def mapping(indexes: String*) = DeleteMappingDefinition(indexes)
     def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
+  }
+
+  def deleteFrom(index: String) = new {
+    def id(id: Any) = delete from index id id
+    def query(q: QueryDefinition) = delete from index where q
   }
 
   case object explain {
@@ -229,6 +242,16 @@ trait ElasticDsl
     def stats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
   }
 
+  def index(indexType: IndexType): IndexDefinition = {
+    require(indexType != null, "indexType must not be null or empty")
+    new IndexDefinition(indexType.index, indexType.`type`)
+  }
+
+  def index(index: String, `type`: String): IndexDefinition = {
+    require(index.nonEmpty, "index must not be null or empty")
+    new IndexDefinition(index, `type`)
+  }
+
   case object inner {
     def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)
     def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
@@ -268,6 +291,8 @@ trait ElasticDsl
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
   }
 
+  def openIndex(index: String) = open index index
+
   case object optimize {
     def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
     def index(indexes: String*): OptimizeDefinition = index(indexes)
@@ -280,19 +305,26 @@ trait ElasticDsl
     }
   }
 
+  def percolateIn(index: String): PercolateDefinition = percolate in index
+
   case object put {
     def mapping(indexType: IndexType) = new PutMappingDefinition(indexType)
   }
+  def putMapping(indexType: IndexType) = new PutMappingDefinition(indexType)
 
   case object recover {
     def index(indexes: Iterable[String]) = new IndexRecoveryDefinition(indexes.toSeq)
     def index(indexes: String*) = new IndexRecoveryDefinition(indexes)
   }
+  def recoverIndex(indexes: String*) = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]) = new RefreshIndexDefinition(indexes.toSeq)
-    def index(indexes: String*) = new RefreshIndexDefinition(indexes)
+    def index(indexes: Iterable[String]) = recover index indexes
+    def index(indexes: String*) = recover index indexes
   }
+
+  def refreshIndex(indexes: Iterable[String]) = refresh index indexes
+  def refreshIndex(indexes: String*) = refresh index indexes
 
   case object remove {
     def alias(alias: String) = {
@@ -300,6 +332,7 @@ trait ElasticDsl
       new RemoveAliasExpectsIndex(alias)
     }
   }
+  def removeAlias(alias: String) = remove alias alias
 
   case object register {
     def id(id: Any) = {
@@ -313,12 +346,14 @@ trait ElasticDsl
     def create(name: String) = new CreateRepositoryExpectsType(name)
   }
 
+
   case object restore {
     def snapshot(name: String) = {
       require(name.nonEmpty, "snapshot name must not be null or empty")
       new RestoreSnapshotExpectsFrom(name)
     }
   }
+  def restoreSnapshot(name: String) = restore snapshot name
 
   case object script {
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
@@ -333,6 +368,8 @@ trait ElasticDsl
     def in(indexType: IndexType): SearchDefinition = new SearchDefinition(IndexesTypes(indexType))
     def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
   }
+
+  def search(indexType: IndexType): SearchDefinition = search in indexType
 
   case object shingle {
     def tokenfilter(name: String) = ShingleTokenFilter(name)
@@ -383,6 +420,9 @@ trait ElasticDsl
       new UpdateExpectsIndex(id.toString)
     }
     def settings(index: String) = new UpdateSettingsDefinition(index)
+  }
+  def updateIn(indexTypes: IndexType*) = new {
+    def id(id: Any) = update id id in IndexesTypes(indexTypes.map(_.index), indexTypes.map(_.`type`))
   }
 
   case object validate {

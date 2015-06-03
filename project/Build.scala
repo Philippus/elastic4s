@@ -6,14 +6,13 @@ object Build extends Build {
   val org = "com.sksamuel.elastic4s"
   val appVersion = "1.5.12-SNAPSHOT"
 
-  val ScalaVersion = "2.11.6"
-  val ScalazVersion = "7.1.2"
-  val ScalatestVersion = "2.2.4"
-  val MockitoVersion = "1.9.5"
-  val JacksonVersion = "2.5.2"
-  val Slf4jVersion = "1.7.7"
-  val ScalaLoggingVersion = "2.1.2"
-  val ElasticsearchVersion = "1.5.2"
+  val ScalaVersion =          "2.11.6"
+  val ScalatestVersion =      "2.2.5"
+  val MockitoVersion =        "1.9.5"
+  val JacksonVersion =        "2.5.2"
+  val Slf4jVersion =          "1.7.7"
+  val ScalaLoggingVersion =   "2.1.2"
+  val ElasticsearchVersion =  "1.5.2"
 
   val rootSettings = Seq(
     version := appVersion,
@@ -28,12 +27,12 @@ object Build extends Build {
     libraryDependencies ++= Seq(
       "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
       "com.typesafe.scala-logging"    %% "scala-logging-slf4j"  % ScalaLoggingVersion,
-      "commons-io"                    %  "commons-io"           % "2.4"   % "test",
-      "log4j"                         %  "log4j"                % "1.2.17" % "test",
-      "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion % "test",
-      "org.mockito"                   %  "mockito-all"          % MockitoVersion % "test",
-      "org.scalatest"                 %% "scalatest"            % ScalatestVersion % "test",
-      "org.codehaus.groovy"           %  "groovy"               % "2.3.7" % "test"
+      "commons-io"                    %  "commons-io"           % "2.4"                 % "test",
+      "log4j"                         %  "log4j"                % "1.2.17"              % "test",
+      "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion          % "test",
+      "org.mockito"                   %  "mockito-all"          % MockitoVersion        % "test",
+      "org.scalatest"                 %% "scalatest"            % ScalatestVersion      % "test",
+      "org.codehaus.groovy"           %  "groovy"               % "2.3.7"               % "test"
 
     ),
     publishTo <<= version {
@@ -81,8 +80,8 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
     )
 
@@ -95,8 +94,8 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-jackson",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
     ).dependsOn(core, testkit % "test")
 }
