@@ -8,6 +8,7 @@ import org.elasticsearch.percolator.PercolatorService
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {

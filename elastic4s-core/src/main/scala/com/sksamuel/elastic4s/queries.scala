@@ -112,7 +112,7 @@ trait QueryDsl {
   def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
   @deprecated("use regexQuery", "1.4.0")
-  def regex(tuple: (String, Any)): RegexQueryDefinition = regex(tuple._1, tuple._2)
+  def regex(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
   @deprecated("use regexQuery", "1.4.0")
   def regex(field: String, value: Any): RegexQueryDefinition = regexQuery(field, value)
   def regexQuery(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
@@ -549,9 +549,13 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
 }
 
 class CommonTermsQueryDefinition(name: String, text: String)
-  extends QueryDefinition with DefinitionAttributeBoost with DefinitionAttributeCutoffFrequency {
-  val builder = QueryBuilders.commonTerms(name, text)
+  extends QueryDefinition
+  with DefinitionAttributeBoost
+  with DefinitionAttributeCutoffFrequency {
+
+  val builder = QueryBuilders.commonTermsQuery(name, text)
   val _builder = builder
+
   def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Int): CommonTermsQueryDefinition = {
     builder.highFreqMinimumShouldMatch(highFreqMinimumShouldMatch.toString)
     this
@@ -1026,7 +1030,8 @@ class MatchPhraseDefinition(field: String, value: Any)
 }
 
 class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
-  val builder = QueryBuilders.simpleQueryString(query)
+
+  val builder = QueryBuilders.simpleQueryStringQuery(query)
 
   def analyzer(analyzer: String): SimpleStringQueryDefinition = {
     builder.analyzer(analyzer)
@@ -1077,7 +1082,7 @@ class QueryStringQueryDefinition(query: String)
   with DefinitionAttributeRewrite
   with DefinitionAttributeBoost {
 
-  val builder = QueryBuilders.queryString(query)
+  val builder = QueryBuilders.queryStringQuery(query)
   val _builder = builder
 
   def analyzer(analyzer: String): this.type = {

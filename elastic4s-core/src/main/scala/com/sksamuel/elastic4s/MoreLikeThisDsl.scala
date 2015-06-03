@@ -61,51 +61,65 @@ class MoreLikeThisDefinition(index: String, `type`: String, id: String) {
   }
 
   def limit(sizeHint: Int): this.type = size(sizeHint)
+
   def minTermFreq(freq: Int): this.type = {
     _builder.minTermFreq(freq)
     this
   }
+
   def maxQueryTerms(maxQueryTerms: Int): this.type = {
     _builder.maxQueryTerms(maxQueryTerms)
     this
   }
+
   def maxWordLength(maxWordLen: Int): this.type = {
     _builder.maxWordLength(maxWordLen)
     this
   }
+
   def minWordLength(minWordLen: Int): this.type = {
     _builder.minWordLength(minWordLen)
     this
   }
+
   def maxDocFreq(maxDocFreq: Int): this.type = {
     _builder.maxDocFreq(maxDocFreq)
     this
   }
+
   def minDocFreq(minDocFreq: Int): this.type = {
     _builder.minDocFreq(minDocFreq)
     this
   }
+
+  @deprecated("deprecated in es", "1.5.12")
   def percentTermsToMatch(percentTermsToMatch: Double): this.type = {
     _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
     this
   }
+
   def routing(routing: String): this.type = {
     _builder.routing(routing)
     this
   }
+
   def size(sizeHint: Int): this.type = {
     _builder.searchSize(sizeHint)
     this
   }
+
   def start(i: Int): this.type = from(i)
+
   def stopWords(stopWords: String*): this.type = {
     _builder.stopWords(stopWords: _*)
     this
   }
+
   def searchSize(searchSize: Int): this.type = {
     _builder.searchSize(searchSize)
     this
   }
+
   def searchScroll(searchScroll: Scroll): this.type = {
     _builder.searchScroll(searchScroll)
     this
