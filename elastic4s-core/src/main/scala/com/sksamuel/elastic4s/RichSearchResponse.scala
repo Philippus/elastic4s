@@ -10,7 +10,6 @@ import org.elasticsearch.search.suggest.Suggest
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 
 import scala.concurrent.duration._
-import scala.reflect.ClassTag
 
 class RichSearchResponse(resp: SearchResponse) {
 

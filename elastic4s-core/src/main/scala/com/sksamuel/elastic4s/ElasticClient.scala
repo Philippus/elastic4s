@@ -20,6 +20,7 @@ import org.elasticsearch.node.{Node, NodeBuilder}
 
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client) {
@@ -162,9 +163,12 @@ object ElasticClient {
     fromClient(client)
   }
 
+  def data : ElasticClient = data(ImmutableSettings.builder.build)
+  def data(settings: Settings): ElasticClient = fromNode(NodeBuilder.nodeBuilder().data(true).settings(settings).node())
+
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
   def local(settings: Settings): ElasticClient = {
-    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
+    fromNode(NodeBuilder.nodeBuilder().local(false).data(true).settings(settings).node())
   }
   @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
   def local(settings: Settings, timeout: Long): ElasticClient = local(settings)
@@ -173,6 +177,7 @@ object ElasticClient {
 
 object ElasticsearchClientUri {
   private val PREFIX = "elasticsearch://"
+  implicit def stringtoUri(str: String): ElasticsearchClientUri = ElasticsearchClientUri(str)
   def apply(str: String): ElasticsearchClientUri = {
     require(str != null && str.trim.nonEmpty, "Invalid uri, must be in format elasticsearch://host:port,host:port,...")
     val withoutPrefix = str.replace(PREFIX, "")
