@@ -8,7 +8,6 @@ import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
-import org.elasticsearch.script.ScriptService.ScriptType
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
@@ -45,8 +44,8 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     source.endObject()
   }
 
-  def script(script: String): UpdateDefinition = {
-    _builder.setScript(script, ScriptType.INLINE)
+  def script(script: String, scriptType: ScriptType = ScriptType.Inline): UpdateDefinition = {
+    _builder.setScript(script, scriptType.elasticType)
     this
   }
 
