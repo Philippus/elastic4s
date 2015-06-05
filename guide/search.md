@@ -23,7 +23,7 @@ One of the great features of Elasticsearch is the number of queries it provides.
 search in "places"->"cities" query { term("state", "georgia") }
 ```
 
-We wouldn't be able to do very much if we couldn't combine queries. So here we combine three queries, 2 "musts" that must match the documents and 1 "not" that must not match the documents. This is what ElasticSearch calls a [boolean query](http://www.elasticsearch.org/guide/reference/query-dsl/bool-query/). You'll see in this example that I don't like to vacation anywhere that is too hot, and I want to only vacation somewhere that is awesome and that where the name ends with 'cester' like Gloucester or Leicester.
+We wouldn't be able to do very much if we couldn't combine queries. So here we combine three queries, 2 "musts" that must match the documents and 1 "not" that must not match the documents. This is what ElasticSearch calls a [boolean query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html). You'll see in this example that I don't like to vacation anywhere that is too hot, and I want to only vacation somewhere that is awesome and that where the name ends with 'cester' like Gloucester or Leicester.
 ```scala
 search in "places"->"cities" query {
    bool {
@@ -64,7 +64,7 @@ search in "places"->"cities" query "europe" sort (
 )
 ```
 
-#### Aggregations
+#### Aggregationsb
 
 [Aggregations](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) are the new [facets](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html). The basic way of doing aggregations in elastic4s is this:
 
