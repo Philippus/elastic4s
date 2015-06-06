@@ -79,7 +79,7 @@ object Build extends Build {
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     .settings(rootSettings: _*)
     .settings(
-      name := "elastic4s",
+      name := "elastic4s-core",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
