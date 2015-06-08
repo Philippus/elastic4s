@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import java.io.File
+import java.io.{PrintWriter, File}
 import java.util.UUID
 
 import com.sksamuel.elastic4s.ElasticDsl._
@@ -13,15 +13,23 @@ object TestElasticNode extends Logging {
 
   val tempFile = File.createTempFile("elasticsearchtests", "tmp")
   val homeDir = new File(tempFile.getParent + "/" + UUID.randomUUID().toString)
+  val confDir = new File(homeDir.getAbsolutePath + "/config")
+
   homeDir.mkdir()
+  confDir.mkdir()
+
   homeDir.deleteOnExit()
+  confDir.deleteOnExit()
   tempFile.deleteOnExit()
+
   logger.info("Setting ES home dir [{}]", homeDir)
+  logger.info("Setting ES conf dir [{}]", confDir)
 
   val settings = ImmutableSettings.settingsBuilder()
     .put("node.http.enabled", false)
     .put("http.enabled", false)
     .put("path.home", homeDir.getAbsolutePath)
+    .put("path.conf", confDir.getAbsolutePath)
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
     .put("script.disable_dynamic", false)
@@ -30,6 +38,10 @@ object TestElasticNode extends Logging {
     //.put("index.translog.flush_threshold_size", "500mb")
     //.put("index.store.throttle.max_bytes_per_sec", "500mb")
     .put("es.logger.level", "INFO")
+
+  val pw = new PrintWriter(new File(confDir.getAbsolutePath + "/stoplist.txt"))
+  pw.write("a\nan\nthe\nis\nand\nwhich")
+  pw.close()
 
   implicit val client = ElasticClient.local(settings.build)
 }

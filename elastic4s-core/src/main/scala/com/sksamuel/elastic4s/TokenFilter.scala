@@ -208,6 +208,21 @@ object NamedStopTokenFilter {
   val Turkish = "_turkish_"
 }
 
+case class StopTokenFilterPath(name: String,
+                               stopwords_path: String,
+                               enablePositionIncrements: Boolean = false,
+                               ignoreCase: Boolean = false)
+  extends TokenFilterDefinition {
+
+  val filterType = "stop"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("stopwords_path", stopwords_path)
+    if (enablePositionIncrements) source.field("enable_position_increments", enablePositionIncrements)
+    if (ignoreCase) source.field("ignore_case", ignoreCase)
+  }
+}
+
 case class PatternCaptureTokenFilter(name: String,
                                      patterns: Iterable[String],
                                      preserveOriginal: Boolean = true)
