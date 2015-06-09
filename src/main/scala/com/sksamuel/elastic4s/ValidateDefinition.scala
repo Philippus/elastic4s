@@ -26,7 +26,7 @@ class ValidateDefinition(index: String, `type`: String) {
   }
 
   def explain(ex: Boolean): this.type = {
-    _builder.setExplain(explain)
+    _builder.setExplain(ex)
     this
   }
 }
