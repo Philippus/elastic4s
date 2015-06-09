@@ -6,20 +6,6 @@ import org.scalatest.{ FreeSpec, Matchers }
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
-  //def printAllHits() {
-  //  println("###########################################################")
-  //  val temp = client.execute {
-  //    search in "analyzer/test" query termQuery("stop_path", "which")
-  //  }.await
-  //  println(temp)
-  //  println(temp.getHits.getTotalHits)
-  //  temp.getHits.hits.foreach { hit =>
-  //    val currentSource = hit.getSource
-  //    println(currentSource)
-  //  }
-  //  println("###########################################################")
-  //}
-
   client.execute {
     create index "analyzer" mappings {
       "test" as (
@@ -222,6 +208,9 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       client.execute {
         search in "analyzer/test" query termQuery("stop_path" -> "and")
       }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("stop_path" -> "testing") // not in stoplist
+      }.await.getHits.getTotalHits shouldBe 1
     }
   }
 

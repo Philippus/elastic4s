@@ -39,9 +39,9 @@ object TestElasticNode extends Logging {
     //.put("index.store.throttle.max_bytes_per_sec", "500mb")
     .put("es.logger.level", "INFO")
 
-  val pw = new PrintWriter(new File(confDir.getAbsolutePath + "/stoplist.txt"))
-  pw.write("a\nan\nthe\nis\nand\nwhich")
-  pw.close()
+  val newStopListFile = new PrintWriter(new File(confDir.getAbsolutePath + "/stoplist.txt"))
+  newStopListFile.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
+  newStopListFile.close()
 
   implicit val client = ElasticClient.local(settings.build)
 }
