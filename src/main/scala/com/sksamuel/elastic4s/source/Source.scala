@@ -20,6 +20,6 @@ trait DocumentMap {
   def map: Map[String, Any]
 }
 
-trait Indexable[T] {
+trait Indexable[-T] {
   def json(t: T): String
 }
