@@ -73,6 +73,7 @@ client.execute {
   search in "index" / "type" query <somequery> aggregations(
     aggregation terms "agg1" field "field1" size 20,
     aggregation avg "agg2" field "field2"
+  )
 }
 ```
 
