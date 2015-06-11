@@ -21,14 +21,14 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.5.12 which is compatible with Elasticsearch 1.5.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.5.13 which is compatible with Elasticsearch 1.5.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.5.12|1.5.X|
-|1.4.13|1.4.x|
+|1.5.13|1.5.X|
+|1.4.14|1.4.x|
 |1.3.3|1.3.x|
 |1.2.3.0|1.2.x|
 |1.1.2.0|1.1.x|
@@ -37,7 +37,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 #### Dependencies
 
-Starting from version 1.5.12 the main artifact has been renamed to elastic4s-core_2.x. Please update your build scripts. There is now an elastic4s-testkit_2.x which brings in a couple of useful methods for waiting until the node/cluster is in some expected state. Very useful when trying unit tests.
+Starting from version 1.5.13 the main artifact has been renamed to elastic4s-core_2.x. Please update your build scripts. There is now an elastic4s-testkit_2.x which brings in a couple of useful methods for waiting until the node/cluster is in some expected state. Very useful when trying unit tests.
 
 If you previously used the Jackson support for DocumentSource or Indexables then you need to add a new dependency elastic4s-jackson_2.x. This will allow you to do `import ElasticJackson.Implicits._` which puts a Jackson based `Indexable` into scope, which allows any class to be indexed automagically without the need to manually create maps or json objects. Similarly, if you are using `response.hitsAs[T]`, then the same import brings in a `Reader` that will convert any type to a case class.
 
