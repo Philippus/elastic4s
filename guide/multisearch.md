@@ -3,12 +3,14 @@
 The multisearch request type allows us to execute multiple searches in the a single request.
 The format is simple, pass a list of search requests into the client method.
 
-Then to issue multiple search requests at once, we use
+Then to issue multiple search requests at once, we wrap the search results in a multi block, as such:
 
 ```scala
 val resp = client.execute (
-  search in "jtull" query "mylo", // note the trailing comma, we are invoking a var args method
-  search in "jtull" query "viva"
+  multi( // use ( not { as we are passing in var args, not a code block
+    search in "jtull" query "mylo", // note the trailing comma, we are invoking a var args method
+    search in "jtull" query "viva"
+  )
 )
 ```
 
