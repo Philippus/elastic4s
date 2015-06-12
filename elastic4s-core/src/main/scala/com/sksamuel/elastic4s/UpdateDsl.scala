@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.DocumentSource
+import com.sksamuel.elastic4s.definitions.DefinitionRouting
+import com.sksamuel.elastic4s.source.{Indexable, DocumentSource}
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
@@ -15,13 +16,6 @@ import scala.concurrent.duration.FiniteDuration
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
 
-  @deprecated("use `update id <id>`", "1.4.5")
-  def update(id: Any) = new UpdateExpectsIndex(id.toString)
-  class UpdateExpectsIndex(id: String) {
-    def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
-    def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
-  }
-
   implicit object UpdateDefinitionExecutable extends Executable[UpdateDefinition, UpdateResponse] {
     override def apply(c: Client, t: UpdateDefinition): Future[UpdateResponse] = {
       injectFuture(c.update(t.build, _))
@@ -29,7 +23,9 @@ trait UpdateDsl extends IndexesTypesDsl {
   }
 }
 
-class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompatibleDefinition {
+class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
+  extends BulkCompatibleDefinition
+  with DefinitionRouting {
 
   val _builder = new UpdateRequestBuilder(ProxyClients.client)
     .setIndex(indexesTypes.index)
@@ -71,10 +67,7 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     _builder.setDoc(source.json)
     this
   }
-  def routing(routing: String): this.type = {
-    _builder.setRouting(routing)
-    this
-  }
+
   def params(entries: (String, Any)*): this.type = params(entries.toMap)
   def params(map: Map[String, Any]): this.type = {
     map.foreach(arg => _builder.addScriptParam(arg._1, arg._2))
@@ -92,6 +85,7 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     _builder.setRefresh(refresh)
     this
   }
+  @deprecated("will be removed in 2.0.0. See https://github.com/elastic/elasticsearch/pull/10171", "1.6.0")
   def replicationType(repType: ReplicationType): this.type = {
     _builder.setReplicationType(repType)
     this
@@ -115,10 +109,17 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     _builder.setScriptLang(scriptLang)
     this
   }
+
+  def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
+    _builder.setDoc(indexable.json(t))
+    this
+  }
+
   def upsert(map: Map[String, Any]): this.type = {
     _builder.setUpsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
     this
   }
+
   def upsert(fields: (String, Any)*): this.type = upsert(fields.toMap)
   def upsert(iterable: Iterable[(String, Any)]): this.type = upsert(iterable.toMap)
 
@@ -126,12 +127,14 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String) extends BulkCompa
     _builder.setScriptedUpsert(upsert)
     this
   }
-  def version(version: Long): this.type = {
-    _builder.setVersion(version)
+
+  def versionType(versionType: VersionType): this.type = {
+    _builder.setVersionType(versionType)
     this
   }
-  def version(versionType: VersionType): this.type = {
-    _builder.setVersionType(versionType)
+
+  def version(version: Long): this.type = {
+    _builder.setVersion(version)
     this
   }
 }
