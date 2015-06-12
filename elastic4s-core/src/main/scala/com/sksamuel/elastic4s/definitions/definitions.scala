@@ -11,6 +11,15 @@ trait DefinitionRouting {
   }
 }
 
+trait DefinitionVersion {
+  protected val _builder: {def setVersion(version: Long): Any}
+
+  def version(version: Long): this.type = {
+    _builder.setVersion(version)
+    this
+  }
+}
+
 trait DefinitionPreference {
   protected val _builder: {def setPreference(pref: String): Any}
 

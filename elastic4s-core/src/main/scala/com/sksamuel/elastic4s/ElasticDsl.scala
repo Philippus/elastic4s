@@ -431,8 +431,11 @@ trait ElasticDsl
     }
     def settings(index: String) = new UpdateSettingsDefinition(index)
   }
-  def updateIn(indexTypes: IndexType*) = new {
-    def id(id: Any) = update id id in IndexesTypes(indexTypes.map(_.index), indexTypes.map(_.`type`))
+
+  def update(id: Any) = new UpdateExpectsIndex(id.toString)
+  class UpdateExpectsIndex(id: String) {
+    def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
+    def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
   }
 
   case object validate {
