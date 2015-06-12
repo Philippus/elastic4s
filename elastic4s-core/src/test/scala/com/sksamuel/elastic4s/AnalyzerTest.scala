@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
-
   client.execute {
     create index "analyzer" mappings {
       "test" as(
@@ -13,6 +12,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
         "stop" typed StringType analyzer StopAnalyzer,
+        "apos" typed StringType analyzer CustomAnalyzer("apos"),
         "stop_path" typed StringType analyzer CustomAnalyzer("stop_path"),
         "standard1" typed StringType analyzer CustomAnalyzer("standard1"),
         "simple1" typed StringType analyzer SimpleAnalyzer,
@@ -27,47 +27,52 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
         )
     } analysis(
-      PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
-      PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
-      CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
-      CustomAnalyzerDefinition("my_ngram",
-        StandardTokenizer,
-        LowercaseTokenFilter,
-        ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
-      CustomAnalyzerDefinition("edgengram",
-        StandardTokenizer,
-        LowercaseTokenFilter,
-        edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
-      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
-      CustomAnalyzerDefinition(
-        "shingle",
-        WhitespaceTokenizer,
-        LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
-      ),
-      CustomAnalyzerDefinition(
-        "shingle2",
-        WhitespaceTokenizer,
-        LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle2" maxShingleSize 2
-      ),
-      CustomAnalyzerDefinition(
-        "shingle3",
-        WhitespaceTokenizer,
-        LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
-      ),
-      CustomAnalyzerDefinition(
-        "shingle4",
-        WhitespaceTokenizer,
-        LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle4" tokenSeperator "#"
-      ),
-      CustomAnalyzerDefinition(
-        "stop_path",
-        WhitespaceTokenizer,
-        StopTokenFilterPath("new_stop", "stoplist.txt")
-      )
+        PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
+        PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
+        CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
+        CustomAnalyzerDefinition("my_ngram",
+          StandardTokenizer,
+          LowercaseTokenFilter,
+          ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
+        CustomAnalyzerDefinition("edgengram",
+          StandardTokenizer,
+          LowercaseTokenFilter,
+          edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
+        CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+        CustomAnalyzerDefinition(
+          "shingle",
+          WhitespaceTokenizer,
+          LowercaseTokenFilter,
+          shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
+        ),
+        CustomAnalyzerDefinition(
+          "shingle2",
+          WhitespaceTokenizer,
+          LowercaseTokenFilter,
+          shingle tokenfilter "filter_shingle2" maxShingleSize 2
+        ),
+        CustomAnalyzerDefinition(
+          "shingle3",
+          WhitespaceTokenizer,
+          LowercaseTokenFilter,
+          shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
+        ),
+        CustomAnalyzerDefinition(
+          "shingle4",
+          WhitespaceTokenizer,
+          LowercaseTokenFilter,
+          shingle tokenfilter "filter_shingle4" tokenSeperator "#"
+        ),
+        CustomAnalyzerDefinition(
+          "stop_path",
+          WhitespaceTokenizer,
+          StopTokenFilterPath("new_stop", "stoplist.txt")
+        ),
+        CustomAnalyzerDefinition(
+          "apos",
+          WhitespaceTokenizer,
+          ApostropheTokenFilter
+        )
       )
   }.await
 
@@ -83,6 +88,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "edgengram" -> "gameofthrones",
       "stop" -> "and and and red sox",
       "stop_path" -> "testing mics and which",
+      "apos" -> "oh no you didn't",
       "pattern1" -> "abc123def",
       "pattern2" -> "jethro tull,coldplay",
       "shingle" -> "please divide this sentence into shingles",
@@ -282,6 +288,17 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       client.execute {
         search in "analyzer/test" query termQuery("shingleseparator" -> "one#two")
       }.await.getHits.getTotalHits shouldBe 1
+    }
+  }
+
+  "ApostropheCharFilter" - {
+    "should remove the apostrophe and the characters after it" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("apos" -> "didn")
+      }.await.getHits.getTotalHits shouldBe 1
+      client.execute {
+        search in "analyzer/test" query termQuery("apos" -> "didn't")
+      }.await.getHits.getTotalHits shouldBe 0
     }
   }
 }

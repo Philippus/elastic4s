@@ -10,6 +10,10 @@ case object ReverseTokenFilter extends TokenFilter {
   val name = "reverse"
 }
 
+case object ApostropheTokenFilter extends TokenFilter {
+  val name = "apostrophe"
+}
+
 case object TrimTokenFilter extends TokenFilter {
   val name = "trim"
 }
