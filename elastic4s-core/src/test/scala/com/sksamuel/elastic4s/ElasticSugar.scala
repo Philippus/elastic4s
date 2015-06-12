@@ -44,6 +44,10 @@ object TestElasticNode extends Logging {
   newStopListFile.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
   newStopListFile.close()
 
+  println("################################################")
+  println(new File(confDir.getAbsolutePath + "/stoplist.txt").exists())
+  println("################################################")
+
   implicit val client = ElasticClient.local(settings.build)
 }
 
