@@ -21,7 +21,7 @@ trait DefinitionPreference {
 }
 
 trait DefinitionMinScore {
-  protected val _builder: {def setMinScore(minScore: Double): Any}
+  protected val _builder: {def setMinScore(minScore: Float): Any}
 
   def minScore(minScore: Double): this.type = {
     _builder.setMinScore(minScore.toFloat)
