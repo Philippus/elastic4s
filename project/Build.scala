@@ -92,6 +92,7 @@ object Build extends Build {
     .dependsOn(core)
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
+    .settings(rootSettings: _*)
     .settings(name := "elastic4s-examples")
     .dependsOn(core)
 

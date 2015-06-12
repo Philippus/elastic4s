@@ -5,6 +5,8 @@ import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.common.unit.TimeValue
 
+import scala.language.reflectiveCalls
+
 /** @author Stephen Samuel */
 object DefinitionAttributes {
 

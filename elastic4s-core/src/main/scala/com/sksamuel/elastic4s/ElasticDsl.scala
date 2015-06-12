@@ -119,7 +119,13 @@ trait ElasticDsl
     def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
   }
 
+  @deprecated("use countFrom", "1.6.0")
+  def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
+  @deprecated("use countFrom", "1.6.0")
+  def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
+
   def countFrom(indexes: String*): CountDefinition = count from indexes
+  def countFrom(indexes: IndexType): CountDefinition = count from indexes
 
   case object create {
 
@@ -347,7 +353,6 @@ trait ElasticDsl
     @deprecated("use `create repository` instead of `repository create` for a more readable dsl", "1.4.0.Beta2")
     def create(name: String) = new CreateRepositoryExpectsType(name)
   }
-
 
   case object restore {
     def snapshot(name: String) = {
