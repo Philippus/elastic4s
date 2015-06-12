@@ -25,6 +25,9 @@ object TestElasticNode extends Logging {
   logger.info("Setting ES home dir [{}]", homeDir)
   logger.info("Setting ES conf dir [{}]", confDir)
 
+  //println("Setting ES home dir [{}]", homeDir)
+  //println("Setting ES conf dir [{}]", confDir)
+
   val settings = ImmutableSettings.settingsBuilder()
     .put("node.http.enabled", false)
     .put("http.enabled", false)
@@ -44,14 +47,15 @@ object TestElasticNode extends Logging {
   newStopListFile.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
   newStopListFile.close()
 
-  println("################################################")
-  println(new File(confDir.getAbsolutePath + "/stoplist.txt").exists())
-  println("################################################")
+  //println("################################################")
+  //println(s"File exisits?: " + new File(confDir.getAbsolutePath + "/stoplist.txt").exists())
+  //println(s"File path: " + confDir.getAbsolutePath + "/stoplist.txt")
+  //println("################################################")
 
   implicit val client = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar extends  Logging {
+trait ElasticSugar extends Logging {
 
   this: Suite =>
 

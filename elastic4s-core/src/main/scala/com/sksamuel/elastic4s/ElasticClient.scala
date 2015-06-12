@@ -168,7 +168,7 @@ object ElasticClient {
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
   def local(settings: Settings): ElasticClient = {
-    fromNode(NodeBuilder.nodeBuilder().local(false).data(true).settings(settings).node())
+    fromNode(NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node())
   }
   @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
   def local(settings: Settings, timeout: Long): ElasticClient = local(settings)
