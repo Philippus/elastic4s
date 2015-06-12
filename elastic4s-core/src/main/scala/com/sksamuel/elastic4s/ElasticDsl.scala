@@ -272,6 +272,7 @@ trait ElasticDsl
     }
   }
 
+  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
   case object more {
     def like(id: Any): MltExpectsIndex = {
       require(id.toString.nonEmpty, "id must not be null or empty")
@@ -279,7 +280,9 @@ trait ElasticDsl
     }
   }
 
+  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
   def mlt = morelike
+  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
   case object morelike {
     def id(id: Any) = {
       require(id.toString.nonEmpty, "id must not be null or empty")

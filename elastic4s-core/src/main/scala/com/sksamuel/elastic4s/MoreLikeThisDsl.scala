@@ -10,7 +10,7 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
 
-  class MltExpectsIndex(id: String) {
+   class MltExpectsIndex(id: String) {
 
     def in(indexType: IndexType): MoreLikeThisDefinition = new MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
 
