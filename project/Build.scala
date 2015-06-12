@@ -26,7 +26,7 @@ object Build extends Build {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
-      "com.typesafe.scala-logging"    %% "scala-logging-slf4j"  % ScalaLoggingVersion,
+      "org.slf4j"                     %  "slf4j-api"            % "1.7.12",
       "commons-io"                    %  "commons-io"           % "2.4"                 % "test",
       "log4j"                         %  "log4j"                % "1.2.17"              % "test",
       "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion          % "test",

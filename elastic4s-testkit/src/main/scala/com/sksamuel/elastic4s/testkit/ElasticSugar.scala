@@ -5,12 +5,14 @@ import java.util.UUID
 
 import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.typesafe.scalalogging.slf4j.StrictLogging
 import org.elasticsearch.common.settings.ImmutableSettings
+import org.slf4j.LoggerFactory
 
 /** @author Stephen Samuel */
 
-object TestElasticNode extends StrictLogging {
+object TestElasticNode {
+
+  private val logger = LoggerFactory.getLogger(getClass)
 
   val tempFile = File.createTempFile("elasticsearchtests", "tmp")
   val homeDir = new File(tempFile.getParent + "/" + UUID.randomUUID().toString)
@@ -36,7 +38,9 @@ object TestElasticNode extends StrictLogging {
   implicit lazy val client = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar extends StrictLogging {
+trait ElasticSugar {
+
+  private val logger = LoggerFactory.getLogger(getClass)
 
   val client = TestElasticNode.client
 
