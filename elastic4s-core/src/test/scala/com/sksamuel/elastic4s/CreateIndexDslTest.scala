@@ -43,6 +43,58 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     create index "test" refreshInterval 4.seconds
   }
 
+  it should "support the stopwords_path filter" in {
+    val req = create.index("users").analysis(
+      PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
+      SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
+      CustomAnalyzerDefinition(
+        "myAnalyzer2",
+        StandardTokenizer("myTokenizer1", 900),
+        LengthTokenFilter("myTokenFilter2", 0, max = 10),
+        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
+        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
+        WordDelimiterTokenFilter(
+          "myWordDelimiterTokenFilter",
+          generateWordParts = true,
+          generateNumberParts = true,
+          catenateWords = false,
+          catenateNumbers = false,
+          catenateAll = false,
+          splitOnCaseChange = true,
+          preserveOriginal = false,
+          splitOnNumerics = true,
+          stemEnglishPossesive = true
+        )
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer3",
+        LowercaseTokenizer,
+        StopTokenFilterPath("myTokenFilter0", "stoplist.txt", enablePositionIncrements = true, ignoreCase = true),
+        StopTokenFilter("myTokenFilter1", enablePositionIncrements = true, ignoreCase = true),
+        ReverseTokenFilter,
+        LimitTokenFilter("myTokenFilter5", 5, consumeAllTokens = false),
+        EdgeNGramTokenFilter("myEdgeNGramTokenFilter", minGram = 3, maxGram = 50),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        HtmlStripCharFilter,
+        MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
+        PatternReplaceCharFilter(
+          "pattern_replace_charfilter",
+          pattern = "sample(.*)",
+          replacement = "replacedSample $1"
+        )
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer4",
+        EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter"))
+      ),
+      CustomAnalyzerDefinition(
+        "myAnalyzer5",
+        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
+    )
+    req._source.string should matchJsonResource("/json/createindex/createindex_stop_path.json")
+  }
+
   it should "support custom analyzers, tokenizers and filters" in {
     val req = create.index("users").analysis(
       PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),

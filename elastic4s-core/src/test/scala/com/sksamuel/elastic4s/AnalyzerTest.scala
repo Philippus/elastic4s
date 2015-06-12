@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{ FreeSpec, Matchers }
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
+
   client.execute {
     create index "analyzer" mappings {
       "test" as (
@@ -12,6 +13,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
         "stop" typed StringType analyzer StopAnalyzer,
+        "stop_path" typed StringType analyzer CustomAnalyzer("stop_path"),
         "standard1" typed StringType analyzer CustomAnalyzer("standard1"),
         "simple1" typed StringType analyzer SimpleAnalyzer,
         "pattern1" typed StringType analyzer CustomAnalyzer("pattern1"),
@@ -25,8 +27,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
       )
     } analysis (
-      PatternAnalyzerDefinition("pattern1", "\\d", false),
-      PatternAnalyzerDefinition("pattern2", ",", false),
+      PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
+      PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
       CustomAnalyzerDefinition("my_ngram",
         StandardTokenizer,
@@ -60,7 +62,12 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
                   WhitespaceTokenizer,
                   LowercaseTokenFilter,
                   shingle tokenfilter "filter_shingle4" tokenSeperator "#"
-                )
+                ),
+                  CustomAnalyzerDefinition(
+                    "stop_path",
+                    WhitespaceTokenizer,
+                    StopTokenFilterPath("new_stop", "stoplist.txt")
+                  )
     )
   }.await
 
@@ -74,7 +81,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "ngram" -> "starcraft",
       "custom_ngram" -> "dyson dc50i",
       "edgengram" -> "gameofthrones",
-      "stop" -> "and and and",
+      "stop" -> "and and and red sox",
+      "stop_path" -> "testing mics and which",
       "pattern1" -> "abc123def",
       "pattern2" -> "jethro tull,coldplay",
       "shingle" -> "please divide this sentence into shingles",
@@ -188,10 +196,21 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   }
 
   "StopAnalyzer" - {
-    "should exclude stop words" in {
+    "should- exclude stop words" in {
       client.execute {
         search in "analyzer/test" query termQuery("stop" -> "and")
       }.await.getHits.getTotalHits shouldBe 0
+    }
+  }
+
+  "StopAnalyzerPath" - {
+    "should exclude stop words from config/stoplist.txt" in {
+      client.execute {
+        search in "analyzer/test" query termQuery("stop_path" -> "and")
+      }.await.getHits.getTotalHits shouldBe 0
+      client.execute {
+        search in "analyzer/test" query termQuery("stop_path" -> "testing") // not in stoplist
+      }.await.getHits.getTotalHits shouldBe 1
     }
   }
 
@@ -265,5 +284,4 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       }.await.getHits.getTotalHits shouldBe 1
     }
   }
-
 }

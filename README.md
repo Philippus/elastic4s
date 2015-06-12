@@ -84,7 +84,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Operation                                 | Syntax |
 |-------------------------------------------|----------------|
 | [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
-| Clear index cache                         | `clear cache <name>` | 
+| Clear index cache                         | `clear cache <name>` |
 | Close index                               | `close index <name>` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
 | [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
@@ -104,7 +104,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Get Mapping                               | `get mapping <index> / <type>` |
 | Get Snapshot                              | `get snapshot <name> from <repo>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
-| Index exists                              | `index exists <name>` | 
+| Index exists                              | `index exists <name>` |
 | Index Status                              | `status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
@@ -119,7 +119,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
-| Search scroll                             | `search scroll <scrollId>` |  
+| Search scroll                             | `search scroll <scrollId>` |
 | [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
 
