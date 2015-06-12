@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 package admin
 
-import org.elasticsearch.action.admin.cluster.repositories.put.{ PutRepositoryResponse, PutRepositoryRequestBuilder }
-import org.elasticsearch.action.admin.cluster.snapshots.create.{ CreateSnapshotRequestBuilder, CreateSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.delete.{ DeleteSnapshotRequestBuilder, DeleteSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.restore.{ RestoreSnapshotRequestBuilder, RestoreSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.get.{ GetSnapshotsRequestBuilder, GetSnapshotsResponse }
+import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequestBuilder, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequestBuilder, GetSnapshotsResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
 import org.elasticsearch.client.Client
 
 import scala.collection.JavaConverters._
@@ -80,10 +80,10 @@ trait SnapshotDsl {
 }
 
 class CreateRepositoryDefinition(name: String, `type`: String) {
-  val request = new PutRepositoryRequestBuilder(ProxyClients.cluster, name).setType(`type`)
-  def build = request.request()
+  protected val request = new PutRepositoryRequest(name).`type`(`type`)
+  def build = request
   def settings(map: Map[String, AnyRef]): this.type = {
-    request.setSettings(map.asJava)
+    request.settings(map.asJava)
     this
   }
 }

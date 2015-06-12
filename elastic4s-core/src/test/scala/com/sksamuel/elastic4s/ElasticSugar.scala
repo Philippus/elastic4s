@@ -30,6 +30,7 @@ object TestElasticNode extends Logging {
     .put("http.enabled", false)
     .put("path.home", homeDir.getAbsolutePath)
     .put("path.conf", confDir.getAbsolutePath)
+    .put("path.repo", homeDir.getAbsolutePath)
     .put("index.number_of_shards", 1)
     .put("index.number_of_replicas", 0)
     .put("script.disable_dynamic", false)

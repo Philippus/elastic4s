@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{ FreeSpec, Matchers }
+import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     create index "analyzer" mappings {
-      "test" as (
+      "test" as(
         "keyword" typed StringType analyzer KeywordAnalyzer,
         "snowball" typed StringType analyzer SnowballAnalyzer,
         "whitespace" typed StringType analyzer WhitespaceAnalyzer,
@@ -25,8 +25,8 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "shingle2" typed StringType analyzer CustomAnalyzer("shingle2"),
         "noshingle" typed StringType analyzer CustomAnalyzer("shingle3"),
         "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
-      )
-    } analysis (
+        )
+    } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
       PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
       CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
@@ -34,45 +34,45 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         StandardTokenizer,
         LowercaseTokenFilter,
         ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
-        CustomAnalyzerDefinition("edgengram",
-          StandardTokenizer,
-          LowercaseTokenFilter,
-          edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
-          CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
-          CustomAnalyzerDefinition(
-            "shingle",
-            WhitespaceTokenizer,
-            LowercaseTokenFilter,
-            shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
-          ),
-            CustomAnalyzerDefinition(
-              "shingle2",
-              WhitespaceTokenizer,
-              LowercaseTokenFilter,
-              shingle tokenfilter "filter_shingle2" maxShingleSize 2
-            ),
-              CustomAnalyzerDefinition(
-                "shingle3",
-                WhitespaceTokenizer,
-                LowercaseTokenFilter,
-                shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
-              ),
-                CustomAnalyzerDefinition(
-                  "shingle4",
-                  WhitespaceTokenizer,
-                  LowercaseTokenFilter,
-                  shingle tokenfilter "filter_shingle4" tokenSeperator "#"
-                ),
-                  CustomAnalyzerDefinition(
-                    "stop_path",
-                    WhitespaceTokenizer,
-                    StopTokenFilterPath("new_stop", "stoplist.txt")
-                  )
-    )
+      CustomAnalyzerDefinition("edgengram",
+        StandardTokenizer,
+        LowercaseTokenFilter,
+        edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
+      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+      CustomAnalyzerDefinition(
+        "shingle",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
+      ),
+      CustomAnalyzerDefinition(
+        "shingle2",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle2" maxShingleSize 2
+      ),
+      CustomAnalyzerDefinition(
+        "shingle3",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
+      ),
+      CustomAnalyzerDefinition(
+        "shingle4",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle4" tokenSeperator "#"
+      ),
+      CustomAnalyzerDefinition(
+        "stop_path",
+        WhitespaceTokenizer,
+        StopTokenFilterPath("new_stop", "stoplist.txt")
+      )
+      )
   }.await
 
   client.execute {
-    index into "analyzer" / "test" fields (
+    index into "analyzer" / "test" fields(
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",
@@ -89,7 +89,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       "shingle2" -> "keep unigram",
       "noshingle" -> "keep",
       "shingleseparator" -> "one two"
-    )
+      )
   }.await
 
   refresh("analyzer")

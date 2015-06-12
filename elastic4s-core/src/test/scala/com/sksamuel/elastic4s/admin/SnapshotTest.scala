@@ -21,15 +21,11 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
   refresh("pizza")
   blockUntilCount(3, "pizza")
 
-  val location = new File(FileUtils.getTempDirectoryPath + "/" + UUID.randomUUID.toString)
-  location.mkdirs()
-  location.deleteOnExit()
-
   "an index" - {
     "can be snapshotted, fetched and restored" in {
 
       client.execute {
-        create repository "_snapshot" `type` "fs" settings Map("location" -> location.getAbsolutePath)
+        create repository "_snapshot" `type` "fs" settings Map("location" -> "snapshottest")
       }.await(10.seconds)
 
       client.execute {
