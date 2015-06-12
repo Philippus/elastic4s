@@ -14,7 +14,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
     def types(_types: String*): DeleteByQueryExpectsClause = types(_types)

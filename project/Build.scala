@@ -73,6 +73,7 @@ object Build extends Build {
     .aggregate(
       core,
       testkit,
+      examples,
       jackson
     )
 
@@ -88,6 +89,10 @@ object Build extends Build {
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
     .settings(rootSettings: _*)
     .settings(name := "elastic4s-testkit")
+    .dependsOn(core)
+
+  lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
+    .settings(name := "elastic4s-examples")
     .dependsOn(core)
 
   lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))

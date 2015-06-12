@@ -162,6 +162,8 @@ trait ElasticDsl
     def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
   }
 
+  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+
   def deleteFrom(index: String) = new {
     def id(id: Any) = delete from index id id
     def query(q: QueryDefinition) = delete from index where q
