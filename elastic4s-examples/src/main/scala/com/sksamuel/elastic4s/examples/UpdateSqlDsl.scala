@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.examples
 
 import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.source.Indexable
 
 // examples of the count API in dot notation
 class UpdateSqlDsl extends ElasticDsl {
@@ -14,6 +15,9 @@ class UpdateSqlDsl extends ElasticDsl {
   // update by id, using an implicit indexable for the updated doc
   case class Document(a: String, b: String, c: String)
   val somedoc = Document("a", "b", "c")
+  implicit object DocumentIndexable extends Indexable[Document] {
+    override def json(t: Document): String = ???
+  }
   update id "id" in "index" / "type" source somedoc
 
   // update by id, using a script

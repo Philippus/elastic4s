@@ -43,7 +43,9 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
       refresh("pizza")
       blockUntilCount(4, "pizza")
 
-      client.close("pizza").await
+      client.execute {
+        close index "pizza"
+      }.await
 
       client.execute {
         restore snapshot "snap" from "_snapshot" index "pizza"
