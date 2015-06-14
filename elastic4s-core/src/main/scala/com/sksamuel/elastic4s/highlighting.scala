@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.search.highlight.HighlightBuilder
 
+import scala.language.implicitConversions
+
 /** @author Stephen Samuel */
 trait HighlightDsl {
 
@@ -30,31 +32,38 @@ class HighlightOptionsDefinition {
     _boundary_max_scan = max
     this
   }
+
   def boundaryChars(chars: String): this.type = {
     _boundary_chars = Option(chars)
     this
   }
+
   def requireFieldMatch(requireFieldMatch: Boolean): this.type = {
     _requireFieldMatch = requireFieldMatch
     this
   }
+
   def tagSchema(tagSchema: TagSchema): this.type = {
     _tagSchema = Option(tagSchema)
     this
   }
+
   def order(order: HighlightOrder): this.type = {
     _order = Option(order)
     this
   }
+
   def encoder(encoder: HighlightEncoder): this.type = {
     this._encoder = Option(encoder)
     this
   }
+
   def postTags(iterable: Iterable[String]): this.type = postTags(iterable.toSeq: _*)
   def postTags(tags: String*): this.type = {
     this._postTags = tags
     this
   }
+
   def preTags(iterable: Iterable[String]): this.type = preTags(iterable.toSeq: _*)
   def preTags(tags: String*): this.type = {
     this._preTags = tags
@@ -82,43 +91,13 @@ class HighlightDefinition(field: String) {
 
   val builder = new HighlightBuilder.Field(field)
 
-  def fragmentSize(f: Int): this.type = {
-    builder.fragmentSize(f)
-    this
-  }
-
-  def noMatchSize(size: Int): this.type = {
-    builder.noMatchSize(size)
-    this
-  }
-
-  def numberOfFragments(n: Int): this.type = {
-    builder.numOfFragments(n)
-    this
-  }
-
-  def query(query: QueryDefinition): this.type = {
-    builder.highlightQuery(query.builder)
-    this
-  }
-
-  def phraseLimit(limit: Int): this.type = {
-    builder.phraseLimit(limit)
+  def boundaryChars(boundaryChars: String): this.type = {
+    builder.boundaryChars(boundaryChars.toCharArray)
     this
   }
 
   def boundaryMaxScan(boundaryMaxScan: Int): this.type = {
     builder.boundaryMaxScan(boundaryMaxScan)
-    this
-  }
-
-  def requireFieldMatchScan(requireFieldMatch: Boolean): this.type = {
-    builder.requireFieldMatch(requireFieldMatch)
-    this
-  }
-
-  def boundaryChars(boundaryChars: String): this.type = {
-    builder.boundaryChars(boundaryChars.toCharArray)
     this
   }
 
@@ -132,8 +111,54 @@ class HighlightDefinition(field: String) {
     this
   }
 
+  def fragmentOffset(n: Int): this.type = {
+    builder.fragmentOffset(n)
+    this
+  }
+
+  def fragmentSize(f: Int): this.type = {
+    builder.fragmentSize(f)
+    this
+  }
+
+  def highlightFilter(filter: Boolean): this.type = {
+    builder.highlightFilter(filter)
+    this
+  }
+
+  def highlighterType(`type`: String): this.type = {
+    builder.highlighterType(`type`)
+    this
+  }
+
+  def matchedFields(fields: String*): this.type = matchedFields(fields)
+  def matchedFields(fields: Iterable[String]): this.type = {
+    builder.matchedFields(fields.toSeq: _*)
+    this
+  }
+
+  def noMatchSize(size: Int): this.type = {
+    builder.noMatchSize(size)
+    this
+  }
+
+  def numberOfFragments(n: Int): this.type = {
+    builder.numOfFragments(n)
+    this
+  }
+
   def order(order: String): this.type = {
     builder.order(order)
+    this
+  }
+
+  def query(query: QueryDefinition): this.type = {
+    builder.highlightQuery(query.builder)
+    this
+  }
+
+  def phraseLimit(limit: Int): this.type = {
+    builder.phraseLimit(limit)
     this
   }
 
@@ -147,13 +172,8 @@ class HighlightDefinition(field: String) {
     this
   }
 
-  def fragmentOffset(n: Int): this.type = {
-    builder.fragmentOffset(n)
-    this
-  }
-
-  def highlighterType(`type`: String): this.type = {
-    builder.highlighterType(`type`)
+  def requireFieldMatchScan(requireFieldMatch: Boolean): this.type = {
+    builder.requireFieldMatch(requireFieldMatch)
     this
   }
 }
