@@ -217,6 +217,11 @@ trait ElasticDsl
 
   }
 
+  case object highlight {
+    def field(name: String) = new HighlightDefinition(name)
+  }
+  def highlight(field: String) = new HighlightDefinition(field)
+
   trait StatsKeyword
   case object stats extends StatsKeyword
 

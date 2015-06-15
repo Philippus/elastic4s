@@ -9,11 +9,6 @@ trait HighlightDsl {
 
   implicit def string2highlightfield(name: String): HighlightDefinition = new HighlightDefinition(name)
 
-  case object highlight {
-    def field(name: String) = new HighlightDefinition(name)
-  }
-  def highlight(field: String) = new HighlightDefinition(field)
-
   def options = new HighlightOptionsDefinition
 }
 
