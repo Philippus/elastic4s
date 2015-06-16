@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.get.GetResponse
-import org.elasticsearch.client.{ Client, Requests }
+import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.search.fetch.source.FetchSourceContext
 
@@ -12,7 +12,6 @@ import scala.language.implicitConversions
 trait GetDsl extends IndexesTypesDsl {
 
   def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
-  implicit def any2get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
 
   class GetWithIdExpectsFrom(id: String) {
     @deprecated("type is not used for get requests, remove the type name", "1.5.5")
@@ -46,8 +45,9 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     this
   }
 
-  def fields(fields: String*) = {
-    _builder.fields(fields: _*)
+  def fields(fs: String*) = fields(fs)
+  def fields(fs: Iterable[String]) = {
+    _builder.fields(fs.toSeq: _*)
     this
   }
 
