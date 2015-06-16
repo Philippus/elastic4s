@@ -132,6 +132,7 @@ trait ElasticDsl
   @deprecated("use countFrom", "1.6.0")
   def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
 
+  def countFrom(index: (String, String)): CountDefinition = count from index
   def countFrom(indexes: String*): CountDefinition = count from indexes
   def countFrom(indexes: IndexType): CountDefinition = count from indexes
 
@@ -161,7 +162,6 @@ trait ElasticDsl
   def createSnapshot(name: String) = create snapshot name
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
-
 
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)

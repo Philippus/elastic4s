@@ -8,29 +8,29 @@ import ElasticDsl._
 class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a count request" should "accept tuple for from" in {
-    val req = count from "places" -> "cities" where "name" -> "sammy"
+    val req = count from "places" -> "cities" query "name" -> "sammy"
     assert(req.build.indices() === Array("places"))
     assert(req.build.types() === Array("cities"))
   }
 
   it should "accept indextype" in {
-    val req = count from "places" / "cities" where "name" -> "sammy"
+    val req = count from "places" / "cities" query "name" -> "sammy"
     assert(req.build.indices() === Array("places"))
     assert(req.build.types() === Array("cities"))
   }
 
   it should "accept sequence of indexes and types" in {
-    val req = count from Seq("index1", "index2") types Seq("type1", "type2") where " name" -> " sammy"
+    val req = count from Seq("index1", "index2") types Seq("type1", "type2") query " name" -> " sammy"
     assert(req.build.indices() === Array("index1", "index2"))
   }
 
   it should "accept sequence of indexes and single type" in {
-    val req = count from Seq("index1", "index2") types "type1" where " name" -> " sammy"
+    val req = count from Seq("index1", "index2") types "type1" query " name" -> " sammy"
     assert(req.build.indices() === Array("index1", "index2"))
   }
 
   it should "accept single index and single type" in {
-    val req = count from "places" types "cities" where "paris"
+    val req = count from "places" types "cities" query "paris"
     assert(req.build.indices() === Array("places"))
   }
 
@@ -40,12 +40,12 @@ class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept varargs index and varargs of types" in {
-    val req = count from ("places", "bands") types ("type1", "type2") where "paris"
+    val req = count from ("places", "bands") types ("type1", "type2") query "paris"
     assert(req.build.indices() === Array("places", "bands"))
   }
 
   it should "accept single index and varargs of types" in {
-    val req = count from "places" types ("type1", "type2") where "paris"
+    val req = count from "places" types ("type1", "type2") query "paris"
     assert(req.build.indices() === Array("places"))
   }
 
@@ -55,17 +55,17 @@ class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "parase method invocation as index type" in {
-    val req = count("places/cities") query "paris"
+    val req = countFrom("places/cities") query "paris"
     assert(req.build.indices() === Array("places"))
   }
 
   it should "accept vararg method invocation as indexes" in {
-    val req = count("places", "bands") query "paris"
+    val req = countFrom("places", "bands") query "paris"
     assert(req.build.indices() === Array("places", "bands"))
   }
 
   it should "accept tuple method invocation" in {
-    val req = count("places" -> "bands") query "paris"
+    val req = countFrom("places" -> "bands") query "paris"
     assert(req.build.indices() === Array("places"))
   }
 }
