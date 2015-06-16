@@ -4,7 +4,6 @@ import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
@@ -23,9 +22,6 @@ trait SearchDsl
   with IndexesTypesDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
-
-  def select(indexes: String*): SearchDefinition = search(indexes: _*)
-  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
 
   def rescore(query: QueryDefinition): RescoreDefinition = {
     new RescoreDefinition(query)
@@ -230,6 +226,12 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     */
   def rawQuery(json: String): SearchDefinition = {
     _builder.setQuery(json)
+    this
+  }
+
+  def fuzzy(tuple: (String, Any)) = {
+    val q = new FuzzyQueryDefinition(tuple._1, tuple._2)
+    _builder.setQuery(q.builder.buildAsBytes)
     this
   }
 

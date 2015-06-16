@@ -385,6 +385,11 @@ trait ElasticDsl
   }
 
   def search(indexType: IndexType): SearchDefinition = search in indexType
+  @deprecated("use search keyword", "1.6.0")
+  def select(indexes: String*): SearchDefinition = search(indexes: _*)
+  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
+
+  def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
   case object shingle {
     def tokenfilter(name: String) = ShingleTokenFilter(name)
