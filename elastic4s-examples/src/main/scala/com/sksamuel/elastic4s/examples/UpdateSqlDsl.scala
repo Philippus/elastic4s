@@ -13,11 +13,7 @@ class UpdateSqlDsl extends ElasticDsl {
   update id "id" in "index" / "type" version 3 doc("name" -> "sam", "occuptation" -> "build breaker")
 
   // update by id, using an implicit indexable for the updated doc
-  case class Document(a: String, b: String, c: String)
   val somedoc = Document("a", "b", "c")
-  implicit object DocumentIndexable extends Indexable[Document] {
-    override def json(t: Document): String = ???
-  }
   update id "id" in "index" / "type" source somedoc
 
   // update by id, using a script

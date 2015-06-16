@@ -15,8 +15,8 @@ trait MappingDsl {
   val NotAnalyzed: String = "not_analyzed"
   def id: FieldDefinition = "_id"
 
-  implicit def field(name: String): FieldDefinition = new FieldDefinition(name)
-  implicit def map(`type`: String): MappingDefinition = new MappingDefinition(`type`)
+  implicit def stringToField(name: String): FieldDefinition = new FieldDefinition(name)
+  implicit def stringToMap(`type`: String): MappingDefinition = new MappingDefinition(`type`)
 
   implicit object GetMappingDefinitionExecutable extends Executable[GetMappingDefinition, GetMappingsResponse] {
     override def apply(c: Client, t: GetMappingDefinition): Future[GetMappingsResponse] = {

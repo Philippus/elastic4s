@@ -180,9 +180,10 @@ trait ElasticDsl
   }
 
   case object field extends TypeableFields {
-    val name = "dummy"
+    val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
   }
+  def field(name: String) = field name name
 
   case object flush {
     def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
@@ -277,7 +278,9 @@ trait ElasticDsl
     }
   }
 
-  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
+  def mapping(name: String) = mapping name name
+
+  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
   case object more {
     def like(id: Any): MltExpectsIndex = {
       require(id.toString.nonEmpty, "id must not be null or empty")
@@ -285,15 +288,18 @@ trait ElasticDsl
     }
   }
 
-  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
+  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
   def mlt = morelike
-  @deprecated("The More Like This API will be removed in 2.0.Instead, use the More Like This Query", "1.6.0")
+  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
   case object morelike {
     def id(id: Any) = {
       require(id.toString.nonEmpty, "id must not be null or empty")
       new MltExpectsIndex(id.toString)
     }
   }
+
+  def multiget(gets: Iterable[GetDefinition]) = new MultiGetDefinition(gets)
+  def multiget(gets: GetDefinition*) = new MultiGetDefinition(gets)
 
   case object ngram {
     def tokenfilter(name: String) = NGramTokenFilter(name)
