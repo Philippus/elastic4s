@@ -458,6 +458,9 @@ trait ElasticDsl
     def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
   }
 
+  def validateIn(indexType: IndexType): ValidateDefinition = validate in indexType
+  def validateIn(value: String): ValidateDefinition = validate in value
+
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)
   }
