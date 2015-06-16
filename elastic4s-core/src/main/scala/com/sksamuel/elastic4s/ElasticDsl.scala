@@ -183,7 +183,7 @@ trait ElasticDsl
     val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
   }
-  def field(name: String) = field name name
+  def field(name: String): FieldDefinition = field name name
 
   case object flush {
     def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
@@ -278,7 +278,7 @@ trait ElasticDsl
     }
   }
 
-  def mapping(name: String) = mapping name name
+  def mapping(name: String): MappingDefinition = mapping name name
 
   @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
   case object more {

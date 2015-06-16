@@ -45,8 +45,8 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     this
   }
 
-  def fields(fs: String*) = fields(fs)
-  def fields(fs: Iterable[String]) = {
+  def fields(fs: String*): GetDefinition = fields(fs)
+  def fields(fs: Iterable[String]): GetDefinition = {
     _builder.fields(fs.toSeq: _*)
     this
   }
