@@ -11,6 +11,11 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
       index into "katebush/songs" fields("name" -> "top of the city", "year" -> "1985"),
       index into "katebush/songs" fields("name" -> "wuthering heights", "year" -> "1979"),
       index into "katebush/songs" fields("name" -> "dream of sheep", "year" -> "1985"),
+      index into "katebush/songs" fields("name" -> "waking the watch", "year" -> "1985"),
+      index into "katebush/songs" fields("name" -> "watching you wathing me", "year" -> "1985"),
+      index into "katebush/songs" fields("name" -> "cloudbusting", "year" -> "1985"),
+      index into "katebush/songs" fields("name" -> "under ice", "year" -> "1985"),
+      index into "katebush/songs" fields("name" -> "jig of life", "year" -> "1985"),
       index into "katebush/songs" fields("name" -> "hello earth", "year" -> "1985")
     )
   }.await
@@ -31,9 +36,19 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
       }.await
       resp2.getHits.getHits.size shouldBe 2
 
+      val resp3 = client.execute {
+        searchScroll(resp2.getScrollId).keepAlive("1m")
+      }.await
+      resp3.getHits.getHits.size shouldBe 2
+
+      val resp4 = client.execute {
+        searchScroll(resp3.getScrollId).keepAlive("1m")
+      }.await
+      resp4.getHits.getHits.size shouldBe 2
+
       client.execute {
-        searchScroll(resp2.getScrollId)
-      }.await.getHits.getHits.size shouldBe 0
+        searchScroll(resp4.getScrollId)
+      }.await.getHits.getHits.size shouldBe 1
     }
   }
 }
