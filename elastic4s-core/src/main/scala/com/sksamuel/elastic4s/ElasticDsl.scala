@@ -255,12 +255,12 @@ trait ElasticDsl
     def stats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
   }
 
-  def index(indexType: IndexType): IndexDefinition = {
+  def indexInto(indexType: IndexType): IndexDefinition = {
     require(indexType != null, "indexType must not be null or empty")
     new IndexDefinition(indexType.index, indexType.`type`)
   }
 
-  def index(index: String, `type`: String): IndexDefinition = {
+  def indexInto(index: String, `type`: String): IndexDefinition = {
     require(index.nonEmpty, "index must not be null or empty")
     new IndexDefinition(index, `type`)
   }
