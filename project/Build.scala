@@ -4,7 +4,7 @@ import sbt.Keys._
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "1.5.14"
+  val appVersion = "1.5.15"
 
   val ScalaVersion =          "2.11.6"
   val ScalatestVersion =      "2.2.5"
@@ -79,7 +79,7 @@ object Build extends Build {
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     .settings(rootSettings: _*)
     .settings(
-      name := "elastic4s",
+      name := "elastic4s-core",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
