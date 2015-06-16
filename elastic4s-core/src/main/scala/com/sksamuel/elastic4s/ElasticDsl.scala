@@ -108,6 +108,14 @@ trait ElasticDsl
 
   def closeIndex(index: String): CloseIndexDefinition = close index index
 
+  case object cluster {
+    def persistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
+    def transientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
+  }
+
+  def clusterPersistentSettings(settings: Map[String, String]) = cluster persistentSettings settings
+  def clusterTransientSettings(settings: Map[String, String]) = cluster transientSettings settings
+
   case object commonGrams {
     def tokenfilter(name: String) = CommonGramsTokenFilter(name)
   }
@@ -153,6 +161,7 @@ trait ElasticDsl
   def createSnapshot(name: String) = create snapshot name
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
+
 
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)

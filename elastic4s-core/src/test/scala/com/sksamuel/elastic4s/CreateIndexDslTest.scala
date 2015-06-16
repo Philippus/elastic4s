@@ -19,7 +19,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         "name" typed GeoPointType latLon true geohash true,
         "content" typed DateType nullValue "no content"
       ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
-      map("users").as(
+      mapping("users").as(
         "name" typed IpType nullValue "127.0.0.1" boost 1.0,
         "location" typed IntegerType nullValue 0,
         "email" typed BinaryType,

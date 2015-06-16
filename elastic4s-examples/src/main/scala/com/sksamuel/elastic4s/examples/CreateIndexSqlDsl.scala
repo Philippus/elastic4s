@@ -27,7 +27,7 @@ class CreateIndexSqlDsl extends ElasticDsl {
   // create index with copy_to functionaliy
   create index "tweets" mappings (
     "tweet" as(
-      "title" typed StringType index "analyzed" copyTo("meta_data", "article_info"),
+      "title" typed StringType index "analyzed" copyTo("meta_data", "article_info")
       )
     )
 
