@@ -6,14 +6,6 @@ import org.elasticsearch.common.xcontent.XContentBuilder
 
 import scala.language.implicitConversions
 
-case class GetMappingDefinition(indexes: Iterable[String]) {
-  var types: Iterable[String] = Nil
-  def types(types: String*): this.type = {
-    this.types = types
-    this
-  }
-}
-
 case class DeleteMappingDefinition(indexes: Iterable[String]) {
   var types: Iterable[String] = Nil
   def types(types: String*): this.type = {
@@ -521,5 +513,5 @@ final class MultiFieldDefinition(name: String)
 }
 
 case class RoutingDefinition(required: Boolean,
-                             path: Option[String])
+  path: Option[String])
 

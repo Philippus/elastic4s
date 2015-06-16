@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
@@ -14,13 +15,13 @@ import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait SearchDsl
-  extends QueryDsl
-  with FilterDsl
-  with FacetDsl
-  with HighlightDsl
-  with ScriptFieldDsl
-  with SuggestionDsl
-  with IndexesTypesDsl {
+    extends QueryDsl
+    with FilterDsl
+    with FacetDsl
+    with HighlightDsl
+    with ScriptFieldDsl
+    with SuggestionDsl
+    with IndexesTypesDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
 
@@ -35,14 +36,14 @@ trait SearchDsl
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
   implicit object SearchDefinitionExecutable
-    extends Executable[SearchDefinition, SearchResponse] {
+      extends Executable[SearchDefinition, SearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[SearchResponse] = {
       injectFuture(c.search(t.build, _))
     }
   }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse] {
+      extends Executable[MultiSearchDefinition, MultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
       injectFuture(c.multiSearch(t.build, _))
     }
@@ -94,10 +95,11 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
   private var includes: Array[String] = Array.empty
   private var excludes: Array[String] = Array.empty
 
-  /** Adds a single string query to this search
-    *
-    * @param string the query string
-    */
+  /**
+   * Adds a single string query to this search
+   *
+   * @param string the query string
+   */
   def query(string: String): SearchDefinition = query(new QueryStringQueryDefinition(string))
   def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
   def query2(block: => QueryBuilder): SearchDefinition = {
@@ -111,7 +113,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
 
   def inner(inners: InnerHitDefinition*): this.type = inner(inners)
   def inner(inners: Iterable[InnerHitDefinition]): this.type = {
-    for ( inner <- inners )
+    for (inner <- inners)
       _builder.addInnerHit(inner.name, inner.inner)
     this
   }
@@ -157,11 +159,12 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  /** This method introduces zero or more script field definitions into the search construction
-    *
-    * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
-    * @return this, an instance of [[SearchDefinition]]
-    */
+  /**
+   * This method introduces zero or more script field definitions into the search construction
+   *
+   * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
+   * @return this, an instance of [[SearchDefinition]]
+   */
   def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
     import scala.collection.JavaConverters._
     sfieldDefs.foreach {
@@ -181,24 +184,26 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  /** Adds a single prefix query to this search
-    *
-    * @param tuple - the field and prefix value
-    *
-    * @return this
-    */
+  /**
+   * Adds a single prefix query to this search
+   *
+   * @param tuple - the field and prefix value
+   *
+   * @return this
+   */
   def prefix(tuple: (String, Any)) = {
     val q = new PrefixQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }
 
-  /** Adds a single regex query to this search
-    *
-    * @param tuple - the field and regex value
-    *
-    * @return this
-    */
+  /**
+   * Adds a single regex query to this search
+   *
+   * @param tuple - the field and regex value
+   *
+   * @return this
+   */
   def regex(tuple: (String, Any)) = {
     val q = new RegexQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
@@ -217,17 +222,18 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  /** Expects a query in json format and sets the query of the search request.
-    * Query must be valid json beginning with '{' and ending with '}'.
-    * Field names must be double quoted.
-    *
-    * Example:
-    * {{{
-    * search in "*" types("users", "tweets") limit 5 rawQuery {
-    * """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
-    * } searchType SearchType.Scan
-    * }}}
-    */
+  /**
+   * Expects a query in json format and sets the query of the search request.
+   * Query must be valid json beginning with '{' and ending with '}'.
+   * Field names must be double quoted.
+   *
+   * Example:
+   * {{{
+   * search in "*" types("users", "tweets") limit 5 rawQuery {
+   * """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
+   * } searchType SearchType.Scan
+   * }}}
+   */
   def rawQuery(json: String): SearchDefinition = {
     _builder.setQuery(json)
     this
@@ -269,6 +275,11 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
   def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
   def preference(pref: String): SearchDefinition = {
     _builder.setPreference(pref)
+    this
+  }
+
+  def indicesOptions(options: IndicesOptions): this.type = {
+    _builder.setIndicesOptions(options)
     this
   }
 

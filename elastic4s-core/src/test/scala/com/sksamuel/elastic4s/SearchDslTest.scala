@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.SuggestMode.{ Missing, Popular }
+import org.elasticsearch.action.support.IndicesOptions._
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MatchQueryBuilder.{ Operator, ZeroTermsQuery }
@@ -31,6 +32,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "accept sequences for type" in {
     val req = search in "*" types ("users", "tweets") from 5 query "sammy"
+    req._builder.toString should matchJsonResource("/json/search/search_test3.json")
+  }
+  
+  it should "accept indices options" in {
+    val req = search in "*" types ("users", "tweets") from 5 query "sammy"  indicesOptions lenientExpandOpen()
     req._builder.toString should matchJsonResource("/json/search/search_test3.json")
   }
 

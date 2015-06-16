@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
+import org.elasticsearch.action.support.IndicesOptions._
 import ElasticDsl._
 
 /** @author Stephen Samuel */
@@ -54,6 +55,11 @@ class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(req.build.indices() === Array("places"))
   }
 
+  it should "accept indices options" in {
+    val req = count from "places/cities" query "paris" indicesOptions lenientExpandOpen()
+    assert(req.build.indices() === Array("places"))
+  }
+  
   it should "parase method invocation as index type" in {
     val req = count("places/cities") query "paris"
     assert(req.build.indices() === Array("places"))

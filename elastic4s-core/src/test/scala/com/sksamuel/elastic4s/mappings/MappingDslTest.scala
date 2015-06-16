@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
+import org.elasticsearch.action.support.IndicesOptions._
 import com.sksamuel.elastic4s.mappings.FieldType.{ DateType, GeoPointType }
 import com.sksamuel.elastic4s.{ ElasticDsl, ElasticSugar }
 import org.scalatest.FlatSpec
@@ -14,8 +15,7 @@ class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
     client.execute {
       put mapping "index" / "type" as Seq(
         field name "name" withType GeoPointType,
-        field name "content" typed DateType nullValue "no content"
-      )
+        field name "content" typed DateType nullValue "no content")
     }
   }
 
@@ -28,6 +28,12 @@ class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "the get mapping dsl" should "be accepted by the client" in {
     client.execute {
       get mapping "index" types "type"
+    }
+  }
+
+  it should "support specify indices options" in {
+    client.execute {
+      get mapping "index" types "type" indicesOptions lenientExpandOpen()
     }
   }
 
