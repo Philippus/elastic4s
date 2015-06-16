@@ -10,9 +10,12 @@ object Build extends Build {
   val ScalatestVersion =      "2.2.5"
   val MockitoVersion =        "1.9.5"
   val JacksonVersion =        "2.5.2"
-  val Slf4jVersion =          "1.7.7"
+  val Slf4jVersion =          "1.7.12"
   val ScalaLoggingVersion =   "2.1.2"
   val ElasticsearchVersion =  "1.6.0"
+  val Log4jVersion          = "1.2.17"
+  val CommonsIoVersion =      "2.4"
+  val GroovyVersion =         "2.3.7"
 
   val rootSettings = Seq(
     version := appVersion,
@@ -26,13 +29,13 @@ object Build extends Build {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
-      "org.slf4j"                     %  "slf4j-api"            % "1.7.12",
-      "commons-io"                    %  "commons-io"           % "2.4"                 % "test",
-      "log4j"                         %  "log4j"                % "1.2.17"              % "test",
+      "org.slf4j"                     %  "slf4j-api"            % Slf4jVersion,
+      "commons-io"                    %  "commons-io"           % CommonsIoVersion      % "test",
+      "log4j"                         %  "log4j"                % Log4jVersion          % "test",
       "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion          % "test",
       "org.mockito"                   %  "mockito-all"          % MockitoVersion        % "test",
       "org.scalatest"                 %% "scalatest"            % ScalatestVersion      % "test",
-      "org.codehaus.groovy"           %  "groovy"               % "2.3.7"               % "test"
+      "org.codehaus.groovy"           %  "groovy"               % GroovyVersion         % "test"
 
     ),
     publishTo <<= version {
