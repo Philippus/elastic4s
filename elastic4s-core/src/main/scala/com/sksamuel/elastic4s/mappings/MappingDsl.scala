@@ -2,8 +2,9 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.{ IndexType, Executable, ProxyClients }
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
+import org.elasticsearch.action.admin.indices.mapping.get.{ GetMappingsRequest, GetMappingsRequestBuilder, GetMappingsResponse }
 import org.elasticsearch.action.admin.indices.mapping.put.{ PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse }
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -20,7 +21,7 @@ trait MappingDsl {
 
   implicit object GetMappingDefinitionExecutable extends Executable[GetMappingDefinition, GetMappingsResponse] {
     override def apply(c: Client, t: GetMappingDefinition): Future[GetMappingsResponse] = {
-      injectFuture(c.admin.indices.prepareGetMappings(t.indexes.toSeq: _*).setTypes(t.types.toSeq: _*).execute)
+      injectFuture(c.admin.indices.getMappings(t.request, _))
     }
   }
 
@@ -35,6 +36,23 @@ trait MappingDsl {
       injectFuture(c.admin.indices.prepareDeleteMapping(t.indexes.toSeq: _*).setType(t.types.toSeq: _*).execute)
     }
   }
+}
+
+case class GetMappingDefinition(indexes: Iterable[String]) {
+
+  val _builder = new GetMappingsRequestBuilder(ProxyClients.indices).setIndices(indexes.toSeq: _*)
+
+  def types(types: String*): this.type = {
+    _builder.setTypes(types: _*)
+    this
+  }
+
+  def indicesOptions(options: IndicesOptions): this.type = {
+    _builder.setIndicesOptions(options)
+    this
+  }
+
+  def request: GetMappingsRequest = _builder.request()
 }
 
 class PutMappingDefinition(indexType: IndexType) extends MappingDefinition(indexType.`type`) {

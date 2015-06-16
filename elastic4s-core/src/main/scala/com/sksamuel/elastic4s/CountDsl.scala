@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.count.{ CountRequestBuilder, CountResponse }
-import org.elasticsearch.action.support.QuerySourceBuilder
+import org.elasticsearch.action.support.{ QuerySourceBuilder, IndicesOptions }
 import org.elasticsearch.client.Client
 import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
 
@@ -44,10 +44,16 @@ class CountDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  /** The maximum count for each shard, upon reaching which the query execution will terminate early.
-    * If set, the response will have a boolean field terminated_early to indicate whether the query execution
-    * has actually terminated_early. Defaults to no terminate_after.
-    */
+  def indicesOptions(options: IndicesOptions): this.type = {
+    _builder.setIndicesOptions(options)
+    this
+  }
+
+  /**
+   * The maximum count for each shard, upon reaching which the query execution will terminate early.
+   * If set, the response will have a boolean field terminated_early to indicate whether the query execution
+   * has actually terminated_early. Defaults to no terminate_after.
+   */
   def terminateAfter(termAfter: Int): this.type = {
     _builder.setTerminateAfter(termAfter)
     this
