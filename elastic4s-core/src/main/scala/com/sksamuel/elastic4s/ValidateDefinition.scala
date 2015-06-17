@@ -20,6 +20,11 @@ class ValidateDefinition(index: String, `type`: String) {
     this
   }
 
+  def rewrite(rewrite: Boolean): this.type = {
+    _builder.setRewrite(rewrite)
+    this
+  }
+
   def query(block: => QueryDefinition): this.type = {
     _builder.setQuery(block.builder)
     this
