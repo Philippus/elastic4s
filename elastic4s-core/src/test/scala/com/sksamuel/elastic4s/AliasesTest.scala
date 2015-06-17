@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
-import org.elasticsearch.index.query.FilterBuilders
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
@@ -28,7 +27,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }.await
 
   client.execute {
-    add alias "english_waterways" on "waterways" filter FilterBuilders.termFilter("country", "england")
+    add alias "english_waterways" on "waterways" filter termFilter("country", "england")
   }.await
 
   client.execute {
