@@ -23,7 +23,7 @@ trait GetDsl extends IndexesTypesDsl {
     def from(index: String): GetDefinition = new GetDefinition(index, id)
   }
 
-  implicit object GetDslExecutable extends Executable[GetDefinition, GetResponse] {
+  implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, GetResponse] {
     override def apply(c: Client, t: GetDefinition): Future[GetResponse] = {
       injectFuture(c.get(t.build, _))
     }
@@ -93,6 +93,4 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
   }
 }
 
-object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse] {
-  override def apply(client: Client, t: GetDefinition): Future[GetResponse] = injectFuture(client.get(t.build, _))
-}
+

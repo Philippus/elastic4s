@@ -31,14 +31,14 @@ trait SearchDsl
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
   implicit object SearchDefinitionExecutable
-    extends Executable[SearchDefinition, SearchResponse] {
+    extends Executable[SearchDefinition, SearchResponse, SearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[SearchResponse] = {
       injectFuture(c.search(t.build, _))
     }
   }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse] {
+    extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
       injectFuture(c.multiSearch(t.build, _))
     }

@@ -10,9 +10,10 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait MoreLikeThisDsl {
 
-   class MltExpectsIndex(id: String) {
+  class MltExpectsIndex(id: String) {
 
-    def in(indexType: IndexType): MoreLikeThisDefinition = new MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
+    def in(indexType: IndexType): MoreLikeThisDefinition = new
+        MoreLikeThisDefinition(indexType.index, indexType.`type`, id)
 
     def in(in: String): MoreLikeThisDefinition = in.split("/").toList match {
       case indx :: Nil => new MoreLikeThisDefinition(indx, null, id)
@@ -21,7 +22,8 @@ trait MoreLikeThisDsl {
     }
   }
 
-  implicit object MoreLikeThisDefinitionExecutable extends Executable[MoreLikeThisDefinition, SearchResponse] {
+  implicit object MoreLikeThisDefinitionExecutable
+    extends Executable[MoreLikeThisDefinition, SearchResponse, SearchResponse] {
     override def apply(c: Client, t: MoreLikeThisDefinition): Future[SearchResponse] = {
       injectFuture(c.moreLikeThis(t.build, _))
     }

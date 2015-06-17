@@ -14,7 +14,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 
-
   class DeleteByQueryExpectsType(indexes: Seq[String]) {
     def types(_types: String*): DeleteByQueryExpectsClause = types(_types)
     def types(_types: Iterable[String]): DeleteByQueryExpectsClause =
@@ -53,13 +52,16 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
   }
 
-  implicit object DeleteByIdDefinitionExecutable extends Executable[DeleteByIdDefinition, DeleteResponse] {
+  implicit object DeleteByIdDefinitionExecutable
+    extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
       injectFuture(c.delete(t.build, _))
     }
   }
 
-  implicit object DeleteByQueryDefinitionExecutable extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse] {
+  @deprecated("Delete by query will be removed in 2.0.  Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+  implicit object DeleteByQueryDefinitionExecutable
+    extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse, DeleteByQueryResponse] {
     override def apply(c: Client, t: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
       injectFuture(c.deleteByQuery(t.build, _))
     }

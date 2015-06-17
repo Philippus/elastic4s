@@ -21,21 +21,21 @@ trait AliasesDsl {
   }
 
   implicit object GetAliasDefinitionExecutable
-    extends Executable[GetAliasDefinition, GetAliasesResponse] {
+    extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {
       injectFuture(c.admin.indices.getAliases(t.build, _))
     }
   }
 
   implicit object MutateAliasDefinitionExecutable
-    extends Executable[MutateAliasDefinition, IndicesAliasesResponse] {
+    extends Executable[MutateAliasDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: MutateAliasDefinition): Future[IndicesAliasesResponse] = {
       injectFuture(c.admin.indices.aliases(t.build, _))
     }
   }
 
   implicit object IndicesAliasesRequestDefinitionExecutable
-    extends Executable[IndicesAliasesRequestDefinition, IndicesAliasesResponse] {
+    extends Executable[IndicesAliasesRequestDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: IndicesAliasesRequestDefinition): Future[IndicesAliasesResponse] = {
       injectFuture(c.admin.indices.aliases(t.build, _))
     }
@@ -53,8 +53,10 @@ class GetAliasDefinition(aliases: Seq[String]) {
 
 class MutateAliasDefinition(val aliasAction: AliasAction) {
   def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
-  def filter(filter: FilterBuilder): MutateAliasDefinition= new MutateAliasDefinition(aliasAction.filter(filter))
-  def filter(filter: FilterDefinition): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter.builder))
+  def filter(filter: FilterBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
+  def filter(filter: FilterDefinition): MutateAliasDefinition = {
+    new MutateAliasDefinition(aliasAction.filter(filter.builder))
+  }
   def build = new IndicesAliasesRequest().addAliasAction(aliasAction)
 }
 

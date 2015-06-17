@@ -1,21 +1,22 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.settings.get.{ GetSettingsRequest, GetSettingsResponse }
-import org.elasticsearch.action.admin.indices.settings.put.{ UpdateSettingsResponse, UpdateSettingsRequest }
+import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
+import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsResponse, UpdateSettingsRequest}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
 
 trait SettingsDsl {
 
-  implicit object GetSettingsDefinitionExecutable extends Executable[GetSettingsDefinition, GetSettingsResponse] {
+  implicit object GetSettingsDefinitionExecutable
+    extends Executable[GetSettingsDefinition, GetSettingsResponse, GetSettingsResponse] {
     override def apply(c: Client, t: GetSettingsDefinition): Future[GetSettingsResponse] = {
       injectFuture(c.admin.indices.getSettings(t.build, _))
     }
   }
 
   implicit object UpdateSettingsDefinitionExecutable
-      extends Executable[UpdateSettingsDefinition, UpdateSettingsResponse] {
+    extends Executable[UpdateSettingsDefinition, UpdateSettingsResponse, UpdateSettingsResponse] {
     override def apply(c: Client, t: UpdateSettingsDefinition): Future[UpdateSettingsResponse] = {
       injectFuture(c.admin.indices.updateSettings(t.builder, _))
     }

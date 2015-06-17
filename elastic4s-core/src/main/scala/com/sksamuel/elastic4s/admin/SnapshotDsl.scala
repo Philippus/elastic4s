@@ -13,12 +13,12 @@ import scala.concurrent.Future
 
 /** @author Stephen Samuel
   *
-  * DSL Syntax:
+  *         DSL Syntax:
   *
-  * repository create <repo> settings <settings>
-  * snapshot create <name> in <repo>
-  * snapshot delete <name> in <repo>
-  * snapshot restore <name> from <repo>
+  *         repository create <repo> settings <settings>
+  *         snapshot create <name> in <repo>
+  *         snapshot delete <name> in <repo>
+  *         snapshot restore <name> from <repo>
   *
   */
 trait SnapshotDsl {
@@ -44,35 +44,35 @@ trait SnapshotDsl {
   }
 
   implicit object DeleteSnapshotDefinitionExecutable
-      extends Executable[DeleteSnapshotDefinition, DeleteSnapshotResponse] {
+    extends Executable[DeleteSnapshotDefinition, DeleteSnapshotResponse, DeleteSnapshotResponse] {
     override def apply(c: Client, t: DeleteSnapshotDefinition): Future[DeleteSnapshotResponse] = {
       injectFuture(c.admin.cluster.deleteSnapshot(t.build, _))
     }
   }
 
   implicit object RestoreSnapshotDefinitionExecutable
-      extends Executable[RestoreSnapshotDefinition, RestoreSnapshotResponse] {
+    extends Executable[RestoreSnapshotDefinition, RestoreSnapshotResponse, RestoreSnapshotResponse] {
     override def apply(c: Client, t: RestoreSnapshotDefinition): Future[RestoreSnapshotResponse] = {
       injectFuture(c.admin.cluster.restoreSnapshot(t.build, _))
     }
   }
 
   implicit object CreateSnapshotDefinitionExecutable
-      extends Executable[CreateSnapshotDefinition, CreateSnapshotResponse] {
+    extends Executable[CreateSnapshotDefinition, CreateSnapshotResponse, CreateSnapshotResponse] {
     override def apply(c: Client, t: CreateSnapshotDefinition): Future[CreateSnapshotResponse] = {
       injectFuture(c.admin.cluster.createSnapshot(t.build, _))
     }
   }
 
   implicit object GetSnapshotsDefinitionExecutable
-      extends Executable[GetSnapshotsDefinition, GetSnapshotsResponse] {
+    extends Executable[GetSnapshotsDefinition, GetSnapshotsResponse, GetSnapshotsResponse] {
     override def apply(c: Client, t: GetSnapshotsDefinition): Future[GetSnapshotsResponse] = {
       injectFuture(c.admin.cluster.getSnapshots(t.build, _))
     }
   }
 
   implicit object CreateRepositoryDefinitionExecutable
-      extends Executable[CreateRepositoryDefinition, PutRepositoryResponse] {
+    extends Executable[CreateRepositoryDefinition, PutRepositoryResponse, PutRepositoryResponse] {
     override def apply(c: Client, t: CreateRepositoryDefinition): Future[PutRepositoryResponse] = {
       injectFuture(c.admin.cluster.putRepository(t.build, _))
     }

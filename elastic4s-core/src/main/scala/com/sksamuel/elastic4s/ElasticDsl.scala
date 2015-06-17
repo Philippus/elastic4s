@@ -163,12 +163,20 @@ trait ElasticDsl
   def createTemplate(name: String) = create template name
 
   case object delete {
+
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+
+    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
     def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsClause = new DeleteByQueryExpectsClause(indexesTypes)
+    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
     def from(indexType: IndexType): DeleteByQueryExpectsClause = from(IndexesTypes(indexType))
+    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
     def from(index: String): DeleteByQueryExpectsClause = from(IndexesTypes(index))
+    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
+    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
+
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
     def index(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq: _*)
     def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
@@ -177,18 +185,7 @@ trait ElasticDsl
     def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
   }
 
-  @deprecated("use deleteId", "1.6.0")
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-  def deleteId(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-
-  def deleteFrom(index: String) = new {
-    def id(id: Any) = delete from index id id
-    def query(q: QueryDefinition) = delete from index where q
-  }
-  def deleteFrom(indexType: IndexType) = new {
-    def id(id: Any) = delete from indexType.index id id
-    def query(q: QueryDefinition) = delete from indexType.index where q
-  }
 
   def deleteIndex(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
   def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq: _*)

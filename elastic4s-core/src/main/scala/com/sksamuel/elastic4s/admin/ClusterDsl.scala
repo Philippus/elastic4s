@@ -16,20 +16,21 @@ trait ClusterDsl {
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
   implicit object ClusterHealthDefinitionExecutable
-    extends Executable[ClusterHealthDefinition, ClusterHealthResponse] {
+    extends Executable[ClusterHealthDefinition, ClusterHealthResponse, ClusterHealthResponse] {
     override def apply(c: Client, t: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
       injectFuture(c.admin.cluster.health(t.build, _))
     }
   }
 
-  implicit object ClusterStatsExecutable extends Executable[ClusterStatsDefinition, ClusterStatsResponse] {
+  implicit object ClusterStatsExecutable
+    extends Executable[ClusterStatsDefinition, ClusterStatsResponse, ClusterStatsResponse] {
     override def apply(c: Client, cs: ClusterStatsDefinition): Future[ClusterStatsResponse] = {
       injectFuture(c.admin.cluster.prepareClusterStats.execute)
     }
   }
 
   implicit object ClusterSettingsExecutable
-    extends Executable[ClusterSettingsDefinition, ClusterUpdateSettingsResponse] {
+    extends Executable[ClusterSettingsDefinition, ClusterUpdateSettingsResponse, ClusterUpdateSettingsResponse] {
     override def apply(c: Client, t: ClusterSettingsDefinition): Future[ClusterUpdateSettingsResponse] = {
       injectFuture(t.build(c.admin.cluster.prepareUpdateSettings).execute)
     }

@@ -7,7 +7,7 @@ import scala.concurrent.Future
 
 trait ScrollDsl {
 
-  implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse] {
+  implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, SearchResponse] {
     override def apply(client: Client, s: SearchScrollDefinition): Future[SearchResponse] = {
       val request = client.prepareSearchScroll(s.id)
       s._keepAlive.foreach(request.setScroll)
@@ -17,7 +17,7 @@ trait ScrollDsl {
 }
 
 class SearchScrollDefinition(val id: String) {
-  var _keepAlive: Option[String] = None
+  private[elastic4s] var _keepAlive: Option[String] = None
   def keepAlive(time: String): this.type = {
     _keepAlive = Option(time)
     this

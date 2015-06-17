@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{ DefinitionAttributePreference, DefinitionAttributeRouting }
-import org.elasticsearch.action.explain.{ ExplainRequestBuilder, ExplainResponse }
+import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRouting}
+import org.elasticsearch.action.explain.{ExplainRequestBuilder, ExplainResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client
 
@@ -10,7 +10,7 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait ExplainDsl {
 
-  implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse] {
+  implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse, ExplainResponse] {
     override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
       injectFuture(c.explain(t.build, _))
     }
@@ -22,8 +22,8 @@ trait ExplainDsl {
 }
 
 class ExplainDefinition(indexesTypes: IndexesTypes, id: Any)
-    extends DefinitionAttributeRouting
-    with DefinitionAttributePreference {
+  extends DefinitionAttributeRouting
+  with DefinitionAttributePreference {
 
   val _builder = new ExplainRequestBuilder(ProxyClients.client, indexesTypes.index, indexesTypes.typ.get, id.toString)
 

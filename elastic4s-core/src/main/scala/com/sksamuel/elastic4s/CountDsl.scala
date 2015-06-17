@@ -11,7 +11,7 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait CountDsl {
 
-  implicit object CountDefinitionExecutable extends Executable[CountDefinition, CountResponse] {
+  implicit object CountDefinitionExecutable extends Executable[CountDefinition, CountResponse, CountResponse] {
     override def apply(client: Client, t: CountDefinition): Future[CountResponse] = {
       injectFuture(client.count(t.build, _))
     }

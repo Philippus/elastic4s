@@ -16,7 +16,7 @@ import scala.concurrent.duration.FiniteDuration
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
 
-  implicit object UpdateDefinitionExecutable extends Executable[UpdateDefinition, UpdateResponse] {
+  implicit object UpdateDefinitionExecutable extends Executable[UpdateDefinition, UpdateResponse, UpdateResponse] {
     override def apply(c: Client, t: UpdateDefinition): Future[UpdateResponse] = {
       injectFuture(c.update(t.build, _))
     }

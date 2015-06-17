@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.index.{ IndexRequestBuilder, IndexResponse }
-import org.elasticsearch.action.percolate.{ PercolateRequestBuilder, PercolateResponse }
+import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
+import org.elasticsearch.action.percolate.{PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{ XContentBuilder, XContentFactory }
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.percolator.PercolatorService
 
 import scala.collection.mutable.ListBuffer
@@ -20,7 +20,8 @@ trait PercolateDsl extends QueryDsl {
   implicit def string2register(id: String): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id)
 
   @deprecated("Use the `percolate in X`", "1.4.1")
-  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new PercolateDefinitionImplicit(IndexesTypes(index))
+  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new
+      PercolateDefinitionImplicit(IndexesTypes(index))
 
   class PercolateDefinitionImplicit(indexType: IndexesTypes) extends PercolateDefinition(indexType) {
     @deprecated("Use the percolate in X", "1.4.1")
@@ -42,15 +43,14 @@ trait PercolateDsl extends QueryDsl {
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
-  implicit object RegisterDefinitionExecutable
-      extends Executable[RegisterDefinition, IndexResponse] {
+  implicit object RegisterDefinitionExecutable extends Executable[RegisterDefinition, IndexResponse, IndexResponse] {
     override def apply(c: Client, t: RegisterDefinition): Future[IndexResponse] = {
       injectFuture(c.index(t.build, _))
     }
   }
 
   implicit object PercolateDefinitionExecutable
-      extends Executable[PercolateDefinition, PercolateResponse] {
+    extends Executable[PercolateDefinition, PercolateResponse, PercolateResponse] {
     override def apply(c: Client, t: PercolateDefinition): Future[PercolateResponse] = {
       injectFuture(c.percolate(t.build, _))
     }
@@ -63,7 +63,7 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
   def build = {
     val source = XContentFactory.jsonBuilder()
       .startObject().field("query", _query.builder)
-    for (tuple <- _fields) {
+    for ( tuple <- _fields ) {
       source.field(tuple._1, tuple._2)
     }
     source.endObject()
@@ -111,7 +111,7 @@ class PercolateDefinition(indexType: IndexesTypes) {
         source.rawField("doc", doc.getBytes("UTF-8"))
       case None =>
         source.startObject("doc")
-        for (tuple <- _fields) {
+        for ( tuple <- _fields ) {
           source.field(tuple._1, tuple._2)
         }
         source.endObject()

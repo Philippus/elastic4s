@@ -9,7 +9,8 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait MultiGetDsl extends GetDsl {
 
-  implicit object MultiGetDefinitionExecutable extends Executable[MultiGetDefinition, MultiGetResponse] {
+  implicit object MultiGetDefinitionExecutable
+    extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResponse] {
     override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResponse] = {
       injectFuture(c.multiGet(t.build, _))
     }

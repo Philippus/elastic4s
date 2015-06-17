@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.bulk.{ BulkRequest, BulkResponse }
+import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -19,7 +19,7 @@ trait BulkDsl {
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
   implicit object BulkCompatibleDefinitionExecutable
-      extends Executable[Seq[BulkCompatibleDefinition], BulkResponse] {
+    extends Executable[Seq[BulkCompatibleDefinition], BulkResponse, BulkResponse] {
     override def apply(c: Client, ts: Seq[BulkCompatibleDefinition]): Future[BulkResponse] = {
       val bulk = c.prepareBulk()
       ts.foreach {
@@ -32,7 +32,7 @@ trait BulkDsl {
   }
 
   implicit object BulkDefinitionExecutable
-      extends Executable[BulkDefinition, BulkResponse] {
+    extends Executable[BulkDefinition, BulkResponse, BulkResponse] {
     override def apply(c: Client, t: BulkDefinition): Future[BulkResponse] = {
       val bulk = c.prepareBulk()
       t.requests.foreach {

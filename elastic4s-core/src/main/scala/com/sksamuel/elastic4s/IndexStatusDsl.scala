@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.status.{ IndicesStatusRequest, IndicesStatusResponse }
+import org.elasticsearch.action.admin.indices.status.{IndicesStatusRequest, IndicesStatusResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -16,7 +16,7 @@ trait IndexStatusDsl {
   }
 
   implicit object IndexStatusDefinitionExecutable
-      extends Executable[IndexStatusDefinition, IndicesStatusResponse] {
+    extends Executable[IndexStatusDefinition, IndicesStatusResponse, IndicesStatusResponse] {
     override def apply(c: Client, t: IndexStatusDefinition): Future[IndicesStatusResponse] = {
       injectFuture(c.admin.indices.status(t.build, _))
     }

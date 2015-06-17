@@ -25,7 +25,7 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client) {
 
-  def execute[T, R](t: T)(implicit executable: Executable[T, R]): Future[R] = executable(client, t)
+  def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
 
