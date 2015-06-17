@@ -210,8 +210,7 @@ trait ElasticDsl
 
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
 
-    def mapping(indexType: IndexType): GetMappingDefinition = new GetMappingDefinition(List(indexType.index))
-      .types(indexType.`type`)
+    def mapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
 
@@ -221,12 +220,18 @@ trait ElasticDsl
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
-    def snapshot(snapshotNames: Iterable[String]): GetSnapshotsExpectsFrom = new
-        GetSnapshotsExpectsFrom(snapshotNames.toSeq)
-    def snapshot(snapshotNames: String*): GetSnapshotsExpectsFrom = snapshot(snapshotNames)
-
+    def snapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(names.toSeq)
+    def snapshot(names: String*): GetSnapshotsExpectsFrom = snapshot(names)
   }
 
+  def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
+  def getMapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
+  def getSegments(indexes: String*): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
+  def getSettings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
+  def getTemplate(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
+  def getSnapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(names.toSeq)
+  def getSnapshot(names: String*): GetSnapshotsExpectsFrom = getSnapshot(names)
+  
   case object highlight {
     def field(name: String) = new HighlightDefinition(name)
   }

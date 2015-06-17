@@ -62,20 +62,3 @@ class IndicesAliasesRequestDefinition(aliasMutations: MutateAliasDefinition*) {
   def build = aliasMutations.foldLeft(new IndicesAliasesRequest())(
     (request, aliasDef) => request.addAliasAction(aliasDef.aliasAction))
 }
-
-object Main extends App {
-
-  import com.sksamuel.elastic4s.ElasticDsl._
-
-  val client = ElasticClient.local
-  client.execute(create index "bands")
-  client.execute {
-    index into "bands/artists" fields "name" -> "coldplay"
-  }.await
-  val resp = client.execute {
-    search in "bands/artists" query "coldplay"
-  }.await
-  println(resp)
-  client.shutdown
-  client.close()
-}
