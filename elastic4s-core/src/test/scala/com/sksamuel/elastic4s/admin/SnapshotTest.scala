@@ -1,10 +1,6 @@
 package com.sksamuel.elastic4s
 package admin
 
-import java.io.File
-import java.util.UUID
-
-import org.apache.commons.io.FileUtils
 import org.scalatest.FreeSpec
 import org.scalatest.mock.MockitoSugar
 

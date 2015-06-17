@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.admin
 
-import org.elasticsearch.action.fieldstats.{FieldStatsRequestBuilder, FieldStats, FieldStatsResponse}
+import com.sksamuel.elastic4s.Executable
+import org.elasticsearch.action.fieldstats.{FieldStats, FieldStatsRequestBuilder, FieldStatsResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future

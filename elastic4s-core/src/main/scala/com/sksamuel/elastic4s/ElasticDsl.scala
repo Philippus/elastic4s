@@ -17,6 +17,7 @@ trait ElasticDsl
   with DeleteIndexDsl
   with DeleteDsl
   with FacetDsl
+  with FieldStatsDsl
   with ExplainDsl
   with GetDsl
   with IndexAdminDsl
@@ -166,15 +167,25 @@ trait ElasticDsl
 
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
-    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+    @deprecated(
+      "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk",
+      "1.6.0")
     def from(indexesTypes: IndexesTypes): DeleteByQueryExpectsClause = new DeleteByQueryExpectsClause(indexesTypes)
-    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+    @deprecated(
+      "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk",
+      "1.6.0")
     def from(indexType: IndexType): DeleteByQueryExpectsClause = from(IndexesTypes(indexType))
-    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+    @deprecated(
+      "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk",
+      "1.6.0")
     def from(index: String): DeleteByQueryExpectsClause = from(IndexesTypes(index))
-    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+    @deprecated(
+      "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk",
+      "1.6.0")
     def from(indexes: String*): DeleteByQueryExpectsType = from(indexes)
-    @deprecated("Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+    @deprecated(
+      "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk",
+      "1.6.0")
     def from(indexes: Iterable[String]): DeleteByQueryExpectsType = new DeleteByQueryExpectsType(indexes.toSeq)
 
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
@@ -202,8 +213,12 @@ trait ElasticDsl
   case object field extends TypeableFields {
     val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
+    def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
+    def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
   def field(name: String): FieldDefinition = field name name
+  def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
+  def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
 
   case object flush {
     def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
