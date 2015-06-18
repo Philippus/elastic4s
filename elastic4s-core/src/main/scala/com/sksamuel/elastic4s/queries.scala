@@ -922,6 +922,11 @@ class MatchPhrasePrefixDefinition(field: String, value: Any)
     builder.analyzer(a.name)
     this
   }
+  
+  def analyzer(name: String): MatchPhrasePrefixDefinition = {
+    builder.analyzer(name)
+    this
+  }
 
   def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery): MatchPhrasePrefixDefinition = {
     builder.zeroTermsQuery(z)
