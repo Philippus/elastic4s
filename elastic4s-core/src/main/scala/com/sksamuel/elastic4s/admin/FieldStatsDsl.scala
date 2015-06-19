@@ -11,7 +11,7 @@ trait FieldStatsDsl {
   implicit object FieldStatsDefinitionExecutable
     extends Executable[FieldStatsDefinition, FieldStatsResponse, FieldStatsResult] {
     override def apply(c: Client, t: FieldStatsDefinition): Future[FieldStatsResult] = {
-      injectFutureAndMap(t.build(c.prepareFieldStats).execute, resp => FieldStatsResult(resp))
+      injectFutureAndMap(t.build(c.prepareFieldStats).execute) { resp => FieldStatsResult(resp) }
     }
   }
 }

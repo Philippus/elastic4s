@@ -6,15 +6,11 @@ import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.facet.Facets
 import org.elasticsearch.search.highlight.HighlightField
-import org.elasticsearch.search.suggest.Suggest
-import org.elasticsearch.search.suggest.Suggest.Suggestion
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 
 import scala.concurrent.duration._
 
 class RichSearchResponse(resp: SearchResponse) {
-
-  import scala.collection.JavaConverters._
 
   def totalHits: Long = resp.getHits.getTotalHits
   def maxScore: Float = resp.getHits.getMaxScore
@@ -33,35 +29,12 @@ class RichSearchResponse(resp: SearchResponse) {
   def facets: Facets = resp.getFacets
   def aggregations: Aggregations = resp.getAggregations
 
-  def suggest: Suggest = resp.getSuggest
-  def suggestions: Suggest = resp.getSuggest
-  def suggestion(name: String): Option[RichSuggestion] = {
-    Option(suggest.getSuggestion[Suggestion[Suggestion.Entry[Suggestion.Entry.Option]]](name)) map { sugg =>
-      RichSuggestion(sugg.getType, sugg.getName, sugg.getEntries.asScala.map { ent =>
-        RichSuggestionEntry(ent.getLength, ent.getOffset, ent.getText.string, ent.getOptions.asScala.map { opt =>
-          RichSuggestionOption(opt.getText.string,
-            opt.getScore,
-            Option(opt.getHighlighted).map(_.toString),
-            opt.collateMatch)
-        }.toArray)
-      }.toArray)
-    }
-  }
+  def suggest: SuggestResult = SuggestResult(resp.getSuggest)
+  def suggestion(name: String) = suggest.suggestions.find(_.name == name)
 
   def isTimedOut: Boolean = resp.isTimedOut
   def isTerminatedEarly: Boolean = resp.isTerminatedEarly
 }
-
-case class RichSuggestion(`type`: Int, name: String, entries: Array[RichSuggestionEntry]) {
-  def size = entries.length
-  def entry(term: String): RichSuggestionEntry = entries.find(_.term == term).get
-  def entryTerms: Array[String] = entries.map(_.term)
-}
-case class RichSuggestionEntry(length: Int, offset: Int, term: String, options: Array[RichSuggestionOption]) {
-  def hasSuggestions = !options.isEmpty
-  def optionsText: Array[String] = options.map(_.text)
-}
-case class RichSuggestionOption(text: String, score: Double, highlighted: Option[String], collateMatch: Boolean)
 
 class RichSearchHit(hit: SearchHit) {
 

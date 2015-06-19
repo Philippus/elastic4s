@@ -1,8 +1,12 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.suggest.SuggestResponse
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
-import org.elasticsearch.search.suggest.SuggestBuilders
+import org.elasticsearch.search.suggest.{Suggest, SuggestBuilders}
+
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait SuggestionDsl {
@@ -12,6 +16,17 @@ trait SuggestionDsl {
   case object phrase extends Suggester[PhraseSuggestionDefinition]
   case object completion extends Suggester[CompletionSuggestionDefinition]
   case object fuzzyCompletion extends Suggester[FuzzyCompletionSuggestionDefinition]
+
+  implicit object SuggestionsDefinitionExecutable
+    extends Executable[TermSuggestionDefinition, SuggestResponse, SuggestResult] {
+    override def apply(client: Client, t: TermSuggestionDefinition): Future[SuggestResult] = {
+      val req = client.prepareSuggest(t.indexes: _*)
+      req.addSuggestion(t.builder)
+      injectFutureAndMap(req.execute) { resp =>
+        SuggestResult(resp.getSuggest)
+      }
+    }
+  }
 
   object suggest {
 
@@ -29,7 +44,6 @@ trait SuggestionDsl {
     /** used for backwards compatibility */
     def as(name: String) = using(term) as name
   }
-
 }
 
 trait SuggestionDefinition {
@@ -63,7 +77,7 @@ trait SuggestionDefinition {
   }
 }
 
-class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
+class TermSuggestionDefinition(val name: String, val indexes: Seq[String] = Nil) extends SuggestionDefinition {
 
   val builder = SuggestBuilders.termSuggestion(name)
 
@@ -197,3 +211,39 @@ object SuggestMode {
   case object Popular extends SuggestMode("popular")
   case object Always extends SuggestMode("always")
 }
+
+case class SuggestResult(suggestions: Array[Suggestion], suggest: org.elasticsearch.search.suggest.Suggest)
+
+object SuggestResult {
+
+  import scala.collection.JavaConverters._
+
+  def apply(suggest: Suggest): SuggestResult = {
+    val suggestions = suggest.iterator.asScala.map { sugg =>
+      Suggestion(sugg.getType, sugg.getName, sugg.getEntries.asScala.map { ent =>
+        SuggestionEntry(ent.getLength, ent.getOffset, ent.getText.string, ent.getOptions.asScala.map { opt =>
+          SuggestionOption(
+            opt.getText.string,
+            opt.getScore,
+            Option(opt.getHighlighted).map(_.toString),
+            opt.collateMatch
+          )
+        }.toArray)
+      }.toArray)
+    }.toArray
+    SuggestResult(suggestions, suggest)
+  }
+}
+
+case class Suggestion(`type`: Int, name: String, entries: Array[SuggestionEntry]) {
+  def size = entries.length
+  def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
+  def entryTerms: Array[String] = entries.map(_.term)
+}
+
+case class SuggestionEntry(length: Int, offset: Int, term: String, options: Array[SuggestionOption]) {
+  def hasSuggestions = !options.isEmpty
+  def optionsText: Array[String] = options.map(_.text)
+}
+
+case class SuggestionOption(text: String, score: Double, highlighted: Option[String], collateMatch: Boolean)
