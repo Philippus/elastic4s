@@ -10,7 +10,6 @@ import scala.concurrent.Future
 
 trait AliasesDsl {
 
-  def aliases(aliasMutations: MutateAliasDefinition*) = new IndicesAliasesRequestDefinition(aliasMutations: _*)
 
   class AddAliasExpectsIndex(alias: String) {
     def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))

@@ -83,6 +83,9 @@ class TermSuggestionDefinition(name: String) extends SuggestionDefinition {
     this
   }
 
+  /**
+   * The minimum length a suggest text term must have in order to be corrected.
+   */
   def minWordLength(minWordLength: Int): TermSuggestionDefinition = {
     builder.minWordLength(minWordLength)
     this

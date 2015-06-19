@@ -46,6 +46,7 @@ trait ElasticDsl
   }
   def addAlias(name: String): AddAliasExpectsIndex = add alias name
 
+  @deprecated("use `add/remove/get alias` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
   case object aliases {
     @deprecated("use `add alias` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
     def add(alias: String) = new AddAliasExpectsIndex(alias)
@@ -54,6 +55,8 @@ trait ElasticDsl
     @deprecated("use `get alias` instead of `aliases get` for a more readable dsl", "1.4.0.Beta2")
     def get(aliases: String*) = new GetAliasDefinition(aliases)
   }
+
+  def aliases(aliasMutations: MutateAliasDefinition*) = new IndicesAliasesRequestDefinition(aliasMutations: _*)
 
   def agg = aggregation
   case object aggregation {
