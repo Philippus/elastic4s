@@ -14,11 +14,8 @@ trait GetDsl extends IndexesTypesDsl {
   def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
 
   class GetWithIdExpectsFrom(id: String) {
-    @deprecated("type is not used for get requests, remove the type name", "1.5.5")
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
-    @deprecated("type is not used for get requests, remove the type name", "1.5.5")
     def from(index: IndexType): GetDefinition = new GetDefinition(index.index, id)
-    @deprecated("type is not used for get requests, remove the type name", "1.5.5")
     def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))
     def from(index: String): GetDefinition = new GetDefinition(index, id)
   }
