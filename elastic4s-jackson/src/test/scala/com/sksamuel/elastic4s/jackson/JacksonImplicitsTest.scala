@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.sksamuel.elastic4s.{ElasticSugar, ElasticDsl}
-import org.scalatest.{WordSpec, Matchers}
+import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.{Matchers, WordSpec}
 
 class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
 
   "jackson implicits" should {
     " support any type" in {
 
-      import ElasticJackson.Implicits._
       import ElasticDsl._
+      import ElasticJackson.Implicits._
 
       client.execute {
         bulk(
