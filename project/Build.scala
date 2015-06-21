@@ -72,6 +72,7 @@ object Build extends Build {
   lazy val root = Project("elastic4s", file("."))
     .settings(rootSettings: _*)
     .settings(publish := {})
+    .settings(publishArtifact := false)
     .settings(name := "elastic4s")
     .aggregate(
       core,
