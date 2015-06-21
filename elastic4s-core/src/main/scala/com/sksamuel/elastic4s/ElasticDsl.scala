@@ -123,6 +123,11 @@ trait ElasticDsl
     def tokenfilter(name: String) = CommonGramsTokenFilter(name)
   }
 
+  case object completion {
+    def suggestion(name: String) = new CompletionSuggestionDefinition(name)
+  }
+  def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
+
   case object count {
     def from(indexType: IndexType): CountDefinition = from(IndexesTypes(indexType))
     def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
@@ -230,6 +235,11 @@ trait ElasticDsl
 
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = flush index indexes
   def flushIndex(indexes: String*): FlushIndexDefinition = flush index indexes
+
+  case object fuzzyCompletion {
+    def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
+  }
+  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition = fuzzyCompletion suggestion name
 
   case object get {
 
@@ -378,6 +388,11 @@ trait ElasticDsl
 
   def percolateIn(index: String): PercolateDefinition = percolate in index
 
+  case object phrase {
+    def suggestion(name: String) = new PhraseSuggestionDefinition(name)
+  }
+  def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
+
   case object put {
     def mapping(indexType: IndexType) = new PutMappingDefinition(indexType)
   }
@@ -476,6 +491,9 @@ trait ElasticDsl
     def tokenfilter(name: String) = StemmerTokenFilter(name)
   }
 
+  def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
+  def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
+
   case object template {
     @deprecated("use `create template` instead of `template create` for a more readable dsl", "1.4.0.Beta2")
     def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
@@ -484,6 +502,11 @@ trait ElasticDsl
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
+
+  case object term {
+    def suggestion(name: String) = new TermSuggestionDefinition(name)
+  }
+  def termSuggestion(name: String): TermSuggestionDefinition = term suggestion name
 
   case object timestamp {
     def enabled(en: Boolean) = TimestampDefinition(en)
@@ -523,6 +546,8 @@ trait ElasticDsl
 
   def validateIn(indexType: IndexType): ValidateDefinition = validate in indexType
   def validateIn(value: String): ValidateDefinition = validate in value
+
+
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)

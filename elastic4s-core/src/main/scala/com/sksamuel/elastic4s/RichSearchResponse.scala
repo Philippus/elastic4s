@@ -30,7 +30,9 @@ class RichSearchResponse(resp: SearchResponse) {
   def aggregations: Aggregations = resp.getAggregations
 
   def suggest: SuggestResult = SuggestResult(resp.getSuggest)
-  def suggestion(name: String) = suggest.suggestions.find(_.name == name)
+  def suggestions = suggest.suggestions
+  def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
+  def suggestion[A](sd: SuggestionDefinition): sd.R = suggestion(sd.name).asInstanceOf[sd.R]
 
   def isTimedOut: Boolean = resp.isTimedOut
   def isTerminatedEarly: Boolean = resp.isTerminatedEarly

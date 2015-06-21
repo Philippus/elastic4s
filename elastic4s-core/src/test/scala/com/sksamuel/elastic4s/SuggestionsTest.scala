@@ -34,38 +34,38 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
 
   "suggestions" should {
     "bring back results" in {
+      val suggestionA = termSuggestion("a").field("artist").text("taylor swaft")
       val resp = client.execute {
         search in indexType suggestions {
-          suggest as "a" field "artist" on "taylor swaft"
+          suggestionA
         }
       }.await
-      resp.suggestion("a").get.entry("taylor").options.isEmpty shouldBe true
-      resp.suggestion("a").get.entry("swaft").optionsText shouldBe Array("swift")
+      resp.suggestion(suggestionA).entry("taylor").options.isEmpty shouldBe true
+      resp.suggestion("a").entry("swaft").optionsText shouldBe Array("swift")
     }
     "bring back suggestions for matching terms when mode is always" in {
+      val suggestionA = term suggestion "a" field "artist" text "Razzle Kacks" mode SuggestMode.Always
       val resp = client.execute {
-        search in indexType suggestions {
-          suggest as "a" field "artist" on "Razzle Kacks" mode SuggestMode.Always
-        }
+        search in indexType suggestions suggestionA
       }.await
-      resp.suggestion("a").get.entry("razzle").optionsText shouldBe Array("rizzle")
-      resp.suggestion("a").get.entry("kacks").optionsText shouldBe Array("kicks")
+      resp.suggestion("a").entry("razzle").optionsText shouldBe Array("rizzle")
+      resp.suggestion("a").entry("kacks").optionsText shouldBe Array("kicks")
     }
     "bring back suggestions that are more popular when popular mode is set" in {
       val resp = client.execute {
         search in indexType suggestions {
-          suggest as "a" field "artist" on "Quoon" mode SuggestMode.Popular
+          term suggestion "a" field "artist" text "Quoon" mode SuggestMode.Popular
         }
       }.await
-      resp.suggestion("a").get.entry("quoon").optionsText shouldBe Array("queen")
+      resp.suggestion("a").entry("quoon").optionsText shouldBe Array("queen")
     }
     "allow us to set the max edits to be counted as a suitable suggestion" in {
       val resp = client.execute {
         search in indexType suggestions {
-          suggest as "a" field "artist" on "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
+          term suggestion "a" field "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
       }.await
-      resp.suggestion("a").get.entry("quean").optionsText shouldBe Array("queen")
+      resp.suggestion("a").entry("quean").optionsText shouldBe Array("queen")
     }
     //    "allow us to set min word length to be suggested for" in {
     //      val resp = client.execute {
