@@ -23,7 +23,7 @@ import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client) {
+class ElasticClient(val client: org.elasticsearch.client.Client) extends IterableSearch {
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
@@ -124,6 +124,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
 
   @deprecated("Use .await() on future of async client", "1.3.0")
   def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
+
+  override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse] = {
+    IterableSearch(this).iterateSearch(query)
+  }
 }
 
 object ElasticClient {
@@ -172,7 +176,6 @@ object ElasticClient {
   }
   @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
   def local(settings: Settings, timeout: Long): ElasticClient = local(settings)
-
 }
 
 object ElasticsearchClientUri {
