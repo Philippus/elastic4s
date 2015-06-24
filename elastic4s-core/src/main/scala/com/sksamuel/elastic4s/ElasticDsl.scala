@@ -368,16 +368,14 @@ trait ElasticDsl
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
   }
-
   def openIndex(index: String) = open index index
 
   case object optimize {
     def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
     def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
-
-  def optimizeIn(indexes: String*): OptimizeDefinition = optimize index indexes
-  def optimizeIn(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
+  def optimizeIndex(indexes: String*): OptimizeDefinition = optimize index indexes
+  def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
 
   case object percolate {
     def in(index: String) = {
@@ -502,6 +500,7 @@ trait ElasticDsl
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
+  def template(name: String): DynamicTemplateDefinition = template name name
 
   case object term {
     def suggestion(name: String) = new TermSuggestionDefinition(name)
@@ -527,8 +526,8 @@ trait ElasticDsl
     }
     def settings(index: String) = new UpdateSettingsDefinition(index)
   }
-
   def update(id: Any) = new UpdateExpectsIndex(id.toString)
+
   class UpdateExpectsIndex(id: String) {
     def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
     def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)

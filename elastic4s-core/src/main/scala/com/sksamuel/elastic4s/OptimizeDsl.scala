@@ -32,14 +32,23 @@ class OptimizeDefinition(indexes: String*) {
     builder.flush(flush)
     this
   }
+
   def maxSegments(maxSegments: Int): OptimizeDefinition = {
     builder.maxNumSegments(maxSegments)
     this
   }
+
+  /**
+   * Should the optimization only expunge deletes from the index, without full optimization.
+   * Defaults to full optimization (<tt>false</tt>).
+   */
+
   def onlyExpungeDeletes(onlyExpungeDeletes: Boolean): OptimizeDefinition = {
     builder.onlyExpungeDeletes(onlyExpungeDeletes)
     this
   }
+
+  @deprecated("deprecated in elasticsearch", "1.6.1")
   def force(force: Boolean): OptimizeDefinition = {
     builder.force(force)
     this
