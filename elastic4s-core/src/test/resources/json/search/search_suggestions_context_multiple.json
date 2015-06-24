@@ -1,0 +1,13 @@
+{
+  "suggest": {
+    "my-suggestion-1": {
+      "text": "wildcats by ratatat",
+      "completion": {
+        "field": "colors",
+        "context": {
+          "genre": ["electronic", "alternative rock"]
+        }
+      }
+    }
+  }
+}
