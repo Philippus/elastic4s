@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRefresh}
+import org.elasticsearch.action.get.MultiGetRequest.Item
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse}
 import org.elasticsearch.client.Client
 
@@ -22,7 +23,15 @@ class MultiGetDefinition(gets: Iterable[GetDefinition])
   with DefinitionAttributeRefresh {
 
   val _builder = new MultiGetRequestBuilder(ProxyClients.client)
-  gets.foreach(get => _builder.add(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id))
+
+  gets foreach { get =>
+    val item = new Item(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id)
+    item.routing(get.build.routing())
+    item.fields(get.build.fields():_*)
+    item.version(get.build.version())
+    _builder.add(item)
+  }
+
   def build: MultiGetRequest = _builder.request()
 
   def realtime(realtime: Boolean): this.type = {
