@@ -921,7 +921,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search in "music" types "bands" suggestions(
       completion suggestion "my-suggestion-1" text "wildcats by ratatat" field "colors" context("genre", Seq("electronic", "alternative rock"))
     )
-    req._builder.toString should matchJsonResource("/json/search/search_suggestions_context.json")
+    req._builder.toString should matchJsonResource("/json/search/search_suggestions_context_multiple.json")
   }
 
   it should "generate correct json for nested query" in {
