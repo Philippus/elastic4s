@@ -70,6 +70,11 @@ trait SuggestionDefinition {
     builder.addContextField(field, values.asJava)
     this
   }
+
+  def context(field: String, values: Iterable[String]): this.type = {
+    builder.addContextField(field, values.asJava)
+    this
+  }
 }
 
 case class TermSuggestionDefinition(name: String, indexes: Seq[String] = Nil)
