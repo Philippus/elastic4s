@@ -27,6 +27,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
+  def json[T](t: T)(implicit show: Show[T]): String = show.show(t)
+
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
 
   def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
@@ -167,7 +169,7 @@ object ElasticClient {
     fromClient(client)
   }
 
-  def data : ElasticClient = data(ImmutableSettings.builder.build)
+  def data: ElasticClient = data(ImmutableSettings.builder.build)
   def data(settings: Settings): ElasticClient = fromNode(NodeBuilder.nodeBuilder().data(true).settings(settings).node())
 
   def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
@@ -176,6 +178,7 @@ object ElasticClient {
   }
   @deprecated("timeout is no longer needed, it is ignored, so you can use the local(client) method instead", "1.4.2")
   def local(settings: Settings, timeout: Long): ElasticClient = local(settings)
+
 }
 
 object ElasticsearchClientUri {
