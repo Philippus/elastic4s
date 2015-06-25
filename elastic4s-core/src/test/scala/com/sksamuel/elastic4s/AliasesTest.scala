@@ -2,19 +2,19 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
-import org.scalatest.FlatSpec
+import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.mock.MockitoSugar
 
 import scala.collection.JavaConversions._
 
-class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute(
     bulk(
-      index into "waterways/rivers" id 11 fields ("name" -> "River Lune", "country" -> "England"),
-      index into "waterways/rivers" id 12 fields ("name" -> "River Dee", "country" -> "England"),
-      index into "waterways/rivers" id 21 fields ("name" -> "River Dee", "country" -> "Wales"),
-      index into "waterways_updated/rivers" id 31 fields ("name" -> "Thames", "country" -> "England")
+      index into "waterways/rivers" id 11 fields("name" -> "River Lune", "country" -> "England"),
+      index into "waterways/rivers" id 12 fields("name" -> "River Dee", "country" -> "England"),
+      index into "waterways/rivers" id 21 fields("name" -> "River Dee", "country" -> "Wales"),
+      index into "waterways_updated/rivers" id 31 fields("name" -> "Thames", "country" -> "England")
     )
   ).await
 
@@ -78,7 +78,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "moving_alias" should "move from 'waterways' to 'waterways_updated'" in {
     val resp = client.execute {
-      get alias "moving_alias" on ("waterways", "waterways_updated")
+      get alias "moving_alias" on("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(resp, "waterways", Set("moving_alias"))
@@ -92,11 +92,20 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar {
     }.await
 
     val respAfterMovingAlias = client.execute {
-      get alias "moving_alias" on ("waterways", "waterways_updated")
+      get alias "moving_alias" on("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(respAfterMovingAlias, "waterways_updated", Set("moving_alias"))
     assert(!respAfterMovingAlias.getAliases.containsKey("waterways"))
+  }
+
+  "get alias" should "have implicit conversion to rich response" in {
+
+    val resp = client.execute {
+      get alias "english_waterways" on "waterways"
+    }.await
+
+    resp.aliases("waterways").head.alias shouldBe "english_waterways"
   }
 
   private def compareAliasesForIndex(resp: GetAliasesResponse, index: String,

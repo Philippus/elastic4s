@@ -3,13 +3,13 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.cluster.metadata.AliasAction
+import org.elasticsearch.cluster.metadata.{AliasMetaData, AliasAction}
 import org.elasticsearch.index.query.FilterBuilder
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 trait AliasesDsl {
-
 
   class AddAliasExpectsIndex(alias: String) {
     def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
@@ -39,6 +39,8 @@ trait AliasesDsl {
       injectFuture(c.admin.indices.aliases(t.build, _))
     }
   }
+
+  implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = new GetAliasResult(resp)
 }
 
 class GetAliasDefinition(aliases: Seq[String]) {
@@ -47,6 +49,15 @@ class GetAliasDefinition(aliases: Seq[String]) {
   def on(indexes: String*): GetAliasDefinition = {
     request.indices(indexes: _*)
     this
+  }
+}
+
+case class GetAliasResult(response: GetAliasesResponse) {
+
+  import scala.collection.JavaConverters._
+
+  def aliases: Map[String, Seq[AliasMetaData]] = {
+    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala.toSeq).toMap
   }
 }
 
