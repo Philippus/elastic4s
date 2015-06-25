@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 package query
 
 import org.elasticsearch.index.query.MatchQueryBuilder
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.WordSpec
 import org.scalatest.mock.MockitoSugar
 
 class MatchQueryTest extends WordSpec with MockitoSugar with ElasticSugar with ElasticDsl {
