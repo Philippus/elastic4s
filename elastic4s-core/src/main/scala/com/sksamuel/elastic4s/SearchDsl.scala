@@ -352,5 +352,7 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     _builder.setFetchSource(this.includes, this.excludes)
     this
   }
+
+  override def toString = _builder.toString
 }
 
