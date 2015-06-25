@@ -7,42 +7,71 @@ import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.slf4j.LoggerFactory
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
-
-object TestElasticNode {
+trait ElasticNodeBuilder {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
-  val tempFile = File.createTempFile("elasticsearchtests", "tmp")
-  val homeDir = new File(tempFile.getParent + "/" + UUID.randomUUID().toString)
-  logger.info(s"Elasticsearch test-server located at $homeDir")
+  /**
+   * Override this if you wish to change where the home directory for the local instance will be located.
+   * Note: if you override the settings method then you should specify the home in there and this method
+   * would not be used.
+   */
+  def homeDir: File = {
+    val homeDir = new File(tempDirectoryPath + "/" + UUID.randomUUID().toString)
+    logger.info(s"Elasticsearch test-server located at $homeDir")
+    homeDir.mkdir()
+    homeDir.deleteOnExit()
+    homeDir
+  }
 
-  homeDir.mkdir()
-  homeDir.deleteOnExit()
-  tempFile.deleteOnExit()
+  def numberOfReplicas: Int = 0
 
-  val settings = ImmutableSettings.settingsBuilder()
-    .put("node.http.enabled", false)
-    .put("http.enabled", false)
-    .put("path.home", homeDir.getAbsolutePath)
-    .put("index.number_of_shards", 1)
-    .put("index.number_of_replicas", 0)
-    .put("script.disable_dynamic", false)
-    .put("index.refresh_interval", "1s")
-    //.put("indices.memory.index_buffer_size", "20%")
-    //.put("index.translog.flush_threshold_size", "500mb")
-    //.put("index.store.throttle.max_bytes_per_sec", "500mb")
-    .put("es.logger.level", "INFO")
+  def numberOfShards: Int = 1
 
-  implicit lazy val client = ElasticClient.local(settings.build)
+  def disableDynamicScripting: Boolean = false
+
+  def indexRefresh: FiniteDuration = 1.seconds
+
+  def httpEnabled: Boolean = true
+
+  def tempDirectoryPath = System.getProperty("java.io.tmpdir")
+
+
+  /**
+   * Override this if you wish to control all the settings used by the client.
+   */
+  private def settings: ImmutableSettings.Builder = {
+    val builder = ImmutableSettings.settingsBuilder()
+      .put("node.http.enabled", httpEnabled)
+      .put("http.enabled", httpEnabled)
+      .put("path.home", homeDir.getAbsolutePath)
+      .put("index.number_of_shards", numberOfShards)
+      .put("index.number_of_replicas", numberOfReplicas)
+      .put("script.disable_dynamic", disableDynamicScripting)
+      .put("index.refresh_interval", indexRefresh.toSeconds + "s")
+      .put("es.logger.level", "INFO")
+    configureSettings(builder)
+  }
+
+  def configureSettings(builder: ImmutableSettings.Builder): ImmutableSettings.Builder = builder
+
+  def createLocalClient = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar {
+trait ElasticSugar extends ElasticNodeBuilder {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
-  val client = TestElasticNode.client
+  private lazy val internalClient = createLocalClient
+
+  /**
+   * Is invoked when a test needs access to a client for the test node.
+   * Can override this if you wish to control precisely how the client is created.
+   */
+  def client: ElasticClient = internalClient
 
   def refresh(indexes: String*) {
     val i = indexes.size match {
@@ -72,21 +101,38 @@ trait ElasticSugar {
     require(done, s"Failed waiting on: $explain")
   }
 
+  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
+    blockUntil(s"Expected to find document $id") { () =>
+      client.execute {
+        get id id from index / `type`
+      }.await.isExists
+    }
+  }
+
+  /**
+   * Will block until the given index and optional types have at least the given number of documents.
+   */
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
-      val actual = client.execute {
+      expected <= client.execute {
         count from index types types
       }.await.getCount
-      expected <= actual
+    }
+  }
+
+  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      expected == client.execute {
+        count from index types types
+      }.await.getCount
     }
   }
 
   def blockUntilEmpty(index: String): Unit = {
     blockUntil(s"Expected empty index $index") { () =>
-      val actual = client.execute {
+      client.execute {
         count from index
-      }.await.getCount
-      actual == 0
+      }.await.getCount == 0
     }
   }
 }
