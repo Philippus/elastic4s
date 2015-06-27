@@ -6,11 +6,11 @@ import org.scalatest.{Matchers, WordSpec}
 
 class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
 
-  "jackson implicits" should {
-    " support any type" in {
+  import ElasticDsl._
+  import ElasticJackson.Implicits._
 
-      import ElasticDsl._
-      import ElasticJackson.Implicits._
+  "jackson implicits" should {
+    "index any type" in {
 
       client.execute {
         bulk(
@@ -21,6 +21,16 @@ class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
       }
 
       blockUntilCount(3, "jacksontest")
+    }
+    "read any type" in {
+
+      blockUntilCount(3, "jacksontest")
+
+      val resp = client.execute {
+        search in "jacksontest/characters" query "breaking"
+      }.await
+
+      resp.hitsAs[Character].head shouldBe Character("hank", "breaking bad")
     }
   }
 }
