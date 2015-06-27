@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.action.percolate.{PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
 import org.elasticsearch.percolator.PercolatorService
 
 import scala.collection.mutable.ListBuffer
@@ -55,11 +55,21 @@ trait PercolateDsl extends QueryDsl {
       injectFuture(c.percolate(t.build, _))
     }
   }
+
+  implicit object PercolateDefinitionShow extends Show[PercolateDefinition] {
+    override def show(f: PercolateDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
+  }
+
+  implicit class PercolateDefinitionShowOps(f: PercolateDefinition) {
+    def show: String = PercolateDefinitionShow.show(f)
+  }
 }
 
 class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefinition {
+
   private[this] var _query: QueryDefinition = _
   private val _fields = new ListBuffer[(String, Any)]
+
   def build = {
     val source = XContentFactory.jsonBuilder()
       .startObject().field("query", _query.builder)

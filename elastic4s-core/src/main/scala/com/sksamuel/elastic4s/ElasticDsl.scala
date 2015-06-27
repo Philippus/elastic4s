@@ -378,13 +378,15 @@ trait ElasticDsl
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
 
   case object percolate {
-    def in(index: String) = {
+    def in(index: String): PercolateDefinition = {
       require(index.nonEmpty, "index must not be null or empty")
       new PercolateDefinition(index)
     }
+    def in(indexType: IndexType): PercolateDefinition = new PercolateDefinition(IndexesTypes(indexType))
   }
 
   def percolateIn(index: String): PercolateDefinition = percolate in index
+  def percolateIn(indexType: IndexType): PercolateDefinition = percolate in indexType
 
   case object phrase {
     def suggestion(name: String) = new PhraseSuggestionDefinition(name)
@@ -545,8 +547,6 @@ trait ElasticDsl
 
   def validateIn(indexType: IndexType): ValidateDefinition = validate in indexType
   def validateIn(value: String): ValidateDefinition = validate in value
-
-
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)

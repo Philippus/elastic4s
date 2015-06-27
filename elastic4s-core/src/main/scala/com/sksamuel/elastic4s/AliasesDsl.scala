@@ -44,8 +44,10 @@ trait AliasesDsl {
 }
 
 class GetAliasDefinition(aliases: Seq[String]) {
+
   val request = new GetAliasesRequest(aliases.toArray)
   def build = request
+
   def on(indexes: String*): GetAliasDefinition = {
     request.indices(indexes: _*)
     this
@@ -62,15 +64,22 @@ case class GetAliasResult(response: GetAliasesResponse) {
 }
 
 class MutateAliasDefinition(val aliasAction: AliasAction) {
+
   def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
+
   def filter(filter: FilterBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
   def filter(filter: FilterDefinition): MutateAliasDefinition = {
     new MutateAliasDefinition(aliasAction.filter(filter.builder))
   }
-  def build = new IndicesAliasesRequest().addAliasAction(aliasAction)
+
+  def build: IndicesAliasesRequest = new IndicesAliasesRequest().addAliasAction(aliasAction)
 }
 
 class IndicesAliasesRequestDefinition(aliasMutations: MutateAliasDefinition*) {
-  def build = aliasMutations.foldLeft(new IndicesAliasesRequest())(
-    (request, aliasDef) => request.addAliasAction(aliasDef.aliasAction))
+
+  def build: IndicesAliasesRequest = {
+    aliasMutations.foldLeft(new IndicesAliasesRequest())((request, aliasDef) =>
+      request.addAliasAction(aliasDef.aliasAction)
+    )
+  }
 }

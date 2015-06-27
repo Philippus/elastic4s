@@ -17,7 +17,9 @@ trait ScrollDsl {
 }
 
 class SearchScrollDefinition(val id: String) {
+
   private[elastic4s] var _keepAlive: Option[String] = None
+
   def keepAlive(time: String): this.type = {
     _keepAlive = Option(time)
     this

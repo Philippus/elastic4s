@@ -25,7 +25,7 @@ trait IndexDsl {
   }
 
   implicit object IndexDefinitionShow extends Show[IndexDefinition] {
-    override def show(f: IndexDefinition): String = XContentHelper.convertToJson(f.build.source, true)
+    override def show(f: IndexDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
   }
 
   implicit class IndexDefinitionShowOps(f: IndexDefinition) {
