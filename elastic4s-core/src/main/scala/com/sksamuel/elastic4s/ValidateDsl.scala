@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequestBuilder, ValidateQueryResponse}
-import org.elasticsearch.client.Client
+import org.elasticsearch.client.{Requests, Client}
 import org.elasticsearch.common.xcontent.XContentHelper
 
 import scala.concurrent.Future
@@ -16,8 +16,9 @@ trait ValidateDsl {
   }
 
   implicit object ValidateDefinitionShow extends Show[ValidateDefinition] {
-    override def show(f: ValidateDefinition): String = XContentHelper
-      .convertToJson(f._builder.request.source, true, true)
+    override def show(f: ValidateDefinition): String = {
+      Option(f.q).fold("")(q => XContentHelper.convertToJson(q.builder.buildAsBytes, true, true))
+    }
   }
 
   implicit class ValidateDefinitionShowOps(f: ValidateDefinition) {
@@ -27,6 +28,7 @@ trait ValidateDsl {
 
 class ValidateDefinition(index: String, `type`: String) {
 
+  private[elastic4s] var q: QueryDefinition = _
   val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices).setIndices(index).setTypes(`type`)
   def build = _builder.request
 
@@ -38,8 +40,8 @@ class ValidateDefinition(index: String, `type`: String) {
    * @return this
    */
   def query(string: String): this.type = {
-    val q = new QueryStringQueryDefinition(string)
-    _builder.setSource(q.builder.buildAsBytes)
+    this.q = new QueryStringQueryDefinition(string)
+    _builder.setQuery(q.builder)
     this
   }
 
@@ -49,7 +51,8 @@ class ValidateDefinition(index: String, `type`: String) {
   }
 
   def query(block: => QueryDefinition): this.type = {
-    _builder.setSource(block.builder.buildAsBytes)
+    this.q = block
+    _builder.setQuery(q.builder)
     this
   }
 
