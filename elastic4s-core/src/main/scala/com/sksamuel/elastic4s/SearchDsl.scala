@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
@@ -42,6 +43,14 @@ trait SearchDsl
     override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
       injectFuture(c.multiSearch(t.build, _))
     }
+  }
+
+  implicit object SearchDefinitionShow extends Show[SearchDefinition] {
+    override def show(f: SearchDefinition): String = f._builder.internalBuilder.toString
+  }
+
+  implicit class SearchDefinitionShowOps(f: SearchDefinition) {
+    def show: String = SearchDefinitionShow.show(f)
   }
 }
 

@@ -24,6 +24,7 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def from(_index: String): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(_index), id)
     def from(_indexes: String*): DeleteByIdExpectsTypes = from(_indexes)
     def from(_indexes: Iterable[String]): DeleteByIdExpectsTypes = new DeleteByIdExpectsTypes(_indexes, id)
+    def from(indexType: IndexType): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(indexType), id)
     def from(indexesTypes: IndexesTypes): DeleteByIdDefinition = new DeleteByIdDefinition(indexesTypes, id)
   }
 
@@ -59,7 +60,9 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     }
   }
 
-  @deprecated("Delete by query will be removed in 2.0.  Instead, use the scroll/scan API to find all matching IDs and then issue a bulk", "1.6.0")
+  @deprecated(
+    "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk delete",
+    "1.6.0")
   implicit object DeleteByQueryDefinitionExecutable
     extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse, DeleteByQueryResponse] {
     override def apply(c: Client, t: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
@@ -69,7 +72,9 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
 }
 
 class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompatibleDefinition {
-  private val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
+
+  private[elastic4s] val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
+
   def types(_type: String): DeleteByIdDefinition = {
     builder.`type`(_type)
     this

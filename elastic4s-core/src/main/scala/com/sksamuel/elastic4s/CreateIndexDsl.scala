@@ -26,6 +26,14 @@ trait CreateIndexDsl {
       injectFuture(c.admin.indices.create(t.build, _))
     }
   }
+
+  implicit object CreateIndexShow extends Show[CreateIndexDefinition] {
+    override def show(f: CreateIndexDefinition): String = f._source.string
+  }
+
+  implicit class CreateIndexShowOps(f: CreateIndexDefinition) {
+    def show = CreateIndexShow.show(f)
+  }
 }
 
 class IndexSettings {
@@ -119,7 +127,7 @@ class CreateIndexDefinition(name: String) {
         source.startObject("analysis")
 
         val charFilterDefinitions = analysis.charFilterDefinitions
-        if (charFilterDefinitions.size > 0) {
+        if (charFilterDefinitions.nonEmpty) {
           source.startObject("char_filter")
           charFilterDefinitions.foreach { filter =>
             source.startObject(filter.name)
@@ -139,7 +147,7 @@ class CreateIndexDefinition(name: String) {
         source.endObject()
 
         val tokenizers = analysis.tokenizers
-        if (tokenizers.size > 0) {
+        if (tokenizers.nonEmpty) {
           source.startObject("tokenizer")
           tokenizers.foreach(tokenizer => {
             source.startObject(tokenizer.name)
@@ -150,7 +158,7 @@ class CreateIndexDefinition(name: String) {
         }
 
         val tokenFilterDefinitions = analysis.tokenFilterDefinitions
-        if (tokenFilterDefinitions.size > 0) {
+        if (tokenFilterDefinitions.nonEmpty) {
           source.startObject("filter")
           tokenFilterDefinitions.foreach(filter => {
             source.startObject(filter.name)
@@ -167,7 +175,7 @@ class CreateIndexDefinition(name: String) {
       source.endObject() // end settings
     }
 
-    if (_mappings.size > 0) {
+    if (_mappings.nonEmpty) {
       source.startObject("mappings")
       for ( mapping <- _mappings ) {
         source.startObject(mapping.`type`)

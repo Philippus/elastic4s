@@ -27,8 +27,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
-  def json[T](t: T)(implicit show: Show[T]): String = show.show(t)
-
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
 
   def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
