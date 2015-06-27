@@ -21,7 +21,7 @@ object Build extends Build {
     version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.7", "2.10.5", "2.12.0-M1"),
+    crossScalaVersions := Seq("2.11.6", "2.10.5"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,

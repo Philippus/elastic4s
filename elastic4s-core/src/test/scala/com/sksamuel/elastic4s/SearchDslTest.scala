@@ -415,23 +415,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for field sort" in {
     val req = search in "music" types "bands" sort {
-      by field "singer" missing "no-singer" order SortOrder.DESC mode MultiMode
-        .Avg nestedPath "nest"
+      field sort "singer" missing "no-singer" order SortOrder.DESC mode MultiMode.Avg nestedPath "nest"
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_field.json")
   }
 
   it should "generate json for nested field sort" in {
     val req = search in "music" types "bands" sort {
-      by field "singer.weight" ignoreUnmapped true order SortOrder.DESC mode MultiMode
-        .Sum nestedFilter termFilter("singer.name", "coldplay")
+      field sort "singer.weight" ignoreUnmapped true order SortOrder.DESC mode MultiMode.Sum nestedFilter termFilter("singer.name", "coldplay")
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_nested_field.json")
   }
 
   it should "generate correct json for score sort" in {
     val req = search in "music" types "bands" sort {
-      by.score.missing("213").order(SortOrder.ASC)
+      score.sort.missing("213").order(SortOrder.ASC)
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_score.json")
   }

@@ -102,6 +102,8 @@ trait ElasticDsl
     def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
   }
 
+  def clearCache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
+  def clearCache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
   def clearIndex(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
 
@@ -118,6 +120,12 @@ trait ElasticDsl
 
   def clusterPersistentSettings(settings: Map[String, String]) = cluster persistentSettings settings
   def clusterTransientSettings(settings: Map[String, String]) = cluster transientSettings settings
+
+  def clusterHealth = new ClusterHealthDefinition()
+  def clusterStats = new ClusterStatsDefinition
+  @deprecated("use clusterStats", "1.6.1")
+  def clusterStatus = new ClusterStatsDefinition
+  def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
   case object commonGrams {
     def tokenfilter(name: String) = CommonGramsTokenFilter(name)
@@ -228,6 +236,7 @@ trait ElasticDsl
   def field(name: String): FieldDefinition = field name name
   def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
+  def fieldSort(name: String) = field sort name
 
   case object flush {
     def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
@@ -245,6 +254,7 @@ trait ElasticDsl
   case object geo {
     def sort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
   }
+  def geoSort(name: String) = geo sort name
 
   case object get {
 
@@ -317,6 +327,9 @@ trait ElasticDsl
     def stats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
   }
 
+  def indexExists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
+  def indexExists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
+
   def indexInto(indexType: IndexType): IndexDefinition = {
     require(indexType != null, "indexType must not be null or empty")
     new IndexDefinition(indexType.index, indexType.`type`)
@@ -327,10 +340,15 @@ trait ElasticDsl
     new IndexDefinition(index, `type`)
   }
 
+  def indexStats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
+  def indexStats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
+
   case object inner {
     def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)
     def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
   }
+  def innerHit(name: String): InnerHitDefinition = inner hit name
+  def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
 
   case object mapping {
     def name(name: String) = {
@@ -338,7 +356,6 @@ trait ElasticDsl
       new MappingDefinition(name)
     }
   }
-
   def mapping(name: String): MappingDefinition = mapping name name
 
   @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
@@ -427,12 +444,12 @@ trait ElasticDsl
   def removeAlias(alias: String) = remove alias alias
 
   case object register {
-    def id(id: Any) = {
+    def id(id: Any): RegisterExpectsIndex = {
       require(id.toString.nonEmpty, "id must not be null or empty")
       new RegisterExpectsIndex(id.toString)
     }
   }
-  def registerId(id: Any) = register id id
+  def register(id: Any): RegisterExpectsIndex = register id id
 
   case object repository {
     @deprecated("use `create repository` instead of `repository create` for a more readable dsl", "1.4.0.Beta2")
@@ -450,11 +467,14 @@ trait ElasticDsl
   case object score {
     def sort: ScoreSortDefinition = new ScoreSortDefinition
   }
+  def scoreSort = score.sort
 
   case object script {
-    def sort(script: String) = new ScriptSortDefinition(script)
+    def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
+  def scriptSort(scripttext: String): ScriptSortDefinition = script sort scripttext
+  def scriptField(n: String): ExpectsScript = script field n
 
   @deprecated("use search keyword", "1.4.0.Beta2")
   def select = search
@@ -474,8 +494,9 @@ trait ElasticDsl
   def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
   case object shingle {
-    def tokenfilter(name: String) = ShingleTokenFilter(name)
+    def tokenfilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
   }
+  def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
 
   case object snapshot {
     @deprecated("use `create snapshot` instead of `snapshot create` for a more readable dsl", "1.4.0.Beta2")
@@ -487,8 +508,9 @@ trait ElasticDsl
   }
 
   case object snowball {
-    def tokenfilter(name: String) = SnowballTokenFilter(name)
+    def tokenfilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
   }
+  def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
 
   @deprecated("use sort by <type>", "1.6.1")
   case object sortby {
@@ -499,8 +521,9 @@ trait ElasticDsl
   }
 
   case object stemmer {
-    def tokenfilter(name: String) = StemmerTokenFilter(name)
+    def tokenfilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
   }
+  def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
 
   def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
   def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
@@ -525,12 +548,14 @@ trait ElasticDsl
   }
   def timestamp(en: Boolean) = TimestampDefinition(en)
 
-  case object types {
-    def exist(types: String*) = new TypesExistExpectsIn(types)
-    class TypesExistExpectsIn(types: Seq[String]) {
-      def in(indexes: String*) = new TypesExistsDefinition(indexes, types)
-    }
+  class TypesExistExpectsIn(types: Seq[String]) {
+    def in(indexes: String*) = new TypesExistsDefinition(indexes, types)
   }
+
+  case object types {
+    def exist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
+  }
+  def typesExist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
 
   case object update {
     def id(id: Any) = {
@@ -540,11 +565,6 @@ trait ElasticDsl
     def settings(index: String) = new UpdateSettingsDefinition(index)
   }
   def update(id: Any) = new UpdateExpectsIndex(id.toString)
-
-  class UpdateExpectsIndex(id: String) {
-    def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
-    def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
-  }
 
   case object validate {
     def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)

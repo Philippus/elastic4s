@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.source.Indexable
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{WordSpec, FlatSpec, Matchers}
+import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */
 class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -51,18 +51,23 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
   }
   "an index exists request" should {
     "return true for an existing index" in {
-      assert(client.exists("electronics").await.isExists)
+      client.execute {
+        index exists "electronics"
+      }.await.isExists shouldBe true
     }
   }
 
   "a delete index request" should {
     "delete the index" in {
-      assert(client.exists("electronics").await.isExists)
+      client.execute {
+        index exists "electronics"
+      }.await.isExists shouldBe true
       client.execute {
         delete index "electronics"
       }.await
-      assert(!client.exists("electronics").await.isExists)
-      client.close()
+      client.execute {
+        index exists "electronics"
+      }.await.isExists shouldBe false
     }
   }
 }

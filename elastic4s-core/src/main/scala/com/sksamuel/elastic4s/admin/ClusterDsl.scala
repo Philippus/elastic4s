@@ -10,11 +10,6 @@ import scala.concurrent.Future
 
 trait ClusterDsl {
 
-  def clusterHealth = new ClusterHealthDefinition()
-  def clusterStatus = new ClusterStatsDefinition
-
-  def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
-
   implicit object ClusterHealthDefinitionExecutable
     extends Executable[ClusterHealthDefinition, ClusterHealthResponse, ClusterHealthResponse] {
     override def apply(c: Client, t: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
