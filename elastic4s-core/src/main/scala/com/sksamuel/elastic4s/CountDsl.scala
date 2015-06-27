@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.definitions.{DefinitionTerminateAfter, DefinitionM
 import org.elasticsearch.action.count.{CountRequestBuilder, CountResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.xcontent.XContentHelper
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 import scala.concurrent.Future
@@ -15,6 +16,14 @@ trait CountDsl {
     override def apply(client: Client, t: CountDefinition): Future[CountResponse] = {
       injectFuture(client.count(t.build, _))
     }
+  }
+
+  implicit object CountDefinitionShow extends Show[CountDefinition] {
+    override def show(f: CountDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
+  }
+
+  implicit class CountDefinitionShowOps(f: CountDefinition) {
+    def show: String = CountDefinitionShow.show(f)
   }
 }
 
