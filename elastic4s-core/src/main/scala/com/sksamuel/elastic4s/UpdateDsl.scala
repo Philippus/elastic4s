@@ -7,7 +7,7 @@ import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilderString, XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future

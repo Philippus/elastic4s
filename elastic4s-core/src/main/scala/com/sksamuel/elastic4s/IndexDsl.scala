@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.source.{Indexable, DocumentMap, DocumentSource}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
 import scala.collection.JavaConverters._
@@ -22,6 +22,14 @@ trait IndexDsl {
     override def apply(c: Client, t: IndexDefinition): Future[IndexResponse] = {
       injectFuture(c.index(t.build, _))
     }
+  }
+
+  implicit object IndexDefinitionShow extends Show[IndexDefinition] {
+    override def show(f: IndexDefinition): String = XContentHelper.convertToJson(f.build.source, true)
+  }
+
+  implicit class IndexDefinitionShowOps(f: IndexDefinition) {
+    def show: String = IndexDefinitionShow.show(f)
   }
 }
 
