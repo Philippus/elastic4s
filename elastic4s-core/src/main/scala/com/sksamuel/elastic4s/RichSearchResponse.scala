@@ -14,8 +14,12 @@ class RichSearchResponse(resp: SearchResponse) {
 
   def totalHits: Long = resp.getHits.getTotalHits
   def maxScore: Float = resp.getHits.getMaxScore
+
   def hits: Array[RichSearchHit] = resp.getHits.getHits.map(new RichSearchHit(_))
+
+  @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
+  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
   def scrollId: String = resp.getScrollId
 
@@ -55,7 +59,10 @@ class RichSearchHit(hit: SearchHit) {
   def isSourceEmpty: Boolean = hit.isSourceEmpty
   def sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
   def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+
+  @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
+  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
   def explanation: Option[Explanation] = Option(hit.explanation)
 
