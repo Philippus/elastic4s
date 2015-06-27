@@ -21,7 +21,7 @@ object Build extends Build {
     version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.6", "2.10.5"),
+    crossScalaVersions := Seq("2.11.7", "2.10.5"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
@@ -97,6 +97,7 @@ object Build extends Build {
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
     .settings(rootSettings: _*)
+    .settings(publish := {})
     .settings(name := "elastic4s-examples")
     .dependsOn(core)
 
