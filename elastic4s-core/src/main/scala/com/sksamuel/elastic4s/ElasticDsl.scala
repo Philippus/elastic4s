@@ -89,12 +89,12 @@ trait ElasticDsl
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 
-  @deprecated("use sortby", "1.6.0")
+  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.0")
   case object by {
-    def score: ScoreSortDefinition = sortby.score
-    def geo(field: String): GeoDistanceSortDefinition = sortby.geo(field)
-    def field(field: String): FieldSortDefinition = sortby.field(field)
-    def script(script: String) = sortby.script(script)
+    def score: ScoreSortDefinition = ElasticDsl.score.sort
+    def geo(field: String): GeoDistanceSortDefinition = ElasticDsl.geo sort field
+    def field(field: String): FieldSortDefinition = ElasticDsl.field.sort(field)
+    def script(script: String) = ElasticDsl.script.sort(script)
   }
 
   case object clear {
@@ -138,7 +138,7 @@ trait ElasticDsl
   @deprecated("use countFrom", "1.6.0")
   def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
   @deprecated("use countFrom", "1.6.0")
-  def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
+  def count(indexes: String*): CountDefinition = new CountDefinition(IndexesTypes(indexes))
 
   def countFrom(index: (String, String)): CountDefinition = count from index
   def countFrom(indexes: String*): CountDefinition = count from indexes
@@ -221,6 +221,7 @@ trait ElasticDsl
   case object field extends TypeableFields {
     val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
+    def sort(field: String): FieldSortDefinition = new FieldSortDefinition(field)
     def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
@@ -240,6 +241,10 @@ trait ElasticDsl
     def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
   }
   def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition = fuzzyCompletion suggestion name
+
+  case object geo {
+    def sort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
+  }
 
   case object get {
 
@@ -442,7 +447,12 @@ trait ElasticDsl
   }
   def restoreSnapshot(name: String) = restore snapshot name
 
+  case object score {
+    def sort: ScoreSortDefinition = new ScoreSortDefinition
+  }
+
   case object script {
+    def sort(script: String) = new ScriptSortDefinition(script)
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
 
@@ -480,6 +490,7 @@ trait ElasticDsl
     def tokenfilter(name: String) = SnowballTokenFilter(name)
   }
 
+  @deprecated("use sort by <type>", "1.6.1")
   case object sortby {
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)

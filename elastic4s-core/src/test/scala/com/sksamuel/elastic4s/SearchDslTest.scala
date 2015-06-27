@@ -438,21 +438,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for script sort" in {
     val req = search in "music" types "bands" sort {
-      by script "document.score" typed "number" lang "java" order SortOrder.DESC nestedPath "nested.path" sortMode "min"
+      script sort "document.score" typed "number" lang "java" order SortOrder.DESC nestedPath "nested.path" sortMode "min"
     } preference new Preference.Custom("custom-node")
     req._builder.toString should matchJsonResource("/json/search/search_sort_script.json")
   }
 
   it should "generate correct json for script sort with params" in {
     val req = search in "music" types "bands" sort {
-      by script "doc.score" typed "number" order SortOrder.DESC params Map("param1" -> "value1", "param2" -> "value2")
+      script sort "doc.score" typed "number" order SortOrder.DESC params Map("param1" -> "value1", "param2" -> "value2")
     } preference new Preference.Custom("custom-node")
     req._builder.toString should matchJsonResource("/json/search/search_sort_script_params.json")
   }
 
   it should "generate correct json for geo sort" in {
     val req = search in "music" types "bands" sort {
-      by geo "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode
+      geo sort "location" geohash "ABCDEFG" missing "567.8889" order SortOrder.DESC mode
         MultiMode.Sum point(56.6, 78.8) nested "nested-path" mode MultiMode.Max geoDistance GeoDistance.ARC
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_geo.json")
@@ -460,9 +460,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multiple sorts" in {
     val req = search in "music" types "bands" sort(
-      by script "document.score" as "java" order SortOrder.ASC,
-      by.score order SortOrder.DESC,
-      by field "dancer" order SortOrder.DESC
+      script sort "document.score" as "java" order SortOrder.ASC,
+      score.sort.order(SortOrder.DESC),
+      field sort "dancer" order SortOrder.DESC
       )
     req._builder.toString should matchJsonResource("/json/search/search_sort_multiple.json")
   }
@@ -872,10 +872,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multiple suggestions" in {
     val req = search in "music" types "bands" query "coldplay" suggestions(
-      term suggestion "my-suggestion-1" text "clocks by culdpaly" from "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
-      term suggestion "my-suggestion-2" text "aqualuck by jethro toll" from "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
-      term suggestion "my-suggestion-3" text "bountiful day by u22" from "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein",
-      term suggestion "my-suggestion-4" text "whatever some text" from "names" maxTermFreq 0.5 minWordLength 5 mode SuggestMode
+      term suggestion "my-suggestion-1" text "clocks by culdpaly" field "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
+      term suggestion "my-suggestion-2" text "aqualuck by jethro toll" field "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
+      term suggestion "my-suggestion-3" text "bountiful day by u22" field "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein",
+      term suggestion "my-suggestion-4" text "whatever some text" field "names" maxTermFreq 0.5 minWordLength 5 mode SuggestMode
         .Always
       )
     req._builder.toString should matchJsonResource("/json/search/search_suggestions_multiple.json")
@@ -884,8 +884,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   // for backwards compatibility default suggester is the term suggester
   it should "generate correct json for suggestions" in {
     val req = search in "music" types "bands" query termQuery("name", "coldplay") suggestions(
-      term suggestion "suggestion-1" on "clocks by culdpaly" from "name" maxEdits 2,
-      term suggestion "suggestion-2" on "aqualuck by jethro toll" from "name"
+      term suggestion "suggestion-1" text "clocks by culdpaly" field "name" maxEdits 2,
+      term suggestion "suggestion-2" text "aqualuck by jethro toll" field "name"
       )
     req._builder.toString should matchJsonResource("/json/search/search_suggestions.json")
   }
@@ -893,7 +893,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for script fields" in {
     val req =
       search in "sesportfolio" types "positions" query matchall size 256 sort {
-        by field "date" order SortOrder.ASC
+        field sort "date" order SortOrder.ASC
       } scriptfields(
         script field "balance" script "portfolioscript" lang "native" params Map("fieldName" -> "rate_of_return"),
         script field "date" script "doc['date'].value" lang "groovy"
