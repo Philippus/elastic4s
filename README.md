@@ -365,7 +365,7 @@ A full example:
 case class Character(name: String, location: String)
 
 implicit object CharacterHitAs extends HitAs[Character] {
-  override def as[T <: Character : Manifest](hit: RichSearchHit): Character = {
+  override def as(hit: RichSearchHit): Character = {
     Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString)
   }
 }
