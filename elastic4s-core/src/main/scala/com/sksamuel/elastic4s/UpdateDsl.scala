@@ -15,7 +15,6 @@ import scala.concurrent.duration.FiniteDuration
 /** @author Stephen Samuel */
 trait UpdateDsl extends IndexesTypesDsl {
 
-  @deprecated("use `update id <id>`", "1.4.5")
   def update(id: Any) = new UpdateExpectsIndex(id.toString)
   class UpdateExpectsIndex(id: String) {
     def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
