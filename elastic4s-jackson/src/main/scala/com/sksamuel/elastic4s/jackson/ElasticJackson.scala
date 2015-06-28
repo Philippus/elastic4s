@@ -17,8 +17,8 @@ object ElasticJackson {
       override def read[T <: Any : Manifest](json: String): T = mapper.readValue[T](json)
     }
 
-    implicit object JacksonJsonHitAs extends HitAs[Any] {
-      override def as[T <: Any : Manifest](hit: RichSearchHit): T = {
+    implicit def JacksonJsonHitAs[T: Manifest]: HitAs[T] = new HitAs[T] {
+      override def as(hit: RichSearchHit): T = {
         val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
         if (!node.has("_id")) node.put("_id", hit.id)
         if (!node.has("_type")) node.put("_type", hit.`type`)

@@ -51,7 +51,7 @@ class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
   }
 
   implicit object CharacterHitAs extends HitAs[Character] {
-    override def as[T <: Character : Manifest](hit: RichSearchHit): Character = {
+    override def as(hit: RichSearchHit): Character = {
       Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("show").toString)
     }
   }
