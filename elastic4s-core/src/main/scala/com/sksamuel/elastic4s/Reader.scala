@@ -6,5 +6,5 @@ trait Reader[-U] {
 }
 
 trait HitAs[-U] {
-  def as[T <: U : Manifest](richSearchHit: RichSearchHit): T
+  def as[T <: U : Manifest](hit: RichSearchHit): T
 }

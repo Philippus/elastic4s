@@ -272,7 +272,8 @@ client.execute {
 
 Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
 it done automagically. For those people, elastic4s provides a [Jackson](http://wiki.fasterxml.com) 
-based implementation of Indexable that will convert anything to Json. To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the 
+based implementation of `Indexable[Any]` that will convert anything to Json. 
+To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the 
 build.
 
 The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
@@ -350,6 +351,44 @@ There are many other types, such as range for numeric fields, wildcards, distanc
 
 Read more about search syntax [here](guide/search.md).
 Read about [multisearch here](guide/multisearch.md).
+
+## Search Conversion
+
+By default Elasticsearch search responses contain an array of `SearchHit` instances which contain things like the id, 
+index, type, version, etc as well as the document source as a string or map. Elastic4s provides a means to convert these 
+back to meaningful domain types quite easily using the `HitAs[T]` typeclass. Provide an implementation of this typeclass, as
+an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call `as[T]` on the response.
+
+A full example:
+
+```scala
+case class Character(name: String, location: String)
+
+implicit object CharacterHitAs extends HitAs[Character] {
+  override def as[T <: Character : Manifest](hit: RichSearchHit): Character = {
+    Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString)
+  }
+}
+
+val resp = client.execte {
+  search in "gameofthrones" / "characters" query "kings landing"
+}.await // don't block in real code
+
+// .as[Character] will look for an implicit HitAs[Character] in scope
+// and then convert all the hits into Characters for us.
+val characters :Seq[Character] = resp.as[Character] 
+
+```
+
+This is basically the inverse of the `Indexable` typeclass. And just like Indexable, there is a general purpose
+Jackson `HitAs[Any]` implementation for those who wish to have some sugar. 
+To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the  build.
+
+The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
+want to use the `as[T]` methods.
+
+As a bonus feature of the Jackson implementation, if your domain object has fields called _timestamp, _id, _type, _index, or 
+_version then those special fields will be automatically populated as well.
 
 ## Highlighting
 

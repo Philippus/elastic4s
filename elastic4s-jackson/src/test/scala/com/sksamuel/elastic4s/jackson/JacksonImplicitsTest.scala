@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.{RichSearchHit, HitAs, ElasticDsl}
 import com.sksamuel.elastic4s.source.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
@@ -48,6 +48,12 @@ class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
 
   implicit object CharacterIndexable extends Indexable[Character] {
     override def json(t: Character): String = s""" { "name" : "${t.name}", "show" : "${t.show}" } """
+  }
+
+  implicit object CharacterHitAs extends HitAs[Character] {
+    override def as[T <: Character : Manifest](hit: RichSearchHit): Character = {
+      Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("show").toString)
+    }
   }
 }
 
