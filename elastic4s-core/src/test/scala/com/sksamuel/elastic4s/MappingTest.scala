@@ -4,7 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
-import org.scalatest.{ WordSpec, Matchers, FlatSpec }
+import org.scalatest.{ WordSpec, Matchers }
 import org.scalatest.mock.MockitoSugar
 
 /** @author Stephen Samuel */

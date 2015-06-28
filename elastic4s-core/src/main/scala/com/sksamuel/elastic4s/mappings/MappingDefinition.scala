@@ -68,8 +68,8 @@ class MappingDefinition(val `type`: String) {
   @deprecated("use the DynamicMapping enum version", "1.5.5")
   def dynamic(dynamic: Boolean): this.type = {
     _dynamic = dynamic match {
-      case true => Some(Dynamic)
-      case false => Some(False)
+      case true => Some(DynamicMapping.Dynamic)
+      case false => Some(DynamicMapping.False)
     }
     this
   }
