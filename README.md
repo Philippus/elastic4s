@@ -248,21 +248,57 @@ There are many additional options we can set such as routing, version, parent, t
 See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options, all of
 which exist in the DSL as keywords that reflect their name in the official API.
 
-Sometimes it is useful to seperate the knowledge of the type from the indexing logic. For this we can use the
-`DocumentSource` or `DocumentMap` abstractions. A quick example.
+## Indexing from Classes
+
+Sometimes it is useful to index directly from your domain model, and not have to create maps of fields inline. For this
+elastic4s provides the `Indexable` typeclass. Simply provide an implicit instance of `Indexable[T]` in scope for any
+class T that you wish to index, and then you can use `source t` on the index request. For example:
 
 ```scala
-case class Band(name: String, albums: Seq[String], label: String)
-val band = Band("coldplay", Seq("X&Y", "Parachutes"), "Parlophone")
+// a simple example of a domain model
+case class Character(name: String, location: String)
 
+// how you turn the type into json is up to you
+implicit object CharacterIndexable extends Indexable[Character] {
+  override def json(t: Character): String = s""" { "name" : "${t.name}", "location" : "${t.location}" } """
+}
+
+// now the index request reads much cleaner
+val jonsnow = Character("jon snow", "the wall")
 client.execute {
-  // the band object will be implicitly converted into a DocumentSource
-  index into "music" / "bands" doc band
+  index into "gameofthrones" / "characters" source jonsnow
 }
 ```
 
-Here Elastic4s has implicitly converted your case class into a DocumentSource and all fields would be indexed against
-the field name. You can control this at a more fine grained level if required. More details on the [document traits](guide/source.md) page.
+Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
+it done automagically. For those people, elastic4s provides a [Jackson](http://wiki.fasterxml.com) 
+based implementation of Indexable that will convert anything to Json. To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the 
+build.
+
+The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
+want to use the `source` method. With that implicit in scope, you can now pass any type you like to `source`
+and Jackson will marshall it to json for you.
+
+Another way that existed prior to the `Indexable` typeclass was the `DocumentSource` or `DocumentMap` abstractions. 
+For these, you provide an instance of `DocumentSource` that returns a Json String, or an instance of DocumentMap
+that provides a `Map[String, Any]`.
+
+```scala
+
+case class Character(name: String, location: String)
+
+caes class CharacterSource(c: Character) extends DocumentSource {
+  def json : String = s""" { "name" : "${c.name}", "location" : "${c.location}" } """
+}
+
+val jonsnow = Character("jon snow", "the wall")
+client.execute {
+  index into "music" / "bands" doc CharacterSource(jonsnow)
+}
+```
+
+There isn't much difference, but the typeclass approach (the former) is considered more idomatic scala.
+More details on the [document traits](guide/source.md) page.
 
 Beautiful!
 
