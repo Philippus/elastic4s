@@ -9,11 +9,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait OptimizeDsl {
 
-
-  object OptimizeDefinition {
-    implicit def apply(index: String): OptimizeDefinition = optimize(index)
-  }
-
   implicit object OptimizeDefinitionExecutable
     extends Executable[OptimizeDefinition, OptimizeResponse, OptimizeResponse] {
     override def apply(c: Client, t: OptimizeDefinition): Future[OptimizeResponse] = {
