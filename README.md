@@ -88,6 +88,8 @@ the DSL closely mirrors the standard Java API / REST API.
 | Clear index cache                         | `clear cache <name>` |
 | Close index                               | `close index <name>` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
+| Cluster health                            | `get cluster health` |
+| Cluster stats                             | `get cluster stats` |
 | [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
 | [Create Repository](guide/snapshot.md)    | `create repository <repo> type <type> settings <settings>` |
 | [Create Snapshot](guide/snapshot.md)      | `create snapshot <name> in <repo> ...` |
@@ -99,11 +101,14 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Delete Snapshot](guide/snapshot.md)      | `delete snapshot <name> in <repo> ...` |
 | Delete Template                           | `delete template <name>` |
 | [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
+| Field stats                               | `field stats <indexes>` |
 | Flush Index                               | `flush index <name>` |
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
 | Get Alias                                 | `get alias <name> on <index>` |
 | Get Mapping                               | `get mapping <index> / <type>` |
+| Get Segments                              | `get segments <indexes>` |
 | Get Snapshot                              | `get snapshot <name> from <repo>` |
+| Get Template                              | `get template <name>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index exists                              | `index exists <name>` |
 | Index Status                              | `status <index>` |
@@ -114,16 +119,16 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
-| Register Query                            | `register id <id> into <index> query { <queryblock> }` |
 | Recover Index                             | `recover index <name>` |
 | Refresh index                             | `refresh index <name>` |
-| [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
+| Register Query                            | `register id <id> into <index> query { <queryblock> }` |
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
+| [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
 | Search scroll                             | `search scroll <scrollId>` |
 | Type Exists                               | `types exists <types> in <index>` |
-| [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
+| [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

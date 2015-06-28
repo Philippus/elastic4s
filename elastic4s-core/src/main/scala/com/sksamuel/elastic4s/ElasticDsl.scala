@@ -278,8 +278,10 @@ trait ElasticDsl
     def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
 
     def segments(indexes: String*): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
+    def segments(indexes: Iterable[String]): GetSegmentsDefinition = new GetSegmentsDefinition(indexes.toSeq)
 
     def settings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
+    def settings(indexes: Iterable[String]): GetSettingsDefinition = new GetSettingsDefinition(indexes.toSeq)
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
@@ -289,11 +291,11 @@ trait ElasticDsl
 
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
   def getMapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
-  def getSegments(indexes: String*): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
-  def getSettings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
-  def getTemplate(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
-  def getSnapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(names.toSeq)
-  def getSnapshot(names: String*): GetSnapshotsExpectsFrom = getSnapshot(names)
+  def getSegments(indexes: String*): GetSegmentsDefinition = get segments (indexes.toSeq: _*)
+  def getSettings(indexes: String*): GetSettingsDefinition = get settings indexes
+  def getSnapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = get snapshot names
+  def getSnapshot(names: String*): GetSnapshotsExpectsFrom = get snapshot names
+  def getTemplate(name: String): GetTemplateDefinition = get template name
 
   trait HealthKeyword
   case object health extends HealthKeyword
