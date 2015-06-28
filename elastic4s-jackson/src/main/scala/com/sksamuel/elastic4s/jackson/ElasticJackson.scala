@@ -9,10 +9,11 @@ object ElasticJackson {
 
     import JacksonJson._
 
-    implicit object JacksonJsonIndexable extends Indexable[Any] {
-      override def json(t: Any): String = mapper.writeValueAsString(t)
+    implicit def JacksonJsonIndexable[T]: Indexable[T] = new Indexable[T] {
+      override def json(t: T): String = mapper.writeValueAsString(t)
     }
 
+    @deprecated("use HitAs, which doesn't have a broken contravariance implementation", "1.6.1")
     implicit object JacksonJsonReader extends Reader[Any] {
       override def read[T <: Any : Manifest](json: String): T = mapper.readValue[T](json)
     }

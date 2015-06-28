@@ -382,7 +382,7 @@ val characters :Seq[Character] = resp.as[Character]
 
 This is basically the inverse of the `Indexable` typeclass. And just like Indexable, there is a general purpose
 Jackson `HitAs[Any]` implementation for those who wish to have some sugar. 
-To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the  build.
+To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the build.
 
 The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
 want to use the `as[T]` methods.

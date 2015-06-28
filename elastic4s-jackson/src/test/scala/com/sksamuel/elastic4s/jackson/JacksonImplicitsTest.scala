@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.sksamuel.elastic4s.{RichSearchHit, HitAs, ElasticDsl}
 import com.sksamuel.elastic4s.source.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.{ElasticDsl, HitAs, RichSearchHit}
 import org.scalatest.{Matchers, WordSpec}
 
 class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
