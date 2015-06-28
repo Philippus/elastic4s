@@ -387,8 +387,8 @@ To use this, you need to add the [jackson extension](http://search.maven.org/#se
 The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
 want to use the `as[T]` methods.
 
-As a bonus feature of the Jackson implementation, if your domain object has fields called _timestamp, _id, _type, _index, or 
-_version then those special fields will be automatically populated as well.
+As a bonus feature of the Jackson implementation, if your domain object has fields called `_timestamp`, `_id`, `_type`, `_index`, or 
+`_version` then those special fields will be automatically populated as well.
 
 ## Highlighting
 
