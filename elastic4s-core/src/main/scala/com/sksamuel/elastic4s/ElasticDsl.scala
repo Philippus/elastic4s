@@ -266,6 +266,7 @@ trait ElasticDsl
     def alias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
 
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
+    def cluster(health: HealthKeyword): ClusterHealthDefinition = new ClusterHealthDefinition
 
     def mapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
     def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
@@ -288,6 +289,9 @@ trait ElasticDsl
   def getTemplate(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
   def getSnapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(names.toSeq)
   def getSnapshot(names: String*): GetSnapshotsExpectsFrom = getSnapshot(names)
+
+  trait HealthKeyword
+  case object health extends HealthKeyword
 
   case object highlight {
     def field(name: String) = new HighlightDefinition(name)

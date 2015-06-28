@@ -5,6 +5,7 @@ import java.util.UUID
 
 import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
@@ -38,7 +39,6 @@ trait ElasticNodeBuilder {
   def httpEnabled: Boolean = true
 
   def tempDirectoryPath = System.getProperty("java.io.tmpdir")
-
 
   /**
    * Override this if you wish to control all the settings used by the client.
@@ -80,6 +80,14 @@ trait ElasticSugar extends ElasticNodeBuilder {
     }
     client.execute {
       ElasticDsl.refresh index indexes
+    }
+  }
+
+  def blockUntilGreen(): Unit = {
+    blockUntil("Expected cluster to have green status") { () =>
+      client.execute {
+        get cluster health
+      }.await.getStatus == ClusterHealthStatus.GREEN
     }
   }
 
