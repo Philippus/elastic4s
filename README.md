@@ -121,6 +121,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
 | Search scroll                             | `search scroll <scrollId>` |
+| Type Exists                               | `types exists <types> in <index>` |
 | [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
 
