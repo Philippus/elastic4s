@@ -34,14 +34,14 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
 
   "suggestions" should {
     "bring back results" in {
-      val suggestionA = termSuggestion("a").field("artist").text("taylor swaft")
+      val mysugg = termSuggestion.field("artist").text("taylor swaft")
       val resp = client.execute {
         search in indexType suggestions {
-          suggestionA
+          mysugg
         }
       }.await
-      resp.suggestion(suggestionA).entry("taylor").options.isEmpty shouldBe true
-      resp.suggestion("a").entry("swaft").optionsText shouldBe Array("swift")
+      resp.suggestion(mysugg).entry("taylor").options.isEmpty shouldBe true
+      resp.suggestion(mysugg).entry("swaft").optionsText shouldBe Array("swift")
     }
     "bring back suggestions for matching terms when mode is always" in {
       val suggestionA = term suggestion "a" field "artist" text "Razzle Kacks" mode SuggestMode.Always

@@ -351,6 +351,7 @@ There are many other types, such as range for numeric fields, wildcards, distanc
 
 Read more about search syntax [here](guide/search.md).
 Read about [multisearch here](guide/multisearch.md).
+Read about [suggestions here](guide/suggestions.md).
 
 ## Search Conversion
 
