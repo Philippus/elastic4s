@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import java.util.UUID
+
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.mappings._
 
@@ -138,6 +140,7 @@ trait ElasticDsl
   case object completion {
     def suggestion(name: String) = new CompletionSuggestionDefinition(name)
   }
+  def completionSuggestion : CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
   case object count {
@@ -254,6 +257,7 @@ trait ElasticDsl
   case object fuzzyCompletion {
     def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
   }
+  def fuzzyCompletionSuggestion : FuzzyCompletionSuggestionDefinition = fuzzyCompletionSuggestion(UUID.randomUUID.toString)
   def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition = fuzzyCompletion suggestion name
 
   case object geo {
@@ -428,6 +432,7 @@ trait ElasticDsl
   case object phrase {
     def suggestion(name: String) = new PhraseSuggestionDefinition(name)
   }
+  def phraseSuggestion : PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
   case object put {
@@ -556,6 +561,7 @@ trait ElasticDsl
   case object term {
     def suggestion(name: String) = new TermSuggestionDefinition(name)
   }
+  def termSuggestion : TermSuggestionDefinition = term suggestion UUID.randomUUID.toString
   def termSuggestion(name: String): TermSuggestionDefinition = term suggestion name
 
   case object timestamp {
