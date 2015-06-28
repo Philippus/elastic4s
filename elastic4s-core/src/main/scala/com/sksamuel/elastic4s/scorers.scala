@@ -35,12 +35,15 @@ class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightScoreDe
 }
 
 trait ScoreDefinition[T] {
+
   val builder: ScoreFunctionBuilder
   var _filter: Option[FilterDefinition] = None
+
   def filter(filter: FilterDefinition): T = {
     this._filter = Option(filter)
     this.asInstanceOf[T]
   }
+
   def weight(boost: Double): T = {
     builder.setWeight(boost.toFloat)
     this.asInstanceOf[T]
@@ -48,11 +51,14 @@ trait ScoreDefinition[T] {
 }
 
 class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[FieldValueFactorDefinition] {
+
   override val builder = new FieldValueFactorFunctionBuilder(fieldName: String)
+
   def factor(f: Double): this.type = {
     builder.factor(f.toFloat)
     this
   }
+
   def modifier(m: FieldValueFactorFunction.Modifier): this.type = {
     builder.modifier(m)
     this
@@ -64,15 +70,19 @@ class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefini
 }
 
 class ScriptScoreDefinition(script: String) extends ScoreDefinition[ScriptScoreDefinition] {
+
   val builder = new ScriptScoreFunctionBuilder().script(script)
+
   def param(key: String, value: String): ScriptScoreDefinition = {
     builder.param(key, value)
     this
   }
+
   def params(map: Map[String, String]): ScriptScoreDefinition = {
     map.foreach(entry => param(entry._1, entry._2))
     this
   }
+
   def lang(lang: String): ScriptScoreDefinition = {
     builder.lang(lang)
     this
@@ -80,11 +90,14 @@ class ScriptScoreDefinition(script: String) extends ScoreDefinition[ScriptScoreD
 }
 
 abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
+
   val builder: DecayFunctionBuilder
+
   def offset(offset: Any): T = {
     builder.setOffset(offset.toString)
     this.asInstanceOf[T]
   }
+
   def decay(decay: Double): T = {
     builder.setDecay(decay)
     this.asInstanceOf[T]

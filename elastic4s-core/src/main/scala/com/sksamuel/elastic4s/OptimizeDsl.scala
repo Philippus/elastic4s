@@ -9,7 +9,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait OptimizeDsl {
 
-  def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
 
   object OptimizeDefinition {
     implicit def apply(index: String): OptimizeDefinition = optimize(index)

@@ -56,7 +56,10 @@ trait ElasticDsl
     def get(aliases: String*) = new GetAliasDefinition(aliases)
   }
 
-  def aliases(aliasMutations: MutateAliasDefinition*) = new IndicesAliasesRequestDefinition(aliasMutations: _*)
+  def aliases(aliasMutations: MutateAliasDefinition*): IndicesAliasesRequestDefinition = aliases(aliasMutations)
+  def aliases(aliasMutations: Iterable[MutateAliasDefinition]): IndicesAliasesRequestDefinition = {
+    new IndicesAliasesRequestDefinition(aliasMutations.toSeq: _*)
+  }
 
   def agg = aggregation
   case object aggregation {
@@ -128,8 +131,9 @@ trait ElasticDsl
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
   case object commonGrams {
-    def tokenfilter(name: String) = CommonGramsTokenFilter(name)
+    def tokenfilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
   }
+  def commonGramsTokenFilter(name: String) = CommonGramsTokenFilter(name)
 
   case object completion {
     def suggestion(name: String) = new CompletionSuggestionDefinition(name)
@@ -223,8 +227,9 @@ trait ElasticDsl
   def deleteMapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
 
   case object explain {
-    def id(id: Any) = new ExplainExpectsIndex(id)
+    def id(id: Any): ExplainExpectsIndex = new ExplainExpectsIndex(id)
   }
+  def explain(id: Any): ExplainExpectsIndex = explain id id
 
   case object field extends TypeableFields {
     val name = ""
@@ -384,12 +389,14 @@ trait ElasticDsl
   def multiget(gets: GetDefinition*) = new MultiGetDefinition(gets)
 
   case object ngram {
-    def tokenfilter(name: String) = NGramTokenFilter(name)
+    def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
   }
+  def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
 
   case object edgeNGram {
-    def tokenfilter(name: String) = EdgeNGramTokenFilter(name)
+    def tokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
   }
+  def edgeNGramTokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
 
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
@@ -400,6 +407,8 @@ trait ElasticDsl
     def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
     def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
+  @deprecated("use optimizeIndex", "1.6.2")
+  def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
   def optimizeIndex(indexes: String*): OptimizeDefinition = optimize index indexes
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
 
@@ -555,7 +564,6 @@ trait ElasticDsl
   class TypesExistExpectsIn(types: Seq[String]) {
     def in(indexes: String*) = new TypesExistsDefinition(indexes, types)
   }
-
   case object types {
     def exist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
   }
