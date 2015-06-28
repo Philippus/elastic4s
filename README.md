@@ -423,6 +423,26 @@ by combinging inserts or using aggressive caching.
 The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 See more information on the [bulk page](guide/bulk.md).
 
+## Json Output
+
+It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser.
+It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.
+
+Elastic4s makes it easy to get this json where possible. Simply call `.show` on a request to get back a json string. Eg:
+
+```scala
+val req = search in "music" / "bands" query "coldplay" ...
+println(req.show) // would output json
+client.execute { req } // now executes that request
+```
+
+Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output.
+And some requests don't convert to json in the Java client so aren't yet supported by the `show` typeclass.
+Also, for clarity, it should be pointed out that the client doesn't send JSON to the server, it uses a binary protocol. So the provided json
+format should be treated as a debugging tool only.
+
+The requests that support `.show` are `search`, `create index`, `index into`, `validate`, `percolate`, `count`.
+
 ## Synchronous Operations
 
 All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots
