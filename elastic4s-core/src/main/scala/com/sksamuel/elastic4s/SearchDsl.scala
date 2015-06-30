@@ -11,6 +11,7 @@ import org.elasticsearch.search.sort.SortBuilder
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
+import compat.Platform.EOL
 
 /** @author Stephen Samuel */
 trait SearchDsl
@@ -54,12 +55,14 @@ trait SearchDsl
   }
 }
 
-class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
+class MultiSearchDefinition(val searches: Iterable[SearchDefinition]) {
   def build: MultiSearchRequest = {
     val builder = new MultiSearchRequestBuilder(ProxyClients.client)
     searches foreach (builder add _.build)
     builder.request()
   }
+
+  override def toString = searches.mkString("{" + EOL, "," + EOL, "}")
 }
 
 class RescoreDefinition(query: QueryDefinition) {
