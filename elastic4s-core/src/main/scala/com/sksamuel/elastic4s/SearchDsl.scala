@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
@@ -11,7 +10,6 @@ import org.elasticsearch.search.sort.SortBuilder
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
-import compat.Platform.EOL
 
 /** @author Stephen Samuel */
 trait SearchDsl
@@ -53,16 +51,25 @@ trait SearchDsl
   implicit class SearchDefinitionShowOps(f: SearchDefinition) {
     def show: String = SearchDefinitionShow.show(f)
   }
+
+  implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
+
+    import compat.Platform.EOL
+
+    override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("{" + EOL, "," + EOL, "}")
+  }
+
+  implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {
+    def show: String = MultiSearchDefinitionShow.show(f)
+  }
 }
 
-class MultiSearchDefinition(val searches: Iterable[SearchDefinition]) {
+case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
   def build: MultiSearchRequest = {
     val builder = new MultiSearchRequestBuilder(ProxyClients.client)
     searches foreach (builder add _.build)
     builder.request()
   }
-
-  override def toString = searches.mkString("{" + EOL, "," + EOL, "}")
 }
 
 class RescoreDefinition(query: QueryDefinition) {
