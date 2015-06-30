@@ -105,12 +105,16 @@ trait ElasticDsl
   case object clear {
     def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
     def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
+    def scroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
+    def scroll(ids: Iterable[String]): ClearScrollDefinition = clearScroll(ids)
   }
 
   def clearCache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
   def clearCache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
   def clearIndex(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
+  def clearScroll(id: String, ids: String*): ClearScrollDefinition = ClearScrollDefinition(id +: ids)
+  def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
 
   case object close {
     def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
@@ -140,7 +144,7 @@ trait ElasticDsl
   case object completion {
     def suggestion(name: String) = new CompletionSuggestionDefinition(name)
   }
-  def completionSuggestion : CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
+  def completionSuggestion: CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
   case object count {
@@ -257,7 +261,9 @@ trait ElasticDsl
   case object fuzzyCompletion {
     def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
   }
-  def fuzzyCompletionSuggestion : FuzzyCompletionSuggestionDefinition = fuzzyCompletionSuggestion(UUID.randomUUID.toString)
+  def fuzzyCompletionSuggestion: FuzzyCompletionSuggestionDefinition = fuzzyCompletionSuggestion(UUID
+    .randomUUID
+    .toString)
   def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition = fuzzyCompletion suggestion name
 
   case object geo {
@@ -432,7 +438,7 @@ trait ElasticDsl
   case object phrase {
     def suggestion(name: String) = new PhraseSuggestionDefinition(name)
   }
-  def phraseSuggestion : PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
+  def phraseSuggestion: PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
   case object put {
@@ -561,7 +567,7 @@ trait ElasticDsl
   case object term {
     def suggestion(name: String) = new TermSuggestionDefinition(name)
   }
-  def termSuggestion : TermSuggestionDefinition = term suggestion UUID.randomUUID.toString
+  def termSuggestion: TermSuggestionDefinition = term suggestion UUID.randomUUID.toString
   def termSuggestion(name: String): TermSuggestionDefinition = term suggestion name
 
   case object timestamp {
