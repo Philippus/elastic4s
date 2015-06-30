@@ -6,7 +6,7 @@ class PercolateShowTest extends WordSpec with Matchers with ElasticSugar {
 
   import ElasticDsl._
 
-  "Index" should {
+  "PercolateDefinition" should {
     "have a show typeclass implementation" in {
       val request = percolate in "star_trek" / " captains" doc "name" -> "cook" query {
         termQuery("color" -> "blue")
@@ -19,6 +19,19 @@ class PercolateShowTest extends WordSpec with Matchers with ElasticSugar {
                               |  },
                               |  "doc" : {
                               |    "name" : "cook"
+                              |  }
+                              |}""".stripMargin
+    }
+  }
+
+  "RegisterDefinition" should {
+    "have a show typeclass implementation" in {
+      val request = register id 14 into "star_trek" query termQuery("name", "kirk")
+      request.show shouldBe """{
+                              |  "query" : {
+                              |    "term" : {
+                              |      "name" : "kirk"
+                              |    }
                               |  }
                               |}""".stripMargin
     }

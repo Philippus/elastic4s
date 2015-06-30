@@ -56,6 +56,14 @@ trait PercolateDsl extends QueryDsl {
     }
   }
 
+  implicit object RegisterDefinitionShow extends Show[RegisterDefinition] {
+    override def show(f: RegisterDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
+  }
+
+  implicit class RegisterDefinitionShowOps(f: RegisterDefinition) {
+    def show: String = RegisterDefinitionShow.show(f)
+  }
+
   implicit object PercolateDefinitionShow extends Show[PercolateDefinition] {
     override def show(f: PercolateDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
   }
@@ -71,8 +79,7 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
   private val _fields = new ListBuffer[(String, Any)]
 
   def build = {
-    val source = XContentFactory.jsonBuilder()
-      .startObject().field("query", _query.builder)
+    val source = XContentFactory.jsonBuilder().startObject().field("query", _query.builder)
     for ( tuple <- _fields ) {
       source.field(tuple._1, tuple._2)
     }
