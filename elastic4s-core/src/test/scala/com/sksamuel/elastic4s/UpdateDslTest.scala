@@ -53,6 +53,33 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
     sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))
   }
 
+  it should "should support docAsUpsert with explicit field types" in {
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
+      NestedFieldValue("captain", Seq(SimpleFieldValue("james", "kirk")))
+      )
+    val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
+    sourceMap should contain key "captain"
+    sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))
+  }
+
+  it should "should support docAsUpsert with nested explicit field types" in {
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
+      "captain" -> SimpleFieldValue("james", "kirk")
+      )
+    val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
+    sourceMap should contain key "captain"
+    sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))
+  }
+
+  it should "should support docAsUpsert with complex nested explicit field types" in {
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
+      "captain" -> NestedFieldValue("first", Seq(SimpleFieldValue("captain", "archer"), SimpleFieldValue("program","NX test")))
+      )
+    val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
+    println(sourceMap.get("captain").asInstanceOf[util.Map[String, String]])
+    sourceMap.get("captain").asInstanceOf[util.Map[String, String]].get("first").asInstanceOf[util.Map[String,String]] should contain(Entry("captain", "archer"))
+  }
+
   it should "should support source" in {
     val updateDef = update id 65 in "scifi/startrek" doc new TestSource
     assert(updateDef.build.doc().sourceAsMap().containsKey("ship"))

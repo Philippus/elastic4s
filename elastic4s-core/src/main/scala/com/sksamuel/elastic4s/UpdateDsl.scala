@@ -61,6 +61,11 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     _builder.setDocAsUpsert(true)
     doc(map)
   }
+  def docAsUpsert(value: FieldValue): this.type = {
+    _builder.setDocAsUpsert(true)
+    doc(value)
+  }
+
   def doc(fields: (String, Any)*): this.type = doc(fields.toMap)
   def doc(iterable: Iterable[(String, Any)]): this.type = doc(iterable.toMap)
   def doc(map: Map[String, Any]): this.type = {
@@ -70,6 +75,11 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
 
   def doc(source: DocumentSource) = {
     _builder.setDoc(source.json)
+    this
+  }
+
+  def doc(value: FieldValue): this.type = {
+    _builder.setDoc(_fieldsAsXContent(Seq(value)))
     this
   }
 
