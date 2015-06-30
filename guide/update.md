@@ -61,3 +61,13 @@ val resp = client.sync.execute {
   update id 98 in "scifi/battlestargalactica" script "ctx._source.tags += tag" params(Map("tag"->"space"))
 }
 ````
+
+Like index, you can use update with explicit field values.
+
+```scala
+val resp = client.execute {
+  update id 14 in "scifi/startrek" docAsUpsert (
+    NestedFieldValue("captain", Seq(SimpleFieldValue("james", "kirk")))
+  )
+}
+````
