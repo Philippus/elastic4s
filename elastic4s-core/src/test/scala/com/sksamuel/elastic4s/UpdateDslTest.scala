@@ -76,7 +76,6 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
       "captain" -> NestedFieldValue("first", Seq(SimpleFieldValue("captain", "archer"), SimpleFieldValue("program","NX test")))
       )
     val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
-    println(sourceMap.get("captain").asInstanceOf[util.Map[String, String]])
     sourceMap.get("captain").asInstanceOf[util.Map[String, String]].get("first").asInstanceOf[util.Map[String,String]] should contain(Entry("captain", "archer"))
   }
 
