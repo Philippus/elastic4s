@@ -11,8 +11,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait GetDsl extends IndexesTypesDsl {
 
-  def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
-
   class GetWithIdExpectsFrom(id: String) {
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
     def from(index: IndexType): GetDefinition = new GetDefinition(index.index, id)

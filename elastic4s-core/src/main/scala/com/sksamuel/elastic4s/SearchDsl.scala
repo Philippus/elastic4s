@@ -56,7 +56,7 @@ trait SearchDsl
 
     import compat.Platform.EOL
 
-    override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("{" + EOL, "," + EOL, "}")
+    override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
   }
 
   implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {

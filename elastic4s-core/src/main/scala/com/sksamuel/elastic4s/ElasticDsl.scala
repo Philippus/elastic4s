@@ -299,6 +299,7 @@ trait ElasticDsl
     def snapshot(names: String*): GetSnapshotsExpectsFrom = snapshot(names)
   }
 
+  def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
   def getMapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
   def getSegments(indexes: String*): GetSegmentsDefinition = get segments (indexes.toSeq: _*)
