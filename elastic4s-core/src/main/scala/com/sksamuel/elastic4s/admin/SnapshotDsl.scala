@@ -6,6 +6,12 @@ import org.elasticsearch.action.admin.cluster.snapshots.create.{ CreateSnapshotR
 import org.elasticsearch.action.admin.cluster.snapshots.delete.{ DeleteSnapshotRequestBuilder, DeleteSnapshotResponse }
 import org.elasticsearch.action.admin.cluster.snapshots.restore.{ RestoreSnapshotRequestBuilder, RestoreSnapshotResponse }
 import org.elasticsearch.action.admin.cluster.snapshots.get.{ GetSnapshotsRequestBuilder, GetSnapshotsResponse }
+import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequestBuilder, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequestBuilder, GetSnapshotsResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 
 import scala.collection.JavaConverters._
@@ -107,6 +113,11 @@ class CreateSnapshotDefinition(name: String, repo: String) {
     this
   }
 
+  def setIndicesOptions(indicesOptions: IndicesOptions): this.type = {
+    request.setIndicesOptions(indicesOptions)
+    this
+  }
+
   def includeGlobalState(global: Boolean): this.type = {
     request.setIncludeGlobalState(global)
     this
@@ -133,12 +144,38 @@ class CreateSnapshotDefinition(name: String, repo: String) {
   }
 }
 
-class RestoreSnapshotDefinition(name: String, repo: String) {
+case class RestoreSnapshotDefinition(name: String, repo: String) {
+
   val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
   def build = request.request()
 
   def restoreGlobalState(global: Boolean): this.type = {
     request.setRestoreGlobalState(global)
+    this
+  }
+
+  def renamePattern(renamePattern: String): this.type = {
+    request.setRenamePattern(renamePattern)
+    this
+  }
+
+  def renameReplacement(renameReplacement: String): this.type = {
+    request.setRenameReplacement(renameReplacement)
+    this
+  }
+
+  def partial(partial: Boolean): this.type = {
+    request.setPartial(partial)
+    this
+  }
+
+  def includeAliases(includeAliases: Boolean): this.type = {
+    request.setIncludeAliases(includeAliases)
+    this
+  }
+
+  def ignoreIndexSettings(ignoreIndexSettings: String*): this.type = {
+    request.setIgnoreIndexSettings(ignoreIndexSettings: _*)
     this
   }
 
