@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.action.search.{ClearScrollResponse, SearchResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -16,10 +16,10 @@ trait ScrollDsl {
   }
 
   implicit object ClearScrollDefinitionExecutable
-    extends Executable[ClearScrollDefinition, ClearScrollResponse, ClearScrollResult] {
-    override def apply(client: Client, s: ClearScrollDefinition): Future[ClearScrollResult] = {
+    extends Executable[ClearScrollDefinition, ClearScrollResponse] {
+    override def apply(client: Client, s: ClearScrollDefinition): Future[ClearScrollResponse] = {
       import scala.collection.JavaConverters._
-      injectFutureAndMap(client.prepareClearScroll.setScrollIds(s.ids.asJava).execute)(resp => ClearScrollResult(resp))
+      injectFuture(client.prepareClearScroll.setScrollIds(s.ids.asJava).execute)
     }
   }
 }

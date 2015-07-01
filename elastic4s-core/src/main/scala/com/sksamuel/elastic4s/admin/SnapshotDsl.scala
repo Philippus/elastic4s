@@ -1,12 +1,7 @@
 package com.sksamuel.elastic4s
 package admin
 
-import org.elasticsearch.action.admin.cluster.repositories.put.{ PutRepositoryResponse, PutRepositoryRequestBuilder }
-import org.elasticsearch.action.admin.cluster.snapshots.create.{ CreateSnapshotRequestBuilder, CreateSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.delete.{ DeleteSnapshotRequestBuilder, DeleteSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.restore.{ RestoreSnapshotRequestBuilder, RestoreSnapshotResponse }
-import org.elasticsearch.action.admin.cluster.snapshots.get.{ GetSnapshotsRequestBuilder, GetSnapshotsResponse }
-import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
+import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequestBuilder, PutRepositoryResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequestBuilder, CreateSnapshotResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequestBuilder, GetSnapshotsResponse}
