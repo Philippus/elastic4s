@@ -43,7 +43,7 @@ trait ElasticNodeBuilder {
   /**
    * Override this if you wish to control all the settings used by the client.
    */
-  private def settings: ImmutableSettings.Builder = {
+  protected def settings: ImmutableSettings.Builder = {
     val builder = ImmutableSettings.settingsBuilder()
       .put("node.http.enabled", httpEnabled)
       .put("http.enabled", httpEnabled)
@@ -56,8 +56,15 @@ trait ElasticNodeBuilder {
     configureSettings(builder)
   }
 
+  /**
+   * Invoked by the sugar trait to setup the settings builder that was created by settings()
+   */
   def configureSettings(builder: ImmutableSettings.Builder): ImmutableSettings.Builder = builder
 
+  /**
+   * Invoked to create a local client for the elastic node.
+   * Override to create the client youself.
+   */
   def createLocalClient = ElasticClient.local(settings.build)
 }
 

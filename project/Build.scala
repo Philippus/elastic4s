@@ -6,16 +6,16 @@ object Build extends Build {
   val org = "com.sksamuel.elastic4s"
   val appVersion = "1.6.3"
 
-  val ScalaVersion =          "2.11.7"
-  val ScalatestVersion =      "2.2.5"
-  val MockitoVersion =        "1.9.5"
-  val JacksonVersion =        "2.5.3"
-  val Slf4jVersion =          "1.7.12"
-  val ScalaLoggingVersion =   "2.1.2"
-  val ElasticsearchVersion =  "1.6.0"
-  val Log4jVersion          = "1.2.17"
-  val CommonsIoVersion =      "2.4"
-  val GroovyVersion =         "2.3.7"
+  val ScalaVersion = "2.11.7"
+  val ScalatestVersion = "2.2.5"
+  val MockitoVersion = "1.9.5"
+  val JacksonVersion = "2.5.3"
+  val Slf4jVersion = "1.7.12"
+  val ScalaLoggingVersion = "2.1.2"
+  val ElasticsearchVersion = "1.6.0"
+  val Log4jVersion = "1.2.17"
+  val CommonsIoVersion = "2.4"
+  val GroovyVersion = "2.3.7"
 
   val rootSettings = Seq(
     version := appVersion,
@@ -28,14 +28,14 @@ object Build extends Build {
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
-      "org.slf4j"                     %  "slf4j-api"            % Slf4jVersion,
-      "commons-io"                    %  "commons-io"           % CommonsIoVersion      % "test",
-      "log4j"                         %  "log4j"                % Log4jVersion          % "test",
-      "org.slf4j"                     %  "log4j-over-slf4j"     % Slf4jVersion          % "test",
-      "org.mockito"                   %  "mockito-all"          % MockitoVersion        % "test",
-      "org.scalatest"                 %% "scalatest"            % ScalatestVersion      % "test",
-      "org.codehaus.groovy"           %  "groovy"               % GroovyVersion         % "test"
+      "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
+      "org.slf4j" % "slf4j-api" % Slf4jVersion,
+      "commons-io" % "commons-io" % CommonsIoVersion % "test",
+      "log4j" % "log4j" % Log4jVersion % "test",
+      "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
+      "org.mockito" % "mockito-all" % MockitoVersion % "test",
+      "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
+      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test"
 
     ),
     publishTo <<= version {
@@ -77,6 +77,7 @@ object Build extends Build {
     .aggregate(
       core,
       testkit,
+      streams,
       examples,
       jackson
     )
@@ -85,8 +86,8 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-core",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
     )
 
@@ -94,6 +95,14 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(name := "elastic4s-testkit")
     .dependsOn(core)
+
+  lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
+    .settings(rootSettings: _*)
+    .settings(
+      name := "elastic4s-streams",
+      libraryDependencies += "org.reactivestreams" % "reactive-streams" % "1.0.0",
+      libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % "1.0.0" % "test"
+    ).dependsOn(core, testkit % "test")
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
     .settings(rootSettings: _*)
@@ -105,8 +114,8 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-jackson",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
     ).dependsOn(core, testkit % "test")
 }
