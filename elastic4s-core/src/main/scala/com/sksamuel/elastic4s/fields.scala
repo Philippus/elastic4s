@@ -18,6 +18,9 @@ object FieldsMapper {
         val values = arr.map(new SimpleFieldValue(None, _))
         ArrayFieldValue(name, values)
 
+      case (name: String, a: FieldValue) =>
+        NestedFieldValue(name,Seq(a))
+
       case (name: String, s: Iterable[_]) =>
         s.headOption match {
           case Some(m: Map[_, _]) =>
