@@ -63,7 +63,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
 
       publisher.subscribe(new Subscriber[RichSearchHit] {
         override def onComplete(): Unit = completionLatch.countDown()
-        override def onError(t: Throwable): Unit = ???
+        override def onError(t: Throwable): Unit = fail(t)
         override def onSubscribe(s: Subscription): Unit = s.request(1000)
         override def onNext(t: RichSearchHit): Unit = documentLatch.countDown()
       })

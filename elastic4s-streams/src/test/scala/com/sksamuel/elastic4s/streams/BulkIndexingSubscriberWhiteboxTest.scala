@@ -14,7 +14,6 @@ class BulkIndexingSubscriberWhiteboxTest
   with ElasticSugar with TestNGSuiteLike {
 
   import ElasticDsl._
-  import scala.concurrent.ExecutionContext.Implicits._
 
   implicit val system = ActorSystem()
 

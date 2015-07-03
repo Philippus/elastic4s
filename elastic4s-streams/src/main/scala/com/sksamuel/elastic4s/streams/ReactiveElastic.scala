@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{ElasticDsl, IndexType, ElasticClient, SearchDefinition}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, IndexType, SearchDefinition}
 
-import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 
 object ReactiveElastic {

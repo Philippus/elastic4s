@@ -14,7 +14,6 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
   import ElasticDsl._
   import ElasticJackson.Implicits._
   import ReactiveElastic._
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   implicit val system = ActorSystem()
 
