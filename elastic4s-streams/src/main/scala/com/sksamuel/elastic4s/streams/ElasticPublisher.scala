@@ -1,91 +1,102 @@
 package com.sksamuel.elastic4s.streams
 
-import java.util.concurrent.atomic.AtomicBoolean
-
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, RichSearchResponse, SearchDefinition}
-import org.elasticsearch.search.SearchHit
+import akka.actor.{Actor, ActorSystem, PoisonPill, Props, Stash}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
+import org.elasticsearch.action.search.SearchResponse
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
 import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class ElasticPublisher(client: ElasticClient, search: SearchDefinition)
-                      (implicit executor: ExecutionContext) extends Publisher[RichSearchHit] {
-
-  import ElasticDsl._
+class ElasticPublisher(client: ElasticClient, search: SearchDefinition, elements: Long)
+                      (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9
-    if (s == null) throw new NullPointerException("Subscriber cannot be null")
-    client.execute(search).onComplete {
-      case Success(resp) => s.onSubscribe(new ElasticSubscription(client, resp, s))
-      case Failure(t) => s.onError(t)
-    }
+    if (s == null) throw new NullPointerException("Rule 1.9: Subscriber cannot be null")
+    s.onSubscribe(new ElasticSubscription(client, search, s, elements))
   }
 }
 
-class ElasticSubscription(client: ElasticClient, resp: RichSearchResponse, s: Subscriber[_ >: RichSearchHit])
-                         (implicit executor: ExecutionContext) extends Subscription {
+class ElasticSubscription(client: ElasticClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
+                         (implicit system: ActorSystem) extends Subscription {
 
-  import ElasticDsl._
-
-  private object NoMoreResults
-  private var id = resp.scrollId
-  private val active = new AtomicBoolean(true)
-  // this is any because I'm using sentinel values to indicate state
-  private val queue: mutable.Queue[Any] = mutable.Queue.empty
-  // this future is used as a way of chaining requests to ensure that even on a multi-thread
-  // executor, only one request is ever executing at any time.
-  private var future: Future[Unit] = Future.successful()
+  val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
 
   override def cancel(): Unit = {
     // Rule 3.5: this call is idempotent, is fast, and thread safe
-    // Rule 3.7: after cancelling, further calls should be no-ops
-    if (active.getAndSet(false)) {
-      client.execute(clearScroll(id))
-    }
+    // Rule 3.7: after cancelling, further calls should be no-ops, which is handled by the actor
+    // we don't mind the subscriber having any pending requests before cancellation is processed
+    actor ! PoisonPill
   }
 
   override def request(n: Long): Unit = {
+    // spec 3.9
+    if (n < 1) s.onError(new java.lang.IllegalArgumentException("Rule 3.9: Must request > 0 elements"))
     // Rule 3.4 this method returns quickly as the search request is non-blocking
-    // Rule 3.6: after cancelling, further calls should be no-ops
-    if (active.get) {
+    actor ! PublishActor.Request(n)
+  }
+}
+
+object PublishActor {
+  case class Request(n: Long)
+}
+
+class PublishActor(client: ElasticClient,
+                   query: SearchDefinition,
+                   s: Subscriber[_ >: RichSearchHit],
+                   max: Long) extends Actor with Stash {
+
+  import ElasticDsl._
+  import PublishActor._
+  import context.dispatcher
+
+  private var scrollId: String = null
+  private var processed: Long = 0
+  private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
+
+  override def receive = ready
+
+  def ready: Actor.Receive = {
+    case Request(n) if n > 0 =>
       if (queue.isEmpty) {
-        // we flatmap on this future so that this command won't execute until the previous one has finished
-        future = future.flatMap { _ =>
-          // we enqueue another batch of hits, possibly more than the user requested which is allowed
-          // we set the future to be the result of the next scroll request, and by rule 2.7 we know
-          // that the subscriber must only invoke request from the same thread.
-          val future = client.execute {
-            search scroll id
-          }
-          future.onFailure {
-            case t => queue.enqueue(t) // enqeue so that the subscriber can get the rest before the error
-          }
-          future.map { resp =>
-            if (resp.hits.isEmpty) {
-              queue.enqueue(NoMoreResults) // we had no more hits
-            } else {
-              id = resp.getScrollId
-              queue.enqueue(resp.hits: _*)
-              request(n)
-            }
-          }
+        Option(scrollId) match {
+          case None => client.execute(query).onComplete(result => self ! result)
+          case Some(id) => client.execute(search scroll id).onComplete(result => self ! result)
         }
+        context become fetching
+        self ! Request(n)
       } else {
-        queue.dequeue match {
-          case t: Throwable =>
-            s.onError(t)
-            active.set(false)
-          case NoMoreResults =>
-            s.onComplete()
-            active.set(false)
-          case hit: RichSearchHit =>
-            s.onNext(hit)
-            request(n - 1)
+        s.onNext(queue.dequeue)
+        processed = processed + 1
+        if (processed == max) {
+          s.onComplete()
+          context.stop(self)
+        } else {
+          self ! Request(n - 1)
         }
       }
-    }
   }
+
+  def fetching: Actor.Receive = {
+    // while fetching (waiting on elasticsearch) we need to postpone requests until the results are back
+    // we can do this handily by stashing them
+    case Request(n) =>
+      stash()
+    // if we had no results from ES then we're done
+    case Success(resp: SearchResponse) if resp.isEmpty =>
+      s.onComplete()
+      context.stop(self)
+    // more results and we can unleash the beast (stashed requests)
+    case Success(resp: SearchResponse) =>
+      scrollId = resp.getScrollId
+      queue.enqueue(resp.hits: _*)
+      context become ready
+      unstashAll()
+    // if the request to elastic failed we will terminate the subscription sorry
+    case Failure(t) =>
+      s.onError(t)
+      context.stop(self)
+  }
+
 }

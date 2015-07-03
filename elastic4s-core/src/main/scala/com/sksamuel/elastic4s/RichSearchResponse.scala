@@ -33,6 +33,8 @@ case class RichSearchResponse(response: SearchResponse) {
   def facets: Facets = response.getFacets
   def aggregations: Aggregations = response.getAggregations
 
+  def isEmpty: Boolean = hits.isEmpty
+
   def suggest: SuggestResult = SuggestResult(response.getSuggest)
   def suggestions = suggest.suggestions
   def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get

@@ -77,9 +77,9 @@ object Build extends Build {
     .aggregate(
       core,
       testkit,
-      streams,
       examples,
-      jackson
+      jackson,
+      streams
     )
 
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -101,8 +101,9 @@ object Build extends Build {
     .settings(
       name := "elastic4s-streams",
       libraryDependencies += "org.reactivestreams" % "reactive-streams" % "1.0.0",
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11",
       libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % "1.0.0" % "test"
-    ).dependsOn(core, testkit % "test")
+    ).dependsOn(core, testkit % "test", jackson % "test")
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
     .settings(rootSettings: _*)
