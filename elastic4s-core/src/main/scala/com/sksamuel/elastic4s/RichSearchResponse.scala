@@ -46,6 +46,13 @@ case class RichSearchResponse(response: SearchResponse) {
 
 class RichSearchHit(hit: SearchHit) {
 
+  override def equals(other: Any): Boolean = other match {
+    case hit: SearchHit => equals(new RichSearchHit(hit))
+    case hit: RichSearchHit =>
+      this.index == hit.index && this.`type` == hit.`type` && this.sourceAsString == hit.sourceAsString
+    case _ => false
+  }
+
   import scala.collection.JavaConverters._
 
   def id: String = hit.id
