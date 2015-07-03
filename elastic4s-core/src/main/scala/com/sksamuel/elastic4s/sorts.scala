@@ -25,9 +25,14 @@ class FieldSortDefinition(field: String) extends SortDefinition {
     this
   }
 
-  @deprecated("since 1.4.0", "1.4.0")
+  @deprecated("Use unmappedType", "1.4.0")
   def ignoreUnmapped(ignoreUnmapped: Boolean) = {
     builder.ignoreUnmapped(ignoreUnmapped)
+    this
+  }
+
+  def unmappedType(`type`: String) = {
+    builder.unmappedType(`type`)
     this
   }
 

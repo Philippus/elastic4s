@@ -1,0 +1,10 @@
+{
+    "sort": [
+        {
+            "singer.weight": {
+                "order": "desc",
+                "unmapped_type": "long"
+            }
+        }
+    ]
+}
