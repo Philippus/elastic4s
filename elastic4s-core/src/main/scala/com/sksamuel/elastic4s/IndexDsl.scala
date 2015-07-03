@@ -60,6 +60,11 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     source.endObject()
   }
 
+  def source(json: String): this.type = {
+    this._json = Option(json)
+    this
+  }
+
   def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
     this._json = Option(indexable.json(t))
     this

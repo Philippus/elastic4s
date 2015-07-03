@@ -116,11 +116,22 @@ trait ElasticSugar extends ElasticNodeBuilder {
     require(done, s"Failed waiting on: $explain")
   }
 
-  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
-    blockUntil(s"Expected to find document $id") { () =>
+  def ensureIndexExists(index: String): Unit = {
+    val resp = client.execute {
+      indexExists(index)
+    }.await
+    if (!resp.isExists)
       client.execute {
-        get id id from index / `type`
-      }.await.isExists
+        create index index
+      }.await
+  }
+
+  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
+    blockUntil(s"Expected to find document $id") {
+      () =>
+        client.execute {
+          get id id from index / `type`
+        }.await.isExists
     }
   }
 
@@ -128,26 +139,29 @@ trait ElasticSugar extends ElasticNodeBuilder {
    * Will block until the given index and optional types have at least the given number of documents.
    */
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
-    blockUntil(s"Expected count of $expected") { () =>
-      expected <= client.execute {
-        count from index types types
-      }.await.getCount
+    blockUntil(s"Expected count of $expected") {
+      () =>
+        expected <= client.execute {
+          count from index types types
+        }.await.getCount
     }
   }
 
   def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
-    blockUntil(s"Expected count of $expected") { () =>
-      expected == client.execute {
-        count from index types types
-      }.await.getCount
+    blockUntil(s"Expected count of $expected") {
+      () =>
+        expected == client.execute {
+          count from index types types
+        }.await.getCount
     }
   }
 
   def blockUntilEmpty(index: String): Unit = {
-    blockUntil(s"Expected empty index $index") { () =>
-      client.execute {
-        count from index
-      }.await.getCount == 0
+    blockUntil(s"Expected empty index $index") {
+      () =>
+        client.execute {
+          count from index
+        }.await.getCount == 0
     }
   }
 }

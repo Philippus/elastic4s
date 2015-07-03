@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
+import org.elasticsearch.action.bulk.{BulkItemResponse, BulkItemRequest, BulkRequest, BulkResponse}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait BulkCompatibleDefinition
@@ -43,6 +44,8 @@ trait BulkDsl {
       injectFuture(bulk.execute)
     }
   }
+
+  implicit def javatoScala(resp: BulkResponse): BulkResult = new BulkResult(resp)
 }
 
 class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
@@ -84,4 +87,12 @@ class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
     case update: UpdateDefinition => _builder.add(update.build)
     case register: RegisterDefinition => _builder.add(register.build)
   }
+}
+
+case class BulkResult(response: BulkResponse) {
+
+  import scala.concurrent.duration._
+
+  def items: Array[BulkItemResponse] = response.getItems
+  def took: Duration = response.getTook.millis.millis
 }

@@ -2,24 +2,37 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
+import org.elasticsearch.ElasticsearchException
 import org.elasticsearch.action.search.SearchResponse
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
 import scala.collection.mutable
 import scala.util.{Failure, Success}
 
-class ElasticPublisher(client: ElasticClient, search: SearchDefinition, elements: Long)
-                      (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
+/**
+ * An implementation of the reactive API Publisher, that publishes documents using an elasticsearch
+ * scroll cursor. The initial query must be provided to the publisher, and there are helpers to create
+ * a query for all documents in an index (and type).
+ *
+ * @param client a client for the cluster
+ * @param search the initial search query to execute
+ * @param elements the maximum number of elements to return
+ * @param system an Actor system required by the publisher
+ */
+class ScrollPublisher(client: ElasticClient,
+                      search: SearchDefinition,
+                      elements: Long)
+                     (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9
     if (s == null) throw new NullPointerException("Rule 1.9: Subscriber cannot be null")
-    s.onSubscribe(new ElasticSubscription(client, search, s, elements))
+    s.onSubscribe(new ScrollSubscription(client, search, s, elements))
   }
 }
 
-class ElasticSubscription(client: ElasticClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
-                         (implicit system: ActorSystem) extends Subscription {
+class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
+                        (implicit system: ActorSystem) extends Subscription {
 
   val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
 
@@ -83,6 +96,9 @@ class PublishActor(client: ElasticClient,
     // we can do this handily by stashing them
     case Request(n) =>
       stash()
+    case Success(resp: SearchResponse) if resp.isTimedOut =>
+      s.onError(new ElasticsearchException("Request terminated early or timed out"))
+      context.stop(self)
     // if we had no results from ES then we're done
     case Success(resp: SearchResponse) if resp.isEmpty =>
       s.onComplete()
