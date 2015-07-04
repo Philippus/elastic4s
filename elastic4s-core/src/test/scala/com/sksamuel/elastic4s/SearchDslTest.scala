@@ -1008,5 +1008,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req._builder.toString should matchJsonResource("/json/search/search_aggregations_global.json")
   }
 
-}
+  it should "generate json for ignored field type sort" in {
+    val req = search in "music" types "bands" sort {
+      field sort "singer.weight" unmappedType "long" order SortOrder.DESC
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_sort_unmapped_field_type.json")
+  }
 
+}
