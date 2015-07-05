@@ -42,7 +42,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * Added reactive streams implementation for elastic4s.
 * Support explicit field types in the update dsl
 * Added missing options to restore snapshot dsl
-* Added 'show' typeclass for percolate register
+* Added `show` typeclass for percolate register
 
 ###### 1.6.3
 * Added clear scroll api
@@ -58,7 +58,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 1.6.1
 * Added IterableSearch for iterating over a scroll
-* Enhanced multiget dsl to include routing, version and field options
+* Enhanced multiget dsl to include `routing`, `version` and `field` options
 * Added rich result for GetAliasResponse
 * Added context queries to suggestions
 * Breaking change: Changed syntax of suggestions to be clearer and allow for type safe results
