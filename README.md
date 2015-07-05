@@ -21,13 +21,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.6.3 which is compatible with Elasticsearch 1.6.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.6.4 which is compatible with Elasticsearch 1.6.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.6.3|1.6.X|
+|1.6.4|1.6.X|
 |1.5.17|1.5.X|
 |1.4.14|1.4.x|
 |1.3.3|1.3.x|
@@ -35,6 +35,43 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |1.1.2.0|1.1.x|
 |1.0.3.0|1.0.x|
 |0.90.13.2|0.90.x|
+
+##### Changelog
+
+###### 1.6.4 
+* Added reactive streams implementation for elastic4s.
+* Support explicit field types in the update dsl
+* Added missing options to restore snapshot dsl
+* Added 'show' typeclass for percolate register
+
+###### 1.6.3
+* Added clear scroll api
+* Added `show` typeclass for multisearch
+* Allow update dsl to use explicit field values
+
+###### 1.6.2
+* Added new methods to testkit
+* Introduced simplier syntax for sorts
+* Added `HitAs` as a replacement for the `Reader` typeclass
+* Fixed validate query for block queries
+* Added `show` typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.
+
+###### 1.6.1
+* Added IterableSearch for iterating over a scroll
+* Enhanced multiget dsl to include routing, version and field options
+* Added rich result for GetAliasResponse
+* Added context queries to suggestions
+* Breaking change: Changed syntax of suggestions to be clearer and allow for type safe results
+* Allow setting analyzer by name on matchphraseprefix
+* Added singleMethodSyntax variant, eg `indexInto(index)` rather than `index into index`
+* Added re-write to validate
+* Added filter support to alias (previously only the java client filters were supported)
+* Added cluster settings api
+* Added field stats api
+* Addd docValuesFormat to timestamp mapping
+* Added matched_fields and highlight filter to highlighter
+* Supported stopwords_list in filter
+* Reworked testkit to allow more configuration over the creating of the test clients
 
 #### Dependencies
 
