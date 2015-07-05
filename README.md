@@ -44,10 +44,19 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * Added missing options to restore snapshot dsl
 * Added `show` typeclass for percolate register
 
+###### 1.5.17
+* Added clear scroll api
+* Added missing options to restore snapshot dsl
+
 ###### 1.6.3
 * Added clear scroll api
 * Added `show` typeclass for multisearch
 * Allow update dsl to use explicit field values
+ 
+###### 1.5.16
+* Added `HitAs` as a replacement for the `Reader` typeclass
+* Added indices option to mapping, count and search dsl
+* Added docValuesFormat to timestamp mapping
 
 ###### 1.6.2
 * Added new methods to testkit
@@ -55,6 +64,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * Added `HitAs` as a replacement for the `Reader` typeclass
 * Fixed validate query for block queries
 * Added `show` typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.
+ 
+###### 1.5.15
+* Added `matched_fields` and highlight filter to highlighter
 
 ###### 1.6.1
 * Added IterableSearch for iterating over a scroll
