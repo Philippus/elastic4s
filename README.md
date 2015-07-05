@@ -68,9 +68,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * Added filter support to alias (previously only the java client filters were supported)
 * Added cluster settings api
 * Added field stats api
-* Addd docValuesFormat to timestamp mapping
-* Added matched_fields and highlight filter to highlighter
-* Supported stopwords_list in filter
+* Addd `docValuesFormat` to timestamp mapping
+* Added `matched_fields` and highlight filter to highlighter
+* Supported `stopwords_list` in filter
 * Reworked testkit to allow more configuration over the creating of the test clients
 
 #### Dependencies
