@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.search.sort.SortOrder
 import org.scalatest.{ FreeSpec, Matchers }
 
 class ScriptTest extends FreeSpec with Matchers with ElasticSugar {
@@ -36,6 +37,16 @@ class ScriptTest extends FreeSpec with Matchers with ElasticSugar {
       }.await
       resp.getHits.getAt(0).field("a").value[String] shouldBe "Fare is: 9.0"
 
+    }
+  }
+  "script sort" - {
+    "sort by name length" in {
+      val sortDefinition = new ScriptSortDefinition(s"if (_source.containsKey('name')) _source['name'].size() else 0").order(SortOrder.DESC).typed("number")
+      val sorted = client.execute {
+        search in "script/tubestops" query matchall sort sortDefinition
+      }.await
+      sorted.hits(0).sourceAsMap("name") shouldBe "south kensington"
+      sorted.hits(3).sourceAsMap("name") shouldBe "bank"
     }
   }
 
