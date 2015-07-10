@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequest, ClusterHealthResponse}
-import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsResponse, ClusterUpdateSettingsRequestBuilder}
+import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequestBuilder, ClusterUpdateSettingsResponse}
+import org.elasticsearch.action.admin.cluster.state.{ClusterStateRequestBuilder, ClusterStateResponse}
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsResponse
 import org.elasticsearch.client.Client
 
@@ -30,9 +31,20 @@ trait ClusterDsl {
       injectFuture(t.build(c.admin.cluster.prepareUpdateSettings).execute)
     }
   }
+
+  implicit object ClusterStateExecutable
+    extends Executable[ClusterStateDefinition, ClusterStateResponse, ClusterStateResponse] {
+    override def apply(c: Client, t: ClusterStateDefinition): Future[ClusterStateResponse] = {
+      injectFuture(t.build(c.admin.cluster.prepareState).execute)
+    }
+  }
 }
 
 class ClusterStatsDefinition
+
+class ClusterStateDefinition {
+  private[elastic4s] def build(builder: ClusterStateRequestBuilder): ClusterStateRequestBuilder = builder
+}
 
 class ClusterHealthDefinition(indices: String*) {
   val _builder = new ClusterHealthRequest(indices: _*)

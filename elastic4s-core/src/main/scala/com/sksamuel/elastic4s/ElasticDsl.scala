@@ -137,6 +137,7 @@ trait ElasticDsl
   def clusterPersistentSettings(settings: Map[String, String]) = cluster persistentSettings settings
   def clusterTransientSettings(settings: Map[String, String]) = cluster transientSettings settings
 
+  def clusterState = new ClusterStateDefinition
   def clusterHealth = new ClusterHealthDefinition()
   def clusterStats = new ClusterStatsDefinition
   @deprecated("use clusterStats", "1.6.1")
