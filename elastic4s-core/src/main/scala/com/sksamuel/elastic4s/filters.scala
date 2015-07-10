@@ -38,6 +38,9 @@ trait FilterDsl {
         HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
   }
 
+  def inFilter(name: String, values: Seq[String]): InFilterDefinition = new InFilterDefinition(name, values)
+  def inFilter(name: String, values: String*): InFilterDefinition = new InFilterDefinition(name, values)
+
   def nestedFilter(path: String): NestedFilterExpectsQueryOrFilter = new NestedFilterExpectsQueryOrFilter(path)
   class NestedFilterExpectsQueryOrFilter(path: String) {
     def query(query: QueryDefinition) = new NestedFilterDefinition(FilterBuilders.nestedFilter(path, query.builder))
@@ -142,6 +145,23 @@ class IdFilterDefinition(ids: String*) extends FilterDefinition {
   }
   def withIds(any: Any*): IdFilterDefinition = {
     any.foreach(id => builder.addIds(id.toString))
+    this
+  }
+}
+
+class InFilterDefinition(name: String, values: Seq[String])
+  extends FilterDefinition with DefinitionAttributeCacheKey with DefinitionAttributeCache {
+
+  val builder = FilterBuilders.inFilter(name, values: _*)
+  val _builder = builder
+
+  def filterName(filterName: String): this.type = {
+    builder.filterName(filterName)
+    this
+  }
+
+  def execution(execution: String): this.type = {
+    builder.execution(execution)
     this
   }
 }
