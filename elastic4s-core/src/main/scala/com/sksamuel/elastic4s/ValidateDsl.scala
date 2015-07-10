@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequestBuilder, ValidateQueryResponse}
-import org.elasticsearch.client.{Requests, Client}
+import org.elasticsearch.client.{Client}
 import org.elasticsearch.common.xcontent.XContentHelper
 
 import scala.concurrent.Future

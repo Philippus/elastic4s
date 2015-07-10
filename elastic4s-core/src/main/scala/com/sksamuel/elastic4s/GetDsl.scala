@@ -46,23 +46,13 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
     this
   }
 
-  def parent(p: String) = {
-    _builder.parent(p)
-    this
-  }
-
   def ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields: Boolean) = {
     _builder.ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields)
     this
   }
 
-  def version(version: Long) = {
-    _builder.version(version)
-    this
-  }
-
-  def versionType(versionType: VersionType) = {
-    _builder.versionType(versionType)
+  def parent(p: String) = {
+    _builder.parent(p)
     this
   }
 
@@ -84,6 +74,16 @@ case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
 
   def routing(r: String) = {
     _builder.routing(r)
+    this
+  }
+
+  def version(version: Long) = {
+    _builder.version(version)
+    this
+  }
+
+  def versionType(versionType: VersionType) = {
+    _builder.versionType(versionType)
     this
   }
 }

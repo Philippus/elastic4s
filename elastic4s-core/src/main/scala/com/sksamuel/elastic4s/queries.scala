@@ -180,8 +180,10 @@ trait QueryDsl {
   def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition =
     new TermsQueryDefinition(field, values.map(_.toString): _*)
 
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def topChildren(`type`: String) = new TopChildrenExpectsQuery(`type`)
   class TopChildrenExpectsQuery(`type`: String) {
+    @deprecated("deprecated by elasticsearch", "1.6.5")
     def query(q: QueryDefinition): TopChildrenQueryDefinition = new TopChildrenQueryDefinition(`type`, q)
   }
 
@@ -338,6 +340,7 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
     this
   }
 
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def percentTermsToMatch(percentTermsToMatch: Double): this.type = {
     _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
     this
@@ -553,22 +556,31 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   }
   val _builder = builder
 
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
     builder.analyzer(a.name)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def ignoreTF(b: Boolean): FuzzyLikeThisDefinition = {
     builder.ignoreTF(b)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def maxQueryTerms(b: Int): FuzzyLikeThisDefinition = {
     builder.maxQueryTerms(b)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def fuzziness(f: Fuzziness): this.type = {
     _builder.fuzziness(f)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def failOnUnsupportedField(failOnUnsupportedField: Boolean): FuzzyLikeThisDefinition = {
     builder.failOnUnsupportedField(failOnUnsupportedField)
     this
@@ -815,17 +827,23 @@ class SpanNearQueryDefinition extends SpanQueryDefinition {
 class TopChildrenQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition
   with DefinitionAttributeBoost {
+
   val builder = QueryBuilders.topChildrenQuery(`type`, q.builder)
   val _builder = builder
 
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def factor(factor: Int): TopChildrenQueryDefinition = {
     builder.factor(factor)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def incrementalFactor(incrementalFactor: Int): TopChildrenQueryDefinition = {
     builder.incrementalFactor(incrementalFactor)
     this
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def score(score: String): TopChildrenQueryDefinition = {
     builder.score(score)
     this

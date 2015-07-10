@@ -4,6 +4,7 @@ import org.elasticsearch.action.search.{ClearScrollResponse, SearchResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 trait ScrollDsl {
 
@@ -30,6 +31,11 @@ case class SearchScrollDefinition(id: String) {
 
   def keepAlive(time: String): this.type = {
     _keepAlive = Option(time)
+    this
+  }
+
+  def keepAlive(duration: FiniteDuration): this.type = {
+    _keepAlive = Option(duration.toSeconds + "s")
     this
   }
 }
