@@ -34,21 +34,38 @@ trait QueryDsl {
     def query(q: String): CommonTermsQueryDefinition = text(q)
   }
 
+  @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
   def constantScore = new ConstantScoreExpectsQueryOrFilter
   class ConstantScoreExpectsQueryOrFilter {
+    @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
     def query(query: QueryDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))
+    @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
     def filter(filter: FilterDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(filter.builder))
   }
 
+  def constantScoreQuery(q: QueryDefinition) = constantScore query q
+  def constantScoreFilter(f: FilterDefinition) = constantScore filter f
+
   def dismax = new DisMaxDefinition
 
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = flt
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def flt(text: String): FuzzyLikeThisExpectsField = new FuzzyLikeThisExpectsField(text)
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   def fuzzylikethis(text: String): FuzzyLikeThisExpectsField = flt(text)
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   class FuzzyLikeThisDefinitionExpectsText {
     def text(q: String) = new FuzzyLikeThisExpectsField(q)
   }
+
+  @deprecated("deprecated by elasticsearch", "1.6.5")
   class FuzzyLikeThisExpectsField(text: String) {
     def field(name: String): FuzzyLikeThisDefinition = fields(name)
     def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
@@ -87,16 +104,27 @@ trait QueryDsl {
     def query(q: QueryDefinition) = new HasParentQueryDefinition(`type`, q)
   }
 
+  @deprecated("use matchQuery", "1.6.5")
   def matches(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple)
+  @deprecated("use matchQuery", "1.6.5")
   def matches(field: String, value: Any): MatchQueryDefinition = matchQuery(field, value)
+
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
+
+  @deprecated("use matchPhraseQuery", "1.6.5")
   def matchPhrase(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
-  def matchPhrasePrefix(field: String, value: Any): MatchPhrasePrefixDefinition =
-    new MatchPhrasePrefixDefinition(field, value)
+  def matchPhraseQuery(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
+
+  @deprecated("use matchPhrasePrefixQuery", "1.6.5")
+  def matchPhrasePrefix(field: String, value: Any) = new MatchPhrasePrefixDefinition(field, value)
+  def matchPhrasePrefixQuery(field: String, value: Any) = new MatchPhrasePrefixDefinition(field, value)
 
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
+
+  @deprecated("use matchAllQuery", "1.6.5")
   def matchall = new MatchAllQueryDefinition
+  def matchAllQuery = new MatchAllQueryDefinition
 
   def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
@@ -141,8 +169,6 @@ trait QueryDsl {
 
   def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new
       SpanMultiTermQueryDefinition(query)
-
-
 
   @deprecated("use termQuery", "1.4.0")
   def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
@@ -515,6 +541,7 @@ class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends Qu
   }
 }
 
+@deprecated("deprecated by elasticsearch", "1.6.5")
 class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   extends QueryDefinition
   with DefinitionAttributePrefixLength
@@ -922,7 +949,7 @@ class MatchPhrasePrefixDefinition(field: String, value: Any)
     builder.analyzer(a.name)
     this
   }
-  
+
   def analyzer(name: String): MatchPhrasePrefixDefinition = {
     builder.analyzer(name)
     this
