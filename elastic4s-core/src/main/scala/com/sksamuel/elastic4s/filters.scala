@@ -10,7 +10,13 @@ trait FilterDsl {
 
   def existsFilter(field: String): ExistsFilter = new ExistsFilter(field)
 
+  def geoHashCellFilter(field: String): GeoHashCellFilter = new GeoHashCellFilter(field)
+
+  @deprecated("use geoBoxFilter, just to keep consistent with other geoXX methods", "1.6.5")
   def geoboxFilter(field: String): GeoBoundingBoxFilter = new GeoBoundingBoxFilter(field)
+
+  def geoBoxFilter(field: String) = geoboxFilter(field)
+
   def geoDistance(field: String): GeoDistanceFilter = new GeoDistanceFilter(field)
   def geoPolygon(field: String): GeoPolygonFilter = new GeoPolygonFilter(field)
   def geoDistanceRangeFilter(field: String): GeoDistanceRangeFilterDefinition =
@@ -159,6 +165,28 @@ class QueryFilterDefinition(q: QueryDefinition)
   val _builder = builder
   def filterName(filterName: String): QueryFilterDefinition = {
     builder.filterName(filterName)
+    this
+  }
+}
+
+class GeoHashCellFilter(field: String)
+  extends FilterDefinition with DefinitionAttributeCache with DefinitionAttributeCacheKey {
+
+  val builder = FilterBuilders.geoHashCellFilter(field)
+  val _builder = builder
+
+  def point(lat: Double, long: Double): this.type = {
+    builder.point(lat, long)
+    this
+  }
+
+  def geohash(geohash: String): this.type = {
+    builder.geohash(geohash)
+    this
+  }
+
+  def neighbours(neighbours: Boolean): this.type = {
+    builder.neighbors(neighbours)
     this
   }
 }
