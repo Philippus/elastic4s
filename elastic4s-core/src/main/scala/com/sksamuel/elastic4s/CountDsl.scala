@@ -1,23 +1,28 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.count.{ CountRequestBuilder, CountResponse }
-import org.elasticsearch.action.support.{ QuerySourceBuilder, IndicesOptions }
+import org.elasticsearch.action.count.{CountRequestBuilder, CountResponse}
+import org.elasticsearch.action.support.{QuerySourceBuilder, IndicesOptions}
 import org.elasticsearch.client.Client
-import org.elasticsearch.index.query.{ QueryBuilder, QueryBuilders }
+import org.elasticsearch.common.xcontent.XContentHelper
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait CountDsl {
 
-  def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-  def count(indexes: String*): CountDefinition = count(IndexesTypes(indexes))
-
-  implicit object CountDefinitionExecutable extends Executable[CountDefinition, CountResponse] {
+  implicit object CountDefinitionExecutable extends Executable[CountDefinition, CountResponse, CountResponse] {
     override def apply(client: Client, t: CountDefinition): Future[CountResponse] = injectFuture(client
       .count(t.build, _))
   }
 
+  implicit object CountDefinitionShow extends Show[CountDefinition] {
+    override def show(f: CountDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
+  }
+
+  implicit class CountDefinitionShowOps(f: CountDefinition) {
+    def show: String = CountDefinitionShow.show(f)
+  }
 }
 
 class CountDefinition(indexesTypes: IndexesTypes) {
