@@ -47,6 +47,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * Added block until index/type exists testkit helpers
 * Added raw query to count dsl
 * Added `show` typeclass for count
+* Added `InFilter` and `IndicesFilter`
 * Added shorter syntax for field types, eg `stringField(name)` vs `field name <name> typed StringType`
 
 ###### 1.6.4 

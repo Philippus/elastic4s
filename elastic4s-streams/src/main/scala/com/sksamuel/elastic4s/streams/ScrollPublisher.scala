@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props, Stash}
+import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
 import org.elasticsearch.ElasticsearchException
 import org.elasticsearch.action.search.SearchResponse
@@ -27,7 +28,10 @@ class ScrollPublisher(client: ElasticClient,
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9
     if (s == null) throw new NullPointerException("Rule 1.9: Subscriber cannot be null")
-    s.onSubscribe(new ScrollSubscription(client, search, s, elements))
+    val subscription = new ScrollSubscription(client, search, s, elements)
+    s.onSubscribe(subscription)
+    // rule 1.03 the subscription should not process onNext until the onSubscribe call has returned
+    subscription.ready()
   }
 }
 
@@ -35,6 +39,10 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
                         (implicit system: ActorSystem) extends Subscription {
 
   val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
+
+  private[streams] def ready() : Unit = {
+    actor ! Ready
+  }
 
   override def cancel(): Unit = {
     // Rule 3.5: this call is idempotent, is fast, and thread safe
@@ -52,6 +60,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
 }
 
 object PublishActor {
+  case object Ready
   case class Request(n: Long)
 }
 
@@ -68,7 +77,13 @@ class PublishActor(client: ElasticClient,
   private var processed: Long = 0
   private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
 
-  override def receive = ready
+  override def receive = {
+    case Ready =>
+      context become ready
+      unstashAll()
+    case _ =>
+      stash()
+  }
 
   def ready: Actor.Receive = {
     case Request(n) if n > 0 =>
