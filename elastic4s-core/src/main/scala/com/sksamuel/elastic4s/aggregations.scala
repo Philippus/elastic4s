@@ -5,6 +5,7 @@ import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode
 import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.geogrid.GeoHashGridBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder}
 import org.elasticsearch.search.aggregations.bucket.missing.MissingBuilder
 import org.elasticsearch.search.aggregations.bucket.nested.{ReverseNestedBuilder, NestedBuilder}
@@ -408,7 +409,31 @@ class DateHistogramAggregation(name: String)
     builder.format(format)
     this
   }
+}
 
+class GeoHashGridAggregationDefinition(name: String)
+  extends AggregationDefinition[GeoHashGridAggregationDefinition, GeoHashGridBuilder] {
+
+  val aggregationBuilder = AggregationBuilders.geohashGrid(name)
+
+  def precision(precision: Int): this.type = {
+    builder.precision(precision)
+    this
+  }
+
+  def field(field: String): this.type = {
+    builder.field(field)
+    this
+  }
+
+  def shardSize(shardSize: Int): this.type = {
+    builder.shardSize(shardSize)
+    this
+  }
+  def size(size: Int): this.type = {
+    builder.size(size)
+    this
+  }
 }
 
 class GeoBoundsAggregationDefinition(name: String)

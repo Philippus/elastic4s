@@ -77,6 +77,7 @@ trait ElasticDsl
     def filters(name: String) = new FiltersAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
+    def geohash(name:String) = new GeoHashGridAggregationDefinition(name)
     def global(name: String) = new GlobalAggregationDefinition(name)
     def histogram(name: String) = new HistogramAggregation(name)
     def ipRange(name: String) = new IpRangeAggregationDefinition(name)
