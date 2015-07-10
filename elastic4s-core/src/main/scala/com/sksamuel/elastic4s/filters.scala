@@ -67,6 +67,7 @@ trait FilterDsl {
   def andFilter(filters: FilterDefinition*): AndFilterDefinition = andFilter(filters)
   def andFilter(filters: Iterable[FilterDefinition]): AndFilterDefinition = new AndFilterDefinition(filters.toSeq: _*)
 
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def numericRangeFilter(field: String): NumericRangeFilter = new NumericRangeFilter(field)
   def rangeFilter(field: String): RangeFilter = new RangeFilter(field)
 
@@ -289,32 +290,47 @@ class NumericRangeFilter(field: String)
   with DefinitionAttributeGt
   with DefinitionAttributeCache
   with DefinitionAttributeCacheKey {
+
   val builder = FilterBuilders.numericRangeFilter(field)
   val _builder = builder
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def filterName(filterName: String): NumericRangeFilter = {
     builder.filterName(filterName)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def includeLower(includeLower: Boolean): NumericRangeFilter = {
     builder.includeLower(includeLower)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def includeUpper(includeUpper: Boolean): NumericRangeFilter = {
     builder.includeUpper(includeUpper)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def lte(lte: Double): NumericRangeFilter = {
     builder.lte(lte)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def lte(lte: Long): NumericRangeFilter = {
     builder.lte(lte)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def gte(gte: Double): NumericRangeFilter = {
     builder.gte(gte)
     this
   }
+
+  @deprecated("deprecated in elasticsearch since 1.0", "1.6.5")
   def gte(gte: Long): NumericRangeFilter = {
     builder.gte(gte)
     this
