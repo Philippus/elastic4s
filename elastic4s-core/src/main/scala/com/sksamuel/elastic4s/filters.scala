@@ -41,6 +41,14 @@ trait FilterDsl {
   def inFilter(name: String, values: Seq[String]): InFilterDefinition = new InFilterDefinition(name, values)
   def inFilter(name: String, values: String*): InFilterDefinition = new InFilterDefinition(name, values)
 
+  def indicesFilter(filter: FilterDefinition, indexes: Seq[String]): IndicesFilterDefinition = {
+    new IndicesFilterDefinition(filter, indexes)
+  }
+
+  def indicesFilter(filter: FilterDefinition, indexes: String*): IndicesFilterDefinition = {
+    new IndicesFilterDefinition(filter, indexes)
+  }
+
   def nestedFilter(path: String): NestedFilterExpectsQueryOrFilter = new NestedFilterExpectsQueryOrFilter(path)
   class NestedFilterExpectsQueryOrFilter(path: String) {
     def query(query: QueryDefinition) = new NestedFilterDefinition(FilterBuilders.nestedFilter(path, query.builder))
@@ -145,6 +153,26 @@ class IdFilterDefinition(ids: String*) extends FilterDefinition {
   }
   def withIds(any: Any*): IdFilterDefinition = {
     any.foreach(id => builder.addIds(id.toString))
+    this
+  }
+}
+
+class IndicesFilterDefinition(filter: FilterDefinition, indexes: Seq[String]) extends FilterDefinition  {
+
+  val builder = FilterBuilders.indicesFilter(filter.builder, indexes: _*)
+
+  def filterName(filterName: String): this.type = {
+    builder.filterName(filterName)
+    this
+  }
+
+  def noMatchFilter(filter: FilterDefinition): this.type = {
+    builder.noMatchFilter(filter.builder)
+    this
+  }
+
+  def noMatchFilter(noMatchFilter: String): this.type = {
+    builder.noMatchFilter(noMatchFilter)
     this
   }
 }
