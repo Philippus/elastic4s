@@ -3,15 +3,15 @@ package com.sksamuel.elastic4s.mappings
 /** @author Stephen Samuel */
 abstract class FieldType(val elastic: String)
 object FieldType {
-  case object IntegerType extends FieldType("integer")
-  case object BooleanType extends FieldType("boolean")
   case object AttachmentType extends FieldType("attachment")
   case object BinaryType extends FieldType("binary")
+  case object BooleanType extends FieldType("boolean")
   case object ByteType extends FieldType("byte")
   case object CompletionType extends FieldType("completion")
   case object DateType extends FieldType("date")
   case object DoubleType extends FieldType("double")
   case object FloatType extends FieldType("float")
+  case object IntegerType extends FieldType("integer")
   case object IpType extends FieldType("ip")
   case object GeoPointType extends FieldType("geo_point")
   case object GeoShapeType extends FieldType("geo_shape")

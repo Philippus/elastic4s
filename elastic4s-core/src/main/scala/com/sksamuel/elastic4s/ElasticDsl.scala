@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import java.util.UUID
 
 import com.sksamuel.elastic4s.admin._
+import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
@@ -93,6 +94,12 @@ trait ElasticDsl
     def terms(name: String) = new TermAggregationDefinition(name)
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
+
+  def attachmentField(name: String) = field(name).typed(AttachmentType)
+
+  def binaryField(name: String) = field(name).typed(BinaryType)
+  def booleanField(name: String) = field(name).typed(BooleanType)
+  def byteField(name: String) = field(name).typed(ByteType)
 
   @deprecated("use score sort, geo sort, field sort or script sort", "1.6.0")
   case object by {
@@ -190,6 +197,9 @@ trait ElasticDsl
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
 
+  def dateField(name: String) = field(name).typed(DateType)
+  def doubleField(name: String) = field(name).typed(DoubleType)
+
   case object delete {
 
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
@@ -269,7 +279,16 @@ trait ElasticDsl
   case object geo {
     def sort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
   }
-  def geoSort(name: String) = geo sort name
+  def geoSort(name: String): GeoDistanceSortDefinition = geo sort name
+
+
+  def completionField(name: String) = field(name).typed(CompletionType)
+
+  def floatField(name: String) = field(name).typed(FloatType)
+
+  def multiField(name: String) = field(name).typed(MultiFieldType)
+  def geopointField(name: String) = field(name).typed(GeoPointType)
+  def geoshapeField(name: String) = field(name).typed(GeoShapeType)
 
   case object get {
 
@@ -299,7 +318,7 @@ trait ElasticDsl
     def snapshot(names: String*): GetSnapshotsExpectsFrom = snapshot(names)
   }
 
-  def get(id: Any) = new GetWithIdExpectsFrom(id.toString)
+  def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
   def getMapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
   def getSegments(indexes: String*): GetSegmentsDefinition = get segments (indexes.toSeq: _*)
@@ -308,19 +327,22 @@ trait ElasticDsl
   def getSnapshot(names: String*): GetSnapshotsExpectsFrom = get snapshot names
   def getTemplate(name: String): GetTemplateDefinition = get template name
 
+  def intField(name: String) = field(name).typed(IntegerType)
+  def ipField(name: String) = field(name).typed(IpType)
+
   trait HealthKeyword
   case object health extends HealthKeyword
 
   case object highlight {
-    def field(name: String) = new HighlightDefinition(name)
+    def field(name: String): HighlightDefinition = new HighlightDefinition(name)
   }
-  def highlight(field: String) = new HighlightDefinition(field)
+  def highlight(field: String): HighlightDefinition = new HighlightDefinition(field)
 
   trait StatsKeyword
   case object stats extends StatsKeyword
 
   @deprecated("use index keyword", "1.4.0")
-  def insert = index
+  def insert: index.type = index
   case object index {
 
     def exists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
@@ -372,8 +394,10 @@ trait ElasticDsl
   def innerHit(name: String): InnerHitDefinition = inner hit name
   def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
 
+  def longField(name: String) = field(name).typed(LongType)
+
   case object mapping {
-    def name(name: String) = {
+    def name(name: String): MappingDefinition = {
       require(name.nonEmpty, "mapping name must not be null or empty")
       new MappingDefinition(name)
     }
@@ -389,22 +413,26 @@ trait ElasticDsl
   }
 
   @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
-  def mlt = morelike
+  def mlt: morelike.type = morelike
   @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
   case object morelike {
-    def id(id: Any) = {
+    def id(id: Any): MltExpectsIndex = {
       require(id.toString.nonEmpty, "id must not be null or empty")
       new MltExpectsIndex(id.toString)
     }
   }
 
-  def multiget(gets: Iterable[GetDefinition]) = new MultiGetDefinition(gets)
-  def multiget(gets: GetDefinition*) = new MultiGetDefinition(gets)
+  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = new MultiGetDefinition(gets)
+  def multiget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets)
+
+  def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
 
   case object ngram {
     def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
   }
   def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
+
+  def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
 
   case object edgeNGram {
     def tokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
@@ -414,14 +442,14 @@ trait ElasticDsl
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
   }
-  def openIndex(index: String) = open index index
+  def openIndex(index: String): OpenIndexDefinition = open index index
 
   case object optimize {
     def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
     def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
   @deprecated("use optimizeIndex", "1.6.2")
-  def optimize(indexes: String*) = new OptimizeDefinition(indexes: _*)
+  def optimize(indexes: String*): OptimizeDefinition = new OptimizeDefinition(indexes: _*)
   def optimizeIndex(indexes: String*): OptimizeDefinition = optimize index indexes
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
 
@@ -437,38 +465,38 @@ trait ElasticDsl
   def percolateIn(indexType: IndexType): PercolateDefinition = percolate in indexType
 
   case object phrase {
-    def suggestion(name: String) = new PhraseSuggestionDefinition(name)
+    def suggestion(name: String): PhraseSuggestionDefinition = new PhraseSuggestionDefinition(name)
   }
   def phraseSuggestion: PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
   case object put {
-    def mapping(indexType: IndexType) = new PutMappingDefinition(indexType)
+    def mapping(indexType: IndexType): PutMappingDefinition = new PutMappingDefinition(indexType)
   }
-  def putMapping(indexType: IndexType) = new PutMappingDefinition(indexType)
+  def putMapping(indexType: IndexType): PutMappingDefinition = new PutMappingDefinition(indexType)
 
   case object recover {
-    def index(indexes: Iterable[String]) = new IndexRecoveryDefinition(indexes.toSeq)
-    def index(indexes: String*) = new IndexRecoveryDefinition(indexes)
+    def index(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
+    def index(indexes: String*): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes)
   }
-  def recoverIndex(indexes: String*) = recover index indexes
-  def recoverIndex(indexes: Iterable[String]) = recover index indexes
+  def recoverIndex(indexes: String*): IndexRecoveryDefinition = recover index indexes
+  def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]) = recover index indexes
-    def index(indexes: String*) = recover index indexes
+    def index(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
+    def index(indexes: String*): IndexRecoveryDefinition = recover index indexes
   }
 
-  def refreshIndex(indexes: Iterable[String]) = refresh index indexes
-  def refreshIndex(indexes: String*) = refresh index indexes
+  def refreshIndex(indexes: Iterable[String]): IndexRecoveryDefinition = refresh index indexes
+  def refreshIndex(indexes: String*): IndexRecoveryDefinition = refresh index indexes
 
   case object remove {
-    def alias(alias: String) = {
+    def alias(alias: String): RemoveAliasExpectsIndex = {
       require(alias.nonEmpty, "alias must not be null or empty")
       new RemoveAliasExpectsIndex(alias)
     }
   }
-  def removeAlias(alias: String) = remove alias alias
+  def removeAlias(alias: String): RemoveAliasExpectsIndex = remove alias alias
 
   case object register {
     def id(id: Any): RegisterExpectsIndex = {
@@ -480,21 +508,21 @@ trait ElasticDsl
 
   case object repository {
     @deprecated("use `create repository` instead of `repository create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String) = new CreateRepositoryExpectsType(name)
+    def create(name: String): CreateRepositoryExpectsType = new CreateRepositoryExpectsType(name)
   }
 
   case object restore {
-    def snapshot(name: String) = {
+    def snapshot(name: String): RestoreSnapshotExpectsFrom = {
       require(name.nonEmpty, "snapshot name must not be null or empty")
       new RestoreSnapshotExpectsFrom(name)
     }
   }
-  def restoreSnapshot(name: String) = restore snapshot name
+  def restoreSnapshot(name: String): RestoreSnapshotExpectsFrom = restore snapshot name
 
   case object score {
     def sort: ScoreSortDefinition = new ScoreSortDefinition
   }
-  def scoreSort = score.sort
+  def scoreSort: ScoreSortDefinition = score.sort
 
   case object script {
     def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
@@ -504,7 +532,7 @@ trait ElasticDsl
   def scriptField(n: String): ExpectsScript = script field n
 
   @deprecated("use search keyword", "1.4.0.Beta2")
-  def select = search
+  def select: search.type = search
   case object search {
     def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
     def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
@@ -525,13 +553,15 @@ trait ElasticDsl
   }
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
 
+  def shortField(name: String) = field(name).typed(ShortType)
+
   case object snapshot {
     @deprecated("use `create snapshot` instead of `snapshot create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String) = new CreateSnapshotExpectsIn(name)
+    def create(name: String): CreateSnapshotExpectsIn = new CreateSnapshotExpectsIn(name)
     @deprecated("use `restore snapshot` instead of `snapshot restore` for a more readable dsl", "1.4.0.Beta2")
-    def restore(name: String) = new RestoreSnapshotExpectsFrom(name)
+    def restore(name: String): RestoreSnapshotExpectsFrom = new RestoreSnapshotExpectsFrom(name)
     @deprecated("use `delete snapshot` instead of `snapshot delete` for a more readable dsl", "1.4.0.Beta2")
-    def delete(name: String) = new DeleteSnapshotExpectsIn(name)
+    def delete(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
   }
 
   case object snowball {
@@ -544,7 +574,7 @@ trait ElasticDsl
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
     def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
-    def script(script: String) = new ScriptSortDefinition(script)
+    def script(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
   }
 
   case object stemmer {
@@ -552,32 +582,36 @@ trait ElasticDsl
   }
   def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
 
+  def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
+
   def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
   def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
 
   case object template {
     @deprecated("use `create template` instead of `template create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String) = new CreateIndexTemplateExpectsPattern(name)
+    def create(name: String): CreateIndexTemplateExpectsPattern = new CreateIndexTemplateExpectsPattern(name)
     @deprecated("use `delete template` instead of `template delete` for a more readable dsl", "1.4.0.Beta2")
-    def delete(name: String) = new DeleteIndexTemplateDefinition(name)
+    def delete(name: String): DeleteIndexTemplateDefinition = new DeleteIndexTemplateDefinition(name)
 
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
   def template(name: String): DynamicTemplateDefinition = template name name
 
   case object term {
-    def suggestion(name: String) = new TermSuggestionDefinition(name)
+    def suggestion(name: String): TermSuggestionDefinition = new TermSuggestionDefinition(name)
   }
   def termSuggestion: TermSuggestionDefinition = term suggestion UUID.randomUUID.toString
   def termSuggestion(name: String): TermSuggestionDefinition = term suggestion name
 
   case object timestamp {
-    def enabled(en: Boolean) = TimestampDefinition(en)
+    def enabled(en: Boolean): TimestampDefinition = TimestampDefinition(en)
   }
-  def timestamp(en: Boolean) = TimestampDefinition(en)
+  def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
+
+  def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
   class TypesExistExpectsIn(types: Seq[String]) {
-    def in(indexes: String*) = new TypesExistsDefinition(indexes, types)
+    def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)
   }
   case object types {
     def exist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
@@ -585,13 +619,13 @@ trait ElasticDsl
   def typesExist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
 
   case object update {
-    def id(id: Any) = {
+    def id(id: Any): UpdateExpectsIndex = {
       require(id.toString.nonEmpty, "id must not be null or empty")
       new UpdateExpectsIndex(id.toString)
     }
-    def settings(index: String) = new UpdateSettingsDefinition(index)
+    def settings(index: String): UpdateSettingsDefinition = new UpdateSettingsDefinition(index)
   }
-  def update(id: Any) = new UpdateExpectsIndex(id.toString)
+  def update(id: Any): UpdateExpectsIndex = new UpdateExpectsIndex(id.toString)
 
   case object validate {
     def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)
@@ -607,7 +641,7 @@ trait ElasticDsl
   def validateIn(value: String): ValidateDefinition = validate in value
 
   implicit class RichFuture[T](future: Future[T]) {
-    def await(implicit duration: Duration = 10.seconds) = Await.result(future, duration)
+    def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
   }
 }
 
