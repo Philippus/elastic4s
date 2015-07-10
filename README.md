@@ -38,6 +38,17 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
+###### 1.6.5 (Pending)
+* Added sourceAsUpsert to allow `Indexable` as upsert in update queries
+* Added geohash aggregation
+* Added geohash cell filter
+* Added cluster state api
+* Added support for unmapped_type property
+* Added block until index/type exists testkit helpers
+* Added raw query to count dsl
+* Added `show` typeclass for count
+* Added shorter syntax for field types, eg `stringField(name)` vs `field name <name> typed StringType`
+
 ###### 1.6.4 
 * Added reactive streams implementation for elastic4s.
 * Support explicit field types in the update dsl
