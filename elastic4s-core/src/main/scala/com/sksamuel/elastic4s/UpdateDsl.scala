@@ -7,7 +7,7 @@ import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.{XContentBuilderString, XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future
@@ -45,25 +45,9 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     source.endObject()
   }
 
-  def script(script: String, scriptType: ScriptType = ScriptType.Inline): UpdateDefinition = {
-    _builder.setScript(script, scriptType.elasticType)
-    this
-  }
-
   def detectNoop(detectNoop: Boolean): this.type = {
     _builder.setDetectNoop(detectNoop)
     this
-  }
-
-  def docAsUpsert(fields: (String, Any)*): this.type = docAsUpsert(fields.toMap)
-  def docAsUpsert(iterable: Iterable[(String, Any)]): this.type = docAsUpsert(iterable.toMap)
-  def docAsUpsert(map: Map[String, Any]): this.type = {
-    _builder.setDocAsUpsert(true)
-    doc(map)
-  }
-  def docAsUpsert(value: FieldValue): this.type = {
-    _builder.setDocAsUpsert(true)
-    doc(value)
   }
 
   def doc(fields: (String, Any)*): this.type = doc(fields.toMap)
@@ -83,35 +67,52 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
+  def docAsUpsert(fields: (String, Any)*): this.type = docAsUpsert(fields.toMap)
+  def docAsUpsert(iterable: Iterable[(String, Any)]): this.type = docAsUpsert(iterable.toMap)
+  def docAsUpsert(map: Map[String, Any]): this.type = {
+    _builder.setDocAsUpsert(true)
+    doc(map)
+  }
+  def docAsUpsert(value: FieldValue): this.type = {
+    _builder.setDocAsUpsert(true)
+    doc(value)
+  }
+
+  def docAsUpsert: UpdateDefinition = docAsUpsert(shouldUpsertDoc = true)
+  def docAsUpsert(shouldUpsertDoc: Boolean): this.type = {
+    _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
+    this
+  }
+
   def params(entries: (String, Any)*): this.type = params(entries.toMap)
   def params(map: Map[String, Any]): this.type = {
     map.foreach(arg => _builder.addScriptParam(arg._1, arg._2))
     this
   }
+
   def retryOnConflict(retryOnConflict: Int): this.type = {
     _builder.setRetryOnConflict(retryOnConflict)
     this
   }
+
   def parent(parent: String): this.type = {
     _builder.setParent(parent)
     this
   }
+
   def refresh(refresh: Boolean): this.type = {
     _builder.setRefresh(refresh)
     this
   }
+
   @deprecated("will be removed in 2.0.0. See https://github.com/elastic/elasticsearch/pull/10171", "1.6.0")
   def replicationType(repType: ReplicationType): this.type = {
     _builder.setReplicationType(repType)
     this
   }
+
   def consistencyLevel(consistencyLevel: WriteConsistencyLevel): this.type = {
     _builder.setConsistencyLevel(consistencyLevel)
-    this
-  }
-  def docAsUpsert: UpdateDefinition = docAsUpsert(shouldUpsertDoc = true)
-  def docAsUpsert(shouldUpsertDoc: Boolean): this.type = {
-    _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
     this
   }
 
@@ -130,18 +131,29 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
+  def sourceAsUpsert[T](t: T)(implicit indexable: Indexable[T]): this.type = {
+    source(t)
+    docAsUpsert(true)
+    this
+  }
+
   def upsert(map: Map[String, Any]): this.type = {
     _builder.setUpsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
     this
   }
 
-  def upsert(fields: (String, Any)*): this.type = upsert(fields.toMap)
-  def upsert(iterable: Iterable[(String, Any)]): this.type = upsert(iterable.toMap)
+  def script(script: String, scriptType: ScriptType = ScriptType.Inline): UpdateDefinition = {
+    _builder.setScript(script, scriptType.elasticType)
+    this
+  }
 
   def scriptedUpsert(upsert: Boolean): this.type = {
     _builder.setScriptedUpsert(upsert)
     this
   }
+
+  def upsert(fields: (String, Any)*): this.type = upsert(fields.toMap)
+  def upsert(iterable: Iterable[(String, Any)]): this.type = upsert(iterable.toMap)
 
   def versionType(versionType: VersionType): this.type = {
     _builder.setVersionType(versionType)

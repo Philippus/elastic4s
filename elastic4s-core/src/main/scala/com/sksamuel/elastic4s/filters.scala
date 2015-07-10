@@ -38,11 +38,11 @@ trait FilterDsl {
         HasParentFilterDefinition(FilterBuilders.hasParentFilter(`type`, filter.builder))
   }
 
-  def inFilter(name: String, values: Seq[String]): InFilterDefinition = new InFilterDefinition(name, values)
+  def inFilter(name: String, values: Iterable[String]): InFilterDefinition = new InFilterDefinition(name, values.toSeq)
   def inFilter(name: String, values: String*): InFilterDefinition = new InFilterDefinition(name, values)
 
-  def indicesFilter(filter: FilterDefinition, indexes: Seq[String]): IndicesFilterDefinition = {
-    new IndicesFilterDefinition(filter, indexes)
+  def indicesFilter(filter: FilterDefinition, indexes: Iterable[String]): IndicesFilterDefinition = {
+    new IndicesFilterDefinition(filter, indexes.toSeq)
   }
 
   def indicesFilter(filter: FilterDefinition, indexes: String*): IndicesFilterDefinition = {
@@ -157,7 +157,7 @@ class IdFilterDefinition(ids: String*) extends FilterDefinition {
   }
 }
 
-class IndicesFilterDefinition(filter: FilterDefinition, indexes: Seq[String]) extends FilterDefinition  {
+class IndicesFilterDefinition(filter: FilterDefinition, indexes: Seq[String]) extends FilterDefinition {
 
   val builder = FilterBuilders.indicesFilter(filter.builder, indexes: _*)
 
