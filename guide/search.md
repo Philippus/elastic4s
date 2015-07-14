@@ -59,8 +59,8 @@ Elasticsearch provides [sorting](http://www.elasticsearch.org/guide/reference/ap
 
 ```scala
 search in "places"->"cities" query "europe" sort (
-    by field "name",
-    by field "status"
+    field sort "name",
+    field sort "status"
 )
 ```
 
