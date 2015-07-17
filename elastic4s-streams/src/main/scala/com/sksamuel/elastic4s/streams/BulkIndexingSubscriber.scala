@@ -26,13 +26,13 @@ import scala.util.{Failure, Success}
  *
  * @tparam T the type of element provided by the publisher this subscriber will subscribe with
  */
-class BulkIndexingSubscriber[T](client: ElasticClient,
-                                builder: RequestBuilder[T],
-                                listener: ResponseListener,
-                                batchSize: Int, concurrentRequests: Int,
-                                completionFn: () => Unit,
-                                errorFn: Throwable => Unit)
-                               (implicit system: ActorSystem) extends Subscriber[T] {
+class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
+                                                 builder: RequestBuilder[T],
+                                                 listener: ResponseListener,
+                                                 batchSize: Int, concurrentRequests: Int,
+                                                 completionFn: () => Unit,
+                                                 errorFn: Throwable => Unit)
+                                                (implicit system: ActorSystem) extends Subscriber[T] {
 
   private var actor: ActorRef = _
 
@@ -42,6 +42,7 @@ class BulkIndexingSubscriber[T](client: ElasticClient,
       actor = system.actorOf(
         Props(new BulkActor(client, builder, s, batchSize, concurrentRequests, listener, completionFn, errorFn))
       )
+      s.request(batchSize * concurrentRequests)
     } else {
       // rule 2.5, must cancel subscription as onSubscribe has been invoked twice
       // https://github.com/reactive-streams/reactive-streams-jvm#2.5
@@ -50,7 +51,7 @@ class BulkIndexingSubscriber[T](client: ElasticClient,
   }
 
   override def onNext(t: T): Unit = {
-    if (t == null) throw new NullPointerException()
+    if (t == null) throw new NullPointerException("On next should not be called until onSubscribe has returned")
     actor ! t
   }
 
@@ -87,10 +88,6 @@ class BulkActor[T](client: ElasticClient,
 
   // total number of elements sent and acknowledge at the es cluster level
   private var pending: Long = 0l
-
-  override def preStart(): Unit = {
-    subscription.request(batchSize * concurrentRequests)
-  }
 
   def receive = {
     case t: Throwable =>
@@ -134,7 +131,7 @@ class BulkActor[T](client: ElasticClient,
 
   private def index(): Unit = {
     pending = pending + buffer.size
-    client.execute( bulk(buffer.map(builder.request))).onComplete {
+    client.execute(bulk(buffer.map(builder.request))).onComplete {
       case Failure(e) => self ! e
       case Success(resp) => self ! resp
     }

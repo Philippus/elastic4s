@@ -16,8 +16,8 @@ object ReactiveElastic {
                       listener: ResponseListener = ResponseListener.noop,
                       completionFn: () => Unit = () => (),
                       errorFn: Throwable => Unit = _ => ())
-                     (implicit provider: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
-      new BulkIndexingSubscriber[T](client, provider, listener, batchSize, concurrentRequests, completionFn, errorFn)
+                     (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
+      new BulkIndexingSubscriber[T](client, builder, listener, batchSize, concurrentRequests, completionFn, errorFn)
     }
 
     def publisher(indexType: IndexType, elements: Long = Long.MaxValue, keepAlive: String = "1m")
