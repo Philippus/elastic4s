@@ -69,8 +69,8 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
       })
       client
 
-      completionLatch.await(5, TimeUnit.SECONDS)
-      documentLatch.await(5, TimeUnit.SECONDS)
+      completionLatch.await(5, TimeUnit.SECONDS) should be (true)
+      documentLatch.await(5, TimeUnit.SECONDS) should be (true)
     }
   }
 }

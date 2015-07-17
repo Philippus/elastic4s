@@ -77,6 +77,9 @@ class PublishActor(client: ElasticClient,
   private var processed: Long = 0
   private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
 
+  // Parse the keep alive setting out of the original query.
+  private val keepAlive = Option(query.build.scroll).map(s => s.keepAlive).map(t => t.toString).getOrElse("1m")
+
   override def receive = {
     case Ready =>
       context become ready
@@ -90,7 +93,7 @@ class PublishActor(client: ElasticClient,
       if (queue.isEmpty) {
         Option(scrollId) match {
           case None => client.execute(query).onComplete(result => self ! result)
-          case Some(id) => client.execute(search scroll id).onComplete(result => self ! result)
+          case Some(id) => client.execute(search scroll id keepAlive keepAlive).onComplete(result => self ! result)
         }
         context become fetching
         self ! Request(n)
