@@ -20,10 +20,10 @@ import scala.util.{Failure, Success}
  * @param elements the maximum number of elements to return
  * @param system an Actor system required by the publisher
  */
-class ScrollPublisher(client: ElasticClient,
-                      search: SearchDefinition,
-                      elements: Long)
-                     (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
+class ScrollPublisher private[streams](client: ElasticClient,
+                                       search: SearchDefinition,
+                                       elements: Long)
+                                      (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9
@@ -40,7 +40,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
 
   val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
 
-  private[streams] def ready() : Unit = {
+  private[streams] def ready(): Unit = {
     actor ! Ready
   }
 
