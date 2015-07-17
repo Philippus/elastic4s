@@ -713,13 +713,13 @@ publisher.subscribe(subscriber)
 For gradle users, add:
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:1.6.5'
+compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:1.6.6'
 ```
 
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "1.6.5"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "1.6.6"
 ```
 
 For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
@@ -728,7 +728,7 @@ For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s-core_2.11</artifactId>
-    <version>1.6.5</version>
+    <version>1.6.6</version>
 </dependency>
 ```
 
