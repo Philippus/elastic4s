@@ -688,16 +688,16 @@ Then create a subscriber, specifying the following parameters:
 * A type parameter that is the type of object that the publisher will provide
 * How many documents should be included per index batch (10-100 is usually good)
 * How many concurrent batches should be in flight (usually around the number of cores)
-* An optional RequestListener that will be notified for each item that was successfully acknowledged by the es cluster
+* An optional `ResponseListener` that will be notified for each item that was successfully acknowledged by the es cluster
 * An optional function that will be called once the subscriber has received all data. Defaults to a no-op
 * An optional function to call if the subscriber encouters an error. Defaults to a no-op.
 
-In addition there should be a further implicit in scope of type RequestBuilder[T] that will accept objects of T (the type produced by your publisher)
-and build an index request suitable for indexing the data into elasticsearch, eg
+In addition there should be a further implicit in scope of type `RequestBuilder[T]` that will accept objects of T (the type produced by your publisher) and build an index, update, or delete request suitable for dispatchin to elasticsearch.
 
 ```scala
 implicit val builder = new RequestBuilder[SomeType] {
   import ElasticDsl._
+  // the request returned doesn't have to be an index - it can be anything supported by the bulk api
   def request(t: T): BulkCompatibleDefinition =  index into "index" / "type" fields ....
 }
 ```
