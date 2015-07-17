@@ -17,7 +17,7 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Integrates with standard Scala futures
 * Uses Scala collections library
 * Leverages the built-in Java client
-* Provides reactive-streams implementation
+* Provides [reactive-streams](#elastic-reactive-streams) implementation
 * SQL-style requests
 
 #### Release
