@@ -21,13 +21,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.6.4 which is compatible with Elasticsearch 1.6.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.6.6 which is compatible with Elasticsearch 1.6.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|1.6.4|1.6.X|
+|1.6.6|1.6.X|
 |1.5.17|1.5.X|
 |1.4.14|1.4.x|
 |1.3.3|1.3.x|
@@ -38,7 +38,11 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
-###### 1.6.5 (Pending)
+###### 1.6.6
+
+* Fix for race condition in elastic-streams subscriber
+
+###### 1.6.5
 * Added sourceAsUpsert to allow `Indexable` as upsert in update queries
 * Added geohash aggregation
 * Added geohash cell filter
