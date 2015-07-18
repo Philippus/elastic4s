@@ -437,7 +437,7 @@ implicit object CharacterHitAs extends HitAs[Character] {
   }
 }
 
-val resp = client.execte {
+val resp = client.execute {
   search in "gameofthrones" / "characters" query "kings landing"
 }.await // don't block in real code
 
