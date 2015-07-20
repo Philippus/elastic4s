@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.source.StringDocumentSource
-import org.elasticsearch.action.ActionListener
+import org.elasticsearch.action.{ActionResponse, ActionListener}
 import org.elasticsearch.action.admin.cluster.node.shutdown.NodesShutdownResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
@@ -21,11 +21,16 @@ import org.elasticsearch.node.{Node, NodeBuilder}
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.implicitConversions
+import scala.util.{Try, Success, Failure}
 
 /** @author Stephen Samuel */
 class ElasticClient(val client: org.elasticsearch.client.Client) extends IterableSearch {
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
+
+  def safeExecute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Try[Q]] = {
+    executable(client, t).map(Success.apply).recover { case e => Failure(e) }
+  }
 
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
 
@@ -195,3 +200,10 @@ object ElasticsearchClientUri {
 }
 
 case class ElasticsearchClientUri(uri: String, hosts: List[(String, Int)])
+
+object Test extends App {
+
+  import ExecutionContext.Implicits.global
+  import scala.concurrent.duration._
+
+}
