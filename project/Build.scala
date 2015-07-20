@@ -9,7 +9,7 @@ object Build extends Build {
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
   val MockitoVersion = "1.9.5"
-  val JacksonVersion = "2.5.3"
+  val JacksonVersion = "2.6.0"
   val Slf4jVersion = "1.7.12"
   val ScalaLoggingVersion = "2.1.2"
   val ElasticsearchVersion = "1.7.0"
@@ -100,7 +100,7 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-streams",
-      libraryDependencies += "com.typesafe.akka"    %% "akka-actor" % "2.3.11",
+      libraryDependencies += "com.typesafe.akka"    %% "akka-actor" % "2.3.12",
       libraryDependencies += "org.reactivestreams"   % "reactive-streams" % "1.0.0",
       libraryDependencies += "org.reactivestreams"   % "reactive-streams-tck" % "1.0.0" % "test"
     ).dependsOn(core, testkit % "test", jackson % "test")
