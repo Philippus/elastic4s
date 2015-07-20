@@ -26,6 +26,7 @@ object IndexOptions {
   case object Docs extends IndexOptions("docs")
   case object Freqs extends IndexOptions("freqs")
   case object Positions extends IndexOptions("positions")
+  case object Offsets extends IndexOptions("offsets")
 }
 
 sealed abstract class PostingsFormat(val value: String)

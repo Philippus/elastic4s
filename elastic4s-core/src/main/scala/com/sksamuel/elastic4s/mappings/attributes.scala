@@ -196,15 +196,20 @@ object attributes {
 
   trait AttributeIndexOptions extends Attribute { self: TypedFieldDefinition =>
 
-    private[this] var _indexOptions: Option[IndexOptions] = None
+    private[this] var _indexOptions: Option[String] = None
 
-    def indexOptions(indexOptions: IndexOptions): this.type = {
+    def indexOptions(indexOptions: String): this.type = {
       _indexOptions = Some(indexOptions)
       this
     }
 
+    def indexOptions(indexOptions: IndexOptions): this.type = {
+      _indexOptions = Some(indexOptions.value)
+      this
+    }
+
     protected override def insert(source: XContentBuilder): Unit = {
-      _indexOptions.foreach(arg => source.field("index_options", arg.value))
+      _indexOptions.foreach(source.field("index_options", _))
     }
   }
 
