@@ -354,7 +354,7 @@ that provides a `Map[String, Any]`.
 
 case class Character(name: String, location: String)
 
-caes class CharacterSource(c: Character) extends DocumentSource {
+case class CharacterSource(c: Character) extends DocumentSource {
   def json : String = s""" { "name" : "${c.name}", "location" : "${c.location}" } """
 }
 
