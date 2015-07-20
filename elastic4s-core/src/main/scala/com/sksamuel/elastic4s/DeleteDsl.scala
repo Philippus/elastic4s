@@ -26,6 +26,7 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
     def from(_index: String): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(_index), id)
     def from(_indexes: String*): DeleteByIdExpectsTypes = from(_indexes)
     def from(_indexes: Iterable[String]): DeleteByIdExpectsTypes = new DeleteByIdExpectsTypes(_indexes, id)
+    def from(indexType: IndexType): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(indexType), id)
     def from(indexesTypes: IndexesTypes): DeleteByIdDefinition = new DeleteByIdDefinition(indexesTypes, id)
   }
 
