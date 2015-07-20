@@ -22,12 +22,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.6.6 which is compatible with Elasticsearch 1.6.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 1.7.0 which is compatible with Elasticsearch 1.7.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
+|1.7.0|1.7.X|
 |1.6.6|1.6.X|
 |1.5.17|1.5.X|
 |1.4.14|1.4.x|
@@ -38,6 +39,11 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |0.90.13.2|0.90.x|
 
 ##### Changelog
+
+###### 1.7.0
+
+* Works with Elasticsearch 1.7.x
+* Removed sync client (deprecated since 1.3.0)
 
 ###### 1.6.6
 
@@ -713,13 +719,13 @@ publisher.subscribe(subscriber)
 For gradle users, add:
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:1.6.6'
+compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:1.7.0'
 ```
 
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "1.6.6"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "1.7.0"
 ```
 
 For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
@@ -728,7 +734,7 @@ For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s-core_2.11</artifactId>
-    <version>1.6.6</version>
+    <version>1.7.0</version>
 </dependency>
 ```
 
