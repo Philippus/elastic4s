@@ -571,7 +571,7 @@ trait ElasticDsl
   }
   def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
 
-  @deprecated("use sort by <type>", "1.6.1")
+  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
   case object sortby {
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)

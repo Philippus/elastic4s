@@ -122,9 +122,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
   def java = client
   def admin = client.admin
 
-  @deprecated("Use .await() on future of async client", "1.3.0")
-  def sync(implicit duration: Duration = 10.seconds) = new SyncClient(this)(duration)
-
   override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse] = {
     IterableSearch(this).iterateSearch(query)
   }
