@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.definitions.DefinitionRouting
 import com.sksamuel.elastic4s.source.{Indexable, DocumentSource}
 import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
+import org.elasticsearch.action.update.{UpdateRequest, UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
@@ -37,7 +37,7 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     .setType(indexesTypes.typ.orNull)
     .setId(id)
 
-  def build = _builder.request
+  def build: UpdateRequest = _builder.request
 
   private def _fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
@@ -57,7 +57,7 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
-  def doc(source: DocumentSource) = {
+  def doc(source: DocumentSource): UpdateDefinition = {
     _builder.setDoc(source.json)
     this
   }
@@ -81,6 +81,17 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
   def docAsUpsert: UpdateDefinition = docAsUpsert(shouldUpsertDoc = true)
   def docAsUpsert(shouldUpsertDoc: Boolean): this.type = {
     _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
+    this
+  }
+
+  def includeSource: this.type = {
+    _builder.setFields("_source")
+    this
+  }
+
+  def fields(fs: String*): this.type = fields(fs)
+  def fields(fs: Iterable[String]): this.type = {
+    _builder.setFields(fs.toSeq: _*)
     this
   }
 
