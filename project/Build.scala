@@ -109,9 +109,10 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-jackson",
-      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-core" % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-databind" % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.module"  %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
+      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-core"         % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-databind"     % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.module"  %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
+      libraryDependencies += "com.fasterxml.jackson.module"  %% "jackson-module-joda"  % JacksonVersion exclude("org.scala-lang", "scala-library")
     ).dependsOn(core, testkit % "test")
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
