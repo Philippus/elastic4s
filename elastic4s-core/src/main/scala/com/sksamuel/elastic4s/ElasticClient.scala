@@ -12,7 +12,7 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.client.Client
+import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
 import org.elasticsearch.common.transport.InetSocketTransportAddress
@@ -27,8 +27,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
+  @deprecated("deprecated in elasticsearch 1.6.0 and will be removed in 2.0.0", "1.7.1")
   def shutdown: Future[NodesShutdownResponse] = shutdown("_local")
 
+  @deprecated("deprecated in elasticsearch 1.6.0 and will be removed in 2.0.0", "1.7.1")
   def shutdown(nodeIds: String*): Future[NodesShutdownResponse] = {
     injectFuture[NodesShutdownResponse](java.admin.cluster.prepareNodesShutdown(nodeIds: _*).execute)
   }
@@ -42,11 +44,11 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
     injectFuture[TypesExistsResponse](client.admin.indices.prepareTypesExists(indices: _*).setTypes(types: _*).execute)
 
   @deprecated("deprecated in favour of: client.execute { search scroll <id> }", "1.5.5")
-  def searchScroll(scrollId: String) =
+  def searchScroll(scrollId: String): Future[SearchResponse] =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).execute)
 
   @deprecated("deprecated in favour of: client.execute { search scroll <id> }", "1.5.5")
-  def searchScroll(scrollId: String, keepAlive: String) =
+  def searchScroll(scrollId: String, keepAlive: String): Future[SearchResponse] =
     injectFuture[SearchResponse](client.prepareSearchScroll(scrollId).setScroll(keepAlive).execute)
 
   @deprecated("deprecated in favour of: client.execute { flush index <index> }", "1.5.5")
@@ -119,8 +121,8 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
     p.future
   }
 
-  def java = client
-  def admin = client.admin
+  def java: Client = client
+  def admin: AdminClient = client.admin
 
   override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse] = {
     IterableSearch(this).iterateSearch(query)
