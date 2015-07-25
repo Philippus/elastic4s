@@ -79,6 +79,7 @@ object Build extends Build {
       testkit,
       examples,
       jackson,
+      json4s,
       streams
     )
 
@@ -112,7 +113,15 @@ object Build extends Build {
       libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-core"           % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-databind"       % JacksonVersion,
       libraryDependencies += "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion exclude("org.scala-lang", "scala-library"),
-      libraryDependencies += "com.fasterxml.jackson.module"   % "jackson-datatype-joda"  % JacksonVersion
+      libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"  % JacksonVersion
+    ).dependsOn(core, testkit % "test")
+
+  lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
+    .settings(rootSettings: _*)
+    .settings(
+      name := "elastic4s-json4s",
+      libraryDependencies += "org.json4s" %% "json4s-core"    % "3.2.11",
+      libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
     ).dependsOn(core, testkit % "test")
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
