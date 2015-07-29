@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.streams
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props, Cancellable}
 import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticClient, ElasticDsl}
 import org.elasticsearch.action.bulk.{BulkItemResponse, BulkResponse}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.duration.FiniteDuration
 import scala.util.{Failure, Success}
 
 /**
@@ -23,6 +24,8 @@ import scala.util.{Failure, Success}
  * @param concurrentRequests the number of concurrent batch operations
  * @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
  * @param errorFn a function which is invoked when there is an error
+ * @param flushInterval used to schedule periodic bulk indexing. Use it when the publisher will never complete.
+ *                     This ensures that all elements are indexed, even if the last batch size is lower than batch size
  *
  * @tparam T the type of element provided by the publisher this subscriber will subscribe with
  */
@@ -31,7 +34,8 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
                                                  listener: ResponseListener,
                                                  batchSize: Int, concurrentRequests: Int,
                                                  completionFn: () => Unit,
-                                                 errorFn: Throwable => Unit)
+                                                 errorFn: Throwable => Unit,
+                                                 flushInterval: Option[FiniteDuration])
                                                 (implicit system: ActorSystem) extends Subscriber[T] {
 
   private var actor: ActorRef = _
@@ -40,7 +44,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
     if (s == null) throw new NullPointerException()
     if (actor == null) {
       actor = system.actorOf(
-        Props(new BulkActor(client, builder, s, batchSize, concurrentRequests, listener, completionFn, errorFn))
+        Props(new BulkActor(client, builder, s, batchSize, concurrentRequests, listener, completionFn, errorFn, flushInterval))
       )
       s.request(batchSize * concurrentRequests)
     } else {
@@ -67,6 +71,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
 
 object BulkActor {
   case object Completed
+  case object ForceIndexing
 }
 
 class BulkActor[T](client: ElasticClient,
@@ -76,10 +81,12 @@ class BulkActor[T](client: ElasticClient,
                    concurrentRequests: Int,
                    listener: ResponseListener,
                    completionFn: () => Unit,
-                   errorFn: Throwable => Unit) extends Actor {
+                   errorFn: Throwable => Unit,
+                   flushInterval: Option[FiniteDuration] = None) extends Actor {
 
   import ElasticDsl._
   import context.dispatcher
+  import context.system
 
   private val buffer = new ArrayBuffer[T]()
   buffer.sizeHint(batchSize)
@@ -88,6 +95,11 @@ class BulkActor[T](client: ElasticClient,
 
   // total number of elements sent and acknowledge at the es cluster level
   private var pending: Long = 0l
+
+  // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing
+  private val scheduler: Option[Cancellable] = flushInterval.map { interval =>
+    system.scheduler.schedule(interval, interval, self, BulkActor.ForceIndexing)
+  }
 
   def receive = {
     case t: Throwable =>
@@ -98,6 +110,10 @@ class BulkActor[T](client: ElasticClient,
         index()
       completed = true
       shutdownIfAllAcked()
+
+    case BulkActor.ForceIndexing =>
+      if (buffer.nonEmpty)
+        index()
 
     case r: BulkResponse =>
       pending = pending - r.items.length
@@ -112,6 +128,9 @@ class BulkActor[T](client: ElasticClient,
       if (buffer.size == batchSize)
         index()
   }
+
+  // Stop the scheduler if it exists
+  override def postStop() = scheduler.map(_.cancel())
 
   private def shutdownIfAllAcked(): Unit = {
     if (pending == 0) {
