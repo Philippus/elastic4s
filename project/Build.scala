@@ -12,7 +12,7 @@ object Build extends Build {
   val JacksonVersion = "2.5.3"
   val Slf4jVersion = "1.7.12"
   val ScalaLoggingVersion = "2.1.2"
-  val ElasticsearchVersion = "1.6.1"
+  val ElasticsearchVersion = "1.6.2"
   val Log4jVersion = "1.2.17"
   val CommonsIoVersion = "2.4"
   val GroovyVersion = "2.3.7"
