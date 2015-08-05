@@ -390,7 +390,7 @@ That is actually an example of a SimpleStringQueryDefinition. The string is impl
 It is the same as specifying the query type directly:
 
 ```scala
-search in "places"- / "cities" query simpleStringQuery("London")
+search in "places" / "cities" query simpleStringQuery("London")
 ```
 
 The simple string example is the only time we don't need to specify the query type.
