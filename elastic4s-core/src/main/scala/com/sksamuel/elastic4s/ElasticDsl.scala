@@ -485,12 +485,12 @@ trait ElasticDsl
   def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
-    def index(indexes: String*): IndexRecoveryDefinition = recover index indexes
+    def index(indexes: Iterable[String]): RefreshIndexDefinition = new RefreshIndexDefinition(indexes.toSeq)
+    def index(indexes: String*): RefreshIndexDefinition = new RefreshIndexDefinition(indexes)
   }
 
-  def refreshIndex(indexes: Iterable[String]): IndexRecoveryDefinition = refresh index indexes
-  def refreshIndex(indexes: String*): IndexRecoveryDefinition = refresh index indexes
+  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refresh index indexes
+  def refreshIndex(indexes: String*): RefreshIndexDefinition = refresh index indexes
 
   case object remove {
     def alias(alias: String): RemoveAliasExpectsIndex = {
