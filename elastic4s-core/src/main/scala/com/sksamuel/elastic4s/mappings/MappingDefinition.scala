@@ -138,7 +138,7 @@ class MappingDefinition(val `type`: String) {
 
   def dynamicTemplates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
   def dynamicTemplates(temps: DynamicTemplateDefinition*): this.type = templates(temps)
-  def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
+  def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps.toSeq:_*)
   def templates(temps: DynamicTemplateDefinition*): this.type = {
     _templates = temps
     this
