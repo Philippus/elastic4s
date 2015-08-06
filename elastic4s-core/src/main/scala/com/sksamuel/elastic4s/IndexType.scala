@@ -21,7 +21,7 @@ object IndexesTypes {
     string.split("/") match {
       case Array(index) => IndexesTypes(Array(index), Nil)
       case Array(index, t) => IndexesTypes(List(index), List(t))
-      case _ => throw new RuntimeException("Could not parse into index/type")
+      case _ => throw new RuntimeException(s"Could not parse '$string' into index/type")
     }
   }
 }
