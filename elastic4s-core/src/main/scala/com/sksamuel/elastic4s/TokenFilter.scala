@@ -55,7 +55,7 @@ class SynonymTokenFilter(val name: String,
 
   override def build(source: XContentBuilder): Unit = {
     path.foreach(source.field("synonyms_path", _))
-    synonyms.foreach(source.field("synonyms", _))
+    source.field("synonyms", synonyms.toArray[String]: _*)
     format.foreach(source.field("format", _))
     ignoreCase.foreach(source.field("ignore_case", _))
     expand.foreach(source.field("expand", _))
