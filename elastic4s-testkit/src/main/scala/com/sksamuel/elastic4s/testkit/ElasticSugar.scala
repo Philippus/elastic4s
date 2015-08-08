@@ -181,4 +181,13 @@ trait ElasticSugar extends ElasticNodeBuilder {
         }.await.isExists == false
     }
   }
+
+  def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit = {
+    blockUntil(s"Expected document $id to have version $version") {
+      () =>
+        client.execute {
+          get id id from index -> `type`
+      }.await.getVersion == version
+    }
+  }
 }
