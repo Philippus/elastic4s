@@ -97,7 +97,19 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
 
   def params(entries: (String, Any)*): this.type = params(entries.toMap)
   def params(map: Map[String, Any]): this.type = {
-    map.foreach(arg => _builder.addScriptParam(arg._1, arg._2))
+    def asJava(param: Any): Any = {
+      import scala.collection.JavaConverters._
+      param match {
+        case l: List[_] => l.asJava
+        case s: Seq[_]  => s.asJava
+        case m: Map[_, _] => m.map {
+          case (k, v) => asJava(k) -> asJava(v)
+        }.asJava
+        case v => v
+      }
+    }
+
+    map.foreach(arg => _builder.addScriptParam(arg._1, asJava(arg._2)))
     this
   }
 

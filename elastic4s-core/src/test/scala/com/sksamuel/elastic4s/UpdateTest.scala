@@ -40,6 +40,28 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(1 == hits)
   }
 
+  it should "support scala collection in script params" in {
+    val friends = List("han", "leia")
+    client.execute {
+      update(8).in("scifi/starwars") script {
+        "ctx._source.friends = friends"
+      } params Map("friends" -> friends)
+    }
+    refresh("scifi")
+
+    var k = 0
+    var hits = 0l
+    while (k < 10 && hits == 0) {
+      val resp = client.execute {
+        search in "scifi" types "starwars" term "friends" -> "leia"
+      }.await
+      hits = resp.getHits.totalHits()
+      Thread.sleep(k * 200)
+      k = k + 1
+    }
+    assert(1 == hits)
+  }
+
   it should "support doc based update" in {
 
     client.execute {
