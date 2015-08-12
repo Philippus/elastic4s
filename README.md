@@ -183,7 +183,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Get Template                              | `get template <name>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index exists                              | `index exists <name>` |
-| Index Status                              | `status <index>` |
+| Index Status                              | `index status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search in <index/type> query, search in <index/type> query, ...)`|
