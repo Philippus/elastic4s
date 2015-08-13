@@ -42,7 +42,7 @@ case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
 }
 
-class SynonymTokenFilter(val name: String,
+case class SynonymTokenFilter(name: String,
                          path: Option[String],
                          synonyms: Set[String],
                          ignoreCase: Option[Boolean],
@@ -67,22 +67,13 @@ object SynonymTokenFilter {
   @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
   def apply(name: String,
             path: String): SynonymTokenFilter = {
-    new SynonymTokenFilter(name, Option(path), Set.empty, None, None, None, None)
+    SynonymTokenFilter(name, Option(path), Set.empty, None, None, None, None)
   }
   @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
   def apply(name: String,
             path: String,
             ignoreCase: Boolean): SynonymTokenFilter = {
-    new SynonymTokenFilter(name, Option(path), Set.empty, Some(ignoreCase), None, None, None)
-  }
-  def apply(name: String,
-            path: Option[String] = None,
-            synonyms: Set[String] = Set.empty,
-            ignoreCase: Option[Boolean] = None,
-            format: Option[String] = None,
-            expand: Option[Boolean] = None,
-            tokenizer: Option[Tokenizer] = None): SynonymTokenFilter = {
-    new SynonymTokenFilter(name, path, synonyms.toSet, ignoreCase, format, expand, tokenizer)
+    SynonymTokenFilter(name, Option(path), Set.empty, Some(ignoreCase), None, None, None)
   }
 }
 
