@@ -4,7 +4,7 @@ import sbt.Keys._
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "1.7.1-SNAPSHOT"
+  val appVersion = "2.0.0-SNAPSHOT"
 
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
@@ -12,7 +12,7 @@ object Build extends Build {
   val JacksonVersion = "2.6.0"
   val Slf4jVersion = "1.7.12"
   val ScalaLoggingVersion = "2.1.2"
-  val ElasticsearchVersion = "1.7.0"
+  val ElasticsearchVersion = "2.0.0-beta1"
   val Log4jVersion = "1.2.17"
   val CommonsIoVersion = "2.4"
   val GroovyVersion = "2.3.7"
@@ -21,6 +21,7 @@ object Build extends Build {
     version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
+    resolvers += "mylocal" at "file:///home/sam/.m2/repository",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -28,14 +29,14 @@ object Build extends Build {
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
-      "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "commons-io" % "commons-io" % CommonsIoVersion % "test",
-      "log4j" % "log4j" % Log4jVersion % "test",
-      "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
-      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test"
+      "org.elasticsearch"      % "elasticsearch"    % ElasticsearchVersion,
+      "org.slf4j"              % "slf4j-api"        % Slf4jVersion,
+      "commons-io"             % "commons-io"       % CommonsIoVersion    % "test",
+      "log4j"                  % "log4j"            % Log4jVersion        % "test",
+      "org.slf4j"              % "log4j-over-slf4j" % Slf4jVersion        % "test",
+      "org.mockito"            % "mockito-all"      % MockitoVersion      % "test",
+      "org.scalatest"         %% "scalatest"        % ScalatestVersion    % "test",
+      "org.codehaus.groovy"    % "groovy"           % GroovyVersion       % "test"
 
     ),
     publishTo <<= version {
