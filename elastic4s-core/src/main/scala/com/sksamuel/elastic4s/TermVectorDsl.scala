@@ -7,23 +7,26 @@ import scala.concurrent.Future
 
 trait TermVectorDsl {
 
-  class TermVectorExecutable extends Executable[TermVectorDefinition, TermVectorResponse, TermVectorResponse] {
+  def termVector(index: String, `type`: String, id: String) = TermVectorDefinition(index, `type`, id)
+
+  implicit object TermVectorExecutable
+    extends Executable[TermVectorDefinition, TermVectorResponse, TermVectorResponse] {
     override def apply(client: Client, t: TermVectorDefinition): Future[TermVectorResponse] = {
       injectFuture(t.build(client.prepareTermVector).execute)
     }
   }
 }
 
-case class TermVectorDefinition(index: String,
-                                `type`: String,
-                                id: String,
-                                positions: Option[Boolean] = None,
-                                payloads: Option[Boolean] = None,
-                                offsets: Option[Boolean] = None,
-                                routing: Option[String] = None,
-                                termStatistics: Option[Boolean] = None,
-                                fieldStatistics: Option[Boolean] = None,
-                                fields: Option[Seq[String]] = None) {
+case class TermVectorDefinition(private val index: String,
+                                private val `type`: String,
+                                private val id: String,
+                                private val positions: Option[Boolean] = None,
+                                private val payloads: Option[Boolean] = None,
+                                private val offsets: Option[Boolean] = None,
+                                private val routing: Option[String] = None,
+                                private val termStatistics: Option[Boolean] = None,
+                                private val fieldStatistics: Option[Boolean] = None,
+                                private val fields: Option[Seq[String]] = None) {
 
   def build(builder: TermVectorRequestBuilder): TermVectorRequestBuilder = {
     builder.setIndex(index)
@@ -35,15 +38,15 @@ case class TermVectorDefinition(index: String,
     payloads.foreach(builder.setPayloads)
     offsets.foreach(builder.setOffsets)
     routing.foreach(builder.setRouting)
-    fields.foreach(builder.setSelectedFields)
+    fields.foreach(flds => builder.setSelectedFields(flds: _ *))
     builder
   }
 
-  def termStatistics(b: Boolean) = copy(termStatistics = Option(b))
-  def fieldStatistics(b: Boolean) = copy(fieldStatistics = Option(b))
-  def fields(fields: String*) = copy(fields = Option(fields))
-  def routing(routing: String) = copy(routing = Option(routing))
-  def offsets(offsets: Boolean) = copy(offsets = Option(offsets))
-  def payloads(payloads: Boolean) = copy(payloads = Option(payloads))
-  def positions(positions: Boolean) = copy(positions = Option(positions))
+  def withTermStatistics(boolean: Boolean = true): TermVectorDefinition = copy(termStatistics = Option(boolean))
+  def withFieldStatistics(boolean: Boolean = true): TermVectorDefinition = copy(fieldStatistics = Option(boolean))
+  def withFields(fields: String*): TermVectorDefinition = copy(fields = Option(fields))
+  def withRouting(routing: String): TermVectorDefinition = copy(routing = Option(routing))
+  def withOffets(boolean: Boolean = true): TermVectorDefinition = copy(offsets = Option(boolean))
+  def withPayloads(boolean: Boolean = true): TermVectorDefinition = copy(payloads = Option(boolean))
+  def withPositions(boolean: Boolean = true): TermVectorDefinition = copy(positions = Option(boolean))
 }
