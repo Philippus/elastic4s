@@ -10,7 +10,7 @@ import org.elasticsearch.client.Client
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 
-trait TemplateDsl {
+trait IndexTemplateDsl {
 
   class CreateIndexTemplateExpectsPattern(name: String) {
     def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)

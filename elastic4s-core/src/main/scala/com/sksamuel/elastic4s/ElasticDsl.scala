@@ -26,6 +26,7 @@ trait ElasticDsl
   with IndexAdminDsl
   with IndexRecoveryDsl
   with IndexStatusDsl
+  with IndexTemplateDsl
   with MappingDsl
   with MoreLikeThisDsl
   with MultiGetDsl
@@ -36,7 +37,7 @@ trait ElasticDsl
   with ScoreDsl
   with ScrollDsl
   with SnapshotDsl
-  with TemplateDsl
+  with TermVectorDsl
   with UpdateDsl
   with ValidateDsl
   with ElasticImplicits {
