@@ -21,7 +21,7 @@ or
 The syntax is quite SQL like. Of course we don't always want to delete by id, we might want to do a delete based on
 some criteria. Enter the delete by query request.
 
-Let's delete all London's from the cities index.
+Let's delete all London's from the places index.
 
 ```scala
   client.execute {
