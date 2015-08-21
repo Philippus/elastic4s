@@ -43,12 +43,12 @@ case object UniqueTokenFilter extends TokenFilter {
 }
 
 case class SynonymTokenFilter(name: String,
-                         path: Option[String],
-                         synonyms: Set[String],
-                         ignoreCase: Option[Boolean],
-                         format: Option[String],
-                         expand: Option[Boolean],
-                         tokenizer: Option[Tokenizer])
+                         path: Option[String] = None,
+                         synonyms: Set[String] = Set.empty,
+                         ignoreCase: Option[Boolean] = None,
+                         format: Option[String] = None,
+                         expand: Option[Boolean] = None,
+                         tokenizer: Option[Tokenizer] = None)
     extends TokenFilterDefinition {
 
   require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
