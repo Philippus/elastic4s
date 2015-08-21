@@ -34,4 +34,16 @@ trait IndexMatchers extends ElasticMatchers {
       )
     }
   }
+
+  def beCreated(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
+      Matcher[String] {
+    override def apply(left: String): MatchResult = {
+      val exists = client.execute(indexExists(left)).await(timeout).isExists
+      MatchResult(
+        exists,
+        s"Index $left did not exist",
+        s"Index $left exists"
+      )
+    }
+  }
 }

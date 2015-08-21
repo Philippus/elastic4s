@@ -19,11 +19,17 @@ class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
   blockUntilCount(4, indexname)
 
   "index matchers" should {
-    "match on index document count" in {
+    "support index document count" in {
       indexname should haveCount(4)
+      indexname should not(haveCount(11))
     }
     "support doc exists" in {
       indexname should containDoc(3)
+      indexname should not (containDoc(44))
+    }
+    "support index exists" in {
+      indexname should beCreated
+      "qweqwe" should not(beCreated)
     }
   }
 }
