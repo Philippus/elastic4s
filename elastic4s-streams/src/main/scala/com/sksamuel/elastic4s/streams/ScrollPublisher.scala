@@ -89,12 +89,16 @@ class PublishActor(client: ElasticClient,
   }
 
   def ready: Actor.Receive = {
+    // if the user has requested more than we currently have, we need to ask elasticsearch for more requests
     case Request(n) if n > 0 =>
       if (queue.isEmpty) {
         Option(scrollId) match {
           case None => client.execute(query).onComplete(result => self ! result)
           case Some(id) => client.execute(search scroll id keepAlive keepAlive).onComplete(result => self ! result)
         }
+        // we switch state while we're waiting on elasticsearch, so we know that any further Request messages
+        // issued by the client should be queued, because we are using a scroll and need to have only
+        // one active request at at time.
         context become fetching
         self ! Request(n)
       } else {

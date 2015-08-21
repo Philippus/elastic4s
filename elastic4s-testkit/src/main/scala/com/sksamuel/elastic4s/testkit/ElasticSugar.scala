@@ -78,7 +78,7 @@ trait ElasticSugar extends ElasticNodeBuilder {
    * Is invoked when a test needs access to a client for the test node.
    * Can override this if you wish to control precisely how the client is created.
    */
-  def client: ElasticClient = internalClient
+  implicit def client: ElasticClient = internalClient
 
   def refresh(indexes: String*) {
     val i = indexes.size match {

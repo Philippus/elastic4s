@@ -23,6 +23,7 @@ object Build extends Build {
     scalaVersion := ScalaVersion,
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     publishMavenStyle := true,
+    resolvers += Resolver.mavenLocal,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
@@ -87,40 +88,43 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-core",
-      libraryDependencies += "com.fasterxml.jackson.core"   % "jackson-core" % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.core"   % "jackson-databind" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
     )
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
     .settings(rootSettings: _*)
-    .settings(name := "elastic4s-testkit")
+    .settings(
+      name := "elastic4s-testkit",
+      libraryDependencies += "org.scalatest" %% "scalatest" % ScalatestVersion
+    )
     .dependsOn(core)
 
   lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-streams",
-      libraryDependencies += "com.typesafe.akka"    %% "akka-actor" % "2.3.12",
-      libraryDependencies += "org.reactivestreams"   % "reactive-streams" % "1.0.0",
-      libraryDependencies += "org.reactivestreams"   % "reactive-streams-tck" % "1.0.0" % "test"
+      libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.12",
+      libraryDependencies += "org.reactivestreams" % "reactive-streams" % "1.0.0",
+      libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % "1.0.0" % "test"
     ).dependsOn(core, testkit % "test", jackson % "test")
 
   lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-jackson",
-      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-core"           % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-databind"       % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion exclude("org.scala-lang", "scala-library"),
-      libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"  % JacksonVersion
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
+      libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % JacksonVersion
     ).dependsOn(core, testkit % "test")
 
   lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-json4s",
-      libraryDependencies += "org.json4s" %% "json4s-core"    % "3.2.11",
+      libraryDependencies += "org.json4s" %% "json4s-core" % "3.2.11",
       libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
     ).dependsOn(core, testkit % "test")
 
