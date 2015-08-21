@@ -51,6 +51,8 @@ case class SynonymTokenFilter(name: String,
                          tokenizer: Option[Tokenizer] = None)
     extends TokenFilterDefinition {
 
+  require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
+
   val filterType = "synonym"
 
   override def build(source: XContentBuilder): Unit = {
