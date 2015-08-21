@@ -169,16 +169,16 @@ trait ElasticSugar extends ElasticNodeBuilder {
       () ⇒
         client.execute {
           indexExists(index)
-        }.await.isExists == true
+        }.await.isExists
     }
   }
 
   def blockUntilIndexNotExists(index: String): Unit = {
     blockUntil(s"Expected not exists index $index") {
       () ⇒
-        client.execute {
+        !client.execute {
           indexExists(index)
-        }.await.isExists == false
+        }.await.isExists
     }
   }
 

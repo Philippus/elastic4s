@@ -46,4 +46,16 @@ trait IndexMatchers extends ElasticMatchers {
       )
     }
   }
+
+  def beEmpty(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
+      Matcher[String] {
+    override def apply(left: String): MatchResult = {
+      val count = client.execute(countFrom(left)).await(timeout).getCount
+      MatchResult(
+        count == 0,
+        s"Index $left was not empty",
+        s"Index $left was empty"
+      )
+    }
+  }
 }

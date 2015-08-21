@@ -16,6 +16,10 @@ class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
     )
   }.await
 
+  client.execute {
+    create index "sammy"
+  }.await
+
   blockUntilCount(4, indexname)
 
   "index matchers" should {
@@ -25,11 +29,15 @@ class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
     }
     "support doc exists" in {
       indexname should containDoc(3)
-      indexname should not (containDoc(44))
+      indexname should not(containDoc(44))
     }
     "support index exists" in {
       indexname should beCreated
       "qweqwe" should not(beCreated)
+    }
+    "support isEmpty" in {
+      indexname should not(beEmpty)
+      "sammy" should beEmpty
     }
   }
 }
