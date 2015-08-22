@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.common.unit.TimeValue
-import org.scalatest.{ Matchers, FlatSpec }
-import ElasticDsl._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.{FlatSpec, Matchers}
 
 class ClusterDslTest extends FlatSpec with Matchers {
 
