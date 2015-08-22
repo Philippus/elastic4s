@@ -6,7 +6,7 @@ object ConnectingToLocal extends App {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  val local = ElasticClient.data
+  val local = ElasticClient.local
   local.execute {
     create index "got"
   } map { _ =>
