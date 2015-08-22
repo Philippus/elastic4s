@@ -8,6 +8,20 @@ import scala.concurrent.duration._
 
 trait SearchMatchers extends ElasticMatchers {
 
+  def containDoc(expectedId: Any)
+                (implicit client: ElasticClient,
+                 timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
+    override def apply(left: SearchDefinition): MatchResult = {
+      val resp = client.execute(left).await(timeout)
+      val exists = resp.hits.exists(_.id == expectedId)
+      MatchResult(
+        exists,
+        s"Search $left did not find document $expectedId",
+        s"Search $left found document $expectedId"
+      )
+    }
+  }
+
   def haveHits(expectedCount: Int)
               (implicit client: ElasticClient,
                timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {

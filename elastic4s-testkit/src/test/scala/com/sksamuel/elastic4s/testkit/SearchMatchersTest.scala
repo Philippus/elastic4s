@@ -19,6 +19,9 @@ class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar 
   blockUntilCount(4, indexname)
 
   "search matchers" should {
+    "support haveHit" in {
+      (search in indexname query "cockfosters") should containDoc(3)
+    }
     "support haveHits" in {
       (search in indexname query "*") should haveHits(4)
       (search in indexname query "bank") should haveHits(1)
