@@ -20,7 +20,7 @@ class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar 
 
   "search matchers" should {
     "support haveHit" in {
-      (search in indexname query "cockfosters") should containDoc(3)
+      (search in indexname query "picadilly") should containDoc(3)
     }
     "support haveHits" in {
       (search in indexname query "*") should haveHits(4)

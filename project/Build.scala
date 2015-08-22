@@ -78,6 +78,7 @@ object Build extends Build {
     .aggregate(
       core,
       testkit,
+      coreTests,
       examples,
       jackson,
       json4s,
@@ -100,6 +101,11 @@ object Build extends Build {
       libraryDependencies += "org.scalatest" %% "scalatest" % ScalatestVersion
     )
     .dependsOn(core)
+
+  lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"))
+    .settings(rootSettings: _*)
+    .settings(name := "elastic4s-core-tests")
+    .dependsOn(core, testkit % "test")
 
   lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
     .settings(rootSettings: _*)

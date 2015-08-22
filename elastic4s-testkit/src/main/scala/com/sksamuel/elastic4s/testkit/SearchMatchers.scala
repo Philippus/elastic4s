@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{SearchDefinition, ElasticClient, QueryDefinition}
+import com.sksamuel.elastic4s.{ElasticClient, SearchDefinition}
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 import scala.concurrent.duration._
@@ -13,7 +13,7 @@ trait SearchMatchers extends ElasticMatchers {
                  timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition): MatchResult = {
       val resp = client.execute(left).await(timeout)
-      val exists = resp.hits.exists(_.id == expectedId)
+      val exists = resp.hits.exists(_.id == expectedId.toString)
       MatchResult(
         exists,
         s"Search $left did not find document $expectedId",
