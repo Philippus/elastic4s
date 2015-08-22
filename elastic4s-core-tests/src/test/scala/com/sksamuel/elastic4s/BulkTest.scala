@@ -2,14 +2,15 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.FlatSpec
-import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.concurrent.Eventually
+import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 
 import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
-class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class BulkTest extends FlatSpec with ElasticSugar with Eventually with ElasticMatchers {
 
+  override implicit def patienceConfig = PatienceConfig(timeout = 5.seconds)
   implicit val duration: Duration = 10.seconds
 
   client.execute {
@@ -29,8 +30,10 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
         index into "transport/air" id 4 fields "company" -> "egypt air"
       )
     ).await
-    refresh("transport")
-    blockUntilCount(5, "transport", "air")
+
+    eventually {
+      "transport" should haveCount(5)
+    }
   }
 
   "a bulk request" should "execute all delete queries" in {
@@ -41,28 +44,9 @@ class BulkTest extends FlatSpec with MockitoSugar with ElasticSugar {
         delete id 2 from "transport/air"
       )
     ).await
-    refresh("transport")
-    blockUntilCount(3, "transport", "air")
-  }
 
-  "a sync bulk request" should "execute all index queries" in {
-    client.execute(
-      bulk(
-        index into "transport/air" id 5 fields "company" -> "aeromexico",
-        index into "transport/air" id 6 fields "company" -> "alaska air",
-        index into "transport/air" id 7 fields "company" -> "hawaiian air",
-        index into "transport/air" id 8 fields "company" -> "aerotaxi"
-      )
-    ).await
+    eventually {
+      "transport" should haveCount(3)
+    }
   }
-
-  "a sync bulk request" should "execute all delete queries" in {
-    client.execute(
-      bulk(
-        delete(8) from "transport/air",
-        delete id 5 from "transport/air"
-      )
-    ).await
-  }
-
 }

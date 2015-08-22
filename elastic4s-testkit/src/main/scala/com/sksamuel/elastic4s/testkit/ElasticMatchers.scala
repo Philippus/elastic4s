@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.testkit
 
-import org.scalatest.Matchers
+trait ElasticMatchers extends SearchMatchers with IndexMatchers
 
-trait ElasticMatchers extends Matchers {
-
-}
+object ElasticMatchers extends ElasticMatchers

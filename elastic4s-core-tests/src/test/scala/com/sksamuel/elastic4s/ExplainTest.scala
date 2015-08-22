@@ -1,19 +1,19 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.scalatest.concurrent.ScalaFutures
+import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import org.scalatest.FlatSpec
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.time.SpanSugar._
-import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
-import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class ExplainTest
     extends FlatSpec
     with ElasticSugar
-    with Matchers
-    with OneInstancePerTest
+    with Eventually
+    with ElasticMatchers
     with ScalaFutures {
 
-  override implicit def patienceConfig: ExplainTest.this.type#PatienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
+  override implicit def patienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
 
   client.execute {
     index into "queens/england" fields ("name" -> "qe2") id 8
