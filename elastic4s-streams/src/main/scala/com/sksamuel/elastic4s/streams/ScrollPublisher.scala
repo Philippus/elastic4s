@@ -28,11 +28,13 @@ class ScrollPublisher private[streams](client: ElasticClient,
   require(search.build.scroll() != null, "Search Definition must have a scroll to be used as Publisher")
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
-    // Rule 1.9
+    // Rule 1.9 subscriber cannot be null
     if (s == null) throw new NullPointerException("Rule 1.9: Subscriber cannot be null")
     val subscription = new ScrollSubscription(client, search, s, elements)
     s.onSubscribe(subscription)
-    // rule 1.03 the subscription should not process onNext until the onSubscribe call has returned
+    // rule 1.03 the subscription should not invoke any onNext's until the onSubscribe call has returned
+    // even tho the user might call request in the onSubscribe, we can't start sending the results yet.
+    // this ready method signals to the actor that its ok to start sending data.
     subscription.ready()
   }
 }
@@ -43,7 +45,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
   val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
 
   private[streams] def ready(): Unit = {
-    actor ! Ready
+    actor ! PublishActor.Ready
   }
 
   override def cancel(): Unit = {
@@ -54,7 +56,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
   }
 
   override def request(n: Long): Unit = {
-    // spec 3.9
+    // Rule 3.9
     if (n < 1) s.onError(new java.lang.IllegalArgumentException("Rule 3.9: Must request > 0 elements"))
     // Rule 3.4 this method returns quickly as the search request is non-blocking
     actor ! PublishActor.Request(n)
@@ -62,7 +64,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subs
 }
 
 object PublishActor {
-  case object Ready
+  object Ready
   case class Request(n: Long)
 }
 
@@ -72,7 +74,6 @@ class PublishActor(client: ElasticClient,
                    max: Long) extends Actor with Stash {
 
   import ElasticDsl._
-  import PublishActor._
   import context.dispatcher
 
   private var scrollId: String = null
@@ -82,6 +83,9 @@ class PublishActor(client: ElasticClient,
   // Parse the keep alive setting out of the original query.
   private val keepAlive = Option(query.build.scroll).map(s => s.keepAlive).map(t => t.toString).getOrElse("1m")
 
+  // rule 1.03 the subscription should not send any results until the onSubscribe call has returned
+  // even tho the user might call request in the onSubscribe, we can't start sending the results yet.
+  // this ready method signals to the actor that its ok to start sending data. In the meantime we just stash requests.
   override def receive = {
     case Ready =>
       context become ready
@@ -90,53 +94,63 @@ class PublishActor(client: ElasticClient,
       stash()
   }
 
-  def ready: Actor.Receive = {
-    // if the user has requested more than we currently have, we need to ask elasticsearch for more requests
-    case Request(n) if n > 0 =>
-      if (queue.isEmpty) {
-        Option(scrollId) match {
-          case None => client.execute(query).onComplete(result => self ! result)
-          case Some(id) => client.execute(search scroll id keepAlive keepAlive).onComplete(result => self ! result)
-        }
-        // we switch state while we're waiting on elasticsearch, so we know that any further Request messages
-        // issued by the client should be queued, because we are using a scroll and need to have only
-        // one active request at at time.
-        context become fetching
-        self ! Request(n)
-      } else {
+  private def send(k: Long): Unit = {
+    require(queue.size >= k)
+    for ( _ <- 0l until k ) {
+      if (max == 0 || processed < max) {
         s.onNext(queue.dequeue)
         processed = processed + 1
-        if (processed == max) {
+        if (processed == max && max > 0) {
           s.onComplete()
           context.stop(self)
-        } else {
-          self ! Request(n - 1)
         }
       }
+    }
   }
 
-  def fetching: Actor.Receive = {
-    // while fetching (waiting on elasticsearch) we need to postpone requests until the results are back
-    // we can do this handily by stashing them
-    case Request(n) =>
+  private def ready: Actor.Receive = {
+    // if a request comes in for more than is currently available,
+    // we will send a request for more while sending what we can now
+    case PublishActor.Request(n) if n > queue.size =>
+      Option(scrollId) match {
+        case None => client.execute(query).onComplete(result => self ! result)
+        case Some(id) => client.execute(search scroll id keepAlive keepAlive).onComplete(result => self ! result)
+      }
+      // we switch state while we're waiting on elasticsearch, so we know not to send another request to ES
+      // because we are using a scroll and can only have one active request at at time.
+      context become fetching
+      // queue up a new request to handle the remaining ones required when the ES response comes in
+      self ! PublishActor.Request(n - queue.size)
+      send(queue.size)
+    // in this case, we have enough available so just send 'em
+    case PublishActor.Request(n) =>
+      send(n)
+  }
+
+  // fetching state is when we're waiting for a reply from es for a request we sent
+  private def fetching: Actor.Receive = {
+    // if we're in fetching mode, its because we ran out of results to send
+    // so any requests must be stashed until a fresh batch arrives
+    case PublishActor.Request(n) =>
+      require(queue.isEmpty) // must be empty or why did we not send it before switching to this mode?
       stash()
+    // handle when the es request dies
     case Success(resp: SearchResponse) if resp.isTimedOut =>
       s.onError(new ElasticsearchException("Request terminated early or timed out"))
       context.stop(self)
-    // if we had no results from ES then we're done
+    // if the request to elastic failed we will terminate the subscription
+    case Failure(t) =>
+      s.onError(t)
+      context.stop(self)
+    // if we had no results from ES then we have nothing left to publish and our work here is done
     case Success(resp: SearchResponse) if resp.isEmpty =>
       s.onComplete()
       context.stop(self)
-    // more results and we can unleash the beast (stashed requests)
+    // more results and we can unleash the beast (stashed requests) and switch back to ready mode
     case Success(resp: SearchResponse) =>
       scrollId = resp.getScrollId
       queue.enqueue(resp.hits: _*)
       context become ready
       unstashAll()
-    // if the request to elastic failed we will terminate the subscription sorry
-    case Failure(t) =>
-      s.onError(t)
-      context.stop(self)
   }
-
 }

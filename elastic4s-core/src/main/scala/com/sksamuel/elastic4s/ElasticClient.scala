@@ -57,10 +57,10 @@ object ElasticClient {
    */
   def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
 
-  @deprecated("use the remote method with an instance of ElasticsearchClientUri", "2.0.0")
+  @deprecated("use the remote method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
 
-  @deprecated("use the remote method with an instance of ElasticsearchClientUri", "2.0.0")
+  @deprecated("use the remote method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(settings: Settings, host: String, port: Int): ElasticClient = {
     remote(settings, ElasticsearchClientUri(host, port))
   }
