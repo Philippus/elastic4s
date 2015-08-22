@@ -21,7 +21,9 @@ class HelpersTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
   "reindex" should "reindex all documents from source to target" in {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    client.reindex("starcraft", "games").await
+    client.execute{
+      reindex("starcraft", "games")
+    }.await
 
     blockUntilCount(3, "games")
 

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.bulk.{BulkItemResponse, BulkItemRequest, BulkRequest, BulkResponse}
+import org.elasticsearch.action.bulk.{BulkItemResponse, BulkRequest, BulkResponse}
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue

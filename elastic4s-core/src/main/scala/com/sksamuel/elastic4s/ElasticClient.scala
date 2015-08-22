@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.source.StringDocumentSource
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{AdminClient, Client}
@@ -19,45 +17,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
 
   def close(): Unit = client.close()
-
-  def reindex(sourceIndex: String,
-              targetIndex: String,
-              chunkSize: Int = 500,
-              keepAlive: String = "5m",
-              preserveId: Boolean = true)(implicit ec: ExecutionContext): Future[Unit] = {
-    execute {
-      ElasticDsl.search in sourceIndex limit chunkSize scroll keepAlive searchType SearchType.Scan query matchall
-    } flatMap { response =>
-
-      def _scroll(scrollId: String): Future[Unit] = {
-        execute {
-          search scroll scrollId keepAlive keepAlive
-        } flatMap { response =>
-          val hits = response.getHits.hits
-          if (hits.nonEmpty) {
-            Future
-              .sequence(hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).grouped(chunkSize).map { pairs =>
-              execute {
-                ElasticDsl.bulk(
-                  pairs map {
-                    case (typ, _id, source) =>
-                      val expr = index into targetIndex -> typ
-                      (if (preserveId) expr id _id else expr) doc StringDocumentSource(source)
-                  }: _*
-                )
-              }
-            })
-              .flatMap(_ => _scroll(response.getScrollId))
-          } else {
-            Future.successful(())
-          }
-        }
-      }
-
-      val scrollId = response.getScrollId
-      _scroll(scrollId)
-    }
-  }
 
   def java: Client = client
   def admin: AdminClient = client.admin
