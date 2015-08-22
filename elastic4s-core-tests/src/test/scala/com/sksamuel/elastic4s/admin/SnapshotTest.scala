@@ -3,6 +3,7 @@ package admin
 
 import org.scalatest.FreeSpec
 import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 import scala.concurrent.duration._
 

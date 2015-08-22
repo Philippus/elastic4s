@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.{Matchers, WordSpec}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 import scala.concurrent.duration._
 

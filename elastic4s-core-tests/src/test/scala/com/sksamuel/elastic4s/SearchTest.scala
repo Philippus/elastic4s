@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{ FlatSpec, Matchers }
 import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class SearchTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {

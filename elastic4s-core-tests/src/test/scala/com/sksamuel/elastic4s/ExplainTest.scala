@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{ FlatSpec, Matchers, OneInstancePerTest }
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class ExplainTest
     extends FlatSpec

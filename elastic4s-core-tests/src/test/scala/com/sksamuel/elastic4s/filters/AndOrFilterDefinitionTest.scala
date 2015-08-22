@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.filters
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.ElasticSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{ FlatSpec, Matchers, WordSpec }
 
 class AndOrFilterDefinitionTest extends WordSpec with ElasticSugar with Matchers {

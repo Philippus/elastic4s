@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.filters
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.ElasticSugar
-import org.scalatest.{ WordSpec, Matchers }
+import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.{Matchers, WordSpec}
 
 class ExistsFilterDefinition extends WordSpec with ElasticSugar with Matchers {
 

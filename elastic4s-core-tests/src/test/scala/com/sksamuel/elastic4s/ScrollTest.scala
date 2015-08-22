@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.{WordSpec, Matchers}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class ScrollTest extends WordSpec with Matchers with ElasticSugar {
 

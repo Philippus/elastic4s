@@ -1,10 +1,18 @@
 package com.sksamuel.elastic4s
 
+import java.io.{File, PrintWriter}
+
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
+
+  val newStopListFile = new PrintWriter((testNodeConfPath resolve "stoplist.txt").toFile)
+  newStopListFile.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
+  newStopListFile.close()
+
   client.execute {
     create index "analyzer" mappings {
       "test" as(
@@ -27,52 +35,52 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
         )
     } analysis(
-        PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
-        PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
-        CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
-        CustomAnalyzerDefinition("my_ngram",
-          StandardTokenizer,
-          LowercaseTokenFilter,
-          ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
-        CustomAnalyzerDefinition("edgengram",
-          StandardTokenizer,
-          LowercaseTokenFilter,
-          edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
-        CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
-        CustomAnalyzerDefinition(
-          "shingle",
-          WhitespaceTokenizer,
-          LowercaseTokenFilter,
-          shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
-        ),
-        CustomAnalyzerDefinition(
-          "shingle2",
-          WhitespaceTokenizer,
-          LowercaseTokenFilter,
-          shingle tokenfilter "filter_shingle2" maxShingleSize 2
-        ),
-        CustomAnalyzerDefinition(
-          "shingle3",
-          WhitespaceTokenizer,
-          LowercaseTokenFilter,
-          shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
-        ),
-        CustomAnalyzerDefinition(
-          "shingle4",
-          WhitespaceTokenizer,
-          LowercaseTokenFilter,
-          shingle tokenfilter "filter_shingle4" tokenSeperator "#"
-        ),
-        CustomAnalyzerDefinition(
-          "stop_path",
-          WhitespaceTokenizer,
-          StopTokenFilterPath("new_stop", "stoplist.txt")
-        ),
-        CustomAnalyzerDefinition(
-          "apos",
-          WhitespaceTokenizer,
-          ApostropheTokenFilter
-        )
+      PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
+      PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
+      CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
+      CustomAnalyzerDefinition("my_ngram",
+        StandardTokenizer,
+        LowercaseTokenFilter,
+        ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
+      CustomAnalyzerDefinition("edgengram",
+        StandardTokenizer,
+        LowercaseTokenFilter,
+        edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
+      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
+      CustomAnalyzerDefinition(
+        "shingle",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
+      ),
+      CustomAnalyzerDefinition(
+        "shingle2",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle2" maxShingleSize 2
+      ),
+      CustomAnalyzerDefinition(
+        "shingle3",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
+      ),
+      CustomAnalyzerDefinition(
+        "shingle4",
+        WhitespaceTokenizer,
+        LowercaseTokenFilter,
+        shingle tokenfilter "filter_shingle4" tokenSeperator "#"
+      ),
+      CustomAnalyzerDefinition(
+        "stop_path",
+        WhitespaceTokenizer,
+        StopTokenFilterPath("new_stop", "stoplist.txt")
+      ),
+      CustomAnalyzerDefinition(
+        "apos",
+        WhitespaceTokenizer,
+        ApostropheTokenFilter
+      )
       )
   }.await
 

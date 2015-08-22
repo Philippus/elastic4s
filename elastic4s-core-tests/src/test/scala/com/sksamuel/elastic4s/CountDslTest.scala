@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {

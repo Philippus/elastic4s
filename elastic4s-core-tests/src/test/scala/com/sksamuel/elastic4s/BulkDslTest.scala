@@ -4,6 +4,7 @@ import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.scalatest.{ FlatSpec, Matchers }
 import scala.concurrent.duration._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {

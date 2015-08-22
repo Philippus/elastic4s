@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.index.VersionType
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._

@@ -6,6 +6,7 @@ import ElasticDsl._
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.action.WriteConsistencyLevel
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class DeleteDslTest extends FlatSpec with MockitoSugar with ElasticSugar {

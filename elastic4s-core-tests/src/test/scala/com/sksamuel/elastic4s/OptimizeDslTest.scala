@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._

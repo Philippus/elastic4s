@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class RecoveryDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "an index recovery request" should "accept a single index" in {

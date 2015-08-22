@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class ValidateDslTest extends FlatSpec with MockitoSugar with ElasticSugar {

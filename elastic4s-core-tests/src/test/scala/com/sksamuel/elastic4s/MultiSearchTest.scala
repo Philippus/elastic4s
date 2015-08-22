@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{ FlatSpec, Matchers }
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

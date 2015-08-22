@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
-import java.io.File
+import java.nio.file.{Path, Paths}
 import java.util.UUID
 
 import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
@@ -17,15 +17,13 @@ trait ElasticNodeBuilder {
 
   /**
    * Override this if you wish to change where the home directory for the local instance will be located.
-   * Note: if you override the settings method then you should specify the home in there and this method
-   * would not be used.
    */
-  def homeDir: File = {
-    val homeDir = new File(tempDirectoryPath + "/" + UUID.randomUUID().toString)
-    logger.info(s"Elasticsearch test-server located at $homeDir")
-    homeDir.mkdir()
-    homeDir.deleteOnExit()
-    homeDir
+  lazy val homeDir: Path = {
+    val path = tempDirectoryPath resolve UUID.randomUUID().toString
+    logger.info(s"Elasticsearch test-server located at $path")
+    path.toFile.mkdir()
+    path.toFile.deleteOnExit()
+    path
   }
 
   def numberOfReplicas: Int = 0
@@ -38,7 +36,14 @@ trait ElasticNodeBuilder {
 
   def httpEnabled: Boolean = true
 
-  def tempDirectoryPath = System.getProperty("java.io.tmpdir")
+  def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
+
+  lazy val testNodeConfPath: Path = {
+    val path = homeDir resolve "config"
+    path.toFile.mkdir()
+    path.toFile.deleteOnExit()
+    path
+  }
 
   /**
    * Override this if you wish to control all the settings used by the client.
@@ -47,7 +52,9 @@ trait ElasticNodeBuilder {
     val builder = ImmutableSettings.settingsBuilder()
       .put("node.http.enabled", httpEnabled)
       .put("http.enabled", httpEnabled)
-      .put("path.home", homeDir.getAbsolutePath)
+      .put("path.home", homeDir.toFile.getAbsolutePath)
+      .put("path.conf", testNodeConfPath.toFile.getAbsolutePath)
+      .put("path.repo", homeDir.toFile.getAbsolutePath)
       .put("index.number_of_shards", numberOfShards)
       .put("index.number_of_replicas", numberOfReplicas)
       .put("script.disable_dynamic", disableDynamicScripting)
@@ -187,7 +194,7 @@ trait ElasticSugar extends ElasticNodeBuilder {
       () =>
         client.execute {
           get id id from index -> `type`
-      }.await.getVersion == version
+        }.await.getVersion == version
     }
   }
 }

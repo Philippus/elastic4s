@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.{ FlatSpec, Matchers }
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar with ElasticSugar {

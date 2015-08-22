@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
@@ -10,18 +11,18 @@ class MoreLikeThisTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
     create index "drinks" mappings {
-      "beer" source true as (
+      "beer" source true as(
         "name" typed StringType store true analyzer StandardAnalyzer,
         "brand" typed StringType store true analyzer KeywordAnalyzer
-      )
+        )
     } shards 1
   }.await
 
   client.execute {
     bulk(
-      index into "drinks/beer" fields ("name" -> "coors light", "brand" -> "coors") id 4,
-      index into "drinks/beer" fields ("name" -> "bud lite", "brand" -> "bud") id 6,
-      index into "drinks/beer" fields ("name" -> "coors regular", "brand" -> "coors") id 8
+      index into "drinks/beer" fields("name" -> "coors light", "brand" -> "coors") id 4,
+      index into "drinks/beer" fields("name" -> "bud lite", "brand" -> "bud") id 6,
+      index into "drinks/beer" fields("name" -> "coors regular", "brand" -> "coors") id 8
     )
   }.await
 

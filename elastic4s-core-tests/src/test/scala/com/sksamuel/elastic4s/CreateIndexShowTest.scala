@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 import org.scalatest.{WordSpec, Matchers}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class CreateIndexShowTest extends WordSpec with Matchers with ElasticSugar {
 

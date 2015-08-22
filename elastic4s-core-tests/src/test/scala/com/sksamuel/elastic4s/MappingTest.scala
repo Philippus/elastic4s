@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import org.scalatest.{ WordSpec, Matchers }
 import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {

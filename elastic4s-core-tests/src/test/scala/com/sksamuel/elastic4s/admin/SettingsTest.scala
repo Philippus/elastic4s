@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.WordSpec
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl {
 

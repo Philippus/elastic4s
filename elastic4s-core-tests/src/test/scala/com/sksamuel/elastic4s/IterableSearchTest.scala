@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl.{index, _}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import concurrent.duration._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /**
  * Tests for IterableSearch

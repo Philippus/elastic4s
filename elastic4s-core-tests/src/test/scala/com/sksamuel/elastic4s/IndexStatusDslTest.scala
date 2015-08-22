@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class IndexStatusDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "an index status request" should "accept a single index" in {

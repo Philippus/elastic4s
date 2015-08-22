@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.query
 
-import com.sksamuel.elastic4s.{ ElasticSugar, ElasticDsl }
+import com.sksamuel.elastic4s.ElasticDsl
 import org.scalatest.{ Matchers, WordSpec }
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class RawQueryTest extends WordSpec with ElasticSugar with Matchers {
 

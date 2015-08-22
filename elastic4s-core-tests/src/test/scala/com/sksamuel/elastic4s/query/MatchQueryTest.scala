@@ -4,6 +4,7 @@ package query
 import org.elasticsearch.index.query.MatchQueryBuilder
 import org.scalatest.WordSpec
 import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class MatchQueryTest extends WordSpec with MockitoSugar with ElasticSugar with ElasticDsl {
 

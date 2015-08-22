@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class GetDslTest extends FlatSpec with Matchers with ElasticSugar {

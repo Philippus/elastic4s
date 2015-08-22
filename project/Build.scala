@@ -88,10 +88,7 @@ object Build extends Build {
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     .settings(rootSettings: _*)
     .settings(
-      name := "elastic4s-core",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
+      name := "elastic4s-core"
     )
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
@@ -105,6 +102,12 @@ object Build extends Build {
   lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"))
     .settings(rootSettings: _*)
     .settings(name := "elastic4s-core-tests")
+    .settings(
+      libraryDependencies += "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
+      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
+    )
     .dependsOn(core, testkit % "test")
 
   lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))

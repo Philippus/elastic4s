@@ -6,6 +6,7 @@ import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.mock.MockitoSugar
 
 import scala.collection.JavaConversions._
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 

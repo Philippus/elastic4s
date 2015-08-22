@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FreeSpec
 import org.scalatest.mock.MockitoSugar
+
 
 /** @author Stephen Samuel */
 class IndexTemplateDslTest extends FreeSpec with MockitoSugar with ElasticSugar with ElasticDsl {

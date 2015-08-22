@@ -13,6 +13,7 @@ import org.elasticsearch.search.aggregations.metrics.min.InternalMin
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
 import org.scalatest.{ FreeSpec, Matchers }
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
 

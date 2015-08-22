@@ -2,10 +2,11 @@ package com.sksamuel.elastic4s
 
 import java.util
 
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */
 class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -17,8 +18,8 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
         create template "brewery_template" pattern "te*" mappings (
           mapping name "brewery" as (
             "year_founded" withType StringType
+            )
           )
-        )
       }.await
 
       val resp = client.execute {
@@ -28,7 +29,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       resp.getIndexTemplates.get(0).name shouldBe "brewery_template"
       resp.getIndexTemplates.get(0).template() shouldBe "te*"
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
-      source should include(""""year_founded":{"type":"string"}""")
+      source should include( """"year_founded":{"type":"string"}""")
     }
     "apply template to new indexes" in {
 
@@ -39,7 +40,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       client.execute {
         index into "templatetest" / "brewery" fields (
           "year_founded" -> 1829
-        )
+          )
       }.await
 
       blockUntilCount(1, "templatetest", "brewery")
@@ -65,14 +66,14 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
         create template "malbec" pattern "malbec*" mappings (
           mapping name "user" fields (
             field name "distance" typed StringType
+            )
           )
-        )
       }.await
 
       client.execute {
         index into "malbec" / "user" fields (
           "distance" -> 1234
-        )
+          )
       }.await
     }
   }

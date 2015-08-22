@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{Matchers, WordSpec}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
 class TermVectorTest
