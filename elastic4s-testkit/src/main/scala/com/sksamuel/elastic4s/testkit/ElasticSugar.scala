@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
+import java.io.PrintWriter
 import java.nio.file.{Path, Paths}
 import java.util.UUID
 
@@ -18,13 +19,7 @@ trait ElasticNodeBuilder {
   /**
    * Override this if you wish to change where the home directory for the local instance will be located.
    */
-  lazy val homeDir: Path = {
-    val path = tempDirectoryPath resolve UUID.randomUUID().toString
-    logger.info(s"Elasticsearch test-server located at $path")
-    path.toFile.mkdir()
-    path.toFile.deleteOnExit()
-    path
-  }
+  lazy val testNodeHomePath: Path = tempDirectoryPath resolve UUID.randomUUID().toString
 
   def numberOfReplicas: Int = 0
 
@@ -36,30 +31,43 @@ trait ElasticNodeBuilder {
 
   def httpEnabled: Boolean = true
 
-  def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
+  lazy val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
 
-  lazy val testNodeConfPath: Path = {
-    val path = homeDir resolve "config"
-    path.toFile.mkdir()
-    path.toFile.deleteOnExit()
-    path
-  }
+  lazy val testNodeConfPath: Path = testNodeHomePath resolve "config"
 
   /**
    * Override this if you wish to control all the settings used by the client.
    */
   protected def settings: ImmutableSettings.Builder = {
+
+    val home = testNodeHomePath
+    logger.info(s"Elasticsearch test-server located at $home")
+    home.toFile.mkdirs()
+    home.toFile.deleteOnExit()
+
+    val conf = testNodeConfPath
+    conf.toFile.mkdirs()
+    conf.toFile.deleteOnExit()
+
+    // todo this needs to come out of here and into the analyzer test alone when we can isolate nodes
+    val newStopListFile = (testNodeConfPath resolve "stoplist.txt").toFile
+    val writer = new PrintWriter(newStopListFile)
+    writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
+    writer.close()
+
     val builder = ImmutableSettings.settingsBuilder()
       .put("node.http.enabled", httpEnabled)
       .put("http.enabled", httpEnabled)
-      .put("path.home", homeDir.toFile.getAbsolutePath)
-      .put("path.conf", testNodeConfPath.toFile.getAbsolutePath)
-      .put("path.repo", homeDir.toFile.getAbsolutePath)
+      .put("path.home", home.toFile.getAbsolutePath)
+      .put("path.repo", home.toFile.getAbsolutePath)
+      .put("path.conf", conf.toFile.getAbsolutePath)
       .put("index.number_of_shards", numberOfShards)
       .put("index.number_of_replicas", numberOfReplicas)
       .put("script.disable_dynamic", disableDynamicScripting)
       .put("index.refresh_interval", indexRefresh.toSeconds + "s")
+      .put("discovery.zen.ping.multicast.enabled", "false")
       .put("es.logger.level", "INFO")
+      .put("cluster.name", getClass.getSimpleName)
     configureSettings(builder)
   }
 
@@ -72,7 +80,7 @@ trait ElasticNodeBuilder {
    * Invoked to create a local client for the elastic node.
    * Override to create the client youself.
    */
-  def createLocalClient = ElasticClient.local(settings.build)
+  def createLocalClient: ElasticClient = ElasticClient.local(settings.build)
 }
 
 trait ElasticSugar extends ElasticNodeBuilder {

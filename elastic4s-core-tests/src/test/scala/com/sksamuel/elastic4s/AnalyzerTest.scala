@@ -1,17 +1,13 @@
 package com.sksamuel.elastic4s
 
-import java.io.{File, PrintWriter}
+import java.io.PrintWriter
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
-
-  val newStopListFile = new PrintWriter((testNodeConfPath resolve "stoplist.txt").toFile)
-  newStopListFile.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
-  newStopListFile.close()
 
   client.execute {
     create index "analyzer" mappings {
