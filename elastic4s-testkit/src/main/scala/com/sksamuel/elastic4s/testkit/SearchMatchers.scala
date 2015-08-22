@@ -23,30 +23,46 @@ trait SearchMatchers extends Matchers {
     }
   }
 
-  def includeField(value: String)
-               (implicit client: ElasticClient,
-                timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
+  def haveFieldValue(value: String)
+                          (implicit client: ElasticClient,
+                           timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new
+      Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
-      val exists = resp.hits.exists(_.fields.keySet.contains(value))
+      val exists = resp.hits.exists(_.fields.exists(_._2.getValues.contains(value)))
       MatchResult(
         exists,
-        s"Search result $left contained unwanted field $value",
-        s"Search result $left did not contain unwanted field $value"
+        s"Search $left contained unwanted field value $value",
+        s"Search $left did not contain unwanted field value $value"
       )
     }
   }
 
-  def includeFieldValue(value: String)
-                    (implicit client: ElasticClient,
-                     timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
+  def haveSourceField(value: String)
+                     (implicit client: ElasticClient,
+                      timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
-      val exists = resp.hits.exists(_.fields.values.exists(_.getValues.contains(value)))
+      val exists = resp.hits.exists(_.sourceAsMap.contains(value))
       MatchResult(
         exists,
-        s"Search result $left contained unwanted field value $value",
-        s"Search result $left did not contain unwanted field value $value"
+        s"Search $left contained unwanted source field $value",
+        s"Search $left did not contain unwanted source field $value"
+      )
+    }
+  }
+
+  def haveSourceFieldValue(value: String)
+                          (implicit client: ElasticClient,
+                           timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new
+      Matcher[SearchDefinition] {
+    override def apply(left: SearchDefinition) = {
+      val resp = client.execute(left).await(timeout)
+      val exists = resp.hits.exists(_.sourceAsMap.valuesIterator.exists(_.toString == value))
+      MatchResult(
+        exists,
+        s"Search $left contained unwanted source field value $value",
+        s"Search $left did not contain unwanted source field value $value"
       )
     }
   }
