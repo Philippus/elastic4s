@@ -36,6 +36,8 @@ case class UaxUrlEmailTokenizer(override val name: String,
     source.field("type", "uax_url_email")
     source.field("max_token_length", maxTokenLength)
   }
+
+  def maxTokenLength(maxTokenLength: Int): UaxUrlEmailTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
 case class StandardTokenizer(override val name: String,
@@ -44,6 +46,8 @@ case class StandardTokenizer(override val name: String,
     source.field("type", "standard")
     source.field("max_token_length", maxTokenLength)
   }
+
+  def maxTokenLength(maxTokenLength: Int): StandardTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
 case class PatternTokenizer(override val name: String,

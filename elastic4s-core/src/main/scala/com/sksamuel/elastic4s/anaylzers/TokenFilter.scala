@@ -118,7 +118,7 @@ case class KeywordMarkerTokenFilter(name: String,
   val filterType = "keyword_marker"
 
   override def build(source: XContentBuilder): Unit = {
-    if (keywords.size > 0) source.field("keywords", keywords.toArray[String]: _*)
+    if (keywords.nonEmpty) source.field("keywords", keywords.toArray[String]: _*)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
 }
