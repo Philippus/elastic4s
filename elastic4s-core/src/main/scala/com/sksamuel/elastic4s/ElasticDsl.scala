@@ -148,7 +148,9 @@ trait ElasticDsl
   def clusterStatus = new ClusterStatsDefinition
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
+  @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
   case object commonGrams {
+    @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
   }
   def commonGramsTokenFilter(name: String) = CommonGramsTokenFilter(name)
@@ -432,16 +434,21 @@ trait ElasticDsl
 
   def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
 
+  @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
   case object ngram {
+    @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
   }
   def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
 
   def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
 
+  @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
   case object edgeNGram {
+    @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
   }
+  @deprecated("prefer the method edgeNGramTokenFilter(\"name\") <-- note capitalization", "2.0.0")
   def edgeNGramTokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
 
   case object open {
@@ -553,7 +560,9 @@ trait ElasticDsl
 
   def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
+  @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
   case object shingle {
+    @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
   }
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
@@ -569,7 +578,9 @@ trait ElasticDsl
     def delete(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
   }
 
+  @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
   case object snowball {
+    @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
   }
   def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
@@ -582,7 +593,9 @@ trait ElasticDsl
     def script(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
   }
 
+  @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
   case object stemmer {
+    @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
     def tokenfilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
   }
   def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
