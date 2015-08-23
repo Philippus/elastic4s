@@ -1,6 +1,4 @@
-package com.sksamuel.elastic4s
-
-import java.io.PrintWriter
+package com.sksamuel.elastic4s.analyzers
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.anaylzers._

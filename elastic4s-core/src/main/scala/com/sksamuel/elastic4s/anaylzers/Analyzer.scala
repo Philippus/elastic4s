@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.anaylzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 /** @author Stephen Samuel */
 abstract class Analyzer(val name: String)
@@ -50,15 +50,24 @@ case object ThaiLanguageAnalyzer extends LanguageAnalyzer("thai")
 
 abstract class AnalyzerDefinition(val name: String) {
   def build(source: XContentBuilder): Unit
+  def json: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder
+    builder.startObject()
+    build(builder)
+    builder.endObject()
+    builder
+  }
 }
 
 case class StopAnalyzerDefinition(override val name: String,
-                                  stopwords: Iterable[String] = Nil,
-                                  maxTokenLength: Int = 0) extends AnalyzerDefinition(name) {
+                                  stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "stop")
     source.field("stopwords", stopwords.toArray[String]: _*)
   }
+
+  def stopwords(stopwords: Iterable[String]): StopAnalyzerDefinition = copy(stopwords = stopwords)
+  def stopwords(stopwords: String, rest: String*): StopAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
 case class StandardAnalyzerDefinition(override val name: String,
