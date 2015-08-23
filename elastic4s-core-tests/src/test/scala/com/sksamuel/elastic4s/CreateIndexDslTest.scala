@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.anaylzers._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings.{ DynamicMapping, PrefixTree }
 import org.scalatest.mock.MockitoSugar

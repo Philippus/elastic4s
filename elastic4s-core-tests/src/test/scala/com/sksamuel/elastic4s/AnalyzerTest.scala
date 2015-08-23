@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import java.io.PrintWriter
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.anaylzers._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}

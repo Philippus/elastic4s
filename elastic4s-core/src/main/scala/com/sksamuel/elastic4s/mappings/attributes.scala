@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
+import com.sksamuel.elastic4s.anaylzers.Analyzer
 import org.elasticsearch.common.xcontent.XContentBuilder
-import com.sksamuel.elastic4s.Analyzer
 
 /** @author Fehmi Can Saglam */
 object attributes {

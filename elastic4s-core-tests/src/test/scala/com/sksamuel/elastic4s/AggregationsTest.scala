@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.anaylzers.KeywordAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange

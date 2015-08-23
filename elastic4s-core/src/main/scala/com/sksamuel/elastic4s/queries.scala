@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.anaylzers.Analyzer
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder

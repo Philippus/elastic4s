@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.anaylzers.{Tokenizer, CharFilterDefinition, CustomAnalyzerDefinition, AnalyzerDefinition, TokenFilterDefinition, TokenFilter}
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.client.Client

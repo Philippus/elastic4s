@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import java.util.UUID
 
 import com.sksamuel.elastic4s.admin._
+import com.sksamuel.elastic4s.anaylzers.{ShingleTokenFilter, StemmerTokenFilter, SnowballTokenFilter, NGramTokenFilter, EdgeNGramTokenFilter, CommonGramsTokenFilter}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 

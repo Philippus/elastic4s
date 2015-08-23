@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.anaylzers.{KeywordAnalyzer, StandardAnalyzer}
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FlatSpec

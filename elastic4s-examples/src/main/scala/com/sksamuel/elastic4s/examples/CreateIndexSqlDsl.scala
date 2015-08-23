@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.examples
 
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.anaylzers.{NGramTokenizer, StandardTokenizer, CustomAnalyzerDefinition, SnowballAnalyzerDefinition, PatternAnalyzerDefinition, StemmerTokenFilter, PatternReplaceTokenFilter, LengthTokenFilter, UniqueTokenFilter}
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 
 // examples of the count API in dot notation
