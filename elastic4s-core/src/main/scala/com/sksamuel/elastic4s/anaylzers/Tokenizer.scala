@@ -52,11 +52,17 @@ case class PatternTokenizer(override val name: String,
                             group: Int = -1) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "pattern")
+    if (flags.nonEmpty)
+      source.field("flags", flags)
     source.field("pattern", pattern)
     if (group > 0) {
       source.field("group", group)
     }
   }
+
+  def pattern(pattern: String): PatternTokenizer = copy(pattern = pattern)
+  def flags(flags: String): PatternTokenizer = copy(flags = flags)
+  def group(group: Int): PatternTokenizer = copy(group = group)
 }
 
 case class KeywordTokenizer(override val name: String,
