@@ -57,42 +57,48 @@ object ElasticClient {
    */
   def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
 
-  @deprecated("use the remote method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
+  @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
 
-  @deprecated("use the remote method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
+  @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(settings: Settings, host: String, port: Int): ElasticClient = {
-    remote(settings, ElasticsearchClientUri(host, port))
+    transport(settings, ElasticsearchClientUri(host, port))
   }
 
   /**
    * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
    * This method will use default settings.
    *
-   * Note: The method name 'remote' refers to the fact that the client will connect to the instance(s)
+   * Note: The method name 'transport' refers to the fact that the client will connect to the instance(s)
    * using the transport client rather than becoming a full node itself and joining the cluster.
    * This is what most people think of when they talk about a client, like you would in mongo or mysql for example.
+   * To create a local node, use the fromNode method.
    *
    * @param uri the instance(s) to connect to.
    */
+  def transport(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
+  @deprecated("use transport instead of remote", "2.0.0")
   def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
 
   /**
    * Connects to elasticsearch instance(s) specified by the uri and setting the
    * given settings object on the client.
    *
-   * Note: The method name 'remote' refers to the fact that the client will connect to the instance(s)
+   * Note: The method name 'transport' refers to the fact that the client will connect to the instance(s)
    * using the transport client rather than becoming a full node itself and joining the cluster.
    * This is what most people think of when they talk about a client, like you would in mongo or mysql for example.
+   * To create a local node, use the fromNode method.
    *
    * @param settings the settings as applicable to the client.
    * @param uri the instance(s) to connect to.
    */
-  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
+  def transport(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
     for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
     fromClient(client)
   }
+  @deprecated("use transport instead of remote", "2.0.0")
+  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)
 
   /**
    * Creates a local data node. This is useful for embedded usage, or for unit tests.
