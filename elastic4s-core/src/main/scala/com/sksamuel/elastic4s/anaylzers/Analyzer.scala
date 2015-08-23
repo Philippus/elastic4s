@@ -78,6 +78,10 @@ case class StandardAnalyzerDefinition(override val name: String,
     source.field("stopwords", stopwords.toArray[String]: _*)
     source.field("max_token_length", maxTokenLength)
   }
+
+  def stopwords(stopwords: Iterable[String]): StandardAnalyzerDefinition = copy(stopwords = stopwords)
+  def stopwords(stopwords: String, rest: String*): StandardAnalyzerDefinition = copy(stopwords = stopwords +: rest)
+  def maxTokenLength(maxTokenLength: Int): StandardAnalyzerDefinition = copy(maxTokenLength = maxTokenLength)
 }
 
 case class PatternAnalyzerDefinition(override val name: String,
