@@ -52,16 +52,6 @@ trait ElasticDsl
   }
   def addAlias(name: String): AddAliasExpectsIndex = add alias name
 
-  @deprecated("use `add/remove/get alias` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
-  case object aliases {
-    @deprecated("use `add alias` instead of `aliases add` for a more readable dsl", "1.4.0.Beta2")
-    def add(alias: String) = new AddAliasExpectsIndex(alias)
-    @deprecated("use `remove alias` instead of `aliases remove` for a more readable dsl", "1.4.0.Beta2")
-    def remove(alias: String) = new RemoveAliasExpectsIndex(alias)
-    @deprecated("use `get alias` instead of `aliases get` for a more readable dsl", "1.4.0.Beta2")
-    def get(aliases: String*) = new GetAliasDefinition(aliases)
-  }
-
   def aliases(aliasMutations: MutateAliasDefinition*): IndicesAliasesRequestDefinition = aliases(aliasMutations)
   def aliases(aliasMutations: Iterable[MutateAliasDefinition]): IndicesAliasesRequestDefinition = {
     new IndicesAliasesRequestDefinition(aliasMutations.toSeq: _*)
@@ -543,8 +533,6 @@ trait ElasticDsl
   def scriptSort(scripttext: String): ScriptSortDefinition = script sort scripttext
   def scriptField(n: String): ExpectsScript = script field n
 
-  @deprecated("use search keyword", "1.4.0.Beta2")
-  def select: search.type = search
   case object search {
     def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
     def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
@@ -553,8 +541,6 @@ trait ElasticDsl
     def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
   }
 
-  @deprecated("use search", "1.6.0")
-  def select(indexes: String*): SearchDefinition = search(indexes: _*)
   def search(indexType: IndexType): SearchDefinition = search in indexType
   def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
 
@@ -568,15 +554,6 @@ trait ElasticDsl
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
 
   def shortField(name: String) = field(name).typed(ShortType)
-
-  case object snapshot {
-    @deprecated("use `create snapshot` instead of `snapshot create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String): CreateSnapshotExpectsIn = new CreateSnapshotExpectsIn(name)
-    @deprecated("use `restore snapshot` instead of `snapshot restore` for a more readable dsl", "1.4.0.Beta2")
-    def restore(name: String): RestoreSnapshotExpectsFrom = new RestoreSnapshotExpectsFrom(name)
-    @deprecated("use `delete snapshot` instead of `snapshot delete` for a more readable dsl", "1.4.0.Beta2")
-    def delete(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
-  }
 
   @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
   case object snowball {
@@ -606,11 +583,6 @@ trait ElasticDsl
   def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
 
   case object template {
-    @deprecated("use `create template` instead of `template create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String): CreateIndexTemplateExpectsPattern = new CreateIndexTemplateExpectsPattern(name)
-    @deprecated("use `delete template` instead of `template delete` for a more readable dsl", "1.4.0.Beta2")
-    def delete(name: String): DeleteIndexTemplateDefinition = new DeleteIndexTemplateDefinition(name)
-
     def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
   }
   def template(name: String): DynamicTemplateDefinition = template name name
