@@ -1,144 +1,149 @@
 {
-    "settings": {
-        "analysis": {
-            "char_filter": {
-                "mapping_charfilter": {
-                    "type": "mapping",
-                    "mappings": [
-                        "ph=>f",
-                        "qu=>q"
-                    ]
-                },
-                "pattern_replace_charfilter": {
-                    "type": "pattern_replace",
-                    "pattern": "sample(.*)",
-                    "replacement": "replacedSample $1"
-                }
-            },
-            "analyzer": {
-                "patternAnalyzer": {
-                    "type": "pattern",
-                    "lowercase": true,
-                    "pattern": "[a-z]"
-                },
-                "mysnowball": {
-                    "type": "snowball",
-                    "language": "english"
-                },
-                "myAnalyzer2": {
-                    "type": "custom",
-                    "tokenizer": "myTokenizer1",
-                    "filter": [
-                        "myTokenFilter2",
-                        "myTokenFilter3",
-                        "myFrenchStemmerTokenFilter",
-                        "prTokenFilter",
-                        "myWordDelimiterTokenFilter"
-                    ]
-                },
-                "myAnalyzer3": {
-                    "type": "custom",
-                    "tokenizer": "lowercase",
-                    "filter": [
-                        "myTokenFilter1",
-                        "reverse",
-                        "myTokenFilter5",
-                        "myEdgeNGramTokenFilter",
-                        "stemmerTokenFilter"
-                    ],
-                    "char_filter": [
-                        "html_strip",
-                        "mapping_charfilter",
-                        "pattern_replace_charfilter"
-                    ]
-                },
-                "myAnalyzer4": {
-                    "type": "custom",
-                    "tokenizer": "myTokenizer4"
-                },
-                "myAnalyzer5": {
-                    "type": "custom",
-                    "tokenizer": "myTokenizer5"
-                }
-            },
-            "tokenizer": {
-                "myTokenizer1": {
-                    "type": "standard",
-                    "max_token_length": 900
-                },
-                "myTokenizer4": {
-                    "type": "edgeNGram",
-                    "min_gram": 3,
-                    "max_gram": 17,
-                    "token_chars": [
-                        "digit",
-                        "letter"
-                    ]
-                },
-                "myTokenizer5": {
-                    "type": "nGram",
-                    "min_gram": 4,
-                    "max_gram": 18,
-                    "token_chars": [
-                        "letter",
-                        "punctuation"
-                    ]
-                }
-            },
-            "filter": {
-                "myTokenFilter2": {
-                    "type": "length",
-                    "max": 10
-                },
-                "myTokenFilter3": {
-                    "type": "unique",
-                    "only_on_same_position": true
-                },
-                "myFrenchStemmerTokenFilter": {
-                    "type": "stemmer",
-                    "name": "french"
-                },
-                "prTokenFilter": {
-                    "type": "pattern_replace",
-                    "pattern": "pattern",
-                    "replacement": "rep"
-                },
-                "myWordDelimiterTokenFilter": {
-                    "type": "word_delimiter",
-                    "generate_word_parts": true,
-                    "generate_number_parts": true,
-                    "catenate_words": false,
-                    "catenate_numbers": false,
-                    "catenate_all": false,
-                    "split_on_case_change": true,
-                    "preserve_original": false,
-                    "split_on_numerics": true,
-                    "stem_english_possessive": true
-                },
-                "myTokenFilter1": {
-                    "type": "stop",
-                    "stopwords": [],
-                    "enable_position_increments": true,
-                    "ignore_case": true
-                },
-                "myTokenFilter5": {
-                    "type": "stop",
-                    "max_token_count": 5
-                },
-                "myEdgeNGramTokenFilter": {
-                    "type": "edgeNGram",
-                    "min_gram": 3,
-                    "max_gram": 50,
-                    "side": "front"
-                },
-                "stemmerTokenFilter": {
-                    "type": "stemmer_override",
-                    "rules": [
-                        "rule1",
-                        "rule2"
-                    ]
-                }
-            }
+  "settings": {
+    "analysis": {
+      "char_filter": {
+        "mapping_charfilter": {
+          "type": "mapping",
+          "mappings": [
+            "ph=>f",
+            "qu=>q"
+          ]
+        },
+        "pattern_replace_charfilter": {
+          "type": "pattern_replace",
+          "pattern": "sample(.*)",
+          "replacement": "replacedSample $1"
         }
+      },
+      "analyzer": {
+        "patternAnalyzer": {
+          "type": "pattern",
+          "lowercase": true,
+          "pattern": "[a-z]"
+        },
+        "mysnowball": {
+          "type": "snowball",
+          "language": "english",
+          "stopwords": [
+            "stop1",
+            "stop2",
+            "stop3"
+          ]
+        },
+        "myAnalyzer2": {
+          "type": "custom",
+          "tokenizer": "myTokenizer1",
+          "filter": [
+            "myTokenFilter2",
+            "myTokenFilter3",
+            "myFrenchStemmerTokenFilter",
+            "prTokenFilter",
+            "myWordDelimiterTokenFilter"
+          ]
+        },
+        "myAnalyzer3": {
+          "type": "custom",
+          "tokenizer": "lowercase",
+          "filter": [
+            "myTokenFilter1",
+            "reverse",
+            "myTokenFilter5",
+            "myEdgeNGramTokenFilter",
+            "stemmerTokenFilter"
+          ],
+          "char_filter": [
+            "html_strip",
+            "mapping_charfilter",
+            "pattern_replace_charfilter"
+          ]
+        },
+        "myAnalyzer4": {
+          "type": "custom",
+          "tokenizer": "myTokenizer4"
+        },
+        "myAnalyzer5": {
+          "type": "custom",
+          "tokenizer": "myTokenizer5"
+        }
+      },
+      "tokenizer": {
+        "myTokenizer1": {
+          "type": "standard",
+          "max_token_length": 900
+        },
+        "myTokenizer4": {
+          "type": "edgeNGram",
+          "min_gram": 3,
+          "max_gram": 17,
+          "token_chars": [
+            "digit",
+            "letter"
+          ]
+        },
+        "myTokenizer5": {
+          "type": "nGram",
+          "min_gram": 4,
+          "max_gram": 18,
+          "token_chars": [
+            "letter",
+            "punctuation"
+          ]
+        }
+      },
+      "filter": {
+        "myTokenFilter2": {
+          "type": "length",
+          "max": 10
+        },
+        "myTokenFilter3": {
+          "type": "unique",
+          "only_on_same_position": true
+        },
+        "myFrenchStemmerTokenFilter": {
+          "type": "stemmer",
+          "name": "french"
+        },
+        "prTokenFilter": {
+          "type": "pattern_replace",
+          "pattern": "pattern",
+          "replacement": "rep"
+        },
+        "myWordDelimiterTokenFilter": {
+          "type": "word_delimiter",
+          "generate_word_parts": true,
+          "generate_number_parts": true,
+          "catenate_words": false,
+          "catenate_numbers": false,
+          "catenate_all": false,
+          "split_on_case_change": true,
+          "preserve_original": false,
+          "split_on_numerics": true,
+          "stem_english_possessive": true
+        },
+        "myTokenFilter1": {
+          "type": "stop",
+          "stopwords": [],
+          "enable_position_increments": true,
+          "ignore_case": true
+        },
+        "myTokenFilter5": {
+          "type": "stop",
+          "max_token_count": 5
+        },
+        "myEdgeNGramTokenFilter": {
+          "type": "edgeNGram",
+          "min_gram": 3,
+          "max_gram": 50,
+          "side": "front"
+        },
+        "stemmerTokenFilter": {
+          "type": "stemmer_override",
+          "rules": [
+            "rule1",
+            "rule2"
+          ]
+        }
+      }
     }
+  }
 }
