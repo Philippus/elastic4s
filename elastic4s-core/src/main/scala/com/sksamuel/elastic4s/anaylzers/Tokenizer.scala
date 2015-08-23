@@ -1,11 +1,18 @@
 package com.sksamuel.elastic4s.anaylzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 /** @author Stephen Samuel */
 abstract class Tokenizer(val name: String) {
   @SuppressWarnings(Array("all"))
   def build(source: XContentBuilder): Unit = {}
+  def json: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder
+    builder.startObject()
+    build(builder)
+    builder.endObject()
+    builder
+  }
   def customized: Boolean = false
 }
 
@@ -58,6 +65,8 @@ case class KeywordTokenizer(override val name: String,
     source.field("type", "keyword")
     source.field("bufferSize", bufferSize)
   }
+
+  def bufferSize(bufferSize: Int): KeywordTokenizer = copy(bufferSize = bufferSize)
 }
 
 case class NGramTokenizer(override val name: String,
