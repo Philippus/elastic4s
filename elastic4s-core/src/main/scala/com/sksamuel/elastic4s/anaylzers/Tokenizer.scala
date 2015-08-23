@@ -89,8 +89,13 @@ case class EdgeNGramTokenizer(override val name: String,
     source.field("type", "edgeNGram")
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
-    source.field("token_chars", tokenChars.toArray[String]: _*)
+    if (tokenChars.nonEmpty)
+      source.field("token_chars", tokenChars.toArray[String]: _*)
   }
+
+  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenizer = copy(minGram = min, maxGram = max)
+  def tokenChars(tokenChars: Iterable[String]): EdgeNGramTokenizer = copy(tokenChars = tokenChars)
+  def tokenChars(tokenChar: String, rest: String*): EdgeNGramTokenizer = copy(tokenChars = tokenChar +: rest)
 }
 
 case class PathHierarchyTokenizer(override val name: String,
