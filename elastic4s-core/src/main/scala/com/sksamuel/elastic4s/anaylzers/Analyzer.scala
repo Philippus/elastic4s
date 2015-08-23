@@ -102,7 +102,13 @@ case class SnowballAnalyzerDefinition(override val name: String,
   def build(source: XContentBuilder): Unit = {
     source.field("type", "snowball")
     source.field("language", lang)
+    if (stopwords.nonEmpty)
+      source.field("stopwords", stopwords.toArray[String]: _*)
   }
+
+  def language(lang: String): SnowballAnalyzerDefinition = copy(lang = lang)
+  def stopwords(stopwords: Iterable[String]): SnowballAnalyzerDefinition = copy(stopwords = stopwords)
+  def stopwords(stopwords: String, rest: String*): SnowballAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
 case class CustomAnalyzerDefinition(override val name: String,

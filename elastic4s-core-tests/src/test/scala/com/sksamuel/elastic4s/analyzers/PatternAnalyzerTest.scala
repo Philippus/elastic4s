@@ -6,16 +6,20 @@ import org.scalatest.{Matchers, WordSpec}
 class PatternAnalyzerTest extends WordSpec with AnalyzerDsl with Matchers {
 
   "PatternAnalyzer builder" should {
-    "set regex" in {
-      patternAnalyzer("testy", "\\d")
+    "set language" in {
+      snowballAnalyzer("testy")
+        .language("klingon")
         .json
-        .string shouldBe """{"type":"pattern","lowercase":true,"pattern":"\\d"}"""
+        .string shouldBe """{"type":"snowball","language":"klingon"}"""
     }
-    "set lowercase" in {
-      patternAnalyzer("testy", "\\s")
-        .lowercase(true)
+    "set stopwords" in {
+      snowballAnalyzer("testy")
+        .stopwords("a", "b")
         .json
-        .string shouldBe """{"type":"pattern","lowercase":true,"pattern":"\\s"}"""
+        .string shouldBe """{"type":"snowball","language":"English","stopwords":["a","b"]}"""
+    }
+    "not set stopwords if not specified" in {
+      snowballAnalyzer("testy").json.string shouldBe """{"type":"snowball","language":"English"}"""
     }
   }
 }
