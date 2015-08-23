@@ -42,6 +42,7 @@ trait ElasticDsl
   with TermVectorDsl
   with UpdateDsl
   with ValidateDsl
+  with DeprecatedElasticDsl
   with ElasticImplicits {
 
   case object add {
@@ -95,14 +96,6 @@ trait ElasticDsl
   def booleanField(name: String) = field(name).typed(BooleanType)
   def byteField(name: String) = field(name).typed(ByteType)
 
-  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.0")
-  case object by {
-    def score: ScoreSortDefinition = ElasticDsl.score.sort
-    def geo(field: String): GeoDistanceSortDefinition = ElasticDsl.geo sort field
-    def field(field: String): FieldSortDefinition = ElasticDsl.field.sort(field)
-    def script(script: String) = ElasticDsl.script.sort(script)
-  }
-
   case object clear {
     def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
     def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
@@ -138,11 +131,6 @@ trait ElasticDsl
   def clusterStatus = new ClusterStatsDefinition
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
-  @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
-  case object commonGrams {
-    @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
-  }
   def commonGramsTokenFilter(name: String) = CommonGramsTokenFilter(name)
 
   case object completion {
@@ -157,11 +145,6 @@ trait ElasticDsl
     def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
     def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
   }
-
-  @deprecated("use countFrom", "1.6.0")
-  def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-  @deprecated("use countFrom", "1.6.0")
-  def count(indexes: String*): CountDefinition = new CountDefinition(IndexesTypes(indexes))
 
   def countFrom(index: (String, String)): CountDefinition = count from index
   def countFrom(indexes: String*): CountDefinition = count from indexes
@@ -338,8 +321,6 @@ trait ElasticDsl
   trait StatsKeyword
   case object stats extends StatsKeyword
 
-  @deprecated("use index keyword", "1.4.0")
-  def insert: index.type = index
   case object index {
 
     def exists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
@@ -424,22 +405,12 @@ trait ElasticDsl
 
   def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
 
-  @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
-  case object ngram {
-    @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
-  }
+
   def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
 
   def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
 
-  @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
-  case object edgeNGram {
-    @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
-  }
-  @deprecated("prefer the method edgeNGramTokenFilter(\"name\") <-- note capitalization", "2.0.0")
-  def edgeNGramTokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
+  def edgeNGramTokenFilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
 
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
@@ -450,8 +421,7 @@ trait ElasticDsl
     def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
     def index(indexes: String*): OptimizeDefinition = index(indexes)
   }
-  @deprecated("use optimizeIndex", "1.6.2")
-  def optimize(indexes: String*): OptimizeDefinition = new OptimizeDefinition(indexes: _*)
+
   def optimizeIndex(indexes: String*): OptimizeDefinition = optimize index indexes
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
 
@@ -508,11 +478,6 @@ trait ElasticDsl
   }
   def register(id: Any): RegisterExpectsIndex = register id id
 
-  case object repository {
-    @deprecated("use `create repository` instead of `repository create` for a more readable dsl", "1.4.0.Beta2")
-    def create(name: String): CreateRepositoryExpectsType = new CreateRepositoryExpectsType(name)
-  }
-
   case object restore {
     def snapshot(name: String): RestoreSnapshotExpectsFrom = {
       require(name.nonEmpty, "snapshot name must not be null or empty")
@@ -546,35 +511,11 @@ trait ElasticDsl
 
   def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
-  @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
-  case object shingle {
-    @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
-  }
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
-
   def shortField(name: String) = field(name).typed(ShortType)
 
-  @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
-  case object snowball {
-    @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
-  }
   def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
 
-  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
-  case object sortby {
-    def score: ScoreSortDefinition = new ScoreSortDefinition
-    def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
-    def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
-    def script(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
-  }
-
-  @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
-  case object stemmer {
-    @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
-  }
   def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
 
   def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
