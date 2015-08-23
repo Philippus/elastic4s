@@ -92,6 +92,8 @@ case class PatternAnalyzerDefinition(override val name: String,
     source.field("lowercase", lowercase)
     source.field("pattern", regex)
   }
+
+  def lowercase(lowercase: Boolean): PatternAnalyzerDefinition = copy(lowercase = lowercase)
 }
 
 case class SnowballAnalyzerDefinition(override val name: String,
