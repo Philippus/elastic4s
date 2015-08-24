@@ -335,30 +335,40 @@ case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
 }
 
 case class WordDelimiterTokenFilter(name: String,
-                                    generateWordParts: Boolean = true,
-                                    generateNumberParts: Boolean = true,
-                                    catenateWords: Boolean = false,
-                                    catenateNumbers: Boolean = false,
-                                    catenateAll: Boolean = false,
-                                    splitOnCaseChange: Boolean = true,
-                                    preserveOriginal: Boolean = false,
-                                    splitOnNumerics: Boolean = true,
-                                    stemEnglishPossesive: Boolean = true)
+                                    generateWordParts: Option[Boolean] = None,
+                                    generateNumberParts: Option[Boolean] = None,
+                                    catenateWords: Option[Boolean] = None,
+                                    catenateNumbers: Option[Boolean] = None,
+                                    catenateAll: Option[Boolean] = None,
+                                    splitOnCaseChange: Option[Boolean] = None,
+                                    preserveOriginal: Option[Boolean] = None,
+                                    splitOnNumerics: Option[Boolean] = None,
+                                    stemEnglishPossesive: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "word_delimiter"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("generate_word_parts", generateWordParts)
-    source.field("generate_number_parts", generateNumberParts)
-    source.field("catenate_words", catenateWords)
-    source.field("catenate_numbers", catenateNumbers)
-    source.field("catenate_all", catenateAll)
-    source.field("split_on_case_change", splitOnCaseChange)
-    source.field("preserve_original", preserveOriginal)
-    source.field("split_on_numerics", splitOnNumerics)
-    source.field("stem_english_possessive", stemEnglishPossesive)
+    generateWordParts.foreach(source.field("generate_word_parts", _))
+    generateNumberParts.foreach(source.field("generate_number_parts", _))
+    catenateWords.foreach(source.field("catenate_words", _))
+    catenateNumbers.foreach(source.field("catenate_numbers", _))
+    catenateAll.foreach(source.field("catenate_all", _))
+    splitOnCaseChange.foreach(source.field("split_on_case_change", _))
+    preserveOriginal.foreach(source.field("preserve_original", _))
+    splitOnNumerics.foreach(source.field("split_on_numerics", _))
+    stemEnglishPossesive.foreach(source.field("stem_english_possessive", _))
   }
+
+  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateWordParts = Option(bool))
+  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateNumberParts = Option(bool))
+  def catenateWords(bool: Boolean): WordDelimiterTokenFilter = copy(catenateWords = Option(bool))
+  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter = copy(catenateNumbers = Option(bool))
+  def catenateAll(bool: Boolean): WordDelimiterTokenFilter = copy(catenateAll = Option(bool))
+  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnCaseChange = Option(bool))
+  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter = copy(preserveOriginal = Option(bool))
+  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnNumerics = Option(bool))
+  def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = Option(bool))
 }
 
 case class ShingleTokenFilter(name: String,
