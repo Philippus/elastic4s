@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRouting}
-import org.elasticsearch.action.explain.{ExplainRequestBuilder, ExplainResponse}
+import org.elasticsearch.action.explain.{ExplainRequest, ExplainRequestBuilder, ExplainResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client
 
@@ -12,45 +11,48 @@ trait ExplainDsl {
 
   implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse, ExplainResponse] {
     override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
-      injectFuture(c.explain(t.build, _))
+      val builder = t.build(c.prepareExplain(t.index, t.`type`, t.id))
+      injectFuture(builder.execute)
     }
   }
 
-  class ExplainExpectsIndex(id: Any) {
-    def in(indexesTypes: IndexesTypes): ExplainDefinition = new ExplainDefinition(indexesTypes, id)
+  @deprecated("use the non dot free style", "2.0.0")
+  class ExplainExpectsIndex(id: String) {
+    def in(indexesTypes: IndexesTypes): ExplainDefinition = {
+      new ExplainDefinition(indexesTypes.index, indexesTypes.typ.get, id)
+    }
   }
 }
 
-class ExplainDefinition(indexesTypes: IndexesTypes, id: Any)
-  extends DefinitionAttributeRouting
-  with DefinitionAttributePreference {
+case class ExplainDefinition(index: String,
+                             `type`: String,
+                             id: String,
+                             query: Option[QueryDefinition] = None,
+                             fetchSource: Option[Boolean] = None,
+                             parent: Option[String] = None,
+                             preference: Option[String] = None,
+                             routing: Option[String] = None) extends Serializable {
 
-  val _builder = new ExplainRequestBuilder(ProxyClients.client, indexesTypes.index, indexesTypes.typ.get, id.toString)
+  // used by testing to get the full builder without a client
+  private[elastic4s] def request: ExplainRequest = {
+    build(new ExplainRequestBuilder(ProxyClients.client, index, `type`, id)).request()
+  }
 
-  def build = _builder.request
-
-  def query(string: String): this.type = {
-    val q = new QueryStringQueryDefinition(string)
+  def build(builder: ExplainRequestBuilder): ExplainRequestBuilder = {
     // need to set the query on the request - workaround for ES internals
-    _builder.request.source(new QuerySourceBuilder().setQuery(q.builder))
-    _builder.setQuery(q.builder.buildAsBytes)
-    this
+    query.foreach(q => builder.request.source(new QuerySourceBuilder().setQuery(q.builder)))
+    query.foreach(q => builder.setQuery(q.builder))
+    fetchSource.foreach(builder.setFetchSource)
+    parent.foreach(builder.setParent)
+    preference.foreach(builder.setPreference)
+    routing.foreach(builder.setRouting)
+    builder
   }
 
-  def query(block: => QueryDefinition): this.type = {
-    // need to set the query on the request - workaround for ES internals
-    _builder.request.source(new QuerySourceBuilder().setQuery(block.builder))
-    _builder.setQuery(block.builder)
-    this
-  }
-
-  def fetchSource(fetchSource: Boolean): this.type = {
-    _builder.setFetchSource(fetchSource)
-    this
-  }
-
-  def parent(parent: String): this.type = {
-    _builder.setParent(parent)
-    this
-  }
+  def query(string: String): ExplainDefinition = query(new QueryStringQueryDefinition(string))
+  def query(block: => QueryDefinition): ExplainDefinition = copy(query = Option(block))
+  def fetchSource(fetchSource: Boolean): ExplainDefinition = copy(fetchSource = Option(fetchSource))
+  def parent(parent: String): ExplainDefinition = copy(parent = Option(parent))
+  def preference(preference: String): ExplainDefinition = copy(preference = Option(preference))
+  def routing(routing: String): ExplainDefinition = copy(routing = Option(routing))
 }

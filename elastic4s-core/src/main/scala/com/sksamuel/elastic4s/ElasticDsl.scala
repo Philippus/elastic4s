@@ -74,7 +74,7 @@ trait ElasticDsl
     def filters(name: String) = new FiltersAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def geohash(name:String) = new GeoHashGridAggregationDefinition(name)
+    def geohash(name: String) = new GeoHashGridAggregationDefinition(name)
     def global(name: String) = new GlobalAggregationDefinition(name)
     def histogram(name: String) = new HistogramAggregation(name)
     def ipRange(name: String) = new IpRangeAggregationDefinition(name)
@@ -224,10 +224,12 @@ trait ElasticDsl
   def deleteMapping(indexes: String*) = DeleteMappingDefinition(indexes)
   def deleteMapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
 
+  @deprecated("use explain(index, type, id).query(query)...", "2.0.")
   case object explain {
-    def id(id: Any): ExplainExpectsIndex = new ExplainExpectsIndex(id)
+    def id(id: String): ExplainExpectsIndex = new ExplainExpectsIndex(id)
   }
-  def explain(id: Any): ExplainExpectsIndex = explain id id
+
+  def explain(index: String, `type`: String, id: String) = ExplainDefinition(index, `type`, id)
 
   case object field extends TypeableFields {
     val name = ""
@@ -261,7 +263,6 @@ trait ElasticDsl
     def sort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
   }
   def geoSort(name: String): GeoDistanceSortDefinition = geo sort name
-
 
   def completionField(name: String) = field(name).typed(CompletionType)
 

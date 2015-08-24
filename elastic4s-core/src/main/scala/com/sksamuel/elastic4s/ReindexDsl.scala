@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.StringDocumentSource
+import com.sksamuel.elastic4s.source.JsonDocumentSource
 import org.elasticsearch.client.Client
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ trait ReindexDsl {
               val indexReqs = response.hits.map(hit => (hit.`type`, hit.id, hit.sourceAsString)).collect {
                 case (typ, _id, source) =>
                   val expr = index into d.targetIndex -> typ
-                  (if (d.preserveId) expr id _id else expr) doc StringDocumentSource(source)
+                  (if (d.preserveId) expr id _id else expr) doc JsonDocumentSource(source)
               }
               BulkDefinitionExecutable.apply(
                 client,

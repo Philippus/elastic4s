@@ -7,11 +7,11 @@ import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.time.SpanSugar._
 
 class ExplainTest
-    extends FlatSpec
-    with ElasticSugar
-    with Eventually
-    with ElasticMatchers
-    with ScalaFutures {
+  extends FlatSpec
+  with ElasticSugar
+  with Eventually
+  with ElasticMatchers
+  with ScalaFutures {
 
   override implicit def patienceConfig = PatienceConfig(timeout = 10 seconds, interval = 1 seconds)
 
@@ -24,34 +24,23 @@ class ExplainTest
 
   "an explain request" should "explain a matching document" in {
 
-    val response = client.execute {
-      explain id 8 in "queens/england" query termQuery("name", "qe2")
-    }.await
-
-    response.isMatch shouldBe true
-
-    val futureResponse = client.execute {
-      explain id 8 in "queens/england" query termQuery("name", "qe2")
+    val f = client.execute {
+      explain("queens", "england", "8") query termQuery("name", "qe2")
     }
 
-    whenReady(futureResponse) { response =>
+    whenReady(f) { response =>
+      response.getGetResult
       response.isMatch shouldBe true
     }
   }
 
   it should "explain a not matching document" in {
 
-    val response = client.execute {
-      explain id 24 in "queens/england" query termQuery("name", "qe2")
-    }.await
-
-    response.isMatch shouldBe false
-
-    val futureResponse = client.execute {
-      explain id 24 in "queens/england" query termQuery("name", "qe2")
+    val f = client.execute {
+      explain("queens", "england", "24") query termQuery("name", "qe2")
     }
 
-    whenReady(futureResponse) { response =>
+    whenReady(f) { response =>
       response.isMatch shouldBe false
     }
   }
