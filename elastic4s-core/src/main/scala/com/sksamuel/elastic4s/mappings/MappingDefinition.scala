@@ -9,6 +9,7 @@ class MappingDefinition(val `type`: String) {
 
   var _all: Option[Boolean] = None
   var _source: Option[Boolean] = None
+  var _sourceExcludes: Iterable[String] = Nil
   var date_detection: Option[Boolean] = None
   var numeric_detection: Option[Boolean] = None
   var _size: Option[Boolean] = None
@@ -112,6 +113,11 @@ class MappingDefinition(val `type`: String) {
     this
   }
 
+  def sourceExcludes(excludes:String*)= {
+    this._sourceExcludes = excludes
+    this
+  }
+
   def dateDetection(date_detection: Boolean): this.type = {
     this.date_detection = Some(date_detection)
     this
@@ -161,7 +167,11 @@ class MappingDefinition(val `type`: String) {
   def build(json: XContentBuilder): Unit = {
 
     for (all <- _all) json.startObject("_all").field("enabled", all).endObject()
-    for (source <- _source) json.startObject("_source").field("enabled", source).endObject()
+    (_source, _sourceExcludes) match{
+      case (_, l) if l.nonEmpty => json.startObject("_source").field("excludes", l.toArray:_*).endObject()
+      case (Some(source), _) => json.startObject("_source").field("enabled", source).endObject()
+      case _ =>
+    }
 
     if (dynamic_date_formats.nonEmpty)
       json.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
