@@ -296,6 +296,7 @@ case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
     source.field("max_gram", maxGram)
   }
 
+  def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min, maxGram = max)
   def minGram(min: Int): NGramTokenFilter = copy(minGram = min)
   def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max)
 }
