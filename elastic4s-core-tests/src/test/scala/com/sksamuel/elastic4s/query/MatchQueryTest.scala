@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s
 package query
 
-import org.elasticsearch.index.query.MatchQueryBuilder
-import org.scalatest.WordSpec
-import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.index.query.MatchQueryBuilder
+import org.scalatest.{Matchers, WordSpec}
 
-class MatchQueryTest extends WordSpec with MockitoSugar with ElasticSugar with ElasticDsl {
+class MatchQueryTest extends WordSpec with Matchers with ElasticSugar  {
+
+  import ElasticDsl._
 
   client.execute {
     bulk(
@@ -25,7 +26,7 @@ class MatchQueryTest extends WordSpec with MockitoSugar with ElasticSugar with E
           matchQuery("_all", "vulture dynamics").operator(MatchQueryBuilder.Operator.AND)
         }
       }.await
-      assert(resp.getHits.totalHits === 1l)
+      resp.totalHits shouldBe 1l
     }
   }
 }

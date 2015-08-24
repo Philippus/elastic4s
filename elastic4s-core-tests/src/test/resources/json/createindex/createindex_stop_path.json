@@ -113,7 +113,6 @@
           "type": "word_delimiter",
           "generate_word_parts": true,
           "generate_number_parts": true,
-          "catenate_words": false,
           "catenate_numbers": false,
           "catenate_all": false,
           "split_on_case_change": true,
@@ -129,7 +128,6 @@
         },
         "myTokenFilter1": {
           "type": "stop",
-          "stopwords": [],
           "enable_position_increments": true,
           "ignore_case": true
         },

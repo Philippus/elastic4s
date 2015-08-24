@@ -5,6 +5,15 @@ import org.elasticsearch.client.Client
 
 import scala.concurrent.{Future, Promise}
 
+/**
+* Typeclass to execute a search for a given type of Elasticsearch request.
+*
+* @tparam T is the elastic4s request definition type
+* @tparam R is the type returned by the Elasticsearch java client for this type.
+* @tparam Q is the type returned by Elastic4s to the user for this request type.
+*           If the particular implementation of this typeclass doesn't return a pimped/scala/rich response type,
+*           then R and Q will be the same.
+*/
 trait Executable[T, R, Q] {
 
   protected def injectFutureAndMap(f: ActionListener[R] => Any)(mapFn: R => Q): Future[Q] = {

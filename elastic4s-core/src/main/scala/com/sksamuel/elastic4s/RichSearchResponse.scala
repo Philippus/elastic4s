@@ -10,38 +10,38 @@ import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchSh
 
 import scala.concurrent.duration._
 
-case class RichSearchResponse(response: SearchResponse) {
+case class RichSearchResponse(original: SearchResponse) extends AnyVal {
 
-  def totalHits: Long = response.getHits.getTotalHits
-  def maxScore: Float = response.getHits.getMaxScore
+  def totalHits: Long = original.getHits.getTotalHits
+  def maxScore: Float = original.getHits.getMaxScore
 
-  def hits: Array[RichSearchHit] = response.getHits.getHits.map(new RichSearchHit(_))
+  def hits: Array[RichSearchHit] = original.getHits.getHits.map(new RichSearchHit(_))
 
   @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
-  def scrollId: String = response.getScrollId
+  def scrollId: String = original.getScrollId
 
-  def totalShards: Int = response.getTotalShards
-  def successfulShards: Int = response.getSuccessfulShards
-  def shardFailures: Array[ShardSearchFailure] = Option(response.getShardFailures).getOrElse(Array.empty)
+  def totalShards: Int = original.getTotalShards
+  def successfulShards: Int = original.getSuccessfulShards
+  def shardFailures: Array[ShardSearchFailure] = Option(original.getShardFailures).getOrElse(Array.empty)
 
-  def tookInMillis: Long = response.getTookInMillis
-  def took: Duration = response.getTookInMillis.millis
+  def tookInMillis: Long = original.getTookInMillis
+  def took: Duration = original.getTookInMillis.millis
 
-  def facets: Facets = response.getFacets
-  def aggregations: Aggregations = response.getAggregations
+  def facets: Facets = original.getFacets
+  def aggregations: Aggregations = original.getAggregations
 
   def isEmpty: Boolean = hits.isEmpty
 
-  def suggest: SuggestResult = SuggestResult(response.getSuggest)
+  def suggest: SuggestResult = SuggestResult(original.getSuggest)
   def suggestions = suggest.suggestions
   def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
   def suggestion[A](sd: SuggestionDefinition): sd.R = suggestion(sd.name).asInstanceOf[sd.R]
 
-  def isTimedOut: Boolean = response.isTimedOut
-  def isTerminatedEarly: Boolean = response.isTerminatedEarly
+  def isTimedOut: Boolean = original.isTimedOut
+  def isTerminatedEarly: Boolean = original.isTerminatedEarly
 }
 
 class RichSearchHit(hit: SearchHit) {
