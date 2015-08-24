@@ -148,31 +148,26 @@ case class LimitTokenFilter(name: String,
 
 case class StopTokenFilter(name: String,
                            stopwords: Iterable[String] = Nil,
-                           enablePositionIncrements: Boolean = false, // ignored now as of 1.4.0
-                           ignoreCase: Boolean = false)
+                           enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
+                           removeTrailing: Option[Boolean] = None,
+                           ignoreCase: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "stop"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("stopwords", stopwords.toArray[String]: _*)
-    if (enablePositionIncrements) source.field("enable_position_increments", enablePositionIncrements)
-    if (ignoreCase) source.field("ignore_case", ignoreCase)
+    if (stopwords.nonEmpty)
+      source.field("stopwords", stopwords.toArray[String]: _*)
+    enablePositionIncrements.foreach(source.field("enable_position_increments", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
+    removeTrailing.foreach(source.field("remove_trailing", _))
   }
-}
 
-case class NamedStopTokenFilter(name: String, stopwords: String,
-                                enablePositionIncrements: Boolean = true,
-                                ignoreCase: Boolean = false)
-  extends TokenFilterDefinition {
-
-  val filterType = "stop"
-
-  override def build(source: XContentBuilder): Unit = {
-    source.field("stopwords", stopwords)
-    source.field("enable_position_increments", enablePositionIncrements)
-    if (ignoreCase) source.field("ignore_case", ignoreCase)
-  }
+  def ignoreCase(boolean: Boolean): StopTokenFilter = copy(ignoreCase = Option(boolean))
+  def removeTrailing(boolean: Boolean): StopTokenFilter = copy(removeTrailing = Option(boolean))
+  def enablePositionIncrements(boolean: Boolean): StopTokenFilter = copy(enablePositionIncrements = Option(boolean))
+  def stopwords(stopwords: Iterable[String]): StopTokenFilter = copy(stopwords = stopwords)
+  def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
 }
 
 object NamedStopTokenFilter {

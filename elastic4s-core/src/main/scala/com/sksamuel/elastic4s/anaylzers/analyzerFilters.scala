@@ -12,6 +12,7 @@ trait AnalyzerFilterDefinition {
   def json: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder
     builder.startObject()
+    builder.field("type", filterType)
     build(builder)
     builder.endObject()
     builder

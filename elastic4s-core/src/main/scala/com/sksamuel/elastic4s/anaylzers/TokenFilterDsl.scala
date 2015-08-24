@@ -6,5 +6,6 @@ trait TokenFilterDsl {
   def edgeNGramTokenFilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
   def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
+  def stopTokenFilter(name: String): StopTokenFilter = StopTokenFilter(name)
   def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
 }

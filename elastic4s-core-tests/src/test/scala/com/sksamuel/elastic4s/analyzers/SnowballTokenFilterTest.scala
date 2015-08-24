@@ -7,7 +7,7 @@ class SnowballTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers
 
   "SnowballTokenFilter builder" should {
     "set language" in {
-      snowballTokenFilter("testy").lang("vulcan").json.string shouldBe """{"language":"vulcan"}"""
+      snowballTokenFilter("testy").lang("vulcan").json.string shouldBe """{"type":"snowball","language":"vulcan"}"""
     }
   }
 }

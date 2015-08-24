@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.anaylzers.{ShingleTokenFilter, StemmerTokenFilter, SnowballTokenFilter, NGramTokenFilter, EdgeNGramTokenFilter, CommonGramsTokenFilter}
-import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
+import com.sksamuel.elastic4s.anaylzers.{StemmerTokenFilter, SnowballTokenFilter, ShingleTokenFilter, TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
+import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
+import com.sksamuel.elastic4s.mappings.{ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, GetMappingDefinition, DeleteMappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -14,6 +14,7 @@ import scala.concurrent.{Await, Future}
 trait ElasticDsl
   extends IndexDsl
   with AliasesDsl
+  with AnalyzerDsl
   with BulkDsl
   with ClusterDsl
   with CountDsl
@@ -40,6 +41,8 @@ trait ElasticDsl
   with ScrollDsl
   with SnapshotDsl
   with TermVectorDsl
+  with TokenizerDsl
+  with TokenFilterDsl
   with UpdateDsl
   with ValidateDsl
   with DeprecatedElasticDsl
@@ -130,8 +133,6 @@ trait ElasticDsl
   @deprecated("use clusterStats", "1.6.1")
   def clusterStatus = new ClusterStatsDefinition
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
-
-  def commonGramsTokenFilter(name: String) = CommonGramsTokenFilter(name)
 
   case object completion {
     def suggestion(name: String) = new CompletionSuggestionDefinition(name)
@@ -405,12 +406,7 @@ trait ElasticDsl
 
   def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
 
-
-  def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
-
   def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
-
-  def edgeNGramTokenFilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
 
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
@@ -511,13 +507,7 @@ trait ElasticDsl
 
   def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
-  def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
   def shortField(name: String) = field(name).typed(ShortType)
-
-  def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
-
-  def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
-
   def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
 
   def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
