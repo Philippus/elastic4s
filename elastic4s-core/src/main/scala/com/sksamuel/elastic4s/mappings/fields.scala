@@ -24,13 +24,6 @@ case class DeleteMappingDefinition(indexes: Iterable[String]) {
 
 sealed abstract class DynamicMapping
 
-@deprecated("Use DynamicMapping.Strict", "1.5.5")
-case object Strict extends DynamicMapping
-@deprecated("Use DynamicMapping.Dynamic", "1.5.5")
-case object Dynamic extends DynamicMapping
-@deprecated("Use DynamicMapping.False", "1.5.5")
-case object False extends DynamicMapping
-
 object DynamicMapping {
   case object Strict extends DynamicMapping
   case object Dynamic extends DynamicMapping

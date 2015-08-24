@@ -131,9 +131,6 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  @deprecated("Use postFilter as a direct replacement keyword. Filter was removed in elasticsearch.", "1.5")
-  def filter(filter: FilterDefinition): this.type = postFilter(filter)
-
   def postFilter(block: => FilterDefinition): this.type = {
     _builder.setPostFilter(block.builder)
     this

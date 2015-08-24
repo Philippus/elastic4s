@@ -680,7 +680,7 @@ class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefi
 
   def sort(sorts: SortDefinition*): this.type = sort2(sorts.map(_.builder): _*)
   def sort2(sorts: SortBuilder*): this.type = {
-    sorts.foreach(builder addSort)
+    sorts.foreach(builder.addSort)
     this
   }
 

@@ -181,8 +181,8 @@ class MappingDefinition(val `type`: String) {
 
     _dynamic.foreach(dynamic => {
       json.field("dynamic", dynamic match {
-        case Strict | DynamicMapping.Strict => "strict"
-        case False | DynamicMapping.False => "false"
+        case DynamicMapping.Strict => "strict"
+        case DynamicMapping.False => "false"
         case _ => "dynamic"
       })
     })
