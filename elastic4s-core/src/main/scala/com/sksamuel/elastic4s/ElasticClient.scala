@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
@@ -30,7 +29,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client,
   def java: Client = client
   def admin: AdminClient = client.admin
 
-  override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse] = {
+  override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[RichSearchResponse] = {
     IterableSearch(this).iterateSearch(query)
   }
 }
@@ -95,7 +94,7 @@ object ElasticClient {
   def transport(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
     for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
-    fromClient(client)
+      fromClient(client)
   }
   @deprecated("use transport instead of remote", "2.0.0")
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)

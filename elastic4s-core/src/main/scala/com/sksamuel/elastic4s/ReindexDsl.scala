@@ -29,9 +29,8 @@ trait ReindexDsl {
             client,
             search scroll scrollId keepAlive d.keepAlive
           ) flatMap { response =>
-            val hits = response.getHits.hits
-            if (hits.nonEmpty) {
-              val indexReqs = hits.map(hit => (hit.`type`, hit.getId, hit.sourceAsString)).collect {
+            if (response.nonEmpty) {
+              val indexReqs = response.hits.map(hit => (hit.`type`, hit.id, hit.sourceAsString)).collect {
                 case (typ, _id, source) =>
                   val expr = index into d.targetIndex -> typ
                   (if (d.preserveId) expr id _id else expr) doc StringDocumentSource(source)
@@ -39,14 +38,14 @@ trait ReindexDsl {
               BulkDefinitionExecutable.apply(
                 client,
                 ElasticDsl.bulk(indexReqs)
-              ) flatMap (_ => _scroll(response.getScrollId))
+              ) flatMap (_ => _scroll(response.scrollId))
             } else {
               Future.successful(())
             }
           }
         }
 
-        val scrollId = response.getScrollId
+        val scrollId = response.scrollId
         _scroll(scrollId)
       }
     }

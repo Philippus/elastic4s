@@ -3,11 +3,10 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.{ FlatSpec, Matchers }
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 /** @author Stephen Samuel */
-class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar with ElasticSugar {
+class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar {
 
   client.execute {
     bulk(
@@ -27,7 +26,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
     val resp = client.execute {
       get id 8 from "beer/lager"
     }.await
-    assert("8" === resp.getId)
+    resp.id shouldBe "8"
   }
 
   it should "retrieve a document asynchronously by id" in {
@@ -38,7 +37,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
     whenReady(resp) { result =>
       result.isExists should be(true)
-      result.getId shouldBe "8"
+      result.id shouldBe "8"
     }
   }
 
@@ -50,9 +49,9 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
     whenReady(resp) { result =>
       result.isExists should be(true)
-      result.getId shouldBe "8"
-      result.getSource should not be null
-      result.getFields should have size 0
+      result.id shouldBe "8"
+      result.source should not be null
+      result.fields should have size 0
     }
   }
 
@@ -64,9 +63,9 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
     whenReady(resp) { result =>
       result.isExists should be(true)
-      result.getId shouldBe "8"
-      result.getSource should be(null)
-      result.getFields should have size 0
+      result.id shouldBe "8"
+      result.source should be(null)
+      result.fields should have size 0
     }
   }
 
@@ -78,9 +77,9 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
     whenReady(resp) { result =>
       result.isExists should be(true)
-      result.getId shouldBe "8"
-      result.getSource should be(null)
-      result.getFields should (contain key "name" and not contain key("brand"))
+      result.id shouldBe "8"
+      result.source should be(null)
+      result.fields should (contain key "name" and not contain key("brand"))
     }
   }
 
@@ -92,9 +91,9 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
 
     whenReady(resp) { result =>
       result.isExists should be(true)
-      result.getId shouldBe "4"
-      result.getSource should not be null
-      result.getFields should (contain key "name" and not contain key("brand"))
+      result.id shouldBe "4"
+      result.source should not be null
+      result.fields should (contain key "name" and not contain key("brand"))
     }
   }
 
@@ -116,7 +115,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with MockitoSugar
       get id 4 from "beer/lager" fields "ingredients"
     }
     whenReady(resp) {
-      result => println(result.getField("ingredients").getValues.asScala)
+      result => println(result.field("ingredients").getValues.asScala)
     }
   }
 

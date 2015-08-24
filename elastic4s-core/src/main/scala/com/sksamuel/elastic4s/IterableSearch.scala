@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.SearchHit
 
 import scala.concurrent.duration.Duration
@@ -23,14 +22,14 @@ trait IterableSearch {
    * @param query $QUERY
    * @return $ONDEMAND_ITERATOR
    */
-  def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse]
+  def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[RichSearchResponse]
 
   /**
    *
    * @param queries $QUERY
    * @return $ONDEMAND_ITERATOR
    */
-  def iterateSearch(queries: Iterable[SearchDefinition])(implicit timeout: Duration): Iterator[SearchResponse] = {
+  def iterateSearch(queries: Iterable[SearchDefinition])(implicit timeout: Duration): Iterator[RichSearchResponse] = {
     queries.iterator.flatMap(iterateSearch)
   }
 
@@ -43,9 +42,9 @@ trait IterableSearch {
    * @return $ONDEMAND_ITERATOR
    */
   def iterateSearch(
-                     firstQuery : SearchDefinition,
-                     secondQuery : SearchDefinition,
-                     theRest : SearchDefinition*)(implicit timeout: Duration): Iterator[SearchResponse] = {
+                     firstQuery: SearchDefinition,
+                     secondQuery: SearchDefinition,
+                     theRest: SearchDefinition*)(implicit timeout: Duration): Iterator[RichSearchResponse] = {
     iterateSearch(firstQuery +: secondQuery +: theRest)
   }
 
@@ -53,7 +52,7 @@ trait IterableSearch {
     * @param query $QUERY
     * @return $ONDEMAND_ITERATOR
     */
-  def iterate(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchHit] = {
+  def iterate(query: SearchDefinition)(implicit timeout: Duration): Iterator[RichSearchHit] = {
     iterate(query :: Nil)
   }
 
@@ -61,38 +60,38 @@ trait IterableSearch {
    * @param queries $QUERY
    * @return $ONDEMAND_ITERATOR
    */
-  def iterate(queries: Iterable[SearchDefinition])(implicit timeout: Duration): Iterator[SearchHit] = {
-    iterateSearch(queries).flatMap(_.getHits.getHits)
+  def iterate(queries: Iterable[SearchDefinition])(implicit timeout: Duration): Iterator[RichSearchHit] = {
+    iterateSearch(queries).flatMap(_.hits)
   }
 
 }
-
 
 object IterableSearch {
 
   private class ElasticIterable(client: ElasticClient, keepAlive: String) extends IterableSearch {
 
-    override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[SearchResponse] = {
+    override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[RichSearchResponse] = {
       iterateNext(query, keepAlive, None)
     }
 
-    private def iterateNext(searchDef: SearchDefinition, keepAlive: String, scrollId: Option[String])(implicit timeout: Duration): Iterator[SearchResponse] = {
-      def next(future: Future[SearchResponse]): Iterator[SearchResponse] = {
+    private def iterateNext(searchDef: SearchDefinition, keepAlive: String, scrollId: Option[String])
+                           (implicit timeout: Duration): Iterator[RichSearchResponse] = {
+      def next(future: Future[RichSearchResponse]): Iterator[RichSearchResponse] = {
         val response = Await.result(future, timeout)
-        val hits = response.getHits.getHits
+        val hits = response.hits
 
-        if (hits.isEmpty || response.getScrollId == null) {
+        if (hits.isEmpty || response.scrollIdOpt.isEmpty) {
           Iterator.empty
         } else {
-          Iterator(response) ++ iterateNext(searchDef, keepAlive, Option(response.getScrollId))
+          Iterator(response) ++ iterateNext(searchDef, keepAlive, response.scrollIdOpt)
         }
       }
 
       import ElasticDsl._
 
       // we're either advancing a scroll id or issuing the first query w/ the keep alive set
-      val future: Future[SearchResponse] = scrollId.fold(client.execute(searchDef.scroll(keepAlive))) { scrollId =>
-        client.execute(search scroll scrollId keepAlive (keepAlive))
+      val future: Future[RichSearchResponse] = scrollId.fold(client.execute(searchDef.scroll(keepAlive))) { scrollId =>
+        client.execute(search scroll scrollId keepAlive keepAlive)
       }
 
       next(future)
@@ -110,6 +109,5 @@ object IterableSearch {
   def apply(client: ElasticClient, keepAlive: String = "5m"): IterableSearch = {
     new ElasticIterable(client, keepAlive)
   }
-
 
 }

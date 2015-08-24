@@ -8,11 +8,11 @@ import scala.concurrent.duration.FiniteDuration
 
 trait ScrollDsl {
 
-  implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, SearchResponse] {
-    override def apply(client: Client, s: SearchScrollDefinition): Future[SearchResponse] = {
+  implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, RichSearchResponse] {
+    override def apply(client: Client, s: SearchScrollDefinition): Future[RichSearchResponse] = {
       val request = client.prepareSearchScroll(s.id)
       s._keepAlive.foreach(request.setScroll)
-      injectFuture(request.execute)
+      injectFutureAndMap(request.execute)(RichSearchResponse)
     }
   }
 

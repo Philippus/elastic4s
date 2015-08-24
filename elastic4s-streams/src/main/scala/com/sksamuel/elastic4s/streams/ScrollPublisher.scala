@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
+import com.sksamuel.elastic4s.{RichSearchResponse, ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
 import org.elasticsearch.ElasticsearchException
-import org.elasticsearch.action.search.SearchResponse
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
 import scala.collection.mutable
@@ -135,7 +134,7 @@ class PublishActor(client: ElasticClient,
       require(queue.isEmpty) // must be empty or why did we not send it before switching to this mode?
       stash()
     // handle when the es request dies
-    case Success(resp: SearchResponse) if resp.isTimedOut =>
+    case Success(resp: RichSearchResponse) if resp.isTimedOut =>
       s.onError(new ElasticsearchException("Request terminated early or timed out"))
       context.stop(self)
     // if the request to elastic failed we will terminate the subscription
@@ -143,12 +142,12 @@ class PublishActor(client: ElasticClient,
       s.onError(t)
       context.stop(self)
     // if we had no results from ES then we have nothing left to publish and our work here is done
-    case Success(resp: SearchResponse) if resp.isEmpty =>
+    case Success(resp: RichSearchResponse) if resp.isEmpty =>
       s.onComplete()
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
-    case Success(resp: SearchResponse) =>
-      scrollId = resp.getScrollId
+    case Success(resp: RichSearchResponse) =>
+      scrollId = resp.scrollId
       queue.enqueue(resp.hits: _*)
       context become ready
       unstashAll()

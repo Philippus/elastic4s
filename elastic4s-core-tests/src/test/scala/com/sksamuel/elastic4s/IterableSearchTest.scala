@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl.{index, _}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import concurrent.duration._
@@ -59,7 +58,7 @@ class IterableSearchTest extends WordSpec with MockitoSugar with ElasticSugar wi
       // assert the iterable makes queries on-demand and produced the correct amount of results
       // make a normal query to get our expected hits
       // ------------------------------------------------------------------------------------------------
-      val expectedHits = client.execute(query).await.getHits.getTotalHits
+      val expectedHits = client.execute(query).await.totalHits
       expectedHits shouldBe expectedRecords // our query should retrieve the records we put in
 
       // let's keep track of all the results in a lazy stream (so we can call .size)

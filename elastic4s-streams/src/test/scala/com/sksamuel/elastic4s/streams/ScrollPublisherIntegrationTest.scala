@@ -15,6 +15,9 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 
+  val indexName = getClass.getSimpleName.toLowerCase
+  val indexType = "emperor"
+
   implicit val system = ActorSystem()
 
   val emperors = Array(
@@ -39,24 +42,24 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
     Item("Diocletion")
   )
 
-  implicit object RichSearchHitRequestBuilder$ extends RequestBuilder[RichSearchHit] {
+  implicit object RichSearchHitRequestBuilder extends RequestBuilder[RichSearchHit] {
     override def request(hit: RichSearchHit): IndexDefinition = {
-      index into "scrollpubint" / "emperor" source hit.sourceAsString
+      index into indexName / indexType source hit.sourceAsString
     }
   }
 
-  ensureIndexExists("scrollpubint")
+  ensureIndexExists(indexName)
 
   client.execute {
-    bulk(emperors.map(index into "scrollpubint" / "emperors" source _))
+    bulk(emperors.map(index into indexName / indexType source _))
   }.await
 
-  blockUntilCount(emperors.length, "scrollpubint")
+  blockUntilCount(emperors.length, indexName)
 
   "elastic-streams" should {
     "publish all data from the index" in {
 
-      val publisher = client.publisher(search in "scrollpubint" / "emperors" query "*:*" scroll "1m")
+      val publisher = client.publisher(search in indexName / indexType query "*:*" scroll "1m")
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch = new CountDownLatch(emperors.length)
