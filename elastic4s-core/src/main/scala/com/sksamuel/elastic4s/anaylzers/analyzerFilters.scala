@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.anaylzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 trait AnalyzerFilter {
   def name: String
@@ -9,6 +9,13 @@ trait AnalyzerFilter {
 trait AnalyzerFilterDefinition {
   def filterType: String
   protected[elastic4s] def build(source: XContentBuilder): Unit
+  def json: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder
+    builder.startObject()
+    build(builder)
+    builder.endObject()
+    builder
+  }
 }
 
 trait CharFilter extends AnalyzerFilter
