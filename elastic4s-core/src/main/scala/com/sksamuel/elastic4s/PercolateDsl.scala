@@ -13,33 +13,7 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
 
-  @deprecated("Use the `register id X into Y` syntax", "1.4.1")
-  implicit def any2register(id: AnyVal): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id.toString)
-
-  @deprecated("Use the `register id X into Y` syntax", "1.4.1")
-  implicit def string2register(id: String): RegisterExpectsIndexImplicit = new RegisterExpectsIndexImplicit(id)
-
-  @deprecated("Use the `percolate in X`", "1.4.1")
-  implicit def string2percolate(index: String): PercolateDefinitionImplicit = new
-      PercolateDefinitionImplicit(IndexesTypes(index))
-
-  class PercolateDefinitionImplicit(indexType: IndexesTypes) extends PercolateDefinition(indexType) {
-    @deprecated("Use the percolate in X", "1.4.1")
-    override def doc(fields: (String, Any)*): PercolateDefinition = super.doc(fields: _*)
-    @deprecated("Use the percolate in X", "1.4.1")
-    override def doc(fields: Map[String, Any]): PercolateDefinition = super.doc(fields)
-    @deprecated("Use the percolate in X", "1.4.1")
-    override def query(string: String): PercolateDefinition = super.query(string)
-    @deprecated("Use the percolate in X", "1.4.1")
-    override def query(block: => QueryDefinition): PercolateDefinition = super.query(block)
-  }
-
   class RegisterExpectsIndex(id: String) {
-    def into(index: String) = new RegisterDefinition(index, id)
-  }
-
-  class RegisterExpectsIndexImplicit(id: String) {
-    @deprecated("Use the register id X into Y syntax", "1.4.0")
     def into(index: String) = new RegisterDefinition(index, id)
   }
 
