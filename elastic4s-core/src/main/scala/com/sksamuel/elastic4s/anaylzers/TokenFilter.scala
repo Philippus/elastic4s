@@ -259,12 +259,14 @@ case class CommonGramsTokenFilter(name: String,
   val filterType = "common_grams"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("common_words", commonWords.toArray[String]: _*)
+    if (commonWords.nonEmpty)
+      source.field("common_words", commonWords.toArray[String]: _*)
     source.field("ignore_case", ignoreCase)
     source.field("query_mode", queryMode)
   }
 
   def commonWords(words: Iterable[String]): CommonGramsTokenFilter = copy(commonWords = words)
+  def commonWords(first: String, rest: String*): CommonGramsTokenFilter = copy(commonWords = first +: rest)
   def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase)
   def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode)
 }
