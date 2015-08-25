@@ -32,7 +32,9 @@ import scala.util.{Failure, Success}
 class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
                                                  builder: RequestBuilder[T],
                                                  listener: ResponseListener,
-                                                 batchSize: Int, concurrentRequests: Int,
+                                                 batchSize: Int,
+                                                 concurrentRequests: Int,
+                                                 refreshAfterOp: Boolean,
                                                  completionFn: () => Unit,
                                                  errorFn: Throwable => Unit,
                                                  flushInterval: Option[FiniteDuration])
@@ -44,7 +46,16 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
     if (s == null) throw new NullPointerException()
     if (actor == null) {
       actor = system.actorOf(
-        Props(new BulkActor(client, builder, s, batchSize, concurrentRequests, listener, completionFn, errorFn, flushInterval))
+        Props(new BulkActor(client,
+          builder,
+          s,
+          batchSize,
+          concurrentRequests,
+          refreshAfterOp,
+          listener,
+          completionFn,
+          errorFn,
+          flushInterval))
       )
       s.request(batchSize * concurrentRequests)
     } else {
@@ -79,6 +90,7 @@ class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
                    batchSize: Int,
                    concurrentRequests: Int,
+                   refreshAfterOp: Boolean,
                    listener: ResponseListener,
                    completionFn: () => Unit,
                    errorFn: Throwable => Unit,
@@ -150,7 +162,7 @@ class BulkActor[T](client: ElasticClient,
 
   private def index(): Unit = {
     pending = pending + buffer.size
-    client.execute(bulk(buffer.map(builder.request))).onComplete {
+    client.execute(bulk(buffer.map(builder.request)).refresh(refreshAfterOp)).onComplete {
       case Failure(e) => self ! e
       case Success(resp) => self ! resp
     }

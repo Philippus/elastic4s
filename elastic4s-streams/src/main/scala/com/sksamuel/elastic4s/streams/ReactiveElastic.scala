@@ -14,12 +14,21 @@ object ReactiveElastic {
 
     def subscriber[T](batchSize: Int = 100,
                       concurrentRequests: Int = 5,
+                      refreshAfterOp: Boolean = false,
                       listener: ResponseListener = ResponseListener.noop,
                       completionFn: () => Unit = () => (),
                       errorFn: Throwable => Unit = _ => (),
                       flushInterval: Option[FiniteDuration] = None)
                      (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
-      new BulkIndexingSubscriber[T](client, builder, listener, batchSize, concurrentRequests, completionFn, errorFn, flushInterval)
+      new BulkIndexingSubscriber[T](client,
+        builder,
+        listener,
+        batchSize,
+        concurrentRequests,
+        refreshAfterOp,
+        completionFn,
+        errorFn,
+        flushInterval)
     }
 
     def publisher(indexType: IndexType, elements: Long = Long.MaxValue, keepAlive: String = "1m")
