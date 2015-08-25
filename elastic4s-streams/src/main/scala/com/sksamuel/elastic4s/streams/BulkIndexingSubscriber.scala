@@ -22,6 +22,7 @@ import scala.util.{Failure, Success}
  * @param listener a listener which is notified on each acknowledge batch item
  * @param batchSize the number of elements to group together per batch aside from the last batch
  * @param concurrentRequests the number of concurrent batch operations
+ * @param refreshAfterOp if the index should be refreshed after each bulk operation
  * @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
  * @param errorFn a function which is invoked when there is an error
  * @param flushInterval used to schedule periodic bulk indexing. Use it when the publisher will never complete.

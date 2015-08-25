@@ -33,7 +33,15 @@ class BulkIndexingSubscriberWhiteboxTest
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {
-    new BulkIndexingSubscriber[Item](client, ItemRequestBuilder, ResponseListener.noop, 10, 2, () => (), _ => (), None) {
+    new BulkIndexingSubscriber[Item](client,
+      ItemRequestBuilder,
+      ResponseListener.noop,
+      10,
+      2,
+      false,
+      () => (),
+      _ => (),
+      None) {
 
       override def onSubscribe(s: Subscription): Unit = {
         super.onSubscribe(s)
