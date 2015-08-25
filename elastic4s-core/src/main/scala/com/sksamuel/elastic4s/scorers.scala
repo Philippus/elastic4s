@@ -63,6 +63,11 @@ class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[Fiel
     builder.modifier(m)
     this
   }
+
+  def missing(v: Double): this.type = {
+    builder.missing(v)
+    this
+  }
 }
 
 class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefinition] {
