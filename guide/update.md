@@ -2,7 +2,7 @@
 
 An update request allows us to update a document based on either a provided field set or a script.
 The operation loads the document, applies the script or merges the given fields, and re-indexes.
-Read [offical update docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html).
+Read [official update docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html).
 
 To update a document by id, we need to know the type and the index. Then we can issue a query such as
 
