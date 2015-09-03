@@ -7,9 +7,11 @@ import java.util.UUID
 import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus
+import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
+import scala.concurrent.Future
 
 /** @author Stephen Samuel */
 trait ElasticNodeBuilder {
@@ -95,7 +97,7 @@ trait ElasticSugar extends ElasticNodeBuilder {
    */
   implicit def client: ElasticClient = internalClient
 
-  def refresh(indexes: String*) {
+  def refresh(indexes: String*): Future[RefreshResponse] = {
     val i = indexes.size match {
       case 0 => Seq("_all")
       case _ => indexes
