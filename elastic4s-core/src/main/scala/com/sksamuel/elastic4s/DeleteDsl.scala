@@ -1,10 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.delete.DeleteResponse
-import org.elasticsearch.action.deletebyquery.{DeleteByQueryRequestBuilder, DeleteByQueryResponse}
-import org.elasticsearch.action.support.QuerySourceBuilder
-import org.elasticsearch.action.support.replication.ReplicationType
 import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 
@@ -13,12 +9,6 @@ import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
-
-  class DeleteByQueryExpectsType(indexes: Seq[String]) {
-    def types(_types: String*): DeleteByQueryExpectsClause = types(_types)
-    def types(_types: Iterable[String]): DeleteByQueryExpectsClause =
-      new DeleteByQueryExpectsClause(IndexesTypes(indexes, _types.toSeq))
-  }
 
   class DeleteByIdExpectsFrom(id: Any) {
     def from(_index: String): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(_index), id)
@@ -38,35 +28,12 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   implicit def string2indextype(index: String): IndexesType = new IndexesType(index)
   implicit def string2indextype(indexes: String*): IndexesType = new IndexesType(indexes: _*)
 
-  class IndexesType(indexes: String*) {
-    def types(types: String*): DeleteByQueryExpectsClause = new DeleteByQueryExpectsClause(IndexesTypes(indexes, types))
-    def types(types: Iterable[String]): DeleteByQueryExpectsClause =
-      new DeleteByQueryExpectsClause(IndexesTypes(indexes, types.toSeq))
-  }
-
-  class DeleteByQueryExpectsClause(indexesTypes: IndexesTypes) {
-    def types(_types: String*): DeleteByQueryExpectsClause = types(_types)
-    def types(_types: Iterable[String]): DeleteByQueryExpectsClause = new
-        DeleteByQueryExpectsClause(indexesTypes.copy(types = _types.toSeq))
-    def id(id: Any): DeleteByIdDefinition = new DeleteByIdDefinition(indexesTypes, id)
-    def where(query: String): DeleteByQueryDefinition = where(new SimpleStringQueryDefinition(query))
-    def where(query: QueryDefinition): DeleteByQueryDefinition = new DeleteByQueryDefinition(indexesTypes, query)
-  }
+  class IndexesType(indexes: String*)
 
   implicit object DeleteByIdDefinitionExecutable
     extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
       injectFuture(c.delete(t.build, _))
-    }
-  }
-
-  @deprecated(
-    "Delete by query will be removed in 2.0. Instead, use the scroll/scan API to find all matching IDs and then issue a bulk delete",
-    "1.6.0")
-  implicit object DeleteByQueryDefinitionExecutable
-    extends Executable[DeleteByQueryDefinition, DeleteByQueryResponse, DeleteByQueryResponse] {
-    override def apply(c: Client, t: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
-      injectFuture(c.deleteByQuery(t.build, _))
     }
   }
 }
@@ -100,41 +67,4 @@ class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompati
     this
   }
   def build = builder
-}
-
-class DeleteByQueryDefinition(indexesTypes: IndexesTypes, q: QueryDefinition) {
-
-  private val builder: DeleteByQueryRequestBuilder =
-    new DeleteByQueryRequestBuilder(ProxyClients.client)
-      .setIndices(indexesTypes.indexes: _*)
-      .setTypes(indexesTypes.types: _*)
-
-  def types(types: String*): DeleteByQueryDefinition = {
-    builder.setTypes(types.toSeq: _*)
-    this
-  }
-  def routing(routing: String): DeleteByQueryDefinition = {
-    builder.setRouting(routing)
-    this
-  }
-  def replicationType(repType: String): DeleteByQueryDefinition = {
-    builder.setReplicationType(repType)
-    this
-  }
-  def replicationType(repType: ReplicationType): DeleteByQueryDefinition = {
-    builder.setReplicationType(repType)
-    this
-  }
-  def consistencyLevel(consistencyLevel: WriteConsistencyLevel): DeleteByQueryDefinition = {
-    builder.setConsistencyLevel(consistencyLevel)
-    this
-  }
-
-  def build = {
-    val req = builder.request()
-
-    // need to set the query on the request - workaround for ES internals
-    val qsb = new QuerySourceBuilder().setQuery(q.builder)
-    req.source(qsb)
-  }
 }

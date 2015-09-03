@@ -235,15 +235,6 @@ object DefinitionAttributes {
     }
   }
 
-  trait DefinitionAttributeReplicationType {
-    val _builder: { def setReplicationType(replicationType: ReplicationType): Any }
-
-    def replicationType(replicationType: ReplicationType): this.type = {
-      _builder.setReplicationType(replicationType)
-      this
-    }
-  }
-
   trait DefinitionAttributeRealtime {
     val _builder: { def setRealtime(realtime: Boolean): Any }
 

@@ -10,46 +10,28 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute(
     bulk(
-      index into "places/cities" id 99 fields (
+      index into "places/cities" id 99 fields(
         "name" -> "London",
         "country" -> "UK"
-      ),
-      index into "places/cities" id 44 fields (
+        ),
+      index into "places/cities" id 44 fields(
         "name" -> "Philadelphia",
         "country" -> "USA"
-      ),
-      index into "places/cities" id 615 fields (
+        ),
+      index into "places/cities" id 615 fields(
         "name" -> "Middlesbrough",
         "country" -> "UK",
         "continent" -> "Europe"
-      )
+        )
     )
   ).await
 
   refresh("places")
   blockUntilCount(3, "places")
 
-  "an index" should "do nothing when deleting a document where the id does not exist using where" in {
-    client.execute {
-      delete from "places" -> "cities" where "name" -> "sammy"
-    }.await
-    refresh("places")
-    Thread.sleep(1000)
-    blockUntilCount(3, "places")
-  }
-
-  it should "do nothing when deleting a document where the id does not exist using id" in {
+  "an index" should "do nothing when deleting a document where the id does not exist using id" in {
     client.execute {
       delete id 141212 from "places" -> "cities"
-    }.await
-    refresh("places")
-    Thread.sleep(1000)
-    blockUntilCount(3, "places")
-  }
-
-  it should "do nothing when deleting a document where the query returns no results" in {
-    client.execute {
-      delete from "places" types "cities" where "paris"
     }.await
     refresh("places")
     Thread.sleep(1000)
@@ -62,13 +44,5 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
     }.await
     refresh("places")
     blockUntilCount(2, "places")
-  }
-
-  it should "remove a document when deleting by query" in {
-    client.execute {
-      delete from "places" types "cities" where matchQuery("continent", "Europe")
-    }.await
-    refresh("places")
-    blockUntilCount(1, "places")
   }
 }
