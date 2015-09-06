@@ -37,9 +37,9 @@ class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightScoreDe
 trait ScoreDefinition[T] {
 
   val builder: ScoreFunctionBuilder
-  var _filter: Option[FilterDefinition] = None
+  var _filter: Option[QueryDefinition] = None
 
-  def filter(filter: FilterDefinition): T = {
+  def filter(filter: QueryDefinition): T = {
     this._filter = Option(filter)
     this.asInstanceOf[T]
   }

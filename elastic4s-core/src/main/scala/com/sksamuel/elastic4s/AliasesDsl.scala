@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.apache.lucene.queryparser.xml.FilterBuilder
 import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.cluster.metadata.{AliasMetaData, AliasAction}
-import org.elasticsearch.index.query.FilterBuilder
+import org.elasticsearch.cluster.metadata.{AliasAction, AliasMetaData}
+import org.elasticsearch.index.query.QueryBuilder
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -68,8 +67,8 @@ class MutateAliasDefinition(val aliasAction: AliasAction) {
 
   def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
 
-  def filter(filter: FilterBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
-  def filter(filter: FilterDefinition): MutateAliasDefinition = {
+  def filter(filter: QueryBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
+  def filter(filter: QueryDefinition): MutateAliasDefinition = {
     new MutateAliasDefinition(aliasAction.filter(filter.builder))
   }
 

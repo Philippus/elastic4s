@@ -1,16 +1,15 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.anaylzers.Analyzer
-import org.elasticsearch.index.query._
-import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
-import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import com.sksamuel.elastic4s.DefinitionAttributes._
+import com.sksamuel.elastic4s.anaylzers.Analyzer
 import org.elasticsearch.common.unit.Fuzziness
+import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
+import org.elasticsearch.index.query._
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.support.QueryInnerHitBuilder
 import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
 import scala.language.implicitConversions
-import scala.util.{Right, Left}
 
 /** @author Stephen Samuel */
 
@@ -21,8 +20,6 @@ trait QueryDsl {
 
   def query = this
 
-  @deprecated("use boostingQuery", "1.4.0")
-  def boosting: BoostingQueryDefinition = boostingQuery
   def boostingQuery: BoostingQueryDefinition = new BoostingQueryDefinition
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
@@ -40,47 +37,16 @@ trait QueryDsl {
   class ConstantScoreExpectsQueryOrFilter {
     @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
     def query(query: QueryDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))
-    @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
-    def filter(filter: FilterDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(filter.builder))
   }
 
   def constantScoreQuery(q: QueryDefinition) = constantScore query q
-  def constantScoreFilter(f: FilterDefinition) = constantScore filter f
 
   def dismax = new DisMaxDefinition
 
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def fuzzylikethis: FuzzyLikeThisDefinitionExpectsText = flt
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def flt: FuzzyLikeThisDefinitionExpectsText = new FuzzyLikeThisDefinitionExpectsText
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def flt(text: String): FuzzyLikeThisExpectsField = new FuzzyLikeThisExpectsField(text)
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def fuzzylikethis(text: String): FuzzyLikeThisExpectsField = flt(text)
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  class FuzzyLikeThisDefinitionExpectsText {
-    def text(q: String) = new FuzzyLikeThisExpectsField(q)
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  class FuzzyLikeThisExpectsField(text: String) {
-    def field(name: String): FuzzyLikeThisDefinition = fields(name)
-    def fields(names: String*): FuzzyLikeThisDefinition = new FuzzyLikeThisDefinition(text, names)
-  }
-
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new
-      FunctionScoreQueryDefinition(Left(query))
-  def functionScoreQuery(filter: FilterDefinition): FunctionScoreQueryDefinition = new
-      FunctionScoreQueryDefinition(Right(filter))
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
 
   def filteredQuery = new FilteredQueryDefinition
 
-  @deprecated("use fuzzyQuery", "1.4.0")
-  def fuzzy(name: String, value: Any) = fuzzyQuery(name, value)
   def fuzzyQuery(name: String, value: Any) = new FuzzyQueryDefinition(name, value)
 
   def indicesQuery(indices: String*) = new {
@@ -105,52 +71,29 @@ trait QueryDsl {
     def query(q: QueryDefinition) = new HasParentQueryDefinition(`type`, q)
   }
 
-  @deprecated("use matchQuery", "1.6.5")
-  def matches(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple)
-  @deprecated("use matchQuery", "1.6.5")
-  def matches(field: String, value: Any): MatchQueryDefinition = matchQuery(field, value)
-
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
 
-  @deprecated("use matchPhraseQuery", "1.6.5")
-  def matchPhrase(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
   def matchPhraseQuery(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
 
-  @deprecated("use matchPhrasePrefixQuery", "1.6.5")
-  def matchPhrasePrefix(field: String, value: Any) = new MatchPhrasePrefixDefinition(field, value)
   def matchPhrasePrefixQuery(field: String, value: Any) = new MatchPhrasePrefixDefinition(field, value)
 
   def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
 
-  @deprecated("use matchAllQuery", "1.6.5")
-  def matchall = new MatchAllQueryDefinition
   def matchAllQuery = new MatchAllQueryDefinition
 
   def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
-  @deprecated("use nestedQuery", "1.4.0")
-  def nested(path: String): NestedQueryDefinition = nestedQuery(path)
   def nestedQuery(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
 
   def query(q: String): QueryStringQueryDefinition = queryStringQuery(q)
   def queryStringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
 
-  @deprecated("use rangeQuery", "1.4.0")
-  def range(field: String): RangeQueryDefinition = rangeQuery(field)
   def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
 
-  @deprecated("use regexQuery", "1.4.0")
-  def regex(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
-  @deprecated("use regexQuery", "1.4.0")
-  def regex(field: String, value: Any): RegexQueryDefinition = regexQuery(field, value)
   def regexQuery(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
 
-  @deprecated("use prefixQuery", "1.4.0")
-  def prefix(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple)
-  @deprecated("use prefixQuery", "1.4.0")
-  def prefix(field: String, value: Any): PrefixQueryDefinition = prefixQuery(field, value)
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
@@ -171,27 +114,12 @@ trait QueryDsl {
   def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new
       SpanMultiTermQueryDefinition(query)
 
-  @deprecated("use termQuery", "1.4.0")
-  def term(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple)
-  @deprecated("use termQuery", "1.4.0")
-  def term(field: String, value: Any): TermQueryDefinition = termQuery(field, value)
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
 
   def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition =
     new TermsQueryDefinition(field, values.map(_.toString): _*)
 
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def topChildren(`type`: String) = new TopChildrenExpectsQuery(`type`)
-  class TopChildrenExpectsQuery(`type`: String) {
-    @deprecated("deprecated by elasticsearch", "1.6.5")
-    def query(q: QueryDefinition): TopChildrenQueryDefinition = new TopChildrenQueryDefinition(`type`, q)
-  }
-
-  @deprecated("use wildcardQuery", "1.4.0")
-  def wildcard(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple)
-  @deprecated("use wildcardQuery", "1.4.0")
-  def wildcard(field: String, value: Any): WildcardQueryDefinition = wildcardQuery(field, value)
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
 
@@ -264,17 +192,14 @@ trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, FilterDefinition])
+class FunctionScoreQueryDefinition(query: QueryDefinition)
   extends QueryDefinition
   with DefinitionAttributeBoost
   with DefinitionAttributeBoostMode
   with DefinitionAttributeMaxBoost
   with DefinitionAttributeScoreMode {
 
-  val builder = queryOrFilter match {
-    case Left(query) => new FunctionScoreQueryBuilder(query.builder)
-    case Right(filter) => new FunctionScoreQueryBuilder(filter.builder)
-  }
+  val builder = new FunctionScoreQueryBuilder(query.builder)
   val _builder = builder
 
   def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
@@ -338,12 +263,6 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
 
   def stopWords(stopWords: String*): this.type = {
     _builder.stopWords(stopWords: _*)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def percentTermsToMatch(percentTermsToMatch: Double): this.type = {
-    _builder.percentTermsToMatch(percentTermsToMatch.toFloat)
     this
   }
 
@@ -506,6 +425,30 @@ class FuzzyQueryDefinition(name: String, value: Any)
   }
 }
 
+class GeoHashCellQuery(field: String)
+  extends QueryDefinition
+  with DefinitionAttributeCache
+  with DefinitionAttributeCacheKey {
+
+  val builder = QueryBuilders.geoHashCellQuery(field)
+  val _builder = builder
+
+  def point(lat: Double, long: Double): this.type = {
+    builder.point(lat, long)
+    this
+  }
+
+  def geohash(geohash: String): this.type = {
+    builder.geohash(geohash)
+    this
+  }
+
+  def neighbours(neighbours: Boolean): this.type = {
+    builder.neighbors(neighbours)
+    this
+  }
+}
+
 class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition with DefinitionAttributeBoost {
   val builder = QueryBuilders.hasChildQuery(`type`, q.builder)
@@ -541,49 +484,6 @@ class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinition) 
 class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
-    this
-  }
-}
-
-@deprecated("deprecated by elasticsearch", "1.6.5")
-class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
-  extends QueryDefinition
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeBoost {
-
-  val builder = fields.size match {
-    case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
-    case _ => QueryBuilders.fuzzyLikeThisQuery(fields.toSeq: _*).likeText(text)
-  }
-  val _builder = builder
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
-    builder.analyzer(a.name)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def ignoreTF(b: Boolean): FuzzyLikeThisDefinition = {
-    builder.ignoreTF(b)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def maxQueryTerms(b: Int): FuzzyLikeThisDefinition = {
-    builder.maxQueryTerms(b)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def fuzziness(f: Fuzziness): this.type = {
-    _builder.fuzziness(f)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def failOnUnsupportedField(failOnUnsupportedField: Boolean): FuzzyLikeThisDefinition = {
-    builder.failOnUnsupportedField(failOnUnsupportedField)
     this
   }
 }
@@ -634,20 +534,26 @@ class DisMaxDefinition extends QueryDefinition {
   }
 }
 
+@deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter")
 class FilteredQueryDefinition extends QueryDefinition {
+
   def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
+
   private var _query: QueryBuilder = QueryBuilders.matchAllQuery
-  private var _filter: FilterBuilder = null
+  private var _filter: QueryBuilder = null
   private var _boost: Double = -1d
+
   def boost(boost: Double): FilteredQueryDefinition = {
     _boost = boost
     this
   }
+
   def query(query: => QueryDefinition): FilteredQueryDefinition = {
     _query = Option(query).map(_.builder).getOrElse(_query)
     this
   }
-  def filter(filter: => FilterDefinition): FilteredQueryDefinition = {
+
+  def filter(filter: => QueryDefinition): FilteredQueryDefinition = {
     _filter = Option(filter).map(_.builder).orNull
     this
   }
@@ -744,8 +650,8 @@ class RegexQueryDefinition(field: String, regex: Any)
 class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
   val builder = value match {
-    case str : String => QueryBuilders.termQuery(field, str)
-    case iter:Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
+    case str: String => QueryBuilders.termQuery(field, str)
+    case iter: Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
     case other => QueryBuilders.termQuery(field, other)
   }
 
@@ -764,8 +670,9 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
     this
   }
 
-  def minimumShouldMatch(minimumShouldMatch: Int): TermsQueryDefinition = {
-    builder.minimumMatch(minimumShouldMatch)
+  @deprecated("deprecated in elasticsearch", "2.0.0")
+  def minimumShouldMatch(minimumShouldMatch: String): TermsQueryDefinition = {
+    builder.minimumShouldMatch(minimumShouldMatch)
     this
   }
 
@@ -835,40 +742,10 @@ class SpanNearQueryDefinition extends SpanQueryDefinition {
   }
 }
 
-class TopChildrenQueryDefinition(`type`: String, q: QueryDefinition)
-  extends QueryDefinition
-  with DefinitionAttributeBoost {
-
-  val builder = QueryBuilders.topChildrenQuery(`type`, q.builder)
-  val _builder = builder
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def factor(factor: Int): TopChildrenQueryDefinition = {
-    builder.factor(factor)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def incrementalFactor(incrementalFactor: Int): TopChildrenQueryDefinition = {
-    builder.incrementalFactor(incrementalFactor)
-    this
-  }
-
-  @deprecated("deprecated by elasticsearch", "1.6.5")
-  def score(score: String): TopChildrenQueryDefinition = {
-    builder.score(score)
-    this
-  }
-}
-
 class MatchAllQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.matchAllQuery
 
-  def normsField(normsField: String): MatchAllQueryDefinition = {
-    builder.normsField(normsField)
-    this
-  }
   def boost(boost: Double): MatchAllQueryDefinition = {
     builder.boost(boost.toFloat)
     this

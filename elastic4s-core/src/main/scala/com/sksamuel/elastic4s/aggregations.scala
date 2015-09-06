@@ -1,25 +1,26 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import org.elasticsearch.script.Script
 import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode
+import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.aggregations.bucket.children.ChildrenBuilder
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.geogrid.GeoHashGridBuilder
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogram, DateHistogramBuilder, Histogram, HistogramBuilder}
+import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
+import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramBuilder, DateHistogramInterval, Histogram, HistogramBuilder}
 import org.elasticsearch.search.aggregations.bucket.missing.MissingBuilder
-import org.elasticsearch.search.aggregations.bucket.nested.{ReverseNestedBuilder, NestedBuilder}
+import org.elasticsearch.search.aggregations.bucket.nested.{NestedBuilder, ReverseNestedBuilder}
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
-import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
 import org.elasticsearch.search.aggregations.metrics.{MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder}
-import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
 
 /** @author Nicolas Yzet */
@@ -36,7 +37,7 @@ object AggregationResults {
     override type Result = org.elasticsearch.search.aggregations.bucket.terms.Terms
   }
   implicit object DateHistogramAggregationResult extends AggregationResult[DateHistogramAggregation] {
-    override type Result = org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram
+    override type Result = org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
   }
   implicit object CountAggregationResult extends AggregationResult[ValueCountAggregationDefinition] {
     override type Result = org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount
@@ -93,7 +94,7 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
   }
 
   def script(script: String): Self = {
-    builder.script(script)
+    builder.script(new Script(script))
     this
   }
 }
@@ -107,7 +108,7 @@ trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggrega
   }
 
   def script(script: String): CardinalityMetricsAggregationDefinition[Self] = {
-    builder.script(script)
+    builder.script(new Script(script))
     this
   }
 
@@ -319,16 +320,6 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
     builder.interval(interval)
     this
   }
-
-  def postOffset(postOffset: Long): HistogramAggregation = {
-    builder.postOffset(postOffset)
-    this
-  }
-
-  def preOffset(preOffset: Long): HistogramAggregation = {
-    builder.preOffset(preOffset)
-    this
-  }
 }
 
 class DateHistogramAggregation(name: String)
@@ -350,7 +341,7 @@ class DateHistogramAggregation(name: String)
     this
   }
 
-  def interval(interval: DateHistogram.Interval): DateHistogramAggregation = {
+  def interval(interval: DateHistogramInterval): DateHistogramAggregation = {
     builder.interval(interval)
     this
   }
@@ -370,38 +361,8 @@ class DateHistogramAggregation(name: String)
     this
   }
 
-  @deprecated("use timeZone() instead", "1.6.0")
-  def preZone(preZone: String) = {
-    builder.preZone(preZone)
-    this
-  }
-
-  @deprecated("this option is going to be removed in 2.0 releases", "1.6.0")
-  def postZone(postZone: String) = {
-    builder.postZone(postZone)
-    this
-  }
-
-  @deprecated("use offset", "1.6.0")
-  def preOffset(preOffset: String) = {
-    builder.preOffset(preOffset)
-    this
-  }
-
-  @deprecated("use offset", "1.6.0")
-  def postOffset(postOffset: String) = {
-    builder.postOffset(postOffset)
-    this
-  }
-
   def order(order: Histogram.Order) = {
     builder.order(order)
-    this
-  }
-
-  @deprecated("this option is going to be removed in 2.0 releases", "1.6.0")
-  def preZoneAdjustLargeInterval(preZoneAdjustLargeInterval: Boolean) = {
-    builder.preZoneAdjustLargeInterval(preZoneAdjustLargeInterval)
     this
   }
 
@@ -493,7 +454,7 @@ class FilterAggregationDefinition(name: String)
   extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filter(name)
 
-  def filter(block: => FilterDefinition): this.type = {
+  def filter(block: => QueryDefinition): this.type = {
     builder.filter(block.builder)
     this
   }
@@ -503,12 +464,12 @@ class FiltersAggregationDefinition(name: String)
   extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
   val aggregationBuilder = AggregationBuilders.filters(name)
 
-  def filter(block: => FilterDefinition): this.type = {
+  def filter(block: => QueryDefinition): this.type = {
     builder.filter(block.builder)
     this
   }
 
-  def filter(key: String, block: => FilterDefinition): this.type = {
+  def filter(key: String, block: => QueryDefinition): this.type = {
     builder.filter(key, block.builder)
     this
   }
@@ -545,7 +506,7 @@ class SigTermsAggregationDefinition(name: String)
     aggregationBuilder.shardMinDocCount(shardMinDocCount)
     this
   }
-  def backgroundFilter(backgroundFilter: FilterDefinition): this.type = {
+  def backgroundFilter(backgroundFilter: QueryDefinition): this.type = {
     aggregationBuilder.backgroundFilter(backgroundFilter.builder)
     this
   }

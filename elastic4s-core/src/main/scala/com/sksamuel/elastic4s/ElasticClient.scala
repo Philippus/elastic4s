@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 
+import java.net.InetSocketAddress
+
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{AdminClient, Client}
-import org.elasticsearch.common.settings.{ImmutableSettings, Settings}
+import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.node.{Node, NodeBuilder}
 
@@ -57,7 +59,7 @@ object ElasticClient {
   def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
 
   @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
-  def remote(host: String, port: Int): ElasticClient = remote(ImmutableSettings.builder.build, host, port)
+  def remote(host: String, port: Int): ElasticClient = remote(Settings.builder.build, host, port)
 
   @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(settings: Settings, host: String, port: Int): ElasticClient = {
@@ -75,9 +77,9 @@ object ElasticClient {
    *
    * @param uri the instance(s) to connect to.
    */
-  def transport(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
+  def transport(uri: ElasticsearchClientUri): ElasticClient = remote(Settings.builder.build, uri)
   @deprecated("use transport instead of remote", "2.0.0")
-  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(ImmutableSettings.builder.build, uri)
+  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(Settings.builder.build, uri)
 
   /**
    * Connects to elasticsearch instance(s) specified by the uri and setting the
@@ -93,9 +95,12 @@ object ElasticClient {
    */
   def transport(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
     val client = new TransportClient(settings)
-    for ( (host, port) <- uri.hosts ) client.addTransportAddress(new InetSocketTransportAddress(host, port))
-      fromClient(client)
+    for ( (host, port) <- uri.hosts ) {
+      client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
+    }
+    fromClient(client)
   }
+
   @deprecated("use transport instead of remote", "2.0.0")
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)
 
@@ -103,7 +108,7 @@ object ElasticClient {
    * Creates a local data node. This is useful for embedded usage, or for unit tests.
    * Default settings will be applied.
    */
-  def local: ElasticClient = local(ImmutableSettings.settingsBuilder().build())
+  def local: ElasticClient = local(Settings.settingsBuilder().build())
 
   /**
    * Creates a local data node. This is useful for embedded usage, or for unit tests.
