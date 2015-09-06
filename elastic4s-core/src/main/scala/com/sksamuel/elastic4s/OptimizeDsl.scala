@@ -41,10 +41,4 @@ class OptimizeDefinition(indexes: String*) {
     builder.onlyExpungeDeletes(onlyExpungeDeletes)
     this
   }
-
-  @deprecated("deprecated in elasticsearch", "1.6.1")
-  def force(force: Boolean): OptimizeDefinition = {
-    builder.force(force)
-    this
-  }
 }

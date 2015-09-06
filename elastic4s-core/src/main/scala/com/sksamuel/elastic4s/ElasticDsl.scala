@@ -29,7 +29,6 @@ trait ElasticDsl
   with IndexStatusDsl
   with IndexTemplateDsl
   with MappingDsl
-  with MoreLikeThisDsl
   with MultiGetDsl
   with OptimizeDsl
   with PercolateDsl
