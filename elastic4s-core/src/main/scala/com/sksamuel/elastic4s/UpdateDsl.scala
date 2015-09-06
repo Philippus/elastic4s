@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.definitions.DefinitionRouting
-import com.sksamuel.elastic4s.source.{Indexable, DocumentSource}
+import com.sksamuel.elastic4s.source.{DocumentSource, Indexable}
 import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.support.replication.ReplicationType
-import org.elasticsearch.action.update.{UpdateRequest, UpdateRequestBuilder, UpdateResponse}
+import org.elasticsearch.action.update.{UpdateAction, UpdateRequest, UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
@@ -32,7 +31,7 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
   extends BulkCompatibleDefinition
   with DefinitionRouting {
 
-  val _builder = new UpdateRequestBuilder(ProxyClients.client)
+  val _builder = new UpdateRequestBuilder(ProxyClients.client, UpdateAction.INSTANCE)
     .setIndex(indexesTypes.index)
     .setType(indexesTypes.typ.orNull)
     .setId(id)
@@ -125,12 +124,6 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
 
   def refresh(refresh: Boolean): this.type = {
     _builder.setRefresh(refresh)
-    this
-  }
-
-  @deprecated("will be removed in 2.0.0. See https://github.com/elastic/elasticsearch/pull/10171", "1.6.0")
-  def replicationType(repType: ReplicationType): this.type = {
-    _builder.setReplicationType(repType)
     this
   }
 

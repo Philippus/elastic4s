@@ -37,7 +37,6 @@ trait ElasticDsl
   with ScoreDsl
   with ScrollDsl
   with SnapshotDsl
-  with TermVectorDsl
   with TokenizerDsl
   with TokenFilterDsl
   with UpdateDsl

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
-import org.elasticsearch.action.percolate.{PercolateRequestBuilder, PercolateResponse}
+import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
+import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
 import org.elasticsearch.percolator.PercolatorService
@@ -58,7 +58,7 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
       source.field(tuple._1, tuple._2)
     }
     source.endObject()
-    new IndexRequestBuilder(ProxyClients.client).setIndex(index)
+    new IndexRequestBuilder(ProxyClients.client, IndexAction.INSTANCE).setIndex(index)
       .setType(PercolatorService.TYPE_NAME).setId(id).setRefresh(true)
       .setSource(source).request
   }
@@ -85,7 +85,7 @@ class PercolateDefinition(indexType: IndexesTypes) {
   private var _rawDoc: Option[String] = None
   private[this] var _query: QueryDefinition = _
 
-  def build = new PercolateRequestBuilder(ProxyClients.client)
+  def build = new PercolateRequestBuilder(ProxyClients.client, PercolateAction.INSTANCE)
     .setSource(_doc)
     .setIndices(indexType.index)
     .setDocumentType(indexType.types.head)

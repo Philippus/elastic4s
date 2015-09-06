@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s
 package admin
 
 import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequestBuilder, CreateSnapshotResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequestBuilder, GetSnapshotsResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotAction, CreateSnapshotRequestBuilder, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotAction, DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsAction, GetSnapshotsRequestBuilder, GetSnapshotsResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotAction, RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 
@@ -90,17 +90,18 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
 }
 
 class DeleteSnapshotDefinition(name: String, repo: String) {
-  val request = new DeleteSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
+  val request = new DeleteSnapshotRequestBuilder(ProxyClients.cluster, DeleteSnapshotAction.INSTANCE, repo, name)
   def build = request.request()
 }
 
 class GetSnapshotsDefinition(snapshotNames: Array[String], repo: String) {
-  val request = new GetSnapshotsRequestBuilder(ProxyClients.cluster, repo).setSnapshots(snapshotNames: _*)
+  val request = new GetSnapshotsRequestBuilder(ProxyClients.cluster, GetSnapshotsAction.INSTANCE, repo)
+    .setSnapshots(snapshotNames: _*)
   def build = request.request()
 }
 
 class CreateSnapshotDefinition(name: String, repo: String) {
-  val request = new CreateSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
+  val request = new CreateSnapshotRequestBuilder(ProxyClients.cluster, CreateSnapshotAction.INSTANCE, repo, name)
   def build = request.request()
 
   def partial(p: Boolean): this.type = {
@@ -141,7 +142,7 @@ class CreateSnapshotDefinition(name: String, repo: String) {
 
 case class RestoreSnapshotDefinition(name: String, repo: String) {
 
-  val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, repo, name)
+  val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, RestoreSnapshotAction.INSTANCE, repo, name)
   def build = request.request()
 
   def restoreGlobalState(global: Boolean): this.type = {
