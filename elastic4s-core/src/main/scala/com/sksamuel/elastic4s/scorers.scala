@@ -9,16 +9,24 @@ import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBui
 import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
 import org.elasticsearch.index.query.functionscore.weight.WeightBuilder
 import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ScoreFunctionBuilder}
-import org.elasticsearch.script.Script
 
 /** @author Stephen Samuel */
 trait ScoreDsl {
 
   def randomScore(seed: Int) = new RandomScoreDefinition(seed)
-  def scriptScore(script: String) = new ScriptScoreDefinition(script)
-  def gaussianScore(field: String, origin: String, scale: String) = new GaussianDecayScoreDefinition(field, origin, scale)
+
+  def scriptScore(script: ScriptDefinition) = new ScriptScoreDefinition(script)
+
+  def gaussianScore(field: String, origin: String, scale: String) = {
+    new GaussianDecayScoreDefinition(field, origin, scale)
+  }
+
   def linearScore(field: String, origin: String, scale: String) = new LinearDecayScoreDefinition(field, origin, scale)
-  def exponentialScore(field: String, origin: String, scale: String) = new ExponentialDecayScoreDefinition(field, origin, scale)
+
+  def exponentialScore(field: String, origin: String, scale: String) = {
+    new ExponentialDecayScoreDefinition(field, origin, scale)
+  }
+
   def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)
   def weightScore(boost: Double) = new WeightScoreDefinition(boost)
 }
@@ -67,24 +75,8 @@ class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefini
   val builder = new RandomScoreFunctionBuilder().seed(seed)
 }
 
-class ScriptScoreDefinition(script: String) extends ScoreDefinition[ScriptScoreDefinition] {
-
-  val builder = new ScriptScoreFunctionBuilder(new Script(script))
-
-  def param(key: String, value: String): ScriptScoreDefinition = {
-    builder.param(key, value)
-    this
-  }
-
-  def params(map: Map[String, String]): ScriptScoreDefinition = {
-    map.foreach(entry => param(entry._1, entry._2))
-    this
-  }
-
-  def lang(lang: String): ScriptScoreDefinition = {
-    builder.lang(lang)
-    this
-  }
+class ScriptScoreDefinition(script: ScriptDefinition) extends ScoreDefinition[ScriptScoreDefinition] {
+  val builder = new ScriptScoreFunctionBuilder(script.toJavaAPI)
 }
 
 abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
@@ -103,17 +95,17 @@ abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
 }
 
 class GaussianDecayScoreDefinition(field: String, origin: String, scale: String)
-    extends DecayScoreDefinition[GaussianDecayScoreDefinition] {
+  extends DecayScoreDefinition[GaussianDecayScoreDefinition] {
   val builder = new GaussDecayFunctionBuilder(field, origin, scale)
 }
 
 class LinearDecayScoreDefinition(field: String, origin: String, scale: String)
-    extends DecayScoreDefinition[LinearDecayScoreDefinition] {
+  extends DecayScoreDefinition[LinearDecayScoreDefinition] {
   val builder = new LinearDecayFunctionBuilder(field, origin, scale)
 }
 
 class ExponentialDecayScoreDefinition(field: String, origin: String, scale: String)
-    extends DecayScoreDefinition[ExponentialDecayScoreDefinition] {
+  extends DecayScoreDefinition[ExponentialDecayScoreDefinition] {
   val builder = new ExponentialDecayFunctionBuilder(field, origin, scale)
 }
 

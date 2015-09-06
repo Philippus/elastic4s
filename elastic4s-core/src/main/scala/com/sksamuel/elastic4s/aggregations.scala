@@ -78,23 +78,8 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
     this
   }
 
-  def lang(lang: String): Self = {
-    builder.lang(lang)
-    this
-  }
-
-  def param(name: String, value: Any): ValuesSourceMetricsAggregationDefinition[Self, B] = {
-    builder.param(name, value)
-    this
-  }
-
-  def params(map: Map[String, Any]): Self = {
-    for ( entry <- map ) param(entry._1, entry._2)
-    this
-  }
-
-  def script(script: String): Self = {
-    builder.script(new Script(script))
+  def script(script: ScriptDefinition): Self = {
+    builder.script(script.toJavaAPI)
     this
   }
 }
@@ -134,9 +119,14 @@ class MissingAggregationDefinition(name: String)
 }
 
 class TermAggregationDefinition(name: String) extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
-  val aggregationBuilder = AggregationBuilders.terms(name)
 
+  val aggregationBuilder = AggregationBuilders.terms(name)
   //def builder = builder
+
+  def script(script: ScriptDefinition): TermAggregationDefinition = {
+    builder.script(script.toJavaAPI)
+    this
+  }
 
   def size(size: Int): TermAggregationDefinition = {
     builder.size(size)
@@ -160,11 +150,6 @@ class TermAggregationDefinition(name: String) extends AggregationDefinition[Term
 
   def valueType(valueType: ValueType): this.type = {
     builder.valueType(valueType)
-    this
-  }
-
-  def lang(lang: String): TermAggregationDefinition = {
-    builder.la(lang)
     this
   }
 

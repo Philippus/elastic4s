@@ -32,6 +32,7 @@ trait ElasticDsl
   with OptimizeDsl
   with PercolateDsl
   with ReindexDsl
+  with ScriptDsl
   with SearchDsl
   with SettingsDsl
   with ScoreDsl

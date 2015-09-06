@@ -94,24 +94,6 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
-  def params(entries: (String, Any)*): this.type = params(entries.toMap)
-  def params(map: Map[String, Any]): this.type = {
-    def asJava(param: Any): Any = {
-      import scala.collection.JavaConverters._
-      param match {
-        case l: List[_] => l.asJava
-        case s: Seq[_]  => s.asJava
-        case m: Map[_, _] => m.map {
-          case (k, v) => asJava(k) -> asJava(v)
-        }.asJava
-        case v => v
-      }
-    }
-
-    map.foreach(arg => _builder.addScriptParam(arg._1, asJava(arg._2)))
-    this
-  }
-
   def retryOnConflict(retryOnConflict: Int): this.type = {
     _builder.setRetryOnConflict(retryOnConflict)
     this
@@ -137,11 +119,6 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
-  def lang(scriptLang: String): this.type = {
-    _builder.setScriptLang(scriptLang)
-    this
-  }
-
   def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
     _builder.setDoc(indexable.json(t))
     this
@@ -158,8 +135,8 @@ class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
     this
   }
 
-  def script(script: String, scriptType: ScriptType = ScriptType.Inline): UpdateDefinition = {
-    _builder.setScript(script, scriptType.elasticType)
+  def script(script: ScriptDefinition): UpdateDefinition = {
+    _builder.setScript(script.toJavaAPI)
     this
   }
 

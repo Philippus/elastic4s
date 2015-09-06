@@ -8,7 +8,6 @@ import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.support.QueryInnerHitBuilder
-import org.elasticsearch.script.Script
 import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
 import scala.language.implicitConversions
@@ -951,7 +950,7 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
     this
   }
 
-  @deprecated("use bool query instead", "2.0.0")
+  @deprecated("deprecated in elasticsearch", "2.0.0")
   def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
     builder.disableCoord(disableCoord)
     this
@@ -1206,31 +1205,16 @@ class MissingQueryDefinition(field: String) extends QueryDefinition {
   }
 }
 
-class ScriptQueryDefinition(script: String)
+class ScriptQueryDefinition(script: ScriptDefinition)
   extends QueryDefinition
   with DefinitionAttributeCache
   with DefinitionAttributeCacheKey {
 
-  val builder = QueryBuilders.scriptQuery(new Script(script))
+  val builder = QueryBuilders.scriptQuery(script.toJavaAPI)
   val _builder = builder
-
-  def lang(lang: String): ScriptQueryDefinition = {
-    builder.lang(lang)
-    this
-  }
-
-  def param(name: String, value: Any): ScriptQueryDefinition = {
-    builder.addParam(name, value)
-    this
-  }
 
   def queryName(queryName: String): ScriptQueryDefinition = {
     builder.queryName(queryName)
-    this
-  }
-
-  def params(map: Map[String, Any]): ScriptQueryDefinition = {
-    for ( entry <- map ) param(entry._1, entry._2)
     this
   }
 }
