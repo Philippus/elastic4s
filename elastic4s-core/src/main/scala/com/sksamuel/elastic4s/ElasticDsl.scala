@@ -26,7 +26,6 @@ trait ElasticDsl
   with GetDsl
   with IndexAdminDsl
   with IndexRecoveryDsl
-  with IndexStatusDsl
   with IndexTemplateDsl
   with MappingDsl
   with MultiGetDsl
