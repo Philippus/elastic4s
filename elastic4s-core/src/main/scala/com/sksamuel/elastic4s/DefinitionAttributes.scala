@@ -208,15 +208,6 @@ object DefinitionAttributes {
     }
   }
 
-  trait DefinitionAttributeFilterName {
-    val _builder: { def filterName(filterName: String): Any }
-
-    def filterName(filterName: String): this.type = {
-      _builder.filterName(filterName)
-      this
-    }
-  }
-
   trait DefinitionAttributeRouting {
     val _builder: { def setRouting(preference: String): Any }
 
