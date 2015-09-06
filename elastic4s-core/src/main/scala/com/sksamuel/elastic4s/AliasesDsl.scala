@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import org.apache.lucene.queryparser.xml.FilterBuilder
 import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.client.Client

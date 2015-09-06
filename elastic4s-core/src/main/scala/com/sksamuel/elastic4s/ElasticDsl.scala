@@ -21,7 +21,6 @@ trait ElasticDsl
   with CreateIndexDsl
   with DeleteIndexDsl
   with DeleteDsl
-  with FacetDsl
   with FieldStatsDsl
   with ExplainDsl
   with GetDsl
