@@ -4,7 +4,6 @@ import org.apache.lucene.search.Explanation
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
-import org.elasticsearch.search.facet.Facets
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 
@@ -22,9 +21,6 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
-
-  @deprecated("use resp.facets, or resp.original.getFacets", "2.0.0")
-  def getFacets = original.getFacets
 
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
   def getAggregations = original.getAggregations
@@ -45,7 +41,6 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   def took: Duration = original.getTookInMillis.millis
 
   def aggregations: Aggregations = original.getAggregations
-  def facets: Facets = original.getFacets
 
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty

@@ -14,8 +14,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait SearchDsl
   extends QueryDsl
-  with FilterDsl
-  with FacetDsl
   with HighlightDsl
   with ScriptFieldDsl
   with SuggestionDsl
@@ -66,7 +64,7 @@ trait SearchDsl
 
 case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
   def build: MultiSearchRequest = {
-    val builder = new MultiSearchRequestBuilder(ProxyClients.client)
+    val builder = new MultiSearchRequestBuilder(ProxyClients.client, MultiSearchAction.INSTANCE)
     searches foreach (builder add _.build)
     builder.request()
   }
@@ -100,7 +98,7 @@ class RescoreDefinition(query: QueryDefinition) {
 class SearchDefinition(indexesTypes: IndexesTypes) {
 
   val _builder = {
-    new SearchRequestBuilder(ProxyClients.client)
+    new SearchRequestBuilder(ProxyClients.client, SearchAction.INSTANCE)
       .setIndices(indexesTypes.indexes: _*)
       .setTypes(indexesTypes.types: _*)
   }
@@ -131,24 +129,15 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
 
-  def postFilter(block: => FilterDefinition): this.type = {
+  def postFilter(block: => QueryDefinition): this.type = {
     _builder.setPostFilter(block.builder)
     this
   }
 
-  def queryCache(queryCache: Boolean): this.type = {
-    _builder.setQueryCache(queryCache)
+  def requestCache(queryCache: Boolean): this.type = {
+    _builder.setRequestCache(queryCache)
     this
   }
-
-  @deprecated("Facets are deprecated, use aggregations", "1.3.0")
-  def facets(iterable: Iterable[FacetDefinition]): SearchDefinition = {
-    iterable.foreach(facet => _builder.addFacet(facet.builder))
-    this
-  }
-
-  @deprecated("Facets are deprecated, use aggregations", "1.3.0")
-  def facets(f: FacetDefinition*): SearchDefinition = facets(f.toIterable)
 
   def aggregations(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = {
     iterable.foreach(agg => _builder.addAggregation(agg.builder))

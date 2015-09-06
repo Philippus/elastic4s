@@ -359,24 +359,6 @@ trait ElasticDsl
   }
   def mapping(name: String): MappingDefinition = mapping name name
 
-  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
-  case object more {
-    def like(id: Any): MltExpectsIndex = {
-      require(id.toString.nonEmpty, "id must not be null or empty")
-      new MltExpectsIndex(id.toString)
-    }
-  }
-
-  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
-  def mlt: morelike.type = morelike
-  @deprecated("The More Like This API will be removed in 2.0. Instead, use the More Like This Query", "1.6.0")
-  case object morelike {
-    def id(id: Any): MltExpectsIndex = {
-      require(id.toString.nonEmpty, "id must not be null or empty")
-      new MltExpectsIndex(id.toString)
-    }
-  }
-
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = new MultiGetDefinition(gets)
   def multiget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets)
 

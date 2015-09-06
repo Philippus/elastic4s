@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.explain.{ExplainRequest, ExplainRequestBuilder, ExplainResponse}
+import org.elasticsearch.action.explain.{ExplainAction, ExplainRequest, ExplainRequestBuilder, ExplainResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client
 
@@ -35,7 +35,7 @@ case class ExplainDefinition(index: String,
 
   // used by testing to get the full builder without a client
   private[elastic4s] def request: ExplainRequest = {
-    build(new ExplainRequestBuilder(ProxyClients.client, index, `type`, id)).request()
+    build(new ExplainRequestBuilder(ProxyClients.client, ExplainAction.INSTANCE, index, `type`, id)).request()
   }
 
   def build(builder: ExplainRequestBuilder): ExplainRequestBuilder = {

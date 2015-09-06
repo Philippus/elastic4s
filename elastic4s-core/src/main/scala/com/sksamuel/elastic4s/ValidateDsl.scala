@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequestBuilder, ValidateQueryResponse}
-import org.elasticsearch.client.{Client}
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder, ValidateQueryResponse}
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.XContentHelper
 
 import scala.concurrent.Future
@@ -29,7 +29,8 @@ trait ValidateDsl {
 class ValidateDefinition(index: String, `type`: String) {
 
   private[elastic4s] var q: QueryDefinition = _
-  val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices).setIndices(index).setTypes(`type`)
+  val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices, ValidateQueryAction.INSTANCE).setIndices(index)
+    .setTypes(`type`)
   def build = _builder.request
 
   /**

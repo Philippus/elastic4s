@@ -164,7 +164,7 @@ class TermAggregationDefinition(name: String) extends AggregationDefinition[Term
   }
 
   def lang(lang: String): TermAggregationDefinition = {
-    builder.lang(lang)
+    builder.la(lang)
     this
   }
 
@@ -179,7 +179,7 @@ class TermAggregationDefinition(name: String) extends AggregationDefinition[Term
   }
 
   def script(script: String): TermAggregationDefinition = {
-    builder.script(script)
+    builder.script(new Script(script))
     this
   }
 

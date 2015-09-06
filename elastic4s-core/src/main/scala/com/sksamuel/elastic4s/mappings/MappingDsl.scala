@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{IndexType, Executable, ProxyClients}
-import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingResponse
+import com.sksamuel.elastic4s.{Executable, IndexType, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
+import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingAction, PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -31,30 +30,15 @@ trait MappingDsl {
       injectFuture(c.admin.indices.putMapping(t.request, _))
     }
   }
-
-  implicit object DeleteMappingDefinitionExecutable
-    extends Executable[DeleteMappingDefinition, DeleteMappingResponse, DeleteMappingResponse] {
-    override def apply(c: Client, t: DeleteMappingDefinition): Future[DeleteMappingResponse] = {
-      injectFuture(c.admin.indices.prepareDeleteMapping(t.indexes.toSeq: _*).setType(t.types.toSeq: _*).execute)
-    }
-  }
 }
 
 class PutMappingDefinition(indexType: IndexType) extends MappingDefinition(indexType.`type`) {
 
-  var ignore: Option[Boolean] = None
-
-  def ignoreConflicts(ignore: Boolean): this.type = {
-    this.ignore = Option(ignore)
-    this
-  }
-
   def request: PutMappingRequest = {
-    val req = new PutMappingRequestBuilder(ProxyClients.indices)
+    val req = new PutMappingRequestBuilder(ProxyClients.indices, PutMappingAction.INSTANCE)
       .setIndices(indexType.index)
       .setType(`type`)
       .setSource(super.build)
-    ignore.foreach(req.setIgnoreConflicts)
     req.request()
   }
 }

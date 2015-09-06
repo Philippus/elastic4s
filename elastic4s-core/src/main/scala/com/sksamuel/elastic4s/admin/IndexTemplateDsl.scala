@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.elastic4s.{Executable, ProxyClients}
-import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse}
-import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder, GetIndexTemplatesResponse}
-import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse}
+import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateAction, DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse}
+import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesAction, GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder, GetIndexTemplatesResponse}
+import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateAction, PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse}
 import org.elasticsearch.client.Client
 
 import scala.collection.mutable.ListBuffer
@@ -45,7 +45,8 @@ trait IndexTemplateDsl {
 class CreateIndexTemplateDefinition(val name: String, val pattern: String) {
 
   val _mappings = new ListBuffer[MappingDefinition]
-  val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, name).setTemplate(pattern)
+  val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, PutIndexTemplateAction.INSTANCE, name)
+    .setTemplate(pattern)
 
   def build: PutIndexTemplateRequest = {
     for ( mapping <- _mappings ) {
@@ -63,10 +64,10 @@ class CreateIndexTemplateDefinition(val name: String, val pattern: String) {
 
 class DeleteIndexTemplateDefinition(name: String) {
   def build: DeleteIndexTemplateRequest = _builder.request
-  val _builder = new DeleteIndexTemplateRequestBuilder(ProxyClients.indices, name)
+  val _builder = new DeleteIndexTemplateRequestBuilder(ProxyClients.indices, DeleteIndexTemplateAction.INSTANCE, name)
 }
 
 class GetTemplateDefinition(name: String) {
   def build: GetIndexTemplatesRequest = _builder.request
-  val _builder = new GetIndexTemplatesRequestBuilder(ProxyClients.indices, name)
+  val _builder = new GetIndexTemplatesRequestBuilder(ProxyClients.indices, GetIndexTemplatesAction.INSTANCE, name)
 }

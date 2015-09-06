@@ -94,7 +94,7 @@ object ElasticClient {
    * @param uri the instance(s) to connect to.
    */
   def transport(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
-    val client = new TransportClient(settings)
+    val client = TransportClient.builder.settings(settings).build()
     for ( (host, port) <- uri.hosts ) {
       client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
     }
