@@ -158,23 +158,6 @@ class IdFilterDefinition(ids: String*) extends FilterDefinition {
   }
 }
 
-class InFilterDefinition(name: String, values: Seq[String])
-  extends FilterDefinition with DefinitionAttributeCacheKey with DefinitionAttributeCache {
-
-  val builder = FilterBuilders.inFilter(name, values: _*)
-  val _builder = builder
-
-  def filterName(filterName: String): this.type = {
-    builder.filterName(filterName)
-    this
-  }
-
-  def execution(execution: String): this.type = {
-    builder.execution(execution)
-    this
-  }
-}
-
 class IndicesFilterDefinition(filter: FilterDefinition, indexes: Seq[String]) extends FilterDefinition {
 
   val builder = FilterBuilders.indicesFilter(filter.builder, indexes: _*)
