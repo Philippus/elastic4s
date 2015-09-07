@@ -125,7 +125,7 @@ class BulkActor[T](client: ElasticClient,
       shutdownIfAllAcked()
 
     case BulkActor.ForceIndexing =>
-      if (buffer.nonEmpty)
+      if (pending == 0 && buffer.nonEmpty)
         index()
 
     case r: BulkResponse =>
