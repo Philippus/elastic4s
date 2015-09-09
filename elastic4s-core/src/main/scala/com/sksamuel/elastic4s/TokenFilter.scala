@@ -378,3 +378,14 @@ case class ShingleTokenFilter(name: String,
   def tokenSeperator(sep: String): ShingleTokenFilter = copy(token_separator = sep)
   def fillerToken(filler: String): ShingleTokenFilter = copy(filler_token = filler)
 }
+
+case class HunspellTokenFilter(name:String,language: String)
+  extends TokenFilterDefinition {
+
+  val filterType = "hunspell"
+
+  override def build(source: XContentBuilder): Unit = {
+    source.field("language", language)
+  }
+
+}
