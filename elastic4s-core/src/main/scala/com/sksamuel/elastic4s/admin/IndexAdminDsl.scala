@@ -53,8 +53,8 @@ trait IndexAdminDsl {
     }
   }
   implicit object ClearIndicesCacheResponseExecutable
-    extends Executable[IndicesStatsDefinition, ClearIndicesCacheResponse, ClearIndicesCacheResponse] {
-    override def apply(c: Client, t: IndicesStatsDefinition): Future[ClearIndicesCacheResponse] = {
+    extends Executable[ClearCacheDefinition, ClearIndicesCacheResponse, ClearIndicesCacheResponse] {
+    override def apply(c: Client, t: ClearCacheDefinition): Future[ClearIndicesCacheResponse] = {
       injectFuture(c.admin.indices.prepareClearCache(t.indexes: _*).execute)
     }
   }
@@ -75,9 +75,9 @@ trait IndexAdminDsl {
 class OpenIndexDefinition(val index: String)
 class CloseIndexDefinition(val index: String)
 class GetSegmentsDefinition(val indexes: Seq[String])
-class FlushIndexDefinition(val indexes: Seq[String])
-class IndicesStatsDefinition(val indexes: Seq[String])
-class ClearCacheDefinition(val indexes: Seq[String])
-class RefreshIndexDefinition(val indexes: Seq[String])
 class IndexExistsDefinition(val indexes: Seq[String])
 class TypesExistsDefinition(val indexes: Seq[String], val types: Seq[String])
+class IndicesStatsDefinition(val indexes: Seq[String])
+class ClearCacheDefinition(val indexes: Seq[String])
+class FlushIndexDefinition(val indexes: Seq[String])
+class RefreshIndexDefinition(val indexes: Seq[String])
