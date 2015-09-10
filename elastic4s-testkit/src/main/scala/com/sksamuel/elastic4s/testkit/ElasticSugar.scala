@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
-import org.elasticsearch.common.settings.ImmutableSettings
+import org.elasticsearch.common.settings.Settings
 import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 import scala.concurrent.Future
@@ -40,7 +40,7 @@ trait ElasticNodeBuilder {
   /**
    * Override this if you wish to control all the settings used by the client.
    */
-  protected def settings: ImmutableSettings.Builder = {
+  protected def settings: Settings.Builder = {
 
     val home = testNodeHomePath
     logger.info(s"Elasticsearch test-server located at $home")
@@ -57,7 +57,7 @@ trait ElasticNodeBuilder {
     writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
     writer.close()
 
-    val builder = ImmutableSettings.settingsBuilder()
+    val builder = Settings.settingsBuilder()
       .put("node.http.enabled", httpEnabled)
       .put("http.enabled", httpEnabled)
       .put("path.home", home.toFile.getAbsolutePath)
@@ -76,7 +76,7 @@ trait ElasticNodeBuilder {
   /**
    * Invoked by the sugar trait to setup the settings builder that was created by settings()
    */
-  def configureSettings(builder: ImmutableSettings.Builder): ImmutableSettings.Builder = builder
+  def configureSettings(builder: Settings.Builder): Settings.Builder = builder
 
   /**
    * Invoked to create a local client for the elastic node.
