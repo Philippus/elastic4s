@@ -1,9 +1,12 @@
 package com.sksamuel.elastic4s
 
+import java.util
+
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
+import org.elasticsearch.script.{ScriptService, Script}
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
@@ -166,13 +169,14 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
   def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
     import scala.collection.JavaConverters._
     sfieldDefs.foreach {
-      case ScriptFieldDefinition(name, script, Some(lang), Some(params)) => _builder
-        .addScriptField(name, lang, script, params.asJava)
-      case ScriptFieldDefinition(name, script, Some(lang), None) => _builder
-        .addScriptField(name, lang, script, Map.empty[String, AnyRef].asJava)
-      case ScriptFieldDefinition(name, script, None, Some(params)) => _builder
-        .addScriptField(name, script, params.asJava)
-      case ScriptFieldDefinition(name, script, None, None) => _builder.addScriptField(name, script)
+      case ScriptFieldDefinition(name, script, Some(lang), Some(params)) =>
+        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, lang, params.asJava))
+      case ScriptFieldDefinition(name, script, Some(lang), None) =>
+        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, lang, new util.HashMap()))
+      case ScriptFieldDefinition(name, script, None, Some(params)) =>
+        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, null, params.asJava))
+      case ScriptFieldDefinition(name, script, None, None) =>
+        _builder.addScriptField(name, new Script(script))
     }
     this
   }

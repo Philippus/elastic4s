@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.search.sort.{ SortOrder, SortBuilder, SortBuilders }
 import org.elasticsearch.common.geo.GeoDistance
 
@@ -36,8 +37,8 @@ class FieldSortDefinition(field: String) extends SortDefinition {
     this
   }
 
-  def nestedFilter(nestedFilter: FilterDefinition) = {
-    builder.setNestedFilter(nestedFilter.builder)
+  def nestedFilter(qb: QueryDefinition) = {
+    builder.setNestedFilter(qb.builder)
     this
   }
 
