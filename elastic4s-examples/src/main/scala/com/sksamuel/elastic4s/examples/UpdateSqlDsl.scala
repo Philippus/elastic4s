@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.examples
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.source.Indexable
 
 // examples of the count API in dot notation
 class UpdateSqlDsl extends ElasticDsl {
@@ -17,12 +16,18 @@ class UpdateSqlDsl extends ElasticDsl {
   update id "id" in "index" / "type" source somedoc
 
   // update by id, using a script
-  update id "id" in "index" / "type" script "ctx._source.somefield = 'value'"
+  update id "id" in "index" / "type" script {
+    script("ctx._source.somefield = 'value'")
+  }
 
   // update by id, using a script, where the script language is specified
-  update id "id" in "index" / "type" script "ctx._source.somefield = 'value'" lang "sillylang"
+  update id "id" in "index" / "type" script {
+    script("ctx._source.somefield = 'value'").lang("sillylang")
+  }
 
   // update by id, using a script which has parameters which are passed in as a map
-  update id "id" in "index" / "type" script "ctx._source.somefield = myparam" params Map("myparam" -> "sam")
+  update id "id" in "index" / "type" script {
+    script("ctx._source.somefield = myparam").params("myparam" -> "sam")
+  }
 }
 

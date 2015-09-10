@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.examples
 
 import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.anaylzers.{NGramTokenizer, StandardTokenizer, CustomAnalyzerDefinition, SnowballAnalyzerDefinition, PatternAnalyzerDefinition, StemmerTokenFilter, PatternReplaceTokenFilter, LengthTokenFilter, UniqueTokenFilter}
+import com.sksamuel.elastic4s.anaylzers.{AnalyzerDefinition, CustomAnalyzerDefinition, LengthTokenFilter, NGramTokenizer, PatternAnalyzerDefinition, PatternReplaceTokenFilter, SnowballAnalyzerDefinition, StandardTokenizer, StemmerTokenFilter, UniqueTokenFilter}
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 
 // examples of the count API in dot notation
@@ -27,13 +27,12 @@ class CreateIndexSqlDsl extends ElasticDsl {
 
   // create index with copy_to functionaliy
   create index "tweets" mappings (
-    "tweet" as(
+    "tweet" as (
       "title" typed StringType index "analyzed" copyTo("meta_data", "article_info")
       )
     )
 
-  // create index "users" with custom analyzers
-  create index "users" analysis(
+  val analyzers: Seq[AnalyzerDefinition] = Seq(
     PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
     SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
     CustomAnalyzerDefinition(
@@ -47,5 +46,9 @@ class CreateIndexSqlDsl extends ElasticDsl {
     CustomAnalyzerDefinition(
       "myAnalyzer2",
       NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
-    ))
+    )
+  )
+
+  // create index "users" with custom analyzers
+  create index "users" analysis analyzers
 }

@@ -97,7 +97,7 @@ class CreateIndexDefinition(name: String) {
     this
   }
 
-  def analysis(analyzers: AnalyzerDefinition*): this.type = analysis(analyzers)
+  def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): this.type = analysis(first +: rest)
 
   var _rawSource: Option[String] = None
 
