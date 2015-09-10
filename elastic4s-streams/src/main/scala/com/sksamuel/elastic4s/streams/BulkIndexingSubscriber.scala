@@ -122,6 +122,7 @@ class BulkActor[T](client: ElasticClient,
       if (buffer.nonEmpty)
         index()
       completed = true
+      scheduler.foreach(_.cancel)
       shutdownIfAllAcked()
 
     case BulkActor.ForceIndexing =>
