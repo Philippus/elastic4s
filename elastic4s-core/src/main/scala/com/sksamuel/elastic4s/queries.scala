@@ -423,9 +423,7 @@ class MultiMatchQueryDefinition(text: String)
 }
 
 class GeoPolygonQueryDefinition(name: String)
-  extends QueryDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends QueryDefinition{
 
   val builder = QueryBuilders.geoPolygonQuery(name)
   val _builder = builder
@@ -443,9 +441,7 @@ class GeoPolygonQueryDefinition(name: String)
 class GeoDistanceQueryDefinition(name: String)
   extends QueryDefinition
   with DefinitionAttributeLat
-  with DefinitionAttributeLon
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  with DefinitionAttributeLon {
 
   val builder = QueryBuilders.geoDistanceQuery(name)
   val _builder = builder
@@ -476,9 +472,7 @@ class GeoDistanceQueryDefinition(name: String)
 }
 
 class GeoBoundingBoxQueryDefinition(name: String)
-  extends QueryDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends QueryDefinition {
 
   val builder = QueryBuilders.geoBoundingBoxQuery(name)
   val _builder = builder
@@ -517,8 +511,6 @@ class GeoDistanceRangeQueryDefinition(field: String)
   with DefinitionAttributeGt
   with DefinitionAttributeLat
   with DefinitionAttributeLon
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey
   with DefinitionAttributePoint {
 
   val builder = QueryBuilders.geoDistanceRangeQuery(field)
@@ -561,9 +553,7 @@ class GeoDistanceRangeQueryDefinition(field: String)
 }
 
 class GeoHashCellQuery(field: String)
-  extends QueryDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends QueryDefinition {
 
   val builder = QueryBuilders.geoHashCellQuery(field)
   val _builder = builder
@@ -883,9 +873,7 @@ class SpanNearQueryDefinition extends SpanQueryDefinition {
 }
 
 class TermsLookupQueryDefinition(field: String)
-  extends QueryDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends QueryDefinition{
 
   val builder = QueryBuilders.termsLookupQuery(field)
   val _builder = builder
@@ -1206,9 +1194,7 @@ class MissingQueryDefinition(field: String) extends QueryDefinition {
 }
 
 class ScriptQueryDefinition(script: ScriptDefinition)
-  extends QueryDefinition
-  with DefinitionAttributeCache
-  with DefinitionAttributeCacheKey {
+  extends QueryDefinition {
 
   val builder = QueryBuilders.scriptQuery(script.toJavaAPI)
   val _builder = builder
@@ -1440,8 +1426,7 @@ class NestedQueryDefinition(path: String) extends QueryDefinition {
 }
 
 class NotQueryDefinition(filter: QueryDefinition)
-  extends QueryDefinition
-  with DefinitionAttributeCache {
+  extends QueryDefinition {
 
   val builder = QueryBuilders.notQuery(filter.builder)
   val _builder = builder

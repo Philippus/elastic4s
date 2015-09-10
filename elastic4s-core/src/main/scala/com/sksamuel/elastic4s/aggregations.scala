@@ -37,7 +37,7 @@ object AggregationResults {
     override type Result = org.elasticsearch.search.aggregations.bucket.terms.Terms
   }
   implicit object DateHistogramAggregationResult extends AggregationResult[DateHistogramAggregation] {
-    override type Result = org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
+    override type Result = org.elasticsearch.search.aggregations.bucket.histogram.Histogram
   }
   implicit object CountAggregationResult extends AggregationResult[ValueCountAggregationDefinition] {
     override type Result = org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount
