@@ -40,6 +40,24 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
+###### 1.7.4
+* Fix for bulk ops not setting refresh value
+
+###### 1.7.3
+* SynonymTokenFilter as case class
+* Adding helper test method to block until a document has an specific version.
+* Publisher checks for presence of scroll in query
+* Index refresh API fixed
+
+###### 1.7.2
+* Added "missing" field to field value factor
+* Added "in" filter
+* Added refresh after bulk op to streams subscriber
+* Fix for #408 Source Exclusion directive is not managed by MappingDefinition DSL
+
+###### 1.7.1
+* #362 Add support for setting fields during update requests
+
 ###### 1.7.0
 
 * Works with Elasticsearch 1.7.x
