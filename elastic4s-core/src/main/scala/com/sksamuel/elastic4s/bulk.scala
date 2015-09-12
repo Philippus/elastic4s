@@ -34,13 +34,7 @@ trait BulkDsl {
   implicit object BulkDefinitionExecutable
     extends Executable[BulkDefinition, BulkResponse, BulkResponse] {
     override def apply(c: Client, t: BulkDefinition): Future[BulkResponse] = {
-      val bulk = c.prepareBulk()
-      t.requests.foreach {
-        case index: IndexDefinition => bulk.add(index.build)
-        case delete: DeleteByIdDefinition => bulk.add(delete.build)
-        case update: UpdateDefinition => bulk.add(update.build)
-      }
-      injectFuture(bulk.execute)
+      injectFuture(c.bulk(t.build, _))
     }
   }
 
@@ -48,6 +42,8 @@ trait BulkDsl {
 }
 
 class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
+
+  def build = _builder
 
   def timeout(value: String): this.type = {
     _builder.timeout(value)
@@ -74,7 +70,7 @@ class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
     this
   }
 
-  val _builder = new BulkRequest()
+  private val _builder = new BulkRequest()
   requests.foreach {
     case index: IndexDefinition => _builder.add(index.build)
     case delete: DeleteByIdDefinition => _builder.add(delete.build)
