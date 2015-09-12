@@ -24,6 +24,7 @@ class ScrollPublisher private[streams](client: ElasticClient,
                                        search: SearchDefinition,
                                        elements: Long)
                                       (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
+  require(search.build.scroll() != null, "Search Definition must have a scroll to be used as Publisher")
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9
