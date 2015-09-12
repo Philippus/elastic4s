@@ -77,7 +77,7 @@ trait ElasticDsl
     def filters(name: String) = new FiltersAggregationDefinition(name)
     def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
     def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def geohash(name:String) = new GeoHashGridAggregationDefinition(name)
+    def geohash(name: String) = new GeoHashGridAggregationDefinition(name)
     def global(name: String) = new GlobalAggregationDefinition(name)
     def histogram(name: String) = new HistogramAggregation(name)
     def ipRange(name: String) = new IpRangeAggregationDefinition(name)
@@ -283,7 +283,6 @@ trait ElasticDsl
   }
   def geoSort(name: String): GeoDistanceSortDefinition = geo sort name
 
-
   def completionField(name: String) = field(name).typed(CompletionType)
 
   def floatField(name: String) = field(name).typed(FloatType)
@@ -485,12 +484,12 @@ trait ElasticDsl
   def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
-    def index(indexes: String*): IndexRecoveryDefinition = recover index indexes
+    def index(indexes: Iterable[String]): IndexRefreshDefinition = new IndexRefreshDefinition(indexes.toSeq)
+    def index(indexes: String*): IndexRefreshDefinition = new IndexRefreshDefinition(indexes)
   }
 
-  def refreshIndex(indexes: Iterable[String]): IndexRecoveryDefinition = refresh index indexes
-  def refreshIndex(indexes: String*): IndexRecoveryDefinition = refresh index indexes
+  def refreshIndex(indexes: Iterable[String]): IndexRefreshDefinition = refresh index indexes
+  def refreshIndex(indexes: String*): IndexRefreshDefinition = refresh index indexes
 
   case object remove {
     def alias(alias: String): RemoveAliasExpectsIndex = {
