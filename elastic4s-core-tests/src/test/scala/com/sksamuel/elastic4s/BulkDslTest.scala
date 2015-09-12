@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.support.replication.ReplicationType
-import org.scalatest.{ FlatSpec, Matchers }
-import scala.concurrent.duration._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.WriteConsistencyLevel
+import org.scalatest.{FlatSpec, Matchers}
+
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {
@@ -38,15 +38,6 @@ class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {
     }
   }
 
-  it should "accept replicationType" in {
-    client.execute {
-      bulk(
-        index into "knightrider/character" fields "name" -> "michael",
-        delete id 12 from "knightrider/vehicle"
-      ).replicationType(ReplicationType.SYNC)
-    }
-  }
-
   it should "accept timeout" in {
     client.execute {
       bulk(
@@ -70,8 +61,7 @@ class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {
       bulk(
         index into "knightrider/character" fields "name" -> "michael",
         delete id 12 from "knightrider/vehicle"
-      ).timeout("123ms").replicationType(ReplicationType.SYNC)
-        .refresh(true).consistencyLevel(WriteConsistencyLevel.QUORUM)
+      ).timeout("123ms").refresh(true).consistencyLevel(WriteConsistencyLevel.QUORUM)
     }
   }
 }

@@ -147,7 +147,9 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
     this
   }
   def aggregations(a: AbstractAggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
-  def aggs(a: AbstractAggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
+  def aggs(first: AbstractAggregationDefinition, rest: AbstractAggregationDefinition*): SearchDefinition = {
+    aggregations(first +: rest)
+  }
   def aggs(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = aggregations(iterable)
 
   def aggregations(json: String): this.type = {

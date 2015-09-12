@@ -200,7 +200,7 @@ trait ElasticDsl
   def deleteMapping(indexes: String*) = DeleteMappingDefinition(indexes)
   def deleteMapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
 
-  @deprecated("use explain(index, type, id).query(query)...", "2.0.")
+  @deprecated("use explain(index, type, id).query(query)...", "2.0.0")
   case object explain {
     def id(id: String): ExplainExpectsIndex = new ExplainExpectsIndex(id)
   }
@@ -210,6 +210,7 @@ trait ElasticDsl
   case object field extends TypeableFields {
     val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
+    @deprecated("use fieldSort(field:String)", "2.0.0")
     def sort(field: String): FieldSortDefinition = new FieldSortDefinition(field)
     def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
@@ -441,16 +442,19 @@ trait ElasticDsl
   }
   def restoreSnapshot(name: String): RestoreSnapshotExpectsFrom = restore snapshot name
 
+  @deprecated("use scoreSort()", "2.0.0")
   case object score {
-    def sort: ScoreSortDefinition = new ScoreSortDefinition
+    @deprecated("use scoreSort()", "2.0.0")
+    def sort: ScoreSortDefinition = ScoreSortDefinition()
   }
-  def scoreSort: ScoreSortDefinition = score.sort
+  def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
   case object script {
+    @deprecated("use scriptSort(script)", "2.0.0")
     def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
-  def scriptSort(scripttext: String): ScriptSortDefinition = script sort scripttext
+  def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
   def scriptField(n: String): ExpectsScript = script field n
 
   case object search {

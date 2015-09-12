@@ -27,11 +27,12 @@ trait ScoreDsl {
     new ExponentialDecayScoreDefinition(field, origin, scale)
   }
 
-  def fieldFactorScore(fieldName: String) = new FieldValueFactorDefinition(fieldName)
-  def weightScore(boost: Double) = new WeightScoreDefinition(boost)
+  def fieldFactorScore(field: String) = FieldValueFactorDefinition(field)
+
+  def weightScore(boost: Double) = WeightScoreDefinition(boost)
 }
 
-class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightScoreDefinition] {
+case class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightScoreDefinition] {
   val builder = new WeightBuilder().setWeight(boost.toFloat)
 }
 
@@ -51,7 +52,7 @@ trait ScoreDefinition[T] {
   }
 }
 
-class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[FieldValueFactorDefinition] {
+case class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[FieldValueFactorDefinition] {
 
   override val builder = new FieldValueFactorFunctionBuilder(fieldName: String)
 
@@ -71,11 +72,11 @@ class FieldValueFactorDefinition(fieldName: String) extends ScoreDefinition[Fiel
   }
 }
 
-class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefinition] {
+case class RandomScoreDefinition(seed: Int) extends ScoreDefinition[RandomScoreDefinition] {
   val builder = new RandomScoreFunctionBuilder().seed(seed)
 }
 
-class ScriptScoreDefinition(script: ScriptDefinition) extends ScoreDefinition[ScriptScoreDefinition] {
+case class ScriptScoreDefinition(script: ScriptDefinition) extends ScoreDefinition[ScriptScoreDefinition] {
   val builder = new ScriptScoreFunctionBuilder(script.toJavaAPI)
 }
 

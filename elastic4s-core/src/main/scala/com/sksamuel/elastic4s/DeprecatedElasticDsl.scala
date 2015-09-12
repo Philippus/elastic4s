@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.anaylzers.{StemmerTokenFilter, SnowballTokenFilter
 // a dumping ground for deprecated syntax, keeps the main file clear
 trait DeprecatedElasticDsl {
 
-  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.0")
+  @deprecated("use scoreSort, geoSort, fieldSort or scriptSort", "1.6.0")
   case object by {
     def score: ScoreSortDefinition = ElasticDsl.score.sort
     def geo(field: String): GeoDistanceSortDefinition = ElasticDsl.geo sort field

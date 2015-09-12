@@ -58,7 +58,7 @@ class FieldSortDefinition(field: String) extends SortDefinition {
   }
 }
 
-class ScriptSortDefinition(script: String) extends SortDefinition {
+case class ScriptSortDefinition(script: String) extends SortDefinition {
 
   def builder = {
     val b = SortBuilders
@@ -157,7 +157,7 @@ class GeoDistanceSortDefinition(field: String) extends SortDefinition {
   }
 }
 
-class ScoreSortDefinition extends SortDefinition {
+case class ScoreSortDefinition() extends SortDefinition {
 
   val builder = SortBuilders.scoreSort()
 

@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 import scala.concurrent.Future
 
 /** @author Stephen Samuel */
-trait ElasticNodeBuilder {
+trait NodeBuilder {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
@@ -26,8 +26,6 @@ trait ElasticNodeBuilder {
   def numberOfReplicas: Int = 0
 
   def numberOfShards: Int = 1
-
-  def disableDynamicScripting: Boolean = false
 
   def indexRefresh: FiniteDuration = 1.seconds
 
@@ -65,7 +63,8 @@ trait ElasticNodeBuilder {
       .put("path.conf", conf.toFile.getAbsolutePath)
       .put("index.number_of_shards", numberOfShards)
       .put("index.number_of_replicas", numberOfReplicas)
-      .put("script.disable_dynamic", disableDynamicScripting)
+      .put("script.inline", "on")
+      .put("script.indexed", "on")
       .put("index.refresh_interval", indexRefresh.toSeconds + "s")
       .put("discovery.zen.ping.multicast.enabled", "false")
       .put("es.logger.level", "INFO")
@@ -85,7 +84,7 @@ trait ElasticNodeBuilder {
   def createLocalClient: ElasticClient = ElasticClient.local(settings.build)
 }
 
-trait ElasticSugar extends ElasticNodeBuilder {
+trait ElasticSugar extends NodeBuilder {
 
   private val logger = LoggerFactory.getLogger(getClass)
 

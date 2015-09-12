@@ -7,7 +7,7 @@
                 "reverse": true,
                 "lang": "java",
                 "mode": "min",
-                "nested_path": "nested.path"
+                "nested_path": "a.b.c"
             }
         }
     ]

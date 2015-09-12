@@ -33,41 +33,31 @@ trait QueryDsl {
     def query(q: String): CommonTermsQueryDefinition = text(q)
   }
 
-  @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
-  def constantScore = new ConstantScoreExpectsQueryOrFilter
-  class ConstantScoreExpectsQueryOrFilter {
-    @deprecated("use constantScoreQuery or constantScoreFilter to be consistent with other query type syntax", "1.6.5")
-    def query(query: QueryDefinition) = new ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))
-  }
-
-  def constantScoreQuery(q: QueryDefinition) = constantScore query q
+  def constantScoreQuery(q: QueryDefinition) = ConstantScoreDefinition(QueryBuilders.constantScoreQuery(q.builder))
 
   def dismax = new DisMaxDefinition
 
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
 
+  @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
   def filteredQuery = new FilteredQueryDefinition
 
   def fuzzyQuery(name: String, value: Any) = new FuzzyQueryDefinition(name, value)
+
+  def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
+  def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
+  def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
 
   def indicesQuery(indices: String*) = new {
     def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
   }
 
-  def hasChildQuery = new HasChildExpectsType
   def hasChildQuery(`type`: String) = new HasChildExpectsQuery(`type`)
-  class HasChildExpectsType {
-    def typed(`type`: String): HasChildExpectsQuery = new HasChildExpectsQuery(`type`)
-  }
   class HasChildExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition): HasChildQueryDefinition = new HasChildQueryDefinition(`type`, q)
+    def query(q: QueryDefinition): HasChildQueryDefinition = HasChildQueryDefinition(`type`, q)
   }
 
-  def hasParentQuery = new HasParentExpectsType
   def hasParentQuery(`type`: String) = new HasParentExpectsQuery(`type`)
-  class HasParentExpectsType {
-    def typed(`type`: String) = new HasParentExpectsQuery(`type`)
-  }
   class HasParentExpectsQuery(`type`: String) {
     def query(q: QueryDefinition) = new HasParentQueryDefinition(`type`, q)
   }
@@ -83,9 +73,12 @@ trait QueryDsl {
 
   def matchAllQuery = new MatchAllQueryDefinition
 
+  def missingQuery(field: String) = MissingQueryDefinition(field)
   def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
 
-  def nestedQuery(path: String): NestedQueryDefinition = new NestedQueryDefinition(path)
+  def nestedQuery(path: String) = new {
+    def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
+  }
 
   def query(q: String): QueryStringQueryDefinition = queryStringQuery(q)
   def queryStringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
@@ -112,23 +105,34 @@ trait QueryDsl {
   def spanNotQuery: SpanNotQueryDefinition = new SpanNotQueryDefinition
   def spanNearQuery: SpanNearQueryDefinition = new SpanNearQueryDefinition
 
-  def spanMultiTermQuery(query: MultiTermQueryDefinition): SpanMultiTermQueryDefinition = new
-      SpanMultiTermQueryDefinition(query)
+  def spanMultiTermQuery(query: MultiTermQueryDefinition) = new SpanMultiTermQueryDefinition(query)
 
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
-  def termQuery(field: String, value: Any): TermQueryDefinition = new TermQueryDefinition(field, value)
+  def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition =
-    new TermsQueryDefinition(field, values.map(_.toString): _*)
+  def termsQuery(field: String, values: AnyRef*) = TermsQueryDefinition(field, values.map(_.toString): _*)
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
 
+  def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
+
+  @deprecated("use idsQuery", "2.0.0")
   def ids(iterable: Iterable[String]): IdQueryDefinition = ids(iterable.toSeq: _*)
+  @deprecated("use idsQuery", "2.0.0")
   def ids(ids: String*): IdQueryDefinition = new IdQueryDefinition(ids: _*)
+
+  def idsQuery(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
+  def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
+
   def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
 
   def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
+  def bool(mustQueries: Seq[QueryDefinition],
+           shouldQueries: Seq[QueryDefinition],
+           notQueries: Seq[QueryDefinition]): BoolQueryDefinition = {
+    must(mustQueries).should(shouldQueries).not(notQueries)
+  }
   def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
@@ -138,51 +142,64 @@ trait QueryDsl {
 }
 
 class BoolQueryDefinition extends QueryDefinition {
+
   val builder = QueryBuilders.boolQuery()
+
   def adjustPureNegative(adjustPureNegative: Boolean): this.type = {
     builder.adjustPureNegative(adjustPureNegative)
     this
   }
+
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
     this
   }
+
   def must(queries: QueryDefinition*): this.type = {
     queries.foreach(builder must _.builder)
     this
   }
+
   def must(queries: Iterable[QueryDefinition]): this.type = {
     queries.foreach(builder must _.builder)
     this
   }
+
   def not(queries: QueryDefinition*): this.type = {
     queries.foreach(builder mustNot _.builder)
     this
   }
+
   def not(queries: Iterable[QueryDefinition]): this.type = {
     queries.foreach(builder mustNot _.builder)
     this
   }
+
   def should(queries: QueryDefinition*): this.type = {
     queries.foreach(builder should _.builder)
     this
   }
+
   def should(queries: Iterable[QueryDefinition]): this.type = {
     queries.foreach(builder should _.builder)
     this
   }
+
   def minimumShouldMatch(minimumShouldMatch: String): this.type = {
     builder.minimumShouldMatch(minimumShouldMatch: String)
     this
   }
+
   def minimumShouldMatch(minimumNumberShouldMatch: Int): this.type = {
     builder.minimumNumberShouldMatch(minimumNumberShouldMatch: Int)
     this
   }
+
   def disableCoord(disableCoord: Boolean): this.type = {
     builder.disableCoord(disableCoord: Boolean)
     this
   }
+
   def queryName(queryName: String): this.type = {
     builder.queryName(queryName)
     this
@@ -212,12 +229,12 @@ class FunctionScoreQueryDefinition(query: QueryDefinition)
   }
 }
 
-class FuzzyQueryDefinition(name: String, value: Any)
+case class FuzzyQueryDefinition(field: String, termValue: Any)
   extends MultiTermQueryDefinition
   with DefinitionAttributePrefixLength
   with DefinitionAttributeBoost {
 
-  val builder = QueryBuilders.fuzzyQuery(name, value.toString)
+  val builder = QueryBuilders.fuzzyQuery(field, termValue.toString)
   val _builder = builder
 
   def fuzziness(fuzziness: Fuzziness) = {
@@ -229,13 +246,19 @@ class FuzzyQueryDefinition(name: String, value: Any)
     builder.maxExpansions(maxExpansions)
     this
   }
+
   def transpositions(transpositions: Boolean) = {
     builder.transpositions(transpositions)
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
-class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
+case class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
 
   val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
   val builder = _builder
@@ -250,6 +273,7 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
     this
   }
 
+  @deprecated("deprecated in elasticsearch", "2.0.0")
   def ids(ids: String*): this.type = {
     _builder.ids(ids: _*)
     this
@@ -275,6 +299,7 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
     this
   }
 
+  @deprecated("deprecated in elasticsearch", "2.0.0")
   def likeText(text: String): this.type = {
     _builder.likeText(text)
     this
@@ -322,6 +347,11 @@ class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
 
   def maxDocFreq(maxDocFreq: Int): this.type = {
     _builder.maxDocFreq(maxDocFreq)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -409,6 +439,11 @@ class MultiMatchQueryDefinition(text: String)
     this
   }
 
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
+
   def matchType(t: String): MultiMatchQueryDefinition = {
     val mt = t match {
       case "most_fields" => MultiMatchQueryBuilder.Type.MOST_FIELDS
@@ -422,83 +457,104 @@ class MultiMatchQueryDefinition(text: String)
   }
 }
 
-class GeoPolygonQueryDefinition(name: String)
-  extends QueryDefinition{
+case class GeoPolygonQueryDefinition(field: String)
+  extends QueryDefinition {
 
-  val builder = QueryBuilders.geoPolygonQuery(name)
+  val builder = QueryBuilders.geoPolygonQuery(field)
   val _builder = builder
 
   def point(geohash: String): GeoPolygonQueryDefinition = {
     builder.addPoint(geohash)
     this
   }
+
   def point(lat: Double, lon: Double): GeoPolygonQueryDefinition = {
     _builder.addPoint(lat, lon)
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
-class GeoDistanceQueryDefinition(name: String)
+case class GeoDistanceQueryDefinition(field: String)
   extends QueryDefinition
   with DefinitionAttributeLat
   with DefinitionAttributeLon {
 
-  val builder = QueryBuilders.geoDistanceQuery(name)
+  val builder = QueryBuilders.geoDistanceQuery(field)
   val _builder = builder
+
+  def geoDistance(geoDistance: GeoDistance): GeoDistanceQueryDefinition = {
+    builder.geoDistance(geoDistance)
+    this
+  }
 
   def geohash(geohash: String): GeoDistanceQueryDefinition = {
     builder.geohash(geohash)
     this
   }
 
-  def method(method: GeoDistance): GeoDistanceQueryDefinition = geoDistance(method)
-
-  def geoDistance(geoDistance: GeoDistance): GeoDistanceQueryDefinition = {
-    builder.geoDistance(geoDistance)
+  def queryName(name: String): GeoDistanceQueryDefinition = {
+    builder.queryName(name)
     this
   }
+
   def distance(distance: String): GeoDistanceQueryDefinition = {
     builder.distance(distance)
     this
   }
+
   def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = {
     builder.distance(distance, unit)
     this
   }
+
   def point(lat: Double, long: Double): GeoDistanceQueryDefinition = {
     builder.point(lat, long)
     this
   }
 }
 
-class GeoBoundingBoxQueryDefinition(name: String)
+case class GeoBoundingBoxQueryDefinition(field: String)
   extends QueryDefinition {
 
-  val builder = QueryBuilders.geoBoundingBoxQuery(name)
+  val builder = QueryBuilders.geoBoundingBoxQuery(field)
   val _builder = builder
 
   private var _left: Double = _
   private var _top: Double = _
   private var _right: Double = _
   private var _bottom: Double = _
+
   def left(left: Double): GeoBoundingBoxQueryDefinition = {
     _left = left
     builder.topLeft(_top, _left)
     this
   }
+
   def top(top: Double): GeoBoundingBoxQueryDefinition = {
     _top = top
     builder.topLeft(_top, _left)
     this
   }
+
   def right(right: Double): GeoBoundingBoxQueryDefinition = {
     _right = right
     builder.bottomRight(_bottom, _right)
     this
   }
+
   def bottom(bottom: Double): GeoBoundingBoxQueryDefinition = {
     _bottom = bottom
     builder.bottomRight(_bottom, _right)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -546,7 +602,7 @@ class GeoDistanceRangeQueryDefinition(field: String)
     this
   }
 
-  def name(name: String): GeoDistanceRangeQueryDefinition = {
+  def queryName(name: String): GeoDistanceRangeQueryDefinition = {
     builder.queryName(name)
     this
   }
@@ -574,32 +630,77 @@ class GeoHashCellQuery(field: String)
   }
 }
 
-class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
+case class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition with DefinitionAttributeBoost {
+
   val builder = QueryBuilders.hasChildQuery(`type`, q.builder)
   val _builder = builder
+
+  /**
+   * Defines the minimum number of children that are required to match for the parent to be considered a match.
+   */
+  def minChildren(min: Int): HasChildQueryDefinition = {
+    builder.minChildren(min)
+    this
+  }
+
+  /**
+   * Configures at what cut off point only to evaluate parent documents that contain the matching parent id terms
+   * instead of evaluating all parent docs.
+   */
+  def shortCircuitCutoff(shortCircuitCutoff: Int): HasChildQueryDefinition = {
+    builder.setShortCircuitCutoff(shortCircuitCutoff)
+    this
+  }
+
+  /**
+   * Defines the maximum number of children that are required to match for the parent to be considered a match.
+   */
+  def maxChildren(max: Int): HasChildQueryDefinition = {
+    builder.maxChildren(max)
+    this
+  }
+
+  /**
+   * Defines how the scores from the matching child documents are mapped into the parent document.
+   */
   def scoreType(scoreType: String): HasChildQueryDefinition = {
     builder.scoreType(scoreType)
+    this
+  }
+
+  def queryName(name: String) = {
+    builder.queryName(name)
     this
   }
 }
 
 class HasParentQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition with DefinitionAttributeBoost {
+
   val builder = QueryBuilders.hasParentQuery(`type`, q.builder)
   val _builder = builder
+
   def scoreType(scoreType: String): HasParentQueryDefinition = {
     builder.scoreType(scoreType)
+    this
+  }
+
+  def queryName(name: String) = {
+    builder.queryName(name)
     this
   }
 }
 
 class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinition) extends QueryDefinition {
+
   override val builder = QueryBuilders.indicesQuery(query.builder, indices.toSeq: _*)
+
   def noMatchQuery(query: QueryDefinition): this.type = {
     builder.noMatchQuery(query.builder)
     this
   }
+
   def queryName(queryName: String): this.type = {
     builder.queryName(queryName)
     this
@@ -631,7 +732,7 @@ class BoostingQueryDefinition extends QueryDefinition {
   }
 }
 
-class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
+case class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
     this
@@ -732,9 +833,14 @@ class FilteredQueryDefinition extends QueryDefinition {
     _filter = Option(filter).map(_.builder).orNull
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
-class IdQueryDefinition(ids: String*) extends QueryDefinition {
+case class IdQueryDefinition(ids: String*) extends QueryDefinition {
 
   def builder = _builder
   private var _builder = QueryBuilders.idsQuery().addIds(ids: _*)
@@ -774,6 +880,11 @@ class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefini
     builder.boost(boost.toFloat)
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
 trait MultiTermQueryDefinition extends QueryDefinition {
@@ -786,6 +897,11 @@ class WildcardQueryDefinition(field: String, query: Any)
   with DefinitionAttributeBoost {
   val builder = QueryBuilders.wildcardQuery(field, query.toString)
   val _builder = builder
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
 class PrefixQueryDefinition(field: String, prefix: Any)
@@ -794,6 +910,11 @@ class PrefixQueryDefinition(field: String, prefix: Any)
   with DefinitionAttributeBoost {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
 class RegexQueryDefinition(field: String, regex: Any)
@@ -804,6 +925,11 @@ class RegexQueryDefinition(field: String, regex: Any)
   val _builder = builder
   def flags(flags: RegexpFlag*): RegexQueryDefinition = {
     builder.flags(flags: _*)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -817,29 +943,41 @@ class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extends Que
 }
 
 class SpanNotQueryDefinition extends QueryDefinition {
+
   val builder = QueryBuilders.spanNotQuery()
+
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
     this
   }
+
   def dist(dist: Int): this.type = {
     builder.dist(dist)
     this
   }
+
   def exclude(query: SpanQueryDefinition): this.type = {
     builder.exclude(query.builder)
     this
   }
+
   def include(query: SpanQueryDefinition): this.type = {
     builder.include(query.builder)
     this
   }
+
   def pre(pre: Int): this.type = {
     builder.pre(pre)
     this
   }
+
   def post(post: Int): this.type = {
     builder.post(post)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -849,36 +987,47 @@ class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends Span
 }
 
 class SpanNearQueryDefinition extends SpanQueryDefinition {
+
   val builder = QueryBuilders.spanNearQuery()
+
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
     this
   }
+
   def inOrder(inOrder: Boolean): this.type = {
     builder.inOrder(inOrder)
     this
   }
+
   def collectPayloads(collectPayloads: Boolean): this.type = {
     builder.collectPayloads(collectPayloads)
     this
   }
+
   def clause(query: SpanQueryDefinition): this.type = {
     builder.clause(query.builder)
     this
   }
+
   def slop(slop: Int): this.type = {
     builder.slop(slop)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
 
 class TermsLookupQueryDefinition(field: String)
-  extends QueryDefinition{
+  extends QueryDefinition {
 
   val builder = QueryBuilders.termsLookupQuery(field)
   val _builder = builder
 
-  def name(name: String): this.type = {
+  def queryName(name: String): this.type = {
     builder.queryName(name)
     this
   }
@@ -909,7 +1058,7 @@ class TermsLookupQueryDefinition(field: String)
   }
 }
 
-class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
+case class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
   val builder = value match {
     case str: String => QueryBuilders.termQuery(field, str)
@@ -921,9 +1070,14 @@ class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
     builder.boost(boost.toFloat)
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
-class TermsQueryDefinition(field: String, values: String*) extends QueryDefinition {
+case class TermsQueryDefinition(field: String, values: String*) extends QueryDefinition {
 
   val builder = QueryBuilders.termsQuery(field, values: _*)
 
@@ -932,9 +1086,17 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
     this
   }
 
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
+
   @deprecated("deprecated in elasticsearch", "2.0.0")
-  def minimumShouldMatch(minimumShouldMatch: String): TermsQueryDefinition = {
-    builder.minimumShouldMatch(minimumShouldMatch)
+  def minimumShouldMatch(min: Int): TermsQueryDefinition = minimumShouldMatch(min.toString)
+
+  @deprecated("deprecated in elasticsearch", "2.0.0")
+  def minimumShouldMatch(min: String): TermsQueryDefinition = {
+    builder.minimumShouldMatch(min)
     this
   }
 
@@ -945,11 +1107,11 @@ class TermsQueryDefinition(field: String, values: String*) extends QueryDefiniti
   }
 }
 
-class TypeQueryDefinition(`type`: String) extends QueryDefinition {
+case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
   val builder = QueryBuilders.typeQuery(`type`)
 }
 
-class MatchAllQueryDefinition extends QueryDefinition {
+case class MatchAllQueryDefinition() extends QueryDefinition {
 
   val builder = QueryBuilders.matchAllQuery
 
@@ -974,6 +1136,31 @@ class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with 
     this
   }
 
+  def lte(d: String): RangeQueryDefinition = {
+    builder.gte(d)
+    this
+  }
+
+  def timeZone(timeZone: String): RangeQueryDefinition = {
+    builder.timeZone(timeZone)
+    this
+  }
+
+  def gte(d: String): RangeQueryDefinition = {
+    builder.gte(d)
+    this
+  }
+
+  def lte(d: Double): RangeQueryDefinition = {
+    builder.gte(d)
+    this
+  }
+
+  def gte(d: Double): RangeQueryDefinition = {
+    builder.gte(d)
+    this
+  }
+
   def includeLower(includeLower: Boolean) = {
     builder.includeLower(includeLower)
     this
@@ -981,6 +1168,11 @@ class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with 
 
   def includeUpper(includeUpper: Boolean) = {
     builder.includeUpper(includeUpper)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -1042,6 +1234,11 @@ class MatchQueryDefinition(field: String, value: Any)
 
   def fuzzyTranspositions(f: Boolean): MatchQueryDefinition = {
     builder.fuzzyTranspositions(f)
+    this
+  }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -1171,9 +1368,14 @@ class MatchPhraseDefinition(field: String, value: Any)
     builder.fuzzyTranspositions(f)
     this
   }
+
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
 }
 
-class MissingQueryDefinition(field: String) extends QueryDefinition {
+case class MissingQueryDefinition(field: String) extends QueryDefinition {
 
   val builder = QueryBuilders.missingQuery(field)
 
@@ -1182,13 +1384,13 @@ class MissingQueryDefinition(field: String) extends QueryDefinition {
     this
   }
 
-  def queryName(queryName: String): MissingQueryDefinition = {
-    builder.queryName(queryName)
+  def existence(existence: Boolean): MissingQueryDefinition = {
+    builder.existence(existence)
     this
   }
 
-  def existence(existence: Boolean): MissingQueryDefinition = {
-    builder.existence(existence)
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
@@ -1299,6 +1501,11 @@ class QueryStringQueryDefinition(query: String)
     this
   }
 
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
+    this
+  }
+
   def fuzzyPrefixLength(fuzzyPrefixLength: Int): this.type = {
     builder.fuzzyPrefixLength(fuzzyPrefixLength)
     this
@@ -1377,50 +1584,35 @@ class QueryStringQueryDefinition(query: String)
     this
   }
 
-  def queryName(queryName: String): QueryStringQueryDefinition = {
-    builder.queryName(queryName)
-    this
-  }
-
   def phraseSlop(phraseSlop: Int): QueryStringQueryDefinition = {
     builder.phraseSlop(phraseSlop)
     this
   }
 }
 
-class NestedQueryDefinition(path: String) extends QueryDefinition {
-  private var _query: QueryDefinition = _
-  private var _boost: Double = 1.0
-  private var _scoreMode: String = _
-  private var _inner: QueryInnerHitBuilder = _
+case class NestedQueryDefinition(path: String,
+                                 query: QueryDefinition,
+                                 boost: Option[Double] = None,
+                                 inner: Option[QueryInnerHitBuilder] = None,
+                                 scoreMode: Option[String] = None) extends QueryDefinition {
+  require(query != null, "must specify query for nested score query")
 
-  def builder = {
-    require(_query != null, "must specify query for nested score query")
-    QueryBuilders.nestedQuery(path, _query.builder).scoreMode(_scoreMode).boost(_boost.toFloat).innerHit(_inner)
+  def builder: NestedQueryBuilder = {
+    val builder = QueryBuilders.nestedQuery(path, query.builder)
+    boost.foreach(b => builder.boost(b.toFloat))
+    scoreMode.foreach(builder.scoreMode)
+    inner.foreach(builder.innerHit)
+    builder
   }
 
-  def inner(name: String): this.type = {
-    _inner = new QueryInnerHitBuilder().setName(name)
-    this
-  }
+  def inner(name: String): this.type = copy(inner = Option(new QueryInnerHitBuilder().setName(name)))
+  def inner(inner: QueryInnerHitsDefinition): this.type = copy(inner = Option(inner.builder))
 
-  def inner(inner: QueryInnerHitsDefinition): this.type = {
-    _inner = inner.builder
-    this
-  }
+  def scoreMode(scoreMode: String) = copy(scoreMode = Option(scoreMode))
+  def boost(b: Double) = copy(boost = Option(b))
 
-  def query(query: QueryDefinition): this.type = {
-    _query = query
-    this
-  }
-
-  def scoreMode(scoreMode: String): this.type = {
-    _scoreMode = scoreMode
-    this
-  }
-
-  def boost(b: Double): this.type = {
-    _boost = b
+  def queryName(queryName: String): this.type = {
+    builder.queryName(queryName)
     this
   }
 }
