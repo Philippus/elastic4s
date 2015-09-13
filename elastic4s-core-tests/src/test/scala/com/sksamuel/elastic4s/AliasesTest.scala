@@ -28,7 +28,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
   }.await
 
   client.execute {
-    add alias "english_waterways" on "waterways" filter termFilter("country", "england")
+    add alias "english_waterways" on "waterways" filter termQuery("country", "england")
   }.await
 
   client.execute {
@@ -40,8 +40,8 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
       search in "waterways" query "Dee"
     }.await
 
-    assert(2 === resp.getHits.totalHits())
-    val hitIds = resp.getHits.map(hit => hit.id()).toList.sorted
+    assert(2 === resp.totalHits)
+    val hitIds = resp.hits.map(hit => hit.id).toList.sorted
     assert(hitIds === Array("12", "21"))
   }
 
@@ -49,7 +49,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
     val resp = client.execute {
       get id 21 from "aquatic_locations/rivers"
     }.await
-    assert("21" === resp.getId)
+    assert("21" === resp.id)
   }
 
   "english_waterways alias" should "return 'River Dee' in England for search" in {
@@ -57,8 +57,8 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
       search in "english_waterways" query "Dee"
     }.await
 
-    assert(1 === resp.getHits.totalHits())
-    assert("12" === resp.getHits.getAt(0).id())
+    assert(1 === resp.totalHits)
+    assert("12" === resp.hits.head.id)
   }
 
   it should "be in query for alias" in {

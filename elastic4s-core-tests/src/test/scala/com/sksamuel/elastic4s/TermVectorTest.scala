@@ -25,20 +25,20 @@ class TermVectorTest
     )
   }.await
 
-  "term vector api " should {
-    "return number of terms for a field in " in {
-
-      val f = client.execute {
-        termVector("termvectortest", "startrek", "5")
-          .withTermStatistics(true)
-          .withFields("name", "rank")
-          .withFieldStatistics(true)
-      }
-
-      whenReady(f) { resp =>
-        val fields = resp.getFields
-        val terms = fields.terms("rank").size shouldBe 2 // ltr cmdr
-      }
-    }
-  }
+//  "term vector api " should {
+//    "return number of terms for a field in " in {
+//
+//      val f = client.execute {
+//        termVector("termvectortest", "startrek", "5")
+//          .withTermStatistics(true)
+//          .withFields("name", "rank")
+//          .withFieldStatistics(true)
+//      }
+//
+//      whenReady(f) { resp =>
+//        val fields = resp.getFields
+//        val terms = fields.terms("rank").size shouldBe 2 // ltr cmdr
+//      }
+//    }
+//  }
 }

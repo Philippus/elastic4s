@@ -24,7 +24,9 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
   "an update request" should "add a field when a script assigns a value" in {
 
     client.execute {
-      update id 5 in "scifi/startrek" script "ctx._source.birthplace = 'iowa'" lang "groovy"
+      update id 5 in "scifi/startrek" script {
+        script("ctx._source.birthplace = 'iowa'") lang "groovy"
+      }
     }.await
     refresh("scifi")
 
@@ -34,7 +36,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       val resp = client.execute {
         search in "scifi" types "startrek" term "birthplace" -> "iowa"
       }.await
-      hits = resp.getHits.totalHits()
+      hits = resp.totalHits
       Thread.sleep(k * 200)
       k = k + 1
     }
@@ -45,8 +47,8 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     val friends = List("han", "leia")
     client.execute {
       update(8).in("scifi/starwars") script {
-        "ctx._source.friends = friends"
-      } params Map("friends" -> friends)
+        script("ctx._source.friends = friends") params Map("friends" -> friends)
+      }
     }
     refresh("scifi")
 
@@ -56,7 +58,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       val resp = client.execute {
         search in "scifi" types "starwars" term "friends" -> "leia"
       }.await
-      hits = resp.getHits.totalHits()
+      hits = resp.totalHits
       Thread.sleep(k * 200)
       k = k + 1
     }
@@ -79,7 +81,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       val resp = client.execute {
         search in "scifi" types "starwars" term "location" -> "cloud"
       }.await
-      hits = resp.getHits.totalHits()
+      hits = resp.totalHits
       Thread.sleep(k * 200)
       k = k + 1
     }
@@ -100,7 +102,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       val resp = client.execute {
         search in "scifi" types "startrek" term "character" -> "kirk"
       }.await
-      hits = resp.getHits.totalHits()
+      hits = resp.totalHits
       Thread.sleep(k * 200)
       k = k + 1
     }
@@ -122,7 +124,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
       val resp = client.execute {
         search in "scifi" types "starwars" term "character" -> "chewie"
       }.await
-      hits = resp.getHits.totalHits()
+      hits = resp.totalHits
       Thread.sleep(k * 200)
       k = k + 1
     }

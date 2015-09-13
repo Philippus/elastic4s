@@ -30,7 +30,7 @@ class IterableSearchTest extends WordSpec with MockitoSugar with ElasticSugar wi
 
   }
 
-  val query = search in indexName / "foo" query matchall
+  val query = search in indexName / "foo" query matchAllQuery
 
   "IterableSearch.iterate" should {
     "iterate all search results on demand" in {
@@ -51,7 +51,7 @@ class IterableSearchTest extends WordSpec with MockitoSugar with ElasticSugar wi
       // ------------------------------------------------------------------------------------------------
       // call our method under test
       // ------------------------------------------------------------------------------------------------
-      implicit val timeout = (2 seconds)
+      implicit val timeout = 2.seconds
       val hitsIterable = IterableSearch(TestClient).iterate(query.size(querySize))
 
       // ------------------------------------------------------------------------------------------------

@@ -179,15 +179,11 @@ trait ElasticDsl
   def doubleField(name: String) = field(name).typed(DoubleType)
 
   case object delete {
-
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-
     def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
     def index(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq: _*)
     def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
     def template(name: String) = new DeleteIndexTemplateDefinition(name)
-    def mapping(indexes: String*) = DeleteMappingDefinition(indexes)
-    def mapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
   }
 
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)

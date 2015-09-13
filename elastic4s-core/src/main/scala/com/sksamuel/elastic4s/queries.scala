@@ -76,7 +76,13 @@ trait QueryDsl {
   def matchAllQuery = new MatchAllQueryDefinition
 
   def missingQuery(field: String) = MissingQueryDefinition(field)
-  def morelikeThisQuery(fields: String*) = new MoreLikeThisQueryDefinition(fields: _*)
+
+  def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisRequiresLike = new MoreLikeThisRequiresLike(flds.toSeq)
+  def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisRequiresLike = moreLikeThisQuery(first +: rest)
+
+  class MoreLikeThisRequiresLike(fields: Seq[String]) {
+    def like(text: String, rest: String*) = MoreLikeThisQueryDefinition(fields, text +: rest)
+  }
 
   def nestedQuery(path: String) = new {
     def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
@@ -260,9 +266,9 @@ case class FuzzyQueryDefinition(field: String, termValue: Any)
   }
 }
 
-case class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition {
+case class MoreLikeThisQueryDefinition(fields: Seq[String], text: Seq[String]) extends QueryDefinition {
 
-  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
+  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*).like(text: _*)
   val builder = _builder
 
   def analyzer(analyser: String): this.type = {
@@ -298,12 +304,6 @@ case class MoreLikeThisQueryDefinition(fields: String*) extends QueryDefinition 
 
   def notFailOnUnsupportedField(): this.type = {
     _builder.failOnUnsupportedField(false)
-    this
-  }
-
-  @deprecated("deprecated in elasticsearch", "2.0.0")
-  def likeText(text: String): this.type = {
-    _builder.likeText(text)
     this
   }
 

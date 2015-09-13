@@ -40,6 +40,10 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
+###### 2.0.0 (in progress)
+
+* Updated to Elasticsearch 2.0.0. See upgrade guide in next section on breaking changes.
+
 ###### 1.7.0
 
 * Works with Elasticsearch 1.7.x
@@ -155,6 +159,11 @@ object Test extends App {
 ```
 
 For more in depth examples keep reading.
+
+## 2.0.0 upgrade guide (beta)
+
+* MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
+* `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
 
 ## Syntax
 

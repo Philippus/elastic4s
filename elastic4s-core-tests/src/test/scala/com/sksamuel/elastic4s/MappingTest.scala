@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s
 import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.anaylzers.{WhitespaceTokenizer, CustomAnalyzerDefinition, GermanLanguageAnalyzer, FrenchLanguageAnalyzer, WhitespaceAnalyzer, LowercaseTokenFilter}
+import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, GermanLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
 import com.sksamuel.elastic4s.mappings.FieldType._
-import org.scalatest.{ WordSpec, Matchers }
-import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */
 class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -47,7 +47,7 @@ class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matc
         put mapping "q" / "r" as Seq(
           field name "c" withType FloatType boost 1.2,
           field name "d" withType StringType analyzer FrenchLanguageAnalyzer
-        ) ignoreConflicts true
+        )
       }.await
 
       val mapping = client.execute {
@@ -70,7 +70,7 @@ class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matc
         put mapping "q" / "r" as Seq(
           field name "a" withType StringType boost 1.2,
           field name "b" withType StringType analyzer GermanLanguageAnalyzer
-        ) ignoreConflicts true
+        )
       }.await
 
       val mapping = client.execute {
@@ -84,20 +84,6 @@ class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matc
 
       val b = map.get("properties").asInstanceOf[util.Map[String, _]].get("b").asInstanceOf[util.Map[String, _]]
       b.get("search_analyzer") shouldBe "german"
-    }
-  }
-  "mapping delete" should {
-    "remove mappings and data" in {
-
-      client.execute {
-        delete mapping "q" / "r"
-      }.await
-
-      val mapping = client.execute {
-        get mapping "q" / "r"
-      }.await
-
-      mapping.mappings().isEmpty shouldBe true
     }
   }
 }

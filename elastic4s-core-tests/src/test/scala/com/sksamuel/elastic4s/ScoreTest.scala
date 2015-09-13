@@ -32,7 +32,9 @@ class ScoreTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstan
   }
 
   it should "generate correct json for a script scorer" in {
-    val req = scriptScore("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
+    val req = scriptScore {
+      script("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
+    }
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()
     actual should matchJsonResource("/json/score/score_script.json")
   }
