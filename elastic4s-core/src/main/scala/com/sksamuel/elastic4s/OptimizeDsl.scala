@@ -17,7 +17,7 @@ trait OptimizeDsl {
   }
 }
 
-class OptimizeDefinition(indexes: String*) {
+case class OptimizeDefinition(indexes: Seq[String]) {
 
   private val builder = Requests.optimizeRequest(indexes: _*)
   def build = builder

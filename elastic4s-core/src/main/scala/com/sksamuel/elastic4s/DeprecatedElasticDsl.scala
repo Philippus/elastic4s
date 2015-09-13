@@ -38,8 +38,8 @@ trait DeprecatedElasticDsl {
     def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
   }
 
-  @deprecated("use optimizeIndex", "1.6.2")
-  def optimize(indexes: String*): OptimizeDefinition = new OptimizeDefinition(indexes: _*)
+  @deprecated("use optimizeIndex(index)", "1.6.2")
+  def optimize(indexes: String*): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq)
 
   @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
   case object shingle {

@@ -79,7 +79,8 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
   }
 }
 
-class PercolateDefinition(indexType: IndexesTypes) {
+case class PercolateDefinition(indexType: IndexesTypes) {
+  require(indexType != null, "index must not be null or empty")
 
   private val _fields = new ListBuffer[(String, Any)]
   private var _rawDoc: Option[String] = None

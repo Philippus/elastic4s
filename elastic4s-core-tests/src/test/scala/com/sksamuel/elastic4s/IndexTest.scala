@@ -22,7 +22,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
 
       client.execute {
         search in "electronics" / "phone" query termQuery("screensize", 5)
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
     "index from indexable typeclass" in {
 
@@ -39,7 +39,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
 
       client.execute {
         search in "electronics" / "phone" query termQuery("speed", "4g")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
     "expire a document once the TTL has passed" in {
       import scala.concurrent.duration._

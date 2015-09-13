@@ -16,44 +16,44 @@ class OptimizeDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
     create index "test2"
   }.await
   client.execute {
-    optimize index "test1"
+    optimizeIndex("test1")
   }.await
   client.execute {
-    optimize("test1", "test2")
+    optimizeIndex("test1", "test2")
   }.await
   client.execute {
-    optimize index Seq("test1", "test2")
+    optimizeIndex(Seq("test1", "test2"))
   }.await
   client.execute {
-    optimize("test1")
+    optimizeIndex("test1")
   }.await
 
   "an optimize request" should "accept var args" in {
-    val opt = optimize("index1", "index2").maxSegments(5)
+    val opt = optimizeIndex("index1", "index2").maxSegments(5)
     assert(opt.build.indices() === Array("index1", "index2"))
     assert(opt.build.maxNumSegments() === 5)
   }
 
   it should "accept single index version" in {
-    val opt = optimize index "index1" flush true
+    val opt = optimizeIndex("index1") flush true
     assert(opt.build.indices() === Array("index1"))
     assert(opt.build.flush())
   }
 
   it should "accept single seq" in {
-    val opt = optimize index Seq("index1", "index2") flush true
+    val opt = optimizeIndex(Seq("index1", "index2")) flush true
     assert(opt.build.indices() === Array("index1", "index2"))
     assert(opt.build.flush())
   }
 
   it should "accept var arg method invocation" in {
-    val opt = optimize("index1", "index2") flush true
+    val opt = optimizeIndex("index1", "index2") flush true
     assert(opt.build.indices() === Array("index1", "index2"))
     assert(opt.build.flush())
   }
 
   it should "accept single string method invocation" in {
-    val opt = optimize("index1") flush true
+    val opt = optimizeIndex("index1") flush true
     assert(opt.build.indices() === Array("index1"))
     assert(opt.build.flush())
   }

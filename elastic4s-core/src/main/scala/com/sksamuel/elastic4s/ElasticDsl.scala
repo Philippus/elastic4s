@@ -369,20 +369,23 @@ trait ElasticDsl
   }
   def openIndex(index: String): OpenIndexDefinition = open index index
 
+  @deprecated("use optimizeIndex", "2.0.0")
   case object optimize {
-    def index(indexes: Iterable[String]): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq: _*)
-    def index(indexes: String*): OptimizeDefinition = index(indexes)
+    @deprecated("use optimizeIndex", "2.0.0")
+    def index(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
+    @deprecated("use optimizeIndex", "2.0.0")
+    def index(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
   }
 
-  def optimizeIndex(indexes: String*): OptimizeDefinition = optimize index indexes
-  def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = optimize index indexes
+  def optimizeIndex(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes)
+  def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
 
+  @deprecated("use percolateIn", "2.0.0")
   case object percolate {
-    def in(index: String): PercolateDefinition = {
-      require(index.nonEmpty, "index must not be null or empty")
-      new PercolateDefinition(index)
-    }
-    def in(indexType: IndexType): PercolateDefinition = new PercolateDefinition(IndexesTypes(indexType))
+    @deprecated("use percolateIn", "2.0.0")
+    def in(index: String): PercolateDefinition = PercolateDefinition(index)
+    @deprecated("use percolateIn", "2.0.0")
+    def in(indexType: IndexType): PercolateDefinition = PercolateDefinition(IndexesTypes(indexType))
   }
 
   def percolateIn(index: String): PercolateDefinition = percolate in index
