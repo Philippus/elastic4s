@@ -1,11 +1,14 @@
 {
-    "aggregations": {
-        "grades_percentileranks": {
-            "percentile_ranks": {
-                "field": "grade",
-                "values" : [95.0, 99.0, 99.9],
-                "compression": 200.0
-            }
-        }
+  "aggregations": {
+    "grades_percentileranks": {
+      "percentile_ranks": {
+        "field": "grade",
+        "values": [
+          95.0,
+          99.0,
+          99.9
+        ]
+      }
     }
+  }
 }

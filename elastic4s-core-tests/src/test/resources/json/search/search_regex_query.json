@@ -1,9 +1,9 @@
 {
   "post_filter": {
-    "term": {
+    "regexp": {
       "singer": {
         "value": "chris martin",
-        "_name": "namey"
+        "flags_value": 65535
       }
     }
   }

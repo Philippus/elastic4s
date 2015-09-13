@@ -1,17 +1,11 @@
 {
-   "post_filter":{
-      "terms":{
-         "user":{
-            "index":"users",
-            "type":"user",
-            "id":"2",
-            "path":"followers",
-            "routing":"user-2",
-            "cache":true
-         },
-         "_name":"users-lookup",
-         "_cache":true,
-         "_cache_key":"user-lookup-for-id-2"
-      }
-   }
+  "post_filter": {
+    "terms": {
+      "user": [
+        "val",
+        "vallllll"
+      ],
+      "_name": "namey"
+    }
+  }
 }

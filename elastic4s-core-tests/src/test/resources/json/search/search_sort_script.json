@@ -1,14 +1,16 @@
 {
-    "sort": [
-        {
-            "_script": {
-                "script": "document.score",
-                "type": "number",
-                "reverse": true,
-                "lang": "java",
-                "mode": "min",
-                "nested_path": "a.b.c"
-            }
-        }
-    ]
+  "sort": [
+    {
+      "_script": {
+        "script": {
+          "inline": "document.score",
+          "lang": "java"
+        },
+        "type": "number",
+        "reverse": true,
+        "mode": "min",
+        "nested_path": "a.b.c"
+      }
+    }
+  ]
 }

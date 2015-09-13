@@ -1,13 +1,15 @@
 {
-    "post_filter": {
-        "has_parent": {
-            "filter": {
-                "term": {
-                    "name": "chris"
-                }
-            },
-            "parent_type": "singer",
-            "_name": "my-filter5"
+  "post_filter": {
+    "has_parent": {
+      "query": {
+        "term": {
+          "name": "chris"
         }
+      },
+      "parent_type": "singer",
+      "score_type": "scoreType",
+      "boost": 2.3,
+      "_name": "spidername"
     }
+  }
 }

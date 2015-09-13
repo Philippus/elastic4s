@@ -118,7 +118,9 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, values: AnyRef*) = TermsQueryDefinition(field, values.map(_.toString): _*)
+  def termsQuery(field: String, first: AnyRef, rest: AnyRef*): TermsQueryDefinition = {
+    TermsQueryDefinition(field, (first +: rest).map(_.toString))
+  }
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
@@ -921,8 +923,10 @@ class RegexQueryDefinition(field: String, regex: Any)
   extends MultiTermQueryDefinition
   with DefinitionAttributeRewrite
   with DefinitionAttributeBoost {
+
   val builder = QueryBuilders.regexpQuery(field, regex.toString)
   val _builder = builder
+
   def flags(flags: RegexpFlag*): RegexQueryDefinition = {
     builder.flags(flags: _*)
     this
@@ -1077,7 +1081,7 @@ case class TermQueryDefinition(field: String, value: Any) extends QueryDefinitio
   }
 }
 
-case class TermsQueryDefinition(field: String, values: String*) extends QueryDefinition {
+case class TermsQueryDefinition(field: String, values: Seq[String]) extends QueryDefinition {
 
   val builder = QueryBuilders.termsQuery(field, values: _*)
 
@@ -1594,6 +1598,7 @@ case class NestedQueryDefinition(path: String,
                                  query: QueryDefinition,
                                  boost: Option[Double] = None,
                                  inner: Option[QueryInnerHitBuilder] = None,
+                                 queryName: Option[String] = None,
                                  scoreMode: Option[String] = None) extends QueryDefinition {
   require(query != null, "must specify query for nested score query")
 
@@ -1602,6 +1607,7 @@ case class NestedQueryDefinition(path: String,
     boost.foreach(b => builder.boost(b.toFloat))
     scoreMode.foreach(builder.scoreMode)
     inner.foreach(builder.innerHit)
+    queryName.foreach(builder.queryName)
     builder
   }
 
@@ -1610,11 +1616,7 @@ case class NestedQueryDefinition(path: String,
 
   def scoreMode(scoreMode: String): NestedQueryDefinition = copy(scoreMode = Option(scoreMode))
   def boost(b: Double): NestedQueryDefinition = copy(boost = Option(b))
-
-  def queryName(queryName: String): NestedQueryDefinition = {
-    builder.queryName(queryName)
-    this
-  }
+  def queryName(queryName: String): NestedQueryDefinition = copy(queryName = Option(queryName))
 }
 
 class NotQueryDefinition(filter: QueryDefinition)

@@ -451,10 +451,11 @@ trait ElasticDsl
   case object script {
     @deprecated("use scriptSort(script)", "2.0.0")
     def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
+    @deprecated("use scriptField(script)", "2.0.0")
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
   def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
-  def scriptField(n: String): ExpectsScript = script field n
+  def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
 
   case object search {
     def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))

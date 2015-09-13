@@ -1,18 +1,19 @@
 {
-    "query": {
-        "nested": {
-            "query": {
-                "constant_score": {
-                    "query": {
-                        "term": {
-                            "name": "sammy"
-                        }
-                    }
-                }
-            },
-            "path": "obj1",
-            "score_mode": "avg",
-            "boost": 14.5
+  "query": {
+    "nested": {
+      "query": {
+        "constant_score": {
+          "filter": {
+            "term": {
+              "name": "sammy"
+            }
+          }
         }
+      },
+      "path": "obj1",
+      "score_mode": "avg",
+      "boost": 14.5,
+      "_name": "namey"
     }
+  }
 }

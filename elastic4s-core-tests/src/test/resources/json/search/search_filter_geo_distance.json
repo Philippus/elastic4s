@@ -1,19 +1,17 @@
 {
-    "post_filter": {
-        "bool": {
-            "must_not": {
-                "geo_distance": {
-                    "distance": "45.0yd"
-                }
-            },
-            "should": {
-                "geo_distance": {
-                    "distance": "120mi",
-                    "distance_type": "factor",
-                    "_cache": true,
-                    "_cache_key": "mycache"
-                }
-            }
+  "post_filter": {
+    "bool": {
+      "must_not": {
+        "geo_distance": {
+          "distance": "45.0yd"
         }
+      },
+      "should": {
+        "geo_distance": {
+          "distance": "120mi",
+          "distance_type": "factor"
+        }
+      }
     }
+  }
 }

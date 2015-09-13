@@ -1,12 +1,13 @@
 {
-    "post_filter": {
-        "has_parent": {
-            "query": {
-                "term": {
-                    "name": "chris"
-                }
-            },
-            "parent_type": "singer"
+  "post_filter": {
+    "has_parent": {
+      "query": {
+        "term": {
+          "name": "chris"
         }
+      },
+      "parent_type": "singer",
+      "_name": "namey"
     }
+  }
 }

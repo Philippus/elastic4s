@@ -1,15 +1,16 @@
 {
-    "post_filter": {
-        "ids": {
-            "types": [],
-            "values": [
-                "a",
-                "b",
-                "c",
-                "q",
-                "r"
-            ],
-            "_name": "some-name"
-        }
+  "post_filter": {
+    "ids": {
+      "types": [
+        "x",
+        "y",
+        "z"
+      ],
+      "values": [
+        "a",
+        "b",
+        "c"
+      ]
     }
+  }
 }

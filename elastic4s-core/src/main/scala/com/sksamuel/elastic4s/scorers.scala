@@ -13,15 +13,13 @@ import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ScoreF
 /** @author Stephen Samuel */
 trait ScoreDsl {
 
-  def randomScore(seed: Int) = new RandomScoreDefinition(seed)
+  def randomScore(seed: Int) = RandomScoreDefinition(seed)
 
   def scriptScore(script: ScriptDefinition) = new ScriptScoreDefinition(script)
 
-  def gaussianScore(field: String, origin: String, scale: String) = {
-    new GaussianDecayScoreDefinition(field, origin, scale)
-  }
+  def gaussianScore(field: String, origin: String, scale: String) = GaussianDecayScoreDefinition(field, origin, scale)
 
-  def linearScore(field: String, origin: String, scale: String) = new LinearDecayScoreDefinition(field, origin, scale)
+  def linearScore(field: String, origin: String, scale: String) = LinearDecayScoreDefinition(field, origin, scale)
 
   def exponentialScore(field: String, origin: String, scale: String) = {
     new ExponentialDecayScoreDefinition(field, origin, scale)
@@ -95,12 +93,12 @@ abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
   }
 }
 
-class GaussianDecayScoreDefinition(field: String, origin: String, scale: String)
+case class GaussianDecayScoreDefinition(field: String, origin: String, scale: String)
   extends DecayScoreDefinition[GaussianDecayScoreDefinition] {
   val builder = new GaussDecayFunctionBuilder(field, origin, scale)
 }
 
-class LinearDecayScoreDefinition(field: String, origin: String, scale: String)
+case class LinearDecayScoreDefinition(field: String, origin: String, scale: String)
   extends DecayScoreDefinition[LinearDecayScoreDefinition] {
   val builder = new LinearDecayFunctionBuilder(field, origin, scale)
 }

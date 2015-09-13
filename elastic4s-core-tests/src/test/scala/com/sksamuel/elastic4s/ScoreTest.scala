@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.{ FlatSpec, OneInstancePerTest }
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.common.xcontent.{ ToXContent, XContentFactory }
+import org.elasticsearch.common.xcontent.{ToXContent, XContentFactory}
+import org.scalatest.FlatSpec
 
 /** @author Stephen Samuel */
-class ScoreTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
+class ScoreTest extends FlatSpec with JsonSugar {
+
   "a score dsl" should "generate correct json for a linear decay function scorer" in {
     val req = linearScore("myfield", "1 2", "2km").offset(100).decay(0.1)
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()
@@ -38,6 +38,7 @@ class ScoreTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstan
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()
     actual should matchJsonResource("/json/score/score_script.json")
   }
+
   it should "generate correct json for a weight function scorer" in {
     val req = weightScore(1.5)
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()

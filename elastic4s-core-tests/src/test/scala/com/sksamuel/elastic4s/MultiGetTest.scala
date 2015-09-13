@@ -48,7 +48,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.Local refresh true realtime true
     ).await
     assert(3 === resp.getResponses.size)
-    assert("3" === resp.getResponses.toSeq(0).getResponse.getId)
+    assert("3" === resp.getResponses.toSeq.head.getResponse.getId)
     assert("5" === resp.getResponses.toSeq(1).getResponse.getId)
     assert(!resp.getResponses.toSeq(2).getResponse.isExists)
   }
@@ -62,7 +62,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.Local refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(!resp.getResponses.toSeq(0).getResponse.isExists)
+    assert(!resp.getResponses.toSeq.head.getResponse.isExists)
     assert("1" === resp.getResponses.toSeq(1).getResponse.getId)
   }
 
@@ -75,7 +75,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.Local refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(resp.getResponses.toSeq(0).getResponse.getFields.keySet().asScala === Set("name", "year"))
+    assert(resp.getResponses.toSeq.head.getResponse.getFields.keySet().asScala === Set("name", "year"))
     assert(resp.getResponses.toSeq(1).getResponse.getFields.keySet().asScala === Set("name"))
   }
 
@@ -87,8 +87,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.Local refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(resp.getResponses.toSeq(0).isFailed)
-    resp.getResponses.toSeq(0).getFailure.getMessage should startWith("VersionConflictEngineException")
+    assert(resp.getResponses.toSeq.head.isFailed)
+    resp.getResponses.toSeq.head.getFailure.getFailure != null shouldBe true
     assert(resp.getResponses.toSeq(1).getResponse.isExists)
     assert(resp.getResponses.toSeq(1).getResponse.getVersion === 4)
   }

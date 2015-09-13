@@ -1,18 +1,20 @@
 {
-    "sort": [
-        {
-            "_script": {
-                "script": "document.score",
-                "type": "java"
-            }
+  "sort": [
+    {
+      "_script": {
+        "script": {
+          "inline": "document.score"
         },
-        {
-            "_score": {}
-        },
-        {
-            "dancer": {
-                "order": "desc"
-            }
-        }
-    ]
+        "type": "java"
+      }
+    },
+    {
+      "_score": {}
+    },
+    {
+      "dancer": {
+        "order": "desc"
+      }
+    }
+  ]
 }

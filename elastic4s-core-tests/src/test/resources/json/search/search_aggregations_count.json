@@ -1,12 +1,14 @@
 {
-    "aggregations": {
-        "grades_count": {
-            "value_count": {
-                "field": "grade",
-                "script": "doc['grade'].value",
-                "lang": "lua"
-            }
+  "aggregations": {
+    "grades_count": {
+      "value_count": {
+        "field": "grade",
+        "script": {
+          "inline": "doc['grade'].value",
+          "lang": "lua",
+          "params": {}
         }
+      }
     }
+  }
 }
-

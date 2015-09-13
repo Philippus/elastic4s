@@ -1,25 +1,23 @@
 {
-  "size" : 256,
-  "query" : {
-    "match_all" : { }
+  "query": {
+    "match_all": {}
   },
-  "script_fields" : {
-    "balance" : {
-      "script" : "portfolioscript",
-      "lang" : "native",
-      "params" : {
-        "fieldName" : "rate_of_return"
+  "script_fields": {
+    "balance": {
+      "script": {
+        "inline": "portfolioscript",
+        "lang": "native",
+        "params": {
+          "fieldName": "rate_of_return"
+        }
       }
     },
-    "date" : {
-      "script" : "doc['date'].value",
-      "lang" : "groovy",
-      "params" : { }
+    "date": {
+      "script": {
+        "inline": "doc['date'].value",
+        "lang": "groovy",
+        "params": {}
+      }
     }
-  },
-  "sort" : [ {
-    "date" : {
-      "order" : "asc"
-    }
-  } ]
+  }
 }

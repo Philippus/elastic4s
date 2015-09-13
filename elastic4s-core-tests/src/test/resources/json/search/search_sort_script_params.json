@@ -2,13 +2,15 @@
   "sort": [
     {
       "_script": {
-        "script": "doc.score",
+        "script": {
+          "inline": "doc.score",
+          "params": {
+            "param1": "value1",
+            "param2": "value2"
+          }
+        },
         "type": "number",
-        "reverse": true,
-        "params": {
-          "param1": "value1",
-          "param2": "value2"
-        }
+        "reverse": true
       }
     }
   ]
