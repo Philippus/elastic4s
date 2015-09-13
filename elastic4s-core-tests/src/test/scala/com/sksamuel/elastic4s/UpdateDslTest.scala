@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{ Entry, Matchers, FlatSpec, OneInstancePerTest }
-import org.scalatest.mock.MockitoSugar
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.elasticsearch.action.WriteConsistencyLevel
-import org.elasticsearch.action.support.replication.ReplicationType
-import com.sksamuel.elastic4s.source.DocumentSource
 import java.util
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.source.DocumentSource
+import org.elasticsearch.action.WriteConsistencyLevel
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{Entry, FlatSpec, Matchers, OneInstancePerTest}
 
 /** @author Stephen Samuel */
 class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest with Matchers {
@@ -24,19 +24,9 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
     assert(updateDef.build.consistencyLevel() == WriteConsistencyLevel.ONE)
   }
 
-  it should "should support lang" in {
-    val updateDef = update id 5 in "scifi/startrek" lang "welsh"
-    assert(updateDef.build.scriptLang() === "welsh")
-  }
-
   it should "should support routing" in {
     val updateDef = update id 5 in "scifi/startrek" routing "aroundwego"
     assert(updateDef.build.routing() === "aroundwego")
-  }
-
-  it should "should support replicationType" in {
-    val updateDef = update id 5 in "scifi/startrek" replicationType ReplicationType.ASYNC
-    assert(updateDef.build.replicationType() === ReplicationType.ASYNC)
   }
 
   it should "should support docAsUpdate" in {
@@ -54,9 +44,9 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
   }
 
   it should "should support docAsUpsert with explicit field types" in {
-    val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
+    val updateDef = update id 14 in "scifi/startrek" docAsUpsert {
       NestedFieldValue("captain", Seq(SimpleFieldValue("james", "kirk")))
-      )
+    }
     val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
     sourceMap should contain key "captain"
     sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))

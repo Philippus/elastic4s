@@ -59,7 +59,7 @@ object ElasticClient {
   def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
 
   @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
-  def remote(host: String, port: Int): ElasticClient = remote(Settings.builder.build, host, port)
+  def remote(host: String, port: Int): ElasticClient = transport(Settings.builder.build, ElasticsearchClientUri(host, port))
 
   @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
   def remote(settings: Settings, host: String, port: Int): ElasticClient = {
@@ -77,9 +77,10 @@ object ElasticClient {
    *
    * @param uri the instance(s) to connect to.
    */
-  def transport(uri: ElasticsearchClientUri): ElasticClient = remote(Settings.builder.build, uri)
+  def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.builder.build, uri)
+
   @deprecated("use transport instead of remote", "2.0.0")
-  def remote(uri: ElasticsearchClientUri): ElasticClient = remote(Settings.builder.build, uri)
+  def remote(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.builder.build, uri)
 
   /**
    * Connects to elasticsearch instance(s) specified by the uri and setting the

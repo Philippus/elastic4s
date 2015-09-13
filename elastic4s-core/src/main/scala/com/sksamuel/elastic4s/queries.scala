@@ -37,6 +37,8 @@ trait QueryDsl {
 
   def dismax = new DisMaxDefinition
 
+  def existsQuery = ExistsQueryDefinition
+
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
 
   @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
@@ -118,9 +120,9 @@ trait QueryDsl {
   def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
 
   @deprecated("use idsQuery", "2.0.0")
-  def ids(iterable: Iterable[String]): IdQueryDefinition = ids(iterable.toSeq: _*)
+  def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
   @deprecated("use idsQuery", "2.0.0")
-  def ids(ids: String*): IdQueryDefinition = new IdQueryDefinition(ids: _*)
+  def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
 
   def idsQuery(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
   def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
@@ -732,7 +734,7 @@ class BoostingQueryDefinition extends QueryDefinition {
   }
 }
 
-case class ConstantScoreDefinition(val builder: ConstantScoreQueryBuilder) extends QueryDefinition {
+case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
     this
@@ -802,10 +804,12 @@ class DisMaxDefinition extends QueryDefinition {
   }
 }
 
-class ExistsQueryDefinition(field: String) extends QueryDefinition {
+case class ExistsQueryDefinition(field: String) extends QueryDefinition {
+
   val builder = QueryBuilders.existsQuery(field)
-  def filterName(filterName: String): ExistsQueryDefinition = {
-    builder.queryName(filterName)
+
+  def queryName(name: String): ExistsQueryDefinition = {
+    builder.queryName(name)
     this
   }
 }
@@ -840,27 +844,23 @@ class FilteredQueryDefinition extends QueryDefinition {
   }
 }
 
-case class IdQueryDefinition(ids: String*) extends QueryDefinition {
+case class IdQueryDefinition(ids: Seq[String],
+                             types: Seq[String] = Nil,
+                             boost: Option[Double] = None,
+                             queryName: Option[String] = None) extends QueryDefinition {
 
-  def builder = _builder
-  private var _builder = QueryBuilders.idsQuery().addIds(ids: _*)
-  private var _boost: Double = -1
-
-  def types(types: String*) = {
-    _builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*).boost(_boost.toFloat)
-    this
+  def builder = {
+    val builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*)
+    boost.foreach(b => builder.boost(b.toFloat))
+    queryName.foreach(builder.queryName)
+    builder
   }
 
-  def queryName(name: String): IdQueryDefinition = {
-    _builder.queryName(name)
-    this
-  }
+  def types(types: Iterable[String]): IdQueryDefinition = copy(types = types.toSeq)
+  def types(first: String, rest: String*): IdQueryDefinition = copy(types = first +: rest)
 
-  def boost(boost: Double) = {
-    _builder.boost(boost.toFloat)
-    _boost = boost
-    this
-  }
+  def queryName(name: String): IdQueryDefinition = copy(queryName = Option(name))
+  def boost(boost: Double): IdQueryDefinition = copy(boost = Option(boost))
 }
 
 class SpanOrQueryDefinition extends SpanQueryDefinition with DefinitionAttributeBoost {
@@ -1605,13 +1605,13 @@ case class NestedQueryDefinition(path: String,
     builder
   }
 
-  def inner(name: String): this.type = copy(inner = Option(new QueryInnerHitBuilder().setName(name)))
-  def inner(inner: QueryInnerHitsDefinition): this.type = copy(inner = Option(inner.builder))
+  def inner(name: String): NestedQueryDefinition = copy(inner = Option(new QueryInnerHitBuilder().setName(name)))
+  def inner(inner: QueryInnerHitsDefinition): NestedQueryDefinition = copy(inner = Option(inner.builder))
 
-  def scoreMode(scoreMode: String) = copy(scoreMode = Option(scoreMode))
-  def boost(b: Double) = copy(boost = Option(b))
+  def scoreMode(scoreMode: String): NestedQueryDefinition = copy(scoreMode = Option(scoreMode))
+  def boost(b: Double): NestedQueryDefinition = copy(boost = Option(b))
 
-  def queryName(queryName: String): this.type = {
+  def queryName(queryName: String): NestedQueryDefinition = {
     builder.queryName(queryName)
     this
   }

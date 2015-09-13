@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.search.sort.{ SortOrder, SortBuilder, SortBuilders }
 import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.search.sort.{SortBuilder, SortBuilders, SortOrder}
 
 /** @author Stephen Samuel */
 sealed abstract class MultiMode(val elastic: String)
@@ -17,7 +16,7 @@ trait SortDefinition {
   def builder: SortBuilder
 }
 
-class FieldSortDefinition(field: String) extends SortDefinition {
+case class FieldSortDefinition(field: String) extends SortDefinition {
 
   val builder = SortBuilders.fieldSort(field)
 

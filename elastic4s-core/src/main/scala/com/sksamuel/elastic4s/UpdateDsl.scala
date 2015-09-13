@@ -23,11 +23,11 @@ trait UpdateDsl extends IndexesTypesDsl {
 
   class UpdateExpectsIndex(id: String) {
     def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
-    def in(indexesTypes: IndexesTypes): UpdateDefinition = new UpdateDefinition(indexesTypes, id)
+    def in(indexesTypes: IndexesTypes): UpdateDefinition = UpdateDefinition(indexesTypes, id)
   }
 }
 
-class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
+case class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
   extends BulkCompatibleDefinition
   with DefinitionRouting {
 

@@ -211,14 +211,14 @@ trait ElasticDsl
     val name = ""
     def name(name: String): FieldDefinition = new FieldDefinition(name)
     @deprecated("use fieldSort(field:String)", "2.0.0")
-    def sort(field: String): FieldSortDefinition = new FieldSortDefinition(field)
+    def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
     def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
   def field(name: String): FieldDefinition = field name name
   def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
-  def fieldSort(name: String) = field sort name
+  def fieldSort(field: String) = FieldSortDefinition(field)
 
   case object flush {
     def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class ExistsFilterDefinition extends WordSpec with ElasticSugar with Matchers {
+class ExistsQueryDefinitionTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute(
     bulk(
@@ -22,20 +22,20 @@ class ExistsFilterDefinition extends WordSpec with ElasticSugar with Matchers {
   refresh("person")
   blockUntilCount(2, "person")
 
-  "exists filter" should {
+  "exists query" should {
     "match non-null fields" in {
       client.execute {
         search in "person" / "interest" postFilter {
-          existsFilter("name")
+          existsQuery("name")
         }
-      }.await.getHits.getTotalHits shouldBe 2
+      }.await.totalHits shouldBe 2
     }
     "not match null fields" in {
       client.execute {
         search in "person" / "interest" postFilter {
-          existsFilter("place")
+          existsQuery("place")
         }
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 }
