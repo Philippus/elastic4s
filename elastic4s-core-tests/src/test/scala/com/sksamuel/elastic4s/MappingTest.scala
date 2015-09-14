@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, GermanLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
+import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
@@ -14,8 +14,8 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
   client.execute {
     create index "q" mappings {
       "r" as Seq(
-        field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
-        field name "b" withType StringType
+         field("a", StringType) stored true analyzer WhitespaceAnalyzer,
+         field("b", StringType)
       )
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -44,8 +44,8 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
       client.execute {
         put mapping "q" / "r" as Seq(
-          field name "c" withType FloatType boost 1.2,
-          field name "d" withType StringType analyzer FrenchLanguageAnalyzer
+          field("c", FloatType) boost 1.2,
+          field("d", StringType) analyzer FrenchLanguageAnalyzer
         )
       }.await
 
@@ -67,7 +67,7 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
       client.execute {
         put mapping "q" / "r" as Seq(
-          field name "a" withType StringType boost 1.2 stored true analyzer WhitespaceAnalyzer
+          field("a", StringType) boost 1.2 stored true analyzer WhitespaceAnalyzer
         )
       }.await
 

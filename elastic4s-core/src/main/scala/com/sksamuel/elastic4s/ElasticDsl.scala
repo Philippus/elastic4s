@@ -5,7 +5,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
 import com.sksamuel.elastic4s.anaylzers.{TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
 import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
-import com.sksamuel.elastic4s.mappings.{ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, GetMappingDefinition, DeleteMappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
+import com.sksamuel.elastic4s.mappings.{AttachmentFieldDefinition, BinaryFieldDefinition, BooleanFieldDefinition, ByteFieldDefinition, CompletionFieldDefinition, DateFieldDefinition, DoubleFieldDefinition, FloatFieldDefinition, GeoPointFieldDefinition, GeoShapeFieldDefinition, IntegerFieldDefinition, IpFieldDefinition, LongFieldDefinition, MultiFieldDefinition, ShortFieldDefinition, TokenCountDefinition, ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, GetMappingDefinition, DeleteMappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -205,13 +205,36 @@ trait ElasticDsl
 
   case object field extends TypeableFields {
     val name = ""
+    @deprecated("use field(name, type)", "2.0.0")
     def name(name: String): FieldDefinition = new FieldDefinition(name)
     @deprecated("use fieldSort(field:String)", "2.0.0")
     def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
     def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
-  def field(name: String): FieldDefinition = field name name
+
+  @deprecated("use field(name, type)", "2.0.0")
+  def field(name: String): FieldDefinition = FieldDefinition(name)
+  def field(name:String,ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
+  def field(name:String,ft: BinaryType.type) = new BinaryFieldDefinition(name)
+  def field(name:String,ft: BooleanType.type) = new BooleanFieldDefinition(name)
+  def field(name:String,ft: ByteType.type) = new ByteFieldDefinition(name)
+  def field(name:String,ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def field(name:String,ft: DateType.type) = new DateFieldDefinition(name)
+  def field(name:String,ft: DoubleType.type) = new DoubleFieldDefinition(name)
+  def field(name:String,ft: FloatType.type) = new FloatFieldDefinition(name)
+  def field(name:String,ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
+  def field(name:String,ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
+  def field(name:String,ft: IntegerType.type) = new IntegerFieldDefinition(name)
+  def field(name:String,ft: IpType.type) = new IpFieldDefinition(name)
+  def field(name:String,ft: LongType.type) = new LongFieldDefinition(name)
+  def field(name:String,ft: MultiFieldType.type) = new MultiFieldDefinition(name)
+  def field(name:String,ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
+  def field(name:String,ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
+  def field(name:String,ft: ShortType.type) = new ShortFieldDefinition(name)
+  def field(name:String,ft: StringType.type) = new StringFieldDefinition(name)
+  def field(name:String,ft: TokenCountType.type) = new TokenCountDefinition(name)
+
   def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   def fieldSort(field: String) = FieldSortDefinition(field)
@@ -227,9 +250,9 @@ trait ElasticDsl
   case object fuzzyCompletion {
     def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
   }
-  def fuzzyCompletionSuggestion: FuzzyCompletionSuggestionDefinition = fuzzyCompletionSuggestion(UUID
-    .randomUUID
-    .toString)
+  def fuzzyCompletionSuggestion: FuzzyCompletionSuggestionDefinition = {
+    fuzzyCompletionSuggestion(UUID.randomUUID.toString)
+  }
   def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition = fuzzyCompletion suggestion name
 
   case object geo {

@@ -14,7 +14,9 @@ trait MappingDsl {
   val NotAnalyzed: String = "not_analyzed"
   def id: FieldDefinition = "_id"
 
+  @deprecated("use field(x)", "2.0.0")
   implicit def stringToField(name: String): FieldDefinition = new FieldDefinition(name)
+  @deprecated("use mapping(x)", "2.0.0")
   implicit def stringToMap(`type`: String): MappingDefinition = new MappingDefinition(`type`)
 
   implicit object GetMappingDefinitionExecutable

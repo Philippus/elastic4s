@@ -175,6 +175,7 @@ For more in depth examples keep reading.
 * Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
 * Delete mapping has been removed
 * IndexStatus api has been removed
+* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)`
 
 ## Syntax
 
