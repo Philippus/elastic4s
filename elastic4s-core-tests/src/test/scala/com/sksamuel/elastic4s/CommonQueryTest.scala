@@ -38,7 +38,7 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
           commonQuery("desc") text "catsup"
         }
       }.await
-      resp.getHits.totalHits shouldBe 1
+      resp.totalHits shouldBe 1
     }
     "use operators" in {
       val resp = client.execute {
@@ -46,7 +46,7 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
           commonQuery("desc") text "buttermilk somethingnotindexed" lowFreqOperator "AND" highFreqOperator "AND"
         }
       }.await
-      resp.getHits.totalHits shouldBe 0
+      resp.totalHits shouldBe 0
     }
     "use lowFreqMinimumShouldMatch" in {
       val resp = client.execute {
@@ -54,7 +54,7 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
           commonQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }
       }.await
-      resp.getHits.totalHits shouldBe 1
+      resp.totalHits shouldBe 1
     }
   }
 }

@@ -169,7 +169,13 @@ For more in depth examples keep reading.
 * Script dsl has changed ... todo more
 * MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
 * `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
-*
+* Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
+* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for ands and `should` clauses for ors.
+* Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
+* Delete mapping has been removed
+* IndexStatus api has been removed
+
 ## Syntax
 
 Here is a list of the common requests and the syntax used to create them. For more details on each request click
