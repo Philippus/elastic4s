@@ -65,45 +65,45 @@ class RichSearchHit(hit: SearchHit) {
 
   import scala.collection.JavaConverters._
 
-  def id: String = hit.id
+  lazy val id: String = hit.id
   @deprecated("use id", "2.0.0")
-  def getId: String = hit.getId
+  lazy val getId: String = hit.getId
 
-  def index: String = hit.index
+  lazy val index: String = hit.index
   @deprecated("use index", "2.0.0")
-  def getIndex: String = index
+  lazy val getIndex: String = index
 
-  def `type`: String = hit.`type`()
+  lazy val `type`: String = hit.`type`()
   @deprecated("use `type", "2.0.0")
-  def getType: String = `type`
+  lazy val getType: String = `type`
 
-  def score: Float = hit.score
-  def nestedIdentity: SearchHit.NestedIdentity = hit.getNestedIdentity
-  def version: Long = hit.version()
-  def shard: SearchShardTarget = hit.shard
+  lazy val score: Float = hit.score
+  lazy val nestedIdentity: SearchHit.NestedIdentity = hit.getNestedIdentity
+  lazy val version: Long = hit.version()
+  lazy val shard: SearchShardTarget = hit.shard
 
-  def sourceRef: BytesReference = hit.sourceRef()
-  def source: Array[Byte] = Option(hit.source).getOrElse(Array.emptyByteArray)
-  def isSourceEmpty: Boolean = hit.isSourceEmpty
-  def sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
-  def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+  lazy val sourceRef: BytesReference = hit.sourceRef()
+  lazy val source: Array[Byte] = Option(hit.source).getOrElse(Array.emptyByteArray)
+  lazy val isSourceEmpty: Boolean = hit.isSourceEmpty
+  lazy val sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
+  lazy val sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
   @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
-  def explanation: Option[Explanation] = Option(hit.explanation)
+  lazy val explanation: Option[Explanation] = Option(hit.explanation)
 
   def field(fieldName: String): SearchHitField = fieldOpt(fieldName).get
   def fieldOpt(fieldName: String): Option[SearchHitField] = Option(hit.field(fieldName))
-  def fields: Map[String, SearchHitField] = Option(hit.fields).map(_.asScala.toMap).getOrElse(Map.empty)
+  lazy val fields: Map[String, SearchHitField] = Option(hit.fields).map(_.asScala.toMap).getOrElse(Map.empty)
 
-  def highlightFields: Map[String, HighlightField] = {
+  lazy val highlightFields: Map[String, HighlightField] = {
     Option(hit.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
   }
 
-  def sortValues: Array[AnyRef] = Option(hit.sortValues).getOrElse(Array.empty)
-  def matchedQueries: Array[String] = Option(hit.matchedQueries).getOrElse(Array.empty)
-  def innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
+  lazy val sortValues: Array[AnyRef] = Option(hit.sortValues).getOrElse(Array.empty)
+  lazy val matchedQueries: Array[String] = Option(hit.matchedQueries).getOrElse(Array.empty)
+  lazy val innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 

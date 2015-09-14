@@ -2,50 +2,6 @@ package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-/** @author liorh  */
-object FieldsMapper {
-  def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
-    fields map {
-      case (name: String, nest: Map[_, _]) =>
-        val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
-        NestedFieldValue(Some(name), nestedFields)
-
-      case (name: String, nest: Array[Map[_, _]]) =>
-        val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-        ArrayFieldValue(name, nested)
-
-      case (name: String, arr: Array[Any]) =>
-        val values = arr.map(new SimpleFieldValue(None, _))
-        ArrayFieldValue(name, values)
-
-      case (name: String, a: FieldValue) =>
-        NestedFieldValue(name,Seq(a))
-
-      case (name: String, s: Iterable[_]) =>
-        s.headOption match {
-          case Some(m: Map[_, _]) =>
-            val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-            ArrayFieldValue(name, nested.toSeq)
-
-          case Some(a: Any) =>
-            val values = s.map(new SimpleFieldValue(None, _))
-            ArrayFieldValue(name, values.toSeq)
-
-          case _ =>
-            // can't work out or empty - map to empty
-            ArrayFieldValue(name, Seq.empty)
-        }
-
-      case (name: String, a: Any) =>
-        SimpleFieldValue(Some(name), a)
-
-      case (name: String, _) =>
-        NullFieldValue(name)
-    }
-  }.toSeq
-
-}
-
 trait FieldValue {
   def output(source: XContentBuilder): Unit
 }

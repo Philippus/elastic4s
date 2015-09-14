@@ -288,10 +288,12 @@ trait ElasticDsl
   trait HealthKeyword
   case object health extends HealthKeyword
 
+  @deprecated("use highlight(field)", "2.0.0")
   case object highlight {
-    def field(name: String): HighlightDefinition = new HighlightDefinition(name)
+    @deprecated("use highlight(field)", "2.0.0")
+    def field(field: String): HighlightDefinition = HighlightDefinition(field)
   }
-  def highlight(field: String): HighlightDefinition = new HighlightDefinition(field)
+  def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   trait StatsKeyword
   case object stats extends StatsKeyword

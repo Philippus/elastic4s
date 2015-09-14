@@ -23,7 +23,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         "pattern2" typed StringType analyzer CustomAnalyzer("pattern2"),
         "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
         "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
-        "custom_ngram" typed StringType indexAnalyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
+        "custom_ngram" typed StringType analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
         "shingle" typed StringType analyzer CustomAnalyzer("shingle"),
         "shingle2" typed StringType analyzer CustomAnalyzer("shingle2"),
         "noshingle" typed StringType analyzer CustomAnalyzer("shingle3"),
@@ -36,35 +36,35 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
       CustomAnalyzerDefinition("my_ngram",
         StandardTokenizer,
         LowercaseTokenFilter,
-        ngram tokenfilter "my_ngram_filter" minGram 2 maxGram 5),
+        ngramTokenFilter("my_ngram_filter") minGram 2 maxGram 5),
       CustomAnalyzerDefinition("edgengram",
         StandardTokenizer,
         LowercaseTokenFilter,
-        edgeNGram tokenfilter "edgengram_filter" minGram 2 maxGram 6 side "back"),
+        edgeNGramTokenFilter("edgengram_filter") minGram 2 maxGram 6 side "back"),
       CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
       CustomAnalyzerDefinition(
         "shingle",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle" maxShingleSize 3 outputUnigrams false
+        shingleTokenFilter("filter_shingle") maxShingleSize 3 outputUnigrams false
       ),
       CustomAnalyzerDefinition(
         "shingle2",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle2" maxShingleSize 2
+        shingleTokenFilter("filter_shingle2") maxShingleSize 2
       ),
       CustomAnalyzerDefinition(
         "shingle3",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle3" outputUnigramsIfNoShingles true
+        shingleTokenFilter("filter_shingle3") outputUnigramsIfNoShingles true
       ),
       CustomAnalyzerDefinition(
         "shingle4",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
-        shingle tokenfilter "filter_shingle4" tokenSeperator "#"
+        shingleTokenFilter("filter_shingle4") tokenSeperator "#"
       ),
       CustomAnalyzerDefinition(
         "stop_path",
@@ -108,7 +108,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should index entire string as a single token" in {
       client.execute {
         search in "analyzer" / "test" query termQuery("keyword" -> "feather")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -116,10 +116,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should index 2 combinations" in {
       client.execute {
         search in "analyzer/test" query termQuery("ngram" -> "cr")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("ngram" -> "craf")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -127,10 +127,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should index specified combinations" in {
       client.execute {
         search in "analyzer/test" query matchQuery("custom_ngram" -> "dy")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer" / "test" query matchQuery("custom_ngram" -> "dc50")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -138,25 +138,25 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should support side option" in {
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "es")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "nes")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "ones")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "rones")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "hrones")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "thrones")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query matchQuery("edgengram" -> "ga")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -164,7 +164,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should stem words" in {
       client.execute {
         search in "analyzer/test" query termQuery("snowball" -> "sky")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -172,7 +172,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should honour max token length" in {
       client.execute {
         search in "analyzer/test" query termQuery("standard1" -> "aaaaaaaaaaa")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -180,27 +180,27 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should split on regex special character" in {
       client.execute {
         search in "analyzer/test" query termQuery("pattern1" -> "abc")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("pattern1" -> "def")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("pattern1" -> "123")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
       client.execute {
         search in "analyzer/test" query termQuery("pattern1" -> "abc123def")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
     "should split on normal character" in {
       client.execute {
         search in "analyzer/test" query termQuery("pattern2" -> "coldplay")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("pattern2" -> "jethro tull")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("pattern2" -> "jethro")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -208,7 +208,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should- exclude stop words" in {
       client.execute {
         search in "analyzer/test" query termQuery("stop" -> "and")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 
@@ -216,10 +216,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should exclude stop words from config/stoplist.txt" in {
       client.execute {
         search in "analyzer/test" query termQuery("stop_path" -> "and")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
       client.execute {
         search in "analyzer/test" query termQuery("stop_path" -> "testing") // not in stoplist
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -227,7 +227,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should split on non-letter" in {
       client.execute {
         search in "analyzer/test" query termQuery("simple" -> "lower")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -235,12 +235,12 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should include stop words" in {
       client.execute {
         search in "analyzer/test" query termQuery("whitespace" -> "and")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
     "should split on whitespace" in {
       client.execute {
         search in "analyzer/test" query termQuery("whitespace" -> "uiop")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -248,22 +248,22 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should split on shingle size from 2 to 3 term" in {
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "please")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "please divide this into")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "please divide")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "please divide this")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "this sentence into")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("shingle" -> "sentence into")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -271,10 +271,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should split on shingle size from 1 to 2 term " in {
       client.execute {
         search in "analyzer/test" query termQuery("shingle2" -> "keep")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("shingle2" -> "keep unigram")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -282,7 +282,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should keep one term field" in {
       client.execute {
         search in "analyzer/test" query termQuery("noshingle" -> "keep")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -290,7 +290,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should use '#' in 'one two' to define shingle term as 'one#two' " in {
       client.execute {
         search in "analyzer/test" query termQuery("shingleseparator" -> "one#two")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
     }
   }
 
@@ -298,10 +298,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     "should remove the apostrophe and the characters after it" in {
       client.execute {
         search in "analyzer/test" query termQuery("apos" -> "didn")
-      }.await.getHits.getTotalHits shouldBe 1
+      }.await.totalHits shouldBe 1
       client.execute {
         search in "analyzer/test" query termQuery("apos" -> "didn't")
-      }.await.getHits.getTotalHits shouldBe 0
+      }.await.totalHits shouldBe 0
     }
   }
 }

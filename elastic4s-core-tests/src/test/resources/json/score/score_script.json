@@ -1,10 +1,12 @@
 {
-    "script_score": {
-        "script": "some script",
-        "lang": "java",
-        "params": {
-            "param1": "value1",
-            "param2": "value2"
-        }
+  "script_score": {
+    "script": {
+      "inline": "some script",
+      "lang": "java",
+      "params": {
+        "param1": "value1",
+        "param2": "value2"
+      }
     }
+  }
 }

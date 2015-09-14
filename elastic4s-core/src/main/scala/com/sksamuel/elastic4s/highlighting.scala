@@ -82,7 +82,7 @@ object HighlightEncoder {
   case object Html extends HighlightEncoder("html")
 }
 
-class HighlightDefinition(field: String) {
+case class HighlightDefinition(field: String) {
 
   val builder = new HighlightBuilder.Field(field)
 

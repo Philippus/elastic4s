@@ -6,11 +6,10 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, GermanLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */
-class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
+class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute {
     create index "q" mappings {
@@ -68,8 +67,7 @@ class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matc
 
       client.execute {
         put mapping "q" / "r" as Seq(
-          field name "a" withType StringType boost 1.2,
-          field name "b" withType StringType analyzer GermanLanguageAnalyzer
+          field name "a" withType StringType boost 1.2 stored true analyzer WhitespaceAnalyzer
         )
       }.await
 
@@ -81,9 +79,6 @@ class MappingTest extends WordSpec with MockitoSugar with ElasticSugar with Matc
 
       val a = map.get("properties").asInstanceOf[util.Map[String, _]].get("a").asInstanceOf[util.Map[String, _]]
       a.get("boost") shouldBe 1.2
-
-      val b = map.get("properties").asInstanceOf[util.Map[String, _]].get("b").asInstanceOf[util.Map[String, _]]
-      b.get("search_analyzer") shouldBe "german"
     }
   }
 }

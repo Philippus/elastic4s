@@ -162,9 +162,14 @@ For more in depth examples keep reading.
 
 ## 2.0.0 upgrade guide (beta)
 
+* In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
+* Some options on filters like cache and cache key are now removed.
+* In queries that were previously filters, `filterName` is now `queryName`.
+* Fuzzy like this query has been removed.
+* Script dsl has changed ... todo more
 * MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
 * `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
-
+*
 ## Syntax
 
 Here is a list of the common requests and the syntax used to create them. For more details on each request click
