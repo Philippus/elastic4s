@@ -6,6 +6,7 @@ import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
+import org.scalactic.{Or, Every, ErrorMessage}
 
 import scala.concurrent.duration._
 
@@ -18,9 +19,12 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   def getHits: SearchHits = original.getHits
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(new RichSearchHit(_))
 
-  @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
+  @deprecated("use readAs[T], which handles errors", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
+  @deprecated("use readAs[T], which handles errors", "1.6.1")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
+
+  def readAs[T](implicit reader: HitReader[T]): Seq[T Or Every[ErrorMessage]] = hits.map(_.readAs[T])
 
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
   def getAggregations = original.getAggregations
@@ -54,7 +58,7 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   def isTerminatedEarly: Boolean = original.isTerminatedEarly
 }
 
-class RichSearchHit(hit: SearchHit) {
+case class RichSearchHit(hit: SearchHit) {
 
   override def equals(other: Any): Boolean = other match {
     case hit: SearchHit => equals(new RichSearchHit(hit))
@@ -86,17 +90,25 @@ class RichSearchHit(hit: SearchHit) {
   lazy val source: Array[Byte] = Option(hit.source).getOrElse(Array.emptyByteArray)
   lazy val isSourceEmpty: Boolean = hit.isSourceEmpty
   lazy val sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
-  lazy val sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+  def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
-  @deprecated("use as[T], which has a more powerful typeclass abstraction", "1.6.1")
+  def richFields: RichSearchHitFields = {
+    RichSearchHitFields(sourceAsMap.map { case (k, v) => (k, SomeValueSearchHitField(k, v)) })
+  }
+
+  @deprecated("use as[T], which handles errors", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
+
+  @deprecated("use readAs[T], which handles errors", "2.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
+
+  def readAs[T](implicit reader: HitReader[T]): T Or Every[ErrorMessage] = reader.as(this)
 
   lazy val explanation: Option[Explanation] = Option(hit.explanation)
 
   def field(fieldName: String): SearchHitField = fieldOpt(fieldName).get
   def fieldOpt(fieldName: String): Option[SearchHitField] = Option(hit.field(fieldName))
-  lazy val fields: Map[String, SearchHitField] = Option(hit.fields).map(_.asScala.toMap).getOrElse(Map.empty)
+  def fields: Map[String, SearchHitField] = Option(hit.fields).map(_.asScala.toMap).getOrElse(Map.empty)
 
   lazy val highlightFields: Map[String, HighlightField] = {
     Option(hit.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
@@ -107,3 +119,22 @@ class RichSearchHit(hit: SearchHit) {
   lazy val innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 
+sealed trait RichSearchHitField {
+  def name: String
+  def value[T]: T
+  def validate[T](prefix: String = "")(implicit reader: HitFieldReader[T]): T Or Every[ErrorMessage] = {
+    reader.as(prefix)(this)
+  }
+}
+
+case class SomeValueSearchHitField(name: String, _value: Any) extends RichSearchHitField {
+  override def value[T]: T = _value.asInstanceOf[T]
+}
+
+case class MissingRichSearchField(name: String) extends RichSearchHitField {
+  def value[T] = throw new UnsupportedOperationException
+}
+
+case class RichSearchHitFields(field: Map[String, RichSearchHitField]) {
+  def apply(name: String) = field.getOrElse(name, MissingRichSearchField(name))
+}

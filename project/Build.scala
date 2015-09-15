@@ -30,6 +30,7 @@ object Build extends Build {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
+      "org.scalactic" %% "scalactic" % "2.2.5",
       "org.slf4j" % "slf4j-api" % Slf4jVersion,
       "commons-io" % "commons-io" % CommonsIoVersion % "test",
       "log4j" % "log4j" % Log4jVersion % "test",
@@ -87,9 +88,7 @@ object Build extends Build {
 
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     .settings(rootSettings: _*)
-    .settings(
-      name := "elastic4s-core"
-    )
+    .settings(name := "elastic4s-core")
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
     .settings(rootSettings: _*)
