@@ -58,7 +58,7 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   def isTerminatedEarly: Boolean = original.isTerminatedEarly
 }
 
-case class RichSearchHit(hit: SearchHit) {
+case class RichSearchHit(hit: SearchHit) extends AnyVal {
 
   override def equals(other: Any): Boolean = other match {
     case hit: SearchHit => equals(new RichSearchHit(hit))
@@ -92,10 +92,6 @@ case class RichSearchHit(hit: SearchHit) {
   lazy val sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
   def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
-  def richFields: RichSearchHitFields = {
-    RichSearchHitFields(sourceAsMap.map { case (k, v) => (k, SomeValueSearchHitField(k, v)) })
-  }
-
   @deprecated("use as[T], which handles errors", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
 
@@ -106,9 +102,13 @@ case class RichSearchHit(hit: SearchHit) {
 
   lazy val explanation: Option[Explanation] = Option(hit.explanation)
 
-  def field(fieldName: String): SearchHitField = fieldOpt(fieldName).get
-  def fieldOpt(fieldName: String): Option[SearchHitField] = Option(hit.field(fieldName))
-  def fields: Map[String, SearchHitField] = Option(hit.fields).map(_.asScala.toMap).getOrElse(Map.empty)
+  lazy val fields: Map[String, RichSearchHitField] = {
+    Option(hit.fields).map(_.asScala.toMap.mapValues(RichSearchHitField)).getOrElse(Map.empty)
+  }
+
+  def field(fieldName: String): RichSearchHitField = fields(fieldName)
+  def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
+  def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
 
   lazy val highlightFields: Map[String, HighlightField] = {
     Option(hit.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
@@ -119,9 +119,26 @@ case class RichSearchHit(hit: SearchHit) {
   lazy val innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 
-sealed trait RichSearchHitField {
-  def name: String
-  def value[T]: T
+case class RichSearchHitField(value: SearchHitField) {
+
+  import scala.collection.JavaConverters._
+
+  def name: String = value.name()
+
+  @deprecated("use name", "2.0.0")
+  def getName: String = name
+
+  def value[V]: V = value.getValue
+
+  @deprecated("use value[V]", "2.0.0")
+  def getValue[V]: V = value[V]
+
+  def values: Seq[AnyRef] = value.values().asScala.toList
+
+  def getValues: Seq[AnyRef] = values
+
+  def isMetadataField: Boolean = value.isMetadataField
+
   def validate[T](prefix: String = "")(implicit reader: HitFieldReader[T]): T Or Every[ErrorMessage] = {
     reader.as(prefix)(this)
   }
@@ -129,10 +146,6 @@ sealed trait RichSearchHitField {
 
 case class SomeValueSearchHitField(name: String, _value: Any) extends RichSearchHitField {
   override def value[T]: T = _value.asInstanceOf[T]
-}
-
-case class MissingRichSearchField(name: String) extends RichSearchHitField {
-  def value[T] = throw new UnsupportedOperationException
 }
 
 case class RichSearchHitFields(field: Map[String, RichSearchHitField]) {
