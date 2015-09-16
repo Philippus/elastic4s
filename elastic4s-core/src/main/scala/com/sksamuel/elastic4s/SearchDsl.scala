@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.search._
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
@@ -369,6 +370,11 @@ class SearchDefinition(indexesTypes: IndexesTypes) {
   def sourceExclude(excludes: String*): this.type = {
     this.excludes = excludes.toArray
     _builder.setFetchSource(this.includes, this.excludes)
+    this
+  }
+
+  def indicesOptions(options: IndicesOptions): this.type = {
+    _builder.setIndicesOptions(options)
     this
   }
 
