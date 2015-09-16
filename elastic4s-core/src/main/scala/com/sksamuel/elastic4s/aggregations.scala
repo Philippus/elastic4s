@@ -13,7 +13,7 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
-import org.elasticsearch.search.aggregations.bucket.significant.heuristics.{SignificanceHeuristicBuilder, SignificanceHeuristic}
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.SignificanceHeuristicBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
 import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
