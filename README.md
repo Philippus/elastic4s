@@ -785,6 +785,11 @@ sbt test
 Integration tests run on a local elastic that is created and torn down as part of the tests inside your standard temp
 folder. There is no need to configure anything externally.
 
+## Used By
+* Barclays Bank
+* HSBC
+* Shazaam
+
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
 
