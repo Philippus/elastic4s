@@ -5,6 +5,11 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.MutualInformation.MutualInformationBuilder
+import org.elasticsearch.search.aggregations.bucket.significant.{SignificantStringTerms, SignificantTerms}
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.ChiSquare
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.ChiSquare.ChiSquareBuilder
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.GND.GNDBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
@@ -189,6 +194,27 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       aggs.getBucketByKey("30.0-40.0").getDocCount shouldBe 1
       aggs.getBucketByKey("40.0-50.0").getDocCount shouldBe 3
       aggs.getBucketByKey("50.0-60.0").getDocCount shouldBe 4
+    }
+  }
+
+  "significant terms aggregation" - {
+    "should allow setting the significance heuristic" in {
+      val mutualInformationResp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation sigTerms "agg1" field "job" significanceHeuristic new MutualInformationBuilder(false, false)
+        }
+      }.await
+      val gndResp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation sigTerms "agg1" field "job" significanceHeuristic new GNDBuilder(false)
+        }
+      }.await
+      val mutualInformationAggs = mutualInformationResp.getAggregations.getAsMap.get("agg1").asInstanceOf[SignificantStringTerms]
+      val gndAggs = gndResp.getAggregations.getAsMap.get("agg1").asInstanceOf[SignificantStringTerms]
+
+      mutualInformationAggs.getBuckets.size() shouldBe 0
+      gndAggs.getBuckets.size() shouldBe 1
+      gndAggs.getBucketByKey("meth sidekick").getDocCount shouldBe 3
     }
   }
 }
