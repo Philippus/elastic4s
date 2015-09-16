@@ -167,6 +167,7 @@ For more in depth examples keep reading.
 * In queries that were previously filters, `filterName` is now `queryName`.
 * Fuzzy like this query has been removed.
 * Script dsl has changed ... todo more
+* Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
 * MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
 * `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
 * Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
