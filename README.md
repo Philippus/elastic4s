@@ -789,6 +789,7 @@ folder. There is no need to configure anything externally.
 * Barclays Bank
 * HSBC
 * Shazaam
+* Graphflow
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
