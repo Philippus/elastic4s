@@ -232,15 +232,18 @@ object attributes {
     }
   }
 
+  @deprecated("AttributeIndexAnalyzer will be removed in 2.0. Use AttributeAnalyzer", "1.7.0")
   trait AttributeIndexAnalyzer extends Attribute { self: TypedFieldDefinition =>
 
     private[this] var _indexAnalyzer: Option[String] = None
 
+    @deprecated("indexAnalyzer will be removed in 2.0. Use analyzer(analyzer)", "1.7.0")
     def indexAnalyzer(analyzer: String): this.type = {
       _indexAnalyzer = Some(analyzer)
       this
     }
 
+    @deprecated("indexAnalyzer will be removed in 2.0. Use analyzer(analyzer)", "1.7.0")
     def indexAnalyzer(analyzer: Analyzer): this.type = {
       _indexAnalyzer = Some(analyzer.name)
       this
