@@ -25,6 +25,12 @@ class GetDslTest extends FlatSpec with Matchers with ElasticSugar {
     assert(req.build.`type`() === "cities")
   }
 
+  it should """parse "index"/"type" combinations """ in {
+    val req = get id 123 from "places"/"cities"
+    assert(req.build.index() === "places")
+    assert(req.build.`type`() === "cities")
+  }
+
   it should "accept one field" in {
     val req = get id 123 from "places/cities" fields "name"
     assert(req.build.index() === "places")
