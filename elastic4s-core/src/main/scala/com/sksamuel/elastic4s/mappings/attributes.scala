@@ -508,6 +508,20 @@ object attributes {
     }
   }
 
+  trait AttributeTreeLevels extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _treeLevels: Option[Integer] = None
+
+    def treeLevels(treeLevels: Integer): this.type = {
+      _treeLevels = Some(treeLevels)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _treeLevels.foreach(source.field("tree_levels", _))
+    }
+  }
+
   trait AttributePath extends Attribute { self: TypedFieldDefinition =>
 
     private[this] var _path: Option[String] = None

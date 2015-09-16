@@ -1,0 +1,13 @@
+{
+    "mappings": {
+        "shapes": {
+            "properties": {
+                "area": {
+                    "type": "geo_shape",
+                    "tree_levels": 4,
+                    "tree": "quadtree"
+                }
+            }
+        }
+    }
+}

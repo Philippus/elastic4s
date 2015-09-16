@@ -383,7 +383,8 @@ final class GeoShapeFieldDefinition(name: String)
     extends TypedFieldDefinition(GeoShapeType, name)
     with AttributeStore
     with AttributeTree
-    with AttributePrecision {
+    with AttributePrecision
+    with AttributeTreeLevels {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -391,6 +392,7 @@ final class GeoShapeFieldDefinition(name: String)
 
     insertType(source)
     super[AttributePrecision].insert(source)
+    super[AttributeTreeLevels].insert(source)
     super[AttributeTree].insert(source)
 
     if (startObject)
