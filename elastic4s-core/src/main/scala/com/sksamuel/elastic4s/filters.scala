@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.index.query.{HasParentFilterBuilder, HasChildFilterBuilder, NestedFilterBuilder, FilterBuilders}
-import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.common.geo.builders.ShapeBuilder
+import org.elasticsearch.index.query.{HasParentFilterBuilder, HasChildFilterBuilder, NestedFilterBuilder, FilterBuilders, GeoShapeFilterBuilder}
+import org.elasticsearch.common.geo.{SpatialStrategy, ShapeRelation, GeoDistance}
 import org.elasticsearch.common.unit.DistanceUnit
 import com.sksamuel.elastic4s.DefinitionAttributes._
 
@@ -11,6 +12,11 @@ trait FilterDsl {
   def existsFilter(field: String): ExistsFilter = new ExistsFilter(field)
 
   def geoHashCellFilter(field: String): GeoHashCellFilter = new GeoHashCellFilter(field)
+
+  def geoShapeFilter(field: String, shape: ShapeBuilder, relation: ShapeRelation) =
+    new GeoShapeFilter(field, shape, relation)
+  def geoShapeFilter(field: String, indexedShapeId: String, indexedShapeType: String, relation: ShapeRelation) =
+    new GeoShapeFilter(field, indexedShapeId, indexedShapeType, relation)
 
   @deprecated("use geoBoxFilter, just to keep consistent with other geoXX methods", "1.6.5")
   def geoboxFilter(field: String): GeoBoundingBoxFilter = new GeoBoundingBoxFilter(field)
@@ -216,6 +222,28 @@ class QueryFilterDefinition(q: QueryDefinition)
     builder.filterName(filterName)
     this
   }
+}
+
+class GeoShapeFilter(val builder: GeoShapeFilterBuilder)
+  extends FilterDefinition with DefinitionAttributeCache with DefinitionAttributeCacheKey {
+
+  def this(field: String,  shape: ShapeBuilder, relation: ShapeRelation) =
+    this(FilterBuilders.geoShapeFilter(field, shape, relation))
+  def this(field: String,  indexedShapeId: String, indexedShapePath: String, relation: ShapeRelation) =
+    this(FilterBuilders.geoShapeFilter(field, indexedShapeId, indexedShapePath, relation))
+
+  val _builder = builder
+
+  def strategy(strategy: SpatialStrategy): this.type = {
+    builder.strategy(strategy)
+    this
+  }
+
+  def indexedShapeIndex(index: String): this.type = {
+    builder.indexedShapeIndex(index)
+    this
+  }
+
 }
 
 class GeoHashCellFilter(field: String)

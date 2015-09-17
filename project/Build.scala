@@ -35,8 +35,9 @@ object Build extends Build {
       "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test",
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
-      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test"
-
+      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test",
+      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test",
+      "com.vividsolutions" % "jts" % "1.13" % "test"
     ),
     publishTo <<= version {
       (v: String) =>
