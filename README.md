@@ -682,12 +682,23 @@ using Akka. To use this, you need to add a dependency on the elastic4s-streams m
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
 
+### Integrate
+
+First you have to add an additional dependeny to your `build.sbt`
+
+```scala
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "1.7.4"
+```
+
+Import the new API with
+
+```scala
+import com.sksamuel.elastic4s.streams.ReactiveElastic._
+```
+
 ### Publisher
 
-An elastic publisher can be created for any arbitrary query you wish, and then using the efficient search scroll API, the entire dataset that matches
-your query is streamed out to subscribers. Firstly, add an import to enable the api
-
-`import ReactiveElastic._`
+An elastic publisher can be created for any arbitrary query you wish, and then using the efficient search scroll API, the entire dataset that matches your query is streamed out to subscribers.
 
 And make sure you have an Akka Actor System in implicit scope
 
@@ -710,8 +721,7 @@ If you just want to stream out an entire index then you can use the overloaded f
 ### Subscription
 
 An elastic subcriber can be created that will stream a request to elasticsearch for each item produced by a publisher. 
-The subscriber can create index, update, or delete requests, so is a good way to synchronize datasets. Again, you need to 
-add an import to enable the api.
+The subscriber can create index, update, or delete requests, so is a good way to synchronize datasets.
 
 `import ReactiveElastic._`
 
