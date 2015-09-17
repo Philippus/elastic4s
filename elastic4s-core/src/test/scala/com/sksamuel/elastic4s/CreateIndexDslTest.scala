@@ -334,4 +334,13 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     req.mappings().containsKey("tweets") === true
     req.mappings().containsKey("users") === true
   }
+
+  it should "allow specifying the tree levels on geo_shape fields" in {
+    val req = create.index("users").mappings(
+      mapping("shapes").as(
+        "area" typed GeoShapeType tree PrefixTree.Quadtree treeLevels 4
+      )
+    )
+    req._source.string should matchJsonResource("/json/createindex/createindex_geoshape_treelevels.json")
+  }
 }

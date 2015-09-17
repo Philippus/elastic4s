@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
 import org.elasticsearch.common.geo.{ShapeRelation, GeoDistance}
 import org.elasticsearch.common.geo.builders.CircleBuilder
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MatchQueryBuilder.{Operator, ZeroTermsQuery}
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
@@ -1028,6 +1029,12 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       field sort "singer.weight" unmappedType "long" order SortOrder.DESC
     }
     req._builder.toString should matchJsonResource("/json/search/search_sort_unmapped_field_type.json")
+  }
+
+  it should "pass through indices options to its request builder when specified" in {
+    val someIndicesOptions = IndicesOptions.fromOptions(true, true, false, false)
+    val req = search in "music" types "bands" indicesOptions someIndicesOptions
+    req.build.indicesOptions should be(someIndicesOptions)
   }
 
 }
