@@ -1,0 +1,20 @@
+{
+    "post_filter": {
+        "geo_shape": {
+            "shapefield": {
+                "shape": {
+                    "type": "circle",
+                    "radius": "1.0km",
+                    "coordinates": [
+                        12.12,
+                        51.43
+                    ]
+                },
+                "relation": "intersects"
+            },
+            "_name": null,
+            "_cache": true,
+            "_cache_key": "somecachekey"
+        }
+    }
+}

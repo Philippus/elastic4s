@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
+import org.elasticsearch.common.geo.{ShapeRelation, GeoDistance}
+import org.elasticsearch.common.geo.builders.CircleBuilder
 import org.elasticsearch.action.support.IndicesOptions
-import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MatchQueryBuilder.{Operator, ZeroTermsQuery}
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
@@ -522,6 +523,20 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       facet termsStats "grades-by-teacher" keyField "teacher" valueField "grade" global true
     }
     req._builder.toString should matchJsonResource("/json/search/search_terms_stats_facets.json")
+  }
+
+  it should "generate correct json for geo shape filter with a shape param" in {
+    val req = search in "music" types "bands" postFilter {
+      geoShapeFilter("shapefield", new CircleBuilder().center(12.12, 51.43).radius("1km"), ShapeRelation.INTERSECTS) cache true cacheKey "somecachekey"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_filter_geo_shape.json")
+  }
+
+  it should "generate correct json for geo shape filter with an indexed shape" in {
+    val req = search in "music" types "bands" postFilter {
+      geoShapeFilter("shapefield", "indexedshapeid", "indexedshapetype", ShapeRelation.INTERSECTS) cache true cacheKey "somecachekey"
+    }
+    req._builder.toString should matchJsonResource("/json/search/search_filter_geo_shape_indexed.json")
   }
 
   it should "generate correct json for geo bounding box filter" in {

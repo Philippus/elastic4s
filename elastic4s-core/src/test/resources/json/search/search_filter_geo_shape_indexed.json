@@ -1,0 +1,16 @@
+{
+    "post_filter": {
+        "geo_shape": {
+            "shapefield": {
+                "indexed_shape": {
+                    "id": "indexedshapeid",
+                    "type": "indexedshapetype"
+                },
+                "relation": "intersects"
+            },
+            "_name": null,
+            "_cache": true,
+            "_cache_key": "somecachekey"
+        }
+    }
+}
