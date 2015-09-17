@@ -792,6 +792,7 @@ folder. There is no need to configure anything externally.
 * Shazaam
 * Graphflow
 * Hotel Urbano
+* Immobilien Scout
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
