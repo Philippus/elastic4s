@@ -216,7 +216,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Index Status                              | `index status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
-| [Multisearch](guide/multisearch.md)       | `multi ( search in <index/type> query, search in <index/type> query, ...)`|
+| [Multisearch](guide/multisearch.md)       | `multi ( search ..., search ..., ...)`|
 | Open index                                | `open index <name>` |
 | [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
