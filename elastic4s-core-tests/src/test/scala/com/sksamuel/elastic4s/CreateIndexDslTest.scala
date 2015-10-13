@@ -266,7 +266,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = create.index("tweets").mappings(
       "tweet" as(
         "name" typed StringType index "analyzed",
-        "ac" typed CompletionType indexAnalyzer "simple" searchAnalyzer "simple"
+        "ac" typed CompletionType analyzer "simple" searchAnalyzer "simple"
           payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
         ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
