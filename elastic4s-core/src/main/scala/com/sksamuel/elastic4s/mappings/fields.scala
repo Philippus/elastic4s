@@ -195,7 +195,6 @@ final class StringFieldDefinition(name: String)
   with AttributeOmitNorms
   with AttributeAnalyzer
   with AttributeIndexOptions
-  with AttributeIndexAnalyzer
   with AttributeSearchAnalyzer
   with AttributeIncludeInAll
   with AttributeIgnoreAbove
@@ -216,7 +215,6 @@ final class StringFieldDefinition(name: String)
     super[AttributeDocValues].insert(source)
     super[AttributeIncludeInAll].insert(source)
     super[AttributeIndex].insert(source)
-    super[AttributeIndexAnalyzer].insert(source)
     super[AttributeIndexName].insert(source)
     super[AttributeIndexOptions].insert(source)
     super[AttributeIgnoreAbove].insert(source)
@@ -479,7 +477,7 @@ final class AttachmentFieldDefinition(name: String)
 
 final class CompletionFieldDefinition(name: String)
   extends TypedFieldDefinition(CompletionType, name)
-  with AttributeIndexAnalyzer
+  with AttributeAnalyzer
   with AttributeSearchAnalyzer
   with AttributePayloads
   with AttributePreserveSeparators
@@ -491,7 +489,7 @@ final class CompletionFieldDefinition(name: String)
       source.startObject(name)
 
     insertType(source)
-    super[AttributeIndexAnalyzer].insert(source)
+    super[AttributeAnalyzer].insert(source)
     super[AttributeSearchAnalyzer].insert(source)
     super[AttributePayloads].insert(source)
     super[AttributePreserveSeparators].insert(source)
@@ -506,7 +504,7 @@ final class CompletionFieldDefinition(name: String)
 final class TokenCountDefinition(name: String) extends TypedFieldDefinition(TokenCountType, name)
 with AttributeIndex
 with AttributeAnalyzer
-with AttributeIndexAnalyzer {
+with AttributeSearchAnalyzer {
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
       source.startObject(name)
@@ -514,7 +512,7 @@ with AttributeIndexAnalyzer {
     insertType(source)
     super[AttributeAnalyzer].insert(source)
     super[AttributeIndex].insert(source)
-    super[AttributeIndexAnalyzer].insert(source)
+    super[AttributeSearchAnalyzer].insert(source)
 
     if (startObject)
       source.endObject()
