@@ -625,7 +625,7 @@ And some requests don't convert to json in the Java client so aren't yet support
 Also, for clarity, it should be pointed out that the client doesn't send JSON to the server, it uses a binary protocol. So the provided json
 format should be treated as a debugging tool only.
 
-The requests that support `.show` are `search`, `create index`, `index into`, `validate`, `percolate`, `count`.
+The requests that support `.show` are `search`, `multi`, `create index`, `index into`, `validate`, `percolate`, `count`.
 
 ## Synchronous Operations
 
