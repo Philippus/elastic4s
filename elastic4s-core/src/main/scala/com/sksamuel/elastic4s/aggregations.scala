@@ -316,8 +316,18 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
     this
   }
 
+  def extendedBounds(minMax: (Long, Long)): HistogramAggregation = {
+    builder.extendedBounds(minMax._1, minMax._2)
+    this
+  }
+
   def interval(interval: Long): HistogramAggregation = {
     builder.interval(interval)
+    this
+  }
+
+  def minDocCount(minDocCount: Long): HistogramAggregation = {
+    builder.minDocCount(minDocCount)
     this
   }
 
@@ -328,6 +338,11 @@ class HistogramAggregation(name: String) extends AggregationDefinition[Histogram
 
   def preOffset(preOffset: Long): HistogramAggregation = {
     builder.preOffset(preOffset)
+    this
+  }
+
+  def order(order: Histogram.Order) = {
+    builder.order(order)
     this
   }
 }

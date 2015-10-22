@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
@@ -197,6 +198,48 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
     }
   }
 
+  "histogram aggregation" - {
+    "should create intervals by field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation histogram "agg1" field "age" interval 10
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[Histogram]
+      aggs.getBuckets.size shouldBe 5
+      aggs.getBucketByKey(20).getDocCount shouldBe 1
+      aggs.getBucketByKey(30).getDocCount shouldBe 1
+      aggs.getBucketByKey(40).getDocCount shouldBe 3
+      aggs.getBucketByKey(50).getDocCount shouldBe 4
+      aggs.getBucketByKey(60).getDocCount shouldBe 1
+    }
+    "should respect min_doc_count" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation histogram "agg1" field "age" interval 10 minDocCount 2
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[Histogram]
+      aggs.getBuckets.size shouldBe 2
+      aggs.getBucketByKey(40).getDocCount shouldBe 3
+      aggs.getBucketByKey(50).getDocCount shouldBe 4
+    }
+    "should respect ordering" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation histogram "agg1" field "age" interval 10 order Histogram.Order.COUNT_DESC
+        }
+      }.await
+      resp.getHits.getTotalHits shouldBe 10
+      val aggs = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[Histogram]
+      aggs.getBuckets.size shouldBe 5
+      aggs.getBuckets.get(0).getKeyAsNumber shouldBe 50
+      aggs.getBuckets.get(1).getKeyAsNumber shouldBe 40
+    }
+  }
+
   "significant terms aggregation" - {
     "should allow setting the significance heuristic" in {
       val mutualInformationResp = client.execute {
@@ -217,4 +260,5 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       gndAggs.getBucketByKey("meth sidekick").getDocCount shouldBe 3
     }
   }
+
 }
