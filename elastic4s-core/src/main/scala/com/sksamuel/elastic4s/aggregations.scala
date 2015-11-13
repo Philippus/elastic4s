@@ -19,9 +19,12 @@ import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
 import org.elasticsearch.search.aggregations.bucket.global.GlobalBuilder
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
+import org.elasticsearch.search.aggregations.metrics.scripted.ScriptedMetricBuilder
 import org.elasticsearch.search.aggregations.metrics.{MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder}
 import org.elasticsearch.search.aggregations._
 import org.elasticsearch.search.sort.SortBuilder
+
+import scala.collection.JavaConverters._
 
 /** @author Nicolas Yzet */
 trait AbstractAggregationDefinition {
@@ -729,4 +732,85 @@ class ReverseNestedAggregationDefinition(name: String)
     builder.path(path)
     this
   }
+}
+
+class ScriptedMetricAggregationDefinition(name: String) extends AbstractAggregationDefinition {
+  val builder = AggregationBuilders.scriptedMetric(name)
+
+  def initScript(script: String): ScriptedMetricAggregationDefinition = {
+    builder.initScript(script)
+    this
+  }
+
+  def initScriptFile(scriptFile: String): ScriptedMetricAggregationDefinition = {
+    builder.initScriptFile(scriptFile)
+    this
+  }
+
+  def initScriptId(scriptId: String): ScriptedMetricAggregationDefinition = {
+    builder.initScriptId(scriptId)
+    this
+  }
+
+  def mapScript(script: String): ScriptedMetricAggregationDefinition = {
+    builder.mapScript(script)
+    this
+  }
+
+  def mapScriptFile(scriptFile: String): ScriptedMetricAggregationDefinition = {
+    builder.mapScriptFile(scriptFile)
+    this
+  }
+
+  def mapScriptId(scriptId: String): ScriptedMetricAggregationDefinition = {
+    builder.mapScriptId(scriptId)
+    this
+  }
+
+  def combineScript(script: String): ScriptedMetricAggregationDefinition = {
+    builder.combineScript(script)
+    this
+  }
+
+  def combineScriptFile(scriptFile: String): ScriptedMetricAggregationDefinition = {
+    builder.combineScriptFile(scriptFile)
+    this
+  }
+
+  def combineScriptId(scriptId: String): ScriptedMetricAggregationDefinition = {
+    builder.combineScriptId(scriptId)
+    this
+  }
+
+  def reduceScript(script: String): ScriptedMetricAggregationDefinition = {
+    builder.reduceScript(script)
+    this
+  }
+
+  def reduceScriptFile(scriptFile: String): ScriptedMetricAggregationDefinition = {
+    builder.reduceScriptFile(scriptFile)
+    this
+  }
+
+  def reduceScriptId(scriptId: String): ScriptedMetricAggregationDefinition = {
+    builder.reduceScriptId(scriptId)
+    this
+  }
+
+  def lang(lang: String): ScriptedMetricAggregationDefinition = {
+    builder.lang(lang)
+    this
+  }
+
+  def params(params: Map[String, AnyRef]): ScriptedMetricAggregationDefinition = {
+    builder.params(params.asJava)
+    this
+  }
+
+  def reduceParams(reduceParams: Map[String, AnyRef]): ScriptedMetricAggregationDefinition = {
+    builder.reduceParams(reduceParams.asJava)
+    this
+  }
+
+
 }
