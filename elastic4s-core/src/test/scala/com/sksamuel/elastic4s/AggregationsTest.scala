@@ -16,6 +16,7 @@ import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
 import org.elasticsearch.search.aggregations.metrics.max.InternalMax
 import org.elasticsearch.search.aggregations.metrics.min.InternalMin
+import org.elasticsearch.search.aggregations.metrics.scripted.InternalScriptedMetric
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
 import org.scalatest.{ FreeSpec, Matchers }
@@ -258,6 +259,22 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       mutualInformationAggs.getBuckets.size() shouldBe 0
       gndAggs.getBuckets.size() shouldBe 1
       gndAggs.getBucketByKey("meth sidekick").getDocCount shouldBe 3
+    }
+  }
+
+  "scripted metric aggregation" - {
+    "should compute a word count on field name" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation.scriptedMetric("agg1")
+            .initScript("_agg['wordCount'] = []")
+            .mapScript("_agg.wordCount.add(doc['name'].values.size())")
+            .combineScript("wc = 0; for(c in _agg.wordCount) { wc += c }; return wc")
+            .reduceScript("wc = 0; for(a in _aggs) { wc += a }; return wc")
+        }
+      }.await
+      val agg = resp.getAggregations.getAsMap.get("agg1").asInstanceOf[InternalScriptedMetric]
+      agg.aggregation().asInstanceOf[Integer] shouldBe 21
     }
   }
 
