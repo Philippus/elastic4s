@@ -16,7 +16,7 @@ trait DeleteIndexDsl {
   }
 }
 
-class DeleteIndexDefinition(names: String*) {
-  private val builder = new DeleteIndexRequest().indices(names: _*)
+class DeleteIndexDefinition(indexes: Seq[String]) {
+  private val builder = new DeleteIndexRequest().indices(indexes: _*)
   def build = builder
 }

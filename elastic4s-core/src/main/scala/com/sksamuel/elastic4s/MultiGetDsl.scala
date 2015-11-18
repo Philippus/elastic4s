@@ -20,12 +20,12 @@ trait MultiGetDsl extends GetDsl {
 
 class MultiGetDefinition(gets: Iterable[GetDefinition])
   extends DefinitionAttributePreference
-  with DefinitionAttributeRefresh {
+    with DefinitionAttributeRefresh {
 
   val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
 
   gets foreach { get =>
-    val item = new Item(get.indexesTypes.index, get.indexesTypes.typ.orNull, get.id)
+    val item = new Item(get.indexTypes.index, get.indexTypes.types.headOption.orNull, get.id)
     item.routing(get.build.routing())
     item.fields(get.build.fields(): _*)
     item.version(get.build.version())

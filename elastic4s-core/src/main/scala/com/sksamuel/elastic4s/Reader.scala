@@ -23,41 +23,41 @@ trait HitFieldReader[T] {
 
 object HitFieldReader {
 
-  implicit object IntHitFieldReader extends HitFieldReader[Int] {
-    override def as(prefix: String)(hit: RichSearchHitField): Int Or Every[ErrorMessage] = hit match {
-      case MissingRichSearchField(name) => Bad(One(s"$prefix $name field is missing"))
-      case field => field.value[Any] match {
-        case v: Int => Good(v)
-        case v: Long => Good(v.toInt)
-        case v: BigInt => Good(v.intValue())
-        case o => Bad(One(s"$prefix ${hit.name} expected an Int got $o"))
-      }
-    }
-  }
+  //  implicit object IntHitFieldReader extends HitFieldReader[Int] {
+  //    override def as(prefix: String)(hit: RichSearchHitField): Int Or Every[ErrorMessage] = hit match {
+  //      case MissingRichSearchField(name) => Bad(One(s"$prefix $name field is missing"))
+  //      case field => field.value[Any] match {
+  //        case v: Int => Good(v)
+  //        case v: Long => Good(v.toInt)
+  //        case v: BigInt => Good(v.intValue())
+  //        case o => Bad(One(s"$prefix ${hit.name} expected an Int got $o"))
+  //      }
+  //    }
+  //  }
+  //
+  //  implicit object BigDecimalHitFieldReader extends HitFieldReader[BigDecimal] {
+  //    override def as(prefix: String)(hit: RichSearchHitField): BigDecimal Or Every[ErrorMessage] = hit match {
+  //      case MissingRichSearchField(name) => Bad(One(s"$prefix $name field is missing"))
+  //      case field => field.value[Any] match {
+  //        case v: Int => Good(BigDecimal(v))
+  //        case v: Long => Good(BigDecimal(v))
+  //        case v: BigInt => Good(BigDecimal(v))
+  //        case v: Double => Good(BigDecimal(v))
+  //        case v: Float => Good(BigDecimal(v))
+  //        case v: BigDecimal => Good(v)
+  //        case v: java.math.BigDecimal => Good(v)
+  //        case v: java.math.BigInteger => Good(BigDecimal(v.longValue()))
+  //        case o => Bad(One(s"$prefix ${hit.name} expected an Int got $o"))
+  //      }
+  //    }
+  //  }
 
-  implicit object BigDecimalHitFieldReader extends HitFieldReader[BigDecimal] {
-    override def as(prefix: String)(hit: RichSearchHitField): BigDecimal Or Every[ErrorMessage] = hit match {
-      case MissingRichSearchField(name) => Bad(One(s"$prefix $name field is missing"))
-      case field => field.value[Any] match {
-        case v: Int => Good(BigDecimal(v))
-        case v: Long => Good(BigDecimal(v))
-        case v: BigInt => Good(BigDecimal(v))
-        case v: Double => Good(BigDecimal(v))
-        case v: Float => Good(BigDecimal(v))
-        case v: BigDecimal => Good(v)
-        case v: java.math.BigDecimal => Good(v)
-        case v: java.math.BigInteger => Good(BigDecimal(v.longValue()))
-        case o => Bad(One(s"$prefix ${hit.name} expected an Int got $o"))
-      }
-    }
-  }
-
-  implicit def optionReader[T](implicit reader: HitFieldReader[T]): HitFieldReader[Option[T]] = {
-    new HitFieldReader[Option[T]] {
-      override def as(prefix: String)(hit: RichSearchHitField): Option[T] Or Every[ErrorMessage] = hit match {
-        case MissingRichSearchField(name) => Good(None)
-        case field => reader.as(prefix)(hit).map(Some.apply)
-      }
-    }
-  }
+  //  implicit def optionReader[T](implicit reader: HitFieldReader[T]): HitFieldReader[Option[T]] = {
+  //    new HitFieldReader[Option[T]] {
+  //      override def as(prefix: String)(hit: RichSearchHitField): Option[T] Or Every[ErrorMessage] = hit match {
+  //        case MissingRichSearchField(name) => Good(None)
+  //        case field => reader.as(prefix)(hit).map(Some.apply)
+  //      }
+  //    }
+  //  }
 }

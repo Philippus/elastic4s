@@ -26,11 +26,16 @@ trait ValidateDsl {
   }
 }
 
-class ValidateDefinition(index: String, `type`: String) {
+case class ValidateDefinition(index: String, `type`: String) {
 
   private[elastic4s] var q: QueryDefinition = _
-  val _builder = new ValidateQueryRequestBuilder(ProxyClients.indices, ValidateQueryAction.INSTANCE).setIndices(index)
-    .setTypes(`type`)
+
+  val _builder = {
+    new ValidateQueryRequestBuilder(ProxyClients.indices, ValidateQueryAction.INSTANCE)
+      .setIndices(index)
+      .setTypes(`type`)
+  }
+
   def build = _builder.request
 
   /**

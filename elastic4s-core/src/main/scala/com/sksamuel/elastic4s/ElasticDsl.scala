@@ -5,7 +5,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
 import com.sksamuel.elastic4s.anaylzers.{TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
 import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
-import com.sksamuel.elastic4s.mappings.{AttachmentFieldDefinition, BinaryFieldDefinition, BooleanFieldDefinition, ByteFieldDefinition, CompletionFieldDefinition, DateFieldDefinition, DoubleFieldDefinition, FloatFieldDefinition, GeoPointFieldDefinition, GeoShapeFieldDefinition, IntegerFieldDefinition, IpFieldDefinition, LongFieldDefinition, MultiFieldDefinition, ShortFieldDefinition, TokenCountDefinition, ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, GetMappingDefinition, DeleteMappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
+import com.sksamuel.elastic4s.mappings.{AttachmentFieldDefinition, BinaryFieldDefinition, BooleanFieldDefinition, ByteFieldDefinition, CompletionFieldDefinition, DateFieldDefinition, DoubleFieldDefinition, FloatFieldDefinition, GeoPointFieldDefinition, GeoShapeFieldDefinition, IntegerFieldDefinition, IpFieldDefinition, LongFieldDefinition, MultiFieldDefinition, ShortFieldDefinition, TokenCountDefinition, ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -13,37 +13,37 @@ import scala.concurrent.{Await, Future}
 /** @author Stephen Samuel */
 trait ElasticDsl
   extends IndexDsl
-  with AliasesDsl
-  with AnalyzerDsl
-  with BulkDsl
-  with ClusterDsl
-  with CountDsl
-  with CreateIndexDsl
-  with DeleteIndexDsl
-  with DeleteDsl
-  with FieldStatsDsl
-  with ExplainDsl
-  with GetDsl
-  with IndexAdminDsl
-  with IndexRecoveryDsl
-  with IndexTemplateDsl
-  with MappingDsl
-  with MultiGetDsl
-  with OptimizeDsl
-  with PercolateDsl
-  with ReindexDsl
-  with ScriptDsl
-  with SearchDsl
-  with SettingsDsl
-  with ScoreDsl
-  with ScrollDsl
-  with SnapshotDsl
-  with TokenizerDsl
-  with TokenFilterDsl
-  with UpdateDsl
-  with ValidateDsl
-  with DeprecatedElasticDsl
-  with ElasticImplicits {
+    with AliasesDsl
+    with AnalyzerDsl
+    with BulkDsl
+    with ClusterDsl
+    with CountDsl
+    with CreateIndexDsl
+    with DeleteIndexDsl
+    with DeleteDsl
+    with FieldStatsDsl
+    with ExplainDsl
+    with GetDsl
+    with IndexAdminDsl
+    with IndexRecoveryDsl
+    with IndexTemplateDsl
+    with MappingDsl
+    with MultiGetDsl
+    with OptimizeDsl
+    with PercolateDsl
+    with ReindexDsl
+    with ScriptDsl
+    with SearchDsl
+    with SettingsDsl
+    with ScoreDsl
+    with ScrollDsl
+    with SnapshotDsl
+    with TokenizerDsl
+    with TokenFilterDsl
+    with UpdateDsl
+    with ValidateDsl
+    with DeprecatedElasticDsl
+    with ElasticImplicits {
 
   case object add {
     def alias(alias: String): AddAliasExpectsIndex = {
@@ -90,12 +90,6 @@ trait ElasticDsl
     def topHits(name: String) = new TopHitsAggregationDefinition(name)
   }
 
-  def attachmentField(name: String) = field(name).typed(AttachmentType)
-
-  def binaryField(name: String) = field(name).typed(BinaryType)
-  def booleanField(name: String) = field(name).typed(BooleanType)
-  def byteField(name: String) = field(name).typed(ByteType)
-
   case object clear {
     def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
     def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
@@ -138,15 +132,12 @@ trait ElasticDsl
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
   case object count {
-    def from(indexType: IndexType): CountDefinition = from(IndexesTypes(indexType))
-    def from(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-    def from(indexes: Iterable[String]): CountDefinition = from(IndexesTypes(indexes))
-    def from(indexes: String*): CountDefinition = from(IndexesTypes(indexes))
+    def from(indexType: IndexAndTypes): CountDefinition = from(IndexesAndTypes(indexType))
+    def from(indexesTypes: IndexesAndTypes): CountDefinition = new CountDefinition(indexesTypes)
   }
 
-  def countFrom(index: (String, String)): CountDefinition = count from index
-  def countFrom(indexes: String*): CountDefinition = count from indexes
-  def countFrom(indexes: IndexType): CountDefinition = count from indexes
+  def countFrom(indexes: IndexAndTypes): CountDefinition = count from indexes
+  def countFrom(indexesAndTypes: IndexesAndTypes): CountDefinition = count from indexesAndTypes
 
   case object create {
 
@@ -175,26 +166,23 @@ trait ElasticDsl
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
 
-  def dateField(name: String) = field(name).typed(DateType)
-  def doubleField(name: String) = field(name).typed(DoubleType)
+
 
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-    def index(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
-    def index(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq: _*)
+    def index(indexes: String*): DeleteIndexDefinition = index(indexes)
+    def index(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq)
     def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
     def template(name: String) = new DeleteIndexTemplateDefinition(name)
   }
 
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
-  def deleteIndex(indexes: String*): DeleteIndexDefinition = new DeleteIndexDefinition(indexes: _*)
-  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq: _*)
+  def deleteIndex(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
+  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq)
 
   def deleteSnapshot(name: String): DeleteSnapshotExpectsIn = delete snapshot name
   def deleteTemplate(name: String): DeleteIndexTemplateDefinition = delete template name
-  def deleteMapping(indexes: String*) = DeleteMappingDefinition(indexes)
-  def deleteMapping(indexType: IndexType) = DeleteMappingDefinition(List(indexType.index)).types(indexType.`type`)
 
   @deprecated("use explain(index, type, id).query(query)...", "2.0.0")
   case object explain {
@@ -213,27 +201,27 @@ trait ElasticDsl
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
 
-  @deprecated("use field(name, type)", "2.0.0")
+  @deprecated("use specific methods for each type, eg longField, stringField", "2.0.0")
   def field(name: String): FieldDefinition = FieldDefinition(name)
-  def field(name:String,ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
-  def field(name:String,ft: BinaryType.type) = new BinaryFieldDefinition(name)
-  def field(name:String,ft: BooleanType.type) = new BooleanFieldDefinition(name)
-  def field(name:String,ft: ByteType.type) = new ByteFieldDefinition(name)
-  def field(name:String,ft: CompletionType.type) = new CompletionFieldDefinition(name)
-  def field(name:String,ft: DateType.type) = new DateFieldDefinition(name)
-  def field(name:String,ft: DoubleType.type) = new DoubleFieldDefinition(name)
-  def field(name:String,ft: FloatType.type) = new FloatFieldDefinition(name)
-  def field(name:String,ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
-  def field(name:String,ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
-  def field(name:String,ft: IntegerType.type) = new IntegerFieldDefinition(name)
-  def field(name:String,ft: IpType.type) = new IpFieldDefinition(name)
-  def field(name:String,ft: LongType.type) = new LongFieldDefinition(name)
-  def field(name:String,ft: MultiFieldType.type) = new MultiFieldDefinition(name)
-  def field(name:String,ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
-  def field(name:String,ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
-  def field(name:String,ft: ShortType.type) = new ShortFieldDefinition(name)
-  def field(name:String,ft: StringType.type) = new StringFieldDefinition(name)
-  def field(name:String,ft: TokenCountType.type) = new TokenCountDefinition(name)
+  def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
+  def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
+  def field(name: String, ft: BooleanType.type) = new BooleanFieldDefinition(name)
+  def field(name: String, ft: ByteType.type) = new ByteFieldDefinition(name)
+  def field(name: String, ft: CompletionType.type) = new CompletionFieldDefinition(name)
+  def field(name: String, ft: DateType.type) = new DateFieldDefinition(name)
+  def field(name: String, ft: DoubleType.type) = new DoubleFieldDefinition(name)
+  def field(name: String, ft: FloatType.type) = new FloatFieldDefinition(name)
+  def field(name: String, ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
+  def field(name: String, ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
+  def field(name: String, ft: IntegerType.type) = new IntegerFieldDefinition(name)
+  def field(name: String, ft: IpType.type) = new IpFieldDefinition(name)
+  def field(name: String, ft: LongType.type) = new LongFieldDefinition(name)
+  def field(name: String, ft: MultiFieldType.type) = new MultiFieldDefinition(name)
+  def field(name: String, ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
+  def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
+  def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
+  def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
+  def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
@@ -260,13 +248,7 @@ trait ElasticDsl
   }
   def geoSort(name: String): GeoDistanceSortDefinition = geo sort name
 
-  def completionField(name: String) = field(name).typed(CompletionType)
 
-  def floatField(name: String) = field(name).typed(FloatType)
-
-  def multiField(name: String) = field(name).typed(MultiFieldType)
-  def geopointField(name: String) = field(name).typed(GeoPointType)
-  def geoshapeField(name: String) = field(name).typed(GeoShapeType)
 
   case object get {
 
@@ -280,15 +262,11 @@ trait ElasticDsl
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
     def cluster(health: HealthKeyword): ClusterHealthDefinition = new ClusterHealthDefinition
 
-    def mapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
-    def mapping(indexes: Iterable[String]): GetMappingDefinition = new GetMappingDefinition(indexes)
-    def mapping(indexes: String*): GetMappingDefinition = mapping(indexes)
+    def mapping(it: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(it)
 
-    def segments(indexes: String*): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
-    def segments(indexes: Iterable[String]): GetSegmentsDefinition = new GetSegmentsDefinition(indexes.toSeq)
+    def segments(indexes: Indexes): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
 
-    def settings(indexes: String*): GetSettingsDefinition = new GetSettingsDefinition(indexes)
-    def settings(indexes: Iterable[String]): GetSettingsDefinition = new GetSettingsDefinition(indexes.toSeq)
+    def settings(indexes: Indexes): GetSettingsDefinition = new GetSettingsDefinition(indexes)
 
     def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
 
@@ -298,15 +276,18 @@ trait ElasticDsl
 
   def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
-  def getMapping(ixTp: IndexType): GetMappingDefinition = new GetMappingDefinition(List(ixTp.index)).types(ixTp.`type`)
-  def getSegments(indexes: String*): GetSegmentsDefinition = get segments (indexes.toSeq: _*)
-  def getSettings(indexes: String*): GetSettingsDefinition = get settings indexes
+  def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = new GetMappingDefinition(IndexesAndTypes(ixTp))
+
+  def getSegments(indexes: Indexes): GetSegmentsDefinition = get segments indexes
+
+  def getSettings(indexes: Indexes): GetSettingsDefinition = get settings indexes
+
   def getSnapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = get snapshot names
   def getSnapshot(names: String*): GetSnapshotsExpectsFrom = get snapshot names
+
   def getTemplate(name: String): GetTemplateDefinition = get template name
 
-  def intField(name: String) = field(name).typed(IntegerType)
-  def ipField(name: String) = field(name).typed(IpType)
+
 
   trait HealthKeyword
   case object health extends HealthKeyword
@@ -340,9 +321,9 @@ trait ElasticDsl
       into(kv._1, kv._2)
     }
 
-    def into(indexType: IndexType): IndexDefinition = {
+    def into(indexType: IndexAndTypes): IndexDefinition = {
       require(indexType != null, "indexType must not be null or empty")
-      new IndexDefinition(indexType.index, indexType.`type`)
+      new IndexDefinition(indexType.index, indexType.types.head)
     }
 
     def stats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
@@ -352,9 +333,9 @@ trait ElasticDsl
   def indexExists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
   def indexExists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
 
-  def indexInto(indexType: IndexType): IndexDefinition = {
+  def indexInto(indexType: IndexAndTypes): IndexDefinition = {
     require(indexType != null, "indexType must not be null or empty")
-    new IndexDefinition(indexType.index, indexType.`type`)
+    new IndexDefinition(indexType.index, indexType.types.head)
   }
 
   def indexInto(index: String, `type`: String): IndexDefinition = {
@@ -363,7 +344,7 @@ trait ElasticDsl
   }
 
   def indexStats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
-  def indexStats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
+  def indexStats(indexes: String*): IndicesStatsDefinition = indexStats(indexes)
 
   case object inner {
     def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)
@@ -372,7 +353,6 @@ trait ElasticDsl
   def innerHit(name: String): InnerHitDefinition = inner hit name
   def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
 
-  def longField(name: String) = field(name).typed(LongType)
 
   case object mapping {
     def name(name: String): MappingDefinition = {
@@ -385,9 +365,7 @@ trait ElasticDsl
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = new MultiGetDefinition(gets)
   def multiget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets)
 
-  def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
 
-  def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
 
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
@@ -405,16 +383,14 @@ trait ElasticDsl
   def optimizeIndex(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes)
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
 
-  @deprecated("use percolateIn", "2.0.0")
+  @deprecated("use percolate", "2.0.0")
   case object percolate {
-    @deprecated("use percolateIn", "2.0.0")
-    def in(index: String): PercolateDefinition = PercolateDefinition(index)
-    @deprecated("use percolateIn", "2.0.0")
-    def in(indexType: IndexType): PercolateDefinition = PercolateDefinition(IndexesTypes(indexType))
+    @deprecated("use percolate", "2.0.0")
+    def in(indexType: IndexAndTypes): PercolateDefinition = PercolateDefinition(IndexesAndTypes(indexType))
   }
 
-  def percolateIn(index: String): PercolateDefinition = percolate in index
-  def percolateIn(indexType: IndexType): PercolateDefinition = percolate in indexType
+  def percolateIn(indexType: IndexAndTypes): PercolateDefinition = percolateIn(IndexesAndTypes(indexType))
+  def percolateIn(indexesAndTypes: IndexesAndTypes): PercolateDefinition = PercolateDefinition(indexesAndTypes)
 
   case object phrase {
     def suggestion(name: String): PhraseSuggestionDefinition = new PhraseSuggestionDefinition(name)
@@ -423,9 +399,9 @@ trait ElasticDsl
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
   case object put {
-    def mapping(indexType: IndexType): PutMappingDefinition = new PutMappingDefinition(indexType)
+    def mapping(indexType: IndexAndTypes): PutMappingDefinition = new PutMappingDefinition(indexType)
   }
-  def putMapping(indexType: IndexType): PutMappingDefinition = new PutMappingDefinition(indexType)
+  def putMapping(indexType: IndexAndTypes): PutMappingDefinition = new PutMappingDefinition(indexType)
 
   case object recover {
     def index(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
@@ -480,23 +456,41 @@ trait ElasticDsl
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
   def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
-  def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
 
   case object search {
-    def in(indexes: String*): SearchDefinition = in(IndexesTypes(indexes))
-    def in(tuple: (String, String)): SearchDefinition = in(IndexesTypes(tuple))
-    def in(indexesTypes: IndexesTypes): SearchDefinition = new SearchDefinition(indexesTypes)
-    def in(indexType: IndexType): SearchDefinition = new SearchDefinition(IndexesTypes(indexType))
+    def in(indexes: String*): SearchDefinition = in(IndexesAndTypes(indexes))
+    def in(tuple: (String, String)): SearchDefinition = in(IndexesAndTypes(tuple))
+    def in(indexesTypes: IndexesAndTypes): SearchDefinition = new SearchDefinition(indexesTypes)
+    def in(indexType: IndexAndTypes): SearchDefinition = new SearchDefinition(IndexesAndTypes(indexType))
     def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
   }
 
-  def search(indexType: IndexType): SearchDefinition = search in indexType
-  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesTypes(indexes))
+  def search(indexType: IndexAndTypes): SearchDefinition = search in indexType
+  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesAndTypes(indexes))
 
   def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
 
+  // -- helper methods to create the field definitions --
+  def attachmentField(name: String) = field(name).typed(AttachmentType)
+  def binaryField(name: String) = field(name).typed(BinaryType)
+  def booleanField(name: String) = field(name).typed(BooleanType)
+  def byteField(name: String) = field(name).typed(ByteType)
+  def completionField(name: String) = field(name).typed(CompletionType)
+  def dateField(name: String) = field(name).typed(DateType)
+  def doubleField(name: String) = field(name).typed(DoubleType)
+  def floatField(name: String) = field(name).typed(FloatType)
+  def geopointField(name: String) = field(name).typed(GeoPointType)
+  def geoshapeField(name: String) = field(name).typed(GeoShapeType)
+  def multiField(name: String) = field(name).typed(MultiFieldType)
+  def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
+  def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
+  def intField(name: String) = field(name).typed(IntegerType)
+  def ipField(name: String) = field(name).typed(IpType)
+  def longField(name: String) = field(name).typed(LongType)
+  def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
   def shortField(name: String) = field(name).typed(ShortType)
   def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
+  def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
   def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
   def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
@@ -517,7 +511,6 @@ trait ElasticDsl
   }
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
-  def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
   class TypesExistExpectsIn(types: Seq[String]) {
     def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)
@@ -537,16 +530,16 @@ trait ElasticDsl
   def update(id: Any): UpdateExpectsIndex = new UpdateExpectsIndex(id.toString)
 
   case object validate {
-    def in(indexType: IndexType): ValidateDefinition = new ValidateDefinition(indexType.index, indexType.`type`)
+    def in(indexType: IndexAndTypes): ValidateDefinition = ValidateDefinition(indexType.index, indexType.types.head)
     def in(value: String): ValidateDefinition = {
       require(value.nonEmpty, "value must not be null or empty")
-      in(value.split("/").toSeq)
+      in(IndexAndTypes(value))
     }
-    def in(value: Seq[String]): ValidateDefinition = in((value.head, value(1)))
-    def in(tuple: (String, String)): ValidateDefinition = new ValidateDefinition(tuple._1, tuple._2)
+    def in(index: String, `type`: String): ValidateDefinition = ValidateDefinition(index, `type`)
+    def in(tuple: (String, String)): ValidateDefinition = ValidateDefinition(tuple._1, tuple._2)
   }
 
-  def validateIn(indexType: IndexType): ValidateDefinition = validate in indexType
+  def validateIn(indexType: IndexAndTypes): ValidateDefinition = validate in indexType
   def validateIn(value: String): ValidateDefinition = validate in value
 
   implicit class RichFuture[T](future: Future[T]) {

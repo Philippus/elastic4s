@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, IndexType, SearchDefinition}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, IndexAndTypes, SearchDefinition}
 
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
@@ -31,7 +31,7 @@ object ReactiveElastic {
         flushInterval)
     }
 
-    def publisher(indexType: IndexType, elements: Long = Long.MaxValue, keepAlive: String = "1m")
+    def publisher(indexType: IndexAndTypes, elements: Long = Long.MaxValue, keepAlive: String = "1m")
                  (implicit system: ActorSystem): ScrollPublisher = {
       publisher(search in indexType query "*:*" scroll keepAlive)
     }

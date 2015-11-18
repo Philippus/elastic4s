@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{Executable, IndexType, ProxyClients}
+import com.sksamuel.elastic4s.{Executable, IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingAction, PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
@@ -19,10 +19,19 @@ trait MappingDsl {
   @deprecated("use mapping(x)", "2.0.0")
   implicit def stringToMap(`type`: String): MappingDefinition = new MappingDefinition(`type`)
 
+  case class GetMappingDefinition(indexesAndTypes: IndexesAndTypes) {
+    def types(first: String, rest: String*): GetMappingDefinition = types(first +: rest)
+    def types(types: Seq[String]): GetMappingDefinition = {
+      copy(indexesAndTypes = IndexesAndTypes(indexesAndTypes.indexes, types))
+    }
+  }
+
   implicit object GetMappingDefinitionExecutable
     extends Executable[GetMappingDefinition, GetMappingsResponse, GetMappingsResponse] {
     override def apply(c: Client, t: GetMappingDefinition): Future[GetMappingsResponse] = {
-      injectFuture(c.admin.indices.prepareGetMappings(t.indexes.toSeq: _*).setTypes(t.types.toSeq: _*).execute)
+      injectFuture(
+        c.admin.indices.prepareGetMappings(t.indexesAndTypes.indexes: _*).setTypes(t.indexesAndTypes.types: _*).execute
+      )
     }
   }
 
@@ -34,12 +43,12 @@ trait MappingDsl {
   }
 }
 
-class PutMappingDefinition(indexType: IndexType) extends MappingDefinition(indexType.`type`) {
+class PutMappingDefinition(indexesType: IndexesAndTypes) extends MappingDefinition(indexesType.types.head) {
 
   def request: PutMappingRequest = {
     val req = new PutMappingRequestBuilder(ProxyClients.indices, PutMappingAction.INSTANCE)
-      .setIndices(indexType.index)
-      .setType(`type`)
+      .setIndices(indexesType.indexes: _*)
+      .setType(indexesType.types.head)
       .setSource(super.build)
     req.request()
   }

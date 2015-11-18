@@ -79,8 +79,8 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
   }
 }
 
-case class PercolateDefinition(indexType: IndexesTypes) {
-  require(indexType != null, "index must not be null or empty")
+case class PercolateDefinition(indexesAndTypes: IndexesAndTypes) {
+  require(indexesAndTypes != null, "index must not be null or empty")
 
   private val _fields = new ListBuffer[(String, Any)]
   private var _rawDoc: Option[String] = None
@@ -88,8 +88,8 @@ case class PercolateDefinition(indexType: IndexesTypes) {
 
   def build = new PercolateRequestBuilder(ProxyClients.client, PercolateAction.INSTANCE)
     .setSource(_doc)
-    .setIndices(indexType.index)
-    .setDocumentType(indexType.types.head)
+    .setIndices(indexesAndTypes.indexes: _*)
+    .setDocumentType(indexesAndTypes.types.head)
     .request()
 
   private[elastic4s] def _doc: XContentBuilder = {

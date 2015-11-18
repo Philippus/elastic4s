@@ -10,7 +10,7 @@ import org.scalactic.{Or, Every, ErrorMessage}
 
 import scala.concurrent.duration._
 
-case class RichSearchResponse(original: SearchResponse) extends AnyVal {
+case class RichSearchResponse(original: SearchResponse) {
 
   def totalHits: Long = original.getHits.getTotalHits
   def maxScore: Float = original.getHits.getMaxScore
@@ -58,7 +58,7 @@ case class RichSearchResponse(original: SearchResponse) extends AnyVal {
   def isTerminatedEarly: Boolean = original.isTerminatedEarly
 }
 
-case class RichSearchHit(hit: SearchHit) extends AnyVal {
+case class RichSearchHit(hit: SearchHit) {
 
   override def equals(other: Any): Boolean = other match {
     case hit: SearchHit => equals(new RichSearchHit(hit))
@@ -119,7 +119,7 @@ case class RichSearchHit(hit: SearchHit) extends AnyVal {
   lazy val innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 
-case class RichSearchHitField(value: SearchHitField) {
+case class RichSearchHitField(value: SearchHitField) extends AnyVal {
 
   import scala.collection.JavaConverters._
 
@@ -128,7 +128,7 @@ case class RichSearchHitField(value: SearchHitField) {
   @deprecated("use name", "2.0.0")
   def getName: String = name
 
-  def value[V]: V = value.getValue
+  def value[V]: V = value.getValue[V]
 
   @deprecated("use value[V]", "2.0.0")
   def getValue[V]: V = value[V]
@@ -144,10 +144,10 @@ case class RichSearchHitField(value: SearchHitField) {
   }
 }
 
-case class SomeValueSearchHitField(name: String, _value: Any) extends RichSearchHitField {
-  override def value[T]: T = _value.asInstanceOf[T]
-}
-
-case class RichSearchHitFields(field: Map[String, RichSearchHitField]) {
-  def apply(name: String) = field.getOrElse(name, MissingRichSearchField(name))
-}
+//case class SomeValueSearchHitField(name: String, _value: Any) extends RichSearchHitField {
+//  override def value[T]: T = _value.asInstanceOf[T]
+//}
+//
+//case class RichSearchHitFields(field: Map[String, RichSearchHitField]) {
+//  def apply(name: String) = field.getOrElse(name, MissingRichSearchField(name))
+//}

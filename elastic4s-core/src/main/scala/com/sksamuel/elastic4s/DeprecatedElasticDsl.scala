@@ -19,11 +19,6 @@ trait DeprecatedElasticDsl {
     def tokenfilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
   }
 
-  @deprecated("use countFrom", "1.6.0")
-  def count(indexesTypes: IndexesTypes): CountDefinition = new CountDefinition(indexesTypes)
-  @deprecated("use countFrom", "1.6.0")
-  def count(indexes: String*): CountDefinition = new CountDefinition(IndexesTypes(indexes))
-
   @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
   case object edgeNGram {
     @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")

@@ -19,8 +19,7 @@ trait SearchDsl
   extends QueryDsl
   with HighlightDsl
   with ScriptFieldDsl
-  with SuggestionDsl
-  with IndexesTypesDsl {
+  with SuggestionDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
 
@@ -98,7 +97,7 @@ class RescoreDefinition(query: QueryDefinition) {
   }
 }
 
-class SearchDefinition(indexesTypes: IndexesTypes) {
+class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   val _builder = {
     new SearchRequestBuilder(ProxyClients.client, SearchAction.INSTANCE)

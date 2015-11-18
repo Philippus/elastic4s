@@ -10,13 +10,10 @@ import scala.concurrent.Future
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
-trait GetDsl extends IndexesTypesDsl {
+trait GetDsl {
 
   class GetWithIdExpectsFrom(id: String) {
-    def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
-    def from(index: IndexType): GetDefinition = new GetDefinition(index.index, id)
-    def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))
-    def from(index: String): GetDefinition = new GetDefinition(index, id)
+    def from(index: IndexAndTypes): GetDefinition = new GetDefinition(index, id)
   }
 
   implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, RichGetResponse] {
@@ -26,9 +23,9 @@ trait GetDsl extends IndexesTypesDsl {
   }
 }
 
-case class GetDefinition(indexesTypes: IndexesTypes, id: String) {
+case class GetDefinition(indexTypes: IndexAndTypes, id: String) {
 
-  private val _builder = Requests.getRequest(indexesTypes.index).`type`(indexesTypes.typ.orNull).id(id)
+  private val _builder = Requests.getRequest(indexTypes.index).`type`(indexTypes.types.headOption.orNull).id(id)
   def build = _builder
 
   def fetchSourceContext(context: Boolean) = {
@@ -107,7 +104,7 @@ case class RichGetResponse(original: GetResponse) extends AnyVal {
   def id: String = original.getId
 
   @deprecated("use index", "2.0.0")
-  def getIndex : String = index
+  def getIndex: String = index
   def index: String = original.getIndex
 
   def source = original.getSource
@@ -115,11 +112,11 @@ case class RichGetResponse(original: GetResponse) extends AnyVal {
   def sourceAsString: String = original.getSourceAsString
 
   @deprecated("use `type`", "2.0.0")
-  def getType : String = `type`
+  def getType: String = `type`
   def `type`: String = original.getType
 
   @deprecated("use version", "2.0.0")
-  def getVersion : Long = version
+  def getVersion: Long = version
   def version: Long = original.getVersion
 
   def isExists: Boolean = original.isExists

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.{Indexes, Executable}
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
@@ -31,7 +31,7 @@ trait IndexAdminDsl {
   implicit object GetSegmentsDefinitionExecutable
     extends Executable[GetSegmentsDefinition, IndicesSegmentResponse, IndicesSegmentResponse] {
     override def apply(c: Client, t: GetSegmentsDefinition): Future[IndicesSegmentResponse] = {
-      injectFuture(c.admin.indices.prepareSegments(t.indexes: _*).execute)
+      injectFuture(c.admin.indices.prepareSegments(t.indexes.values: _*).execute)
     }
   }
   implicit object IndexExistsDefinitionExecutable
@@ -74,7 +74,7 @@ trait IndexAdminDsl {
 
 class OpenIndexDefinition(val index: String)
 class CloseIndexDefinition(val index: String)
-class GetSegmentsDefinition(val indexes: Seq[String])
+class GetSegmentsDefinition(val indexes: Indexes)
 class IndexExistsDefinition(val indexes: Seq[String])
 class TypesExistsDefinition(val indexes: Seq[String], val types: Seq[String])
 class IndicesStatsDefinition(val indexes: Seq[String])

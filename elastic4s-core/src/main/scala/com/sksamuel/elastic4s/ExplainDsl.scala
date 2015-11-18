@@ -18,8 +18,8 @@ trait ExplainDsl {
 
   @deprecated("use the non dot free style", "2.0.0")
   class ExplainExpectsIndex(id: String) {
-    def in(indexesTypes: IndexesTypes): ExplainDefinition = {
-      new ExplainDefinition(indexesTypes.index, indexesTypes.typ.get, id)
+    def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
+      new ExplainDefinition(indexAndTypes.index, indexAndTypes.types.head, id)
     }
   }
 }

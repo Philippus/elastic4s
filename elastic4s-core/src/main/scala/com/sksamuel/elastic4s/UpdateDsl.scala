@@ -13,7 +13,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 /** @author Stephen Samuel */
-trait UpdateDsl extends IndexesTypesDsl {
+trait UpdateDsl {
 
   implicit object UpdateDefinitionExecutable extends Executable[UpdateDefinition, UpdateResponse, UpdateResponse] {
     override def apply(c: Client, t: UpdateDefinition): Future[UpdateResponse] = {
@@ -22,18 +22,17 @@ trait UpdateDsl extends IndexesTypesDsl {
   }
 
   class UpdateExpectsIndex(id: String) {
-    def in(indexType: IndexType): UpdateDefinition = in(IndexesTypes(indexType))
-    def in(indexesTypes: IndexesTypes): UpdateDefinition = UpdateDefinition(indexesTypes, id)
+    def in(indexType: IndexAndTypes): UpdateDefinition = in(indexType)
   }
 }
 
-case class UpdateDefinition(indexesTypes: IndexesTypes, id: String)
+case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   extends BulkCompatibleDefinition
-  with DefinitionRouting {
+    with DefinitionRouting {
 
   val _builder = new UpdateRequestBuilder(ProxyClients.client, UpdateAction.INSTANCE)
-    .setIndex(indexesTypes.index)
-    .setType(indexesTypes.typ.orNull)
+    .setIndex(indexAndTypes.index)
+    .setType(indexAndTypes.types.headOption.orNull)
     .setId(id)
 
   def build: UpdateRequest = _builder.request

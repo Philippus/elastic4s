@@ -6,22 +6,6 @@ import org.elasticsearch.common.xcontent.XContentBuilder
 
 import scala.language.implicitConversions
 
-case class GetMappingDefinition(indexes: Iterable[String]) {
-  var types: Iterable[String] = Nil
-  def types(types: String*): this.type = {
-    this.types = types
-    this
-  }
-}
-
-case class DeleteMappingDefinition(indexes: Iterable[String]) {
-  var types: Iterable[String] = Nil
-  def types(types: String*): this.type = {
-    this.types = types
-    this
-  }
-}
-
 sealed abstract class DynamicMapping
 
 object DynamicMapping {
@@ -156,7 +140,7 @@ final class NestedFieldDefinition(name: String)
 /** @author Fehmi Can Saglam */
 final class ObjectFieldDefinition(name: String)
   extends TypedFieldDefinition(ObjectType, name)
-  with AttributeEnabled {
+    with AttributeEnabled {
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
@@ -193,8 +177,8 @@ final class StringFieldDefinition(name: String)
   with AttributeBoost
   with AttributeNullValue[String]
   with AttributeOmitNorms
-  with AttributeAnalyzer
   with AttributeIndexOptions
+  with AttributeAnalyzer
   with AttributeSearchAnalyzer
   with AttributeIncludeInAll
   with AttributeIgnoreAbove
@@ -236,18 +220,18 @@ final class StringFieldDefinition(name: String)
 
 abstract class NumberFieldDefinition[T](`type`: FieldType, name: String)
   extends TypedFieldDefinition(`type`, name)
-  with AttributeBoost
-  with AttributeIncludeInAll
-  with AttributeIgnoreMalformed
-  with AttributeIndex
-  with AttributeIndexName
-  with AttributeNullValue[T]
-  with AttributePostingsFormat
-  with AttributePrecisionStep
-  with AttributeStore
-  with AttributeDocValues
-  with AttributeCopyTo
-  with AttributeFields {
+    with AttributeBoost
+    with AttributeIncludeInAll
+    with AttributeIgnoreMalformed
+    with AttributeIndex
+    with AttributeIndexName
+    with AttributeNullValue[T]
+    with AttributePostingsFormat
+    with AttributePrecisionStep
+    with AttributeStore
+    with AttributeDocValues
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -281,19 +265,19 @@ final class LongFieldDefinition(name: String) extends NumberFieldDefinition[Long
 
 final class DateFieldDefinition(name: String)
   extends TypedFieldDefinition(DateType, name)
-  with AttributeBoost
-  with AttributeFormat
-  with AttributeIncludeInAll
-  with AttributeIndex
-  with AttributeIndexName
-  with AttributeIgnoreMalformed
-  with AttributeNullValue[String]
-  with AttributePostingsFormat
-  with AttributePrecisionStep
-  with AttributeStore
-  with AttributeDocValues
-  with AttributeCopyTo
-  with AttributeFields {
+    with AttributeBoost
+    with AttributeFormat
+    with AttributeIncludeInAll
+    with AttributeIndex
+    with AttributeIndexName
+    with AttributeIgnoreMalformed
+    with AttributeNullValue[String]
+    with AttributePostingsFormat
+    with AttributePrecisionStep
+    with AttributeStore
+    with AttributeDocValues
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -321,16 +305,16 @@ final class DateFieldDefinition(name: String)
 
 final class BooleanFieldDefinition(name: String)
   extends TypedFieldDefinition(BooleanType, name)
-  with AttributeIndexName
-  with AttributeStore
-  with AttributeIndex
-  with AttributeBoost
-  with AttributeNullValue[Boolean]
-  with AttributeIncludeInAll
-  with AttributePostingsFormat
-  with AttributeDocValues
-  with AttributeCopyTo
-  with AttributeFields {
+    with AttributeIndexName
+    with AttributeStore
+    with AttributeIndex
+    with AttributeBoost
+    with AttributeNullValue[Boolean]
+    with AttributeIncludeInAll
+    with AttributePostingsFormat
+    with AttributeDocValues
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -355,9 +339,9 @@ final class BooleanFieldDefinition(name: String)
 
 final class BinaryFieldDefinition(name: String)
   extends TypedFieldDefinition(BinaryType, name)
-  with AttributeIndexName
-  with AttributePostingsFormat
-  with AttributeDocValues {
+    with AttributeIndexName
+    with AttributePostingsFormat
+    with AttributeDocValues {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -375,17 +359,17 @@ final class BinaryFieldDefinition(name: String)
 
 final class GeoPointFieldDefinition(name: String)
   extends TypedFieldDefinition(GeoPointType, name)
-  with AttributeLatLon
-  with AttributeGeohash
-  with AttributeGeohashPrecision
-  with AttributeGeohashPrefix
-  with AttributeStore
-  with AttributeValidate
-  with AttributeValidateLat
-  with AttributeValidateLon
-  with AttributeNormalize
-  with AttributeNormalizeLat
-  with AttributeNormalizeLon {
+    with AttributeLatLon
+    with AttributeGeohash
+    with AttributeGeohashPrecision
+    with AttributeGeohashPrefix
+    with AttributeStore
+    with AttributeValidate
+    with AttributeValidateLat
+    with AttributeValidateLon
+    with AttributeNormalize
+    with AttributeNormalizeLat
+    with AttributeNormalizeLon {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -410,9 +394,9 @@ final class GeoPointFieldDefinition(name: String)
 
 final class GeoShapeFieldDefinition(name: String)
   extends TypedFieldDefinition(GeoShapeType, name)
-  with AttributeStore
-  with AttributeTree
-  with AttributePrecision {
+    with AttributeStore
+    with AttributeTree
+    with AttributePrecision {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -429,15 +413,15 @@ final class GeoShapeFieldDefinition(name: String)
 
 final class IpFieldDefinition(name: String)
   extends TypedFieldDefinition(IpType, name)
-  with AttributeIndexName
-  with AttributeStore
-  with AttributeIndex
-  with AttributePrecisionStep
-  with AttributeBoost
-  with AttributeNullValue[String]
-  with AttributeIncludeInAll
-  with AttributeCopyTo
-  with AttributeFields {
+    with AttributeIndexName
+    with AttributeStore
+    with AttributeIndex
+    with AttributePrecisionStep
+    with AttributeBoost
+    with AttributeNullValue[String]
+    with AttributeIncludeInAll
+    with AttributeCopyTo
+    with AttributeFields {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -461,7 +445,7 @@ final class IpFieldDefinition(name: String)
 
 final class AttachmentFieldDefinition(name: String)
   extends TypedFieldDefinition(AttachmentType, name)
-  with AttributeFields {
+    with AttributeFields {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -477,12 +461,12 @@ final class AttachmentFieldDefinition(name: String)
 
 final class CompletionFieldDefinition(name: String)
   extends TypedFieldDefinition(CompletionType, name)
-  with AttributeAnalyzer
-  with AttributeSearchAnalyzer
-  with AttributePayloads
-  with AttributePreserveSeparators
-  with AttributePreservePositionIncrements
-  with AttributeMaxInputLen {
+    with AttributeAnalyzer
+    with AttributeSearchAnalyzer
+    with AttributePayloads
+    with AttributePreserveSeparators
+    with AttributePreservePositionIncrements
+    with AttributeMaxInputLen {
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -521,7 +505,7 @@ with AttributeSearchAnalyzer {
 
 final class MultiFieldDefinition(name: String)
   extends TypedFieldDefinition(MultiFieldType, name)
-  with AttributePath {
+    with AttributePath {
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 

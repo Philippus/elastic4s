@@ -23,8 +23,8 @@ trait SettingsDsl {
   }
 }
 
-class GetSettingsDefinition(indexes: Seq[String]) {
-  def build: GetSettingsRequest = new GetSettingsRequest().indices(indexes: _*)
+class GetSettingsDefinition(indexes: Indexes) {
+  def build: GetSettingsRequest = new GetSettingsRequest().indices(indexes.values: _*)
 }
 
 class UpdateSettingsDefinition(index: String) {

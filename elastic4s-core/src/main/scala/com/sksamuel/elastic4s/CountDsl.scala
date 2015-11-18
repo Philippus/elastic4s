@@ -25,7 +25,7 @@ trait CountDsl {
   }
 }
 
-class CountDefinition(indexesTypes: IndexesTypes) {
+class CountDefinition(indexesTypes: IndexesAndTypes) {
 
   val _builder = new CountRequestBuilder(ProxyClients.client, CountAction.INSTANCE)
     .setIndices(indexesTypes.indexes: _*)

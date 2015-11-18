@@ -8,27 +8,12 @@ import scala.concurrent.Future
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
-trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
+trait DeleteDsl extends QueryDsl {
 
   class DeleteByIdExpectsFrom(id: Any) {
-    def from(_index: String): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(_index), id)
-    def from(_indexes: String*): DeleteByIdExpectsTypes = from(_indexes)
-    def from(_indexes: Iterable[String]): DeleteByIdExpectsTypes = new DeleteByIdExpectsTypes(_indexes, id)
-    def from(indexType: IndexType): DeleteByIdDefinition = new DeleteByIdDefinition(IndexesTypes(indexType), id)
-    def from(indexesTypes: IndexesTypes): DeleteByIdDefinition = new DeleteByIdDefinition(indexesTypes, id)
+    def from(index: String): DeleteByIdDefinition = new DeleteByIdDefinition(IndexAndTypes(index), id)
+    def from(indexAndTypes: IndexAndTypes): DeleteByIdDefinition = new DeleteByIdDefinition(indexAndTypes, id)
   }
-
-  class DeleteByIdExpectsTypes(indexes: Iterable[String], id: Any) {
-    def types(`type`: String): DeleteByIdDefinition = types(List(`type`))
-    def types(_types: String*): DeleteByIdDefinition = types(_types)
-    def types(_types: Iterable[String]): DeleteByIdDefinition =
-      new DeleteByIdDefinition(IndexesTypes(indexes.toSeq, _types.toSeq), id)
-  }
-
-  implicit def string2indextype(index: String): IndexesType = new IndexesType(index)
-  implicit def string2indextype(indexes: String*): IndexesType = new IndexesType(indexes: _*)
-
-  class IndexesType(indexes: String*)
 
   implicit object DeleteByIdDefinitionExecutable
     extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
@@ -38,33 +23,41 @@ trait DeleteDsl extends QueryDsl with IndexesTypesDsl {
   }
 }
 
-class DeleteByIdDefinition(indexType: IndexesTypes, id: Any) extends BulkCompatibleDefinition {
+case class DeleteByIdDefinition(indexType: IndexAndTypes, id: Any) extends BulkCompatibleDefinition {
 
-  private[elastic4s] val builder = Requests.deleteRequest(indexType.index).`type`(indexType.typ.orNull).id(id.toString)
+  private[elastic4s] val builder = {
+    Requests.deleteRequest(indexType.index).`type`(indexType.types.headOption.orNull).id(id.toString)
+  }
 
-  def types(_type: String): DeleteByIdDefinition = {
+  def `type`(_type: String): DeleteByIdDefinition = {
     builder.`type`(_type)
     this
   }
+
   def parent(parent: String): DeleteByIdDefinition = {
     builder.parent(parent)
     this
   }
+
   def routing(routing: String): DeleteByIdDefinition = {
     builder.routing(routing)
     this
   }
+
   def refresh(refresh: Boolean): DeleteByIdDefinition = {
     builder.refresh(refresh)
     this
   }
-  def version(version: Int): DeleteByIdDefinition = {
+
+  def version(version: Long): DeleteByIdDefinition = {
     builder.version(version)
     this
   }
+
   def versionType(versionType: VersionType): DeleteByIdDefinition = {
     builder.versionType(versionType)
     this
   }
+
   def build = builder
 }
