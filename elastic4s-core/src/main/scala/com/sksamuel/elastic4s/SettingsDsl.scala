@@ -23,7 +23,7 @@ trait SettingsDsl {
   }
 }
 
-class GetSettingsDefinition(indexes: Indexes) {
+case class GetSettingsDefinition(indexes: Indexes) {
   def build: GetSettingsRequest = new GetSettingsRequest().indices(indexes.values: _*)
 }
 

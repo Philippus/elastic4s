@@ -28,7 +28,7 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
         get mapping "q" / "r"
       }.await
 
-      val map = mapping.mappings().get("q").get("r").sourceAsMap()
+      val map = mapping.mappings.get("q").get("r").sourceAsMap()
 
       val a = map.get("properties").asInstanceOf[util.Map[String, Any]].get("a").asInstanceOf[util.Map[String, Any]]
       a.get("type") shouldBe "string"
@@ -53,7 +53,7 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
         get mapping "q" / "r"
       }.await
 
-      val map = mapping.mappings().get("q").get("r").sourceAsMap()
+      val map = mapping.mappings.get("q").get("r").sourceAsMap()
 
       val c = map.get("properties").asInstanceOf[util.Map[String, _]].get("c").asInstanceOf[util.Map[String, _]]
       c.get("type") shouldBe "float"
@@ -75,7 +75,7 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
         get mapping "q" / "r"
       }.await
 
-      val map = mapping.mappings().get("q").get("r").sourceAsMap()
+      val map = mapping.mappings.get("q").get("r").sourceAsMap()
 
       val a = map.get("properties").asInstanceOf[util.Map[String, _]].get("a").asInstanceOf[util.Map[String, _]]
       a.get("boost") shouldBe 1.2

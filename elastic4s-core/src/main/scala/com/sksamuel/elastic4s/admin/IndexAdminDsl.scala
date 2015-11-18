@@ -72,12 +72,12 @@ trait IndexAdminDsl {
   }
 }
 
-class OpenIndexDefinition(val index: String)
-class CloseIndexDefinition(val index: String)
-class GetSegmentsDefinition(val indexes: Indexes)
-class IndexExistsDefinition(val indexes: Seq[String])
-class TypesExistsDefinition(val indexes: Seq[String], val types: Seq[String])
-class IndicesStatsDefinition(val indexes: Seq[String])
-class ClearCacheDefinition(val indexes: Seq[String])
-class FlushIndexDefinition(val indexes: Seq[String])
-class RefreshIndexDefinition(val indexes: Seq[String])
+case class OpenIndexDefinition(index: String)
+case class CloseIndexDefinition(index: String)
+case class GetSegmentsDefinition(indexes: Indexes)
+case class IndexExistsDefinition(indexes: Seq[String])
+case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
+case class IndicesStatsDefinition(indexes: Seq[String])
+case class ClearCacheDefinition(indexes: Seq[String])
+case class FlushIndexDefinition(indexes: Seq[String])
+case class RefreshIndexDefinition(indexes: Seq[String])

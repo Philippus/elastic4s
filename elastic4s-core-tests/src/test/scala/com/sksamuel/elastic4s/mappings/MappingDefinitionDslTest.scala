@@ -13,19 +13,19 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     "insert source exclusion directives when set" in {
       val mapping = new MappingDefinition("test").sourceExcludes("excludeMe1", "excludeMe2")
       val output = mapping.build.string()
-      output should include (""""_source":{"excludes":["excludeMe1","excludeMe2"]}""")
+      output should include(""""_source":{"excludes":["excludeMe1","excludeMe2"]}""")
     }
     "insert source exclusion directives when set and override enabled directive" in {
       val mapping = new MappingDefinition("test").sourceExcludes("excludeMe1", "excludeMe2").source(true)
       val output = mapping.build.string()
-      output should include (""""_source":{"excludes":["excludeMe1","excludeMe2"]}""")
+      output should include(""""_source":{"excludes":["excludeMe1","excludeMe2"]}""")
       output should not include """"enabled":true"""
     }
     "insert source enabling" in {
       val mapping = new MappingDefinition("test").source(false)
       val output = mapping.build.string()
       output should not include """"_source":{"excludes":["excludeMe1","excludeMe2"]}"""
-      output should include (""""enabled":false""")
+      output should include(""""enabled":false""")
     }
     "not insert date detection by default" in {
       val mapping = new MappingDefinition("type")
@@ -59,14 +59,10 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     }
     "include dynamic templates" in {
       val req = create.index("docsAndTags").mappings(
-        mapping name "my_type" templates (
-          template name "es" matching "*_es" matchMappingType "string" mapping {
-            field typed StringType analyzer SpanishLanguageAnalyzer
-          } matchPattern "regex",
-          template name "en" matching "*" matchMappingType "string" mapping {
-            field typed StringType analyzer EnglishLanguageAnalyzer
-          }
-        )
+        mapping name "my_type" templates(
+          dynamicTemplate("es", field typed StringType analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
+          dynamicTemplate("en", field typed StringType analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
+          )
       )
       req._source.string should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
     }

@@ -42,7 +42,7 @@ trait IndexTemplateDsl {
   }
 }
 
-class CreateIndexTemplateDefinition(val name: String, val pattern: String) {
+case class CreateIndexTemplateDefinition(name: String, pattern: String) {
 
   val _mappings = new ListBuffer[MappingDefinition]
   val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, PutIndexTemplateAction.INSTANCE, name)
@@ -62,12 +62,12 @@ class CreateIndexTemplateDefinition(val name: String, val pattern: String) {
   }
 }
 
-class DeleteIndexTemplateDefinition(name: String) {
+case class DeleteIndexTemplateDefinition(name: String) {
   def build: DeleteIndexTemplateRequest = _builder.request
   val _builder = new DeleteIndexTemplateRequestBuilder(ProxyClients.indices, DeleteIndexTemplateAction.INSTANCE, name)
 }
 
-class GetTemplateDefinition(name: String) {
+case class GetTemplateDefinition(name: String) {
   def build: GetIndexTemplatesRequest = _builder.request
   val _builder = new GetIndexTemplatesRequestBuilder(ProxyClients.indices, GetIndexTemplatesAction.INSTANCE, name)
 }

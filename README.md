@@ -167,6 +167,7 @@ For more in depth examples keep reading.
 * In queries that were previously filters, `filterName` is now `queryName`.
 * Fuzzy like this query has been removed.
 * Script dsl has changed ... todo more
+* DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
 * Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
 * MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
 * `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
@@ -176,6 +177,7 @@ For more in depth examples keep reading.
 * Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
 * Delete mapping has been removed
 * IndexStatus api has been removed
+* Template has been renamed dynamic template
 * Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)`
 
 ## Syntax

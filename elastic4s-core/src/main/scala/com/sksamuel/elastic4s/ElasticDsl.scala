@@ -5,10 +5,11 @@ import java.util.UUID
 import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
 import com.sksamuel.elastic4s.anaylzers.{TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
 import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
-import com.sksamuel.elastic4s.mappings.{AttachmentFieldDefinition, BinaryFieldDefinition, BooleanFieldDefinition, ByteFieldDefinition, CompletionFieldDefinition, DateFieldDefinition, DoubleFieldDefinition, FloatFieldDefinition, GeoPointFieldDefinition, GeoShapeFieldDefinition, IntegerFieldDefinition, IpFieldDefinition, LongFieldDefinition, MultiFieldDefinition, ShortFieldDefinition, TokenCountDefinition, ObjectFieldDefinition, NestedFieldDefinition, TimestampDefinition, DynamicTemplateDefinition, StringFieldDefinition, PutMappingDefinition, MappingDefinition, TypeableFields, FieldDefinition, MappingDsl}
+import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait ElasticDsl
@@ -262,11 +263,11 @@ trait ElasticDsl
 
     def mapping(it: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(it)
 
-    def segments(indexes: Indexes): GetSegmentsDefinition = new GetSegmentsDefinition(indexes)
+    def segments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
 
-    def settings(indexes: Indexes): GetSettingsDefinition = new GetSettingsDefinition(indexes)
+    def settings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
-    def template(name: String): GetTemplateDefinition = new GetTemplateDefinition(name)
+    def template(name: String): GetTemplateDefinition = GetTemplateDefinition(name)
 
     def snapshot(names: Iterable[String]): GetSnapshotsExpectsFrom = new GetSnapshotsExpectsFrom(names.toSeq)
     def snapshot(names: String*): GetSnapshotsExpectsFrom = snapshot(names)
@@ -274,7 +275,7 @@ trait ElasticDsl
 
   def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
-  def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = new GetMappingDefinition(IndexesAndTypes(ixTp))
+  def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = get segments indexes
 
@@ -453,29 +454,29 @@ trait ElasticDsl
   def byteField(name: String) = field(name).typed(ByteType)
   def completionField(name: String) = field(name).typed(CompletionType)
   def dateField(name: String) = field(name).typed(DateType)
-  def doubleField(name: String) = field(name).typed(DoubleType)
-  def floatField(name: String) = field(name).typed(FloatType)
-  def geopointField(name: String) = field(name).typed(GeoPointType)
-  def geoshapeField(name: String) = field(name).typed(GeoShapeType)
-  def multiField(name: String) = field(name).typed(MultiFieldType)
+  def doubleField(name: String) = field(name, DoubleType)
+  def floatField(name: String) = field(name, FloatType)
+  def geopointField(name: String) = field(name, GeoPointType)
+  def geoshapeField(name: String) = field(name, GeoShapeType)
+  def multiField(name: String) = field(name, MultiFieldType)
   def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
   def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
-  def intField(name: String) = field(name).typed(IntegerType)
-  def ipField(name: String) = field(name).typed(IpType)
-  def longField(name: String) = field(name).typed(LongType)
+  def intField(name: String) = field(name, IntegerType)
+  def ipField(name: String) = field(name, IpType)
+  def longField(name: String) = field(name, LongType)
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
   def scriptField(n: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = n, script)
-  def shortField(name: String) = field(name).typed(ShortType)
-  def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
+  def shortField(name: String) = field(name, ShortType)
+  def stringField(name: String): StringFieldDefinition = field(name, StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
   def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
   def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
 
-  case object template {
-    def name(name: String): DynamicTemplateDefinition = new DynamicTemplateDefinition(name)
+  def dynamicTemplate(name: String): DynamicTemplateExpectsMapping = new DynamicTemplateExpectsMapping(name)
+  def dynamicTemplate(name: String, mapping: TypedFieldDefinition): DynamicTemplateDefinition = {
+    DynamicTemplateDefinition(name, mapping)
   }
-  def template(name: String): DynamicTemplateDefinition = template name name
 
   case object term {
     def suggestion(name: String): TermSuggestionDefinition = new TermSuggestionDefinition(name)
