@@ -37,7 +37,7 @@ trait CreateIndexDsl {
   }
 }
 
-case class IndexSettings {
+class IndexSettings {
   private val ShardsKey = "number_of_shards"
   private val ReplicasKey = "number_of_replicas"
   private val RefreshIntervalKey = "refresh_interval"

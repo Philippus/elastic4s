@@ -86,7 +86,7 @@ case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
   def response: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
 }
 
-class RescoreDefinition(query: QueryDefinition) {
+case class RescoreDefinition(query: QueryDefinition) {
   val builder = RescoreBuilder.queryRescorer(query.builder)
   var windowSize = 50
 
@@ -111,7 +111,7 @@ class RescoreDefinition(query: QueryDefinition) {
   }
 }
 
-class SearchDefinition(indexesTypes: IndexesAndTypes) {
+case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   val _builder = {
     new SearchRequestBuilder(ProxyClients.client, SearchAction.INSTANCE)

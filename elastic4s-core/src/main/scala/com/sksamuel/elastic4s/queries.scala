@@ -151,7 +151,7 @@ trait QueryDsl {
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
 
-case class BoolQueryDefinition extends QueryDefinition {
+class BoolQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.boolQuery()
 
@@ -711,7 +711,7 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
   }
 }
 
-case class BoostingQueryDefinition extends QueryDefinition {
+class BoostingQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.boostingQuery()
 
@@ -782,7 +782,7 @@ case class CommonTermsQueryDefinition(name: String, text: String)
   }
 }
 
-case class DisMaxDefinition extends QueryDefinition {
+class DisMaxDefinition extends QueryDefinition {
   val builder = QueryBuilders.disMaxQuery()
 
   def query(queries: QueryDefinition*): DisMaxDefinition = {
@@ -817,7 +817,7 @@ case class ExistsQueryDefinition(field: String) extends QueryDefinition {
 }
 
 @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
-case class FilteredQueryDefinition extends QueryDefinition {
+class FilteredQueryDefinition extends QueryDefinition {
 
   def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
 
@@ -946,7 +946,7 @@ case class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extend
   val builder = QueryBuilders.spanFirstQuery(query.builder, end)
 }
 
-case class SpanNotQueryDefinition extends QueryDefinition {
+class SpanNotQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.spanNotQuery()
 
@@ -990,7 +990,7 @@ case class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends
   override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
 }
 
-case class SpanNearQueryDefinition extends SpanQueryDefinition {
+class SpanNearQueryDefinition extends SpanQueryDefinition {
 
   val builder = QueryBuilders.spanNearQuery()
 
@@ -1411,7 +1411,7 @@ case class ScriptQueryDefinition(script: ScriptDefinition)
   }
 }
 
-case case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
+case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
 
   val builder = QueryBuilders.simpleQueryStringQuery(query)
 

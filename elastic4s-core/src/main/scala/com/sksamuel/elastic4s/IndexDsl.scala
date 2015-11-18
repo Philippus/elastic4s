@@ -18,9 +18,9 @@ trait IndexDsl {
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
 
   implicit object IndexDefinitionExecutable
-    extends Executable[IndexDefinition, IndexResponse, IndexResponse] {
-    override def apply(c: Client, t: IndexDefinition): Future[IndexResponse] = {
-      injectFuture(c.index(t.build, _))
+    extends Executable[IndexDefinition, IndexResponse, IndexResult] {
+    override def apply(c: Client, t: IndexDefinition): Future[IndexResult] = {
+      injectFutureAndMap(c.index(t.build, _))(IndexResult.apply)
     }
   }
 
@@ -31,6 +31,19 @@ trait IndexDsl {
   implicit class IndexDefinitionShowOps(f: IndexDefinition) {
     def show: String = IndexDefinitionShow.show(f)
   }
+}
+
+case class IndexResult(original: IndexResponse) {
+  def getId = id
+  def id = original.getId
+  def getIndex = index
+  def index = original.getIndex
+  def getType = `type`
+  def `type` = original.getType
+  def getVersion = original.getVersion
+  def version: Long = original.getVersion
+  def isCreated: Boolean = created
+  def created: Boolean = original.isCreated
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
