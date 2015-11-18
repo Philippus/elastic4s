@@ -1,29 +1,27 @@
 {
-    "mappings": {
-        "tweet": {
-            "numeric_detection": true,
-            "_boost": {
-                "name": "myboost",
-                "null_value": 1.2
-            },
-            "_size": {
-                "enabled": true
-            },
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "index": "analyzed"
-                },
-                "ac" : {
-                    "type" : "completion",
-                    "index_analyzer" : "simple",
-                    "search_analyzer" : "simple",
-                    "payloads" : true,
-                    "preserve_separators" : false,
-                    "preserve_position_increments" : false,
-                    "max_input_len" : 10
-                }
-            }
+  "mappings": {
+    "tweet": {
+      "numeric_detection": true,
+      "_boost": {
+        "name": "myboost",
+        "null_value": 1.2
+      },
+      "_size": {
+        "enabled": true
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "index": "analyzed"
+        },
+        "ac": {
+          "type": "completion",
+          "analyzer": "simple",
+          "search_analyzer": "simple",
+          "payloads": true,
+          "preserve_separators": false,
+          "preserve_position_increments": false,
+          "max_input_len": 10
         }
       }
     }

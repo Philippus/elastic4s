@@ -28,17 +28,6 @@ case class IndexesAndTypes(indexes: Seq[String], types: Seq[String])
 
 object IndexesAndTypes {
 
-  implicit def apply(indexes: String*): IndexesAndTypes = apply(indexes)
-
-  implicit def apply(indexes: Iterable[String]): IndexesAndTypes = IndexesAndTypes(indexes.toSeq, Nil)
-
-  // converts a tuple which is assumed to be an index and a type
-  implicit def apply(indexAndType: (String, String)): IndexesAndTypes = apply(indexAndType._1, indexAndType._2)
-
-  implicit def apply(index: String, `type`: String): IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
-
-  implicit def apply(indexType: IndexAndTypes): IndexesAndTypes = IndexesAndTypes(Seq(indexType.index), indexType.types)
-
   implicit def apply(string: String): IndexesAndTypes = {
     string.split("/") match {
       case Array(index) => IndexesAndTypes(index.split(","), Nil)
@@ -46,4 +35,14 @@ object IndexesAndTypes {
       case _ => sys.error(s"Could not parse '$string' into index1[,index2,...]/type1[,type2,...]")
     }
   }
+
+  implicit def apply(indexType: IndexAndTypes): IndexesAndTypes = IndexesAndTypes(Seq(indexType.index), indexType.types)
+
+  // iterables of strings are assumed to be lists of indexes with no types
+  implicit def apply(indexes: String*): IndexesAndTypes = apply(indexes)
+  implicit def apply(indexes: Iterable[String]): IndexesAndTypes = IndexesAndTypes(indexes.toSeq, Nil)
+
+  // a tuple is assumed to be an index and a type
+  implicit def apply(indexAndType: (String, String)): IndexesAndTypes = apply(indexAndType._1, indexAndType._2)
+  implicit def apply(index: String, `type`: String): IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
 }

@@ -17,9 +17,9 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait SearchDsl
   extends QueryDsl
-  with HighlightDsl
-  with ScriptFieldDsl
-  with SuggestionDsl {
+    with HighlightDsl
+    with ScriptFieldDsl
+    with SuggestionDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
 
@@ -38,9 +38,9 @@ trait SearchDsl
   }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResponse] {
-    override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResponse] = {
-      injectFuture(c.multiSearch(t.build, _))
+    extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResult] {
+    override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResult] = {
+      injectFutureAndMap(c.multiSearch(t.build, _))(MultiSearchResult.apply)
     }
   }
 
@@ -70,6 +70,20 @@ case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
     searches foreach (builder add _.build)
     builder.request()
   }
+}
+
+case class MultiSearchResult(original: MultiSearchResponse) {
+  def size = items.size
+  def items: Seq[MultiSearchResultItem] = original.getResponses.map(MultiSearchResultItem.apply)
+  // backwards compat
+  def getResponses(): Array[MultiSearchResponse.Item] = original.getResponses
+}
+
+case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
+  def isFailure: Boolean = item.isFailure
+  def failureMessage: Option[String] = Option(item.getFailureMessage)
+  def failure: Option[Throwable] = Option(item.getFailure)
+  def response: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
 }
 
 class RescoreDefinition(query: QueryDefinition) {

@@ -41,21 +41,21 @@ class CountDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "accept varargs index and varargs of types" in {
-    val req = count from ("places", "bands") types ("type1", "type2") query "paris"
-    assert(req.build.indices() === Array("places", "bands"))
+    val req = countFrom("places", "bands", "events").types("type1", "type2").query("paris")
+    assert(req.build.indices() === Array("places", "bands", "events"))
   }
 
   it should "accept single index and varargs of types" in {
-    val req = count from "places" types ("type1", "type2") query "paris"
+    val req = count from "places" types("type1", "type2") query "paris"
     assert(req.build.indices() === Array("places"))
   }
 
   it should "parse slash indextype" in {
-    val req = count from "places/cities" query "paris"
+    val req = count from "places" / "cities" query "paris"
     assert(req.build.indices() === Array("places"))
   }
 
-  it should "parase method invocation as index type" in {
+  it should "parse method invocation as index type" in {
     val req = countFrom("places/cities") query "paris"
     assert(req.build.indices() === Array("places"))
   }

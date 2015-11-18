@@ -17,16 +17,16 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = create.index("users").mappings(
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-        "name" typed GeoPointType latLon true geohash true,
-        "content" typed DateType nullValue "no content"
+        field("name", GeoPointType) latLon true geohash true,
+        field("content", DateType) nullValue "no content"
         ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       mapping("users").as(
-        "name" typed IpType nullValue "127.0.0.1" boost 1.0,
-        "location" typed IntegerType nullValue 0,
-        "email" typed BinaryType,
-        "picture" typed AttachmentType,
-        "age" typed FloatType indexName "indexName",
-        "area" typed GeoShapeType tree PrefixTree.Quadtree precision "1m"
+        field("name", IpType) nullValue "127.0.0.1" boost 1.0,
+        field("location", IntegerType) nullValue 0,
+        field("email", BinaryType),
+        field("picture", AttachmentType),
+        field("age", FloatType) indexName "indexName",
+        field("area", GeoShapeType) tree PrefixTree.Quadtree precision "1m"
       ) all true analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
     )
     req._source.string should matchJsonResource("/json/createindex/createindex_mappings.json")
@@ -141,12 +141,12 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = create.index("users").mappings(
       "tweets" as(
         id typed StringType analyzer KeywordAnalyzer,
-        "name" typed StringType analyzer KeywordAnalyzer,
+        stringField("name") analyzer KeywordAnalyzer,
         "locations" typed GeoPointType validate true normalize true,
-        "date" typed DateType precisionStep 5,
-        "size" typed LongType,
-        "read" typed BooleanType,
-        "content" typed StringType,
+        dateField("date") precisionStep 5,
+        longField("size"),
+        booleanField("read"),
+        stringField("content"),
         "user" nested(
           "name" typed StringType,
           "email" typed StringType,
@@ -192,9 +192,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
       "tweet" as(
         "person" inner(
           "name" typed ObjectType enabled false,
-          "sid" typed StringType index "not_analyzed"
+          field("sid", StringType) index "not_analyzed"
           ),
-        "message" typed StringType
+        field("message", StringType)
         ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_inner_object_disabled.json")

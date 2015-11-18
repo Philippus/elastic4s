@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.source.DocumentSource
 import org.elasticsearch.action.WriteConsistencyLevel
+import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Entry, FlatSpec, Matchers, OneInstancePerTest}
 
 /** @author Stephen Samuel */
-class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest with Matchers {
+class UpdateDslTest
+  extends FlatSpec with MockitoSugar with OneInstancePerTest with Matchers with TypeCheckedTripleEquals {
 
   val mapper = new ObjectMapper()
 
@@ -37,7 +39,7 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
   it should "should support docAsUpsert with nested object" in {
     val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
       "captain" -> Map("james" -> "kirk")
-    )
+      )
     val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
     sourceMap should contain key "captain"
     sourceMap.get("captain").asInstanceOf[util.Map[String, String]] should contain(Entry("james", "kirk"))
@@ -63,10 +65,12 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
 
   it should "should support docAsUpsert with complex nested explicit field types" in {
     val updateDef = update id 14 in "scifi/startrek" docAsUpsert (
-      "captain" -> NestedFieldValue("first", Seq(SimpleFieldValue("captain", "archer"), SimpleFieldValue("program","NX test")))
+      "captain" -> NestedFieldValue("first",
+        Seq(SimpleFieldValue("captain", "archer"), SimpleFieldValue("program", "NX test")))
       )
     val sourceMap: util.Map[String, AnyRef] = updateDef.build.doc().sourceAsMap()
-    sourceMap.get("captain").asInstanceOf[util.Map[String, String]].get("first").asInstanceOf[util.Map[String,String]] should contain(Entry("captain", "archer"))
+    sourceMap.get("captain").asInstanceOf[util.Map[String, String]].get("first")
+      .asInstanceOf[util.Map[String, String]] should contain(Entry("captain", "archer"))
   }
 
   it should "should support source" in {
@@ -76,21 +80,25 @@ class UpdateDslTest extends FlatSpec with MockitoSugar with OneInstancePerTest w
   }
 
   it should "accept tuple for in" in {
-    val req = update id 65 in "places" -> "cities"
-    assert(req.build.index() === "places")
-    assert(req.build.`type`() === "cities")
+    (update id 65 in "places" -> "cities").build.index === "places"
+    (update id 65 in "places" -> "cities").build.`type` === "cities"
+    update(65).in("places" -> "cities").build.index === "places"
+    update(65).in("places" -> "cities").build.`type` === "cites"
   }
 
   it should "accept two parameters for in" in {
-    val req = update id 65 in ("places", "cities")
-    assert(req.build.index() === "places")
-    assert(req.build.`type`() === "cities")
+    (update id 65 in("places", "cities")).build.index === "places"
+    (update id 65 in("places", "cities")).build.`type` === "cities"
+    update(65).in("places", "cities").build.index === "places"
+    update(65).in("places", "cities").build.`type` === "cities"
   }
 
   it should "parse slash indextype" in {
     val req = update id 65 in "places/cities"
-    assert(req.build.index() === "places")
-    assert(req.build.`type`() === "cities")
+    req.build.index === "places"
+    req.build.`type` === "cities"
+    update(65).in("places/cities").build.index === "places"
+    update(65).in("places/cities").build.`type` === "cities"
   }
 }
 

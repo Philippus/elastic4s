@@ -19,6 +19,10 @@ class MultiSearchTest
 
   "a multi search request" should "find matching documents for all queries" in {
 
+    client.execute {
+      createIndex("jtull")
+    }.await
+
     val futureInsert1 = client.execute {
       index into "jtull/albums" fields ("name" -> "aqualung") id 14
     }
@@ -42,9 +46,10 @@ class MultiSearchTest
     }
 
     whenReady(futureResponse) { response =>
-      response.getResponses.size shouldBe 2
-      response.getResponses()(0).getResponse.getHits.getAt(0).id() shouldBe "14"
-      response.getResponses()(1).getResponse.getHits.getAt(0).id() shouldBe "51"
+      response.items.size shouldBe 2
+      response.size shouldBe 2
+      response.items.head.response.get.hits.head.id shouldBe "14"
+      response.items.tail.head.response.get.hits.head.id shouldBe "51"
     }
   }
 }

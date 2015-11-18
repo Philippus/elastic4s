@@ -15,9 +15,9 @@ case class RichSearchResponse(original: SearchResponse) {
   def totalHits: Long = original.getHits.getTotalHits
   def maxScore: Float = original.getHits.getMaxScore
 
-  @deprecated("use hits() to get scala wrappers, or response.original.getHits to get the raw SearchHits", "2.0.0")
+  @deprecated("use .hits to get scala wrappers, or response.original.getHits to get the raw SearchHits", "2.0.0")
   def getHits: SearchHits = original.getHits
-  def hits: Array[RichSearchHit] = original.getHits.getHits.map(new RichSearchHit(_))
+  def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
 
   @deprecated("use readAs[T], which handles errors", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])

@@ -132,12 +132,14 @@ trait ElasticDsl
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
   case object count {
-    def from(indexType: IndexAndTypes): CountDefinition = from(IndexesAndTypes(indexType))
-    def from(indexesTypes: IndexesAndTypes): CountDefinition = new CountDefinition(indexesTypes)
+    def from(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
+    def from(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
+    def from(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
   }
 
-  def countFrom(indexes: IndexAndTypes): CountDefinition = count from indexes
-  def countFrom(indexesAndTypes: IndexesAndTypes): CountDefinition = count from indexesAndTypes
+  def countFrom(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
+  def countFrom(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
+  def countFrom(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
 
   case object create {
 
@@ -165,8 +167,6 @@ trait ElasticDsl
   def createSnapshot(name: String) = create snapshot name
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
-
-
 
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
@@ -248,8 +248,6 @@ trait ElasticDsl
   }
   def geoSort(name: String): GeoDistanceSortDefinition = geo sort name
 
-
-
   case object get {
 
     def id(id: Any) = {
@@ -287,8 +285,6 @@ trait ElasticDsl
 
   def getTemplate(name: String): GetTemplateDefinition = get template name
 
-
-
   trait HealthKeyword
   case object health extends HealthKeyword
 
@@ -306,20 +302,6 @@ trait ElasticDsl
 
     def exists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
     def exists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
-
-    def into(index: String): IndexDefinition = {
-      require(index.nonEmpty, "index must not be null or empty")
-      into(index.split("/").head, index.split("/").last)
-    }
-
-    def into(index: String, `type`: String): IndexDefinition = {
-      require(index.nonEmpty, "index must not be null or empty")
-      new IndexDefinition(index, `type`)
-    }
-
-    def into(kv: (String, String)): IndexDefinition = {
-      into(kv._1, kv._2)
-    }
 
     def into(indexType: IndexAndTypes): IndexDefinition = {
       require(indexType != null, "indexType must not be null or empty")
@@ -353,7 +335,6 @@ trait ElasticDsl
   def innerHit(name: String): InnerHitDefinition = inner hit name
   def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
 
-
   case object mapping {
     def name(name: String): MappingDefinition = {
       require(name.nonEmpty, "mapping name must not be null or empty")
@@ -364,8 +345,6 @@ trait ElasticDsl
 
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = new MultiGetDefinition(gets)
   def multiget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets)
-
-
 
   case object open {
     def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
@@ -458,10 +437,7 @@ trait ElasticDsl
   def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
 
   case object search {
-    def in(indexes: String*): SearchDefinition = in(IndexesAndTypes(indexes))
-    def in(tuple: (String, String)): SearchDefinition = in(IndexesAndTypes(tuple))
     def in(indexesTypes: IndexesAndTypes): SearchDefinition = new SearchDefinition(indexesTypes)
-    def in(indexType: IndexAndTypes): SearchDefinition = new SearchDefinition(IndexesAndTypes(indexType))
     def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
   }
 
@@ -488,6 +464,7 @@ trait ElasticDsl
   def ipField(name: String) = field(name).typed(IpType)
   def longField(name: String) = field(name).typed(LongType)
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
+  def scriptField(n: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = n, script)
   def shortField(name: String) = field(name).typed(ShortType)
   def stringField(name: String): StringFieldDefinition = field(name).typed(StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
@@ -510,7 +487,6 @@ trait ElasticDsl
     def enabled(en: Boolean): TimestampDefinition = TimestampDefinition(en)
   }
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
-
 
   class TypesExistExpectsIn(types: Seq[String]) {
     def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)

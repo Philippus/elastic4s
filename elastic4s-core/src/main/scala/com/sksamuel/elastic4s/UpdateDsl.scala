@@ -22,7 +22,7 @@ trait UpdateDsl {
   }
 
   class UpdateExpectsIndex(id: String) {
-    def in(indexType: IndexAndTypes): UpdateDefinition = in(indexType)
+    def in(indexType: IndexAndTypes): UpdateDefinition = new UpdateDefinition(indexType, id)
   }
 }
 
