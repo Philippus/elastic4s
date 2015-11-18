@@ -4,14 +4,15 @@ import sbt.Keys._
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "1.7.1"
+  val appVersion = "2.0.0-SNAPSHOT"
 
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
   val MockitoVersion = "1.9.5"
   val JacksonVersion = "2.6.1"
   val Slf4jVersion = "1.7.12"
-  val ElasticsearchVersion = "2.0.0-beta1"
+  val ScalaLoggingVersion = "2.1.2"
+  val ElasticsearchVersion = "2.0.0"
   val Log4jVersion = "1.2.17"
   val CommonsIoVersion = "2.4"
   val GroovyVersion = "2.3.7"
