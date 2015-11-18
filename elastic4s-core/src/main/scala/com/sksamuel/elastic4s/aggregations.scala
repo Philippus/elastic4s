@@ -118,7 +118,8 @@ class MissingAggregationDefinition(name: String)
   }
 }
 
-case class TermAggregationDefinition(name: String) extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
+case class TermAggregationDefinition(name: String)
+  extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
 
   val aggregationBuilder = AggregationBuilders.terms(name)
   //def builder = builder
@@ -184,7 +185,8 @@ case class TermAggregationDefinition(name: String) extends AggregationDefinition
   }
 }
 
-case class RangeAggregationDefinition(name: String) extends AggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
+case class RangeAggregationDefinition(name: String)
+  extends AggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
   val aggregationBuilder = AggregationBuilders.range(name)
 
   def range(from: Double, to: Double): RangeAggregationDefinition = {
