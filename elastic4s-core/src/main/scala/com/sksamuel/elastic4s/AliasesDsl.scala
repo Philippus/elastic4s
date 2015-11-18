@@ -43,7 +43,7 @@ trait AliasesDsl {
   implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = new GetAliasResult(resp)
 }
 
-class GetAliasDefinition(aliases: Seq[String]) {
+case class GetAliasDefinition(aliases: Seq[String]) {
 
   val request = new GetAliasesRequest(aliases.toArray)
   def build = request
@@ -63,7 +63,7 @@ case class GetAliasResult(response: GetAliasesResponse) {
   }
 }
 
-class MutateAliasDefinition(val aliasAction: AliasAction) {
+case class MutateAliasDefinition(aliasAction: AliasAction) {
 
   def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
 
@@ -75,7 +75,7 @@ class MutateAliasDefinition(val aliasAction: AliasAction) {
   def build: IndicesAliasesRequest = new IndicesAliasesRequest().addAliasAction(aliasAction)
 }
 
-class IndicesAliasesRequestDefinition(aliasMutations: MutateAliasDefinition*) {
+case class IndicesAliasesRequestDefinition(aliasMutations: MutateAliasDefinition*) {
 
   def build: IndicesAliasesRequest = {
     aliasMutations.foldLeft(new IndicesAliasesRequest())((request, aliasDef) =>

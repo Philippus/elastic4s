@@ -37,7 +37,7 @@ trait CreateIndexDsl {
   }
 }
 
-class IndexSettings {
+case class IndexSettings {
   private val ShardsKey = "number_of_shards"
   private val ReplicasKey = "number_of_replicas"
   private val RefreshIntervalKey = "refresh_interval"
@@ -54,7 +54,7 @@ class IndexSettings {
   def refreshInterval_=(i: String): Unit = settings += RefreshIntervalKey -> i
 }
 
-class CreateIndexDefinition(name: String) {
+case class CreateIndexDefinition(name: String) {
   require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
   val _mappings = new mutable.ListBuffer[MappingDefinition]

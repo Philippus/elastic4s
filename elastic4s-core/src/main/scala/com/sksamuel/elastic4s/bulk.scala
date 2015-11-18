@@ -41,7 +41,7 @@ trait BulkDsl {
   implicit def javatoScala(resp: BulkResponse): BulkResult = new BulkResult(resp)
 }
 
-class BulkDefinition(val requests: Seq[BulkCompatibleDefinition]) {
+case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
 
   def build = _builder
 

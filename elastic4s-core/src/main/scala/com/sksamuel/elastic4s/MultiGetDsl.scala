@@ -18,7 +18,7 @@ trait MultiGetDsl extends GetDsl {
   }
 }
 
-class MultiGetDefinition(gets: Iterable[GetDefinition])
+case class MultiGetDefinition(gets: Iterable[GetDefinition])
   extends DefinitionAttributePreference
     with DefinitionAttributeRefresh {
 

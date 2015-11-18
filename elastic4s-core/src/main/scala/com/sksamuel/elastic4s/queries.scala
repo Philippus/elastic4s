@@ -151,7 +151,7 @@ trait QueryDsl {
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
 
-class BoolQueryDefinition extends QueryDefinition {
+case class BoolQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.boolQuery()
 
@@ -220,12 +220,12 @@ trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-class FunctionScoreQueryDefinition(query: QueryDefinition)
+case class FunctionScoreQueryDefinition(query: QueryDefinition)
   extends QueryDefinition
-  with DefinitionAttributeBoost
-  with DefinitionAttributeBoostMode
-  with DefinitionAttributeMaxBoost
-  with DefinitionAttributeScoreMode {
+    with DefinitionAttributeBoost
+    with DefinitionAttributeBoostMode
+    with DefinitionAttributeMaxBoost
+    with DefinitionAttributeScoreMode {
 
   val builder = new FunctionScoreQueryBuilder(query.builder)
   val _builder = builder
@@ -241,8 +241,8 @@ class FunctionScoreQueryDefinition(query: QueryDefinition)
 
 case class FuzzyQueryDefinition(field: String, termValue: Any)
   extends MultiTermQueryDefinition
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeBoost {
+    with DefinitionAttributePrefixLength
+    with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.fuzzyQuery(field, termValue.toString)
   val _builder = builder
@@ -360,12 +360,12 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String], text: Seq[String]) e
   }
 }
 
-class MultiMatchQueryDefinition(text: String)
+case class MultiMatchQueryDefinition(text: String)
   extends QueryDefinition
-  with DefinitionAttributeFuzziness
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeFuzzyRewrite
-  with DefinitionAttributeCutoffFrequency {
+    with DefinitionAttributeFuzziness
+    with DefinitionAttributePrefixLength
+    with DefinitionAttributeFuzzyRewrite
+    with DefinitionAttributeCutoffFrequency {
 
   val _builder = QueryBuilders.multiMatchQuery(text)
   val builder = _builder
@@ -485,8 +485,8 @@ case class GeoPolygonQueryDefinition(field: String)
 
 case class GeoDistanceQueryDefinition(field: String)
   extends QueryDefinition
-  with DefinitionAttributeLat
-  with DefinitionAttributeLon {
+    with DefinitionAttributeLat
+    with DefinitionAttributeLon {
 
   val builder = QueryBuilders.geoDistanceQuery(field)
   val _builder = builder
@@ -563,15 +563,15 @@ case class GeoBoundingBoxQueryDefinition(field: String)
   }
 }
 
-class GeoDistanceRangeQueryDefinition(field: String)
+case class GeoDistanceRangeQueryDefinition(field: String)
   extends QueryDefinition
-  with DefinitionAttributeTo
-  with DefinitionAttributeFrom
-  with DefinitionAttributeLt
-  with DefinitionAttributeGt
-  with DefinitionAttributeLat
-  with DefinitionAttributeLon
-  with DefinitionAttributePoint {
+    with DefinitionAttributeTo
+    with DefinitionAttributeFrom
+    with DefinitionAttributeLt
+    with DefinitionAttributeGt
+    with DefinitionAttributeLat
+    with DefinitionAttributeLon
+    with DefinitionAttributePoint {
 
   val builder = QueryBuilders.geoDistanceRangeQuery(field)
   val _builder = builder
@@ -612,7 +612,7 @@ class GeoDistanceRangeQueryDefinition(field: String)
   }
 }
 
-class GeoHashCellQuery(field: String)
+case class GeoHashCellQuery(field: String)
   extends QueryDefinition {
 
   val builder = QueryBuilders.geoHashCellQuery(field)
@@ -679,7 +679,7 @@ case class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
   }
 }
 
-class HasParentQueryDefinition(`type`: String, q: QueryDefinition)
+case class HasParentQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.hasParentQuery(`type`, q.builder)
@@ -696,7 +696,7 @@ class HasParentQueryDefinition(`type`: String, q: QueryDefinition)
   }
 }
 
-class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinition) extends QueryDefinition {
+case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinition) extends QueryDefinition {
 
   override val builder = QueryBuilders.indicesQuery(query.builder, indices.toSeq: _*)
 
@@ -711,7 +711,7 @@ class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinition) 
   }
 }
 
-class BoostingQueryDefinition extends QueryDefinition {
+case class BoostingQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.boostingQuery()
 
@@ -743,10 +743,10 @@ case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends Q
   }
 }
 
-class CommonTermsQueryDefinition(name: String, text: String)
+case class CommonTermsQueryDefinition(name: String, text: String)
   extends QueryDefinition
-  with DefinitionAttributeBoost
-  with DefinitionAttributeCutoffFrequency {
+    with DefinitionAttributeBoost
+    with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.commonTermsQuery(name, text)
   val _builder = builder
@@ -782,7 +782,7 @@ class CommonTermsQueryDefinition(name: String, text: String)
   }
 }
 
-class DisMaxDefinition extends QueryDefinition {
+case class DisMaxDefinition extends QueryDefinition {
   val builder = QueryBuilders.disMaxQuery()
 
   def query(queries: QueryDefinition*): DisMaxDefinition = {
@@ -817,7 +817,7 @@ case class ExistsQueryDefinition(field: String) extends QueryDefinition {
 }
 
 @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
-class FilteredQueryDefinition extends QueryDefinition {
+case class FilteredQueryDefinition extends QueryDefinition {
 
   def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
 
@@ -893,10 +893,10 @@ trait MultiTermQueryDefinition extends QueryDefinition {
   override def builder: MultiTermQueryBuilder
 }
 
-class WildcardQueryDefinition(field: String, query: Any)
+case class WildcardQueryDefinition(field: String, query: Any)
   extends QueryDefinition
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeBoost {
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeBoost {
   val builder = QueryBuilders.wildcardQuery(field, query.toString)
   val _builder = builder
 
@@ -906,10 +906,10 @@ class WildcardQueryDefinition(field: String, query: Any)
   }
 }
 
-class PrefixQueryDefinition(field: String, prefix: Any)
+case class PrefixQueryDefinition(field: String, prefix: Any)
   extends MultiTermQueryDefinition
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeBoost {
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeBoost {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
 
@@ -919,10 +919,10 @@ class PrefixQueryDefinition(field: String, prefix: Any)
   }
 }
 
-class RegexQueryDefinition(field: String, regex: Any)
+case class RegexQueryDefinition(field: String, regex: Any)
   extends MultiTermQueryDefinition
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeBoost {
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.regexpQuery(field, regex.toString)
   val _builder = builder
@@ -942,11 +942,11 @@ trait SpanQueryDefinition extends QueryDefinition {
   override def builder: SpanQueryBuilder
 }
 
-class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extends QueryDefinition {
+case class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extends QueryDefinition {
   val builder = QueryBuilders.spanFirstQuery(query.builder, end)
 }
 
-class SpanNotQueryDefinition extends QueryDefinition {
+case class SpanNotQueryDefinition extends QueryDefinition {
 
   val builder = QueryBuilders.spanNotQuery()
 
@@ -986,11 +986,11 @@ class SpanNotQueryDefinition extends QueryDefinition {
   }
 }
 
-class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends SpanQueryDefinition {
+case class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends SpanQueryDefinition {
   override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
 }
 
-class SpanNearQueryDefinition extends SpanQueryDefinition {
+case class SpanNearQueryDefinition extends SpanQueryDefinition {
 
   val builder = QueryBuilders.spanNearQuery()
 
@@ -1025,7 +1025,7 @@ class SpanNearQueryDefinition extends SpanQueryDefinition {
   }
 }
 
-class TermsLookupQueryDefinition(field: String)
+case class TermsLookupQueryDefinition(field: String)
   extends QueryDefinition {
 
   val builder = QueryBuilders.termsLookupQuery(field)
@@ -1125,7 +1125,7 @@ case class MatchAllQueryDefinition() extends QueryDefinition {
   }
 }
 
-class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {
+case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.rangeQuery(field)
   val _builder = builder
@@ -1181,14 +1181,14 @@ class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with 
   }
 }
 
-class MatchQueryDefinition(field: String, value: Any)
+case class MatchQueryDefinition(field: String, value: Any)
   extends QueryDefinition
-  with DefinitionAttributeBoost
-  with DefinitionAttributeFuzziness
-  with DefinitionAttributeFuzzyRewrite
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeCutoffFrequency {
+    with DefinitionAttributeBoost
+    with DefinitionAttributeFuzziness
+    with DefinitionAttributeFuzzyRewrite
+    with DefinitionAttributePrefixLength
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchQuery(field, value)
   val _builder = builder
@@ -1247,14 +1247,14 @@ class MatchQueryDefinition(field: String, value: Any)
   }
 }
 
-class MatchPhrasePrefixDefinition(field: String, value: Any)
+case class MatchPhrasePrefixDefinition(field: String, value: Any)
   extends QueryDefinition
-  with DefinitionAttributeBoost
-  with DefinitionAttributeFuzziness
-  with DefinitionAttributeFuzzyRewrite
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeCutoffFrequency {
+    with DefinitionAttributeBoost
+    with DefinitionAttributeFuzziness
+    with DefinitionAttributeFuzzyRewrite
+    with DefinitionAttributePrefixLength
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeCutoffFrequency {
 
   def builder = _builder
   val _builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
@@ -1313,14 +1313,14 @@ class MatchPhrasePrefixDefinition(field: String, value: Any)
   }
 }
 
-class MatchPhraseDefinition(field: String, value: Any)
+case class MatchPhraseDefinition(field: String, value: Any)
   extends QueryDefinition
-  with DefinitionAttributeBoost
-  with DefinitionAttributeFuzziness
-  with DefinitionAttributeFuzzyRewrite
-  with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeCutoffFrequency {
+    with DefinitionAttributeBoost
+    with DefinitionAttributeFuzziness
+    with DefinitionAttributeFuzzyRewrite
+    with DefinitionAttributePrefixLength
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
   val _builder = builder
@@ -1399,7 +1399,7 @@ case class MissingQueryDefinition(field: String) extends QueryDefinition {
   }
 }
 
-class ScriptQueryDefinition(script: ScriptDefinition)
+case class ScriptQueryDefinition(script: ScriptDefinition)
   extends QueryDefinition {
 
   val builder = QueryBuilders.scriptQuery(script.toJavaAPI)
@@ -1411,7 +1411,7 @@ class ScriptQueryDefinition(script: ScriptDefinition)
   }
 }
 
-class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
+case case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
 
   val builder = QueryBuilders.simpleQueryStringQuery(query)
 
@@ -1464,10 +1464,10 @@ class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
   }
 }
 
-class QueryStringQueryDefinition(query: String)
+case class QueryStringQueryDefinition(query: String)
   extends QueryDefinition
-  with DefinitionAttributeRewrite
-  with DefinitionAttributeBoost {
+    with DefinitionAttributeRewrite
+    with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.queryStringQuery(query)
   val _builder = builder
@@ -1631,7 +1631,7 @@ class NotQueryDefinition(filter: QueryDefinition)
   }
 }
 
-class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
+case class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
 
   private[elastic4s] val builder = new QueryInnerHitBuilder().setName(name)
 
@@ -1646,7 +1646,7 @@ class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
   }
 }
 
-class InnerHitDefinition(private[elastic4s] val name: String) {
+case class InnerHitDefinition(private[elastic4s] val name: String) {
 
   private[elastic4s] val inner = new InnerHit
 
