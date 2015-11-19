@@ -9,9 +9,9 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 /** @author Stephen Samuel */
 class TermVectorTest
   extends WordSpec
-  with ElasticSugar
-  with Matchers
-  with ScalaFutures {
+    with ElasticSugar
+    with Matchers
+    with ScalaFutures {
 
   override implicit def patienceConfig: PatienceConfig = PatienceConfig(timeout = 10.seconds, interval = 1.seconds)
 
@@ -25,20 +25,23 @@ class TermVectorTest
     )
   }.await
 
-//  "term vector api " should {
-//    "return number of terms for a field in " in {
-//
-//      val f = client.execute {
-//        termVector("termvectortest", "startrek", "5")
-//          .withTermStatistics(true)
-//          .withFields("name", "rank")
-//          .withFieldStatistics(true)
-//      }
-//
-//      whenReady(f) { resp =>
-//        val fields = resp.getFields
-//        val terms = fields.terms("rank").size shouldBe 2 // ltr cmdr
-//      }
-//    }
-//  }
+  "term vector api " should {
+    "return number of terms for a field in " in {
+
+      val f = client.execute {
+        termVectors("termvectortest", "startrek", "5")
+          .termStatistics(true)
+          .fields("name", "rank")
+          .fieldStatistics(true)
+      }
+
+      whenReady(f) { resp =>
+        resp.index shouldBe "termvectortest"
+        resp.`type` shouldBe "startrek"
+        resp.id shouldBe "5"
+        resp.fields.terms("name").size shouldBe 3 // geordie la forge
+        resp.fields.terms("rank").size shouldBe 2 // ltr cmdr
+      }
+    }
+  }
 }
