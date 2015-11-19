@@ -39,6 +39,7 @@ trait ElasticDsl
     with ScoreDsl
     with ScrollDsl
     with SnapshotDsl
+    with TermVectorDsl
     with TokenizerDsl
     with TokenFilterDsl
     with UpdateDsl
@@ -481,6 +482,9 @@ trait ElasticDsl
   case object term {
     def suggestion(name: String): TermSuggestionDefinition = new TermSuggestionDefinition(name)
   }
+
+  def termVectors: TermVectorsDefinition = TermVectorsDefinition()
+
   def termSuggestion: TermSuggestionDefinition = term suggestion UUID.randomUUID.toString
   def termSuggestion(name: String): TermSuggestionDefinition = term suggestion name
 
