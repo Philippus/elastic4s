@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props, Cancellable}
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticClient, ElasticDsl}
-import org.elasticsearch.action.bulk.{BulkItemResponse, BulkResponse}
+import akka.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkItemResult, ElasticClient, ElasticDsl}
+import org.elasticsearch.action.bulk.BulkResponse
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -44,6 +44,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
   private var actor: ActorRef = _
 
   override def onSubscribe(s: Subscription): Unit = {
+    // rule 1.9 https://github.com/reactive-streams/reactive-streams-jvm#2.5
     if (s == null) throw new NullPointerException()
     if (actor == null) {
       actor = system.actorOf(
@@ -98,8 +99,7 @@ class BulkActor[T](client: ElasticClient,
                    flushInterval: Option[FiniteDuration] = None) extends Actor {
 
   import ElasticDsl._
-  import context.dispatcher
-  import context.system
+  import context.{dispatcher, system}
 
   private val buffer = new ArrayBuffer[T]()
   buffer.sizeHint(batchSize)
@@ -109,7 +109,8 @@ class BulkActor[T](client: ElasticClient,
   // total number of elements sent and acknowledge at the es cluster level
   private var pending: Long = 0l
 
-  // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing
+  // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
+  // we can be stuck at batchSize-1 waiting for the nth message for ages.
   private val scheduler: Option[Cancellable] = flushInterval.map { interval =>
     system.scheduler.schedule(interval, interval, self, BulkActor.ForceIndexing)
   }
@@ -164,7 +165,8 @@ class BulkActor[T](client: ElasticClient,
 
   private def index(): Unit = {
     pending = pending + buffer.size
-    client.execute(bulk(buffer.map(builder.request)).refresh(refreshAfterOp)).onComplete {
+    val defs = buffer.map(t => builder.request(t))
+    client.execute(bulk(defs).refresh(refreshAfterOp)).onComplete {
       case Failure(e) => self ! e
       case Success(resp) => self ! resp
     }
@@ -184,11 +186,11 @@ trait RequestBuilder[T] {
  * Notified on each acknowledgement
  */
 trait ResponseListener {
-  def onAck(resp: BulkItemResponse): Unit
+  def onAck(resp: BulkItemResult): Unit
 }
 
 object ResponseListener {
   def noop = new ResponseListener {
-    override def onAck(resp: BulkItemResponse): Unit = ()
+    override def onAck(resp: BulkItemResult): Unit = ()
   }
 }

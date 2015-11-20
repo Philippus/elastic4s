@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.action.WriteConsistencyLevel
+import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.bulk.{BulkItemResponse, BulkRequest, BulkResponse}
+import org.elasticsearch.action.delete.DeleteResponse
+import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
@@ -19,15 +22,15 @@ trait BulkDsl {
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
   implicit object BulkCompatibleDefinitionExecutable
-    extends Executable[Seq[BulkCompatibleDefinition], BulkResponse, BulkResponse] {
-    override def apply(c: Client, ts: Seq[BulkCompatibleDefinition]): Future[BulkResponse] = {
+    extends Executable[Seq[BulkCompatibleDefinition], BulkResponse, BulkResult] {
+    override def apply(c: Client, ts: Seq[BulkCompatibleDefinition]): Future[BulkResult] = {
       val bulk = c.prepareBulk()
       ts.foreach {
         case index: IndexDefinition => bulk.add(index.build)
         case delete: DeleteByIdDefinition => bulk.add(delete.build)
         case update: UpdateDefinition => bulk.add(update.build)
       }
-      injectFuture(bulk.execute)
+      injectFutureAndMap(bulk.execute)(BulkResult.apply)
     }
   }
 
@@ -39,6 +42,52 @@ trait BulkDsl {
   }
 
   implicit def javatoScala(resp: BulkResponse): BulkResult = new BulkResult(resp)
+}
+
+case class BulkResult(original: BulkResponse) {
+
+  import scala.concurrent.duration._
+
+  def buildFailureMessage: String = original.buildFailureMessage
+
+  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
+  def getItems = original.getItems
+
+  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
+  def getTook: TimeValue = original.getTook
+
+  def took: FiniteDuration = original.getTook.millis.millis
+
+  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
+  def getTookInMillis: Long = original.getTookInMillis
+
+  def hasFailures: Boolean = original.hasFailures
+
+  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
+  def iterator = original.iterator()
+
+  def items: Seq[BulkItemResult] = original.getItems.map(BulkItemResult.apply)
+  def failures: Seq[BulkItemResult] = items.filter(_.isFailure)
+}
+
+case class BulkItemResult(original: BulkItemResponse) {
+  def failure: Failure = original.getFailure
+  def failureMessage = original.getFailureMessage
+  def id = original.getId
+  def index = original.getIndex
+  def itemId = original.getItemId
+  def opType = original.getOpType
+  def deleteResponse: Option[DeleteResponse] = original.getResponse match {
+    case d: DeleteResponse => Some(d)
+    case _ => None
+  }
+  def indexResult: Option[IndexResult] = original.getResponse match {
+    case i: IndexResponse => Some(IndexResult(i))
+    case _ => None
+  }
+  def `type` = original.getType
+  def version = original.getVersion
+  def isFailure: Boolean = original.isFailed
 }
 
 case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
@@ -77,12 +126,4 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
     case update: UpdateDefinition => _builder.add(update.build)
     case register: RegisterDefinition => _builder.add(register.build)
   }
-}
-
-case class BulkResult(response: BulkResponse) {
-
-  import scala.concurrent.duration._
-
-  def items: Array[BulkItemResponse] = response.getItems
-  def took: Duration = response.getTook.millis.millis
 }

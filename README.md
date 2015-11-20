@@ -179,6 +179,7 @@ For more in depth examples keep reading.
 * IndexStatus api has been removed
 * Template has been renamed dynamic template
 * Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)`
+* In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
 
 ## Syntax
 
