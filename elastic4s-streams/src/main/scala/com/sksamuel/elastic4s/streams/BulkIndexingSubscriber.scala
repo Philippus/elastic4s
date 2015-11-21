@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkItemResult, ElasticClient, ElasticDsl}
-import org.elasticsearch.action.bulk.BulkResponse
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -130,8 +129,8 @@ class BulkActor[T](client: ElasticClient,
       if (pending == 0 && buffer.nonEmpty)
         index()
 
-    case r: BulkResponse =>
-      pending = pending - r.items.length
+    case r: BulkResult =>
+      pending = pending - r.successes.size
       r.items.foreach(listener.onAck)
       // need to check if we're completed, because if we are then this might be the last pending ack
       // and if it is, we can shutdown. Otherwise w can set another batch going.
@@ -165,11 +164,16 @@ class BulkActor[T](client: ElasticClient,
 
   private def index(): Unit = {
     pending = pending + buffer.size
-    val defs = buffer.map(t => builder.request(t))
-    client.execute(bulk(defs).refresh(refreshAfterOp)).onComplete {
-      case Failure(e) => self ! e
-      case Success(resp) => self ! resp
+    def send(req: BulkDefinition): Unit = {
+      client.execute(req).onComplete {
+        case Failure(e) => self ! e
+        case Success(resp) if resp.hasFailures => send(req)
+        case Success(resp) => self ! resp
+      }
     }
+    val defs = buffer.map(t => builder.request(t))
+    val req = bulk(defs).refresh(refreshAfterOp)
+    send(req)
     buffer.clear
   }
 }

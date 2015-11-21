@@ -40,8 +40,6 @@ trait BulkDsl {
       injectFuture(c.bulk(t.build, _))
     }
   }
-
-  implicit def javatoScala(resp: BulkResponse): BulkResult = new BulkResult(resp)
 }
 
 case class BulkResult(original: BulkResponse) {
@@ -68,6 +66,7 @@ case class BulkResult(original: BulkResponse) {
 
   def items: Seq[BulkItemResult] = original.getItems.map(BulkItemResult.apply)
   def failures: Seq[BulkItemResult] = items.filter(_.isFailure)
+  def successes: Seq[BulkItemResult] = items.filterNot(_.isFailure)
 }
 
 case class BulkItemResult(original: BulkItemResponse) {
