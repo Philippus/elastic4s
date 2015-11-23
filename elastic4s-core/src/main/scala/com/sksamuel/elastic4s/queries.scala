@@ -1140,11 +1140,6 @@ case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition 
     this
   }
 
-  def lte(d: String): RangeQueryDefinition = {
-    builder.gte(d)
-    this
-  }
-
   def timeZone(timeZone: String): RangeQueryDefinition = {
     builder.timeZone(timeZone)
     this
@@ -1155,13 +1150,18 @@ case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition 
     this
   }
 
-  def lte(d: Double): RangeQueryDefinition = {
+  def gte(d: Double): RangeQueryDefinition = {
     builder.gte(d)
     this
   }
 
-  def gte(d: Double): RangeQueryDefinition = {
-    builder.gte(d)
+  def lte(d: String): RangeQueryDefinition = {
+    builder.lte(d)
+    this
+  }
+
+  def lte(d: Double): RangeQueryDefinition = {
+    builder.lte(d)
     this
   }
 
