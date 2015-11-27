@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.anaylzers
+package com.sksamuel.elastic4s.analyzers
 
 trait TokenFilterDsl {
   def commonGramsTokenFilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)

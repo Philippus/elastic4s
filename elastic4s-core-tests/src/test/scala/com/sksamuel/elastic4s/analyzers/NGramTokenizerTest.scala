@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.anaylzers.TokenizerDsl
+import com.sksamuel.elastic4s.analyzers.TokenizerDsl
 import org.scalatest.{Matchers, WordSpec}
 
 class NGramTokenizerTest extends WordSpec with TokenizerDsl with Matchers {

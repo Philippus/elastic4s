@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.anaylzers
+package com.sksamuel.elastic4s.analyzers
 
 trait TokenizerDsl {
   def edgeNGramTokenizer(name: String): EdgeNGramTokenizer = EdgeNGramTokenizer(name)

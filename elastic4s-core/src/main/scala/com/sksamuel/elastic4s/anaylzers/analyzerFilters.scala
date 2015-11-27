@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.anaylzers
+package com.sksamuel.elastic4s.analyzers
 
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 

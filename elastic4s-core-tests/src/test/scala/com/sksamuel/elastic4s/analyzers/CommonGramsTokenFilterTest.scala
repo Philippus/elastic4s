@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.anaylzers.TokenFilterDsl
+import com.sksamuel.elastic4s.analyzers.TokenFilterDsl
 import org.scalatest.{Matchers, WordSpec}
 
 class CommonGramsTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {

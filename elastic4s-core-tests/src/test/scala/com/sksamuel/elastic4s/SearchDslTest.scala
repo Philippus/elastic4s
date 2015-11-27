@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.SuggestMode.{Missing, Popular}
-import com.sksamuel.elastic4s.anaylzers.{SnowballAnalyzer, StandardAnalyzer, WhitespaceAnalyzer}
+import com.sksamuel.elastic4s.analyzers.{SnowballAnalyzer, StandardAnalyzer, WhitespaceAnalyzer}
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MatchQueryBuilder.{Operator, ZeroTermsQuery}

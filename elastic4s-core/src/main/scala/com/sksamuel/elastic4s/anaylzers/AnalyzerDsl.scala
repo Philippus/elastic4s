@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.anaylzers
+package com.sksamuel.elastic4s.analyzers
 
 trait AnalyzerDsl {
   def stopAnalyzer(name: String): StopAnalyzerDefinition = StopAnalyzerDefinition(name)

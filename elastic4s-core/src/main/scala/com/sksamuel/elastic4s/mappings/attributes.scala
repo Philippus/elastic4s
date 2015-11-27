@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.anaylzers.Analyzer
+import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.xcontent.XContentBuilder
 
 /** @author Fehmi Can Saglam */
