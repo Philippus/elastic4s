@@ -42,7 +42,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 2.0.0
 
-Major upgrade to Elasticsearch 2.0.0. _Please raise a PR if I've missed any breaking changes._
+Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a PR if I've missed any breaking changes._
 
 * In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
 * Some options that existed only on filters like cache and cache key are now removed.
