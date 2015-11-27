@@ -6,25 +6,10 @@ import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
-import org.scalactic.{Or, Every, ErrorMessage}
 
 import scala.concurrent.duration._
 
 case class RichSearchResponse(original: SearchResponse) {
-
-  def totalHits: Long = original.getHits.getTotalHits
-  def maxScore: Float = original.getHits.getMaxScore
-
-  @deprecated("use .hits to get scala wrappers, or response.original.getHits to get the raw SearchHits", "2.0.0")
-  def getHits: SearchHits = original.getHits
-  def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
-
-  @deprecated("use readAs[T], which handles errors", "1.6.1")
-  def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
-  @deprecated("use readAs[T], which handles errors", "1.6.1")
-  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
-
-  def readAs[T](implicit reader: HitReader[T]): Seq[T Or Every[ErrorMessage]] = hits.map(_.readAs[T])
 
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
   def getAggregations = original.getAggregations
@@ -33,7 +18,27 @@ case class RichSearchResponse(original: SearchResponse) {
   def getSuggest = original.getSuggest
 
   @deprecated("use scrollId", "2.0.0")
-  def getScrollId: String = scrollId
+  def getScrollId: String = original.getScrollId
+
+  @deprecated("use .hits to get scala wrappers, or response.original.getHits to get the raw SearchHits", "2.0.0")
+  def getHits: SearchHits = original.getHits
+
+  def totalHits: Long = original.getHits.getTotalHits
+  def maxScore: Float = original.getHits.getMaxScore
+
+  @deprecated("use scala idiomatic method returning a duration", "2.0.0")
+  def getTook = original.getTook
+
+  @deprecated("use scala idiomatic method returning a duration", "2.0.0")
+  def getTookInMillis = original.getTookInMillis
+
+  def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
+
+  @deprecated("use readAs[T], which handles errors", "1.6.1")
+  def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
+
+  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
+
   def scrollId: String = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)
 
@@ -92,13 +97,10 @@ case class RichSearchHit(hit: SearchHit) {
   lazy val sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
   def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
-  @deprecated("use as[T], which handles errors", "2.0.0")
+  @deprecated("use as[T]", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
 
-  @deprecated("use readAs[T], which handles errors", "2.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
-
-  def readAs[T](implicit reader: HitReader[T]): T Or Every[ErrorMessage] = reader.as(this)
 
   lazy val explanation: Option[Explanation] = Option(hit.explanation)
 
@@ -121,33 +123,22 @@ case class RichSearchHit(hit: SearchHit) {
 
 case class RichSearchHitField(value: SearchHitField) extends AnyVal {
 
-  import scala.collection.JavaConverters._
-
-  def name: String = value.name()
-
   @deprecated("use name", "2.0.0")
   def getName: String = name
-
-  def value[V]: V = value.getValue[V]
 
   @deprecated("use value[V]", "2.0.0")
   def getValue[V]: V = value[V]
 
-  def values: Seq[AnyRef] = value.values().asScala.toList
-
+  @deprecated("use values", "2.0.0")
   def getValues: Seq[AnyRef] = values
 
+  import scala.collection.JavaConverters._
+
+  def name: String = value.name()
+
+  def value[V]: V = value.getValue[V]
+
+  def values: Seq[AnyRef] = value.values().asScala.toList
+
   def isMetadataField: Boolean = value.isMetadataField
-
-  def validate[T](prefix: String = "")(implicit reader: HitFieldReader[T]): T Or Every[ErrorMessage] = {
-    reader.as(prefix)(this)
-  }
 }
-
-//case class SomeValueSearchHitField(name: String, _value: Any) extends RichSearchHitField {
-//  override def value[T]: T = _value.asInstanceOf[T]
-//}
-//
-//case class RichSearchHitFields(field: Map[String, RichSearchHitField]) {
-//  def apply(name: String) = field.getOrElse(name, MissingRichSearchField(name))
-//}
