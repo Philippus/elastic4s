@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import org.elasticsearch.common.xcontent.{ XContentFactory, XContentBuilder }
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 import scala.collection.mutable.ListBuffer
 
@@ -25,6 +25,7 @@ class MappingDefinition(val `type`: String) {
   var _timestamp: Option[TimestampDefinition] = None
   var _ttl: Option[Boolean] = None
   var _templates: Iterable[DynamicTemplateDefinition] = Nil
+  var _id: Option[IdField] = None
 
   @deprecated("no longer used, simply set ttl or not", "1.5.4")
   def useTtl(useTtl: Boolean): this.type = {
@@ -33,6 +34,11 @@ class MappingDefinition(val `type`: String) {
 
   def all(enabled: Boolean): this.type = {
     _all = Option(enabled)
+    this
+  }
+
+  def id(idField: IdField): this.type = {
+    _id = Some(idField)
     this
   }
 
@@ -113,7 +119,7 @@ class MappingDefinition(val `type`: String) {
     this
   }
 
-  def sourceExcludes(excludes:String*)= {
+  def sourceExcludes(excludes: String*) = {
     this._sourceExcludes = excludes
     this
   }
@@ -144,7 +150,7 @@ class MappingDefinition(val `type`: String) {
 
   def dynamicTemplates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps)
   def dynamicTemplates(temps: DynamicTemplateDefinition*): this.type = templates(temps)
-  def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps.toSeq:_*)
+  def templates(temps: Iterable[DynamicTemplateDefinition]): this.type = templates(temps.toSeq: _*)
   def templates(temps: DynamicTemplateDefinition*): this.type = {
     _templates = temps
     this
@@ -166,9 +172,9 @@ class MappingDefinition(val `type`: String) {
 
   def build(json: XContentBuilder): Unit = {
 
-    for (all <- _all) json.startObject("_all").field("enabled", all).endObject()
-    (_source, _sourceExcludes) match{
-      case (_, l) if l.nonEmpty => json.startObject("_source").field("excludes", l.toArray:_*).endObject()
+    for ( all <- _all ) json.startObject("_all").field("enabled", all).endObject()
+    (_source, _sourceExcludes) match {
+      case (_, l) if l.nonEmpty => json.startObject("_source").field("excludes", l.toArray: _*).endObject()
       case (Some(source), _) => json.startObject("_source").field("enabled", source).endObject()
       case _ =>
     }
@@ -176,8 +182,8 @@ class MappingDefinition(val `type`: String) {
     if (dynamic_date_formats.nonEmpty)
       json.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
 
-    for (dd <- date_detection) json.field("date_detection", dd)
-    for (nd <- numeric_detection) json.field("numeric_detection", nd)
+    for ( dd <- date_detection ) json.field("date_detection", dd)
+    for ( nd <- numeric_detection ) json.field("numeric_detection", nd)
 
     _dynamic.foreach(dynamic => {
       json.field("dynamic", dynamic match {
@@ -194,19 +200,25 @@ class MappingDefinition(val `type`: String) {
 
     _timestamp.foreach(_.build(json))
 
-    for (ttl <- _ttl) json.startObject("_ttl").field("enabled", ttl).endObject()
+    for ( ttl <- _ttl ) json.startObject("_ttl").field("enabled", ttl).endObject()
 
     if (_fields.nonEmpty) {
       json.startObject("properties")
-      for (field <- _fields) {
+      for ( field <- _fields ) {
         field.build(json)
       }
       json.endObject() // end properties
     }
 
+    for ( id <- _id ) {
+      json.startObject("_id")
+      json.field("index", id.index)
+      json.endObject()
+    }
+
     if (_meta.nonEmpty) {
       json.startObject("_meta")
-      for (meta <- _meta) {
+      for ( meta <- _meta ) {
         json.field(meta._1, meta._2)
       }
       json.endObject()
@@ -220,8 +232,10 @@ class MappingDefinition(val `type`: String) {
 
     if (_templates.nonEmpty) {
       json.startArray("dynamic_templates")
-      for (template <- _templates) template.build(json)
+      for ( template <- _templates ) template.build(json)
       json.endArray()
     }
   }
 }
+
+case class IdField(index: String)
