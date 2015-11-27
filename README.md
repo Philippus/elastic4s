@@ -22,12 +22,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 1.7.4 which is compatible with Elasticsearch 1.7.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 2.0.0 which is compatible with Elasticsearch 2.0.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
+|2.0.0|2.0.X|
 |1.7.4|1.7.X|
 |1.6.6|1.6.X|
 |1.5.17|1.5.X|
@@ -40,9 +41,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
-###### 2.0.0 (in progress)
+###### 2.0.0
 
-* Updated to Elasticsearch 2.0.0. See upgrade guide in next section on breaking changes.
+* Updated to Elasticsearch 2.0.0. See upgrade guide in next section on breaking changes. The biggest change is the removal of filters (only queries are now used in elasticsearch).
 
 ###### 1.7.0
 
@@ -160,26 +161,30 @@ object Test extends App {
 
 For more in depth examples keep reading.
 
-## 2.0.0 upgrade guide (beta)
+## 2.0.0 upgrade guide
+
+_Please do a PR to add anything I've missed_
 
 * In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
-* Some options on filters like cache and cache key are now removed.
-* In queries that were previously filters, `filterName` is now `queryName`.
-* Fuzzy like this query has been removed.
-* Script dsl has changed ... todo more
+* Some options that existed only on filters like cache and cache key are now removed.
+* Fuzzy like this query has been removed (this was removed in elasticsearch itself)
+* Script dsl has changed. To create a script to pass into a method, you use `script(script)` or `script(name, script)` with further parameters set using the builder pattern.
 * DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
 * Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
 * MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
 * `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
 * Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
 * The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
-* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for ands and `should` clauses for ors.
+* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for and's and `should` clauses for or's.
 * Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
-* Delete mapping has been removed
-* IndexStatus api has been removed
-* Template has been renamed dynamic template
-* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)`
+* Delete mapping has been removed (this is removed in elasticsearch itself)
+* IndexStatus api has been removed (this was removed in elasticsearch itself)
+* Template has been renamed dynamic template (to better match the terminology in elasticsesarch)
+* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)` or `stringField()`, `longField`, etc
 * In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
+* Multiget now returns a rich scala wrapper in the form of `MultiGetResult`. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* GetSegments returns a scala wrapper in the form of `GetSegmentsResult`
+* IndexStats returns a scala wrapper in the form `IndexStatsResult`
 
 ## Syntax
 
@@ -191,7 +196,7 @@ the DSL closely mirrors the standard Java API / REST API.
 |-------------------------------------------|----------------|
 | [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
 | Clear index cache                         | `clear cache <name>` |
-| Close index                               | `close index <name>` |
+| Close index                               | `closeIndex(<name>)` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
 | Cluster health                            | `get cluster health` |
 | Cluster stats                             | `get cluster stats` |
@@ -211,16 +216,16 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
 | Get Alias                                 | `get alias <name> on <index>` |
 | Get Mapping                               | `get mapping <index> / <type>` |
-| Get Segments                              | `get segments <indexes>` |
-| Get Snapshot                              | `get snapshot <name> from <repo>` |
-| Get Template                              | `get template <name>` |
+| Get Segments                              | `getSegments(<indexes>)` |
+| Get Snapshot                              | `getSnapshot <name> from <repo>` |
+| Get Template                              | `getTemplate(<name>)` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
-| Index exists                              | `index exists <name>` |
+| Index exists                              | `indexExists(<name>)` |
 | Index Status                              | `index status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search ..., search ..., ...)`|
-| Open index                                | `open index <name>` |
+| Open index                                | `openIndex(<name>)` |
 | [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
 | Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
 | Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
