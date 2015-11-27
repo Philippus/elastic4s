@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.anaylzers.{StemmerTokenFilter, SnowballTokenFilter, ShingleTokenFilter, NGramTokenFilter, EdgeNGramTokenFilter, CommonGramsTokenFilter}
+import com.sksamuel.elastic4s.analyzers.{StemmerTokenFilter, SnowballTokenFilter, ShingleTokenFilter, NGramTokenFilter, EdgeNGramTokenFilter, CommonGramsTokenFilter}
 
 // a dumping ground for deprecated syntax, keeps the main file clear
 trait DeprecatedElasticDsl {

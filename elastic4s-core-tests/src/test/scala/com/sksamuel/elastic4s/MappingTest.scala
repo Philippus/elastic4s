@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import java.util
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
+import com.sksamuel.elastic4s.analyzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}

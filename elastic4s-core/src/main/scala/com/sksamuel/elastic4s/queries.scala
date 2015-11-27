@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
-import com.sksamuel.elastic4s.anaylzers.Analyzer
+import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator

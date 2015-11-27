@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.anaylzers.Analyzer
+import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.action.suggest.SuggestResponse
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.Fuzziness

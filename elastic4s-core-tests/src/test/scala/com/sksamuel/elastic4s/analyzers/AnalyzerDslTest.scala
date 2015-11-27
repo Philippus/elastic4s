@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.anaylzers.{CustomAnalyzerDefinition, WhitespaceTokenizer}
+import com.sksamuel.elastic4s.analyzers.{CustomAnalyzerDefinition, WhitespaceTokenizer}
 import org.scalatest.WordSpec
 
 class AnalyzerDslTest extends WordSpec with ElasticDsl {

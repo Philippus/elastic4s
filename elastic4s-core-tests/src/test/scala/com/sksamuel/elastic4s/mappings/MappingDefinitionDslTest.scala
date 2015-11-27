@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.anaylzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
+import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{Matchers, WordSpec}
 
