@@ -68,7 +68,7 @@ case class SnowballAnalyzerDefinition(override val name: String,
 
 case class CustomAnalyzerDefinition(override val name: String,
                                     tokenizer: Tokenizer,
-                                    filters: Iterable[AnalyzerFilter]) extends AnalyzerDefinition(name) {
+                                    filters: Seq[AnalyzerFilter] = Nil) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
@@ -81,10 +81,16 @@ case class CustomAnalyzerDefinition(override val name: String,
       source.field("char_filter", charFilters.map(_.name).toArray: _*)
     }
   }
+
+  def filters(filters: Seq[AnalyzerFilter]): CustomAnalyzerDefinition = copy(filters = filters)
+  def addFilter(filter: AnalyzerFilter): CustomAnalyzerDefinition = copy(filters = filters :+ filter)
 }
 
 object CustomAnalyzerDefinition {
-  def apply(name: String, tokenizer: Tokenizer, filters: AnalyzerFilter*): CustomAnalyzerDefinition = {
-    CustomAnalyzerDefinition(name, tokenizer, filters)
+  def apply(name: String,
+            tokenizer: Tokenizer,
+            first: AnalyzerFilter,
+            rest: AnalyzerFilter*): CustomAnalyzerDefinition = {
+    CustomAnalyzerDefinition(name, tokenizer, first +: rest)
   }
 }

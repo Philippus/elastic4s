@@ -5,4 +5,7 @@ trait AnalyzerDsl {
   def standardAnalyzer(name: String): StandardAnalyzerDefinition = StandardAnalyzerDefinition(name)
   def patternAnalyzer(name: String, regex: String): PatternAnalyzerDefinition = PatternAnalyzerDefinition(name, regex)
   def snowballAnalyzer(name: String): SnowballAnalyzerDefinition = SnowballAnalyzerDefinition(name)
+  def customAnalyzer(name: String, tokenizer: Tokenizer): CustomAnalyzerDefinition = {
+    CustomAnalyzerDefinition(name, tokenizer)
+  }
 }

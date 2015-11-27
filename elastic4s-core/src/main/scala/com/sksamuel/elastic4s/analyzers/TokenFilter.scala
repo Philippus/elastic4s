@@ -111,7 +111,7 @@ case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
 }
 
 case class KeywordMarkerTokenFilter(name: String,
-                                    keywords: Iterable[String] = Nil,
+                                    keywords: Seq[String] = Nil,
                                     ignoreCase: Boolean = false)
   extends TokenFilterDefinition {
 
@@ -121,9 +121,12 @@ case class KeywordMarkerTokenFilter(name: String,
     if (keywords.nonEmpty) source.field("keywords", keywords.toArray[String]: _*)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
+
+  def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter = copy(keywords = keywords)
+  def withKeyword(keyword: String): KeywordMarkerTokenFilter = copy(keywords = keywords :+ keyword)
 }
 
-case class ElisionTokenFilter(name: String, articles: Iterable[String])
+case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
   extends TokenFilterDefinition {
 
   val filterType = "elision"
@@ -131,6 +134,9 @@ case class ElisionTokenFilter(name: String, articles: Iterable[String])
   override def build(source: XContentBuilder): Unit = {
     source.field("articles", articles.toArray[String]: _*)
   }
+
+  def articles(articles: Seq[String]): ElisionTokenFilter = copy(articles = articles)
+  def withArticle(article: String): ElisionTokenFilter = copy(articles = articles :+ article)
 }
 
 case class LimitTokenFilter(name: String,
