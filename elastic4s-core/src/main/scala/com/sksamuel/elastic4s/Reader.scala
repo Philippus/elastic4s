@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-@deprecated("use HitReader, this reader trait has a broken contravariance implementation", "1.6.1")
+@deprecated("use HitAs, this reader trait has a broken contravariance implementation", "1.6.1")
 trait Reader[-U] {
   def read[T <: U : Manifest](json: String): T
 }

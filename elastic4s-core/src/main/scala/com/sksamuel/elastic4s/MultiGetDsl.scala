@@ -24,6 +24,7 @@ case class MultiGetResult(original: MultiGetResponse) {
 
   @deprecated("use .responses for a scala friendly Seq, or use .original to access the java result", "2.0")
   def getResponses() = original.getResponses
+
   def responses: Seq[MultiGetItemResult] = original.iterator.asScala.map(MultiGetItemResult.apply).toList
 }
 
@@ -31,10 +32,14 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
 
   @deprecated("use failure for a scala friendly Option, or use .original to access the java result", "2.0")
   def getFailure = original.getFailure
-  def getId = original.getId
-  def getIndex = original.getIndex
+
   @deprecated("use response for a scala friendly Option, or use .original to access the java result", "2.0")
   def getResponse = original.getResponse
+
+
+  def getId = original.getId
+  def getIndex = original.getIndex
+
   def getType = original.getType
   def isFailed = original.isFailed
 

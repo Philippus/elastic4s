@@ -186,7 +186,6 @@ trait ElasticDsl
   def deleteSnapshot(name: String): DeleteSnapshotExpectsIn = delete snapshot name
   def deleteTemplate(name: String): DeleteIndexTemplateDefinition = delete template name
 
-  @deprecated("use explain(index, type, id).query(query)...", "2.0.0")
   case object explain {
     def id(id: String): ExplainExpectsIndex = new ExplainExpectsIndex(id)
   }
@@ -195,15 +194,12 @@ trait ElasticDsl
 
   case object field extends TypeableFields {
     val name = ""
-    @deprecated("use field(name, type)", "2.0.0")
     def name(name: String): FieldDefinition = new FieldDefinition(name)
-    @deprecated("use fieldSort(field:String)", "2.0.0")
     def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
     def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
     def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
   }
 
-  @deprecated("use specific methods for each type, eg longField, stringField", "2.0.0")
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -276,7 +272,8 @@ trait ElasticDsl
   }
 
   def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
-  def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
+  def getAlias(first: String, rest: String*): GetAliasDefinition = new GetAliasDefinition(first +: rest)
+  def getAlias(aliases: Iterable[String]): GetAliasDefinition = new GetAliasDefinition(aliases.toSeq)
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
@@ -292,9 +289,7 @@ trait ElasticDsl
   trait HealthKeyword
   case object health extends HealthKeyword
 
-  @deprecated("use highlight(field)", "2.0.0")
   case object highlight {
-    @deprecated("use highlight(field)", "2.0.0")
     def field(field: String): HighlightDefinition = HighlightDefinition(field)
   }
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
@@ -355,20 +350,15 @@ trait ElasticDsl
   }
   def openIndex(index: String): OpenIndexDefinition = open index index
 
-  @deprecated("use optimizeIndex", "2.0.0")
   case object optimize {
-    @deprecated("use optimizeIndex", "2.0.0")
     def index(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
-    @deprecated("use optimizeIndex", "2.0.0")
     def index(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
   }
 
   def optimizeIndex(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes)
   def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
 
-  @deprecated("use percolate", "2.0.0")
   case object percolate {
-    @deprecated("use percolate", "2.0.0")
     def in(indexType: IndexAndTypes): PercolateDefinition = PercolateDefinition(IndexesAndTypes(indexType))
   }
 
@@ -425,17 +415,13 @@ trait ElasticDsl
   }
   def restoreSnapshot(name: String): RestoreSnapshotExpectsFrom = restore snapshot name
 
-  @deprecated("use scoreSort()", "2.0.0")
   case object score {
-    @deprecated("use scoreSort()", "2.0.0")
     def sort: ScoreSortDefinition = ScoreSortDefinition()
   }
   def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
   case object script {
-    @deprecated("use scriptSort(script)", "2.0.0")
     def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
-    @deprecated("use scriptField(script)", "2.0.0")
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
   def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
@@ -497,9 +483,6 @@ trait ElasticDsl
   }
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
-  class TypesExistExpectsIn(types: Seq[String]) {
-    def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)
-  }
   case object types {
     def exist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
   }
@@ -530,6 +513,10 @@ trait ElasticDsl
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
   }
+}
+
+case class TypesExistExpectsIn(types: Seq[String]) {
+  def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)
 }
 
 object ElasticDsl extends ElasticDsl

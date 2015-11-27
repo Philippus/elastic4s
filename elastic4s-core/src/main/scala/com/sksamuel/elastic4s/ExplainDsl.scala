@@ -16,7 +16,6 @@ trait ExplainDsl {
     }
   }
 
-  @deprecated("use the non dot free style", "2.0.0")
   class ExplainExpectsIndex(id: String) {
     def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
       new ExplainDefinition(indexAndTypes.index, indexAndTypes.types.head, id)
