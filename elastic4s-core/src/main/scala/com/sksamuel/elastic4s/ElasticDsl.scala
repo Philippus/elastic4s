@@ -472,7 +472,7 @@ trait ElasticDsl
   }
 
   def termVectors(index: String, `type`: String, id: String): TermVectorsDefinition = {
-    TermVectorsDefinition(index, `type`, id)
+    TermVectorsDefinition(index / `type`, id)
   }
 
   def termSuggestion: TermSuggestionDefinition = term suggestion UUID.randomUUID.toString

@@ -29,8 +29,7 @@ case class TermVectorsResult(original: TermVectorsResponse) {
   def version: Long = original.getVersion
 }
 
-case class TermVectorsDefinition(index: String,
-                                 `type`: String,
+case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
                                  id: String,
                                  dfs: Option[Boolean] = None,
                                  fieldStatistics: Option[Boolean] = None,
@@ -54,8 +53,8 @@ case class TermVectorsDefinition(index: String,
                                  maxWordLength: Option[Int] = None) {
   def build(request: TermVectorsRequestBuilder): TermVectorsRequestBuilder = {
     request.setId(id)
-    request.setIndex(index)
-    request.setType(`type`)
+    request.setIndex(indexAndTypes.index)
+    request.setType(indexAndTypes.types.head)
     dfs.foreach(request.setDfs)
     fieldStatistics.foreach(request.setFieldStatistics)
     offsets.foreach(request.setOffsets)
