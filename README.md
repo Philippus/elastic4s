@@ -18,7 +18,6 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Uses Scala collections library
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
-* SQL-style requests
 
 #### Release
 
@@ -43,7 +42,28 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 2.0.0
 
-* Updated to Elasticsearch 2.0.0. See upgrade guide in next section on breaking changes. The biggest change is the removal of filters (only queries are now used in elasticsearch).
+Major upgrade to Elasticsearch 2.0.0. _Please raise a PR if I've missed any breaking changes._
+
+* In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
+* Some options that existed only on filters like cache and cache key are now removed.
+* Fuzzy like this query has been removed (this was removed in elasticsearch itself)
+* Script dsl has changed. To create a script to pass into a method, you use `script(script)` or `script(name, script)` with further parameters set using the builder pattern.
+* DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
+* Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
+* MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
+* `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
+* Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
+* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for and's and `should` clauses for or's.
+* Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
+* Delete mapping has been removed (this is removed in elasticsearch itself)
+* IndexStatus api has been removed (this was removed in elasticsearch itself)
+* Template has been renamed dynamic template (to better match the terminology in elasticsesarch)
+* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)` or `stringField()`, `longField`, etc
+* In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
+* Multiget now returns a rich scala wrapper in the form of `MultiGetResult`. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* GetSegments returns a scala wrapper in the form of `GetSegmentsResult`
+* IndexStats returns a scala wrapper in the form `IndexStatsResult`
 
 ###### 1.7.0
 
@@ -160,31 +180,6 @@ object Test extends App {
 ```
 
 For more in depth examples keep reading.
-
-## 2.0.0 upgrade guide
-
-_Please do a PR to add anything I've missed_
-
-* In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
-* Some options that existed only on filters like cache and cache key are now removed.
-* Fuzzy like this query has been removed (this was removed in elasticsearch itself)
-* Script dsl has changed. To create a script to pass into a method, you use `script(script)` or `script(name, script)` with further parameters set using the builder pattern.
-* DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
-* Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
-* MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
-* `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
-* Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
-* The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
-* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for and's and `should` clauses for or's.
-* Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
-* Delete mapping has been removed (this is removed in elasticsearch itself)
-* IndexStatus api has been removed (this was removed in elasticsearch itself)
-* Template has been renamed dynamic template (to better match the terminology in elasticsesarch)
-* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)` or `stringField()`, `longField`, etc
-* In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
-* Multiget now returns a rich scala wrapper in the form of `MultiGetResult`. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
-* GetSegments returns a scala wrapper in the form of `GetSegmentsResult`
-* IndexStats returns a scala wrapper in the form `IndexStatsResult`
 
 ## Syntax
 
