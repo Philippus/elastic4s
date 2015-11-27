@@ -135,12 +135,15 @@ class MappingDefinition(val `type`: String) {
   }
 
   def fields(fields: Iterable[TypedFieldDefinition]): this.type = as(fields)
+
+  @deprecated("use mapping(myname).fields(myfields) or mapping myname fields myfields", "2.0")
   def as(iterable: Iterable[TypedFieldDefinition]): this.type = {
     _fields ++= iterable
     this
   }
 
   def fields(fields: TypedFieldDefinition*): this.type = as(fields: _*)
+  @deprecated("use mapping(myname).fields(myfields) or mapping myname fields myfields", "2.0")
   def as(fields: TypedFieldDefinition*): this.type = as(fields.toIterable)
 
   def size(size: Boolean): this.type = {
