@@ -312,8 +312,8 @@ trait ElasticDsl
       new IndexDefinition(indexType.index, indexType.types.head)
     }
 
-    def stats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
-    def stats(indexes: String*): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
+    def stats(indexes: Indexes): IndicesStatsDefinition = indexStats(indexes)
+    def stats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
   }
 
   def indexExists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
@@ -329,8 +329,8 @@ trait ElasticDsl
     new IndexDefinition(index, `type`)
   }
 
-  def indexStats(indexes: Iterable[String]): IndicesStatsDefinition = new IndicesStatsDefinition(indexes.toSeq)
-  def indexStats(indexes: String*): IndicesStatsDefinition = indexStats(indexes)
+  def indexStats(indexes: Indexes): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
+  def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
 
   case object inner {
     def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)

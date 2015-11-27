@@ -10,8 +10,9 @@ import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
-import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse
+import org.elasticsearch.action.admin.indices.stats.{IndexStats, CommonStats, IndicesStatsResponse}
 import org.elasticsearch.client.Client
+import org.elasticsearch.cluster.routing.ShardRouting
 import org.elasticsearch.index.engine.Segment
 import org.elasticsearch.index.shard.ShardId
 
@@ -55,9 +56,9 @@ trait IndexAdminDsl {
   }
 
   implicit object IndicesStatsDefinitionExecutable
-    extends Executable[IndicesStatsDefinition, IndicesStatsResponse, IndicesStatsResponse] {
-    override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResponse] = {
-      injectFuture(c.admin.indices.prepareStats(t.indexes: _*).execute)
+    extends Executable[IndicesStatsDefinition, IndicesStatsResponse, IndicesStatsResult] {
+    override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResult] = {
+      injectFutureAndMap(c.admin.indices.prepareStats(t.indexes.values: _*).execute)(IndicesStatsResult.apply)
     }
   }
 
@@ -88,14 +89,74 @@ case class CloseIndexDefinition(index: String)
 case class GetSegmentsDefinition(indexes: Indexes)
 case class IndexExistsDefinition(indexes: Seq[String])
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
-case class IndicesStatsDefinition(indexes: Seq[String])
+case class IndicesStatsDefinition(indexes: Indexes)
 case class ClearCacheDefinition(indexes: Seq[String])
 case class FlushIndexDefinition(indexes: Seq[String])
 case class RefreshIndexDefinition(indexes: Seq[String])
 
+case class IndicesStatsResult(original: IndicesStatsResponse) {
+
+  import scala.collection.JavaConverters._
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getPrimaries() = original.getPrimaries
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def asMap() = original.asMap
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getIndices() = original.getIndices
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getTotal(): CommonStats = original.getTotal
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getShards(): Array[org.elasticsearch.action.admin.indices.stats.ShardStats] = original.getShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getIndex(name: String) = original.getIndex(name)
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getAt(pos: Int) = original.getAt(pos)
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getTotalShards() = original.getTotalShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getFailedShards() = original.getFailedShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getSuccessfulShards() = original.getSuccessfulShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getShardFailures() = original.getShardFailures
+
+  def primaries: CommonStats = original.getPrimaries
+  def routing: Map[ShardRouting, CommonStats] = original.asMap.asScala.toMap
+  def indexStats: Map[String, IndexStats] = original.getIndices.asScala.toMap
+  def totalStats: CommonStats = original.getTotal
+  def shardStats: Seq[org.elasticsearch.action.admin.indices.stats.ShardStats] = original.getShards.toSeq
+  def indexNames: Set[String] = indexStats.keySet
+}
+
 case class GetSegmentsResult(original: IndicesSegmentResponse) {
 
   import scala.collection.JavaConverters._
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getTotalShards() = original.getTotalShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getFailedShards() = original.getFailedShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getSuccessfulShards() = original.getSuccessfulShards
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getShardFailures() = original.getShardFailures
+
+  @deprecated("Use the scala idiomatic methods", "2.0")
+  def getIndices() = original.getIndices
 
   def totalShards: Integer = original.getTotalShards
   def failedShards: Integer = original.getFailedShards
