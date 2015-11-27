@@ -63,15 +63,22 @@ case class SynonymTokenFilter(name: String,
     expand.foreach(source.field("expand", _))
     tokenizer.foreach(t => source.field("tokenizer", t.name))
   }
+
+  def path(path: String): SynonymTokenFilter = copy(path = Some(path))
+  def synonyms(synonyms: Iterable[String]): SynonymTokenFilter = copy(synonyms = synonyms.toSet)
+  def tokenizer(tokenizer: Tokenizer): SynonymTokenFilter = copy(tokenizer = Some(tokenizer))
+  def format(format: String): SynonymTokenFilter = copy(format = Some(format))
+  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter = copy(ignoreCase = Some(ignoreCase))
+  def expand(expand: Boolean): SynonymTokenFilter = copy(expand = Some(expand))
 }
 
 object SynonymTokenFilter {
-  @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
+  @deprecated("for backwards compatibility, use synonymTokenFilter(name).xxx.xxx", "1.5.6")
   def apply(name: String,
             path: String): SynonymTokenFilter = {
     SynonymTokenFilter(name, Option(path), Set.empty, None, None, None, None)
   }
-  @deprecated("for backwards compatibility, move to expanded method", "1.5.6")
+  @deprecated("for backwards compatibility, use synonymTokenFilter(name).xxx.xxx", "1.5.6")
   def apply(name: String,
             path: String,
             ignoreCase: Boolean): SynonymTokenFilter = {
@@ -87,6 +94,8 @@ case class TruncateTokenFilter(name: String, length: Int = 10)
   override def build(source: XContentBuilder): Unit = {
     source.field("length", length)
   }
+
+  def length(length: Int): TruncateTokenFilter = copy(length = length)
 }
 
 case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
@@ -100,7 +109,7 @@ case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_
   }
 
   def min(min: Int): LengthTokenFilter = copy(min = min)
-  def min(max: Int): LengthTokenFilter = copy(max = min)
+  def max(max: Int): LengthTokenFilter = copy(max = max)
 }
 
 case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
@@ -111,6 +120,8 @@ case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
   override def build(source: XContentBuilder): Unit = {
     source.field("only_on_same_position", onlyOnSamePosition)
   }
+
+  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition)
 }
 
 case class KeywordMarkerTokenFilter(name: String,
@@ -228,7 +239,7 @@ case class StopTokenFilterPath(name: String,
 }
 
 case class PatternCaptureTokenFilter(name: String,
-                                     patterns: Iterable[String],
+                                     patterns: Seq[String] = Nil,
                                      preserveOriginal: Boolean = true)
   extends TokenFilterDefinition {
 
@@ -239,7 +250,7 @@ case class PatternCaptureTokenFilter(name: String,
     source.field("preserve_original", preserveOriginal)
   }
 
-  def patterns(patterns: Iterable[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
+  def patterns(patterns: Seq[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
@@ -334,7 +345,7 @@ case class StemmerTokenFilter(name: String, lang: String = "English")
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
-case class StemmerOverrideTokenFilter(name: String, rules: Array[String])
+case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil)
   extends TokenFilterDefinition {
 
   val filterType = "stemmer_override"
