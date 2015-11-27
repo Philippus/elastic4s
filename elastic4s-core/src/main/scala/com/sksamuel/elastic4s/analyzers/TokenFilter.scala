@@ -98,6 +98,9 @@ case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_
     if (min > 0) source.field("min", min)
     if (max < Integer.MAX_VALUE) source.field("max", max)
   }
+
+  def min(min: Int): LengthTokenFilter = copy(min = min)
+  def min(max: Int): LengthTokenFilter = copy(max = min)
 }
 
 case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
@@ -150,6 +153,9 @@ case class LimitTokenFilter(name: String,
     if (maxTokenCount > 1) source.field("max_token_count", maxTokenCount)
     if (consumeAllTokens) source.field("consume_all_tokens", consumeAllTokens)
   }
+
+  def maxTokenCount(maxTokenCount: Int): LimitTokenFilter = copy(maxTokenCount = maxTokenCount)
+  def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenFilter = copy(consumeAllTokens = consumeAllTokens)
 }
 
 case class StopTokenFilter(name: String,
