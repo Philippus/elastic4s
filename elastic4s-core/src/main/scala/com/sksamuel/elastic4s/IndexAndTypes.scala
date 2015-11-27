@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import scala.language.implicitConversions
 
-case class Indexes(values: Seq[String])
+case class Indexes(values: Seq[String]) extends AnyVal
 
 object Indexes {
   implicit def apply(index: String): Indexes = Indexes(Seq(index))

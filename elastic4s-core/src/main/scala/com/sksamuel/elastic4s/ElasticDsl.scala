@@ -264,7 +264,8 @@ trait ElasticDsl
 
     def mapping(it: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(it)
 
-    def segments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
+    def segments(indexes: Indexes): GetSegmentsDefinition = getSegments(indexes)
+    def segments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)
 
     def settings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
@@ -278,7 +279,8 @@ trait ElasticDsl
   def getAlias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
-  def getSegments(indexes: Indexes): GetSegmentsDefinition = get segments indexes
+  def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
+  def getSegments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)
 
   def getSettings(indexes: Indexes): GetSettingsDefinition = get settings indexes
 

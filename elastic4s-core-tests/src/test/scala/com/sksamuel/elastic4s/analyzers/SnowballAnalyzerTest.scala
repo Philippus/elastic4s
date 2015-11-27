@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.analyzers.AnalyzerDsl
 import org.scalatest.{Matchers, WordSpec}
 
 class SnowballAnalyzerTest extends WordSpec with AnalyzerDsl with Matchers {

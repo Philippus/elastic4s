@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.analyzers.{TokenizerDsl, AnalyzerDsl}
 import org.scalatest.{Matchers, WordSpec}
 
 class KeywordTokenizerTest extends WordSpec with TokenizerDsl with Matchers {

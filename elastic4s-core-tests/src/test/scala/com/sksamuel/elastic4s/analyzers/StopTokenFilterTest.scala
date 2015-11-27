@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.analyzers.TokenFilterDsl
 import org.scalatest.{Matchers, WordSpec}
 
 class StopTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {

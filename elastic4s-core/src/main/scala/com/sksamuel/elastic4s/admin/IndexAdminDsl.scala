@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.{Indexes, Executable}
+import com.sksamuel.elastic4s.{Executable, Indexes}
+import org.elasticsearch.action.ShardOperationFailedException
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
@@ -11,6 +12,8 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse
 import org.elasticsearch.client.Client
+import org.elasticsearch.index.engine.Segment
+import org.elasticsearch.index.shard.ShardId
 
 import scala.concurrent.Future
 
@@ -22,48 +25,56 @@ trait IndexAdminDsl {
       injectFuture(c.admin.indices.prepareOpen(t.index).execute)
     }
   }
+
   implicit object CloseIndexDefinitionExecutable
     extends Executable[CloseIndexDefinition, CloseIndexResponse, CloseIndexResponse] {
     override def apply(c: Client, t: CloseIndexDefinition): Future[CloseIndexResponse] = {
       injectFuture(c.admin.indices.prepareClose(t.index).execute)
     }
   }
+
   implicit object GetSegmentsDefinitionExecutable
-    extends Executable[GetSegmentsDefinition, IndicesSegmentResponse, IndicesSegmentResponse] {
-    override def apply(c: Client, t: GetSegmentsDefinition): Future[IndicesSegmentResponse] = {
-      injectFuture(c.admin.indices.prepareSegments(t.indexes.values: _*).execute)
+    extends Executable[GetSegmentsDefinition, IndicesSegmentResponse, GetSegmentsResult] {
+    override def apply(c: Client, t: GetSegmentsDefinition): Future[GetSegmentsResult] = {
+      injectFutureAndMap(c.admin.indices.prepareSegments(t.indexes.values: _*).execute)(GetSegmentsResult.apply)
     }
   }
+
   implicit object IndexExistsDefinitionExecutable
     extends Executable[IndexExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
     override def apply(c: Client, t: IndexExistsDefinition): Future[IndicesExistsResponse] = {
       injectFuture(c.admin.indices.prepareExists(t.indexes: _*).execute)
     }
   }
+
   implicit object TypesExistsDefinitionExecutable
     extends Executable[TypesExistsDefinition, TypesExistsResponse, TypesExistsResponse] {
     override def apply(c: Client, t: TypesExistsDefinition): Future[TypesExistsResponse] = {
       injectFuture(c.admin.indices.prepareTypesExists(t.indexes: _*).setTypes(t.types: _*).execute)
     }
   }
+
   implicit object IndicesStatsDefinitionExecutable
     extends Executable[IndicesStatsDefinition, IndicesStatsResponse, IndicesStatsResponse] {
     override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResponse] = {
       injectFuture(c.admin.indices.prepareStats(t.indexes: _*).execute)
     }
   }
+
   implicit object ClearIndicesCacheResponseExecutable
     extends Executable[ClearCacheDefinition, ClearIndicesCacheResponse, ClearIndicesCacheResponse] {
     override def apply(c: Client, t: ClearCacheDefinition): Future[ClearIndicesCacheResponse] = {
       injectFuture(c.admin.indices.prepareClearCache(t.indexes: _*).execute)
     }
   }
+
   implicit object FlushIndexDefinitionExecutable
     extends Executable[FlushIndexDefinition, FlushResponse, FlushResponse] {
     override def apply(c: Client, t: FlushIndexDefinition): Future[FlushResponse] = {
       injectFuture(c.admin.indices.prepareFlush(t.indexes: _*).execute)
     }
   }
+
   implicit object RefreshDefinitionExecutable
     extends Executable[RefreshIndexDefinition, RefreshResponse, RefreshResponse] {
     override def apply(c: Client, t: RefreshIndexDefinition): Future[RefreshResponse] = {
@@ -81,3 +92,45 @@ case class IndicesStatsDefinition(indexes: Seq[String])
 case class ClearCacheDefinition(indexes: Seq[String])
 case class FlushIndexDefinition(indexes: Seq[String])
 case class RefreshIndexDefinition(indexes: Seq[String])
+
+case class GetSegmentsResult(original: IndicesSegmentResponse) {
+
+  import scala.collection.JavaConverters._
+
+  def totalShards: Integer = original.getTotalShards
+  def failedShards: Integer = original.getFailedShards
+  def successfulShards: Integer = original.getSuccessfulShards
+  def shardFailures: Seq[ShardOperationFailedException] = Option(original.getShardFailures).map(_.toSeq).getOrElse(Nil)
+
+  def indices: Map[String, IndexSegments] = {
+    Option(original.getIndices).map(_.asScala.map { case (k, v) => k -> IndexSegments(v) }.toMap).getOrElse(Map.empty)
+  }
+}
+
+case class IndexSegments(original: org.elasticsearch.action.admin.indices.segments.IndexSegments) {
+
+  import scala.collection.JavaConverters._
+
+  def index: String = original.getIndex
+
+  def shards: Map[Integer, IndexShardSegments] = {
+    Option(original.getShards).map(_.asScala.map { case (k, v) => k -> IndexShardSegments(v) }.toMap)
+      .getOrElse(Map.empty)
+  }
+}
+
+case class IndexShardSegments(original: org.elasticsearch.action.admin.indices.segments.IndexShardSegments) {
+  def shards: Seq[ShardSegments] = Option(original.getShards).map(_.toSeq.map(ShardSegments.apply)).getOrElse(Nil)
+  def shardId: ShardId = original.getShardId
+}
+
+case class ShardSegments(original: org.elasticsearch.action.admin.indices.segments.ShardSegments) {
+
+  import scala.collection.JavaConverters._
+
+  def numberOfCommitted: Integer = original.getNumberOfCommitted
+  def numberOfSearch: Integer = original.getNumberOfSearch
+  def segments: Seq[Segment] = Option(original.getSegments).map(_.asScala).getOrElse(Nil)
+  def shardRouting = original.getShardRouting
+}
+
