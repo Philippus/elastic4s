@@ -135,14 +135,20 @@ trait ElasticDsl
   def completionSuggestion: CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
+  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
   case object count {
     def from(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
+    @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
     def from(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
+    @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
     def from(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
   }
 
+  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
   def countFrom(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
+  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
   def countFrom(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
+  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
   def countFrom(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
 
   case object create {

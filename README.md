@@ -47,7 +47,10 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * #458 Added options to clear cache def
 * #475 fixed breaking change in terms query
 * Rewrite was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
-
+* Added [GeoCentroid](https://www.elastic.co/guide/en/elasticsearch/reference/2.1/search-aggregations-metrics-geocentroid-aggregation.html) aggregation
+* Added terminateAfter to search definition
+* SearchType.SCAN is now deprecated in Elasticsearch
+* Count DSL is deprecated in Elasticsearch
 
 ###### 2.0.1
  
