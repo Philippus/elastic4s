@@ -137,7 +137,7 @@ case class KeywordMarkerTokenFilter(name: String,
   }
 
   def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter = copy(keywords = keywords)
-  def withKeyword(keyword: String): KeywordMarkerTokenFilter = copy(keywords = keywords :+ keyword)
+  def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest)
 }
 
 case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
@@ -150,7 +150,7 @@ case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
   }
 
   def articles(articles: Seq[String]): ElisionTokenFilter = copy(articles = articles)
-  def withArticle(article: String): ElisionTokenFilter = copy(articles = articles :+ article)
+  def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
 }
 
 case class LimitTokenFilter(name: String,
@@ -246,11 +246,13 @@ case class PatternCaptureTokenFilter(name: String,
   val filterType = "pattern_capture"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("patterns", patterns.toArray[String]: _*)
+    if (patterns.nonEmpty)
+      source.field("patterns", patterns.toArray[String]: _*)
     source.field("preserve_original", preserveOriginal)
   }
 
   def patterns(patterns: Seq[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
+  def patterns(first: String, rest: String*): PatternCaptureTokenFilter = copy(patterns = first +: rest)
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 

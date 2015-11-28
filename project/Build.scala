@@ -6,7 +6,7 @@ object Build extends Build {
   val org = "com.sksamuel.elastic4s"
   val appVersion = "2.0.0"
 
-  val ScalaVersion = "2.11.7"
+  val ScalaVersion = "2.10.5"
   val ScalatestVersion = "2.2.5"
   val MockitoVersion = "1.9.5"
   val JacksonVersion = "2.6.1"

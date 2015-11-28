@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 trait ScriptFieldDsl {
   case class ExpectsScript(field: String) {
-    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = field, script = script)
+    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field, script, None, None)
   }
 }
 

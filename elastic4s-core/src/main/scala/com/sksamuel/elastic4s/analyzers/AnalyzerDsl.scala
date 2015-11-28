@@ -8,4 +8,10 @@ trait AnalyzerDsl {
   def customAnalyzer(name: String, tokenizer: Tokenizer): CustomAnalyzerDefinition = {
     CustomAnalyzerDefinition(name, tokenizer)
   }
+  def customAnalyzer(name: String,
+                     tokenizer: Tokenizer,
+                     filter: TokenFilter,
+                     rest: TokenFilter*): CustomAnalyzerDefinition = {
+    CustomAnalyzerDefinition(name, tokenizer, filter +: rest)
+  }
 }

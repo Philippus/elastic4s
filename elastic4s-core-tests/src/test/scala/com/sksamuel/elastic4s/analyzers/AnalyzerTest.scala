@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}
@@ -10,18 +9,18 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     create index "analyzer" mappings {
-      "test" as(
-        "keyword" typed StringType analyzer KeywordAnalyzer,
-        "snowball" typed StringType analyzer SnowballAnalyzer,
-        "whitespace" typed StringType analyzer WhitespaceAnalyzer,
-        "stop" typed StringType analyzer StopAnalyzer,
-        "apos" typed StringType analyzer CustomAnalyzer("apos"),
-        "stop_path" typed StringType analyzer CustomAnalyzer("stop_path"),
-        "standard1" typed StringType analyzer CustomAnalyzer("standard1"),
-        "simple1" typed StringType analyzer SimpleAnalyzer,
-        "pattern1" typed StringType analyzer CustomAnalyzer("pattern1"),
-        "pattern2" typed StringType analyzer CustomAnalyzer("pattern2"),
-        "ngram" typed StringType analyzer CustomAnalyzer("default_ngram"),
+      mapping("test") fields (
+        stringField("keyword") analyzer KeywordAnalyzer,
+        stringField("snowball") typed StringType analyzer SnowballAnalyzer,
+        stringField("whitespace") analyzer WhitespaceAnalyzer,
+        stringField("stop") analyzer StopAnalyzer,
+        stringField("apos") analyzer CustomAnalyzer("apos"),
+        stringField("stop_path") analyzer CustomAnalyzer("stop_path"),
+        stringField("standard1") analyzer CustomAnalyzer("standard1"),
+        stringField("simple1") analyzer SimpleAnalyzer,
+        stringField("pattern1") analyzer CustomAnalyzer("pattern1"),
+        stringField("pattern2") analyzer CustomAnalyzer("pattern2"),
+        stringField("ngram") analyzer CustomAnalyzer("default_ngram"),
         "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
         "custom_ngram" typed StringType analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
         "shingle" typed StringType analyzer CustomAnalyzer("shingle"),
@@ -32,46 +31,46 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
     } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
       PatternAnalyzerDefinition("pattern2", ",", lowercase = false),
-      CustomAnalyzerDefinition("default_ngram", NGramTokenizer),
-      CustomAnalyzerDefinition("my_ngram",
+      customAnalyzer("default_ngram", NGramTokenizer),
+      customAnalyzer("my_ngram",
         StandardTokenizer,
         LowercaseTokenFilter,
         ngramTokenFilter("my_ngram_filter") minGram 2 maxGram 5),
-      CustomAnalyzerDefinition("edgengram",
+      customAnalyzer("edgengram",
         StandardTokenizer,
         LowercaseTokenFilter,
         edgeNGramTokenFilter("edgengram_filter") minGram 2 maxGram 6 side "back"),
-      CustomAnalyzerDefinition("standard1", StandardTokenizer("stokenizer1", 10)),
-      CustomAnalyzerDefinition(
+      customAnalyzer("standard1", StandardTokenizer("stokenizer1", 10)),
+      customAnalyzer(
         "shingle",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
         shingleTokenFilter("filter_shingle") maxShingleSize 3 outputUnigrams false
       ),
-      CustomAnalyzerDefinition(
+      customAnalyzer(
         "shingle2",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
         shingleTokenFilter("filter_shingle2") maxShingleSize 2
       ),
-      CustomAnalyzerDefinition(
+      customAnalyzer(
         "shingle3",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
         shingleTokenFilter("filter_shingle3") outputUnigramsIfNoShingles true
       ),
-      CustomAnalyzerDefinition(
+      customAnalyzer(
         "shingle4",
         WhitespaceTokenizer,
         LowercaseTokenFilter,
         shingleTokenFilter("filter_shingle4") tokenSeperator "#"
       ),
-      CustomAnalyzerDefinition(
+      customAnalyzer(
         "stop_path",
         WhitespaceTokenizer,
         StopTokenFilterPath("new_stop", "stoplist.txt")
       ),
-      CustomAnalyzerDefinition(
+      customAnalyzer(
         "apos",
         WhitespaceTokenizer,
         ApostropheTokenFilter

@@ -454,7 +454,7 @@ trait ElasticDsl
   def ipField(name: String) = field(name, IpType)
   def longField(name: String) = field(name, LongType)
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
-  def scriptField(n: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(field = n, script)
+  def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
   def shortField(name: String) = field(name, ShortType)
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
