@@ -14,12 +14,13 @@ import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
 
+
 /** @author Stephen Samuel */
 trait SearchDsl
   extends QueryDsl
-    with HighlightDsl
-    with ScriptFieldDsl
-    with SuggestionDsl {
+  with HighlightDsl
+  with ScriptFieldDsl
+  with SuggestionDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
 
@@ -30,12 +31,14 @@ trait SearchDsl
   def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = new MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
 
+
   implicit object SearchDefinitionExecutable
     extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[RichSearchResponse] = {
       injectFutureAndMap(c.search(t.build, _))(RichSearchResponse.apply)
     }
   }
+
 
   implicit object MultiSearchDefinitionExecutable
     extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResult] {
@@ -44,25 +47,34 @@ trait SearchDsl
     }
   }
 
+
   implicit object SearchDefinitionShow extends Show[SearchDefinition] {
     override def show(f: SearchDefinition): String = f._builder.internalBuilder.toString
   }
+
 
   implicit class SearchDefinitionShowOps(f: SearchDefinition) {
     def show: String = SearchDefinitionShow.show(f)
   }
 
+
   implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
 
+
     import compat.Platform.EOL
+
 
     override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
   }
 
+
   implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {
     def show: String = MultiSearchDefinitionShow.show(f)
   }
+
+
 }
+
 
 case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
   def build: MultiSearchRequest = {
@@ -72,6 +84,7 @@ case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
   }
 }
 
+
 case class MultiSearchResult(original: MultiSearchResponse) {
   def size = items.size
   def items: Seq[MultiSearchResultItem] = original.getResponses.map(MultiSearchResultItem.apply)
@@ -79,12 +92,14 @@ case class MultiSearchResult(original: MultiSearchResponse) {
   def getResponses(): Array[MultiSearchResponse.Item] = original.getResponses
 }
 
+
 case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
   def isFailure: Boolean = item.isFailure
   def failureMessage: Option[String] = Option(item.getFailureMessage)
   def failure: Option[Throwable] = Option(item.getFailure)
   def response: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
 }
+
 
 case class RescoreDefinition(query: QueryDefinition) {
   val builder = RescoreBuilder.queryRescorer(query.builder)
@@ -110,6 +125,7 @@ case class RescoreDefinition(query: QueryDefinition) {
     this
   }
 }
+
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
@@ -150,8 +166,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def requestCache(queryCache: Boolean): this.type = {
-    _builder.setRequestCache(queryCache)
+  def requestCache(requestCache: Boolean): this.type = {
+    _builder.setRequestCache(requestCache)
     this
   }
 
@@ -253,6 +269,11 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
+  def explain(enabled: Boolean): SearchDefinition = {
+    _builder.setExplain(enabled)
+    this
+  }
+
   def fuzzy(tuple: (String, Any)) = {
     val q = new FuzzyQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
@@ -319,14 +340,14 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
-  def indexBoost(tuples: (String, Double)*): SearchDefinition = {
-    tuples.foreach(arg => _builder.addIndexBoost(arg._1, arg._2.toFloat))
+  def terminateAfter(terminateAfter: Int): SearchDefinition = {
+    _builder.setTerminateAfter(terminateAfter)
     this
   }
 
-  def explain(enabled: Boolean): SearchDefinition = {
-    _builder.setExplain(enabled)
+  def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
+  def indexBoost(tuples: (String, Double)*): SearchDefinition = {
+    tuples.foreach(arg => _builder.addIndexBoost(arg._1, arg._2.toFloat))
     this
   }
 
