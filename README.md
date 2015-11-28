@@ -27,7 +27,8 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|2.0.0|2.0.X|
+|2.1.0|2.1.X|
+|2.0.1|2.0.X|
 |1.7.4|1.7.X|
 |1.6.6|1.6.X|
 |1.5.17|1.5.X|
@@ -44,13 +45,13 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 * Optimize was renamed to ForceMerge. The existing optimize method are deprecated and `forceMerge(indexes*)` has been added in its place.
 * #395 Added pipeline aggregation definitions
-* #458 Added options to clear cache def
-* #475 fixed breaking change in terms query
-* Rewrite was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
+* #458 Added parameters to clear cache operation
+* #475 Fixed breaking change in terms query
+* `rewrite` was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
 * Added [GeoCentroid](https://www.elastic.co/guide/en/elasticsearch/reference/2.1/search-aggregations-metrics-geocentroid-aggregation.html) aggregation
-* Added terminateAfter to search definition
+* Added `terminateAfter` to search definition
 * SearchType.SCAN is now deprecated in Elasticsearch
-* Count DSL is deprecated in Elasticsearch
+* `count` is deprecated in Elasticsearch and should be replaced with a search with size 0
 
 ###### 2.0.1
  
@@ -779,13 +780,13 @@ publisher.subscribe(subscriber)
 For gradle users, add:
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:1.7.4'
+compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:2.1.0'
 ```
 
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "1.7.4"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.1.0"
 ```
 
 For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
@@ -794,7 +795,7 @@ For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
     <artifactId>elastic4s-core_2.11</artifactId>
-    <version>1.7.4</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
