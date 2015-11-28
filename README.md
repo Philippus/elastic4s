@@ -825,6 +825,8 @@ folder. There is no need to configure anything externally.
 * Hotel Urbano
 * Immobilien Scout
 
+_Raise a PR to add your company here_
+
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
 
