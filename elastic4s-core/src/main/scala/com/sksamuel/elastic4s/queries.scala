@@ -114,8 +114,8 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, first: AnyRef, rest: AnyRef*): TermsQueryDefinition = {
-    TermsQueryDefinition(field, (first +: rest).map(_.toString))
+  def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition = {
+    TermsQueryDefinition(field, values.map(_.toString))
   }
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
