@@ -20,29 +20,42 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
 import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityBuilder
 import org.elasticsearch.search.aggregations.metrics.geobounds.GeoBoundsBuilder
+import org.elasticsearch.search.aggregations.metrics.geocentroid.GeoCentroidBuilder
 import org.elasticsearch.search.aggregations.metrics.{MetricsAggregationBuilder, ValuesSourceMetricsAggregationBuilder}
 import org.elasticsearch.search.sort.SortBuilder
+
 
 /** @author Nicolas Yzet */
 trait AbstractAggregationDefinition {
   def builder: AbstractAggregationBuilder
 }
 
+
 abstract class AggregationResult[T <: AbstractAggregationDefinition] {
   type Result <: Aggregation
 }
 
+
 object AggregationResults {
+
+
   implicit object TermsAggregationResult extends AggregationResult[TermAggregationDefinition] {
     override type Result = org.elasticsearch.search.aggregations.bucket.terms.Terms
   }
+
+
   implicit object DateHistogramAggregationResult extends AggregationResult[DateHistogramAggregation] {
     override type Result = org.elasticsearch.search.aggregations.bucket.histogram.Histogram
   }
+
+
   implicit object CountAggregationResult extends AggregationResult[ValueCountAggregationDefinition] {
     override type Result = org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount
   }
+
+
 }
+
 
 trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: AggregationBuilder[B]]
   extends AbstractAggregationDefinition {
@@ -62,12 +75,14 @@ trait AggregationDefinition[+Self <: AggregationDefinition[Self, B], B <: Aggreg
   def aggs(a: Iterable[AbstractAggregationDefinition]): Self = aggregations(a)
 }
 
+
 trait MetricsAggregationDefinition[+Self <: MetricsAggregationDefinition[Self, B], B <: MetricsAggregationBuilder[B]]
   extends AbstractAggregationDefinition {
   val aggregationBuilder: B
 
   def builder = aggregationBuilder
 }
+
 
 trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggregationDefinition[Self, B], B <: ValuesSourceMetricsAggregationBuilder[B]]
   extends MetricsAggregationDefinition[Self, B] {
@@ -83,6 +98,7 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
     this
   }
 }
+
 
 trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggregationDefinition[Self]]
   extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
@@ -108,6 +124,7 @@ trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggrega
   }
 }
 
+
 case class MissingAggregationDefinition(name: String)
   extends AggregationDefinition[MissingAggregationDefinition, MissingBuilder] {
   val aggregationBuilder = AggregationBuilders.missing(name)
@@ -117,6 +134,7 @@ case class MissingAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class TermAggregationDefinition(name: String)
   extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
@@ -185,6 +203,7 @@ case class TermAggregationDefinition(name: String)
   }
 }
 
+
 case class RangeAggregationDefinition(name: String)
   extends AggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
   val aggregationBuilder = AggregationBuilders.range(name)
@@ -230,6 +249,7 @@ case class RangeAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
 
@@ -286,6 +306,7 @@ case class DateRangeAggregation(name: String) extends AggregationDefinition[Date
   }
 }
 
+
 case class ChildrenAggregationDefinition(name: String)
   extends AggregationDefinition[ChildrenAggregationDefinition, ChildrenBuilder] {
   val aggregationBuilder = AggregationBuilders.children(name)
@@ -295,6 +316,7 @@ case class ChildrenAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class HistogramAggregation(name: String) extends AggregationDefinition[HistogramAggregation, HistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.histogram(name)
@@ -309,6 +331,7 @@ case class HistogramAggregation(name: String) extends AggregationDefinition[Hist
     this
   }
 }
+
 
 case class DateHistogramAggregation(name: String)
   extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
@@ -360,6 +383,7 @@ case class DateHistogramAggregation(name: String)
   }
 }
 
+
 case class GeoHashGridAggregationDefinition(name: String)
   extends AggregationDefinition[GeoHashGridAggregationDefinition, GeoHashGridBuilder] {
 
@@ -385,6 +409,7 @@ case class GeoHashGridAggregationDefinition(name: String)
   }
 }
 
+
 case class GeoBoundsAggregationDefinition(name: String)
   extends AggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
   val aggregationBuilder = AggregationBuilders.geoBounds(name)
@@ -394,11 +419,44 @@ case class GeoBoundsAggregationDefinition(name: String)
     this
   }
 
+  def script(script: Script): GeoBoundsAggregationDefinition = {
+    aggregationBuilder.script(Script)
+    this
+  }
+
+  def missing(missing: String): GeoBoundsAggregationDefinition = {
+    aggregationBuilder.missing(missing)
+    this
+  }
+
   def wrapLongitude(wrapLongitude: Boolean): GeoBoundsAggregationDefinition = {
     builder.wrapLongitude(wrapLongitude)
     this
   }
 }
+
+
+case class GeoCentroidAggregationDefinition(name: String)
+  extends AggregationDefinition[GeoCentroidAggregationDefinition, GeoCentroidBuilder] {
+
+  val aggregationBuilder = AggregationBuilders.geoCentroid(name)
+
+  def field(field: String): GeoCentroidAggregationDefinition = {
+    aggregationBuilder.field(field)
+    this
+  }
+
+  def missing(missing: String): GeoCentroidAggregationDefinition = {
+    aggregationBuilder.missing(missing)
+    this
+  }
+
+  def format(format: String): GeoCentroidAggregationDefinition = {
+    aggregationBuilder.format(format)
+    this
+  }
+}
+
 
 case class GeoDistanceAggregationDefinition(name: String)
   extends AggregationDefinition[GeoDistanceAggregationDefinition, GeoDistanceBuilder] {
@@ -419,6 +477,7 @@ case class GeoDistanceAggregationDefinition(name: String)
     builder.distanceType(geoDistance)
     this
   }
+
   def geohash(geohash: String): GeoDistanceAggregationDefinition = {
     builder.geohash(geohash)
     this
@@ -428,15 +487,18 @@ case class GeoDistanceAggregationDefinition(name: String)
     builder.point(new GeoPoint(lat, long))
     this
   }
+
   def addUnboundedFrom(addUnboundedFrom: Double): GeoDistanceAggregationDefinition = {
     builder.addUnboundedFrom(addUnboundedFrom)
     this
   }
+
   def addUnboundedTo(addUnboundedTo: Double): GeoDistanceAggregationDefinition = {
     builder.addUnboundedTo(addUnboundedTo)
     this
   }
 }
+
 
 case class FilterAggregationDefinition(name: String)
   extends AggregationDefinition[FilterAggregationDefinition, FilterAggregationBuilder] {
@@ -447,6 +509,7 @@ case class FilterAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class FiltersAggregationDefinition(name: String)
   extends AggregationDefinition[FiltersAggregationDefinition, FiltersAggregationBuilder] {
@@ -462,6 +525,7 @@ case class FiltersAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class SigTermsAggregationDefinition(name: String)
   extends AggregationDefinition[SigTermsAggregationDefinition, SignificantTermsBuilder] {
@@ -504,6 +568,7 @@ case class SigTermsAggregationDefinition(name: String)
   }
 }
 
+
 case class IpRangeAggregationDefinition(name: String) extends AbstractAggregationDefinition {
 
   val builder = AggregationBuilders.ipRange(name)
@@ -539,30 +604,36 @@ case class IpRangeAggregationDefinition(name: String) extends AbstractAggregatio
   }
 }
 
+
 case class MinAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[MinAggregationDefinition, metrics.min.MinBuilder] {
   val aggregationBuilder = AggregationBuilders.min(name)
 }
+
 
 case class MaxAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[MaxAggregationDefinition, metrics.max.MaxBuilder] {
   val aggregationBuilder = AggregationBuilders.max(name)
 }
 
+
 case class SumAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[SumAggregationDefinition, metrics.sum.SumBuilder] {
   val aggregationBuilder = AggregationBuilders.sum(name)
 }
+
 
 case class AvgAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[AvgAggregationDefinition, metrics.avg.AvgBuilder] {
   val aggregationBuilder = AggregationBuilders.avg(name)
 }
 
+
 case class StatsAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[StatsAggregationDefinition, metrics.stats.StatsBuilder] {
   val aggregationBuilder = AggregationBuilders.stats(name)
 }
+
 
 case class PercentilesAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[PercentilesAggregationDefinition, metrics.percentiles.PercentilesBuilder] {
@@ -579,6 +650,7 @@ case class PercentilesAggregationDefinition(name: String)
   }
 }
 
+
 case class PercentileRanksAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[PercentileRanksAggregationDefinition, metrics.percentiles.PercentileRanksBuilder] {
   val aggregationBuilder = AggregationBuilders.percentileRanks(name)
@@ -594,25 +666,30 @@ case class PercentileRanksAggregationDefinition(name: String)
   }
 }
 
+
 case class ExtendedStatsAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[ExtendedStatsAggregationDefinition, metrics.stats.extended.ExtendedStatsBuilder] {
   val aggregationBuilder = AggregationBuilders.extendedStats(name)
 }
+
 
 case class ValueCountAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[ValueCountAggregationDefinition, metrics.valuecount.ValueCountBuilder] {
   val aggregationBuilder = AggregationBuilders.count(name)
 }
 
+
 case class CardinalityAggregationDefinition(name: String)
   extends CardinalityMetricsAggregationDefinition[CardinalityAggregationDefinition] {
   val aggregationBuilder = AggregationBuilders.cardinality(name)
 }
 
+
 case class GlobalAggregationDefinition(name: String)
   extends AggregationDefinition[GlobalAggregationDefinition, GlobalBuilder] {
   val aggregationBuilder = AggregationBuilders.global(name)
 }
+
 
 case class TopHitsAggregationDefinition(name: String) extends AbstractAggregationDefinition {
   val builder = AggregationBuilders.topHits(name)
@@ -640,6 +717,7 @@ case class TopHitsAggregationDefinition(name: String) extends AbstractAggregatio
 
 }
 
+
 case class NestedAggregationDefinition(name: String)
   extends AggregationDefinition[NestedAggregationDefinition, NestedBuilder] {
   val aggregationBuilder = AggregationBuilders.nested(name)
@@ -649,6 +727,7 @@ case class NestedAggregationDefinition(name: String)
     this
   }
 }
+
 
 case class ReverseNestedAggregationDefinition(name: String)
   extends AggregationDefinition[ReverseNestedAggregationDefinition, ReverseNestedBuilder] {

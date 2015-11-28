@@ -42,8 +42,17 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 2.1.0
 
-* Rewrite was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
 * Optimize was renamed to ForceMerge. The existing optimize method are deprecated and `forceMerge(indexes*)` has been added in its place.
+* #395 Added pipeline aggregation definitions
+* #458 Added options to clear cache def
+* #475 fixed breaking change in terms query
+* Rewrite was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
+
+
+###### 2.0.1
+ 
+* #475 fixed breaking change in terms query
+
 
 ###### 2.0.0
 
