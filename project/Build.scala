@@ -4,7 +4,7 @@ import sbt.Keys._
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "2.0.0"
+  val appVersion = "2.0.1"
 
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
@@ -26,6 +26,8 @@ object Build extends Build {
     resolvers += Resolver.mavenLocal,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
+    fork in Test := true,
+    javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
