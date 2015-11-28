@@ -24,6 +24,8 @@ object Build extends Build {
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
+    fork in Test := true,
+    javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     parallelExecution in Test := false,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
