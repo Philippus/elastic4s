@@ -20,6 +20,22 @@ import org.elasticsearch.search.aggregations.pipeline.serialdiff.SerialDiffBuild
 import org.elasticsearch.search.aggregations.pipeline.{PipelineAggregatorBuilder, PipelineAggregatorBuilders}
 
 
+trait PipelineAggregationDsl {
+  def avgBucketAggregation(name: String): AvgBucketDefinition = AvgBucketDefinition(name)
+  def bucketScriptAggregation(name: String): BucketScriptDefinition = BucketScriptDefinition(name)
+  def cumulativeSumAggregation(name: String): CumulativeSumDefinition = CumulativeSumDefinition(name)
+  def derivativeAggregation(name: String): DerivativeDefinition = DerivativeDefinition(name)
+  def diffAggregation(name: String): DiffDefinition = DiffDefinition(name)
+  def extendedStatsBucketAggregation(name: String): ExtendedStatsBucketDefinition = ExtendedStatsBucketDefinition(name)
+  def maxBucketAggregation(name: String): MaxBucketDefinition = MaxBucketDefinition(name)
+  def minBucketAggregation(name: String): MinBucketDefinition = MinBucketDefinition(name)
+  def movingAverageAggregation(name: String): MovAvgDefinition = MovAvgDefinition(name)
+  def percentilesBucketAggregation(name: String): PercentilesBucketDefinition = PercentilesBucketDefinition(name)
+  def statsBucketAggregation(name: String): StatsBucketDefinition = StatsBucketDefinition(name)
+  def sumBucketAggregation(name: String): SumBucketDefinition = SumBucketDefinition(name)
+}
+
+
 abstract class PipelineDefinition {
 
   type T <: PipelineAggregatorBuilder[T]

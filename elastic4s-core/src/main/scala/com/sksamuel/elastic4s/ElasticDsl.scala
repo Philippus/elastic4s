@@ -14,6 +14,7 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait ElasticDsl
   extends IndexDsl
+  with AggregationDsl
   with AliasesDsl
   with AnalyzerDsl
   with BulkDsl
@@ -22,16 +23,17 @@ trait ElasticDsl
   with CreateIndexDsl
   with DeleteIndexDsl
   with DeleteDsl
-  with FieldStatsDsl
   with ExplainDsl
+  with FieldStatsDsl
+  with ForceMergeDsl
   with GetDsl
   with IndexAdminDsl
   with IndexRecoveryDsl
   with IndexTemplateDsl
   with MappingDsl
   with MultiGetDsl
-  with ForceMergeDsl
   with PercolateDsl
+  with PipelineAggregationDsl
   with ReindexDsl
   with ScriptDsl
   with SearchDsl

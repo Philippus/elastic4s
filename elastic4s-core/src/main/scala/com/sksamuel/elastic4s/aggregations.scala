@@ -108,7 +108,7 @@ trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggrega
   }
 }
 
-class MissingAggregationDefinition(name: String)
+case class MissingAggregationDefinition(name: String)
   extends AggregationDefinition[MissingAggregationDefinition, MissingBuilder] {
   val aggregationBuilder = AggregationBuilders.missing(name)
 
