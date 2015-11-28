@@ -8,7 +8,7 @@
                 }
             },
             "parent_type": "sometype",
-            "score_type": "type",
+            "score_mode": "type",
             "boost": 1.2
         }
     }

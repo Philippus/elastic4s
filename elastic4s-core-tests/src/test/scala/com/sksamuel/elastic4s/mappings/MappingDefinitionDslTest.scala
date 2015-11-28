@@ -32,6 +32,11 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
       val output = mapping.build.string()
       output should not include "date"
     }
+    "allow _id to be set to not_analyzed" in {
+      val _mapping = mapping("testy").id(IdField("not_analyzed"))
+      val output = _mapping.build.string()
+      output should include("""{"_id":{"index":"not_analyzed"}}""")
+    }
     "insert date detection when set to true" in {
       val mapping = new MappingDefinition("type").dateDetection(true)
       val output = mapping.build.string()

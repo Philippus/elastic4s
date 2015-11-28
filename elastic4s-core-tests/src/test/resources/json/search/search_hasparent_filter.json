@@ -7,7 +7,7 @@
         }
       },
       "parent_type": "singer",
-      "score_type": "scoreType",
+      "score_mode": "scoreType",
       "boost": 2.3,
       "_name": "spidername"
     }

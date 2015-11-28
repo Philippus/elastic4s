@@ -38,6 +38,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_test4.json")
   }
 
+  it should "use terminateAfter when specified" in {
+    val req = search in "*" types("users", "tweets") terminateAfter 5 query "coldplay"
+    req.show should matchJsonResource("/json/search/search_test_terminate_after.json")
+  }
+
   it should "use fetchSource when specified" in {
     val req = search in "*" types("users", "tweets") fetchSource false query "coldplay"
     req.show should matchJsonResource("/json/search/search_test_fetch_source.json")
@@ -184,7 +189,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search in "*" types("users", "tweets") limit 5 query {
       hasChildQuery("sometype") query {
         "coldplay"
-      } boost 1.2 scoreType "type"
+      } boost 1.2 scoreMode "type"
     } searchType SearchType.QueryThenFetch
     req.show should matchJsonResource("/json/search/search_haschild_query.json")
   }
