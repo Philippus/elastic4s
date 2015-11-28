@@ -94,12 +94,12 @@ trait ElasticDsl
 
   case object clear {
     def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
-    def cache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
+    def cache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
     def scroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
     def scroll(ids: Iterable[String]): ClearScrollDefinition = clearScroll(ids)
   }
 
-  def clearCache(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
+  def clearCache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
   def clearCache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
   def clearIndex(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)

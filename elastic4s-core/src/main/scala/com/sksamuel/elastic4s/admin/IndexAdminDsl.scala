@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.{Executable, Indexes}
 import org.elasticsearch.action.ShardOperationFailedException
-import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
+import org.elasticsearch.action.admin.indices.cache.clear.{ClearIndicesCacheRequestBuilder, ClearIndicesCacheResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexResponse
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
@@ -11,6 +11,7 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
 import org.elasticsearch.action.admin.indices.stats.{IndexStats, CommonStats, IndicesStatsResponse}
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.cluster.routing.ShardRouting
 import org.elasticsearch.index.engine.Segment
@@ -65,7 +66,7 @@ trait IndexAdminDsl {
   implicit object ClearIndicesCacheResponseExecutable
     extends Executable[ClearCacheDefinition, ClearIndicesCacheResponse, ClearIndicesCacheResponse] {
     override def apply(c: Client, t: ClearCacheDefinition): Future[ClearIndicesCacheResponse] = {
-      injectFuture(c.admin.indices.prepareClearCache(t.indexes: _*).execute)
+      injectFuture(t.build(c.admin.indices.prepareClearCache(t.indexes: _*)).execute)
     }
   }
 
@@ -90,7 +91,28 @@ case class GetSegmentsDefinition(indexes: Indexes)
 case class IndexExistsDefinition(indexes: Seq[String])
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
 case class IndicesStatsDefinition(indexes: Indexes)
-case class ClearCacheDefinition(indexes: Seq[String])
+
+case class ClearCacheDefinition(indexes: Seq[String],
+                                fieldDataCache: Option[Boolean] = None,
+                                requestCache: Option[Boolean] = None,
+                                indicesOptions: Option[IndicesOptions] = None,
+                                queryCache: Option[Boolean] = None,
+                                indices: Seq[String] = Nil,
+                                fields: Seq[String] = Nil) {
+
+  def build(builder: ClearIndicesCacheRequestBuilder): ClearIndicesCacheRequestBuilder = {
+    fieldDataCache.foreach(builder.setFieldDataCache)
+    if (fields.nonEmpty)
+      builder.setFields(fields: _*)
+    if (indices.nonEmpty)
+      builder.setFields(indices: _*)
+    requestCache.foreach(builder.setRequestCache)
+    queryCache.foreach(builder.setQueryCache)
+    indicesOptions.foreach(builder.setIndicesOptions)
+    builder
+  }
+}
+
 case class FlushIndexDefinition(indexes: Seq[String])
 case class RefreshIndexDefinition(indexes: Seq[String])
 
