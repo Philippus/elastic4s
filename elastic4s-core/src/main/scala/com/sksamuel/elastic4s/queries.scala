@@ -171,6 +171,12 @@ class BoolQueryDefinition extends QueryDefinition {
     this
   }
 
+  def filter(first: QueryDefinition, rest: QueryDefinition*): this.type = filter(first +: rest)
+  def filter(queries: Iterable[QueryDefinition]): this.type = {
+    queries.foreach(builder filter _.builder)
+    this
+  }
+
   def not(queries: QueryDefinition*): this.type = {
     queries.foreach(builder mustNot _.builder)
     this
@@ -218,10 +224,10 @@ trait QueryDefinition {
 
 case class FunctionScoreQueryDefinition(query: QueryDefinition)
   extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeBoostMode
-    with DefinitionAttributeMaxBoost
-    with DefinitionAttributeScoreMode {
+  with DefinitionAttributeBoost
+  with DefinitionAttributeBoostMode
+  with DefinitionAttributeMaxBoost
+  with DefinitionAttributeScoreMode {
 
   val builder = new FunctionScoreQueryBuilder(query.builder)
   val _builder = builder
@@ -237,8 +243,8 @@ case class FunctionScoreQueryDefinition(query: QueryDefinition)
 
 case class FuzzyQueryDefinition(field: String, termValue: Any)
   extends MultiTermQueryDefinition
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeBoost {
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.fuzzyQuery(field, termValue.toString)
   val _builder = builder
@@ -378,10 +384,10 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String]) extends QueryDefinit
 
 case class MultiMatchQueryDefinition(text: String)
   extends QueryDefinition
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributeCutoffFrequency {
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributeCutoffFrequency {
 
   val _builder = QueryBuilders.multiMatchQuery(text)
   val builder = _builder
@@ -501,8 +507,8 @@ case class GeoPolygonQueryDefinition(field: String)
 
 case class GeoDistanceQueryDefinition(field: String)
   extends QueryDefinition
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon {
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon {
 
   val builder = QueryBuilders.geoDistanceQuery(field)
   val _builder = builder
@@ -581,13 +587,13 @@ case class GeoBoundingBoxQueryDefinition(field: String)
 
 case class GeoDistanceRangeQueryDefinition(field: String)
   extends QueryDefinition
-    with DefinitionAttributeTo
-    with DefinitionAttributeFrom
-    with DefinitionAttributeLt
-    with DefinitionAttributeGt
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon
-    with DefinitionAttributePoint {
+  with DefinitionAttributeTo
+  with DefinitionAttributeFrom
+  with DefinitionAttributeLt
+  with DefinitionAttributeGt
+  with DefinitionAttributeLat
+  with DefinitionAttributeLon
+  with DefinitionAttributePoint {
 
   val builder = QueryBuilders.geoDistanceRangeQuery(field)
   val _builder = builder
@@ -761,8 +767,8 @@ case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends Q
 
 case class CommonTermsQueryDefinition(name: String, text: String)
   extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeCutoffFrequency {
+  with DefinitionAttributeBoost
+  with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.commonTermsQuery(name, text)
   val _builder = builder
@@ -911,8 +917,8 @@ trait MultiTermQueryDefinition extends QueryDefinition {
 
 case class WildcardQueryDefinition(field: String, query: Any)
   extends QueryDefinition
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeBoost {
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeBoost {
   val builder = QueryBuilders.wildcardQuery(field, query.toString)
   val _builder = builder
 
@@ -924,8 +930,8 @@ case class WildcardQueryDefinition(field: String, query: Any)
 
 case class PrefixQueryDefinition(field: String, prefix: Any)
   extends MultiTermQueryDefinition
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeBoost {
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeBoost {
   val builder = QueryBuilders.prefixQuery(field, prefix.toString)
   val _builder = builder
 
@@ -937,8 +943,8 @@ case class PrefixQueryDefinition(field: String, prefix: Any)
 
 case class RegexQueryDefinition(field: String, regex: Any)
   extends MultiTermQueryDefinition
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeBoost {
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.regexpQuery(field, regex.toString)
   val _builder = builder
@@ -1199,12 +1205,12 @@ case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition 
 
 case class MatchQueryDefinition(field: String, value: Any)
   extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeCutoffFrequency {
+  with DefinitionAttributeBoost
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchQuery(field, value)
   val _builder = builder
@@ -1265,12 +1271,12 @@ case class MatchQueryDefinition(field: String, value: Any)
 
 case class MatchPhrasePrefixDefinition(field: String, value: Any)
   extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeCutoffFrequency {
+  with DefinitionAttributeBoost
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeCutoffFrequency {
 
   def builder = _builder
   val _builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
@@ -1331,12 +1337,12 @@ case class MatchPhrasePrefixDefinition(field: String, value: Any)
 
 case class MatchPhraseDefinition(field: String, value: Any)
   extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeCutoffFrequency {
+  with DefinitionAttributeBoost
+  with DefinitionAttributeFuzziness
+  with DefinitionAttributeFuzzyRewrite
+  with DefinitionAttributePrefixLength
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
   val _builder = builder
@@ -1482,8 +1488,8 @@ case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
 
 case class QueryStringQueryDefinition(query: String)
   extends QueryDefinition
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeBoost {
+  with DefinitionAttributeRewrite
+  with DefinitionAttributeBoost {
 
   val builder = QueryBuilders.queryStringQuery(query)
   val _builder = builder
