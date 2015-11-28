@@ -1209,7 +1209,6 @@ case class MatchQueryDefinition(field: String, value: Any)
   with DefinitionAttributeFuzziness
   with DefinitionAttributeFuzzyRewrite
   with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
   with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchQuery(field, value)
@@ -1275,7 +1274,6 @@ case class MatchPhrasePrefixDefinition(field: String, value: Any)
   with DefinitionAttributeFuzziness
   with DefinitionAttributeFuzzyRewrite
   with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
   with DefinitionAttributeCutoffFrequency {
 
   def builder = _builder
@@ -1341,7 +1339,6 @@ case class MatchPhraseDefinition(field: String, value: Any)
   with DefinitionAttributeFuzziness
   with DefinitionAttributeFuzzyRewrite
   with DefinitionAttributePrefixLength
-  with DefinitionAttributeRewrite
   with DefinitionAttributeCutoffFrequency {
 
   val builder = QueryBuilders.matchPhraseQuery(field, value.toString)

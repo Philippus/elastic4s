@@ -34,7 +34,7 @@ trait DeprecatedElasticDsl {
   }
 
   @deprecated("use optimizeIndex(index)", "1.6.2")
-  def optimize(indexes: String*): OptimizeDefinition = new OptimizeDefinition(indexes.toSeq)
+  def optimize(indexes: String*): ForceMergeDefinition = new ForceMergeDefinition(indexes.toSeq)
 
   @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
   case object shingle {

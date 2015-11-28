@@ -6,7 +6,7 @@ import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 
 /** @author Stephen Samuel */
-class OptimizeDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class ForceMergeDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   // not testing the output of these; they are here just to test the DSL in the client
   client.execute {

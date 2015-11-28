@@ -14,38 +14,38 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait ElasticDsl
   extends IndexDsl
-    with AliasesDsl
-    with AnalyzerDsl
-    with BulkDsl
-    with ClusterDsl
-    with CountDsl
-    with CreateIndexDsl
-    with DeleteIndexDsl
-    with DeleteDsl
-    with FieldStatsDsl
-    with ExplainDsl
-    with GetDsl
-    with IndexAdminDsl
-    with IndexRecoveryDsl
-    with IndexTemplateDsl
-    with MappingDsl
-    with MultiGetDsl
-    with OptimizeDsl
-    with PercolateDsl
-    with ReindexDsl
-    with ScriptDsl
-    with SearchDsl
-    with SettingsDsl
-    with ScoreDsl
-    with ScrollDsl
-    with SnapshotDsl
-    with TermVectorDsl
-    with TokenizerDsl
-    with TokenFilterDsl
-    with UpdateDsl
-    with ValidateDsl
-    with DeprecatedElasticDsl
-    with ElasticImplicits {
+  with AliasesDsl
+  with AnalyzerDsl
+  with BulkDsl
+  with ClusterDsl
+  with CountDsl
+  with CreateIndexDsl
+  with DeleteIndexDsl
+  with DeleteDsl
+  with FieldStatsDsl
+  with ExplainDsl
+  with GetDsl
+  with IndexAdminDsl
+  with IndexRecoveryDsl
+  with IndexTemplateDsl
+  with MappingDsl
+  with MultiGetDsl
+  with ForceMergeDsl
+  with PercolateDsl
+  with ReindexDsl
+  with ScriptDsl
+  with SearchDsl
+  with SettingsDsl
+  with ScoreDsl
+  with ScrollDsl
+  with SnapshotDsl
+  with TermVectorDsl
+  with TokenizerDsl
+  with TokenFilterDsl
+  with UpdateDsl
+  with ValidateDsl
+  with DeprecatedElasticDsl
+  with ElasticImplicits {
 
   case object add {
     def alias(alias: String): AddAliasExpectsIndex = {
@@ -350,13 +350,21 @@ trait ElasticDsl
   }
   def openIndex(index: String): OpenIndexDefinition = open index index
 
+  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
   case object optimize {
-    def index(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
-    def index(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
+    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
+    def index(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
+    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
+    def index(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
   }
 
-  def optimizeIndex(indexes: String*): OptimizeDefinition = OptimizeDefinition(indexes)
-  def optimizeIndex(indexes: Iterable[String]): OptimizeDefinition = OptimizeDefinition(indexes.toSeq)
+  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
+  def optimizeIndex(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes)
+  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
+  def optimizeIndex(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
+
+  def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)
+  def forceMerge(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
   case object percolate {
     def in(indexType: IndexAndTypes): PercolateDefinition = PercolateDefinition(IndexesAndTypes(indexType))

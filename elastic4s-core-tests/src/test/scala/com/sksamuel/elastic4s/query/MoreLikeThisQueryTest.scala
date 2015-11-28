@@ -37,7 +37,6 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
           moreLikeThisQuery("text") like("coors", "beer", "molson") minTermFreq 1 minDocFreq 1
         }
       }.await
-      println(resp.hits.toList)
       resp.hits.map(_.id) should contain("4")
       resp.hits.map(_.id) should contain("8")
     }
@@ -45,10 +44,9 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
     "find matches based on input items" in {
       val resp = client.execute {
         search in "drinks/beer" query {
-          moreLikeThisQuery("text") like Item("drinks", "beer", "4") minTermFreq 2 minDocFreq 1
+          moreLikeThisQuery("text") like Item("drinks", "beer", "4") minTermFreq 1 minDocFreq 1
         }
       }.await
-      println(resp.hits.toList)
       resp.hits.map(_.id) should contain("8")
     }
   }
