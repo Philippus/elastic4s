@@ -40,6 +40,11 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
+###### 2.1.0
+
+* Rewrite was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
+* Optimize was renamed to ForceMerge. The existing optimize method are deprecated and `forceMerge(indexes*)` has been added in its place.
+
 ###### 2.0.0
 
 Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a PR if I've missed any breaking changes._
@@ -195,45 +200,44 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
 | Cluster health                            | `get cluster health` |
 | Cluster stats                             | `get cluster stats` |
-| [Create Index](guide/createindex.md)      | `create index <name> mappings { mappings block> } [settings]`|
-| [Create Repository](guide/snapshot.md)    | `create repository <repo> type <type> settings <settings>` |
-| [Create Snapshot](guide/snapshot.md)      | `create snapshot <name> in <repo> ...` |
-| Create Template                           | `create template <name> pattern <pattern> mappings {...}` |
+| [Create Index](guide/createindex.md)      | `createIndex(<name>) mappings { mappings block> } [settings]`|
+| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>) type(<type>) settings <settings>` |
+| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>) in <repo> ...` |
+| Create Template                           | `createTemplate(<name>) pattern <pattern> mappings {...}` |
 | [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
 | [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
-| [Delete index](guide/delete.md)           | `delete index <index> [settings]`
-| Delete Mapping                            | `delete mapping <index/type>` |
-| [Delete Snapshot](guide/snapshot.md)      | `delete snapshot <name> in <repo> ...` |
-| Delete Template                           | `delete template <name>` |
+| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`
+| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>) ...` |
+| Delete Template                           | `deleteTemplate(<name>)` |
 | [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
 | Field stats                               | `field stats <indexes>` |
 | Flush Index                               | `flush index <name>` |
 | [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
-| Get Alias                                 | `get alias <name> on <index>` |
-| Get Mapping                               | `get mapping <index> / <type>` |
+| Get Alias                                 | `getAlias(<name>).on(<index>)` |
+| Get Mapping                               | `getMapping(<index> / <type>)` |
 | Get Segments                              | `getSegments(<indexes>)` |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |
 | Get Template                              | `getTemplate(<name>)` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index exists                              | `indexExists(<name>)` |
-| Index Status                              | `index status <index>` |
+| Index Status                              | `indexStatus(<index>)` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search ..., search ..., ...)`|
 | Open index                                | `openIndex(<name>)` |
-| [Optimize](guide/optimize.md)             | `optimize index "indexname" [settings]` |
-| Percolate Doc                             | `percolate in <index> { fields <fieldsblock> }` |
-| Put mapping                               | `put mapping <index> / <type> add { mappings block }` |
-| Recover Index                             | `recover index <name>` |
-| Refresh index                             | `refresh index <name>` |
+| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>*) [settings]` |
+| Percolate Doc                             | `percolateIn(<index>) doc <fieldsblock>` |
+| Put mapping                               | `putMapping(<index> / <type>) add { mappings block }` |
+| Recover Index                             | `recoverIndex(<name>)` |
+| Refresh index                             | `refreshIndex(<name>)` |
 | Register Query                            | `register id <id> into <index> query { <queryblock> }` |
-| [Remove Alias](guide/aliases.md)          | `remove alias "<alias>" on "<index>"` |
+| [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |
 | [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
 | [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
-| Search scroll                             | `search scroll <scrollId>` |
-| Type Exists                               | `types exists <types> in <index>` |
+| Search scroll                             | `searchScroll(<scrollId>)` |
+| Type Exists                               | `typesExists(<types>) in <index>` |
 | [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
-| [Validate](guide/validate.md)             | `validate in <index/type> query <queryblock>` |
+| [Validate](guide/validate.md)             | `validateIn(<index/type>) query <queryblock>` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
