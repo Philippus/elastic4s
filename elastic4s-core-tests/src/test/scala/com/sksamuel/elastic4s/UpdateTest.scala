@@ -2,15 +2,20 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.scalatest.FlatSpec
+import org.scalatest.time.{Seconds, Span}
+import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.concurrent.Eventually
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.duration._
 
+
 /** @author Stephen Samuel */
-class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Eventually with Matchers {
 
   implicit val duration: Duration = 10.seconds
+
+  implicit override val patienceConfig = PatienceConfig(timeout = scaled(Span(5, Seconds)))
 
   client.execute(
     bulk(
@@ -25,26 +30,22 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     client.execute {
       update id 5 in "scifi/startrek" script {
-        script("ctx._source.birthplace = 'iowa'") lang "groovy"
+        script("ctx._source.birthplace = 'iowa'")
       }
     }.await
     refresh("scifi")
 
-    var k = 0
-    var hits = 0l
-    while (k < 10 && hits == 0) {
-      val resp = client.execute {
+    eventually {
+      client.execute {
         search in "scifi" types "startrek" term "birthplace" -> "iowa"
-      }.await
-      hits = resp.totalHits
-      Thread.sleep(k * 200)
-      k = k + 1
+      }.await.totalHits shouldBe 1
     }
-    assert(1 == hits)
   }
 
-  it should "support scala collection in script params" in {
+  it should "support scala seqs in script params" in {
+
     val friends = List("han", "leia")
+
     client.execute {
       update(8).in("scifi/starwars") script {
         script("ctx._source.friends = friends") params Map("friends" -> friends)
@@ -52,17 +53,11 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar {
     }
     refresh("scifi")
 
-    var k = 0
-    var hits = 0l
-    while (k < 10 && hits == 0) {
-      val resp = client.execute {
+    eventually {
+      client.execute {
         search in "scifi" types "starwars" term "friends" -> "leia"
-      }.await
-      hits = resp.totalHits
-      Thread.sleep(k * 200)
-      k = k + 1
+      }.await.totalHits shouldBe 1
     }
-    assert(1 == hits)
   }
 
   it should "support doc based update" in {

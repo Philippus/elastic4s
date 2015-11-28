@@ -420,7 +420,7 @@ case class GeoBoundsAggregationDefinition(name: String)
   }
 
   def script(script: Script): GeoBoundsAggregationDefinition = {
-    aggregationBuilder.script(Script)
+    aggregationBuilder.script(script)
     this
   }
 
@@ -437,14 +437,9 @@ case class GeoBoundsAggregationDefinition(name: String)
 
 
 case class GeoCentroidAggregationDefinition(name: String)
-  extends AggregationDefinition[GeoCentroidAggregationDefinition, GeoCentroidBuilder] {
+  extends ValuesSourceMetricsAggregationDefinition[GeoCentroidAggregationDefinition, GeoCentroidBuilder] {
 
   val aggregationBuilder = AggregationBuilders.geoCentroid(name)
-
-  def field(field: String): GeoCentroidAggregationDefinition = {
-    aggregationBuilder.field(field)
-    this
-  }
 
   def missing(missing: String): GeoCentroidAggregationDefinition = {
     aggregationBuilder.missing(missing)

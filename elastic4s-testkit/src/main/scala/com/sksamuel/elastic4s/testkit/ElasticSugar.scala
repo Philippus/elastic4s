@@ -68,6 +68,7 @@ trait NodeBuilder {
       .put("index.refresh_interval", indexRefresh.toSeconds + "s")
       .put("discovery.zen.ping.multicast.enabled", "false")
       .put("es.logger.level", "INFO")
+      .put("script.groovy.indy", "false")
       .put("cluster.name", getClass.getSimpleName)
     configureSettings(builder)
   }
