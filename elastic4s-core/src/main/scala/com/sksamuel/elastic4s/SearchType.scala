@@ -7,7 +7,8 @@ case object SearchType {
   case object QueryThenFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_THEN_FETCH)
   case object DfsQueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
   case object QueryAndFetch extends SearchType(org.elasticsearch.action.search.SearchType.QUERY_AND_FETCH)
+  @deprecated("All benefits from this search type can now be achieved by doing a scroll request that sorts documents in _doc order", "2.1.0")
   case object Scan extends SearchType(org.elasticsearch.action.search.SearchType.SCAN)
-  @deprecated("does not any improvements compared to {@link #QUERY_THEN_FETCH} with a `size` of {@code 0}", "2.0.0")
+  @deprecated("Does not have any improvement compared to #QUERY_THEN_FETCH with a `size` of  0", "2.0.0")
   case object Count extends SearchType(org.elasticsearch.action.search.SearchType.COUNT)
 }

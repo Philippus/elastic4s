@@ -294,9 +294,17 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String]) extends QueryDefinit
     this
   }
 
-  def ignoreLike(first: String, rest: String*): this.type = ignoreLike(first +: rest)
+  @deprecated("Use unlike", "2.1.0")
+  def ignoreLike(first: String, rest: String*): this.type = unlike(first +: rest)
+  @deprecated("Use unlike", "2.1.0")
   def ignoreLike(likes: Iterable[String]): this.type = {
-    _builder.ignoreLike(likes.toSeq: _*)
+    _builder.unlike(likes.toSeq: _*)
+    this
+  }
+
+  def unlike(first: String, rest: String*): this.type = unlike(first +: rest)
+  def unlike(likes: Iterable[String]): this.type = {
+    _builder.unlike(likes.toSeq: _*)
     this
   }
 
