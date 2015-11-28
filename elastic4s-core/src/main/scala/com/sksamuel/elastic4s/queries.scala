@@ -77,12 +77,8 @@ trait QueryDsl {
 
   def missingQuery(field: String) = MissingQueryDefinition(field)
 
-  def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisRequiresLike = new MoreLikeThisRequiresLike(flds.toSeq)
-  def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisRequiresLike = moreLikeThisQuery(first +: rest)
-
-  class MoreLikeThisRequiresLike(fields: Seq[String]) {
-    def like(text: String, rest: String*) = MoreLikeThisQueryDefinition(fields, text +: rest)
-  }
+  def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisQueryDefinition = MoreLikeThisQueryDefinition(flds.toSeq)
+  def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisQueryDefinition = moreLikeThisQuery(first +: rest)
 
   def nestedQuery(path: String) = new {
     def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
@@ -268,13 +264,33 @@ case class FuzzyQueryDefinition(field: String, termValue: Any)
   }
 }
 
-case class MoreLikeThisQueryDefinition(fields: Seq[String], text: Seq[String]) extends QueryDefinition {
+case class Item(index: String, `type`: String, id: String)
 
-  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*).like(text: _*)
+case class MoreLikeThisQueryDefinition(fields: Seq[String]) extends QueryDefinition {
+
+  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
   val builder = _builder
+
+  def like(first: String, rest: String*): this.type = like(first +: rest)
+  def like(likes: Iterable[String]): this.type = {
+    _builder.like(likes.toSeq: _*)
+    this
+  }
+
+  def like(item: Item, rest: Item*): this.type = like(item +: rest)
+  def like(items: Seq[Item]): this.type = {
+    builder.like(items.map(item => new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id)): _ *)
+    this
+  }
 
   def analyzer(analyser: String): this.type = {
     _builder.analyzer(analyser)
+    this
+  }
+
+  def ignoreLike(first: String, rest: String*): this.type = ignoreLike(first +: rest)
+  def ignoreLike(likes: Iterable[String]): this.type = {
+    _builder.ignoreLike(likes.toSeq: _*)
     this
   }
 

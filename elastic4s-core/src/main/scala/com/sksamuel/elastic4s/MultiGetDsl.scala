@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRefresh}
-import org.elasticsearch.action.get.MultiGetRequest.Item
-import org.elasticsearch.action.get.{GetResponse, MultiGetItemResponse, MultiGetAction, MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse}
+import org.elasticsearch.action.get.{GetResponse, MultiGetAction, MultiGetItemResponse, MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -58,10 +57,10 @@ case class MultiGetDefinition(gets: Iterable[GetDefinition])
   val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
 
   gets foreach { get =>
-    val item = new Item(get.indexTypes.index, get.indexTypes.types.headOption.orNull, get.id)
-    item.routing(get.build.routing())
-    item.fields(get.build.fields(): _*)
-    item.version(get.build.version())
+    val item = new MultiGetRequest.Item(get.indexTypes.index, get.indexTypes.types.headOption.orNull, get.id)
+    item.routing(get.build.routing)
+    item.fields(get.build.fields: _*)
+    item.version(get.build.version)
     _builder.add(item)
   }
 

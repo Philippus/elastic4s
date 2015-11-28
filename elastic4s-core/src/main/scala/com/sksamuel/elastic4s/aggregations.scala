@@ -232,6 +232,7 @@ case class RangeAggregationDefinition(name: String)
 }
 
 case class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
+
   val aggregationBuilder = AggregationBuilders.dateRange(name)
 
   def range(from: String, to: String): DateRangeAggregation = {
