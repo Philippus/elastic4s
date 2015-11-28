@@ -54,8 +54,9 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 2.0.1
  
-* #475 fixed breaking change in terms query
-
+* #473 Added missing "filter" clause from bool query
+* #475 Fixed breaking change in terms query
+* #474 Added "item" likes to more like this query
 
 ###### 2.0.0
 
