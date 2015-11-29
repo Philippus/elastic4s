@@ -133,6 +133,7 @@ trait QueryDsl {
 
   def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
 
+  // -- bool query dsl ---
   def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
   def bool(mustQueries: Seq[QueryDefinition],
            shouldQueries: Seq[QueryDefinition],
@@ -141,6 +142,8 @@ trait QueryDsl {
   }
   def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
+  def filter(first: QueryDefinition, rest:QueryDefinition*): BoolQueryDefinition = filter(first+:rest)
+  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
@@ -1661,6 +1664,7 @@ case class NestedQueryDefinition(path: String,
   def queryName(queryName: String): NestedQueryDefinition = copy(queryName = Option(queryName))
 }
 
+@deprecated("use bool query with a mustNot clause", "2.1.1")
 class NotQueryDefinition(filter: QueryDefinition)
   extends QueryDefinition {
 
