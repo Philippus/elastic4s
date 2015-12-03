@@ -824,6 +824,7 @@ folder. There is no need to configure anything externally.
 * Graphflow
 * Hotel Urbano
 * Immobilien Scout
+* HMRC
 
 _Raise a PR to add your company here_
 
