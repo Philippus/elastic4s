@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.util
 
+import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
@@ -17,9 +18,9 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       client.execute {
         create template "brewery_template" pattern "te*" mappings (
           mapping name "brewery" as (
-            "year_founded" withType StringType
+            "year_founded" withType StringType analyzer "test_analyzer"
             )
-          )
+          ) analysis Seq(StandardAnalyzerDefinition("test_analyzer")) indexSetting("index.cache.query.enable", true)
       }.await
 
       val resp = client.execute {
@@ -28,8 +29,14 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
 
       resp.getIndexTemplates.get(0).name shouldBe "brewery_template"
       resp.getIndexTemplates.get(0).template() shouldBe "te*"
+
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
-      source should include( """"year_founded":{"type":"string"}""")
+
+      source should include( """"year_founded":{"type":"string"""")
+
+      val settings = resp.getIndexTemplates.get(0).getSettings
+      settings.get("index.cache.query.enable") should equal("true")
+
     }
     "apply template to new indexes" in {
 

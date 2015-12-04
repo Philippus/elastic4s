@@ -110,7 +110,6 @@ case class CreateIndexDefinition(name: String) {
     val source = XContentFactory.jsonBuilder().startObject()
 
     if (_settings.settings.nonEmpty || _analysis.nonEmpty) {
-
       source.startObject("settings")
 
       if (_settings.settings.nonEmpty) {
@@ -124,54 +123,7 @@ case class CreateIndexDefinition(name: String) {
         source.endObject()
       }
 
-      _analysis.foreach(analysis => {
-        source.startObject("analysis")
-
-        val charFilterDefinitions = analysis.charFilterDefinitions
-        if (charFilterDefinitions.nonEmpty) {
-          source.startObject("char_filter")
-          charFilterDefinitions.foreach { filter =>
-            source.startObject(filter.name)
-            source.field("type", filter.filterType)
-            filter.build(source)
-            source.endObject()
-          }
-          source.endObject()
-        }
-
-        source.startObject("analyzer")
-        analysis.analyzers.foreach(analyzer => {
-          source.startObject(analyzer.name)
-          analyzer.build(source)
-          source.endObject()
-        })
-        source.endObject()
-
-        val tokenizers = analysis.tokenizers
-        if (tokenizers.nonEmpty) {
-          source.startObject("tokenizer")
-          tokenizers.foreach(tokenizer => {
-            source.startObject(tokenizer.name)
-            tokenizer.build(source)
-            source.endObject()
-          })
-          source.endObject()
-        }
-
-        val tokenFilterDefinitions = analysis.tokenFilterDefinitions
-        if (tokenFilterDefinitions.nonEmpty) {
-          source.startObject("filter")
-          tokenFilterDefinitions.foreach(filter => {
-            source.startObject(filter.name)
-            source.field("type", filter.filterType)
-            filter.build(source)
-            source.endObject()
-          })
-          source.endObject()
-        }
-
-        source.endObject()
-      })
+      _analysis.foreach(_.build(source))
 
       source.endObject() // end settings
     }
@@ -210,4 +162,53 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition]) {
     }.flatMap(_.filters).collect {
       case char: CharFilterDefinition => char
     }
+
+  private[elastic4s] def build(source: XContentBuilder) {
+    source.startObject("analysis")
+
+    val charFilterDefinitions = this.charFilterDefinitions
+    if (charFilterDefinitions.nonEmpty) {
+      source.startObject("char_filter")
+      charFilterDefinitions.foreach { filter =>
+        source.startObject(filter.name)
+        source.field("type", filter.filterType)
+        filter.build(source)
+        source.endObject()
+      }
+      source.endObject()
+    }
+
+    source.startObject("analyzer")
+    analyzers.foreach(analyzer => {
+      source.startObject(analyzer.name)
+      analyzer.build(source)
+      source.endObject()
+    })
+    source.endObject()
+
+    val tokenizers = this.tokenizers
+    if (tokenizers.nonEmpty) {
+      source.startObject("tokenizer")
+      tokenizers.foreach(tokenizer => {
+        source.startObject(tokenizer.name)
+        tokenizer.build(source)
+        source.endObject()
+      })
+      source.endObject()
+    }
+
+    val tokenFilterDefinitions = this.tokenFilterDefinitions
+    if (tokenFilterDefinitions.nonEmpty) {
+      source.startObject("filter")
+      tokenFilterDefinitions.foreach(filter => {
+        source.startObject(filter.name)
+        source.field("type", filter.filterType)
+        filter.build(source)
+        source.endObject()
+      })
+      source.endObject()
+    }
+
+    source.endObject()
+  }
 }

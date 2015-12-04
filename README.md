@@ -217,7 +217,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Create Index](guide/createindex.md)      | `createIndex(<name>) mappings { mappings block> } [settings]`|
 | [Create Repository](guide/snapshot.md)    | `createRepository(<repo>) type(<type>) settings <settings>` |
 | [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>) in <repo> ...` |
-| Create Template                           | `createTemplate(<name>) pattern <pattern> mappings {...}` |
+| Create Template                           | `createTemplate(<name>) pattern <pattern> mappings {...} [settings]`|
 | [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
 | [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
 | [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`

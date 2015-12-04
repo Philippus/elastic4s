@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
 import com.sksamuel.elastic4s.mappings.MappingDefinition
-import com.sksamuel.elastic4s.{Executable, ProxyClients}
+import com.sksamuel.elastic4s.{IndexSettings, AnalysisDefinition, Executable, ProxyClients}
 import org.elasticsearch.action.admin.indices.template.delete.{DeleteIndexTemplateAction, DeleteIndexTemplateRequest, DeleteIndexTemplateRequestBuilder, DeleteIndexTemplateResponse}
 import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesAction, GetIndexTemplatesRequest, GetIndexTemplatesRequestBuilder, GetIndexTemplatesResponse}
 import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateAction, PutIndexTemplateRequest, PutIndexTemplateRequestBuilder, PutIndexTemplateResponse}
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -19,10 +21,25 @@ trait IndexTemplateDsl {
   implicit object CreateIndexTemplateDefinitionExecutable
     extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
+      import t._
+
       val req = c.admin.indices.preparePutTemplate(t.name).setTemplate(t.pattern)
-      t._mappings.foreach(mapping => {
+      _mappings.foreach(mapping => {
         req.addMapping(mapping.`type`, mapping.buildWithName)
       })
+
+      if (_settings.settings.nonEmpty || _analysis.nonEmpty) {
+        val source = XContentFactory.jsonBuilder().startObject()
+
+        _settings.settings foreach { p => source.field(p._1, p._2) }
+
+        _analysis.foreach(_.build(source))
+
+        source.endObject() 
+
+        req.setSettings(source.string())
+      }
+
       injectFuture(req.execute)
     }
   }
@@ -45,19 +62,24 @@ trait IndexTemplateDsl {
 case class CreateIndexTemplateDefinition(name: String, pattern: String) {
 
   val _mappings = new ListBuffer[MappingDefinition]
+  var _analysis: Option[AnalysisDefinition] = None
+  val _settings = new IndexSettings
+
   val _builder = new PutIndexTemplateRequestBuilder(ProxyClients.indices, PutIndexTemplateAction.INSTANCE, name)
     .setTemplate(pattern)
 
-  def build: PutIndexTemplateRequest = {
-    for ( mapping <- _mappings ) {
-      _builder.addMapping(mapping.`type`, mapping.build)
-    }
-    println(_builder.request().mappings)
-    _builder.request
-  }
-
   def mappings(mappings: MappingDefinition*): this.type = {
     _mappings appendAll mappings
+    this
+  }
+
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): this.type = {
+    _analysis = Some(new AnalysisDefinition(analyzers))
+    this
+  }
+
+  def indexSetting(name: String, value: Any): this.type = {
+    _settings.settings += name -> value
     this
   }
 }
