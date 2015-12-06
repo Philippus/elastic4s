@@ -48,6 +48,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
     this
   }
 
+  def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = {
+    _builder.setDoc(indexable.json(t))
+    this
+  }
+
   def doc(fields: (String, Any)*): this.type = doc(fields.toMap)
   def doc(iterable: Iterable[(String, Any)]): this.type = doc(iterable.toMap)
   def doc(map: Map[String, Any]): this.type = {
@@ -62,6 +67,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
 
   def doc(value: FieldValue): this.type = {
     _builder.setDoc(_fieldsAsXContent(Seq(value)))
+    this
+  }
+
+  def docAsUpsert[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = {
+    _builder.setDoc(indexable.json(t))
     this
   }
 
