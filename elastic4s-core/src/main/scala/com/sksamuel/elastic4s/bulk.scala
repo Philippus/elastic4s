@@ -21,23 +21,10 @@ trait BulkDsl {
   def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = new BulkDefinition(requests.toSeq)
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
-  implicit object BulkCompatibleDefinitionExecutable
-    extends Executable[Seq[BulkCompatibleDefinition], BulkResponse, BulkResult] {
-    override def apply(c: Client, ts: Seq[BulkCompatibleDefinition]): Future[BulkResult] = {
-      val bulk = c.prepareBulk()
-      ts.foreach {
-        case index: IndexDefinition => bulk.add(index.build)
-        case delete: DeleteByIdDefinition => bulk.add(delete.build)
-        case update: UpdateDefinition => bulk.add(update.build)
-      }
-      injectFutureAndMap(bulk.execute)(BulkResult.apply)
-    }
-  }
-
   implicit object BulkDefinitionExecutable
-    extends Executable[BulkDefinition, BulkResponse, BulkResponse] {
-    override def apply(c: Client, t: BulkDefinition): Future[BulkResponse] = {
-      injectFuture(c.bulk(t.build, _))
+    extends Executable[BulkDefinition, BulkResponse, BulkResult] {
+    override def apply(c: Client, t: BulkDefinition): Future[BulkResult] = {
+      injectFutureAndMap(c.bulk(t.build, _))(BulkResult.apply)
     }
   }
 }
