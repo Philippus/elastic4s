@@ -21,32 +21,15 @@ trait BulkDsl {
   def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = new BulkDefinition(requests.toSeq)
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
-  implicit object BulkCompatibleDefinitionExecutable
-    extends Executable[Seq[BulkCompatibleDefinition], BulkResponse, BulkResult] {
-    override def apply(c: Client, ts: Seq[BulkCompatibleDefinition]): Future[BulkResult] = {
-      val bulk = c.prepareBulk()
-      ts.foreach {
-        case index: IndexDefinition => bulk.add(index.build)
-        case delete: DeleteByIdDefinition => bulk.add(delete.build)
-        case update: UpdateDefinition => bulk.add(update.build)
-      }
-      injectFutureAndMap(bulk.execute)(BulkResult.apply)
-    }
-  }
-
   implicit object BulkDefinitionExecutable
-    extends Executable[BulkDefinition, BulkResponse, BulkResponse] {
-    override def apply(c: Client, t: BulkDefinition): Future[BulkResponse] = {
-      injectFuture(c.bulk(t.build, _))
+    extends Executable[BulkDefinition, BulkResponse, BulkResult] {
+    override def apply(c: Client, t: BulkDefinition): Future[BulkResult] = {
+      injectFutureAndMap(c.bulk(t.build, _))(BulkResult.apply)
     }
   }
 }
 
 case class BulkResult(original: BulkResponse) {
-
-  import scala.concurrent.duration._
-
-  def buildFailureMessage: String = original.buildFailureMessage
 
   @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
   def getItems = original.getItems
@@ -54,16 +37,21 @@ case class BulkResult(original: BulkResponse) {
   @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
   def getTook: TimeValue = original.getTook
 
-  def took: FiniteDuration = original.getTook.millis.millis
+  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
+  def iterator = original.iterator()
 
   @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
   def getTookInMillis: Long = original.getTookInMillis
 
-  def hasFailures: Boolean = original.hasFailures
-
   @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def iterator = original.iterator()
+  def buildFailureMessage: String = original.buildFailureMessage
 
+
+  import scala.concurrent.duration._
+
+  def failureMessage: String = original.buildFailureMessage
+  def took: FiniteDuration = original.getTook.millis.millis
+  def hasFailures: Boolean = original.hasFailures
   def items: Seq[BulkItemResult] = original.getItems.map(BulkItemResult.apply)
   def failures: Seq[BulkItemResult] = items.filter(_.isFailure)
   def successes: Seq[BulkItemResult] = items.filterNot(_.isFailure)

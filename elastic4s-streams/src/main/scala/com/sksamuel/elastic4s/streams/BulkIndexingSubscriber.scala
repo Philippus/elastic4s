@@ -167,8 +167,8 @@ class BulkActor[T](client: ElasticClient,
     def send(req: BulkDefinition): Unit = {
       client.execute(req).onComplete {
         case Failure(e) => self ! e
-        case Success(resp) if resp.hasFailures => send(req)
-        case Success(resp) => self ! resp
+        case Success(resp: BulkResult) if resp.hasFailures => send(req)
+        case Success(resp: BulkResult) => self ! resp
       }
     }
     val defs = buffer.map(t => builder.request(t))
