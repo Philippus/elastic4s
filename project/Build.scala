@@ -4,7 +4,7 @@ import sbt.Keys._
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "2.1.0"
+  val appVersion = "2.1.1"
 
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
