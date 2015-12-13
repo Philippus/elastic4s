@@ -593,4 +593,42 @@ object attributes {
     }
   }
 
+  trait AttributeIncludeInRoot extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _includeInRoot: Option[String] = None
+
+    def includeInRoot(includeInRoot: YesNo): this.type = {
+      _includeInRoot = Some(includeInRoot.value)
+      this
+    }
+
+    def includeInRoot(param: Boolean): this.type = {
+      includeInRoot(YesNo(param))
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _includeInRoot.foreach(source.field("include_in_root", _))
+    }
+  }
+
+  trait AttributeIncludeInParent extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _includeInParent: Option[String] = None
+
+    def includeInParent(includeInParent: YesNo): this.type = {
+      _includeInParent = Some(includeInParent.value)
+      this
+    }
+
+    def includeInParent(param: Boolean): this.type = {
+      includeInParent(YesNo(param))
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _includeInParent.foreach(source.field("include_in_parent", _))
+    }
+  }
+
 }

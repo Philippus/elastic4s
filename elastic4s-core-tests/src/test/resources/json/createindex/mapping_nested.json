@@ -38,6 +38,8 @@
                 },
                 "user": {
                     "type": "nested",
+                    "include_in_root": "yes",
+                    "include_in_parent": "yes",
                     "properties": {
                         "name": {
                             "type": "string"
