@@ -593,4 +593,23 @@ object attributes {
     }
   }
 
+  trait AttributeIncludeInRoot extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _includeInRoot: Option[String] = None
+
+    def includeInRoot(includeInRoot: YesNo): this.type = {
+      _includeInRoot = Some(includeInRoot.value)
+      this
+    }
+
+    def includeInRoot(param: Boolean): this.type = {
+      includeInRoot(YesNo(param))
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _includeInRoot.foreach(source.field("include_in_root", _))
+    }
+  }
+
 }

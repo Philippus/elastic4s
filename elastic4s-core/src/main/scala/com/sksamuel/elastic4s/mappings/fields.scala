@@ -73,7 +73,8 @@ abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends
 
 /** @author Fehmi Can Saglam */
 final class NestedFieldDefinition(name: String)
-  extends TypedFieldDefinition(NestedType, name) {
+  extends TypedFieldDefinition(NestedType, name)
+  with AttributeIncludeInRoot {
 
   var _fields: Seq[TypedFieldDefinition] = Nil
 
@@ -87,6 +88,7 @@ final class NestedFieldDefinition(name: String)
       source.startObject(name)
 
     insertType(source)
+    super[AttributeIncludeInRoot].insert(source)
     source.startObject("properties")
     for ( field <- _fields ) {
       field.build(source)
