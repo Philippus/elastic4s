@@ -612,4 +612,23 @@ object attributes {
     }
   }
 
+  trait AttributeIncludeInParent extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _includeInParent: Option[String] = None
+
+    def includeInParent(includeInParent: YesNo): this.type = {
+      _includeInParent = Some(includeInParent.value)
+      this
+    }
+
+    def includeInParent(param: Boolean): this.type = {
+      includeInParent(YesNo(param))
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _includeInParent.foreach(source.field("include_in_parent", _))
+    }
+  }
+
 }
