@@ -153,7 +153,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           "last" nested {
             "lastLogin" typed DateType
           }
-          )
+          ) includeInRoot(true) includeInParent(true)
         ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_nested.json")
