@@ -13,7 +13,7 @@ trait GetDsl extends IndexesTypesDsl {
 
   class GetWithIdExpectsFrom(id: String) {
     def from(index: IndexesTypes): GetDefinition = new GetDefinition(index, id)
-    def from(index: IndexType): GetDefinition = new GetDefinition(index.index, id)
+    def from(index: IndexType): GetDefinition = new GetDefinition(IndexesTypes(index), id)
     def from(index: String, `type`: String): GetDefinition = from(IndexesTypes(index, `type`))
     def from(index: String): GetDefinition = new GetDefinition(index, id)
   }
