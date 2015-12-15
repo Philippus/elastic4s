@@ -58,4 +58,9 @@ class GetDslTest extends FlatSpec with Matchers with ElasticSugar {
     assert(req.build.routing() === "whosyour")
   }
 
+  it should "accept indextype" in {
+    val req = get id 123 from "places" / "cities"
+    assert(req.build.index() === "places")
+    assert(req.build.`type`() === "cities")
+  }
 }
