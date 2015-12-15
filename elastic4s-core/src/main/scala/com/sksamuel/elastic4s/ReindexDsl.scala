@@ -9,7 +9,8 @@ case class ReindexDefinition(sourceIndex: String,
                              targetIndex: String,
                              chunkSize: Int = 500,
                              keepAlive: String = "5m",
-                             preserveId: Boolean = true)(implicit val executor: ExecutionContext)
+                             preserveId: Boolean = true,
+                             selector:QueryDefinition = ElasticDsl.matchAllQuery)(implicit val executor: ExecutionContext)
 
 trait ReindexDsl {
 
@@ -20,7 +21,7 @@ trait ReindexDsl {
       import d.executor
 
       val query = {
-        search in d.sourceIndex limit d.chunkSize scroll d.keepAlive searchType SearchType.Scan query matchAllQuery
+        search in d.sourceIndex limit d.chunkSize scroll d.keepAlive searchType SearchType.Scan query d.selector
       }
 
       SearchDefinitionExecutable.apply(client, query) flatMap { response =>
