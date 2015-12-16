@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.analyzers.KeywordAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
-import org.elasticsearch.search.aggregations.bucket.range.InternalRange
-import org.elasticsearch.search.aggregations.bucket.range.InternalRange.Bucket
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
@@ -14,7 +14,8 @@ import org.elasticsearch.search.aggregations.metrics.min.InternalMin
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
 import org.scalatest.{FreeSpec, Matchers}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+
+import scala.collection.JavaConverters._
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
 
@@ -60,6 +61,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       agg.getBucketByKey("lawyer").getDocCount shouldBe 1
       agg.getBucketByKey("heavy").getDocCount shouldBe 2
     }
+
     "should only include matching documents in the query" in {
       val resp = client.execute {
         // should match 3 documents
@@ -176,6 +178,42 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       aggs.getValue shouldBe 10
     }
   }
+
+  "histogram aggregation" - {
+    "should histogram by field" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation histogram "h" field "age" interval 10
+        }
+      }.await
+      resp.totalHits shouldBe 10
+
+      val buckets = resp.aggregations.get[Histogram]("h").getBuckets.asScala
+      buckets.size shouldBe 5
+      buckets.find(_.getKey == 20).get.getDocCount shouldBe 1
+      buckets.find(_.getKey == 30).get.getDocCount shouldBe 1
+      buckets.find(_.getKey == 40).get.getDocCount shouldBe 3
+      buckets.find(_.getKey == 50).get.getDocCount shouldBe 4
+      buckets.find(_.getKey == 60).get.getDocCount shouldBe 1
+    }
+
+    "should use offset" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation histogram "h" field "age" interval 10 offset 5
+        }
+      }.await
+      resp.totalHits shouldBe 10
+
+      val buckets = resp.aggregations.get[Histogram]("h").getBuckets.asScala
+      buckets.size shouldBe 4
+      buckets.find(_.getKey == 25).get.getDocCount shouldBe 2
+      buckets.find(_.getKey == 35).get.getDocCount shouldBe 2
+      buckets.find(_.getKey == 45).get.getDocCount shouldBe 3
+      buckets.find(_.getKey == 55).get.getDocCount shouldBe 3
+    }
+  }
+
 //  "range aggregation" - {
   //    "should range by field" in {
   //      val resp = client.execute {
