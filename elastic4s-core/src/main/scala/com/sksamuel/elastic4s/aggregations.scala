@@ -15,6 +15,7 @@ import org.elasticsearch.search.aggregations.bucket.nested.{NestedBuilder, Rever
 import org.elasticsearch.search.aggregations.bucket.range.RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeBuilder
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceBuilder
+import org.elasticsearch.search.aggregations.bucket.range.ipv4.IPv4RangeBuilder
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.ValueType
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsBuilder}
@@ -99,6 +100,22 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
   }
 }
 
+trait ValuesSourceAggregationDefinition[+Self <: ValuesSourceAggregationDefinition[Self, B], B <: ValuesSourceAggregationBuilder[B]]
+  extends AggregationDefinition[Self, B] {
+  self: Self =>
+
+  def field(field: String): Self = {
+    builder.field(field)
+    this
+  }
+
+  def script(script: ScriptDefinition): Self = {
+    builder.script(script.toJavaAPI)
+    this
+  }
+}
+
+
 
 trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggregationDefinition[Self]]
   extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
@@ -137,15 +154,9 @@ case class MissingAggregationDefinition(name: String)
 
 
 case class TermAggregationDefinition(name: String)
-  extends AggregationDefinition[TermAggregationDefinition, TermsBuilder] {
+  extends ValuesSourceAggregationDefinition[TermAggregationDefinition, TermsBuilder] {
 
   val aggregationBuilder = AggregationBuilders.terms(name)
-  //def builder = builder
-
-  def script(script: ScriptDefinition): TermAggregationDefinition = {
-    builder.script(script.toJavaAPI)
-    this
-  }
 
   def size(size: Int): TermAggregationDefinition = {
     builder.size(size)
@@ -177,16 +188,6 @@ case class TermAggregationDefinition(name: String)
     this
   }
 
-  def field(field: String): TermAggregationDefinition = {
-    builder.field(field)
-    this
-  }
-
-  def script(script: String): TermAggregationDefinition = {
-    builder.script(new Script(script))
-    this
-  }
-
   def shardSize(shardSize: Int): TermAggregationDefinition = {
     builder.shardSize(shardSize)
     this
@@ -205,7 +206,7 @@ case class TermAggregationDefinition(name: String)
 
 
 case class RangeAggregationDefinition(name: String)
-  extends AggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
+  extends ValuesSourceAggregationDefinition[RangeAggregationDefinition, RangeBuilder] {
   val aggregationBuilder = AggregationBuilders.range(name)
 
   def range(from: Double, to: Double): RangeAggregationDefinition = {
@@ -243,15 +244,10 @@ case class RangeAggregationDefinition(name: String)
     builder.addRange(key, from, to)
     this
   }
-
-  def field(field: String): RangeAggregationDefinition = {
-    builder.field(field)
-    this
-  }
 }
 
 
-case class DateRangeAggregation(name: String) extends AggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
+case class DateRangeAggregation(name: String) extends ValuesSourceAggregationDefinition[DateRangeAggregation, DateRangeBuilder] {
 
   val aggregationBuilder = AggregationBuilders.dateRange(name)
 
@@ -272,11 +268,6 @@ case class DateRangeAggregation(name: String) extends AggregationDefinition[Date
 
   def range(key: String, from: Long, to: Long): DateRangeAggregation = {
     builder.addRange(key, from, to)
-    this
-  }
-
-  def field(field: String): DateRangeAggregation = {
-    builder.field(field)
     this
   }
 
@@ -318,29 +309,39 @@ case class ChildrenAggregationDefinition(name: String)
 }
 
 
-case class HistogramAggregation(name: String) extends AggregationDefinition[HistogramAggregation, HistogramBuilder] {
+case class HistogramAggregation(name: String) extends ValuesSourceAggregationDefinition[HistogramAggregation, HistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.histogram(name)
-
-  def field(field: String): HistogramAggregation = {
-    builder.field(field)
-    this
-  }
 
   def interval(interval: Long): HistogramAggregation = {
     builder.interval(interval)
+    this
+  }
+
+  def offset(offset: Long): HistogramAggregation = {
+    builder.offset(offset)
+    this
+  }
+
+  def order(order: Histogram.Order): HistogramAggregation = {
+    builder.order(order)
+    this
+  }
+
+  def minDocCount(minDocCount: Long): HistogramAggregation = {
+    builder.minDocCount(minDocCount)
+    this
+  }
+
+  def extendedBounds(min: Long, max: Long): HistogramAggregation = {
+    builder.extendedBounds(min, max)
     this
   }
 }
 
 
 case class DateHistogramAggregation(name: String)
-  extends AggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
+  extends ValuesSourceAggregationDefinition[DateHistogramAggregation, DateHistogramBuilder] {
   val aggregationBuilder = AggregationBuilders.dateHistogram(name)
-
-  def field(field: String): DateHistogramAggregation = {
-    builder.field(field)
-    this
-  }
 
   def extendedBounds(minMax: (String, String)): DateHistogramAggregation = {
     builder.extendedBounds(minMax._1, minMax._2)
@@ -411,13 +412,8 @@ case class GeoHashGridAggregationDefinition(name: String)
 
 
 case class GeoBoundsAggregationDefinition(name: String)
-  extends AggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
+  extends ValuesSourceAggregationDefinition[GeoBoundsAggregationDefinition, GeoBoundsBuilder] {
   val aggregationBuilder = AggregationBuilders.geoBounds(name)
-
-  def field(field: String): GeoBoundsAggregationDefinition = {
-    builder.field(field)
-    this
-  }
 
   def script(script: Script): GeoBoundsAggregationDefinition = {
     aggregationBuilder.script(script)
@@ -564,9 +560,10 @@ case class SigTermsAggregationDefinition(name: String)
 }
 
 
-case class IpRangeAggregationDefinition(name: String) extends AbstractAggregationDefinition {
+case class IpRangeAggregationDefinition(name: String)
+  extends ValuesSourceAggregationDefinition[IpRangeAggregationDefinition, IPv4RangeBuilder] {
 
-  val builder = AggregationBuilders.ipRange(name)
+  val aggregationBuilder = AggregationBuilders.ipRange(name)
 
   def maskRange(key: String, mask: String): this.type = {
     builder.addMaskRange(key, mask)
