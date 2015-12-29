@@ -167,7 +167,7 @@ class BulkActor[T](client: ElasticClient,
     def send(req: BulkDefinition): Unit = {
       client.execute(req).onComplete {
         case Failure(e) => self ! e
-        case Success(resp: BulkResult) if resp.hasFailures => send(req)
+        case Success(resp: BulkResult) if resp.hasFailures => self ! new HasFailuresException("Bulk request has failures.", resp)
         case Success(resp: BulkResult) => self ! resp
       }
     }
