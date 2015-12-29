@@ -1,0 +1,17 @@
+{
+    "size": 5,
+    "query": {
+        "bool": {
+            "must": {
+                "term": {
+                    "title": "Search"
+                }
+            },
+            "filter": {
+                "term": {
+                    "status": "published"
+                }
+            }
+        }
+    }
+}

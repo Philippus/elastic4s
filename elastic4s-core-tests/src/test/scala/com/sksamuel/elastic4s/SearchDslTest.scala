@@ -231,6 +231,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_boolean2.json")
   }
 
+  it should "generate json for a boolean query with filter" in {
+    val req = search in "*" limit 5 query {
+      bool {
+        must(termQuery("title", "Search")) filter(termQuery("status", "published"))
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_boolean_with_filter.json")
+  }
+
   it should "generate json for a match phrase query" in {
     val req = search("*").types("bands", "artists").limit(5).query {
       matchPhraseQuery("name", "coldplay")
