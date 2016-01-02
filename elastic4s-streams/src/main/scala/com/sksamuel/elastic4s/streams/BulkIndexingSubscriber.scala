@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
-import com.sksamuel.elastic4s.{IndexDefinition, DeleteByIdDefinition, BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -48,6 +48,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
 
   override def onSubscribe(s: Subscription): Unit = {
     // rule 1.9 https://github.com/reactive-streams/reactive-streams-jvm#2.5
+    // when the provided Subscriber is null in which case it MUST throw a java.lang.NullPointerException to the caller
     if (s == null) throw new NullPointerException()
     if (actor == null) {
       actor = system.actorOf(
@@ -89,6 +90,8 @@ object BulkActor {
   // signifies that the downstream publisher has completed (NOT that a bulk request has suceeded)
   case object Completed
   case object ForceIndexing
+  case class Result(items: Seq[BulkItemResult])
+  case object Request
 }
 
 class BulkActor[T](client: ElasticClient,
@@ -111,8 +114,12 @@ class BulkActor[T](client: ElasticClient,
 
   private var completed = false
 
-  // total number of elements sent and acknowledge at the elasticsearch cluster level
+  // documents sent and acknowledged at the elasticsearch cluster level but pending confirmation
+  // we need to keep track so we know when we can shutdown
   private var pending: Long = 0l
+
+  // total number of documents requested
+  private var requested: Long = 0l
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
@@ -144,17 +151,20 @@ class BulkActor[T](client: ElasticClient,
       completed = true
       shutdownIfAllAcked()
 
+    case BulkActor.Request =>
+      subscription.request(batchSize)
+      requested = requested + batchSize
+
     case BulkActor.ForceIndexing =>
-      if (pending == 0 && buffer.nonEmpty)
+      if (buffer.nonEmpty)
         index()
 
-    case r: BulkResult =>
-      pending = pending - r.successes.size
-      r.items.foreach(listener.onAck)
+    case BulkActor.Result(items) =>
+      pending = pending - items.size
+      items.foreach(listener.onAck)
       // need to check if we're completed, because if we are then this might be the last pending ack
-      // and if it is, we can shutdown. Otherwise w can set another batch going.
+      // and if it is, we can shutdown.
       if (completed) shutdownIfAllAcked()
-      else subscription.request(batchSize)
 
     case t: T =>
       buffer.append(t)
@@ -189,18 +199,41 @@ class BulkActor[T](client: ElasticClient,
 
   private def index(): Unit = {
     pending = pending + buffer.size
+
+    def bulkDef: BulkDefinition = {
+      val defs = buffer.map(t => builder.request(t))
+      BulkDefinition(defs).refresh(refreshAfterOp)
+    }
+
+    // returns just the requests that failed as a new bulk definition
+    def retryDef(bulk: BulkDefinition, resp: BulkResult): BulkDefinition = {
+      val failureIds = resp.failures.map(_.itemId).toSet
+      val failedReqs = bulk.requests.zipWithIndex.filter { case (_, index) => failureIds.contains(index) }.map(_._1)
+      BulkDefinition(failedReqs).refresh(refreshAfterOp)
+    }
+
     def send(req: BulkDefinition): Unit = {
       client.execute(req).onComplete {
         case Failure(e) => self ! e
-        case Success(resp: BulkResult) if resp.hasFailures => send(req)
+        case Success(resp: BulkResult) =>
+
+          if (resp.hasFailures)
+            send(retryDef(req, resp))
+          // only once the req has no failures can we safely request another batch from our downstream publisher
+          else
+            self ! BulkActor.Request
+
+          if (resp.hasSuccesses)
+            self ! BulkActor.Result(resp.successes)
+
         case Success(resp: BulkResult) => self ! resp
       }
     }
-    val defs = buffer.map(t => builder.request(t))
-    val req = bulk(defs).refresh(refreshAfterOp)
-    send(req)
+
+    send(bulkDef)
     buffer.clear
-    // buffer is now empty so no point scheduling a flush after operation
+
+    // buffer is now empty so no point keeping a scheduled flush after operation
     flushAfterScheduler.foreach(_.cancel)
     flushAfterScheduler = None
   }
