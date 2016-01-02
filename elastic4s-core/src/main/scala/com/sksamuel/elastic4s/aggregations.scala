@@ -317,18 +317,18 @@ case class HistogramAggregation(name: String) extends ValuesSourceAggregationDef
     this
   }
 
-  def offset(offset: Long): HistogramAggregation = {
-    builder.offset(offset)
+  def minDocCount(minDocCount: Long): HistogramAggregation = {
+    builder.minDocCount(minDocCount)
     this
   }
 
-  def order(order: Histogram.Order): HistogramAggregation = {
+  def order(order: Histogram.Order) = {
     builder.order(order)
     this
   }
 
-  def minDocCount(minDocCount: Long): HistogramAggregation = {
-    builder.minDocCount(minDocCount)
+  def offset(offset: Long): HistogramAggregation = {
+    builder.offset(offset)
     this
   }
 
