@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
+import com.sksamuel.elastic4s.{IndexDefinition, DeleteByIdDefinition, BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -24,8 +24,12 @@ import scala.util.{Failure, Success}
  * @param refreshAfterOp if the index should be refreshed after each bulk operation
  * @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
  * @param errorFn a function which is invoked when there is an error
- * @param flushInterval used to schedule periodic bulk indexing. Use it when the publisher will never complete.
- *                     This ensures that all elements are indexed, even if the last batch size is lower than batch size
+ * @param flushInterval used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
+ *                     for a long period of time. It also is used if the publisher will never complete.
+ *                     This ensures that all elements are indexed, even if the last batch size is lower than batch size.
+ * @param flushAfter used to schedule an index if no document has been received within the given duration.
+ *                   Once an index is performed (either by this flush value or because docs arrived in time)
+ *                   the flush after schedule is reset.
  *
  * @tparam T the type of element provided by the publisher this subscriber will subscribe with
  */
@@ -82,6 +86,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
 }
 
 object BulkActor {
+  // signifies that the downstream publisher has completed (NOT that a bulk request has suceeded)
   case object Completed
   case object ForceIndexing
 }
@@ -95,7 +100,8 @@ class BulkActor[T](client: ElasticClient,
                    listener: ResponseListener,
                    completionFn: () => Unit,
                    errorFn: Throwable => Unit,
-                   flushInterval: Option[FiniteDuration] = None) extends Actor {
+                   flushInterval: Option[FiniteDuration] = None,
+                   flushAfter: Option[FiniteDuration] = None) extends Actor {
 
   import ElasticDsl._
   import context.{dispatcher, system}
@@ -105,13 +111,27 @@ class BulkActor[T](client: ElasticClient,
 
   private var completed = false
 
-  // total number of elements sent and acknowledge at the es cluster level
+  // total number of elements sent and acknowledge at the elasticsearch cluster level
   private var pending: Long = 0l
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
-  // we can be stuck at batchSize-1 waiting for the nth message for ages.
-  private val scheduler: Option[Cancellable] = flushInterval.map { interval =>
+  // we can be stuck at batchSize-1 waiting for the nth message to arrive.
+  //
+  // It has been suggested we can use ReceiveTimeout here, but one reason we can't is because BulkResult messages,
+  // will cause the timeout period to be reset, but they shouldn't interfere with the flush interval.
+  private val flushIntervalScheduler: Option[Cancellable] = flushInterval.map { interval =>
     system.scheduler.schedule(interval, interval, self, BulkActor.ForceIndexing)
+  }
+
+  // If flushAfter is specified then after each message, a scheduler is created to force indexing if no documents
+  // are received within the given duration.
+  private var flushAfterScheduler: Option[Cancellable] = None
+
+  private def resetFlushAfterScheduler(): Unit = {
+    flushAfterScheduler.map(_.cancel)
+    flushAfterScheduler = flushAfter.map { interval =>
+      system.scheduler.scheduleOnce(interval, self, BulkActor.ForceIndexing)
+    }
   }
 
   def receive = {
@@ -122,7 +142,6 @@ class BulkActor[T](client: ElasticClient,
       if (buffer.nonEmpty)
         index()
       completed = true
-      scheduler.foreach(_.cancel)
       shutdownIfAllAcked()
 
     case BulkActor.ForceIndexing =>
@@ -139,12 +158,18 @@ class BulkActor[T](client: ElasticClient,
 
     case t: T =>
       buffer.append(t)
-      if (buffer.size == batchSize)
+      if (buffer.size == batchSize) {
         index()
+      } else {
+        resetFlushAfterScheduler()
+      }
   }
 
-  // Stop the scheduler if it exists
-  override def postStop() = scheduler.map(_.cancel())
+  // Stops the schedulers if they exist
+  override def postStop() = {
+    flushIntervalScheduler.map(_.cancel)
+    flushAfterScheduler.map(_.cancel)
+  }
 
   private def shutdownIfAllAcked(): Unit = {
     if (pending == 0) {
@@ -175,6 +200,9 @@ class BulkActor[T](client: ElasticClient,
     val req = bulk(defs).refresh(refreshAfterOp)
     send(req)
     buffer.clear
+    // buffer is now empty so no point scheduling a flush after operation
+    flushAfterScheduler.foreach(_.cancel)
+    flushAfterScheduler = None
   }
 }
 
