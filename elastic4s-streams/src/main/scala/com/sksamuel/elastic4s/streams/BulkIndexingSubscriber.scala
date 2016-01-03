@@ -62,7 +62,7 @@ object BulkActor {
   case object ForceIndexing
   case class Result(items: Seq[BulkItemResult])
   case object Request
-  case class Send(req: BulkDefinition)
+  case class Send(req: BulkDefinition, attempts: Int)
 }
 
 class BulkActor[T](client: ElasticClient,
@@ -129,7 +129,7 @@ class BulkActor[T](client: ElasticClient,
       subscription.request(config.batchSize)
       requested = requested + config.batchSize
 
-    case BulkActor.Send(req) => send(req)
+    case BulkActor.Send(req, attempts) => send(req, attempts)
 
     case BulkActor.ForceIndexing =>
       if (buffer.nonEmpty)
@@ -166,7 +166,7 @@ class BulkActor[T](client: ElasticClient,
     }
   }
 
-  private def send(req: BulkDefinition): Unit = {
+  private def send(req: BulkDefinition, attempts: Int): Unit = {
 
     // returns just requests that failed as a new bulk definition
     def retryDef(resp: BulkResult): BulkDefinition = {
@@ -180,9 +180,13 @@ class BulkActor[T](client: ElasticClient,
       case Success(resp: BulkResult) =>
 
         if (resp.hasFailures) {
+          resp.failures.foreach(config.listener.onFailure)
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
-          system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef(resp)))
+          if (attempts > 0)
+            system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef(resp), attempts - 1))
+          else
+            throw new RuntimeException("Bulk operation failed too many times: " + resp.failureMessage)
         }
 
         if (resp.hasSuccesses)
@@ -207,7 +211,7 @@ class BulkActor[T](client: ElasticClient,
     }
 
     sent = sent + buffer.size
-    self ! BulkActor.Send(bulkDef)
+    self ! BulkActor.Send(bulkDef, config.maxAttempts)
 
     buffer.clear
 
@@ -230,6 +234,7 @@ trait RequestBuilder[T] {
  */
 trait ResponseListener {
   def onAck(resp: BulkItemResult): Unit
+  def onFailure(resp: BulkItemResult): Unit = ()
 }
 
 object ResponseListener {
@@ -245,6 +250,10 @@ object ResponseListener {
 * @param refreshAfterOp if the index should be refreshed after each bulk operation
 * @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
 * @param errorFn a function which is invoked when there is an error
+* @param failureWait the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
+*                    indicating backpressure, so this parameter determines how long to wait between requests.
+* @param maxAttempts the max number of times to try a request. If it fails too many times it probably isn't back pressure
+*                    but an error with the document.
 * @param flushInterval used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
 *                     for a long period of time. It also is used if the publisher will never complete.
 *                     This ensures that all elements are indexed, even if the last batch size is lower than batch size.
@@ -259,5 +268,6 @@ case class SubscriberConfig(batchSize: Int = 100,
                             completionFn: () => Unit = () => (),
                             errorFn: Throwable => Unit = e => (),
                             failureWait: FiniteDuration = 2.seconds,
+                            maxAttempts: Int = 5,
                             flushInterval: Option[FiniteDuration] = None,
                             flushAfter: Option[FiniteDuration] = None)

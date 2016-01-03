@@ -20,7 +20,8 @@ object ReactiveElastic {
                       errorFn: Throwable => Unit = _ => (),
                       flushInterval: Option[FiniteDuration] = None,
                       flushAfter: Option[FiniteDuration] = None,
-                      failureWait: FiniteDuration = 2.seconds)
+                      failureWait: FiniteDuration = 2.seconds,
+                      maxAttempts: Int = 5)
                      (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
       val config = SubscriberConfig(
         batchSize = batchSize,
@@ -31,7 +32,8 @@ object ReactiveElastic {
         errorFn = errorFn,
         failureWait = failureWait,
         flushInterval = flushInterval,
-        flushAfter = flushAfter
+        flushAfter = flushAfter,
+        maxAttempts = maxAttempts
       )
       new BulkIndexingSubscriber[T](client, builder, config)
     }
