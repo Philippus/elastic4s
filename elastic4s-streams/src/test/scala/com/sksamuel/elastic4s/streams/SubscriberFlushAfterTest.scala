@@ -39,6 +39,8 @@ class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar 
       val subscriber = client.subscriber[Spaceship](config)
       SpaceshipPublisher.subscribe(subscriber)
 
+      blockUntilCount(0, "subscriberflushaftertest")
+
       // after the flushAfterDuration, the flush after should have sent the request
       Thread.sleep(flushAfterDuration.toMillis)
       blockUntilCount(1, "subscriberflushaftertest")

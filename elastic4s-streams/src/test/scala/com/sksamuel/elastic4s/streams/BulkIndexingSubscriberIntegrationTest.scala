@@ -3,26 +3,19 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
+import com.sksamuel.elastic4s.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.ElasticDsl.index
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticDsl}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
-import BulkIndexingSubscriberIntegrationTest._
 
 class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers {
 
-  import ElasticDsl._
-  import ElasticJackson.Implicits._
   import ReactiveElastic._
 
   implicit val system = ActorSystem()
-
-  implicit object ShipRequestBuilder extends RequestBuilder[Ship] {
-    override def request(ship: Ship): BulkCompatibleDefinition = {
-      index into "bulkindexsubint" / "ships" source ship
-    }
-  }
+  implicit val builder = ShipRequestBuilder
 
   ensureIndexExists("bulkindexsubint")
 
@@ -34,7 +27,7 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       ShipPublisher.subscribe(subscriber)
       completionLatch.await(5, TimeUnit.SECONDS)
 
-      blockUntilCount(ships.length, "bulkindexsubint")
+      blockUntilCount(Ship.ships.length, "bulkindexsubint")
     }
 
     "index all received data even if the subscriber never completes" in {
@@ -45,12 +38,13 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       val subscriber = client.subscriber[Ship](8, 2, flushInterval = Some(500.millis))
       ShipEndlessPublisher.subscribe(subscriber)
 
-      blockUntilCount(ships.length, "bulkindexsubint")
+      blockUntilCount(Ship.ships.length, "bulkindexsubint")
     }
   }
 }
 
-object BulkIndexingSubscriberIntegrationTest {
+
+object Ship {
 
   val ships = Array(
     Ship("clipper"),
@@ -76,10 +70,19 @@ object BulkIndexingSubscriberIntegrationTest {
 
 }
 
+
+object ShipRequestBuilder extends RequestBuilder[Ship] {
+  import ElasticJackson.Implicits._
+  override def request(ship: Ship): BulkCompatibleDefinition = {
+    index into "bulkindexsubint/ships" source ship
+  }
+}
+
+
 object ShipPublisher extends Publisher[Ship] {
 
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
-    var remaining = ships
+    var remaining = Ship.ships
     s.onSubscribe(new Subscription {
       override def cancel(): Unit = ()
       override def request(n: Long): Unit = {
@@ -92,10 +95,11 @@ object ShipPublisher extends Publisher[Ship] {
   }
 }
 
+
 object ShipEndlessPublisher extends Publisher[Ship] {
 
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
-    var remaining = ships
+    var remaining = Ship.ships
     s.onSubscribe(new Subscription {
       override def cancel(): Unit = ()
       override def request(n: Long): Unit = {
@@ -105,5 +109,6 @@ object ShipEndlessPublisher extends Publisher[Ship] {
     })
   }
 }
+
 
 case class Ship(name: String)
