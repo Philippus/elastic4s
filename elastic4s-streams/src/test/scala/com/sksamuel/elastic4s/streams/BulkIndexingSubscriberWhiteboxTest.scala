@@ -11,7 +11,7 @@ import org.scalatest.testng.TestNGSuiteLike
 
 class BulkIndexingSubscriberWhiteboxTest
   extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
-  with ElasticSugar with TestNGSuiteLike {
+    with ElasticSugar with TestNGSuiteLike {
 
   import ElasticDsl._
 
@@ -33,15 +33,7 @@ class BulkIndexingSubscriberWhiteboxTest
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {
-    new BulkIndexingSubscriber[Item](client,
-      ItemRequestBuilder,
-      ResponseListener.noop,
-      10,
-      2,
-      false,
-      () => (),
-      _ => (),
-      None) {
+    new BulkIndexingSubscriber[Item](client, ItemRequestBuilder, SubscriberConfig()) {
 
       override def onSubscribe(s: Subscription): Unit = {
         super.onSubscribe(s)
