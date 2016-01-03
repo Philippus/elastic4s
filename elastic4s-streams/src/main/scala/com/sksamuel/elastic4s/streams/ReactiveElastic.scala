@@ -8,9 +8,15 @@ import scala.language.implicitConversions
 
 object ReactiveElastic {
 
+
   implicit class ReactiveElastic(client: ElasticClient) {
 
     import ElasticDsl._
+
+    def subscriber[T](config: SubscriberConfig)
+                     (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
+      new BulkIndexingSubscriber[T](client, builder, config)
+    }
 
     def subscriber[T](batchSize: Int = 100,
                       concurrentRequests: Int = 5,
@@ -35,7 +41,7 @@ object ReactiveElastic {
         flushAfter = flushAfter,
         maxAttempts = maxAttempts
       )
-      new BulkIndexingSubscriber[T](client, builder, config)
+      subscriber(config)
     }
 
     def publisher(indexType: IndexAndTypes, elements: Long = Long.MaxValue, keepAlive: String = "1m")
@@ -49,4 +55,6 @@ object ReactiveElastic {
       new ScrollPublisher(client, q, elements)
     }
   }
+
+
 }

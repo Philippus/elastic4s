@@ -61,7 +61,7 @@ object BulkActor {
   case object Completed
   case object ForceIndexing
   case class Result(items: Seq[BulkItemResult])
-  case object Request
+  case class Request(n:Int)
   case class Send(req: BulkDefinition, attempts: Int)
 }
 
@@ -111,7 +111,7 @@ class BulkActor[T](client: ElasticClient,
   // each time we complete a batch
   override def preStart(): Unit = {
     super.preStart()
-    subscription.request(config.batchSize * config.concurrentRequests)
+    self ! BulkActor.Request(config.batchSize * config.concurrentRequests)
   }
 
   def receive = {
@@ -125,9 +125,9 @@ class BulkActor[T](client: ElasticClient,
       completed = true
       shutdownIfAllConfirmed()
 
-    case BulkActor.Request =>
-      subscription.request(config.batchSize)
-      requested = requested + config.batchSize
+    case BulkActor.Request(n) =>
+      subscription.request(n)
+      requested = requested + n
 
     case BulkActor.Send(req, attempts) => send(req, attempts)
 
@@ -141,8 +141,7 @@ class BulkActor[T](client: ElasticClient,
       // need to check if we're completed, because if we are then this might be the last pending conf
       // and if it is, we can shutdown.
       if (completed) shutdownIfAllConfirmed()
-      else if (confirmed - sent >= config.batchSize)
-        self ! BulkActor.Request
+      else self ! BulkActor.Request(items.size)
 
     case t: T =>
       buffer.append(t)

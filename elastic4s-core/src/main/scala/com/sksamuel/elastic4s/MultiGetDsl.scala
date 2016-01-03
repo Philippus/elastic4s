@@ -10,9 +10,9 @@ import scala.concurrent.Future
 trait MultiGetDsl extends GetDsl {
 
   implicit object MultiGetDefinitionExecutable
-    extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResponse] {
-    override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResponse] = {
-      injectFuture(c.multiGet(t.build, _))
+    extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResult] {
+    override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResult] = {
+      injectFutureAndMap(c.multiGet(t.build, _))(MultiGetResult.apply)
     }
   }
 }
@@ -34,7 +34,6 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
 
   @deprecated("use response for a scala friendly Option, or use .original to access the java result", "2.0")
   def getResponse = original.getResponse
-
 
   def getId = original.getId
   def getIndex = original.getIndex
