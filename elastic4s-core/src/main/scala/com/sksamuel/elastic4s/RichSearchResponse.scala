@@ -14,27 +14,19 @@ case class RichSearchResponse(original: SearchResponse) {
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
   def getAggregations = original.getAggregations
 
-  @deprecated("use resp.suggest, or resp.original.getSuggest", "2.0.0")
+  // java aliases
   def getSuggest = original.getSuggest
-
-  @deprecated("use scrollId", "2.0.0")
   def getScrollId: String = original.getScrollId
-
-  @deprecated("use .hits to get scala wrappers, or response.original.getHits to get the raw SearchHits", "2.0.0")
   def getHits: SearchHits = original.getHits
+  def getTook = original.getTook
+  def getTookInMillis = original.getTookInMillis
 
   def totalHits: Long = original.getHits.getTotalHits
   def maxScore: Float = original.getHits.getMaxScore
 
-  @deprecated("use scala idiomatic method returning a duration", "2.0.0")
-  def getTook = original.getTook
-
-  @deprecated("use scala idiomatic method returning a duration", "2.0.0")
-  def getTookInMillis = original.getTookInMillis
-
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
 
-  @deprecated("use readAs[T], which handles errors", "1.6.1")
+  @deprecated("use as[T], which handles errors", "1.6.1")
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
@@ -63,7 +55,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def isTerminatedEarly: Boolean = original.isTerminatedEarly
 }
 
-case class RichSearchHit(hit: SearchHit) {
+case class RichSearchHit(java: SearchHit) {
 
   override def equals(other: Any): Boolean = other match {
     case hit: SearchHit => equals(new RichSearchHit(hit))
@@ -74,71 +66,71 @@ case class RichSearchHit(hit: SearchHit) {
 
   import scala.collection.JavaConverters._
 
-  lazy val id: String = hit.id
-  @deprecated("use id", "2.0.0")
-  lazy val getId: String = hit.getId
+  // java method aliases
+  @deprecated("use .java", "2.1.2")
+  def hit = java
+  def getId: String = java.getId
+  def getIndex: String = index
+  def getType: String = `type`
+  def getVersion: Long = version
+  def getSource = java.getSource
+  def getSourceAsString = java.getSourceAsString
+  def getScore = java.getScore
+  def getShard = java.getShard
 
-  lazy val index: String = hit.index
-  @deprecated("use index", "2.0.0")
-  lazy val getIndex: String = index
+  def id: String = java.id
+  def index: String = java.index
+  def `type`: String = java.`type`()
 
-  lazy val `type`: String = hit.`type`()
-  @deprecated("use `type", "2.0.0")
-  lazy val getType: String = `type`
+  def score: Float = java.score
+  def nestedIdentity: SearchHit.NestedIdentity = java.getNestedIdentity
+  def version: Long = java.version()
+  def shard: SearchShardTarget = java.shard
 
-  lazy val score: Float = hit.score
-  lazy val nestedIdentity: SearchHit.NestedIdentity = hit.getNestedIdentity
-  lazy val version: Long = hit.version()
-  lazy val shard: SearchShardTarget = hit.shard
-
-  lazy val sourceRef: BytesReference = hit.sourceRef()
-  lazy val source: Array[Byte] = Option(hit.source).getOrElse(Array.emptyByteArray)
-  lazy val isSourceEmpty: Boolean = hit.isSourceEmpty
-  lazy val sourceAsString: String = Option(hit.sourceAsString).getOrElse("")
-  def sourceAsMap: Map[String, AnyRef] = Option(hit.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+  def sourceRef: BytesReference = java.sourceRef()
+  def source: Array[Byte] = Option(java.source).getOrElse(Array.emptyByteArray)
+  def isSourceEmpty: Boolean = java.isSourceEmpty
+  def sourceAsString: String = Option(java.sourceAsString).getOrElse("")
+  def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
   @deprecated("use as[T]", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
-  lazy val explanation: Option[Explanation] = Option(hit.explanation)
+  def explanation: Option[Explanation] = Option(java.explanation)
 
-  lazy val fields: Map[String, RichSearchHitField] = {
-    Option(hit.fields).map(_.asScala.toMap.mapValues(RichSearchHitField)).getOrElse(Map.empty)
+  def fields: Map[String, RichSearchHitField] = {
+    Option(java.fields).map(_.asScala.toMap.mapValues(RichSearchHitField)).getOrElse(Map.empty)
   }
 
   def field(fieldName: String): RichSearchHitField = fields(fieldName)
   def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
   def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
 
-  lazy val highlightFields: Map[String, HighlightField] = {
-    Option(hit.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
+  def highlightFields: Map[String, HighlightField] = {
+    Option(java.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
   }
 
-  lazy val sortValues: Array[AnyRef] = Option(hit.sortValues).getOrElse(Array.empty)
-  lazy val matchedQueries: Array[String] = Option(hit.matchedQueries).getOrElse(Array.empty)
-  lazy val innerHits: Map[String, SearchHits] = Option(hit.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
+  def sortValues: Array[AnyRef] = Option(java.sortValues).getOrElse(Array.empty)
+  def matchedQueries: Array[String] = Option(java.matchedQueries).getOrElse(Array.empty)
+  def innerHits: Map[String, SearchHits] = Option(java.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 }
 
-case class RichSearchHitField(value: SearchHitField) extends AnyVal {
+case class RichSearchHitField(java: SearchHitField) extends AnyVal {
 
-  @deprecated("use name", "2.0.0")
+  @deprecated("use .java", "2.1.2")
+  def value = java
+
+  // java method aliases
   def getName: String = name
-
-  @deprecated("use value[V]", "2.0.0")
   def getValue[V]: V = value[V]
-
-  @deprecated("use values", "2.0.0")
   def getValues: Seq[AnyRef] = values
 
   import scala.collection.JavaConverters._
 
-  def name: String = value.name()
-
-  def value[V]: V = value.getValue[V]
-
-  def values: Seq[AnyRef] = value.values().asScala.toList
-
-  def isMetadataField: Boolean = value.isMetadataField
+  def name: String = java.name()
+  def value[V]: V = java.getValue[V]
+  def values: Seq[AnyRef] = java.values().asScala.toList
+  def isMetadataField: Boolean = java.isMetadataField
 }

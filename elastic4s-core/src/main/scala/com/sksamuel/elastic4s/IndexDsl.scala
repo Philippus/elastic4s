@@ -34,15 +34,18 @@ trait IndexDsl {
 }
 
 case class IndexResult(original: IndexResponse) {
+
+  // java method aliases
   def getId = id
-  def id = original.getId
-  def getIndex = index
-  def index = original.getIndex
   def getType = `type`
-  def `type` = original.getType
+  def getIndex = index
   def getVersion = original.getVersion
-  def version: Long = original.getVersion
   def isCreated: Boolean = created
+
+  def id = original.getId
+  def index = original.getIndex
+  def `type` = original.getType
+  def version: Long = original.getVersion
   def created: Boolean = original.isCreated
 }
 

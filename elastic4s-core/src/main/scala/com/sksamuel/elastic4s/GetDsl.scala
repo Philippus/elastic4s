@@ -86,37 +86,31 @@ case class GetDefinition(indexTypes: IndexAndTypes, id: String) {
   }
 }
 
-case class RichGetResponse(original: GetResponse) extends AnyVal {
+case class RichGetResponse(original: GetResponse) {
 
   import scala.collection.JavaConverters._
 
-  @deprecated("use field(name)", "2.0.0")
+  // java method aliases
   def getField(name: String): GetField = field(name)
+  def getFields = original.getFields
+  def getId: String = id
+  def getIndex: String = index
+  def getType: String = `type`
+  def getVersion: Long = version
+
   def field(name: String): GetField = original.getField(name)
   def fieldOpt(name: String): Option[GetField] = Option(field(name))
 
-  @deprecated("use fields", "2.0.0")
-  def getFields = original.getFields
   def fields: Map[String, GetField] = original.getFields.asScala.toMap
 
-  @deprecated("use id", "2.0.0")
-  def getId: String = id
   def id: String = original.getId
-
-  @deprecated("use index", "2.0.0")
-  def getIndex: String = index
   def index: String = original.getIndex
 
   def source = original.getSource
   def sourceAsBytes = original.getSourceAsBytes
   def sourceAsString: String = original.getSourceAsString
 
-  @deprecated("use `type`", "2.0.0")
-  def getType: String = `type`
   def `type`: String = original.getType
-
-  @deprecated("use version", "2.0.0")
-  def getVersion: Long = version
   def version: Long = original.getVersion
 
   def isExists: Boolean = original.isExists
