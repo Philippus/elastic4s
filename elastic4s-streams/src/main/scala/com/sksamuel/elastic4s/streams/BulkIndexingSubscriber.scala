@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.streams
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
+import akka.actor._
 import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
 import org.reactivestreams.{Subscriber, Subscription}
 
@@ -54,16 +54,34 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
   override def onComplete(): Unit = {
     actor ! BulkActor.Completed
   }
+
+  def close(): Unit = {
+    actor ! PoisonPill
+  }
 }
 
+
 object BulkActor {
+
+
   // signifies that the downstream publisher has completed (NOT that a bulk request has suceeded)
   case object Completed
+
+
   case object ForceIndexing
+
+
   case class Result(items: Seq[BulkItemResult])
-  case class Request(n:Int)
+
+
+  case class Request(n: Int)
+
+
   case class Send(req: BulkDefinition, attempts: Int)
+
+
 }
+
 
 class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
@@ -101,7 +119,7 @@ class BulkActor[T](client: ElasticClient,
   private var flushAfterScheduler: Option[Cancellable] = None
 
   private def resetFlushAfterScheduler(): Unit = {
-    flushAfterScheduler.map(_.cancel)
+    flushAfterScheduler.foreach(_.cancel)
     flushAfterScheduler = config.flushAfter.map { interval =>
       system.scheduler.scheduleOnce(interval, self, BulkActor.ForceIndexing)
     }
@@ -110,7 +128,6 @@ class BulkActor[T](client: ElasticClient,
   // requests our initial starting batches, we can request them all at once, and then just request a new batch
   // each time we complete a batch
   override def preStart(): Unit = {
-    super.preStart()
     self ! BulkActor.Request(config.batchSize * config.concurrentRequests)
   }
 
@@ -118,7 +135,7 @@ class BulkActor[T](client: ElasticClient,
     case t: Throwable => handleError(t)
 
     case BulkActor.Completed =>
-      // since we are completed at the publisher level, we should send all remaining documents as a complete
+      // since we are completed at the publisher level, we should send all remaining documents because a complete
       // batch cannot happen now
       if (buffer.nonEmpty)
         index()
@@ -156,11 +173,11 @@ class BulkActor[T](client: ElasticClient,
   override def postStop() = {
     flushIntervalScheduler.map(_.cancel)
     flushAfterScheduler.map(_.cancel)
+    config.completionFn()
   }
 
   private def shutdownIfAllConfirmed(): Unit = {
     if (confirmed == sent) {
-      config.completionFn()
       context.stop(self)
     }
   }
@@ -220,6 +237,7 @@ class BulkActor[T](client: ElasticClient,
   }
 }
 
+
 /**
  * An implementation of this typeclass must provide a bulk compatible request for the given instance of T.
  * @tparam T the type of elements this provider supports
@@ -227,6 +245,7 @@ class BulkActor[T](client: ElasticClient,
 trait RequestBuilder[T] {
   def request(t: T): BulkCompatibleDefinition
 }
+
 
 /**
  * Notified on each acknowledgement
@@ -236,30 +255,32 @@ trait ResponseListener {
   def onFailure(resp: BulkItemResult): Unit = ()
 }
 
+
 object ResponseListener {
   def noop = new ResponseListener {
     override def onAck(resp: BulkItemResult): Unit = ()
   }
 }
 
+
 /**
-* @param listener a listener which is notified on each acknowledge batch item
-* @param batchSize the number of elements to group together per batch aside from the last batch
-* @param concurrentRequests the number of concurrent batch operations
-* @param refreshAfterOp if the index should be refreshed after each bulk operation
-* @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
-* @param errorFn a function which is invoked when there is an error
-* @param failureWait the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
-*                    indicating backpressure, so this parameter determines how long to wait between requests.
-* @param maxAttempts the max number of times to try a request. If it fails too many times it probably isn't back pressure
-*                    but an error with the document.
-* @param flushInterval used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
-*                     for a long period of time. It also is used if the publisher will never complete.
-*                     This ensures that all elements are indexed, even if the last batch size is lower than batch size.
-* @param flushAfter used to schedule an index if no document has been received within the given duration.
-*                   Once an index is performed (either by this flush value or because docs arrived in time)
-*                   the flush after schedule is reset.
-**/
+ * @param listener a listener which is notified on each acknowledge batch item
+ * @param batchSize the number of elements to group together per batch aside from the last batch
+ * @param concurrentRequests the number of concurrent batch operations
+ * @param refreshAfterOp if the index should be refreshed after each bulk operation
+ * @param completionFn a function which is invoked when all sent requests have been acknowledged and the publisher has completed
+ * @param errorFn a function which is invoked when there is an error
+ * @param failureWait the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
+ *                    indicating backpressure, so this parameter determines how long to wait between requests.
+ * @param maxAttempts the max number of times to try a request. If it fails too many times it probably isn't back pressure
+ *                    but an error with the document.
+ * @param flushInterval used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
+ *                      for a long period of time. It also is used if the publisher will never complete.
+ *                      This ensures that all elements are indexed, even if the last batch size is lower than batch size.
+ * @param flushAfter used to schedule an index if no document has been received within the given duration.
+ *                   Once an index is performed (either by this flush value or because docs arrived in time)
+ *                   the flush after schedule is reset.
+ **/
 case class SubscriberConfig(batchSize: Int = 100,
                             concurrentRequests: Int = 5,
                             refreshAfterOp: Boolean = false,

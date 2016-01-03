@@ -85,6 +85,7 @@ trait NodeBuilder {
   def createLocalClient: ElasticClient = ElasticClient.local(settings.build)
 }
 
+
 trait ElasticSugar extends NodeBuilder {
 
   private val logger = LoggerFactory.getLogger(getClass)
@@ -141,6 +142,18 @@ trait ElasticSugar extends NodeBuilder {
       client.execute {
         create index index
       }.await
+  }
+
+  def truncateIndex(index: String): Unit = {
+    client.execute {
+      deleteIndex(index)
+    }.await
+
+    client.execute {
+      createIndex(index)
+    }.await
+
+    blockUntilEmpty(index)
   }
 
   def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
