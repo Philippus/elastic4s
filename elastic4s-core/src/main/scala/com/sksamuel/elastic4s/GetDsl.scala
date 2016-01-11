@@ -101,7 +101,7 @@ case class RichGetResponse(original: GetResponse) {
   def field(name: String): GetField = original.getField(name)
   def fieldOpt(name: String): Option[GetField] = Option(field(name))
 
-  def fields: Map[String, GetField] = original.getFields.asScala.toMap
+  def fields: Map[String, GetField] = Option(original.getFields).fold(Map.empty[String, GetField])(_.asScala.toMap)
 
   def id: String = original.getId
   def index: String = original.getIndex
