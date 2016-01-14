@@ -180,7 +180,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
   }
 
   "histogram aggregation" - {
-    "should histogram by field" in {
+    "should create histogram by field" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
           aggregation histogram "h" field "age" interval 10
@@ -212,22 +212,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       buckets.find(_.getKey == 45).get.getDocCount shouldBe 3
       buckets.find(_.getKey == 55).get.getDocCount shouldBe 3
     }
-    "should create intervals by field" in {
-      val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
-          aggregation histogram "agg1" field "age" interval 10
-        }
-      }.await
-      resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.get[Histogram]("agg1")
-      val buckets = aggs.getBuckets.asScala
-      buckets.size shouldBe 5
-      buckets.find(_.getKey == 20).get.getDocCount shouldBe 1
-      buckets.find(_.getKey == 30).get.getDocCount shouldBe 1
-      buckets.find(_.getKey == 40).get.getDocCount shouldBe 3
-      buckets.find(_.getKey == 50).get.getDocCount shouldBe 4
-      buckets.find(_.getKey == 60).get.getDocCount shouldBe 1
-    }
+    
     "should respect min_doc_count" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
@@ -240,6 +225,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       buckets.find(_.getKey == 40).get.getDocCount shouldBe 3
       buckets.find(_.getKey == 50).get.getDocCount shouldBe 4
     }
+    
     "should respect ordering" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
