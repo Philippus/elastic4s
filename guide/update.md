@@ -33,7 +33,7 @@ operation. Eg,
 
 ```scala
 val resp = client.execute {
-  update 25 in "scifi/starwars" docAsUpsert (
+  update id 25 in "scifi/starwars" docAsUpsert (
     "character" -> "chewie",
     "race" -> "wookie"
   )
