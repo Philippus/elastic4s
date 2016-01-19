@@ -11,6 +11,7 @@ import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
 import org.elasticsearch.search.aggregations.metrics.cardinality.InternalCardinality
 import org.elasticsearch.search.aggregations.metrics.max.InternalMax
 import org.elasticsearch.search.aggregations.metrics.min.InternalMin
+import org.elasticsearch.search.aggregations.metrics.scripted.InternalScriptedMetric
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount
 import org.scalatest.{FreeSpec, Matchers}
@@ -212,7 +213,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       buckets.find(_.getKey == 45).get.getDocCount shouldBe 3
       buckets.find(_.getKey == 55).get.getDocCount shouldBe 3
     }
-    
+
     "should respect min_doc_count" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
@@ -225,7 +226,7 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       buckets.find(_.getKey == 40).get.getDocCount shouldBe 3
       buckets.find(_.getKey == 50).get.getDocCount shouldBe 4
     }
-    
+
     "should respect ordering" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
@@ -237,6 +238,22 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       buckets.size shouldBe 5
       buckets.head.getKeyAsString shouldBe "50"
       buckets.tail.head.getKeyAsString shouldBe "40"
+    }
+  }
+
+  "scripted aggregation" - {
+    "should  compute a word count on field name" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation.scriptedMetric("agg1")
+            .initScript("_agg['wordCount'] = []")
+            .mapScript("_agg.wordCount.add(doc['name'].values.size())")
+            .combineScript("wc = 0; for(c in _agg.wordCount) { wc += c }; return wc")
+            .reduceScript("wc = 0; for(a in _aggs) { wc += a }; return wc")
+        }
+      }.await
+      val agg = resp.aggregations.get[InternalScriptedMetric]("agg1")
+      agg.aggregation().asInstanceOf[Integer] shouldBe 21
     }
   }
 }

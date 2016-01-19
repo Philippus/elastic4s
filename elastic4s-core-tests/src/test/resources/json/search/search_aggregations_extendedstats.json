@@ -5,8 +5,7 @@
         "field": "grade",
         "script": {
           "inline": "doc['grade'].value",
-          "lang": "lua",
-          "params": {}
+          "lang": "lua"
         }
       }
     }
