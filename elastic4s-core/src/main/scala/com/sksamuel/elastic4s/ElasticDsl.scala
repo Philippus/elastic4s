@@ -87,6 +87,7 @@ trait ElasticDsl
     def percentiles(name: String) = new PercentilesAggregationDefinition(name)
     def percentileranks(name: String) = new PercentileRanksAggregationDefinition(name)
     def range(name: String) = new RangeAggregationDefinition(name)
+    def scriptedMetric(name: String) = new ScriptedMetricAggregationDefinition(name)
     def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
     def stats(name: String) = new StatsAggregationDefinition(name)
     def sum(name: String) = new SumAggregationDefinition(name)

@@ -25,8 +25,12 @@ case class ScriptDefinition(script: String,
   def scriptType(scriptType: ESScriptType): ScriptDefinition = copy(scriptType = scriptType)
 
   def toJavaAPI: Script = {
-    val mappedParams = FieldsMapper.mapper(params).asJava
-    new Script(script, scriptType, lang.orNull, mappedParams)
+    if(params.isEmpty) {
+      new Script(script, scriptType, lang.orNull, null)
+    } else {
+      val mappedParams = FieldsMapper.mapper(params).asJava
+      new Script(script, scriptType, lang.orNull, mappedParams)
+    }
   }
 }
 
