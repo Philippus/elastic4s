@@ -29,7 +29,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |-------|---------------------|
 |2.1.1|2.1.X|
 |2.0.1|2.0.X|
-|1.7.4|1.7.X|
+|1.7.5|1.7.X|
 |1.6.6|1.6.X|
 |1.5.17|1.5.X|
 |1.4.14|1.4.x|
