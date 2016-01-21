@@ -2,13 +2,15 @@ package com.sksamuel.elastic4s
 
 import scala.language.implicitConversions
 
-case class Indexes(values: Seq[String]) extends AnyVal
+case class Indexes(values: Seq[String])
 
 object Indexes {
   implicit def apply(index: String): Indexes = Indexes(Seq(index))
   implicit def apply(first: String, rest: String*): Indexes = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
+
+case class IndexAndType(index: String, `type`: String)
 
 case class IndexAndTypes(index: String, types: Seq[String])
 
@@ -20,6 +22,7 @@ object IndexAndTypes {
       case _ => sys.error(s"Could not parse '$string' into index/type1[,type2,...]")
     }
   }
+  implicit def apply(indexAndType: IndexAndType): IndexAndTypes = apply(indexAndType.index, indexAndType.`type`)
   implicit def apply(index: String, `type`: String): IndexAndTypes = IndexAndTypes(index, Seq(`type`))
   implicit def apply(indexAndType: (String, String)): IndexAndTypes = apply(indexAndType._1, indexAndType._2)
 }
@@ -36,6 +39,7 @@ object IndexesAndTypes {
     }
   }
 
+  implicit def apply(indexAndType: IndexAndType): IndexesAndTypes = apply(indexAndType.index, indexAndType.`type`)
   implicit def apply(indexType: IndexAndTypes): IndexesAndTypes = IndexesAndTypes(Seq(indexType.index), indexType.types)
 
   // iterables of strings are assumed to be lists of indexes with no types
@@ -45,4 +49,10 @@ object IndexesAndTypes {
   // a tuple is assumed to be an index and a type
   implicit def apply(indexAndType: (String, String)): IndexesAndTypes = apply(indexAndType._1, indexAndType._2)
   implicit def apply(index: String, `type`: String): IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
+}
+
+case class IndexesAndType(indexes: Seq[String], `type`: String)
+
+object IndexesAndType {
+  implicit def apply(indexAndType: IndexAndType): IndexesAndType = IndexesAndType(Seq(indexAndType.index), indexAndType.`type`)
 }

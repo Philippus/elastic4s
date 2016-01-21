@@ -389,9 +389,9 @@ trait ElasticDsl
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
   case object put {
-    def mapping(indexType: IndexAndTypes): PutMappingDefinition = new PutMappingDefinition(indexType)
+    def mapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
   }
-  def putMapping(indexType: IndexAndTypes): PutMappingDefinition = new PutMappingDefinition(indexType)
+  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
 
   case object recover {
     def index(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
