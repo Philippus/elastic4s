@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{Executable, IndexesAndTypes, ProxyClients}
+import com.sksamuel.elastic4s.{IndexesAndType, Executable, IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingAction, PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
@@ -65,12 +65,12 @@ case class GetMappingsResult(original: GetMappingsResponse) {
   }
 }
 
-class PutMappingDefinition(indexesType: IndexesAndTypes) extends MappingDefinition(indexesType.types.head) {
+class PutMappingDefinition(indexesAndType: IndexesAndType) extends MappingDefinition(indexesAndType.`type`) {
 
   def request: PutMappingRequest = {
     val req = new PutMappingRequestBuilder(ProxyClients.indices, PutMappingAction.INSTANCE)
-      .setIndices(indexesType.indexes: _*)
-      .setType(indexesType.types.head)
+      .setIndices(indexesAndType.indexes: _*)
+      .setType(indexesAndType.`type`)
       .setSource(super.build)
     req.request()
   }
