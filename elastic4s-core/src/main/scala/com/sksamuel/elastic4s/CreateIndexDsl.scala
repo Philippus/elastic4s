@@ -92,6 +92,11 @@ case class CreateIndexDefinition(name: String) {
     this
   }
 
+  def mappings(mappings: Iterable[MappingDefinition]): CreateIndexDefinition = {
+    _mappings ++= mappings
+    this
+  }
+
   def analysis(analyzers: Iterable[AnalyzerDefinition]): this.type = {
     _analysis = Some(new AnalysisDefinition(analyzers))
     this
