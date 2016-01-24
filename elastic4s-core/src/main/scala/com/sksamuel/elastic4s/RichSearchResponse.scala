@@ -104,6 +104,8 @@ case class RichSearchHit(java: SearchHit) {
     Option(java.fields).map(_.asScala.toMap.mapValues(RichSearchHitField)).getOrElse(Map.empty)
   }
 
+  def stringValue(fieldName: String): String = field(fieldName).value[String]
+
   def field(fieldName: String): RichSearchHitField = fields(fieldName)
   def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
   def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
