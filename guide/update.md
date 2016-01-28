@@ -58,7 +58,9 @@ If you want to do a script update with params then you can do:
 
 ```scala
 val resp = client.sync.execute {
-  update id 98 in "scifi/battlestargalactica" script "ctx._source.tags += tag" params(Map("tag"->"space"))
+  update id 98 in "scifi/battlestargalactica" script {
+    script("ctx._source.tags += tag").params(Map("tag"->"space"))
+  }
 }
 ````
 
