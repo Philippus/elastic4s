@@ -741,7 +741,13 @@ class RegexQueryDefinition(field: String, regex: Any)
 }
 
 class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
-  val builder = QueryBuilders.termQuery(field, value.toString)
+
+  val builder = value match {
+    case str : String => QueryBuilders.termQuery(field, str)
+    case iter:Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
+    case other => QueryBuilders.termQuery(field, other)
+  }
+
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
@@ -749,15 +755,19 @@ class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
 }
 
 class TermsQueryDefinition(field: String, values: String*) extends QueryDefinition {
+
   val builder = QueryBuilders.termsQuery(field, values: _*)
+
   def boost(boost: Double): TermsQueryDefinition = {
     builder.boost(boost.toFloat)
     this
   }
+
   def minimumShouldMatch(minimumShouldMatch: Int): TermsQueryDefinition = {
     builder.minimumMatch(minimumShouldMatch)
     this
   }
+
   def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
     builder.disableCoord(disableCoord)
     this
