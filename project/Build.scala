@@ -1,10 +1,10 @@
+import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.Keys._
 
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "2.1.1"
 
   val ScalaVersion = "2.11.7"
   val ScalatestVersion = "2.2.5"
@@ -17,7 +17,6 @@ object Build extends Build {
   val CommonsIoVersion = "2.4"
 
   val rootSettings = Seq(
-    version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
@@ -27,6 +26,8 @@ object Build extends Build {
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     parallelExecution in Test := false,
+    sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
