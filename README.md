@@ -3,7 +3,7 @@ elastic4s - Elasticsearch Scala Client
 
 [![Join the chat at https://gitter.im/sksamuel/elastic4s](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sksamuel/elastic4s?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/sksamuel/elastic4s.png)](https://travis-ci.org/sksamuel/elastic4s)
+[![Build Status](https://travis-ci.org/sksamuel/elastic4s.png?branch=master)](https://travis-ci.org/sksamuel/elastic4s)
 
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java's nature. Scala lets us do better.
 
@@ -60,7 +60,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 * `count` is deprecated in Elasticsearch and should be replaced with a search with size 0
 
 ###### 2.0.1
- 
+
 * #473 Added missing "filter" clause from bool query
 * #475 Fixed breaking change in terms query
 * #474 Added "item" likes to more like this query
@@ -111,7 +111,7 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 * Added `InFilter` and `IndicesFilter`
 * Added shorter syntax for field types, eg `stringField(name)` vs `field name <name> typed StringType`
 
-###### 1.6.4 
+###### 1.6.4
 * Added reactive streams implementation for elastic4s.
 * Support explicit field types in the update dsl
 * Added missing options to restore snapshot dsl
@@ -125,7 +125,7 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 * Added clear scroll api
 * Added `show` typeclass for multisearch
 * Allow update dsl to use explicit field values
- 
+
 ###### 1.5.16
 * Added `HitAs` as a replacement for the `Reader` typeclass
 * Added indices option to mapping, count and search dsl
@@ -137,7 +137,7 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 * Added `HitAs` as a replacement for the `Reader` typeclass
 * Fixed validate query for block queries
 * Added `show` typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.
- 
+
 ###### 1.5.15
 * Added `matched_fields` and highlight filter to highlighter
 
@@ -189,7 +189,7 @@ object Test extends App {
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
   client.execute { index into "bands" / "artists" fields "name"->"coldplay" }.await
-  
+
   // we need to wait until the index operation has been flushed by the server.
   // this is an important point - when the index future completes, that doesn't mean that the doc
   // is necessarily searchable. It simply means the server has processed your request and the doc is
@@ -400,16 +400,16 @@ client.execute {
 ```
 
 Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
-it done automagically. For those people, elastic4s provides a [Jackson](http://wiki.fasterxml.com) 
-based implementation of `Indexable[Any]` that will convert anything to Json. 
-To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the 
+it done automagically. For those people, elastic4s provides a [Jackson](http://wiki.fasterxml.com)
+based implementation of `Indexable[Any]` that will convert anything to Json.
+To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the
 build.
 
 The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
 want to use the `source` method. With that implicit in scope, you can now pass any type you like to `source`
 and Jackson will marshall it to json for you.
 
-Another way that existed prior to the `Indexable` typeclass was the `DocumentSource` or `DocumentMap` abstractions. 
+Another way that existed prior to the `Indexable` typeclass was the `DocumentSource` or `DocumentMap` abstractions.
 For these, you provide an instance of `DocumentSource` that returns a Json String, or an instance of DocumentMap
 that provides a `Map[String, Any]`.
 
@@ -484,8 +484,8 @@ Read about [suggestions here](guide/suggestions.md).
 
 ## Search Conversion
 
-By default Elasticsearch search responses contain an array of `SearchHit` instances which contain things like the id, 
-index, type, version, etc as well as the document source as a string or map. Elastic4s provides a means to convert these 
+By default Elasticsearch search responses contain an array of `SearchHit` instances which contain things like the id,
+index, type, version, etc as well as the document source as a string or map. Elastic4s provides a means to convert these
 back to meaningful domain types quite easily using the `HitAs[T]` typeclass. Provide an implementation of this typeclass, as
 an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call `as[T]` on the response.
 
@@ -506,18 +506,18 @@ val resp = client.execute {
 
 // .as[Character] will look for an implicit HitAs[Character] in scope
 // and then convert all the hits into Characters for us.
-val characters :Seq[Character] = resp.as[Character] 
+val characters :Seq[Character] = resp.as[Character]
 
 ```
 
 This is basically the inverse of the `Indexable` typeclass. And just like Indexable, there is a general purpose
-Jackson `HitAs[Any]` implementation for those who wish to have some sugar. 
+Jackson `HitAs[Any]` implementation for those who wish to have some sugar.
 To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the build.
 
 The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
 want to use the `as[T]` methods.
 
-As a bonus feature of the Jackson implementation, if your domain object has fields called `_timestamp`, `_id`, `_type`, `_index`, or 
+As a bonus feature of the Jackson implementation, if your domain object has fields called `_timestamp`, `_id`, `_type`, `_index`, or
 `_version` then those special fields will be automatically populated as well.
 
 ## Highlighting
@@ -703,9 +703,9 @@ where the Scala DSL is missing a construct, or where there is no need to provide
 
 ## Elastic Reactive Streams
 
-Elastic4s has an implementation of the [reactive streams](http://www.reactive-streams.org) api for both publishing and subscribing that is built 
+Elastic4s has an implementation of the [reactive streams](http://www.reactive-streams.org) api for both publishing and subscribing that is built
 using Akka. To use this, you need to add a dependency on the elastic4s-streams module.
- 
+
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
 
@@ -731,12 +731,12 @@ And make sure you have an Akka Actor System in implicit scope
 
 `implicit val system = ActorSystem()`
 
-Then create a publisher from the client using any query you want. You must specify the scroll parameter, as the publisher 
+Then create a publisher from the client using any query you want. You must specify the scroll parameter, as the publisher
 uses the scroll API.
 
 `val publisher = client.publisher(search in "myindex" query "sometext" scroll "1m")`
 
-Now you can add subscribers to this publisher. They can of course be any type that adheres to the reactive-streams api, 
+Now you can add subscribers to this publisher. They can of course be any type that adheres to the reactive-streams api,
 so you could stream out to a mongo database, or a filesystem, or whatever custom type you want.
 
 `publisher.subscribe(someSubscriber)`
@@ -747,7 +747,7 @@ If you just want to stream out an entire index then you can use the overloaded f
 
 ### Subscription
 
-An elastic subcriber can be created that will stream a request to elasticsearch for each item produced by a publisher. 
+An elastic subcriber can be created that will stream a request to elasticsearch for each item produced by a publisher.
 The subscriber can create index, update, or delete requests, so is a good way to synchronize datasets.
 
 `import ReactiveElastic._`

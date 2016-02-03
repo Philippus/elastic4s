@@ -75,6 +75,7 @@ trait QueryDsl {
 
   def matchAllQuery = new MatchAllQueryDefinition
 
+  @deprecated("Use existsQuery with a mustNot clause", "2.2.0")
   def missingQuery(field: String) = MissingQueryDefinition(field)
 
   def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisQueryDefinition = MoreLikeThisQueryDefinition(flds.toSeq)
@@ -1424,6 +1425,7 @@ case class MatchPhraseDefinition(field: String, value: Any)
   }
 }
 
+@deprecated("Use existsQuery with a mustNot clause", "2.2.0")
 case class MissingQueryDefinition(field: String) extends QueryDefinition {
 
   val builder = QueryBuilders.missingQuery(field)

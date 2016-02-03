@@ -38,8 +38,10 @@ class FieldStatsTest extends WordSpec with Matchers with ElasticSugar {
       }.await
       resp.fieldStats("qty") match {
         case text: FieldStats.Long =>
-          text.getMaxValue shouldBe "73"
-          text.getMinValue shouldBe "6"
+          text.getMaxValueAsString shouldBe "73"
+          text.getMaxValue shouldBe 73
+          text.getMinValueAsString shouldBe "6"
+          text.getMinValue shouldBe 6
           text.getDocCount shouldBe 7
           text.getMaxDoc shouldBe 7
         case other => throw new UnsupportedOperationException(other.toString)

@@ -10,7 +10,7 @@ import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
-import org.elasticsearch.action.admin.indices.stats.{IndexStats, CommonStats, IndicesStatsResponse}
+import org.elasticsearch.action.admin.indices.stats.{ShardStats, IndexStats, CommonStats, IndicesStatsResponse}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.cluster.routing.ShardRouting
@@ -154,7 +154,7 @@ case class IndicesStatsResult(original: IndicesStatsResponse) {
   def getShardFailures() = original.getShardFailures
 
   def primaries: CommonStats = original.getPrimaries
-  def routing: Map[ShardRouting, CommonStats] = original.asMap.asScala.toMap
+  def routing: Map[ShardRouting, ShardStats] = original.asMap.asScala.toMap
   def indexStats: Map[String, IndexStats] = original.getIndices.asScala.toMap
   def totalStats: CommonStats = original.getTotal
   def shardStats: Seq[org.elasticsearch.action.admin.indices.stats.ShardStats] = original.getShards.toSeq

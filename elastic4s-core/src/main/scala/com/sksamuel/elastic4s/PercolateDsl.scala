@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
 import org.elasticsearch.percolator.PercolatorService
 
@@ -100,7 +101,7 @@ case class PercolateDefinition(indexesAndTypes: IndexesAndTypes) {
 
     _rawDoc match {
       case Some(doc) =>
-        source.rawField("doc", doc.getBytes("UTF-8"))
+        source.rawField("doc", new BytesArray(doc.getBytes("UTF-8")))
       case None =>
         source.startObject("doc")
         for ( tuple <- _fields ) {
