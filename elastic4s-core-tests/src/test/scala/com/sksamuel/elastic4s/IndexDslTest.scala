@@ -250,8 +250,8 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     }
 
     expectedTtl match {
-      case Some(t) => builtRequest.ttl shouldEqual t
-      case None => builtRequest.ttl shouldEqual -1
+      case Some(t) => builtRequest.ttl.millis() shouldEqual t
+      case None => builtRequest.ttl shouldEqual null
     }
 
     req._fieldsAsXContent.string should matchJsonResource(expectedJsonResource)

@@ -2,16 +2,21 @@ package com.sksamuel.elastic4s.testkit
 
 import java.io.PrintWriter
 import java.nio.file.{Path, Paths}
+import java.util
 import java.util.UUID
 
-import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthStatus
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl}
+import org.elasticsearch.Version
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.Settings
+import org.elasticsearch.node.MockNode
+import org.elasticsearch.script.groovy.GroovyPlugin
 import org.slf4j.LoggerFactory
-import scala.concurrent.duration._
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 /** @author Stephen Samuel */
 trait NodeBuilder {
@@ -63,12 +68,11 @@ trait NodeBuilder {
       .put("path.conf", conf.toFile.getAbsolutePath)
       .put("index.number_of_shards", numberOfShards)
       .put("index.number_of_replicas", numberOfReplicas)
-      .put("script.inline", "on")
-      .put("script.indexed", "on")
+      .put("script.inline", true)
+      .put("script.indexed", true)
       .put("index.refresh_interval", indexRefresh.toSeconds + "s")
       .put("discovery.zen.ping.multicast.enabled", "false")
       .put("es.logger.level", "INFO")
-      .put("script.groovy.indy", "false")
       .put("cluster.name", getClass.getSimpleName)
     configureSettings(builder)
   }
@@ -82,9 +86,19 @@ trait NodeBuilder {
    * Invoked to create a local client for the elastic node.
    * Override to create the client youself.
    */
-  def createLocalClient: ElasticClient = ElasticClient.local(settings.build)
+  def createLocalClient: ElasticClient = {
+    val localSettings = Settings.settingsBuilder().put(settings.build())
+    localSettings.put("node.local", true)
+    localSettings.put("node.data", true)
+    val node = new MockNode(
+      localSettings.build(),
+      Version.CURRENT,
+      util.Arrays.asList(classOf[GroovyPlugin])
+    )
+    node.start()
+    new ElasticClient(node.client(), Some(node))
+  }
 }
-
 
 trait ElasticSugar extends NodeBuilder {
 

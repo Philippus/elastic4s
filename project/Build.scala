@@ -12,10 +12,9 @@ object Build extends Build {
   val JacksonVersion = "2.6.1"
   val Slf4jVersion = "1.7.12"
   val ScalaLoggingVersion = "2.1.2"
-  val ElasticsearchVersion = "2.1.1"
+  val ElasticsearchVersion = "2.2.0"
   val Log4jVersion = "1.2.17"
   val CommonsIoVersion = "2.4"
-  val GroovyVersion = "2.3.7"
 
   val rootSettings = Seq(
     version := appVersion,
@@ -38,9 +37,7 @@ object Build extends Build {
       "log4j" % "log4j" % Log4jVersion % "test",
       "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
-      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test"
-
+      "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     publishTo <<= version {
       (v: String) =>
@@ -96,7 +93,11 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-testkit",
-      libraryDependencies += "org.scalatest" %% "scalatest" % ScalatestVersion
+      libraryDependencies ++= Seq(
+        "org.scalatest" %% "scalatest" % ScalatestVersion,
+        "org.elasticsearch.module" % "lang-groovy" % ElasticsearchVersion,
+        "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion classifier "tests"
+      )
     )
     .dependsOn(core)
 
