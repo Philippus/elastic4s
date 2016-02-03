@@ -65,6 +65,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
     this
   }
 
+  def doc(source: XContentBuilder): UpdateDefinition = {
+    _builder.setDoc(source)
+    this
+  }
+
   def doc(value: FieldValue): this.type = {
     _builder.setDoc(_fieldsAsXContent(Seq(value)))
     this
@@ -141,6 +146,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
 
   def upsert(map: Map[String, Any]): this.type = {
     _builder.setUpsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
+    this
+  }
+
+  def upsert(source: XContentBuilder): UpdateDefinition = {
+    _builder.setUpsert(source)
     this
   }
 
