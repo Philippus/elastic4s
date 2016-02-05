@@ -21,13 +21,14 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 2.1.1 which is compatible with Elasticsearch 2.1.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 2.2.0 which is compatible with Elasticsearch 2.2.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|2.1.1|2.1.X|
+|2.2.0|2.2.X|
+|2.1.2|2.1.X|
 |2.0.1|2.0.X|
 |1.7.5|1.7.X|
 |1.6.6|1.6.X|
