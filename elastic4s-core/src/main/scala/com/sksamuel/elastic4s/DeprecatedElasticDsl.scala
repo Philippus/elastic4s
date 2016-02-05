@@ -53,7 +53,7 @@ trait DeprecatedElasticDsl {
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
     def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
-    def script(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
+    def script(script: ScriptDefinition) = ElasticDsl.script.sort(script)
   }
 
   @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")

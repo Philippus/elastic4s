@@ -34,8 +34,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
     "sort by name length" in {
       val sorted = client.execute {
         search in "script/tubestops" query matchAllQuery sort {
-          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") order
-            SortOrder.DESC typed "number"
+          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed "number" order SortOrder.DESC
         }
       }.await
       sorted.hits(0).sourceAsMap("name") shouldBe "south kensington"

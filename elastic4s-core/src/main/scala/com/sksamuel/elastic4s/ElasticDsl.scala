@@ -438,10 +438,14 @@ trait ElasticDsl
   def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
   case object script {
-    def sort(script: String): ScriptSortDefinition = new ScriptSortDefinition(script)
+    def sort(script: ScriptDefinition) = scriptSort(script)
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
-  def scriptSort(scriptText: String): ScriptSortDefinition = ScriptSortDefinition(scriptText)
+
+  def scriptSort(script: ScriptDefinition) = new {
+    def as(`type`: String): ScriptSortDefinition = typed(`type`)
+    def typed(`type`: String):ScriptSortDefinition = ScriptSortDefinition(script, `type`)
+  }
 
   case object search {
     def in(indexesTypes: IndexesAndTypes): SearchDefinition = new SearchDefinition(indexesTypes)
