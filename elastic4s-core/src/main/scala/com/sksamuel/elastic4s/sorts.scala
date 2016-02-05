@@ -57,60 +57,32 @@ case class FieldSortDefinition(field: String) extends SortDefinition {
   }
 }
 
-case class ScriptSortDefinition(script: String) extends SortDefinition {
+case class ScriptSortDefinition(script: ScriptDefinition, `type`: String) extends SortDefinition {
 
-  def builder = {
-    val b = SortBuilders
-      .scriptSort(script, _type)
-      .setNestedPath(_nestedPath)
-      .lang(_lang)
-      .order(_order)
-      .sortMode(_sortmode)
-    _params.foreach(pair => b.param(pair._1, pair._2))
-    b
-  }
+  val builder = SortBuilders.scriptSort(script.toJavaAPI, `type`)
 
-  var _type = "string"
-  var _missing: AnyRef = null
-  var _nestedPath: String = null
-  var _order: SortOrder = null
-  var _sortmode: String = null
-  var _lang: String = null
-  var _params: Map[String, String] = Map.empty
-
-  def sortMode(sortmode: String): ScriptSortDefinition = {
-    _sortmode = sortmode
+  def sortMode(sortMode: String): this.type = {
+    builder.sortMode(sortMode)
     this
   }
 
-  def lang(lang: String): ScriptSortDefinition = {
-    _lang = lang
+  def nestedPath(nestedPath: String): this.type = {
+    builder.setNestedPath(nestedPath)
     this
   }
 
-  def as(`type`: String): ScriptSortDefinition = typed(`type`)
-  def typed(`type`: String): ScriptSortDefinition = {
-    _type = `type`
+  def nestedFilter(nestedFilter: QueryDefinition): this.type = {
+    builder.setNestedFilter(nestedFilter.builder)
     this
   }
 
-  def nestedPath(nestedPath: String): ScriptSortDefinition = {
-    _nestedPath = nestedPath
+  def order(order: SortOrder): this.type = {
+    builder.order(order)
     this
   }
 
-  def order(order: SortOrder): ScriptSortDefinition = {
-    _order = order
-    this
-  }
-
-  def param(key: String, value: String): ScriptSortDefinition = {
-    _params + (key -> value)
-    this
-  }
-
-  def params(map: Map[String, String]): ScriptSortDefinition = {
-    _params = map
+  def missing(missing: AnyRef): this.type = {
+    builder.missing(missing)
     this
   }
 }

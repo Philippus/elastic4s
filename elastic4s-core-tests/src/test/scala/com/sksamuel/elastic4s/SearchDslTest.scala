@@ -414,14 +414,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for script sort" in {
     val req = search in "music" types "bands" sort {
-      scriptSort("document.score") typed "number" lang "java" order SortOrder.DESC nestedPath "a.b.c" sortMode "min"
+      scriptSort(script("document.score").lang("java")) typed "number" order SortOrder.DESC nestedPath "a.b.c" sortMode "min"
     } preference new Preference.Custom("custom-node")
     req.show should matchJsonResource("/json/search/search_sort_script.json")
   }
 
   it should "generate correct json for script sort with params" in {
     val req = search in "music" types "bands" sort {
-      scriptSort("doc.score") typed "number" order SortOrder.DESC params Map("param1" -> "value1", "param2" -> "value2")
+      scriptSort(script("doc.score").params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.DESC
     } preference new Preference.Custom("custom-node")
     req.show should matchJsonResource("/json/search/search_sort_script_params.json")
   }
@@ -436,7 +436,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multiple sorts" in {
     val req = search in "music" types "bands" sort(
-      scriptSort("document.score") as "java" order SortOrder.ASC,
+      scriptSort("document.score") typed "java" order SortOrder.ASC,
       scoreSort().order(SortOrder.DESC),
       fieldSort("dancer") order SortOrder.DESC
       )
