@@ -7,6 +7,7 @@ import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.plugins.Plugin
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -93,9 +94,13 @@ object ElasticClient {
    *
    * @param settings the settings as applicable to the client.
    * @param uri the instance(s) to connect to.
+   * @param plugins the plugins to add to the client.
    */
-  def transport(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = {
-    val client = TransportClient.builder.settings(settings).build()
+  def transport(settings: Settings, uri: ElasticsearchClientUri, plugins: Class[_ <: Plugin]*): ElasticClient = {
+    val client = plugins
+      .foldLeft(TransportClient.builder)((c, plugin) => c.addPlugin(plugin))
+      .settings(settings)
+      .build()
     for ( (host, port) <- uri.hosts ) {
       client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
     }
