@@ -319,9 +319,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def rescore(rescore: RescoreDefinition): SearchDefinition = {
-    _builder.setRescoreWindow(rescore.windowSize)
-    _builder.setRescorer(rescore.builder)
+  def rescore(rescorers: RescoreDefinition*): SearchDefinition = {
+    rescorers.foreach(rescorer => _builder.addRescorer(rescorer.builder, rescorer.windowSize))
     this
   }
 
