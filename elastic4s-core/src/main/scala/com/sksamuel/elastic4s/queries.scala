@@ -11,6 +11,7 @@ import org.elasticsearch.index.query.support.QueryInnerHitBuilder
 import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
 import scala.language.implicitConversions
+import scala.language.reflectiveCalls
 
 /** @author Stephen Samuel */
 
