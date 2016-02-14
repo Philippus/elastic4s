@@ -36,7 +36,8 @@ object Build extends Build {
       "org.mockito" % "mockito-all" % MockitoVersion % "test",
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
       "org.codehaus.groovy" % "groovy" % GroovyVersion % "test",
-      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test"
+      "org.codehaus.groovy" % "groovy" % GroovyVersion % "test",
+      "com.vividsolutions" % "jts" % "1.13" % "test"
     ),
     publishTo <<= version {
       (v: String) =>
