@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticDsl}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
+import BulkIndexingSubscriberIntegrationTest._
 
 class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers {
 
@@ -33,12 +34,24 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       ShipPublisher.subscribe(subscriber)
       completionLatch.await(5, TimeUnit.SECONDS)
 
-      blockUntilCount(ShipPublisher.ships.length, "bulkindexsubint")
+      blockUntilCount(ships.length, "bulkindexsubint")
+    }
+
+    "index all received data even if the subscriber never completes" in {
+
+      import scala.concurrent.duration._
+
+      val completionLatch = new CountDownLatch(1)
+      // The short interval is just for the sake of test execution time, it's not a recommendation
+      val subscriber = client.subscriber[Ship](8, 2, flushInterval = Some(500.millis))
+      ShipEndlessPublisher.subscribe(subscriber)
+
+      blockUntilCount(ships.length, "bulkindexsubint")
     }
   }
 }
 
-object ShipPublisher extends Publisher[Ship] {
+object BulkIndexingSubscriberIntegrationTest {
 
   val ships = Array(
     Ship("clipper"),
@@ -62,6 +75,10 @@ object ShipPublisher extends Publisher[Ship] {
     Ship("diamondback")
   )
 
+}
+
+object ShipPublisher extends Publisher[Ship] {
+
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
     var remaining = ships
     s.onSubscribe(new Subscription {
@@ -71,6 +88,20 @@ object ShipPublisher extends Publisher[Ship] {
         remaining = remaining.drop(n.toInt)
         if (remaining.isEmpty)
           s.onComplete()
+      }
+    })
+  }
+}
+
+object ShipEndlessPublisher extends Publisher[Ship] {
+
+  override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
+    var remaining = ships
+    s.onSubscribe(new Subscription {
+      override def cancel(): Unit = ()
+      override def request(n: Long): Unit = {
+        remaining.take(n.toInt).foreach(s.onNext)
+        remaining = remaining.drop(n.toInt)
       }
     })
   }

@@ -27,6 +27,7 @@ trait ElasticDsl
   with IndexRefreshDsl
   with IndexRecoveryDsl
   with IndexStatusDsl
+  with IndexTemplateDsl
   with MappingDsl
   with MoreLikeThisDsl
   with MultiGetDsl
@@ -37,7 +38,7 @@ trait ElasticDsl
   with ScoreDsl
   with ScrollDsl
   with SnapshotDsl
-  with TemplateDsl
+  with TermVectorDsl
   with UpdateDsl
   with ValidateDsl
   with ElasticImplicits {
@@ -486,12 +487,12 @@ trait ElasticDsl
   def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]): IndexRefreshDefinition = new IndexRefreshDefinition(indexes.toSeq)
-    def index(indexes: String*): IndexRefreshDefinition = new IndexRefreshDefinition(indexes)
+    def index(indexes: Iterable[String]): RefreshIndexDefinition = new RefreshIndexDefinition(indexes.toSeq)
+    def index(indexes: String*): RefreshIndexDefinition = new RefreshIndexDefinition(indexes)
   }
 
-  def refreshIndex(indexes: Iterable[String]): IndexRefreshDefinition = refresh index indexes
-  def refreshIndex(indexes: String*): IndexRefreshDefinition = refresh index indexes
+  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refresh index indexes
+  def refreshIndex(indexes: String*): RefreshIndexDefinition = refresh index indexes
 
   case object remove {
     def alias(alias: String): RemoveAliasExpectsIndex = {

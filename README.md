@@ -157,7 +157,15 @@ object Test extends App {
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
   client.execute { index into "bands" / "artists" fields "name"->"coldplay" }.await
+  
+  // we need to wait until the index operation has been flushed by the server.
+  // this is an important point - when the index future completes, that doesn't mean that the doc
+  // is necessarily searchable. It simply means the server has processed your request and the doc is
+  // queued to be flushed to the indexes. Elasticsearch is eventually consistent.
+  // For this demo, we'll simply wait for 2 seconds (default refresh interval is 1 second).
+  Thread.sleep(2000)
 
+  // now we can search for the document we indexed earlier
   val resp = client.execute { search in "bands" / "artists" query "coldplay" }.await
   println(resp)
 
@@ -201,7 +209,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Get Template                              | `get template <name>` |
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index exists                              | `index exists <name>` |
-| Index Status                              | `status <index>` |
+| Index Status                              | `index status <index>` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search in <index/type> query, search in <index/type> query, ...)`|
@@ -408,7 +416,7 @@ That is actually an example of a SimpleStringQueryDefinition. The string is impl
 It is the same as specifying the query type directly:
 
 ```scala
-search in "places"- / "cities" query simpleStringQuery("London")
+search in "places" / "cities" query simpleStringQuery("London")
 ```
 
 The simple string example is the only time we don't need to specify the query type.
