@@ -21,5 +21,5 @@ case class ScriptFieldDefinition(field: String,
   def params(ps: (String, Any)*): ScriptFieldDefinition = {
     copy(parameters = Some(ps.toMap.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
   }
-  def scriptType(scriptType: ScriptType): ScriptFieldDefinition = copy(scriptType = scriptType)
+  def scriptType(scriptType: ScriptService.ScriptType): ScriptFieldDefinition = copy(scriptType = scriptType)
 }
