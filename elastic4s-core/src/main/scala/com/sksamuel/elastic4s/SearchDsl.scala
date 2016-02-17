@@ -5,6 +5,7 @@ import java.util
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.common.xcontent.ToXContent.Params
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.script.{ScriptService, Script}
 import org.elasticsearch.search.rescore.RescoreBuilder
@@ -200,14 +201,16 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
     import scala.collection.JavaConverters._
     sfieldDefs.foreach {
-      case ScriptFieldDefinition(name, script, Some(lang), Some(params)) =>
-        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, lang, params.asJava))
-      case ScriptFieldDefinition(name, script, Some(lang), None) =>
-        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, lang, new util.HashMap()))
-      case ScriptFieldDefinition(name, script, None, Some(params)) =>
-        _builder.addScriptField(name, new Script(script, ScriptService.ScriptType.INLINE, null, params.asJava))
-      case ScriptFieldDefinition(name, script, None, None) =>
+      case ScriptFieldDefinition(name, script, Some(lang), Some(params), scriptType) =>
+        _builder.addScriptField(name, new Script(script, scriptType, lang, params.asJava))
+      case ScriptFieldDefinition(name, script, Some(lang), None, scriptType) =>
+        _builder.addScriptField(name, new Script(script, scriptType, lang, new util.HashMap()))
+      case ScriptFieldDefinition(name, script, None, Some(params), scriptType) =>
+        _builder.addScriptField(name, new Script(script, scriptType, null, params.asJava))
+      case ScriptFieldDefinition(name, script, None, None, ScriptService.ScriptType.INLINE) =>
         _builder.addScriptField(name, new Script(script))
+      case ScriptFieldDefinition(name,script,None,None,scriptType)=>
+        _builder.addScriptField(name, new Script(script,scriptType, null, new util.HashMap()))
     }
     this
   }
