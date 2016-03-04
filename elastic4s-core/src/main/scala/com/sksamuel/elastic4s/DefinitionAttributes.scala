@@ -63,6 +63,15 @@ object DefinitionAttributes {
     }
   }
 
+  trait DefinitionAttributeMinScore {
+    val _builder: { def setMinScore(minScore: Float): Any }
+
+    def minScore(min: Double): this.type = {
+      _builder.setMinScore(min.toFloat)
+      this
+    }
+  }
+
   trait DefinitionAttributeMaxBoost {
     val _builder: { def maxBoost(maxBoost: Float): Any }
 
