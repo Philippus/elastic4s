@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.util
 
+import com.sksamuel.elastic4s.DefinitionAttributes._
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -128,7 +129,7 @@ case class RescoreDefinition(query: QueryDefinition) {
 }
 
 
-case class SearchDefinition(indexesTypes: IndexesAndTypes) {
+case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAttributeMinScore {
 
   val _builder = {
     new SearchRequestBuilder(ProxyClients.client, SearchAction.INSTANCE)
@@ -350,11 +351,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
   def indexBoost(tuples: (String, Double)*): SearchDefinition = {
     tuples.foreach(arg => _builder.addIndexBoost(arg._1, arg._2.toFloat))
-    this
-  }
-
-  def minScore(score: Double): SearchDefinition = {
-    _builder.setMinScore(score.toFloat)
     this
   }
 

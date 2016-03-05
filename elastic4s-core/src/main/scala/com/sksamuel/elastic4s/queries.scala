@@ -232,7 +232,8 @@ case class FunctionScoreQueryDefinition(query: QueryDefinition)
     with DefinitionAttributeBoost
     with DefinitionAttributeBoostMode
     with DefinitionAttributeMaxBoost
-    with DefinitionAttributeScoreMode {
+    with DefinitionAttributeScoreMode
+    with DefinitionAttributeMinScore {
 
   val builder = new FunctionScoreQueryBuilder(query.builder)
   val _builder = builder
