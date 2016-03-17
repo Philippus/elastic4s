@@ -274,7 +274,7 @@ val client = ElasticClient.local
 
 To specify settings for the local node you can pass in a settings object like this:
 ```scala
-val settings = ImmutableSettings.settingsBuilder()
+val settings = Settings.settingsBuilder()
       .put("http.enabled", false)
       .put("path.home", "/var/elastic/")
 val client = ElasticClient.local(settings.build)
@@ -297,8 +297,8 @@ If you need to pass settings to the client, then you need to invoke remote() wit
 For example to specify the cluster name (if you changed the default then you must specify the cluster name).
 
 ```scala
-import org.elasticsearch.common.settings.ImmutableSettings
-val settings = ImmutableSettings.settingsBuilder().put("cluster.name", "myClusterName").build()
+import org.elasticsearch.common.settings.Settings
+val settings = Settings.settingsBuilder().put("cluster.name", "myClusterName").build()
 val client = ElasticClient.remote(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
 ```
 
