@@ -249,7 +249,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Open index                                | `openIndex(<name>)` |
 | [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>*) [settings]` |
 | Percolate Doc                             | `percolateIn(<index>) doc <fieldsblock>` |
-| Put mapping                               | `putMapping(<index> / <type>) add { mappings block }` |
+| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |
 | Recover Index                             | `recoverIndex(<name>)` |
 | Refresh index                             | `refreshIndex(<name>)` |
 | Register Query                            | `register id <id> into <index> query { <queryblock> }` |
