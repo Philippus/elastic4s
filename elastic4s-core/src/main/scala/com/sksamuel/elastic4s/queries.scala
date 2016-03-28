@@ -568,6 +568,13 @@ case class GeoBoundingBoxQueryDefinition(field: String)
   private var _top: Double = _
   private var _right: Double = _
   private var _bottom: Double = _
+  private var _type: String = _
+
+  def `type`(`type`: String): GeoBoundingBoxQueryDefinition = {
+    _type = `type`
+    builder.`type`(_type)
+    this
+  }
 
   def left(left: Double): GeoBoundingBoxQueryDefinition = {
     _left = left
