@@ -46,8 +46,9 @@ trait QueryDsl {
 
   def fuzzyQuery(name: String, value: Any) = new FuzzyQueryDefinition(name, value)
 
-  def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
+  def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
+  def geoHashCell(field: String, value: String): GeoHashCellQuery = new GeoHashCellQuery(field).geohash(value)
   def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
 
   def indicesQuery(indices: String*) = new {
