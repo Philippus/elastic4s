@@ -7,7 +7,7 @@ import org.elasticsearch.index.VersionType
 
 import scala.concurrent.Future
 
-trait TermVectorDsl {
+trait TermVectorApi {
 
   implicit object TermVectorExecutable
     extends Executable[TermVectorsDefinition, TermVectorsResponse, TermVectorsResult] {

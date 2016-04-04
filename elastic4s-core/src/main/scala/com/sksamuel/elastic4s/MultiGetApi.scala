@@ -7,7 +7,7 @@ import org.elasticsearch.client.Client
 import scala.concurrent.Future
 
 /** @author Stephen Samuel */
-trait MultiGetDsl extends GetDsl {
+trait MultiGetApi extends GetDsl {
 
   implicit object MultiGetDefinitionExecutable
     extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResult] {

@@ -31,7 +31,7 @@ trait ElasticDsl
   with IndexRecoveryDsl
   with IndexTemplateDsl
   with MappingDsl
-  with MultiGetDsl
+    with MultiGetApi
   with PercolateDsl
   with PipelineAggregationDsl
   with ReindexDsl
@@ -41,7 +41,8 @@ trait ElasticDsl
   with ScoreDsl
   with ScrollDsl
   with SnapshotDsl
-  with TermVectorDsl
+    with TaskApi
+    with TermVectorApi
   with TokenizerDsl
   with TokenFilterDsl
   with UpdateDsl
@@ -342,6 +343,14 @@ trait ElasticDsl
   }
   def innerHit(name: String): InnerHitDefinition = inner hit name
   def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
+
+  def listTasks(first: String, rest: String*): ListTasksDefinition = listTasks(first +: rest)
+  def listTasks(nodeIds: Seq[String]): ListTasksDefinition = ListTasksDefinition(nodeIds)
+
+  def cancelTasks(first: String, rest: String*): CancelTasksDefinition = cancelTasks(first +: rest)
+  def cancelTasks(nodeIds: Seq[String]): CancelTasksDefinition = CancelTasksDefinition(nodeIds)
+
+  def pendingClusterTasks(local: Boolean): PendingClusterTasksDefinition = PendingClusterTasksDefinition(local)
 
   case object mapping {
     def name(name: String): MappingDefinition = {
