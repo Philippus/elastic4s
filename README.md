@@ -218,6 +218,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | Operation                                 | Syntax |
 |-------------------------------------------|----------------|
 | [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
+| Cancel Tasks                              | `cancelTasks(nodeIds)` |
 | Clear index cache                         | `clear cache <name>` |
 | Close index                               | `closeIndex(<name>)` |
 | [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
@@ -244,6 +245,7 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
 | Index exists                              | `indexExists(<name>)` |
 | Index Status                              | `indexStatus(<index>)` |
+| List Tasks                                | `listTasks(nodeIds)` |
 | More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
 | [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
 | [Multisearch](guide/multisearch.md)       | `multi ( search ..., search ..., ...)`|
