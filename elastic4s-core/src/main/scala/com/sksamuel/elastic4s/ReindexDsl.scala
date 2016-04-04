@@ -5,6 +5,7 @@ import org.elasticsearch.client.Client
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@deprecated("Elasticsearch now provides this functionality directly", "2.3")
 case class ReindexDefinition(sourceIndex: String,
                              targetIndex: String,
                              chunkSize: Int = 500,
@@ -14,6 +15,7 @@ case class ReindexDefinition(sourceIndex: String,
 
 trait ReindexDsl {
 
+  @deprecated("Elasticsearch now provides this functionality directly", "2.3")
   implicit object ReindexExecutable extends Executable[ReindexDefinition, Unit, Unit] {
     override def apply(client: Client, d: ReindexDefinition): Future[Unit] = {
 
@@ -52,6 +54,7 @@ trait ReindexDsl {
     }
   }
 
+  @deprecated("Elasticsearch now provides this functionality directly", "2.3")
   def reindex(sourceIndex: String, targetIndex: String)(implicit executor: ExecutionContext) = {
     ReindexDefinition(sourceIndex, targetIndex)
   }
