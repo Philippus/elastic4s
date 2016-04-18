@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
 import org.elasticsearch.percolator.PercolatorService
 
 import scala.collection.mutable.ListBuffer
@@ -85,13 +86,22 @@ case class PercolateDefinition(indexesAndTypes: IndexesAndTypes) {
 
   private val _fields = new ListBuffer[(String, Any)]
   private var _rawDoc: Option[String] = None
+  private var _id: Option[String] = None
   private[this] var _query: QueryDefinition = _
 
-  def build = new PercolateRequestBuilder(ProxyClients.client, PercolateAction.INSTANCE)
-    .setSource(_doc)
-    .setIndices(indexesAndTypes.indexes: _*)
-    .setDocumentType(indexesAndTypes.types.head)
+  def build = {
+    val _type = indexesAndTypes.types.head
+    //What happens if user provides many indicies? Is it supported?
+    val index = indexesAndTypes.indexes.head
+
+    def pb = new PercolateRequestBuilder(ProxyClients.client, PercolateAction.INSTANCE)
+      .setIndices(indexesAndTypes.indexes: _*)
+      .setDocumentType(_type)
+
+    _id.map(id => pb.setGetRequest(new GetRequest(index, _type, id)))
+    .getOrElse(pb.setSource(_doc))
     .request()
+  }
 
   private[elastic4s] def _doc: XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
@@ -111,6 +121,11 @@ case class PercolateDefinition(indexesAndTypes: IndexesAndTypes) {
     }
     source.endObject()
     source
+  }
+
+  def id(id: String):PercolateDefinition = {
+    this._id = Some(id)
+    this
   }
 
   def rawDoc(json: String): PercolateDefinition = {
