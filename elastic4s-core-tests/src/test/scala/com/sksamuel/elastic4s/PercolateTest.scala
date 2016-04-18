@@ -44,4 +44,22 @@ class PercolateTest extends FlatSpec with Matchers with MockitoSugar with Elasti
     matches.size shouldBe 1
     matches(0).getId.string shouldBe "a"
   }
+
+  "a percolate request for existing document" should "return queries that match the document" in {
+    val _id = client.execute {
+      index into "percolate/teas" source """{"flavour" : "earl"}"""
+    }.await.id
+
+    refresh("percolate").await
+
+    val matches = client.execute {
+      percolate in "percolate/teas" id _id
+    }.await.getMatches
+
+    matches.size shouldBe 1
+    matches(0).getId.string shouldBe "b"
+
+  }
+
+
 }
