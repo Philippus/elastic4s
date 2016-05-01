@@ -9,7 +9,8 @@ lazy val root = Project("elastic4s", file("."))
     examples,
     jackson,
     json4s,
-    streams
+    streams,
+    shapeless
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -58,6 +59,12 @@ lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
     name := "elastic4s-json4s",
     libraryDependencies += "org.json4s" %% "json4s-core" % "3.2.11",
     libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
+  ).dependsOn(core, testkit % "test")
+  
+lazy val shapeless = Project("elastic4s-shapeless", file("elastic4s-shapeless"))
+  .settings(
+    name := "elastic4s-shapeless",
+    libraryDependencies += "com.chuusai" %% "shapeless" % "2.3.0"
   ).dependsOn(core, testkit % "test")
 
 lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
