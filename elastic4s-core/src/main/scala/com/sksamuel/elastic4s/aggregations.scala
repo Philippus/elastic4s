@@ -199,8 +199,38 @@ case class TermAggregationDefinition(name: String)
     this
   }
 
+  def include(values: Array[String]): TermAggregationDefinition = {
+    builder.include(values)
+    this
+  }
+
+  def include(values: Array[Double]): TermAggregationDefinition = {
+    builder.include(values)
+    this
+  }
+
+  def include(values: Array[Long]): TermAggregationDefinition = {
+    builder.include(values)
+    this
+  }
+
   def exclude(regex: String): TermAggregationDefinition = {
     builder.exclude(regex)
+    this
+  }
+
+  def exclude(values: Array[String]): TermAggregationDefinition = {
+    builder.exclude(values)
+    this
+  }
+
+  def exclude(values: Array[Double]): TermAggregationDefinition = {
+    builder.exclude(values)
+    this
+  }
+
+  def exclude(values: Array[Long]): TermAggregationDefinition = {
+    builder.exclude(values)
     this
   }
 }
