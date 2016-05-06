@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
                                                  builder: RequestBuilder[T],
                                                  config: SubscriberConfig)
-                                                (implicit system: ActorSystem) extends Subscriber[T] {
+                                                (implicit actorRefFactory: ActorRefFactory) extends Subscriber[T] {
 
   private var actor: ActorRef = _
 
@@ -33,7 +33,7 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
     // when the provided Subscriber is null in which case it MUST throw a java.lang.NullPointerException to the caller
     if (sub == null) throw new NullPointerException()
     if (actor == null) {
-      actor = system.actorOf(Props(new BulkActor(client, sub, builder, config)))
+      actor = actorRefFactory.actorOf(Props(new BulkActor(client, sub, builder, config)))
     } else {
       // rule 2.5, must cancel subscription if onSubscribe has been invoked twice
       // https://github.com/reactive-streams/reactive-streams-jvm#2.5

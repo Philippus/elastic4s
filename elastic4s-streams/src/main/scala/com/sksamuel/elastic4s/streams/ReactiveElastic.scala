@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.streams
 
-import akka.actor.ActorSystem
+import akka.actor.ActorRefFactory
 import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, IndexAndTypes, SearchDefinition}
 
 import scala.concurrent.duration._
@@ -14,7 +14,7 @@ object ReactiveElastic {
     import ElasticDsl._
 
     def subscriber[T](config: SubscriberConfig)
-                     (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
+                     (implicit builder: RequestBuilder[T], actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] = {
       new BulkIndexingSubscriber[T](client, builder, config)
     }
 
@@ -28,7 +28,7 @@ object ReactiveElastic {
                       flushAfter: Option[FiniteDuration] = None,
                       failureWait: FiniteDuration = 2.seconds,
                       maxAttempts: Int = 5)
-                     (implicit builder: RequestBuilder[T], system: ActorSystem): BulkIndexingSubscriber[T] = {
+                     (implicit builder: RequestBuilder[T], actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] = {
       val config = SubscriberConfig(
         batchSize = batchSize,
         concurrentRequests = concurrentRequests,
@@ -45,13 +45,13 @@ object ReactiveElastic {
     }
 
     def publisher(indexType: IndexAndTypes, elements: Long = Long.MaxValue, keepAlive: String = "1m")
-                 (implicit system: ActorSystem): ScrollPublisher = {
+                 (implicit actorRefFactory: ActorRefFactory): ScrollPublisher = {
       publisher(search in indexType query "*:*" scroll keepAlive)
     }
 
-    def publisher(q: SearchDefinition)(implicit system: ActorSystem): ScrollPublisher = publisher(q, Long.MaxValue)
+    def publisher(q: SearchDefinition)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher = publisher(q, Long.MaxValue)
     def publisher(q: SearchDefinition, elements: Long)
-                 (implicit system: ActorSystem): ScrollPublisher = {
+                 (implicit actorRefFactory: ActorRefFactory): ScrollPublisher = {
       new ScrollPublisher(client, q, elements)
     }
   }
