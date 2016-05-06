@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.streams
 
-import akka.actor.{Actor, ActorSystem, PoisonPill, Props, Stash}
+import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.elastic4s.{RichSearchResponse, ElasticClient, ElasticDsl, RichSearchHit, SearchDefinition}
 import org.elasticsearch.ElasticsearchException
@@ -17,12 +17,12 @@ import scala.util.{Failure, Success}
  * @param client a client for the cluster
  * @param search the initial search query to execute
  * @param elements the maximum number of elements to return
- * @param system an Actor system required by the publisher
+ * @param actorRefFactory an Actor reference factory required by the publisher
  */
 class ScrollPublisher private[streams](client: ElasticClient,
                                        search: SearchDefinition,
                                        elements: Long)
-                                      (implicit system: ActorSystem) extends Publisher[RichSearchHit] {
+                                      (implicit actorRefFactory: ActorRefFactory) extends Publisher[RichSearchHit] {
 
   require(search.build.scroll() != null, "Search Definition must have a scroll to be used as Publisher")
 
@@ -39,9 +39,9 @@ class ScrollPublisher private[streams](client: ElasticClient,
 }
 
 class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
-                        (implicit system: ActorSystem) extends Subscription {
+                        (implicit actorRefFactory: ActorRefFactory) extends Subscription {
 
-  val actor = system.actorOf(Props(new PublishActor(client, query, s, max)))
+  val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
 
   private[streams] def ready(): Unit = {
     actor ! PublishActor.Ready
