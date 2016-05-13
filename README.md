@@ -229,7 +229,6 @@ the DSL closely mirrors the standard Java API / REST API.
 | [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>) in <repo> ...` |
 | Create Template                           | `createTemplate(<name>) pattern <pattern> mappings {...} [settings]`|
 | [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
-| [Delete by query](guide/delete.md)        | `delete from <index/type> query { <queryblock> } [settings]`
 | [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`
 | [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>) ...` |
 | Delete Template                           | `deleteTemplate(<name>)` |
