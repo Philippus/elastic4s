@@ -76,6 +76,33 @@ class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
       aggs.getBucketByKey("dea agent").getDocCount shouldBe 2
       aggs.getBucketByKey("lawyer").getDocCount shouldBe 1
     }
+
+    "should only return included fields" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation terms "agg1" field "job" include Array("meth kingpin", "lawyer")
+        }
+      }.await
+      resp.totalHits shouldBe 10
+      val agg = resp.aggregations.getAsMap.get("agg1").asInstanceOf[StringTerms]
+      agg.getBuckets.size shouldBe 2
+      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
+      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
+    }
+
+    "should not return excluded fields" in {
+      val resp = client.execute {
+        search in "aggregations/breakingbad" aggregations {
+          aggregation terms "agg1" field "job" exclude  Array("meth kingpin", "lawyer")
+        }
+      }.await
+      resp.totalHits shouldBe 10
+      val agg = resp.aggregations.getAsMap.get("agg1").asInstanceOf[StringTerms]
+      agg.getBuckets.size shouldBe 3
+      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
+      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
+      agg.getBucketByKey("heavy").getDocCount shouldBe 2
+    }
   }
 
   "avg aggregation" - {
