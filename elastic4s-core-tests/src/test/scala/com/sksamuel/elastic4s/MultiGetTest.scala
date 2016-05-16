@@ -79,6 +79,19 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(resp.getResponses.toSeq(1).getResponse.getFields.keySet().asScala === Set("name"))
   }
 
+  it should "retrieve documents by id with fetchSourceContext" in {
+
+    val resp = client.execute(
+      multiget(
+        get id 3 from "coldplay/albums" fetchSourceContext Seq("name", "year"),
+        get id 5 from "coldplay/albums" fields "name" fetchSourceContext Seq("name")
+      ) preference Preference.Local refresh true realtime true
+    ).await
+    assert(2 === resp.responses.size)
+    assert(resp.responses.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
+    assert(resp.responses.last.original.getResponse.getSource.asScala.keySet === Set("name"))
+  }
+
   it should "retrieve documents by id and version" in {
     val resp = client.execute(
       multiget(
