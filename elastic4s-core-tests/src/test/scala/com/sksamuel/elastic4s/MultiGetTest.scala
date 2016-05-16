@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.index.VersionType
+import org.elasticsearch.search.fetch.source.FetchSourceContext
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mock.MockitoSugar
@@ -77,6 +78,19 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(2 === resp.getResponses.size)
     assert(resp.getResponses.toSeq.head.getResponse.getFields.keySet().asScala === Set("name", "year"))
     assert(resp.getResponses.toSeq(1).getResponse.getFields.keySet().asScala === Set("name"))
+  }
+
+  it should "retrieve documents by id with fetchSourceContext" in {
+
+    val resp = client.execute(
+      multiget(
+        get id 3 from "coldplay/albums" fetchSourceContext new FetchSourceContext(Array("name", "year")),
+        get id 5 from "coldplay/albums" fields "name" fetchSourceContext new FetchSourceContext(Array("name"))
+      ) preference Preference.Local refresh true realtime true
+    ).await
+    assert(2 === resp.responses.size)
+    assert(resp.responses.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
+    assert(resp.responses.last.original.getResponse.getSource.asScala.keySet === Set("name"))
   }
 
   it should "retrieve documents by id and version" in {
