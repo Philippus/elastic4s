@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.index.VersionType
-import org.elasticsearch.search.fetch.source.FetchSourceContext
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mock.MockitoSugar
@@ -84,8 +83,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     val resp = client.execute(
       multiget(
-        get id 3 from "coldplay/albums" fetchSourceContext new FetchSourceContext(Array("name", "year")),
-        get id 5 from "coldplay/albums" fields "name" fetchSourceContext new FetchSourceContext(Array("name"))
+        get id 3 from "coldplay/albums" fetchSourceContext Seq("name", "year"),
+        get id 5 from "coldplay/albums" fields "name" fetchSourceContext Seq("name")
       ) preference Preference.Local refresh true realtime true
     ).await
     assert(2 === resp.responses.size)
