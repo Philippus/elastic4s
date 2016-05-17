@@ -11,6 +11,7 @@ import org.elasticsearch.Version
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.Settings
+import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.node.MockNode
 import org.elasticsearch.script.groovy.GroovyPlugin
 import org.slf4j.LoggerFactory
@@ -149,13 +150,13 @@ trait ElasticSugar extends NodeBuilder {
   }
 
   def ensureIndexExists(index: String): Unit = {
-    val resp = client.execute {
-      indexExists(index)
-    }.await
-    if (!resp.isExists)
+    try {
       client.execute {
-        create index index
+        createIndex(index)
       }.await
+    } catch {
+      case _: IndexAlreadyExistsException => // Ok, ignore.
+    }
   }
 
   def truncateIndex(index: String): Unit = {
