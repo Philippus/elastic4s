@@ -258,6 +258,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   }
 
   /** Expects a query in json format and sets the query of the search request.
+    * i.e. underneath a "query" field if referencing HTTP API
     * Query must be valid json beginning with '{' and ending with '}'.
     * Field names must be double quoted.
     *
@@ -270,6 +271,43 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     */
   def rawQuery(json: String): SearchDefinition = {
     _builder.setQuery(json)
+    this
+  }
+
+  /** Sets the source of the request as a json string. Allows setting other parameters.
+    * Unlike rawQuery, setExtraSource is parsed at the "root" level
+    * Query must be valid json beginning with '{' and ending with '}'.
+    * Field names must be double quoted.
+    *
+    * Example:
+    * {{{
+    * search in "*" types("users", "tweets") limit 5 extraSource {
+    * """{ "query": { "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } } }"""
+    * } searchType SearchType.Scan
+    * }}}
+    */
+  def extraSource(json: String): SearchDefinition = {
+    _builder.setExtraSource(json)
+    this
+  }
+
+  /**
+    * Sets the source of the request as a json string. Note, settings anything other
+    * than the search type will cause this source to be overridden, consider using
+    * {@link #setExtraSource(String)}.
+    * Unlike rawQuery, setExtraSource is parsed at the "root" level
+    * Query must be valid json beginning with '{' and ending with '}'.
+    * Field names must be double quoted.
+    *
+    * Example:
+    * {{{
+    * search in "*" types("users", "tweets") limit 5 extraSource {
+    * """{ "query": { "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } } }"""
+    * } searchType SearchType.Scan
+    * }}}
+    */
+  def source(json: String): SearchDefinition = {
+    _builder.setSource(json)
     this
   }
 
