@@ -4,6 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import org.elasticsearch.action.search._
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.ToXContent.Params
@@ -358,6 +359,11 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
   def preference(pref: String): SearchDefinition = {
     _builder.setPreference(pref)
+    this
+  }
+
+  def indicesOptions(options: IndicesOptions): SearchDefinition = {
+    _builder.setIndicesOptions(options)
     this
   }
 
