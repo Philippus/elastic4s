@@ -293,6 +293,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_terms_lookup_filter.json")
   }
 
+  it should "generate json for int terms lookup filter" in {
+    val req = search in "music" types "bands" postFilter {
+      termsQuery("formedYear", 2013, 2014)
+    }
+    req.show should matchJsonResource("/json/search/search_int_terms_lookup_filter.json")
+  }
+
   it should "generate json for regex query" in {
     val req = search in "music" types "bands" postFilter {
       regexQuery("singer", "chris martin")
