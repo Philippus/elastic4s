@@ -121,6 +121,22 @@ trait QueryDsl {
     TermsQueryDefinition(field, values.map(_.toString))
   }
 
+  def termsQuery(field: String, values: Int*): IntTermsQueryDefinition = {
+    IntTermsQueryDefinition(field, values)
+  }
+
+  def termsQuery(field: String, values: Long*): LongTermsQueryDefinition = {
+    LongTermsQueryDefinition(field, values)
+  }
+
+  def termsQuery(field: String, values: Float*): FloatTermsQueryDefinition = {
+    FloatTermsQueryDefinition(field, values)
+  }
+
+  def termsQuery(field: String, values: Double*): DoubleTermsQueryDefinition = {
+    DoubleTermsQueryDefinition(field, values)
+  }
+
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
 
@@ -1140,11 +1156,10 @@ case class TermQueryDefinition(field: String, value: Any) extends QueryDefinitio
   }
 }
 
-case class TermsQueryDefinition(field: String, values: Seq[String]) extends QueryDefinition {
+trait GenericTermsQueryDefinition extends QueryDefinition {
+  def builder: TermsQueryBuilder
 
-  val builder = QueryBuilders.termsQuery(field, values: _*)
-
-  def boost(boost: Double): TermsQueryDefinition = {
+  def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
     this
   }
@@ -1153,6 +1168,11 @@ case class TermsQueryDefinition(field: String, values: Seq[String]) extends Quer
     builder.queryName(queryName)
     this
   }
+}
+
+case class TermsQueryDefinition(field: String, values: Seq[String]) extends GenericTermsQueryDefinition {
+
+  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
 
   @deprecated("deprecated in elasticsearch", "2.0.0")
   def minimumShouldMatch(min: Int): TermsQueryDefinition = minimumShouldMatch(min.toString)
@@ -1168,6 +1188,22 @@ case class TermsQueryDefinition(field: String, values: Seq[String]) extends Quer
     builder.disableCoord(disableCoord)
     this
   }
+}
+
+case class IntTermsQueryDefinition(field: String, values: Seq[Int]) extends GenericTermsQueryDefinition {
+  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
+}
+
+case class LongTermsQueryDefinition(field: String, values: Seq[Long]) extends GenericTermsQueryDefinition {
+  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
+}
+
+case class FloatTermsQueryDefinition(field: String, values: Seq[Float]) extends GenericTermsQueryDefinition {
+  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
+}
+
+case class DoubleTermsQueryDefinition(field: String, values: Seq[Double]) extends GenericTermsQueryDefinition {
+  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
 }
 
 case class TypeQueryDefinition(`type`: String) extends QueryDefinition {

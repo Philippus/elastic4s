@@ -1,0 +1,10 @@
+{
+  "post_filter": {
+    "terms": {
+      "formedYear": [
+        2013,
+        2014
+      ]
+    }
+  }
+}
