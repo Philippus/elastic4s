@@ -11,7 +11,7 @@ class QueryInnerHitsDslTest extends WordSpec with ElasticDsl {
         nestedQuery("somepath") query "qweqwe" inner {
           inner hits "name" from 2 size 10 highlighting (
               highlight field "x" matchedFields "x" order "score" fragmentSize 18 numberOfFragments 5
-            )
+            ) sourceInclude "x"
         }
       }
     }

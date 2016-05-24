@@ -1,0 +1,24 @@
+{
+    "query" : {
+        "nested" : {
+            "path" : "obj1",
+            "query" : {
+                "constant_score" : {
+                    "filter" : {
+                        "term" : {
+                            "name" : "sammy"
+                        }
+                    }
+                }
+            },
+            "score_mode" : "avg",
+            "inner_hits" : {
+                "_source" : {
+                    "includes" : [],
+                    "excludes" : ["bla"]
+                },
+                "name" : "obj1"
+            }
+        }
+    }
+}

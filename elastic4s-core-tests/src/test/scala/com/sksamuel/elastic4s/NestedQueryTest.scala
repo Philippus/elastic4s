@@ -54,12 +54,28 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
       resp1.totalHits shouldEqual 1
       val maybeHits = resp1.hits(0).innerHits.get("actor")
       maybeHits.isDefined shouldBe true
-      maybeHits.get.getTotalHits shouldBe 1
-      val fields = maybeHits.get.getAt(0).highlightFields()
+      maybeHits.get.getTotalHits shouldEqual 1
+      val fields = maybeHits.get.getAt(0).highlightFields
       fields.containsKey("actor.name") shouldBe true
       val fragments = fields.get("actor.name").fragments()
       fragments.length shouldBe 1
-      fragments(0).string() shouldBe "peter <em>dinklage</em>"
+      fragments(0).string shouldBe "peter <em>dinklage</em>"
+    }
+  }
+
+  "nested object" - {
+    "should have correct inner hit source" in {
+      val resp1 = client.execute {
+        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage")).inner {
+          innerHits("actor").sourceExclude("birthplace")
+        }
+      }.await
+      resp1.totalHits shouldEqual 1
+      val maybeInnerHits = resp1.hits(0).innerHits.get("actor")
+      maybeInnerHits.isDefined shouldBe true
+      maybeInnerHits.get.getTotalHits shouldEqual 1
+      maybeInnerHits.get.getAt(0).sourceAsMap.containsKey("birthplace") shouldBe false
+      maybeInnerHits.get.getAt(0).sourceAsMap.containsKey("name") shouldBe true
     }
   }
 }
