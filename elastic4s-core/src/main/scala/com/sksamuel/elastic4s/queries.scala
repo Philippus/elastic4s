@@ -1738,6 +1738,11 @@ case class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
     builder.setSize(s)
     this
   }
+
+  def highlighting(highlights: HighlightDefinition*): this.type = {
+    highlights.foreach(highlight => builder.addHighlightedField(highlight.builder))
+    this
+  }
 }
 
 case class InnerHitDefinition(private[elastic4s] val name: String) {
@@ -1751,6 +1756,11 @@ case class InnerHitDefinition(private[elastic4s] val name: String) {
 
   def `type`(t: String): this.type = {
     inner.setType(t)
+    this
+  }
+
+  def highlighting(highlights: HighlightDefinition*): this.type = {
+    highlights.foreach(highlight => inner.addHighlightedField(highlight.builder))
     this
   }
 }
