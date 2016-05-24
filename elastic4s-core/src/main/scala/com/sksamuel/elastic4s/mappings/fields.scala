@@ -453,7 +453,9 @@ final class CompletionFieldDefinition(name: String)
 final class TokenCountDefinition(name: String) extends TypedFieldDefinition(TokenCountType, name)
 with AttributeIndex
 with AttributeAnalyzer
-with AttributeSearchAnalyzer {
+with AttributeSearchAnalyzer
+with AttributeNullValue[Int]
+with AttributeStore {
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
       source.startObject(name)
