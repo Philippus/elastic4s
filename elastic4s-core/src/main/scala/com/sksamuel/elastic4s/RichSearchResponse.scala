@@ -88,10 +88,10 @@ case class RichSearchHit(java: SearchHit) {
   def shard: SearchShardTarget = java.shard
 
   def sourceRef: BytesReference = java.sourceRef()
-  def source: Array[Byte] = Option(java.source).getOrElse(Array.emptyByteArray)
+  def source: Array[Byte] = if (java.source == null) Array.emptyByteArray else java.source
   def isSourceEmpty: Boolean = java.isSourceEmpty
-  def sourceAsString: String = Option(java.sourceAsString).getOrElse("")
-  def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+  def sourceAsString: String = if (java.sourceAsString == null) "" else java.sourceAsString
+  def sourceAsMap: Map[String, AnyRef] = if (java.sourceAsMap == null) Map.empty else java.sourceAsMap.asScala.toMap
 
   @deprecated("use as[T]", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
@@ -101,7 +101,7 @@ case class RichSearchHit(java: SearchHit) {
   def explanation: Option[Explanation] = Option(java.explanation)
 
   def fields: Map[String, RichSearchHitField] = {
-    Option(java.fields).map(_.asScala.toMap.mapValues(RichSearchHitField)).getOrElse(Map.empty)
+    if (java.fields == null) Map.empty else java.fields.asScala.toMap.mapValues(RichSearchHitField)
   }
 
   def stringValue(fieldName: String): String = field(fieldName).value[String]
@@ -111,12 +111,14 @@ case class RichSearchHit(java: SearchHit) {
   def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
 
   def highlightFields: Map[String, HighlightField] = {
-    Option(java.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
+    if (java.highlightFields == null) Map.empty else java.highlightFields().asScala.toMap
   }
 
-  def sortValues: Array[AnyRef] = Option(java.sortValues).getOrElse(Array.empty)
-  def matchedQueries: Array[String] = Option(java.matchedQueries).getOrElse(Array.empty)
-  def innerHits: Map[String, SearchHits] = Option(java.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
+  def sortValues: Array[AnyRef] = if (java.sortValues == null) Array.empty else java.sortValues
+  def matchedQueries: Array[String] = if (java.matchedQueries == null) Array.empty else java.matchedQueries
+  def innerHits: Map[String, SearchHits] = {
+    if (java.getInnerHits == null) Map.empty else java.getInnerHits.asScala.toMap
+  }
 }
 
 case class RichSearchHitField(java: SearchHitField) extends AnyVal {
