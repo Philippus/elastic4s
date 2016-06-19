@@ -65,6 +65,7 @@ case class RichSearchHit(java: SearchHit) {
   }
 
   import scala.collection.JavaConverters._
+  import scala.collection.mutable
 
   // java method aliases
   @deprecated("use .java", "2.1.2")
@@ -92,6 +93,9 @@ case class RichSearchHit(java: SearchHit) {
   def isSourceEmpty: Boolean = java.isSourceEmpty
   def sourceAsString: String = if (java.sourceAsString == null) "" else java.sourceAsString
   def sourceAsMap: Map[String, AnyRef] = if (java.sourceAsMap == null) Map.empty else java.sourceAsMap.asScala.toMap
+  def sourceAsMutableMap: mutable.Map[String, AnyRef] = {
+    if (java.sourceAsMap == null) mutable.Map.empty else java.sourceAsMap.asScala
+  }
 
   @deprecated("use as[T]", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
