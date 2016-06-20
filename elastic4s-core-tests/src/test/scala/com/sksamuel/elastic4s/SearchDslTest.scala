@@ -856,6 +856,29 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_query_nested.json")
   }
 
+  it should "generate correct json for nested query with inner highlight" in {
+    val req = search in "music" types "bands" query {
+      nestedQuery("obj1") query {
+        constantScoreQuery {
+          termQuery("name", "sammy")
+        }
+      } scoreMode "avg" inner
+          innerHits("obj1").size(6).highlighting(highlight("name").fragmentSize(20))
+    }
+    req.show should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
+  }
+
+  it should "generate correct json for nested query with inner-hits source modulation" in {
+    val req = search in "music" types "bands" query {
+      nestedQuery("obj1") query {
+        constantScoreQuery {
+          termQuery("name", "sammy")
+        }
+      } scoreMode "avg" inner innerHits("obj1").sourceExclude("bla")
+    }
+    req.show should matchJsonResource("/json/search/search_query_nested_inner_hits_source.json")
+  }
+
   it should "generate correct json for a SpanTermQueryDefinition" in {
     val req = search in "*" types("users", "tweets") query {
       spanTermQuery("name", "coldplay").boost(123)
