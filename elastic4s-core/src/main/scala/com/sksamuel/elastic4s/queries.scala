@@ -98,6 +98,8 @@ trait QueryDsl {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
 
+  def scriptQuery(script: String): ScriptQueryDefinition = ScriptQueryDefinition(script)
+
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
   def stringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
 

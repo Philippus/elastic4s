@@ -1,0 +1,9 @@
+{
+  "post_filter": {
+    "script": {
+      "script": {
+        "inline": "doc['creationYear'].value > 2013"
+      }
+    }
+  }
+}
