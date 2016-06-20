@@ -808,6 +808,7 @@ folder. There is no need to configure anything externally.
 * Hotel Urbano
 * Immobilien Scout
 * HMRC
+* Canal+
 
 _Raise a PR to add your company here_
 
