@@ -19,7 +19,8 @@ object Build extends AutoPlugin {
     val ScalaLoggingVersion = "2.1.2"
     val ElasticsearchVersion = "2.3.0"
     val Log4jVersion = "1.2.17"
-    val CommonsIoVersion = "2.4"  
+    val CommonsIoVersion = "2.4"
+    val CirceVersion = "0.4.1"
   }
   
   import autoImport._
