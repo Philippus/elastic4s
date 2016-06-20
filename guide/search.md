@@ -44,6 +44,12 @@ search in "*" types("users", "tweets") limit 5 rawQuery {
 } searchType SearchType.Scan
 ```
 
+Or initialize the entire SearchRequestBuilder from a json string. This provides more flexibility (i.e when the DSL is not complete) and enables storing queries in a separate environment (DB, cache, etc.).
+```scala
+search in "*" types("users", "tweets") limit 5 extraSource {
+  """{ "query": { "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } } }"""
+} searchType SearchType.Scan
+```
 
 We might want to return facets from our search. Naturally in London we'd want to search for historic landmarks and the age of those attractions and so we'd offer these as selectable facets to our lovely users.
 ```scala
@@ -81,9 +87,9 @@ That would create two aggregations, one for the number of terms up to the 20 mos
 
 #### Source Filtering
 
-We can control which parts of the source are returned to us using source filtering. Let's carry on our places/cities 
-example, but now lets suppose the document has many more fields, such as population, foundation date, 
-gps coordinates. We can specify which ones are included / excludes by using the `sourceInclude` and `sourceExclude` 
+We can control which parts of the source are returned to us using source filtering. Let's carry on our places/cities
+example, but now lets suppose the document has many more fields, such as population, foundation date,
+gps coordinates. We can specify which ones are included / excludes by using the `sourceInclude` and `sourceExclude`
 methods. This is useful functionality to trim down large documents from being sent over the wire.
 
 ```scala
@@ -92,7 +98,7 @@ client.execute {
 }
 ```
 
-We can specify multiple includes/excludes and they recognize regular expressions. Read more in the [elasticsearch 
+We can specify multiple includes/excludes and they recognize regular expressions. Read more in the [elasticsearch
 docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-source-filtering.html)
 
 Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
