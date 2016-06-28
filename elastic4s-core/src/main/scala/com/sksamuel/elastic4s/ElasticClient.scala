@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
+import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
@@ -18,7 +19,14 @@ import scala.util.Try
 class ElasticClient(val client: org.elasticsearch.client.Client,
                     node: Option[Node] = None) extends IterableSearch {
 
-  def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = executable(client, t)
+  def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
+    try {
+      executable(client, t)
+    } catch {
+      case e: ElasticsearchException => Future.failed(e)
+      case e: ElasticsearchWrapperException => Future.failed(e)
+    }
+  }
 
   def close(): Unit = {
     Try {
