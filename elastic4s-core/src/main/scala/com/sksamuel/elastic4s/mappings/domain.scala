@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 /** @author Stephen Samuel */
-sealed abstract class YesNo(val value: String)
+case class YesNo(val value: String)
 object YesNo {
   case object Yes extends YesNo("yes")
   case object No extends YesNo("no")
@@ -11,7 +11,7 @@ object YesNo {
   }
 }
 
-sealed abstract class TermVector(val value: String)
+case class TermVector(val value: String)
 object TermVector {
   case object No extends TermVector("no")
   case object Yes extends TermVector("yes")
@@ -21,7 +21,7 @@ object TermVector {
   case object WithPositionsOffsetsPayloads extends TermVector("with_positions_offsets_payloads")
 }
 
-sealed abstract class IndexOptions(val value: String)
+case class IndexOptions(val value: String)
 object IndexOptions {
   case object Docs extends IndexOptions("docs")
   case object Freqs extends IndexOptions("freqs")
@@ -29,7 +29,7 @@ object IndexOptions {
   case object Offsets extends IndexOptions("offsets")
 }
 
-sealed abstract class PostingsFormat(val value: String)
+case class PostingsFormat(val value: String)
 object PostingsFormat {
   case object Direct extends PostingsFormat("direct")
   case object Memory extends PostingsFormat("memory")
@@ -39,20 +39,20 @@ object PostingsFormat {
   case object Default extends PostingsFormat("default")
 }
 
-sealed abstract class DocValuesFormat(val value: String)
+case class DocValuesFormat(val value: String)
 object DocValuesFormat {
   case object Memory extends DocValuesFormat("memory")
   case object Disk extends DocValuesFormat("disk")
   case object Default extends DocValuesFormat("default")
 }
 
-sealed abstract class Similarity(val value: String)
+case class Similarity(val value: String)
 object Similarity {
   case object Default extends Similarity("default")
   case object BM25 extends Similarity("BM25")
 }
 
-sealed abstract class PrefixTree(val value: String)
+case class PrefixTree(val value: String)
 object PrefixTree {
   case object Geohash extends PrefixTree("geohash")
   case object Quadtree extends PrefixTree("quadtree")
