@@ -205,6 +205,9 @@ trait QueryDsl {
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
+
+  def wrapperQuery(source : String) : WrapperQueryStringDefinition = new WrapperQueryStringDefinition(source)
+  def wrapperQuery(source : Array[Byte], offset : Int, length : Int) : WrapperQueryByteDefinition = new WrapperQueryByteDefinition(source, offset, length)
 }
 
 class BoolQueryDefinition extends QueryDefinition {
@@ -1298,6 +1301,16 @@ class NestedQueryDefinition(path: String) extends QueryDefinition {
     this
   }
 }
+
+
+class WrapperQueryStringDefinition(source : String) extends QueryDefinition {
+  val builder = QueryBuilders.wrapperQuery(source)
+}
+
+class WrapperQueryByteDefinition(source : Array[Byte], offset : Int, length : Int) extends QueryDefinition {
+  val builder = QueryBuilders.wrapperQuery(source, offset, length)
+}
+
 
 class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
 
