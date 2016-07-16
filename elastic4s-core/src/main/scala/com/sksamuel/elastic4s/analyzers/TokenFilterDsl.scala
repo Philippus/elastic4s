@@ -17,6 +17,7 @@ trait TokenFilterDsl {
   def stemmerOverrideTokenFilter(name: String): StemmerOverrideTokenFilter = StemmerOverrideTokenFilter(name)
   def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
   def stopTokenFilter(name: String): StopTokenFilter = StopTokenFilter(name)
+  def predefinedStopTokenFilter(name: String): PredefinedStopTokenFilter = PredefinedStopTokenFilter(name)
   def synonymTokenFilter(name: String): SynonymTokenFilter = SynonymTokenFilter(name)
   def synonymTokenFilter(name: String, synonyms: Iterable[String]): SynonymTokenFilter = {
     SynonymTokenFilter(name).synonyms(synonyms)
