@@ -157,7 +157,7 @@ trait ElasticDsl
 
     def index(name: String) = {
       require(name.nonEmpty, "index name must not be null or empty")
-      new CreateIndexDefinition(name)
+      CreateIndexDefinition(name)
     }
 
     def snapshot(name: String) = {

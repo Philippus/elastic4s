@@ -14,6 +14,7 @@ import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.node.MockNode
 import org.elasticsearch.script.groovy.GroovyPlugin
+import org.elasticsearch.transport.RemoteTransportException
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future
@@ -156,6 +157,7 @@ trait ElasticSugar extends NodeBuilder {
       }.await
     } catch {
       case _: IndexAlreadyExistsException => // Ok, ignore.
+      case _: RemoteTransportException => // Ok, ignore.
     }
   }
 
