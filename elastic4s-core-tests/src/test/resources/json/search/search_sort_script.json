@@ -7,7 +7,7 @@
           "lang": "java"
         },
         "type": "number",
-        "reverse": true,
+        "order": "desc",
         "mode": "min",
         "nested_path": "a.b.c"
       }

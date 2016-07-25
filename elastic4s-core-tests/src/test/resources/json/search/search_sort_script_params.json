@@ -10,7 +10,7 @@
           }
         },
         "type": "number",
-        "reverse": true
+        "order": "desc"
       }
     }
   ]

@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.ScriptDefinition
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.script.Script
 import org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode

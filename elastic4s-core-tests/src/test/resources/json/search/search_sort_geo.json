@@ -1,19 +1,19 @@
 {
-    "sort": [
-        {
-            "_geo_distance": {
-                "location": [
-                    {
-                        "lat": 56.6,
-                        "lon": 78.8
-                    },
-                    "ABCDEFG"
-                ],
-                "distance_type": "arc",
-                "reverse": true,
-                "mode": "max",
-                "nested_path": "nested-path"
-            }
-        }
-    ]
+  "sort": [
+    {
+      "_geo_distance": {
+        "location": [
+          {
+            "lat": 56.6,
+            "lon": 78.8
+          },
+          "ABCDEFG"
+        ],
+        "distance_type": "arc",
+        "order": "desc",
+        "mode": "max",
+        "nested_path": "nested-path"
+      }
+    }
+  ]
 }
