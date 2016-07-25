@@ -785,6 +785,33 @@ val subscriber = client.subscriber[SomeType](batchSize, concurrentBatches, () =>
 publisher.subscribe(subscriber)
 ```
 
+## Using Elastic4s in your project
+
+For gradle users, add:
+
+```groovy
+compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:2.3.0'
+```
+
+For SBT users simply add:
+
+```scala
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
+```
+
+For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
+
+```xml
+<dependency>
+    <groupId>com.sksamuel.elastic4s</groupId>
+    <artifactId>elastic4s-core_2.11</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
+
+The above is just an example and is not always up to date. Check the latest released version on
+[maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
+
 ## Building and Testing
 
 This project is built with SBT. So to build
