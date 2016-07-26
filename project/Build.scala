@@ -11,7 +11,7 @@ object Build extends AutoPlugin {
   object autoImport {
     val org = "com.sksamuel.elastic4s"
   
-    val ScalaVersion = "2.11.7"
+    val ScalaVersion = "2.11.8"
     val ScalatestVersion = "2.2.5"
     val MockitoVersion = "1.9.5"
     val JacksonVersion = "2.7.5"
@@ -28,7 +28,7 @@ object Build extends AutoPlugin {
   override def projectSettings = Seq(
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.7", "2.10.5"),
+    crossScalaVersions := Seq("2.11.8", "2.10.5"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     fork in Test := true,
