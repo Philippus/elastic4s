@@ -14,7 +14,7 @@ object Build extends AutoPlugin {
     val ScalaVersion = "2.11.7"
     val ScalatestVersion = "2.2.5"
     val MockitoVersion = "1.9.5"
-    val JacksonVersion = "2.6.1"
+    val JacksonVersion = "2.7.5"
     val Slf4jVersion = "1.7.12"
     val ScalaLoggingVersion = "2.1.2"
     val ElasticsearchVersion = "2.3.4"
