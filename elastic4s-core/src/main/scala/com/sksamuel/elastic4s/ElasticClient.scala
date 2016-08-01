@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import java.net.InetSocketAddress
 
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
-import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.client.transport.{TransportClient, NoNodeAvailableException}
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
@@ -25,6 +25,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client,
     } catch {
       case e: ElasticsearchException => Future.failed(e)
       case e: ElasticsearchWrapperException => Future.failed(e)
+      case e: NoNodeAvailableException => Future.failed(e)
     }
   }
 
