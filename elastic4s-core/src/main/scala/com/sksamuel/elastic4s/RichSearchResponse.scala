@@ -102,6 +102,8 @@ case class RichSearchHit(java: SearchHit) {
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
+  def to[T](implicit fromHit: FromHit[T], manifest: Manifest[T]): T = fromHit.from(new ScalaSearchHit(java))
+
   def explanation: Option[Explanation] = Option(java.explanation)
 
   def fields: Map[String, RichSearchHitField] = {
@@ -141,4 +143,34 @@ case class RichSearchHitField(java: SearchHitField) extends AnyVal {
   def value[V]: V = java.getValue[V]
   def values: Seq[AnyRef] = java.values().asScala.toList
   def isMetadataField: Boolean = java.isMetadataField
+}
+
+class ScalaSearchHit(java: SearchHit) extends Hit {
+
+  import scala.collection.JavaConverters._
+
+  override def id: String = java.id()
+  override def index: String = java.index()
+  override def source: Map[String, AnyRef] = java.sourceAsMap().asScala.toMap
+  override def sourceAsBytes: Array[Byte] = java.source()
+  override def sourceAsString: String = java.sourceAsString()
+  override def isExists: Boolean = true
+  override def isEmpty: Boolean = java.isSourceEmpty
+  override def `type`: String = java.`type`()
+  override def version: Long = java.version()
+  override def field(name: String): HitField = new ScalaSearchHitField(java.field(name))
+  override def fieldOpt(name: String): Option[HitField] = Option(java.field(name)).map(new ScalaSearchHitField(_))
+  override def fields: Map[String, HitField] = java.fields().asScala.toMap.map { case (key, value) =>
+    key -> new ScalaSearchHitField(value)
+  }
+}
+
+class ScalaSearchHitField(java: SearchHitField) extends HitField {
+
+  import scala.collection.JavaConverters._
+
+  override def name: String = java.name()
+  override def value: AnyRef = java.value()
+  override def values: Seq[AnyRef] = java.values().asScala
+  override def isMetadataField: Boolean = java.isMetadataField
 }

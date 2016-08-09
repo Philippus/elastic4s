@@ -7,22 +7,21 @@ object Build extends AutoPlugin {
 
   override def trigger = AllRequirements
   override def requires = JvmPlugin
-  
+
   object autoImport {
     val org = "com.sksamuel.elastic4s"
-  
     val ScalaVersion = "2.11.8"
-    val ScalatestVersion = "2.2.5"
+    val ScalatestVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
     val JacksonVersion = "2.7.5"
     val Slf4jVersion = "1.7.12"
     val ScalaLoggingVersion = "2.1.2"
-    val ElasticsearchVersion = "2.3.4"
+    val ElasticsearchVersion = "2.3.5"
     val Log4jVersion = "1.2.17"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.4.1"
   }
-  
+
   import autoImport._
 
   override def projectSettings = Seq(
@@ -40,14 +39,14 @@ object Build extends AutoPlugin {
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
-      "org.scalactic" %% "scalactic" % "2.2.5",
-      "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "commons-io" % "commons-io" % CommonsIoVersion % "test",
-      "log4j" % "log4j" % Log4jVersion % "test",
-      "org.slf4j" % "log4j-over-slf4j" % Slf4jVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
+      "org.elasticsearch"     % "elasticsearch"     % ElasticsearchVersion,
+      "org.scalactic"         %% "scalactic"        % "2.2.5",
+      "org.slf4j"             % "slf4j-api"         % Slf4jVersion,
+      "commons-io"            % "commons-io"        % CommonsIoVersion  % "test",
+      "log4j"                 % "log4j"             % Log4jVersion      % "test",
+      "org.slf4j"             % "log4j-over-slf4j"  % Slf4jVersion      % "test",
+      "org.mockito"           % "mockito-all"       % MockitoVersion    % "test",
+      "org.scalatest"         %% "scalatest"        % ScalatestVersion  % "test"
     ),
     publishTo <<= version {
       (v: String) =>

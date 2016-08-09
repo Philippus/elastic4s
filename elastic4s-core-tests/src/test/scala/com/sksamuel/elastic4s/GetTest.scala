@@ -64,7 +64,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar
     whenReady(resp) { result =>
       result.isExists should be(true)
       result.id shouldBe "8"
-      result.source should be(null)
+      result.source shouldBe Map.empty
       result.fields should have size 0
     }
   }
@@ -78,7 +78,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar
     whenReady(resp) { result =>
       result.isExists should be(true)
       result.id shouldBe "8"
-      result.source should be(null)
+      result.source shouldBe Map.empty
       result.fields should (contain key "name" and not contain key("brand"))
     }
   }
