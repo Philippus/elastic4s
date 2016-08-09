@@ -123,6 +123,7 @@ object ElasticClient {
    * Creates a local data node. This is useful for embedded usage, or for unit tests.
    * Default settings will be applied.
    */
+  @deprecated("must specify path.home in elasticsearch now, so this method will throw", "2.3.3")
   def local: ElasticClient = local(Settings.settingsBuilder().build())
 
   /**

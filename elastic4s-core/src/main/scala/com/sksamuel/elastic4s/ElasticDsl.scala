@@ -231,20 +231,20 @@ trait ElasticDsl
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
   def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
-  def fieldStats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
-  def fieldStats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
+  def fieldStats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
+  def fieldStats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
   def fieldSort(field: String) = FieldSortDefinition(field)
 
   case object flush {
-    def index(indexes: Iterable[String]): FlushIndexDefinition = new FlushIndexDefinition(indexes.toSeq)
-    def index(indexes: String*): FlushIndexDefinition = new FlushIndexDefinition(indexes)
+    def index(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
+    def index(indexes: String*): FlushIndexDefinition = FlushIndexDefinition(indexes)
   }
 
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = flush index indexes
   def flushIndex(indexes: String*): FlushIndexDefinition = flush index indexes
 
   case object fuzzyCompletion {
-    def suggestion(name: String) = new FuzzyCompletionSuggestionDefinition(name)
+    def suggestion(name: String) = FuzzyCompletionSuggestionDefinition(name)
   }
   def fuzzyCompletionSuggestion: FuzzyCompletionSuggestionDefinition = {
     fuzzyCompletionSuggestion(UUID.randomUUID.toString)
@@ -263,7 +263,7 @@ trait ElasticDsl
       new GetWithIdExpectsFrom(id.toString)
     }
 
-    def alias(aliases: String*): GetAliasDefinition = new GetAliasDefinition(aliases)
+    def alias(aliases: String*): GetAliasDefinition = GetAliasDefinition(aliases)
 
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
     def cluster(health: HealthKeyword): ClusterHealthDefinition = new ClusterHealthDefinition
@@ -282,8 +282,8 @@ trait ElasticDsl
   }
 
   def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
-  def getAlias(first: String, rest: String*): GetAliasDefinition = new GetAliasDefinition(first +: rest)
-  def getAlias(aliases: Iterable[String]): GetAliasDefinition = new GetAliasDefinition(aliases.toSeq)
+  def getAlias(first: String, rest: String*): GetAliasDefinition = GetAliasDefinition(first +: rest)
+  def getAlias(aliases: Iterable[String]): GetAliasDefinition = GetAliasDefinition(aliases.toSeq)
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
