@@ -13,7 +13,8 @@ import scala.language.implicitConversions
 trait GetDsl {
 
   class GetWithIdExpectsFrom(id: String) {
-    def from(index: IndexAndTypes): GetDefinition = new GetDefinition(index, id)
+    def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id)
+    def from(index: IndexAndTypes): GetDefinition = GetDefinition(index, id)
   }
 
   implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, RichGetResponse] {
