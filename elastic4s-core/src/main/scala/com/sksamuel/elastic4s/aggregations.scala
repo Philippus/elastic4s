@@ -712,7 +712,7 @@ case class GlobalAggregationDefinition(name: String)
   val aggregationBuilder = AggregationBuilders.global(name)
 }
 
-class ScriptedMetricAggregationDefinition(name: String) extends AbstractAggregationDefinition {
+case class ScriptedMetricAggregationDefinition(name: String) extends AbstractAggregationDefinition {
 
   import scala.collection.JavaConverters._
 

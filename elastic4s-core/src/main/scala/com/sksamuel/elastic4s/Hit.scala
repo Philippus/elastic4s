@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import org.scalactic.{ErrorMessage, Or}
+
 trait Hit {
   def id: String
   def index: String
@@ -26,6 +28,6 @@ trait HitField {
   def isMetadataField: Boolean
 }
 
-trait FromHit[T] {
-  def from(hit: Hit): T
+trait HitReader[T] {
+  def from(hit: Hit): T Or ErrorMessage
 }

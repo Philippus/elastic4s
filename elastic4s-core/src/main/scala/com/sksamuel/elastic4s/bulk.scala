@@ -18,7 +18,7 @@ trait BulkCompatibleDefinition
 trait BulkDsl {
   this: IndexDsl =>
 
-  def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = new BulkDefinition(requests.toSeq)
+  def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = BulkDefinition(requests.toSeq)
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
   implicit object BulkDefinitionExecutable

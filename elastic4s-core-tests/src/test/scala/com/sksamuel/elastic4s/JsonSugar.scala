@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import org.scalatest.Matchers
 import org.scalatest.matchers.{Matcher, MatchResult}
 
-
 trait JsonSugar extends Matchers {
 
   protected val mapper = new ObjectMapper with ScalaObjectMapper
@@ -32,7 +31,6 @@ trait JsonSugar extends Matchers {
       )
     }
   }
-
 
   class JsonResourceMatcher(resourceName: String) extends Matcher[String] {
     override def apply(left: String): MatchResult = {

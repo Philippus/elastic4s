@@ -6,6 +6,7 @@ import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
+import org.scalactic.{ErrorMessage, Or}
 
 import scala.concurrent.duration._
 
@@ -30,6 +31,8 @@ case class RichSearchResponse(original: SearchResponse) {
   def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
+
+  def to[T: HitReader : Manifest]: Array[T Or ErrorMessage] = hits.map(_.to[T])
 
   def scrollId: String = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)
@@ -102,7 +105,8 @@ case class RichSearchHit(java: SearchHit) {
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
-  def to[T](implicit fromHit: FromHit[T], manifest: Manifest[T]): T = fromHit.from(new ScalaSearchHit(java))
+  def to[T](implicit read: HitReader[T], manifest: Manifest[T]): Or[T, ErrorMessage] = read
+    .from(new ScalaSearchHit(java))
 
   def explanation: Option[Explanation] = Option(java.explanation)
 
@@ -146,6 +150,7 @@ case class RichSearchHitField(java: SearchHitField) extends AnyVal {
 }
 
 class ScalaSearchHit(java: SearchHit) extends Hit {
+  require(java != null)
 
   import scala.collection.JavaConverters._
 
@@ -158,14 +163,15 @@ class ScalaSearchHit(java: SearchHit) extends Hit {
   override def isEmpty: Boolean = java.isSourceEmpty
   override def `type`: String = java.`type`()
   override def version: Long = java.version()
-  override def field(name: String): HitField = new ScalaSearchHitField(java.field(name))
+  override def field(name: String): HitField = fieldOpt(name).orNull
   override def fieldOpt(name: String): Option[HitField] = Option(java.field(name)).map(new ScalaSearchHitField(_))
-  override def fields: Map[String, HitField] = java.fields().asScala.toMap.map { case (key, value) =>
-    key -> new ScalaSearchHitField(value)
+  override def fields: Map[String, HitField] = java.fields().asScala.toMap.map {
+    case (key, value) => key -> new ScalaSearchHitField(value)
   }
 }
 
 class ScalaSearchHitField(java: SearchHitField) extends HitField {
+  require(java != null)
 
   import scala.collection.JavaConverters._
 

@@ -5,6 +5,7 @@ import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.index.get.GetField
 import org.elasticsearch.search.fetch.source.FetchSourceContext
+import org.scalactic.{ErrorMessage, Or}
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -123,7 +124,7 @@ case class RichGetResponse(original: GetResponse) {
   def isSourceEmpty: Boolean = original.isSourceEmpty
   def iterator: Iterator[GetField] = original.iterator.asScala
 
-  def to[T](implicit fromHit: FromHit[T], manifest: Manifest[T]): T = fromHit.from(new GetHit(original))
+  def to[T](implicit read: HitReader[T], manifest: Manifest[T]): Or[T, ErrorMessage] = read.from(new GetHit(original))
 }
 
 case class RichGetField(original: GetField) extends AnyVal {

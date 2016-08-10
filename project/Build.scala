@@ -40,7 +40,7 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch"     % "elasticsearch"     % ElasticsearchVersion,
-      "org.scalactic"         %% "scalactic"        % "2.2.5",
+      "org.scalactic"         %% "scalactic"        % "3.0.0",
       "org.slf4j"             % "slf4j-api"         % Slf4jVersion,
       "commons-io"            % "commons-io"        % CommonsIoVersion  % "test",
       "log4j"                 % "log4j"             % Log4jVersion      % "test",

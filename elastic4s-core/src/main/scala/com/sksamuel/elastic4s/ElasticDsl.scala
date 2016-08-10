@@ -60,58 +60,58 @@ trait ElasticDsl
 
   def aliases(aliasMutations: MutateAliasDefinition*): IndicesAliasesRequestDefinition = aliases(aliasMutations)
   def aliases(aliasMutations: Iterable[MutateAliasDefinition]): IndicesAliasesRequestDefinition = {
-    new IndicesAliasesRequestDefinition(aliasMutations.toSeq: _*)
+    IndicesAliasesRequestDefinition(aliasMutations.toSeq: _*)
   }
 
   def agg = aggregation
   case object aggregation {
-    def avg(name: String) = new AvgAggregationDefinition(name)
-    def children(name: String) = new ChildrenAggregationDefinition(name)
-    def count(name: String) = new ValueCountAggregationDefinition(name)
-    def cardinality(name: String) = new CardinalityAggregationDefinition(name)
-    def datehistogram(name: String) = new DateHistogramAggregation(name)
-    def daterange(name: String) = new DateRangeAggregation(name)
-    def extendedstats(name: String) = new ExtendedStatsAggregationDefinition(name)
-    def filter(name: String) = new FilterAggregationDefinition(name)
-    def filters(name: String) = new FiltersAggregationDefinition(name)
-    def geobounds(name: String) = new GeoBoundsAggregationDefinition(name)
-    def geodistance(name: String) = new GeoDistanceAggregationDefinition(name)
-    def geohash(name: String) = new GeoHashGridAggregationDefinition(name)
-    def global(name: String) = new GlobalAggregationDefinition(name)
-    def histogram(name: String) = new HistogramAggregation(name)
-    def ipRange(name: String) = new IpRangeAggregationDefinition(name)
-    def max(name: String) = new MaxAggregationDefinition(name)
-    def min(name: String) = new MinAggregationDefinition(name)
-    def missing(name: String) = new MissingAggregationDefinition(name)
-    def nested(name: String) = new NestedAggregationDefinition(name)
-    def reverseNested(name: String) = new ReverseNestedAggregationDefinition(name)
-    def percentiles(name: String) = new PercentilesAggregationDefinition(name)
-    def percentileranks(name: String) = new PercentileRanksAggregationDefinition(name)
-    def range(name: String) = new RangeAggregationDefinition(name)
-    def scriptedMetric(name: String) = new ScriptedMetricAggregationDefinition(name)
-    def sigTerms(name: String) = new SigTermsAggregationDefinition(name)
-    def stats(name: String) = new StatsAggregationDefinition(name)
-    def sum(name: String) = new SumAggregationDefinition(name)
-    def terms(name: String) = new TermAggregationDefinition(name)
-    def topHits(name: String) = new TopHitsAggregationDefinition(name)
+    def avg(name: String) = AvgAggregationDefinition(name)
+    def children(name: String) = ChildrenAggregationDefinition(name)
+    def count(name: String) = ValueCountAggregationDefinition(name)
+    def cardinality(name: String) = CardinalityAggregationDefinition(name)
+    def datehistogram(name: String) = DateHistogramAggregation(name)
+    def daterange(name: String) = DateRangeAggregation(name)
+    def extendedstats(name: String) = ExtendedStatsAggregationDefinition(name)
+    def filter(name: String) = FilterAggregationDefinition(name)
+    def filters(name: String) = FiltersAggregationDefinition(name)
+    def geobounds(name: String) = GeoBoundsAggregationDefinition(name)
+    def geodistance(name: String) = GeoDistanceAggregationDefinition(name)
+    def geohash(name: String) = GeoHashGridAggregationDefinition(name)
+    def global(name: String) = GlobalAggregationDefinition(name)
+    def histogram(name: String) = HistogramAggregation(name)
+    def ipRange(name: String) = IpRangeAggregationDefinition(name)
+    def max(name: String) = MaxAggregationDefinition(name)
+    def min(name: String) = MinAggregationDefinition(name)
+    def missing(name: String) = MissingAggregationDefinition(name)
+    def nested(name: String) = NestedAggregationDefinition(name)
+    def reverseNested(name: String) = ReverseNestedAggregationDefinition(name)
+    def percentiles(name: String) = PercentilesAggregationDefinition(name)
+    def percentileranks(name: String) = PercentileRanksAggregationDefinition(name)
+    def range(name: String) = RangeAggregationDefinition(name)
+    def scriptedMetric(name: String) = ScriptedMetricAggregationDefinition(name)
+    def sigTerms(name: String) = SigTermsAggregationDefinition(name)
+    def stats(name: String) = StatsAggregationDefinition(name)
+    def sum(name: String) = SumAggregationDefinition(name)
+    def terms(name: String) = TermAggregationDefinition(name)
+    def topHits(name: String) =  TopHitsAggregationDefinition(name)
   }
 
   case object clear {
-    def cache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
+    def cache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
     def cache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
     def scroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
     def scroll(ids: Iterable[String]): ClearScrollDefinition = clearScroll(ids)
   }
 
   def clearCache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
-  def clearCache(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
-  def clearIndex(indexes: String*): ClearCacheDefinition = new ClearCacheDefinition(indexes)
-  def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = new ClearCacheDefinition(indexes.toSeq)
+  def clearCache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
+  def clearIndex(indexes: String*): ClearCacheDefinition = ClearCacheDefinition(indexes)
+  def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
   def clearScroll(id: String, ids: String*): ClearScrollDefinition = ClearScrollDefinition(id +: ids)
   def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
 
   case object close {
-    def index(index: String): CloseIndexDefinition = new CloseIndexDefinition(index)
+    def index(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
   }
 
   def closeIndex(index: String): CloseIndexDefinition = close index index
@@ -132,7 +132,7 @@ trait ElasticDsl
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
   case object completion {
-    def suggestion(name: String) = new CompletionSuggestionDefinition(name)
+    def suggestion(name: String) = CompletionSuggestionDefinition(name)
   }
   def completionSuggestion: CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
@@ -183,15 +183,15 @@ trait ElasticDsl
   case object delete {
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
     def index(indexes: String*): DeleteIndexDefinition = index(indexes)
-    def index(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq)
+    def index(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
     def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
-    def template(name: String) = new DeleteIndexTemplateDefinition(name)
+    def template(name: String) = DeleteIndexTemplateDefinition(name)
   }
 
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   def deleteIndex(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
-  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = new DeleteIndexDefinition(indexes.toSeq)
+  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
 
   def deleteSnapshot(name: String): DeleteSnapshotExpectsIn = delete snapshot name
   def deleteTemplate(name: String): DeleteIndexTemplateDefinition = delete template name
@@ -204,10 +204,10 @@ trait ElasticDsl
 
   case object field extends TypeableFields {
     val name = ""
-    def name(name: String): FieldDefinition = new FieldDefinition(name)
+    def name(name: String): FieldDefinition = FieldDefinition(name)
     def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
-    def stats(fields: String*): FieldStatsDefinition = new FieldStatsDefinition(fields = fields)
-    def stats(fields: Iterable[String]): FieldStatsDefinition = new FieldStatsDefinition(fields = fields.toSeq)
+    def stats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
+    def stats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
   }
 
   def field(name: String): FieldDefinition = FieldDefinition(name)
@@ -309,8 +309,8 @@ trait ElasticDsl
 
   case object index {
 
-    def exists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
-    def exists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
+    def exists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
+    def exists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
 
     def into(indexType: IndexAndTypes): IndexDefinition = {
       require(indexType != null, "indexType must not be null or empty")
@@ -321,8 +321,8 @@ trait ElasticDsl
     def stats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
   }
 
-  def indexExists(indexes: Iterable[String]): IndexExistsDefinition = new IndexExistsDefinition(indexes.toSeq)
-  def indexExists(indexes: String*): IndexExistsDefinition = new IndexExistsDefinition(indexes)
+  def indexExists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
+  def indexExists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
 
   def indexInto(indexType: IndexAndTypes): IndexDefinition = {
     require(indexType != null, "indexType must not be null or empty")
@@ -334,12 +334,12 @@ trait ElasticDsl
     new IndexDefinition(index, `type`)
   }
 
-  def indexStats(indexes: Indexes): IndicesStatsDefinition = new IndicesStatsDefinition(indexes)
+  def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
   def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
 
   case object inner {
-    def hits(name: String): QueryInnerHitsDefinition = new QueryInnerHitsDefinition(name)
-    def hit(name: String): InnerHitDefinition = new InnerHitDefinition(name)
+    def hits(name: String): QueryInnerHitsDefinition = QueryInnerHitsDefinition(name)
+    def hit(name: String): InnerHitDefinition = InnerHitDefinition(name)
   }
   def innerHit(name: String): InnerHitDefinition = inner hit name
   def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
@@ -360,11 +360,11 @@ trait ElasticDsl
   }
   def mapping(name: String): MappingDefinition = mapping name name
 
-  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = new MultiGetDefinition(gets)
-  def multiget(gets: GetDefinition*): MultiGetDefinition = new MultiGetDefinition(gets)
+  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets)
+  def multiget(gets: GetDefinition*): MultiGetDefinition = MultiGetDefinition(gets)
 
   case object open {
-    def index(index: String): OpenIndexDefinition = new OpenIndexDefinition(index)
+    def index(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
   }
   def openIndex(index: String): OpenIndexDefinition = open index index
 
@@ -392,7 +392,7 @@ trait ElasticDsl
   def percolateIn(indexesAndTypes: IndexesAndTypes): PercolateDefinition = PercolateDefinition(indexesAndTypes)
 
   case object phrase {
-    def suggestion(name: String): PhraseSuggestionDefinition = new PhraseSuggestionDefinition(name)
+    def suggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
   }
   def phraseSuggestion: PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
@@ -410,8 +410,8 @@ trait ElasticDsl
   def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
 
   case object refresh {
-    def index(indexes: Iterable[String]): RefreshIndexDefinition = new RefreshIndexDefinition(indexes.toSeq)
-    def index(indexes: String*): RefreshIndexDefinition = new RefreshIndexDefinition(indexes)
+    def index(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
+    def index(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
   }
 
   def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refresh index indexes
@@ -457,14 +457,14 @@ trait ElasticDsl
   }
 
   case object search {
-    def in(indexesTypes: IndexesAndTypes): SearchDefinition = new SearchDefinition(indexesTypes)
-    def scroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
+    def in(indexesTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesTypes)
+    def scroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
   }
 
   def search(indexType: IndexAndTypes): SearchDefinition = search in indexType
-  def search(indexes: String*): SearchDefinition = new SearchDefinition(IndexesAndTypes(indexes))
+  def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
 
-  def searchScroll(id: String): SearchScrollDefinition = new SearchScrollDefinition(id)
+  def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
   // -- helper methods to create the field definitions --
   def attachmentField(name: String) = field(name).typed(AttachmentType)
@@ -498,7 +498,7 @@ trait ElasticDsl
   }
 
   case object term {
-    def suggestion(name: String): TermSuggestionDefinition = new TermSuggestionDefinition(name)
+    def suggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
   }
 
   def termVectors(index: String, `type`: String, id: String): TermVectorsDefinition = {
@@ -514,9 +514,9 @@ trait ElasticDsl
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
   case object types {
-    def exist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
+    def exist(types: String*): TypesExistExpectsIn = TypesExistExpectsIn(types)
   }
-  def typesExist(types: String*): TypesExistExpectsIn = new TypesExistExpectsIn(types)
+  def typesExist(types: String*): TypesExistExpectsIn = TypesExistExpectsIn(types)
 
   case object update {
     def id(id: Any): UpdateExpectsIndex = {

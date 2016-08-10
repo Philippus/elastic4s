@@ -7,7 +7,6 @@ import org.elasticsearch.action.search._
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.ToXContent.Params
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.script.{ScriptService, Script}
 import org.elasticsearch.search.rescore.RescoreBuilder
@@ -25,14 +24,14 @@ trait SearchDsl
   with ScriptFieldDsl
   with SuggestionDsl {
 
-  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = new RichSearchResponse(resp)
+  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
   def rescore(query: QueryDefinition): RescoreDefinition = {
-    new RescoreDefinition(query)
+    RescoreDefinition(query)
   }
 
-  def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = new MultiSearchDefinition(searches)
-  def multi(searches: SearchDefinition*): MultiSearchDefinition = new MultiSearchDefinition(searches)
+  def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
+  def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
 
 
   implicit object SearchDefinitionExecutable
@@ -62,11 +61,7 @@ trait SearchDsl
 
 
   implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
-
-
     import compat.Platform.EOL
-
-
     override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
   }
 
@@ -74,8 +69,6 @@ trait SearchDsl
   implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {
     def show: String = MultiSearchDefinitionShow.show(f)
   }
-
-
 }
 
 
@@ -146,7 +139,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     *
     * @param string the query string
     */
-  def query(string: String): SearchDefinition = query(new QueryStringQueryDefinition(string))
+  def query(string: String): SearchDefinition = query(QueryStringQueryDefinition(string))
   def query(block: => QueryDefinition): SearchDefinition = query2(block.builder)
   def query2(block: => QueryBuilder): SearchDefinition = {
     _builder.setQuery(block)
@@ -229,7 +222,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     * @return this
     */
   def prefix(tuple: (String, Any)) = {
-    val q = new PrefixQueryDefinition(tuple._1, tuple._2)
+    val q = PrefixQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }
@@ -241,19 +234,19 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     * @return this
     */
   def regex(tuple: (String, Any)) = {
-    val q = new RegexQueryDefinition(tuple._1, tuple._2)
+    val q = RegexQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }
 
   def term(tuple: (String, Any)) = {
-    val q = new TermQueryDefinition(tuple._1, tuple._2)
+    val q = TermQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }
 
   def range(field: String) = {
-    val q = new RangeQueryDefinition(field)
+    val q = RangeQueryDefinition(field)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }
@@ -318,7 +311,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   }
 
   def fuzzy(tuple: (String, Any)) = {
-    val q = new FuzzyQueryDefinition(tuple._1, tuple._2)
+    val q = FuzzyQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(q.builder.buildAsBytes)
     this
   }

@@ -1,16 +1,12 @@
 package com.sksamuel.elastic4s.circe
 
-import com.sksamuel.elastic4s.{ RichSearchHit, HitAs }
-import com.sksamuel.elastic4s.source.Indexable
-
-import org.scalatest.{ WordSpec, ShouldMatchers, GivenWhenThen }
-import org.scalatest.mock.MockitoSugar._
-import org.mockito.Mockito
+import com.sksamuel.elastic4s.RichSearchHit
 import org.elasticsearch.search.SearchHit
+import org.mockito.Mockito
+import org.scalatest.mock.MockitoSugar._
+import org.scalatest.{GivenWhenThen, Matchers, WordSpec}
 
-import scala.collection.JavaConversions._
-
-class CodecDerivationTest extends WordSpec with ShouldMatchers with GivenWhenThen {
+class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
  
   case class Place(id: Int, name: String)
   case class Cafe(name: String, place: Place)
@@ -50,7 +46,6 @@ class CodecDerivationTest extends WordSpec with ShouldMatchers with GivenWhenThe
   
   "A derived Indexable instance" should {
     "be implicitly found if circe.generic.auto is in imported" in {
-      import io.circe.generic.auto._
       "implicitly[Indexable[Cafe]]" should compile
     }
     

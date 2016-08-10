@@ -1,86 +1,99 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.scalactic.{Bad, ErrorMessage, Accumulation, Every, Or}
-import org.scalatest.{WordSpec, Matchers}
+import org.scalactic.{Bad, ErrorMessage, Good, Or}
+import org.scalatest.{Matchers, WordSpec}
 
 class HitReaderTest extends WordSpec with Matchers with ElasticSugar with JsonSugar {
 
-//  import scala.concurrent.ExecutionContext.Implicits.global
-//  import ElasticDsl._
-//
-//  client.execute {
-//    bulk(
-//      index into "cluedo/killers" fields("name" -> "professor plum", "weapons" -> Array("revolver", "knife")),
-//      index into "cluedo/killers" fields("name" -> "scarlet", "weapons" -> Array("candlestick",
-//        "spanner"), "character" -> Map("color" -> "red", "sex" -> "female", "age" -> 26)),
-//      index into "cluedo/killers" fields("name" -> "rev green", "weapons" -> Array("lead pipe",
-//        "rope"), "character" -> Map("color" -> "green", "sex" -> "male", "age" -> 45))
-//    )
-//  }.await
-//
-//  refresh("cluedo")
-//  blockUntilCount(3, "cluedo")
-//
-//  import HitFieldReader._
-//
-//  implicit object CharacterHitReader extends HitReader[Character] {
-//
-//    override def as(hit: RichSearchHit): Character Or Every[ErrorMessage] = {
-//      import Accumulation._
-//      val color = hit.richFields("color").validate[String]("Reading Character,")
-//      val sex = hit.richFields("sex").validate[String]("Reading Character,")
-//      val age = hit.richFields("age").validate[Int]("Reading Character,")
-//      withGood(color, sex, age)(Character)
-//    }
-//  }
-//
-//  implicit object KillerHitReader extends HitReader[Killer] {
-//
-//    override def as(hit: RichSearchHit): Killer Or Every[ErrorMessage] = {
-//      import Accumulation._
-//      val badName = hit.richFields("name").validate[String]("Reading Killer,")
-//      val weapons: Seq[String] Or Every[ErrorMessage] = hit.richFields("weapons").validate[Seq[String]]("Reading Killer,")
-//      val character: Option[Character] Or Every[ErrorMessage] = hit.richFields("character").validate[Option[Character]]("Reading Killer,")
-//      withGood(badName, weapons, character)(Killer)
-//    }
-//  }
-//
-//  implicit object BadKillerHitRead extends HitReader[BadKiller] {
-//
-//    override def as(hit: RichSearchHit): BadKiller Or Every[ErrorMessage] = {
-//      import Accumulation._
-//      val badName = hit.richFields("badName").validate[String]("Reading BadKiller,")
-//      withGood(badName)(BadKiller)
-//    }
-//  }
-//
-//  val professorPlum = Killer("professor plum", Seq("revolver", "knife"))
-//  val scarlet = Killer("scarlet", Seq("candlestick", "spanner"), Some(Character("red", "female", 26)))
-//  val revGreen = Killer("rev green", Seq("lead pipe", "rope"), Some(Character("green", "male", 45)))
-//
-//  "HitReader" should {
-//    "convert using an implicit HitReader to Array[Or[T, ErrorMessage]]" ignore {
-//      import Accumulation._
-//      val killers = client.execute {
-//        search in "cluedo" / "killers" query "*:*"
-//      }.map { resp => resp.readAs[Killer] }.await
-//      killers.combined.get.toSet shouldBe Set(professorPlum, scarlet, revGreen)
-//    }
-//    "accumulate conversion error using an implicit HitReader to Array[Or[T, ErrorMessage]]" ignore {
-//      import Accumulation._
-//      val killers = client.execute {
-//        search in "cluedo" / "killers" query "*:*"
-//      }.map { resp => resp.readAs[BadKiller] }.await
-//      killers.combined shouldBe Bad(Every(
-//        "BadKiller badName field is missing",
-//        "BadKiller badName field is missing",
-//        "BadKiller badName field is missing"
-//      ))
-//    }
-//  }
+  import ElasticDsl._
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  client.execute {
+    bulk(
+      index into "cluedo/characters" fields("name" -> "professor plum", "career" -> "scientist"),
+      index into "cluedo/characters" fields("name" -> "miss scarlet", "career" -> "media"),
+      index into "cluedo/characters" fields("name" -> "rev green", "career" -> "minister")
+    )
+  }.await
+
+  refresh("cluedo")
+  blockUntilCount(3, "cluedo")
+
+  val professorPlum = Killer("professor plum", "scientist")
+  val scarlet = Killer("miss scarlet", "media")
+  val revGreen = Killer("rev green", "minister")
+
+  implicit object KillerHitReader extends HitReader[Killer] {
+    override def from(hit: Hit): Killer Or ErrorMessage = {
+      Good(
+        Killer(
+          hit.source("name").toString,
+          hit.source("career").toString
+        )
+      )
+    }
+  }
+
+  implicit object BadKillerHitReader extends HitReader[BadKiller] {
+    override def from(hit: Hit): BadKiller Or ErrorMessage = {
+      Bad("Missing field missingField")
+    }
+  }
+
+  //  import HitFieldReader._
+  //
+  //  implicit object CharacterHitReader extends HitReader[Character] {
+  //
+  //    override def as(hit: RichSearchHit): Character Or Every[ErrorMessage] = {
+  //      import Accumulation._
+  //      val color = hit.richFields("color").validate[String]("Reading Character,")
+  //      val sex = hit.richFields("sex").validate[String]("Reading Character,")
+  //      val age = hit.richFields("age").validate[Int]("Reading Character,")
+  //      withGood(color, sex, age)(Character)
+  //    }
+  //  }
+  //
+  //  implicit object KillerHitReader extends HitReader[Killer] {
+  //
+  //    override def as(hit: RichSearchHit): Killer Or Every[ErrorMessage] = {
+  //      import Accumulation._
+  //      val badName = hit.richFields("name").validate[String]("Reading Killer,")
+  //      val weapons: Seq[String] Or Every[ErrorMessage] = hit.richFields("weapons").validate[Seq[String]]("Reading Killer,")
+  //      val character: Option[Character] Or Every[ErrorMessage] = hit.richFields("character").validate[Option[Character]]("Reading Killer,")
+  //      withGood(badName, weapons, character)(Killer)
+  //    }
+  //  }
+  //
+  //  implicit object BadKillerHitRead extends HitReader[BadKiller] {
+  //
+  //    override def as(hit: RichSearchHit): BadKiller Or Every[ErrorMessage] = {
+  //      import Accumulation._
+  //      val badName = hit.richFields("badName").validate[String]("Reading BadKiller,")
+  //      withGood(badName)(BadKiller)
+  //    }
+  //  }
+
+  "HitRead" should {
+    "convert using an implicit HitRead to Array[Or[T, ErrorMessage]]" in {
+      val killers = client.execute {
+        search("cluedo" / "characters").query("*:*")
+      }.map(_.to[Killer]).await
+      killers.collect {
+        case Good(x) => x
+      }.toSet shouldBe Set(professorPlum, scarlet, revGreen)
+    }
+    "Include errors in the results" in {
+      val killers = client.execute {
+        search in "cluedo" / "characters" query "*:*"
+      }.map(_.to[BadKiller]).await
+      killers.collect {
+        case Bad(x) => x
+      }.toList shouldBe List("Missing field missingField", "Missing field missingField", "Missing field missingField")
+    }
+  }
 }
 
-case class Character(color: String, sex: String, age: Int)
-case class Killer(name: String, weapons: Seq[String], character: Option[Character] = None)
-case class BadKiller(badName: String)
+case class Killer(name: String, career: String)
+case class BadKiller(missingField: String)
