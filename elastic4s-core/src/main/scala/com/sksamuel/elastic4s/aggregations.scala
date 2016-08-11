@@ -98,6 +98,12 @@ trait ValuesSourceMetricsAggregationDefinition[+Self <: ValuesSourceMetricsAggre
     builder.script(script.toJavaAPI)
     this
   }
+
+  def missing(missing: String): Self = {
+    aggregationBuilder.missing(missing)
+    this
+  }
+
 }
 
 trait ValuesSourceAggregationDefinition[+Self <: ValuesSourceAggregationDefinition[Self, B], B <: ValuesSourceAggregationBuilder[B]]
@@ -113,9 +119,12 @@ trait ValuesSourceAggregationDefinition[+Self <: ValuesSourceAggregationDefiniti
     builder.script(script.toJavaAPI)
     this
   }
+
+  def missing(missing: String): Self = {
+    aggregationBuilder.missing(missing)
+    this
+  }
 }
-
-
 
 trait CardinalityMetricsAggregationDefinition[+Self <: CardinalityMetricsAggregationDefinition[Self]]
   extends MetricsAggregationDefinition[Self, CardinalityBuilder] {
@@ -450,11 +459,6 @@ case class GeoBoundsAggregationDefinition(name: String)
     this
   }
 
-  def missing(missing: String): GeoBoundsAggregationDefinition = {
-    aggregationBuilder.missing(missing)
-    this
-  }
-
   def wrapLongitude(wrapLongitude: Boolean): GeoBoundsAggregationDefinition = {
     builder.wrapLongitude(wrapLongitude)
     this
@@ -466,11 +470,6 @@ case class GeoCentroidAggregationDefinition(name: String)
   extends ValuesSourceMetricsAggregationDefinition[GeoCentroidAggregationDefinition, GeoCentroidBuilder] {
 
   val aggregationBuilder = AggregationBuilders.geoCentroid(name)
-
-  def missing(missing: String): GeoCentroidAggregationDefinition = {
-    aggregationBuilder.missing(missing)
-    this
-  }
 
   def format(format: String): GeoCentroidAggregationDefinition = {
     aggregationBuilder.format(format)
