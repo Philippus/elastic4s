@@ -24,3 +24,6 @@ test-output/
 # Sublime Text specific
 *.sublime-project
 *.sublime-workspace
+
+# Intellij
+.DS_Store
