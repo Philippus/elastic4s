@@ -8,7 +8,7 @@ This example creates a repostory called "_snapshot" located at "/mount/backup"
 
 ```scala
 client.execute {
-  repository create "_snapshot" `type` "fs" settings Map("location" -> "/mount/backup")
+  create repository "_snapshot" `type` "fs" settings Map("location" -> "/mount/backup")
 }
 ```
 
@@ -18,7 +18,7 @@ If this is set to false (the default), the future will complete as soon as the r
 
 ```scala
 client.execute {
-  snapshot create "snap1" in "_snapshot" waitForCompletion true
+  create snapshot "snap1" in "_snapshot" waitForCompletion true
 }
 ```
 
@@ -42,7 +42,7 @@ Later on we can restore the snapshot with:
 
 ```scala
 client.execute {
-  snapshot restore "snap1" from "_snapshot"
+  restore snapshot "snap1" from "_snapshot"
 }
 ```
 
@@ -50,6 +50,6 @@ Snapshots can be deleted thus:
 
 ```scala
 client.execute {
-  snapshot delete "snap1" in "_snapshot"
+  delete snapshot "snap1" in "_snapshot"
 }
 ```
