@@ -10,11 +10,11 @@ import com.sksamuel.elastic4s.mappings.DynamicMapping.Strict
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.util.Random
 
-class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers {
+class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers with BeforeAndAfter {
 
   import ReactiveElastic._
   import scala.concurrent.duration._
@@ -22,11 +22,18 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
   implicit val system = ActorSystem()
 
   val indexName = "bulkindexsubint"
-  ensureIndexExists(indexName)
+  val strictIndex = "bulkindexfail"
+
+  after {
+    deleteIndex(indexName)
+    deleteIndex(strictIndex)
+  }
 
   "elastic-streams" should {
     "index all received data" in {
+      ensureIndexExists(indexName)
       implicit val builder = new ShipRequestBuilder(indexName)
+
       val completionLatch = new CountDownLatch(1)
       val subscriber = client.subscriber[Ship](10, 2, completionFn = () => completionLatch.countDown)
       ShipPublisher.subscribe(subscriber)
@@ -36,8 +43,8 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
     }
 
     "index all received data even if the subscriber never completes" in {
+      ensureIndexExists(indexName)
       implicit val builder = new ShipRequestBuilder(indexName)
-
 
       // The short interval is just for the sake of test execution time, it's not a recommendation
       val subscriber = client.subscriber[Ship](8, 2, flushInterval = Some(500.millis))
@@ -47,19 +54,19 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
     }
 
     "index all receveid data and ignore failures" in {
-      val strictIndex = "bulkindexfail"
+
       client.execute {
         createIndex(strictIndex) mappings ("ships" fields (
-            "name" typed StringType,
-            "description" typed IntegerType,
-            "size" typed IntegerType
+          "name" typed StringType,
+          "description" typed IntegerType,
+          "size" typed IntegerType
           ) dynamic Strict
-        )
+          )
       }.await
+      implicit val builder = new ShipRequestBuilder(strictIndex)
 
       val errorsExpected = 2
 
-      implicit val builder = new ShipRequestBuilder(strictIndex)
       val completionLatch = new CountDownLatch(1)
       val ackLatch = new CountDownLatch(Ship.ships.length - errorsExpected)
       val errorLatch = new CountDownLatch(errorsExpected)
