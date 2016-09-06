@@ -161,15 +161,23 @@ trait ElasticSugar extends NodeBuilder {
     }
   }
 
+  def doesIndexExists(name: String): Boolean = {
+    client.execute {
+      indexExists(name)
+    }.await.isExists
+  }
+
+  def deleteIndex(name: String): Unit = {
+    if(doesIndexExists(name)) {
+      client.execute {
+        delete index name
+      }.await
+    }
+  }
+
   def truncateIndex(index: String): Unit = {
-    client.execute {
-      deleteIndex(index)
-    }.await
-
-    client.execute {
-      createIndex(index)
-    }.await
-
+    deleteIndex(index)
+    ensureIndexExists(index)
     blockUntilEmpty(index)
   }
 
@@ -213,19 +221,13 @@ trait ElasticSugar extends NodeBuilder {
   }
   def blockUntilIndexExists(index: String): Unit = {
     blockUntil(s"Expected exists index $index") {
-      () ⇒
-        client.execute {
-          indexExists(index)
-        }.await.isExists
+      () ⇒ doesIndexExists(index)
     }
   }
 
   def blockUntilIndexNotExists(index: String): Unit = {
     blockUntil(s"Expected not exists index $index") {
-      () ⇒
-        !client.execute {
-          indexExists(index)
-        }.await.isExists
+      () ⇒ !doesIndexExists(index)
     }
   }
 

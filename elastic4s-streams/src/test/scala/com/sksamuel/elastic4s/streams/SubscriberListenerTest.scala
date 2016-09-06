@@ -12,7 +12,7 @@ class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar {
   import ReactiveElastic._
 
   implicit val system = ActorSystem()
-  implicit val builder = ShipRequestBuilder
+  implicit val builder = new ShipRequestBuilder()
 
   ensureIndexExists("subscriberlistenertest")
 
