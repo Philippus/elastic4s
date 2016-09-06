@@ -63,22 +63,18 @@ class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
 
 object BulkActor {
 
-
   // signifies that the downstream publisher has completed (NOT that a bulk request has suceeded)
   case object Completed
 
-
   case object ForceIndexing
-
 
   case class Result(items: Seq[BulkItemResult])
 
+  case class FailedResult(items: Seq[BulkItemResult])
 
   case class Request(n: Int)
 
-
   case class Send(req: BulkDefinition, attempts: Int)
-
 
 }
 
@@ -104,6 +100,9 @@ class BulkActor[T](client: ElasticClient,
 
   // total number of documents confirmed as successful
   private var confirmed: Long = 0l
+
+  // total number of documents that failed the retry attempts and are ignored
+  private var failed: Long = 0l
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
@@ -155,10 +154,12 @@ class BulkActor[T](client: ElasticClient,
     case BulkActor.Result(items) =>
       confirmed = confirmed + items.size
       items.foreach(config.listener.onAck)
-      // need to check if we're completed, because if we are then this might be the last pending conf
-      // and if it is, we can shutdown.
-      if (completed) shutdownIfAllConfirmed()
-      else self ! BulkActor.Request(items.size)
+      checkCompleteOrRequestNext(items.size)
+
+    case BulkActor.FailedResult(items) =>
+      failed = failed + items.size
+      items.foreach(config.listener.onFailure)
+      checkCompleteOrRequestNext(items.size)
 
     case t: T =>
       buffer.append(t)
@@ -169,6 +170,13 @@ class BulkActor[T](client: ElasticClient,
       }
   }
 
+  // need to check if we're completed, because if we are then this might be the last pending conf
+  // and if it is, we can shutdown.
+  private def checkCompleteOrRequestNext(n: Int): Unit = {
+    if (completed) shutdownIfAllConfirmed()
+    else self ! BulkActor.Request(n)
+  }
+
   // Stops the schedulers if they exist
   override def postStop() = {
     flushIntervalScheduler.map(_.cancel)
@@ -177,7 +185,7 @@ class BulkActor[T](client: ElasticClient,
   }
 
   private def shutdownIfAllConfirmed(): Unit = {
-    if (confirmed == sent) {
+    if (confirmed + failed == sent) {
       context.stop(self)
     }
   }
@@ -196,13 +204,12 @@ class BulkActor[T](client: ElasticClient,
       case Success(resp: BulkResult) =>
 
         if (resp.hasFailures) {
-          resp.failures.foreach(config.listener.onFailure)
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
           if (attempts > 0)
             system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef(resp), attempts - 1))
           else
-            throw new RuntimeException("Bulk operation failed too many times: " + resp.failureMessage)
+            self ! BulkActor.FailedResult(resp.failures)
         }
 
         if (resp.hasSuccesses)

@@ -51,8 +51,8 @@ case class BulkResult(original: BulkResponse) {
 
   def failureMessage: String = original.buildFailureMessage
   def took: FiniteDuration = original.getTook.millis.millis
-  def hasSuccesses: Boolean = !hasFailures
-  def hasFailures: Boolean = original.hasFailures
+  def hasFailures: Boolean = original.getItems.exists(_.isFailed)
+  def hasSuccesses: Boolean = original.getItems.exists(!_.isFailed)
   def items: Seq[BulkItemResult] = original.getItems.map(BulkItemResult.apply)
   def failures: Seq[BulkItemResult] = items.filter(_.isFailure)
   def successes: Seq[BulkItemResult] = items.filterNot(_.isFailure)
