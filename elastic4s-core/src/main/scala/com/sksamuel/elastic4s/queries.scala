@@ -1557,6 +1557,21 @@ case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
     builder.flags(flags: _*)
     this
   }
+
+  def lenient(lenient: Boolean): SimpleStringQueryDefinition = {
+    builder.lenient(lenient)
+    this
+  }
+
+  def minimumShouldMatch(minimumShouldMatch: Int): SimpleStringQueryDefinition = {
+    builder.minimumShouldMatch(minimumShouldMatch.toString)
+    this
+  }
+
+  def analyzeWildcard(analyzeWildcard: Boolean): SimpleStringQueryDefinition = {
+    builder.analyzeWildcard(analyzeWildcard)
+    this
+  }
 }
 
 case class QueryStringQueryDefinition(query: String)
