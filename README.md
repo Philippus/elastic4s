@@ -834,10 +834,16 @@ folder. There is no need to configure anything externally.
 * Graphflow
 * Hotel Urbano
 * Immobilien Scout
+* Deutsche Bank
 * HMRC
 * Canal+
 
 _Raise a PR to add your company here_
+
+YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
+and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
+innovative and intelligent tools for profiling Java and .NET applications.
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:
