@@ -52,6 +52,7 @@ trait QueryDsl {
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
   def geoHashCell(field: String, value: String): GeoHashCellQuery = new GeoHashCellQuery(field).geohash(value)
   def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
+  def geoDistanceRangeQuery(field: String) = GeoDistanceRangeQueryDefinition(field)
 
   def indicesQuery(indices: String*) = new {
     def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
