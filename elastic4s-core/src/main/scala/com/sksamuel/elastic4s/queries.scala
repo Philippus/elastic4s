@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
 import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query._
@@ -51,6 +52,7 @@ trait QueryDsl {
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
   def geoHashCell(field: String, value: String): GeoHashCellQuery = new GeoHashCellQuery(field).geohash(value)
   def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
+  def geoDistanceRangeQuery(field: String) = GeoDistanceRangeQueryDefinition(field)
 
   def indicesQuery(indices: String*) = new {
     def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
@@ -568,6 +570,11 @@ case class GeoDistanceQueryDefinition(field: String)
 
   def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = {
     builder.distance(distance, unit)
+    this
+  }
+
+  def distance(distance: Distance): GeoDistanceQueryDefinition = {
+    builder.distance(distance.value, distance.unit)
     this
   }
 
