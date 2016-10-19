@@ -9,7 +9,8 @@ lazy val root = Project("elastic4s", file("."))
     examples,
     jackson,
     json4s,
-    streams
+    streams,
+    playjson
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -52,7 +53,7 @@ lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
     libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
     libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % JacksonVersion
   ).dependsOn(core, testkit % "test")
-  
+
 lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
 .settings(
   name := "elastic4s-circe",
@@ -67,6 +68,12 @@ lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
     libraryDependencies += "org.json4s" %% "json4s-core" % "3.2.11",
     libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
   ).dependsOn(core, testkit % "test")
+
+lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
+    .settings(
+      name := "elastic4s-play-json",
+      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
+    ).dependsOn(core, testkit % "test")
 
 lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
   .settings(publish := {})

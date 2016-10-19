@@ -20,6 +20,7 @@ object Build extends AutoPlugin {
     val Log4jVersion = "1.2.17"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.4.1"
+    val PlayJsonVersion = "2.5.9"
   }
 
   import autoImport._
