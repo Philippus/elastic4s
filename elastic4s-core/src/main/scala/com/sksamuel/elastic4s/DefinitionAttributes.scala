@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.common.unit.TimeValue
 
@@ -8,15 +7,6 @@ import scala.language.reflectiveCalls
 
 /** @author Stephen Samuel */
 object DefinitionAttributes {
-
-  trait DefinitionAttributeConsistencyLevel {
-    val _builder: { def setConsistencyLevel(level: WriteConsistencyLevel): Any }
-
-    def consistencyLevel(level: WriteConsistencyLevel): this.type = {
-      _builder.setConsistencyLevel(level)
-      this
-    }
-  }
 
   trait DefinitionAttributeIgnoreConflicts {
     val _builder: { def setIgnoreConflicts(ignoreConflicts: Boolean): Any }

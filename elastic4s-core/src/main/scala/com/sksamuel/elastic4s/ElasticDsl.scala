@@ -2,10 +2,14 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
-import com.sksamuel.elastic4s.analyzers.{TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
-import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
+import com.sksamuel.elastic4s.admin._
+import com.sksamuel.elastic4s.aggregations._
+import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.queries.{CompletionSuggestionDefinition, InnerHitDefinition, PhraseSuggestionDefinition, QueryInnerHitsDefinition, SuggestDefinition, SuggestionDefinition, TermSuggestionDefinition}
+import com.sksamuel.elastic4s.search.{HighlightDefinition, SearchDefinition, SearchDsl}
+import com.sksamuel.elastic4s.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition, ScriptSortDefinition}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -19,7 +23,6 @@ trait ElasticDsl
   with AnalyzerDsl
   with BulkDsl
   with ClusterDsl
-  with CountDsl
   with CreateIndexDsl
   with DeleteIndexDsl
   with DeleteDsl
@@ -66,7 +69,7 @@ trait ElasticDsl
   def agg = aggregation
   case object aggregation {
     def avg(name: String) = AvgAggregationDefinition(name)
-    def children(name: String) = ChildrenAggregationDefinition(name)
+    def children(name: String, childType: String) = ChildrenAggregationDefinition(name, childType)
     def count(name: String) = ValueCountAggregationDefinition(name)
     def cardinality(name: String) = CardinalityAggregationDefinition(name)
     def datehistogram(name: String) = DateHistogramAggregation(name)
@@ -83,7 +86,7 @@ trait ElasticDsl
     def max(name: String) = MaxAggregationDefinition(name)
     def min(name: String) = MinAggregationDefinition(name)
     def missing(name: String) = MissingAggregationDefinition(name)
-    def nested(name: String) = NestedAggregationDefinition(name)
+    def nested(name: String, path: String) = NestedAggregationDefinition(name, path)
     def reverseNested(name: String) = ReverseNestedAggregationDefinition(name)
     def percentiles(name: String) = PercentilesAggregationDefinition(name)
     def percentileranks(name: String) = PercentileRanksAggregationDefinition(name)
@@ -136,22 +139,6 @@ trait ElasticDsl
   }
   def completionSuggestion: CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
-
-  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-  case object count {
-    def from(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
-    @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-    def from(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
-    @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-    def from(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
-  }
-
-  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-  def countFrom(index: String): CountDefinition = CountDefinition(IndexesAndTypes(index))
-  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-  def countFrom(indexes: String*): CountDefinition = CountDefinition(IndexesAndTypes(indexes))
-  @deprecated("Count api is deprecated in favour of search with a size of 0", "2.1.0")
-  def countFrom(indexesAndTypes: IndexesAndTypes): CountDefinition = CountDefinition(indexesAndTypes)
 
   case object create {
 

@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.{Indexable, DocumentMap, DocumentSource}
+import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Indexable}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
+import org.elasticsearch.action.support.WriteRequest
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
 import org.elasticsearch.index.VersionType
+import org.elasticsearch.rest.RestStatus
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -46,7 +48,8 @@ case class IndexResult(original: IndexResponse) {
   def index = original.getIndex
   def `type` = original.getType
   def version: Long = original.getVersion
-  def created: Boolean = original.isCreated
+  def status = original.status
+  def created: Boolean = status == RestStatus.CREATED
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
@@ -111,8 +114,8 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     this
   }
 
-  def refresh(refresh: Boolean): IndexDefinition = {
-    _request.refresh(refresh)
+  def refreshPolicy(refresh: WriteRequest.RefreshPolicy): IndexDefinition = {
+    _request.setRefreshPolicy(refresh)
     this
   }
 

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.QueryDefinition
 import com.sksamuel.elastic4s.source.JsonDocumentSource
 import org.elasticsearch.client.Client
 

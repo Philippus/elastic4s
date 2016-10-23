@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.QueryDsl
 import org.elasticsearch.action.delete.DeleteResponse
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 
@@ -44,8 +46,8 @@ case class DeleteByIdDefinition(indexType: IndexAndTypes, id: Any) extends BulkC
     this
   }
 
-  def refresh(refresh: Boolean): DeleteByIdDefinition = {
-    builder.refresh(refresh)
+  def refreshPolicy(refresh: RefreshPolicy): DeleteByIdDefinition = {
+    builder.setRefreshPolicy(refresh)
     this
   }
 

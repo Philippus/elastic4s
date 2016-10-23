@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.{QueryDefinition, QueryDsl, QueryStringQueryDefinition}
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
-import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
-import org.elasticsearch.percolator.PercolatorService
+import org.elasticsearch.percolator.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -70,7 +70,7 @@ class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefini
     this
   }
   def query(string: String) = {
-    _query = new QueryStringQueryDefinition(string)
+    _query = QueryStringQueryDefinition(string)
     this
   }
   def fields(map: Map[String, Any]): RegisterDefinition = fields(map.toList)

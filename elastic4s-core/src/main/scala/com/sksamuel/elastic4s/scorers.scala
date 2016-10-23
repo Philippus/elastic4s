@@ -1,29 +1,24 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.QueryDefinition
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
-import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.fieldvaluefactor.FieldValueFactorFunctionBuilder
-import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.weight.WeightBuilder
-import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ScoreFunctionBuilder}
+import org.elasticsearch.index.query.functionscore.{DecayFunctionBuilder, ExponentialDecayFunctionBuilder, FieldValueFactorFunctionBuilder, GaussDecayFunctionBuilder, LinearDecayFunctionBuilder, RandomScoreFunctionBuilder, ScoreFunctionBuilder, ScriptScoreFunctionBuilder, WeightBuilder}
 
 /** @author Stephen Samuel */
 trait ScoreDsl {
 
   def randomScore(seed: Int) = RandomScoreDefinition(seed)
 
-  def scriptScore(script: ScriptDefinition) = new ScriptScoreDefinition(script)
+  def scriptScore(script: ScriptDefinition) = ScriptScoreDefinition(script)
 
-  def gaussianScore(field: String, origin: String, scale: String) = GaussianDecayScoreDefinition(field, origin, scale)
+  def gaussianScore(field: String, origin: String, scale: String, offset: String) =
+    GaussianDecayScoreDefinition(field, origin, scale, offset)
 
-  def linearScore(field: String, origin: String, scale: String) = LinearDecayScoreDefinition(field, origin, scale)
+  def linearScore(field: String, origin: String, scale: String, offset: String) =
+    LinearDecayScoreDefinition(field, origin, scale, offset)
 
-  def exponentialScore(field: String, origin: String, scale: String) = {
-    new ExponentialDecayScoreDefinition(field, origin, scale)
-  }
+  def exponentialScore(field: String, origin: String, scale: String, offset: String) =
+    new ExponentialDecayScoreDefinition(field, origin, scale, offset)
 
   def fieldFactorScore(field: String) = FieldValueFactorDefinition(field)
 
@@ -36,7 +31,7 @@ case class WeightScoreDefinition(boost: Double) extends ScoreDefinition[WeightSc
 
 trait ScoreDefinition[T] {
 
-  val builder: ScoreFunctionBuilder
+  val builder: ScoreFunctionBuilder[T]
   var _filter: Option[QueryDefinition] = None
 
   def filter(filter: QueryDefinition): T = {
@@ -80,7 +75,7 @@ case class ScriptScoreDefinition(script: ScriptDefinition) extends ScoreDefiniti
 
 abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
 
-  val builder: DecayFunctionBuilder
+  val builder: DecayFunctionBuilder[T]
 
   def offset(offset: Any): T = {
     builder.setOffset(offset.toString)
@@ -93,18 +88,18 @@ abstract class DecayScoreDefinition[T] extends ScoreDefinition[T] {
   }
 }
 
-case class GaussianDecayScoreDefinition(field: String, origin: String, scale: String)
+case class GaussianDecayScoreDefinition(field: String, origin: String, scale: String, offset: String)
   extends DecayScoreDefinition[GaussianDecayScoreDefinition] {
-  val builder = new GaussDecayFunctionBuilder(field, origin, scale)
+  val builder = new GaussDecayFunctionBuilder(field, origin, scale, offset)
 }
 
-case class LinearDecayScoreDefinition(field: String, origin: String, scale: String)
+case class LinearDecayScoreDefinition(field: String, origin: String, scale: String, offset: String)
   extends DecayScoreDefinition[LinearDecayScoreDefinition] {
-  val builder = new LinearDecayFunctionBuilder(field, origin, scale)
+  val builder = new LinearDecayFunctionBuilder(field, origin, scale, offset)
 }
 
-class ExponentialDecayScoreDefinition(field: String, origin: String, scale: String)
+class ExponentialDecayScoreDefinition(field: String, origin: String, scale: String, offset: String)
   extends DecayScoreDefinition[ExponentialDecayScoreDefinition] {
-  val builder = new ExponentialDecayFunctionBuilder(field, origin, scale)
+  val builder = new ExponentialDecayFunctionBuilder(field, origin, scale, offset)
 }
 

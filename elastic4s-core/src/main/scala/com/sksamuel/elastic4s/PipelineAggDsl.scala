@@ -3,22 +3,21 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.script.Script
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.avg.AvgBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.max.MaxBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.min.MinBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.percentile.PercentilesBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.StatsBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.extended.ExtendedStatsBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.sum.SumBucketBuilder
-import org.elasticsearch.search.aggregations.pipeline.bucketscript.BucketScriptBuilder
-import org.elasticsearch.search.aggregations.pipeline.cumulativesum.CumulativeSumBuilder
-import org.elasticsearch.search.aggregations.pipeline.derivative.DerivativeBuilder
-import org.elasticsearch.search.aggregations.pipeline.having.BucketSelectorBuilder
-import org.elasticsearch.search.aggregations.pipeline.movavg.MovAvgBuilder
+import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.BucketMetricsPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.avg.AvgBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.max.MaxBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.min.MinBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.percentile.PercentilesBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.StatsBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.stats.extended.ExtendedStatsBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.sum.SumBucketPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketscript.BucketScriptPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.bucketselector.BucketSelectorPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.cumulativesum.CumulativeSumPipelineAggregationBuilder
+import org.elasticsearch.search.aggregations.pipeline.derivative.DerivativePipelineAggregationBuilder
 import org.elasticsearch.search.aggregations.pipeline.movavg.models.MovAvgModelBuilder
-import org.elasticsearch.search.aggregations.pipeline.serialdiff.SerialDiffBuilder
-import org.elasticsearch.search.aggregations.pipeline.{PipelineAggregatorBuilder, PipelineAggregatorBuilders}
-
+import org.elasticsearch.search.aggregations.pipeline.serialdiff.SerialDiffPipelineAggregationBuilder
 
 trait PipelineAggregationDsl {
   def avgBucketAggregation(name: String): AvgBucketDefinition = AvgBucketDefinition(name)
@@ -35,10 +34,9 @@ trait PipelineAggregationDsl {
   def sumBucketAggregation(name: String): SumBucketDefinition = SumBucketDefinition(name)
 }
 
-
 abstract class PipelineDefinition {
 
-  type T <: PipelineAggregatorBuilder[T]
+  type T <: BucketMetricsPipelineAggregationBuilder[T]
 
   def metadata: Map[String, AnyRef]
   def bucketPaths: Seq[String]
@@ -53,13 +51,12 @@ abstract class PipelineDefinition {
   }
 }
 
-
 case class AvgBucketDefinition(name: String,
                                gapPolicy: Option[GapPolicy] = None,
                                format: Option[String] = None,
                                metadata: Map[String, AnyRef] = Map.empty,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = AvgBucketBuilder
+  type T = AvgBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.avgBucket(name))
@@ -83,7 +80,7 @@ case class BucketScriptDefinition(name: String,
                                   metadata: Map[String, AnyRef] = Map.empty,
                                   bucketPaths: Seq[String] = Nil,
                                   bucketPathsMap: Map[String, String] = Map.empty) extends PipelineDefinition {
-  type T = BucketScriptBuilder
+  type T = BucketScriptPipelineAggregationBuilder
 
   def build: T = {
     import scala.collection.JavaConverters._
@@ -110,7 +107,7 @@ case class CumulativeSumDefinition(name: String,
                                    format: Option[String] = None,
                                    metadata: Map[String, AnyRef] = Map.empty,
                                    bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = CumulativeSumBuilder
+  type T = CumulativeSumPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.cumulativeSum(name))
@@ -131,10 +128,10 @@ case class DerivativeDefinition(name: String,
                                 unitString: Option[String] = None,
                                 metadata: Map[String, AnyRef] = Map.empty,
                                 bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = DerivativeBuilder
+  type T = DerivativePipelineAggregationBuilder
 
   def build: T = {
-    val builder = super.build(PipelineAggregatorBuilders.derivative(name))
+    val builder = super.build(PipelineAggregatorBuilders.derivative(name, bucketPaths.head))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
     unit.foreach(builder.unit)
@@ -158,7 +155,7 @@ case class DiffDefinition(name: String,
                           lag: Option[Integer] = None,
                           metadata: Map[String, AnyRef] = Map.empty,
                           bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = SerialDiffBuilder
+  type T = SerialDiffPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.diff(name))
@@ -180,7 +177,7 @@ case class ExtendedStatsBucketDefinition(name: String,
                                          gapPolicy: Option[GapPolicy] = None,
                                          metadata: Map[String, AnyRef] = Map.empty,
                                          bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = ExtendedStatsBucketBuilder
+  type T = ExtendedStatsBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.extendedStatsBucket(name))
@@ -202,7 +199,7 @@ case class BucketSelectorDefinition(name: String,
                                     metadata: Map[String, AnyRef] = Map.empty,
                                     bucketPaths: Seq[String] = Nil,
                                     bucketPathsMap: Map[String, String] = Map.empty) extends PipelineDefinition {
-  type T = BucketSelectorBuilder
+  type T = BucketSelectorPipelineAggregationBuilder
 
   def build: T = {
     import scala.collection.JavaConverters._
@@ -227,7 +224,7 @@ case class MaxBucketDefinition(name: String,
                                gapPolicy: Option[GapPolicy] = None,
                                metadata: Map[String, AnyRef] = Map.empty,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = MaxBucketBuilder
+  type T = MaxBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.maxBucket(name))
@@ -248,7 +245,7 @@ case class MinBucketDefinition(name: String,
                                gapPolicy: Option[GapPolicy] = None,
                                metadata: Map[String, AnyRef] = Map.empty,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = MinBucketBuilder
+  type T = MinBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.minBucket(name))
@@ -309,7 +306,7 @@ case class PercentilesBucketDefinition(name: String,
                                        percents: Seq[Double] = Nil,
                                        metadata: Map[String, AnyRef] = Map.empty,
                                        bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = PercentilesBucketBuilder
+  type T = PercentilesBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.percentilesBucket(name))
@@ -334,7 +331,7 @@ case class StatsBucketDefinition(name: String,
                                  gapPolicy: Option[GapPolicy] = None,
                                  metadata: Map[String, AnyRef] = Map.empty,
                                  bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = StatsBucketBuilder
+  type T = StatsBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.statsBucket(name))
@@ -355,7 +352,7 @@ case class SumBucketDefinition(name: String,
                                gapPolicy: Option[GapPolicy] = None,
                                metadata: Map[String, AnyRef] = Map.empty,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
-  type T = SumBucketBuilder
+  type T = SumBucketPipelineAggregationBuilder
 
   def build: T = {
     val builder = super.build(PipelineAggregatorBuilders.sumBucket(name))

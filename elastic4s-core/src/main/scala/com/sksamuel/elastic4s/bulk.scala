@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.bulk.{BulkItemResponse, BulkRequest, BulkResponse}
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.index.IndexResponse
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
@@ -80,7 +80,16 @@ case class BulkItemResult(original: BulkItemResponse) {
 
 case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
 
-  def build = _builder
+  def build = {
+    val builder = new BulkRequest()
+    requests.foreach {
+      case index: IndexDefinition => builder.add(index.build)
+      case delete: DeleteByIdDefinition => builder.add(delete.build)
+      case update: UpdateDefinition => builder.add(update.build)
+      case register: RegisterDefinition => builder.add(register.build)
+    }
+    builder
+  }
 
   def timeout(value: String): this.type = {
     _builder.timeout(value)
@@ -97,8 +106,8 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
     this
   }
 
-  def refresh(refresh: Boolean): this.type = {
-    _builder.refresh(refresh)
+  def refreshPolicy(refresh: RefreshPolicy): this.type = {
+    _builder.setRefreshPolicy(refresh)
     this
   }
 
@@ -107,11 +116,4 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
     this
   }
 
-  private val _builder = new BulkRequest()
-  requests.foreach {
-    case index: IndexDefinition => _builder.add(index.build)
-    case delete: DeleteByIdDefinition => _builder.add(delete.build)
-    case update: UpdateDefinition => _builder.add(update.build)
-    case register: RegisterDefinition => _builder.add(register.build)
-  }
 }

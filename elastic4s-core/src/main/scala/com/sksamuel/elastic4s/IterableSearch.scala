@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.search.SearchDefinition
+
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 

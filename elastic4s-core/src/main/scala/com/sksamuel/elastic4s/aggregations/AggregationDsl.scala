@@ -1,17 +1,25 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.aggregations
+
+import org.elasticsearch.common.geo.GeoPoint
 
 trait AggregationDsl {
 
   def avgAggregation(name: String): AvgAggregationDefinition = AvgAggregationDefinition(name)
   def cardinalityAggregation(name: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name)
-  def childrenAggregation(name: String): ChildrenAggregationDefinition = ChildrenAggregationDefinition(name)
+
+  def childrenAggregation(name: String, childType: String): ChildrenAggregationDefinition =
+    ChildrenAggregationDefinition(name, childType)
+
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
   def dateRangeAggregation(name: String): DateRangeAggregation = DateRangeAggregation(name)
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition = ExtendedStatsAggregationDefinition(name)
   def filterAggregation(name: String): FilterAggregationDefinition = FilterAggregationDefinition(name)
   def filtersAggregation(name: String): FiltersAggregationDefinition = FiltersAggregationDefinition(name)
   def geoBoundsAggregation(name: String): GeoBoundsAggregationDefinition = GeoBoundsAggregationDefinition(name)
-  def geoDistanceAggregation(name: String): GeoDistanceAggregationDefinition = GeoDistanceAggregationDefinition(name)
+
+  def geoDistanceAggregation(name: String, origin: GeoPoint): GeoDistanceAggregationDefinition =
+    GeoDistanceAggregationDefinition(name, origin)
+
   def geoHashGridAggregation(name: String): GeoHashGridAggregationDefinition = GeoHashGridAggregationDefinition(name)
   def geoCentroidAggregation(name: String): GeoCentroidAggregationDefinition = GeoCentroidAggregationDefinition(name)
   def globalAggregation(name: String): GlobalAggregationDefinition = GlobalAggregationDefinition(name)
@@ -20,7 +28,10 @@ trait AggregationDsl {
   def maxAggregation(name: String): MaxAggregationDefinition = MaxAggregationDefinition(name)
   def minAggregation(name: String): MinAggregationDefinition = MinAggregationDefinition(name)
   def missingAggregation(name: String): MissingAggregationDefinition = MissingAggregationDefinition(name)
-  def nestedAggregation(name: String): NestedAggregationDefinition = NestedAggregationDefinition(name)
+
+  def nestedAggregation(name: String, path: String): NestedAggregationDefinition =
+    NestedAggregationDefinition(name, path)
+
   def percentilesAggregation(name: String): PercentilesAggregationDefinition = PercentilesAggregationDefinition(name)
   def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition = PercentileRanksAggregationDefinition(name)
   def rangeAggregation(name: String): RangeAggregationDefinition = RangeAggregationDefinition(name)

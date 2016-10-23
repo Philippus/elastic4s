@@ -1,15 +1,14 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.queries
 
+import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import org.elasticsearch.action.suggest.SuggestResponse
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.Suggest.Suggestion
-import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
-import org.elasticsearch.search.suggest.completion.{CompletionSuggestion, CompletionSuggestionBuilder, CompletionSuggestionFuzzyBuilder}
+import org.elasticsearch.search.suggest.completion.{CompletionSuggestion, CompletionSuggestionBuilder}
 import org.elasticsearch.search.suggest.phrase.{PhraseSuggestion, PhraseSuggestionBuilder}
+import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
 import org.elasticsearch.search.suggest.term.{TermSuggestion, TermSuggestionBuilder}
-import org.elasticsearch.search.suggest.{Suggest, SuggestBuilders}
+import org.elasticsearch.search.suggest.{Suggest, SuggestBuilders, SuggestionBuilder}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
@@ -38,15 +37,11 @@ trait SuggestionDefinition {
   val name: String
   val builder: SuggestionBuilder[B]
 
-  @deprecated("use text", "1.6.1")
-  def on(_text: String): this.type = text(_text)
   def text(_text: String): this.type = {
     builder.text(_text)
     this
   }
 
-  @deprecated("use field", "1.6.1")
-  def from(_field: String): this.type = field(_field)
   def field(_field: String): this.type = {
     builder.field(_field)
     this
@@ -95,8 +90,7 @@ case class TermSuggestionDefinition(name: String, indexes: Seq[String] = Nil)
     this
   }
 
-  def mode(suggestMode: SuggestMode): TermSuggestionDefinition = mode(suggestMode.elastic)
-  def mode(suggestMode: String): TermSuggestionDefinition = {
+  def mode(suggestMode: SuggestMode): TermSuggestionDefinition = {
     builder.suggestMode(suggestMode)
     this
   }
@@ -110,7 +104,7 @@ case class TermSuggestionDefinition(name: String, indexes: Seq[String] = Nil)
   }
 
   def accuracy(accuracy: Double): TermSuggestionDefinition = {
-    builder.setAccuracy(accuracy.toFloat)
+    builder.accuracy(accuracy.toFloat)
     this
   }
 
@@ -124,7 +118,7 @@ case class TermSuggestionDefinition(name: String, indexes: Seq[String] = Nil)
     this
   }
 
-  def stringDistance(stringDistance: String): TermSuggestionDefinition = {
+  def stringDistance(stringDistance: TermSuggestionBuilder.StringDistanceImpl): TermSuggestionDefinition = {
     builder.stringDistance(stringDistance)
     this
   }
@@ -188,45 +182,6 @@ case class CompletionSuggestionDefinition(name: String) extends SuggestionDefini
   override type R <: CompletionSuggestionResult
 
   override val builder = SuggestBuilders.completionSuggestion(name)
-}
-
-case class FuzzyCompletionSuggestionDefinition(name: String)
-  extends SuggestionDefinition {
-
-  override type B = CompletionSuggestionFuzzyBuilder
-  override val builder = SuggestBuilders.fuzzyCompletionSuggestion(name)
-
-  def fuzziness(fuzziness: Fuzziness): this.type = {
-    builder.setFuzziness(fuzziness)
-    this
-  }
-
-  def fuzzyMinLength(fuzzyMinLength: Int): this.type = {
-    builder.setFuzzyMinLength(fuzzyMinLength)
-    this
-  }
-
-  def fuzzyPrefixLength(fuzzyPrefixLength: Int): this.type = {
-    builder.setFuzzyPrefixLength(fuzzyPrefixLength)
-    this
-  }
-
-  def fuzzyTranspositions(fuzzyTranspositions: Boolean): this.type = {
-    builder.setFuzzyTranspositions(fuzzyTranspositions)
-    this
-  }
-
-  def unicodeAware(unicodeAware: Boolean): this.type = {
-    builder.setUnicodeAware(unicodeAware)
-    this
-  }
-}
-
-sealed abstract class SuggestMode(val elastic: String)
-object SuggestMode {
-  case object Missing extends SuggestMode("missing")
-  case object Popular extends SuggestMode("popular")
-  case object Always extends SuggestMode("always")
 }
 
 case class SuggestResult(suggestions: Seq[SuggestionResult],
@@ -295,7 +250,6 @@ trait SuggestionEntry {
     .getOptions
     .asScala
     .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option]))
-    .toSeq
 }
 
 case class TermSuggestionEntry(entry: TermSuggestion.Entry) extends SuggestionEntry {

@@ -1,127 +1,25 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.search
 
-import java.util
+import java.io.ByteArrayInputStream
+import java.nio.ByteBuffer
 
-import com.sksamuel.elastic4s.DefinitionAttributes._
-import org.elasticsearch.action.search._
+import com.sksamuel.elastic4s.DefinitionAttributes.DefinitionAttributeMinScore
+import com.sksamuel.elastic4s.aggregations.AbstractAggregationDefinition
+import com.sksamuel.elastic4s.queries._
+import com.sksamuel.elastic4s.sort.SortDefinition
+import com.sksamuel.elastic4s.{IndexesAndTypes, ProxyClients, ScriptFieldDefinition}
+import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions
-import org.elasticsearch.client.Client
+import org.elasticsearch.cluster.routing.Preference
+import org.elasticsearch.common.io.stream.{ByteBufferStreamInput, InputStreamStreamInput}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.script.{ScriptService, Script}
-import org.elasticsearch.search.rescore.RescoreBuilder
+import org.elasticsearch.script.{Script, ScriptService}
+import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
-import scala.concurrent.Future
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
-import scala.language.implicitConversions
-
-
-/** @author Stephen Samuel */
-trait SearchDsl
-  extends QueryDsl
-  with HighlightDsl
-  with ScriptFieldDsl
-  with SuggestionDsl {
-
-  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
-
-  def rescore(query: QueryDefinition): RescoreDefinition = {
-    RescoreDefinition(query)
-  }
-
-  def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
-  def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
-
-
-  implicit object SearchDefinitionExecutable
-    extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
-    override def apply(c: Client, t: SearchDefinition): Future[RichSearchResponse] = {
-      injectFutureAndMap(c.search(t.build, _))(RichSearchResponse.apply)
-    }
-  }
-
-
-  implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResult] {
-    override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResult] = {
-      injectFutureAndMap(c.multiSearch(t.build, _))(MultiSearchResult.apply)
-    }
-  }
-
-
-  implicit object SearchDefinitionShow extends Show[SearchDefinition] {
-    override def show(f: SearchDefinition): String = f._builder.internalBuilder.toString
-  }
-
-
-  implicit class SearchDefinitionShowOps(f: SearchDefinition) {
-    def show: String = SearchDefinitionShow.show(f)
-  }
-
-
-  implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
-    import compat.Platform.EOL
-    override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
-  }
-
-
-  implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {
-    def show: String = MultiSearchDefinitionShow.show(f)
-  }
-}
-
-
-case class MultiSearchDefinition(searches: Iterable[SearchDefinition]) {
-  def build: MultiSearchRequest = {
-    val builder = new MultiSearchRequestBuilder(ProxyClients.client, MultiSearchAction.INSTANCE)
-    searches foreach (builder add _.build)
-    builder.request()
-  }
-}
-
-
-case class MultiSearchResult(original: MultiSearchResponse) {
-  def size = items.size
-  def items: Seq[MultiSearchResultItem] = original.getResponses.map(MultiSearchResultItem.apply)
-  // backwards compat
-  def getResponses(): Array[MultiSearchResponse.Item] = original.getResponses
-}
-
-
-case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
-  def isFailure: Boolean = item.isFailure
-  def failureMessage: Option[String] = Option(item.getFailureMessage)
-  def failure: Option[Throwable] = Option(item.getFailure)
-  def response: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
-}
-
-
-case class RescoreDefinition(query: QueryDefinition) {
-  val builder = RescoreBuilder.queryRescorer(query.builder)
-  var windowSize = 50
-
-  def window(size: Int): RescoreDefinition = {
-    this.windowSize = size
-    this
-  }
-
-  def originalQueryWeight(weight: Double): RescoreDefinition = {
-    builder.setQueryWeight(weight.toFloat)
-    this
-  }
-
-  def rescoreQueryWeight(weight: Double): RescoreDefinition = {
-    builder.setRescoreQueryWeight(weight.toFloat)
-    this
-  }
-
-  def scoreMode(scoreMode: String): RescoreDefinition = {
-    builder.setScoreMode(scoreMode)
-    this
-  }
-}
-
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAttributeMinScore {
 
@@ -183,8 +81,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   }
 
   def sort(sorts: SortDefinition*): SearchDefinition = sort2(sorts.map(_.builder): _*)
-  def sort2(sorts: SortBuilder*): SearchDefinition = {
-    sorts.foreach(_builder.addSort)
+  def sort2(sorts: SortBuilder[_ <: SortBuilder[_]]*): SearchDefinition = {
+    sorts.foreach(_builder.addSort(sorts))
     this
   }
 
@@ -194,7 +92,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     * @return this, an instance of [[SearchDefinition]]
     */
   def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
-    import scala.collection.JavaConverters._
     sfieldDefs.foreach {
       case ScriptFieldDefinition(name, script, Some(lang), Some(params), scriptType) =>
         _builder.addScriptField(name, new Script(script, scriptType, lang, params.asJava))
@@ -235,7 +132,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     */
   def regex(tuple: (String, Any)) = {
     val q = RegexQueryDefinition(tuple._1, tuple._2)
-    _builder.setQuery(q.builder.buildAsBytes)
+    _builder.setSource(new SearchSourceBuilder(new ByteBufferStreamInput(ByteBuffer.wrap(q.builder.buildAsBytes.toBytesRef.bytes))))
     this
   }
 
@@ -349,7 +246,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
     this
   }
 
-  def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
+  def preference(pref: Preference): SearchDefinition = preference(pref.`type`())
   def preference(pref: String): SearchDefinition = {
     _builder.setPreference(pref)
     this
@@ -371,7 +268,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   }
 
   def searchType(searchType: SearchType) = {
-    _builder.setSearchType(searchType.elasticType)
+    _builder.setSearchType(searchType)
     this
   }
 
@@ -412,7 +309,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
   }
 
   def fields(fields: String*): SearchDefinition = {
-    _builder.addFields(fields: _*)
+    _builder.storedFields(fields: _*)
     this
   }
 
@@ -435,4 +332,3 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) extends DefinitionAtt
 
   override def toString = _builder.toString
 }
-

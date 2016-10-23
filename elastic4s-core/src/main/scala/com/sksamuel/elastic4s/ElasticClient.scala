@@ -1,14 +1,16 @@
 package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
+import javafx.scene.NodeBuilder
 
-import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
-import org.elasticsearch.client.transport.{TransportClient, NoNodeAvailableException}
+import com.sksamuel.elastic4s.search.SearchDefinition
+import org.elasticsearch.client.transport.{NoNodeAvailableException, TransportClient}
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.node.Node
 import org.elasticsearch.plugins.Plugin
+import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -118,13 +120,6 @@ object ElasticClient {
 
   @deprecated("use transport instead of remote", "2.0.0")
   def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)
-
-  /**
-   * Creates a local data node. This is useful for embedded usage, or for unit tests.
-   * Default settings will be applied.
-   */
-  @deprecated("must specify path.home in elasticsearch now, so this method will throw", "2.3.3")
-  def local: ElasticClient = local(Settings.settingsBuilder().build())
 
   /**
    * Creates a local data node. This is useful for embedded usage, or for unit tests.

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.QueryDefinition
 import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.client.Client
@@ -12,11 +13,11 @@ import scala.language.implicitConversions
 trait AliasesDsl {
 
   class AddAliasExpectsIndex(alias: String) {
-    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
+    def on(index: String) = MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
   }
 
   class RemoveAliasExpectsIndex(alias: String) {
-    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.REMOVE, index, alias))
+    def on(index: String) = MutateAliasDefinition(new AliasAction(AliasAction.Type.REMOVE, index, alias))
   }
 
   implicit object GetAliasDefinitionExecutable
@@ -40,7 +41,7 @@ trait AliasesDsl {
     }
   }
 
-  implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = new GetAliasResult(resp)
+  implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = GetAliasResult(resp)
 }
 
 case class GetAliasDefinition(aliases: Seq[String]) {
@@ -59,18 +60,17 @@ case class GetAliasResult(response: GetAliasesResponse) {
   import scala.collection.JavaConverters._
 
   def aliases: Map[String, Seq[AliasMetaData]] = {
-    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala.toSeq).toMap
+    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala).toMap
   }
 }
 
 case class MutateAliasDefinition(aliasAction: AliasAction) {
 
-  def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
+  def routing(route: String): MutateAliasDefinition = MutateAliasDefinition(aliasAction.routing(route))
 
-  def filter(filter: QueryBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
-  def filter(filter: QueryDefinition): MutateAliasDefinition = {
-    new MutateAliasDefinition(aliasAction.filter(filter.builder))
-  }
+  def filter(filter: QueryBuilder): MutateAliasDefinition = MutateAliasDefinition(aliasAction.filter(filter))
+  def filter(filter: QueryDefinition): MutateAliasDefinition =
+    MutateAliasDefinition(aliasAction.filter(filter.builder))
 
   def build: IndicesAliasesRequest = new IndicesAliasesRequest().addAliasAction(aliasAction)
 }

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.queries.{SuggestResult, SuggestionDefinition, SuggestionResult}
 import org.apache.lucene.search.Explanation
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.bytes.BytesReference
@@ -26,9 +27,6 @@ case class RichSearchResponse(original: SearchResponse) {
   def maxScore: Float = original.getHits.getMaxScore
 
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
-
-  @deprecated("use as[T], which handles errors", "1.6.1")
-  def hitsAs[T](implicit reader: Reader[T], manifest: Manifest[T]): Array[T] = hits.map(_.mapTo[T])
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
@@ -93,15 +91,12 @@ case class RichSearchHit(java: SearchHit) {
 
   def sourceRef: BytesReference = java.sourceRef()
   def source: Array[Byte] = if (java.source == null) Array.emptyByteArray else java.source
-  def isSourceEmpty: Boolean = java.isSourceEmpty
+  def isSourceEmpty: Boolean = source.isEmpty
   def sourceAsString: String = if (java.sourceAsString == null) "" else java.sourceAsString
   def sourceAsMap: Map[String, AnyRef] = if (java.sourceAsMap == null) Map.empty else java.sourceAsMap.asScala.toMap
   def sourceAsMutableMap: mutable.Map[String, AnyRef] = {
     if (java.sourceAsMap == null) mutable.Map.empty else java.sourceAsMap.asScala
   }
-
-  @deprecated("use as[T]", "2.0.0")
-  def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
 
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
@@ -160,7 +155,7 @@ class ScalaSearchHit(java: SearchHit) extends Hit {
   override def sourceAsBytes: Array[Byte] = java.source()
   override def sourceAsString: String = java.sourceAsString()
   override def isExists: Boolean = true
-  override def isEmpty: Boolean = java.isSourceEmpty
+  override def isEmpty: Boolean = java.source.isEmpty
   override def `type`: String = java.`type`()
   override def version: Long = java.version()
   override def field(name: String): HitField = fieldOpt(name).orNull

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.script.ScriptService
-import org.elasticsearch.script.ScriptService.ScriptType
 
 trait ScriptFieldDsl {
   case class ExpectsScript(field: String) {
