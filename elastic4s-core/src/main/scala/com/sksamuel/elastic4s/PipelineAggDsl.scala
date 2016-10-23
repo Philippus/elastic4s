@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.script.Script
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
 import org.elasticsearch.search.aggregations.pipeline.bucketmetrics.avg.AvgBucketBuilder
@@ -36,7 +37,7 @@ trait PipelineAggregationDsl {
 }
 
 
-abstract class PipelineDefinition {
+abstract class PipelineDefinition extends AbstractAggregationDefinition {
 
   type T <: PipelineAggregatorBuilder[T]
 
@@ -61,7 +62,7 @@ case class AvgBucketDefinition(name: String,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = AvgBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.avgBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -85,7 +86,7 @@ case class BucketScriptDefinition(name: String,
                                   bucketPathsMap: Map[String, String] = Map.empty) extends PipelineDefinition {
   type T = BucketScriptBuilder
 
-  def build: T = {
+  def builder: T = {
     import scala.collection.JavaConverters._
     val builder = super.build(PipelineAggregatorBuilders.bucketScript(name))
     format.foreach(builder.format)
@@ -112,7 +113,7 @@ case class CumulativeSumDefinition(name: String,
                                    bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = CumulativeSumBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.cumulativeSum(name))
     format.foreach(builder.format)
     builder
@@ -133,7 +134,7 @@ case class DerivativeDefinition(name: String,
                                 bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = DerivativeBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.derivative(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -160,7 +161,7 @@ case class DiffDefinition(name: String,
                           bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = SerialDiffBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.diff(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -182,7 +183,7 @@ case class ExtendedStatsBucketDefinition(name: String,
                                          bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = ExtendedStatsBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.extendedStatsBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -204,7 +205,7 @@ case class BucketSelectorDefinition(name: String,
                                     bucketPathsMap: Map[String, String] = Map.empty) extends PipelineDefinition {
   type T = BucketSelectorBuilder
 
-  def build: T = {
+  def builder: T = {
     import scala.collection.JavaConverters._
     val builder = super.build(PipelineAggregatorBuilders.having(name))
     script.foreach(builder.script)
@@ -229,7 +230,7 @@ case class MaxBucketDefinition(name: String,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = MaxBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.maxBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -250,7 +251,7 @@ case class MinBucketDefinition(name: String,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = MinBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.minBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -276,7 +277,7 @@ case class MovAvgDefinition(name: String,
                             bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = MovAvgBuilder
 
-  def build: T = {
+  def builder: T = {
     import scala.collection.JavaConverters._
     val builder = super.build(PipelineAggregatorBuilders.movingAvg(name))
     format.foreach(builder.format)
@@ -311,7 +312,7 @@ case class PercentilesBucketDefinition(name: String,
                                        bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = PercentilesBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.percentilesBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -336,7 +337,7 @@ case class StatsBucketDefinition(name: String,
                                  bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = StatsBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.statsBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
@@ -357,7 +358,7 @@ case class SumBucketDefinition(name: String,
                                bucketPaths: Seq[String] = Nil) extends PipelineDefinition {
   type T = SumBucketBuilder
 
-  def build: T = {
+  def builder: T = {
     val builder = super.build(PipelineAggregatorBuilders.sumBucket(name))
     format.foreach(builder.format)
     gapPolicy.foreach(builder.gapPolicy)
