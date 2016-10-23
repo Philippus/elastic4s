@@ -193,6 +193,26 @@ case class StopTokenFilter(name: String,
   def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
 }
 
+case class PredefinedStopTokenFilter(name: String,
+                                     stopwords: Option[String] = None,
+                                     removeTrailing: Option[Boolean] = None,
+                                     ignoreCase: Option[Boolean] = None)
+  extends TokenFilterDefinition {
+
+  val filterType = "stop"
+
+  override def build(source: XContentBuilder): Unit = {
+    stopwords.foreach(source.field("stopwords", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
+    removeTrailing.foreach(source.field("remove_trailing", _))
+  }
+
+  def ignoreCase(boolean: Boolean): PredefinedStopTokenFilter = copy(ignoreCase = Option(boolean))
+  def removeTrailing(boolean: Boolean): PredefinedStopTokenFilter = copy(removeTrailing = Option(boolean))
+  def stopwords(stopwords: Option[String]): PredefinedStopTokenFilter = copy(stopwords = stopwords)
+  def stopwords(stopwords: String): PredefinedStopTokenFilter = copy(stopwords = Option(stopwords))
+}
+
 object NamedStopTokenFilter {
   val Arabic = "_arabic_"
   val Armenian = "_armenian_"
