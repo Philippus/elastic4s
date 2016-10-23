@@ -12,11 +12,13 @@ object Build extends AutoPlugin {
     val org = "com.sksamuel.elastic4s"
     val ScalaVersion = "2.11.8"
     val ScalatestVersion = "3.0.0"
+    val ScalacticVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
+    val AkkaVersion = "2.3.12"
+    val ReactiveStreamsVersion = "1.0.0"
     val JacksonVersion = "2.7.5"
     val Slf4jVersion = "1.7.12"
-    val ScalaLoggingVersion = "2.1.2"
-    val ElasticsearchVersion = "2.3.5"
+    val ElasticsearchVersion = "2.4.1"
     val Log4jVersion = "1.2.17"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.4.1"
@@ -28,7 +30,7 @@ object Build extends AutoPlugin {
   override def projectSettings = Seq(
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.8", "2.10.6"),
+    crossScalaVersions := Seq("2.11.8"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     fork in Test := true,
@@ -41,7 +43,7 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch"     % "elasticsearch"     % ElasticsearchVersion,
-      "org.scalactic"         %% "scalactic"        % "3.0.0",
+      "org.scalactic"         %% "scalactic"        % ScalacticVersion,
       "org.slf4j"             % "slf4j-api"         % Slf4jVersion,
       "commons-io"            % "commons-io"        % CommonsIoVersion  % "test",
       "log4j"                 % "log4j"             % Log4jVersion      % "test",

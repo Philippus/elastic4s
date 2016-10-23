@@ -5,7 +5,6 @@ import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.index.get.GetField
 import org.elasticsearch.search.fetch.source.FetchSourceContext
-import org.scalactic.{ErrorMessage, Or}
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -123,8 +122,6 @@ case class RichGetResponse(original: GetResponse) {
   def isExists: Boolean = original.isExists
   def isSourceEmpty: Boolean = original.isSourceEmpty
   def iterator: Iterator[GetField] = original.iterator.asScala
-
-  def to[T](implicit read: HitReader[T], manifest: Manifest[T]): Or[T, ErrorMessage] = read.from(new GetHit(original))
 }
 
 case class RichGetField(original: GetField) extends AnyVal {
@@ -136,34 +133,4 @@ case class RichGetField(original: GetField) extends AnyVal {
   def values: Seq[AnyRef] = original.getValues.asScala
   def isMetadataField: Boolean = original.isMetadataField
   def iterator: Iterator[AnyRef] = original.iterator.asScala
-}
-
-class GetHit(resp: GetResponse) extends Hit {
-
-  import scala.collection.JavaConverters._
-
-  override def id: String = resp.getId
-  override def index: String = resp.getIndex
-  override def source: Map[String, AnyRef] = resp.getSource.asScala.toMap
-  override def sourceAsBytes: Array[Byte] = resp.getSourceAsBytes
-  override def sourceAsString: String = resp.getSourceAsString
-  override def isExists: Boolean = resp.isExists
-  override def isEmpty: Boolean = resp.isSourceEmpty
-  override def `type`: String = resp.getType
-  override def version: Long = resp.getVersion
-  override def field(name: String): HitField = new GetHitField(resp.getField(name))
-  override def fieldOpt(name: String): Option[HitField] = Option(resp.getField(name)).map(new GetHitField(_))
-  override def fields: Map[String, HitField] = resp.getFields.asScala.toMap.map { case (key, value) =>
-    key -> new GetHitField(value)
-  }
-}
-
-class GetHitField(java: GetField) extends HitField {
-
-  import scala.collection.JavaConverters._
-
-  override def name: String = java.getName
-  override def value: AnyRef = java.getValue
-  override def values: Seq[AnyRef] = java.getValues.asScala
-  override def isMetadataField: Boolean = java.isMetadataField
 }

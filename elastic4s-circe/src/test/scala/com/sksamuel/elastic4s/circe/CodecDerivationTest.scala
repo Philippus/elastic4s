@@ -13,7 +13,7 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
 
   "A derived HitAs instance" should {
 
-    "be implicitly found if circe.generic.auto is in imported" in {
+    "be implicitly found if circe.generic.auto is in imported" ignore {
       import io.circe.generic.auto._
       "implicitly[HitAs[Cafe]]" should compile
     }
@@ -45,7 +45,7 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
   }
   
   "A derived Indexable instance" should {
-    "be implicitly found if circe.generic.auto is in imported" in {
+    "be implicitly found if circe.generic.auto is in imported" ignore {
       "implicitly[Indexable[Cafe]]" should compile
     }
     
