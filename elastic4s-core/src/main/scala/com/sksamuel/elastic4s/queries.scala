@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import com.sksamuel.elastic4s.query.BoostingQueryDefinition
+import com.sksamuel.elastic4s.query.{BoolQueryDefinition, BoostingQueryDefinition, SpanNearQueryDefinition, SpanOrQueryDefinition}
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
@@ -107,6 +107,8 @@ trait QueryDsl {
     }
   }
 
+  def spanNearQuery(defs: Iterable[SpanQueryDefinition], slop: Int): SpanNearQueryDefinition = SpanNearQueryDefinition(defs.toSeq, slop)
+
   def spanOrQuery(iterable: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
   def spanOrQuery(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition = spanOrQuery(first +: rest)
 
@@ -115,7 +117,6 @@ trait QueryDsl {
   def spanNotQuery(include: SpanQueryDefinition, exclude: SpanQueryDefinition): SpanNotQueryDefinition =
     SpanNotQueryDefinition(include, exclude)
 
-  def spanNearQuery: SpanNearQueryDefinition = new SpanNearQueryDefinition
 
   def spanMultiTermQuery(query: MultiTermQueryDefinition) = SpanMultiTermQueryDefinition(query)
 
@@ -143,7 +144,7 @@ trait QueryDsl {
   }
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
-  def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = new WildcardQueryDefinition(field, value)
+  def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)
 
   def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
 
@@ -174,76 +175,6 @@ trait QueryDsl {
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
 
-class BoolQueryDefinition extends QueryDefinition {
-
-  val builder = QueryBuilders.boolQuery()
-
-  def adjustPureNegative(adjustPureNegative: Boolean): this.type = {
-    builder.adjustPureNegative(adjustPureNegative)
-    this
-  }
-
-  def boost(boost: Double): this.type = {
-    builder.boost(boost.toFloat)
-    this
-  }
-
-  def must(queries: QueryDefinition*): this.type = {
-    queries.foreach(builder must _.builder)
-    this
-  }
-
-  def must(queries: Iterable[QueryDefinition]): this.type = {
-    queries.foreach(builder must _.builder)
-    this
-  }
-
-  def filter(first: QueryDefinition, rest: QueryDefinition*): this.type = filter(first +: rest)
-  def filter(queries: Iterable[QueryDefinition]): this.type = {
-    queries.foreach(builder filter _.builder)
-    this
-  }
-
-  def not(queries: QueryDefinition*): this.type = {
-    queries.foreach(builder mustNot _.builder)
-    this
-  }
-
-  def not(queries: Iterable[QueryDefinition]): this.type = {
-    queries.foreach(builder mustNot _.builder)
-    this
-  }
-
-  def should(queries: QueryDefinition*): this.type = {
-    queries.foreach(builder should _.builder)
-    this
-  }
-
-  def should(queries: Iterable[QueryDefinition]): this.type = {
-    queries.foreach(builder should _.builder)
-    this
-  }
-
-  def minimumShouldMatch(minimumShouldMatch: String): this.type = {
-    builder.minimumShouldMatch(minimumShouldMatch: String)
-    this
-  }
-
-  def minimumShouldMatch(minimumNumberShouldMatch: Int): this.type = {
-    builder.minimumNumberShouldMatch(minimumNumberShouldMatch: Int)
-    this
-  }
-
-  def disableCoord(disableCoord: Boolean): this.type = {
-    builder.disableCoord(disableCoord: Boolean)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
 
 trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
@@ -797,7 +728,6 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
 }
 
 
-
 case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
     builder.boost(b.toFloat)
@@ -897,24 +827,6 @@ case class IdQueryDefinition(ids: Seq[String],
   def boost(boost: Double): IdQueryDefinition = copy(boost = Option(boost))
 }
 
-case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
-                                 boost: Option[Double] = None,
-                                 queryName: Option[String] = None) extends SpanQueryDefinition {
-
-  def builder: SpanOrQueryBuilder = {
-
-    val initial = clauses.headOption.getOrElse(sys.error("Must have at least one clause"))
-    val builder = QueryBuilders.spanOrQuery(initial.builder)
-    clauses.tail.map(_.builder).foreach(builder.addClause)
-    boost.map(_.toFloat).foreach(builder.boost)
-    queryName.foreach(builder.queryName)
-    builder
-  }
-
-  def boost(boost: Double) = copy(boost = Option(boost))
-  def clauses(clauses: Iterable[SpanQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
-  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*) = clauses(first +: rest)
-}
 
 class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
 
@@ -1023,40 +935,6 @@ case class SpanMultiTermQueryDefinition(query: MultiTermQueryDefinition) extends
   override val builder = QueryBuilders.spanMultiTermQueryBuilder(query.builder)
 }
 
-class SpanNearQueryDefinition extends SpanQueryDefinition {
-
-  val builder = QueryBuilders.spanNearQuery()
-
-  def boost(boost: Double): this.type = {
-    builder.boost(boost.toFloat)
-    this
-  }
-
-  def inOrder(inOrder: Boolean): this.type = {
-    builder.inOrder(inOrder)
-    this
-  }
-
-  def collectPayloads(collectPayloads: Boolean): this.type = {
-    builder.collectPayloads(collectPayloads)
-    this
-  }
-
-  def clause(query: SpanQueryDefinition): this.type = {
-    builder.clause(query.builder)
-    this
-  }
-
-  def slop(slop: Int): this.type = {
-    builder.slop(slop)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
 
 case class TermsLookupQueryDefinition(field: String)
   extends QueryDefinition {

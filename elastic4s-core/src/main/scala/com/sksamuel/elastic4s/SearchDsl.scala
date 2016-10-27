@@ -3,12 +3,13 @@ package com.sksamuel.elastic4s
 import java.util
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
+import com.sksamuel.elastic4s.query.BoolQueryDefinition
 import org.elasticsearch.action.search._
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.script.{ScriptService, Script}
+import org.elasticsearch.script.{Script, ScriptService}
 import org.elasticsearch.search.rescore.RescoreBuilder
 import org.elasticsearch.search.sort.SortBuilder
 
