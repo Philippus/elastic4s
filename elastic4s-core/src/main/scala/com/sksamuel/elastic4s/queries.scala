@@ -560,24 +560,7 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
 }
 
 
-case class IdQueryDefinition(ids: Seq[String],
-                             types: Seq[String] = Nil,
-                             boost: Option[Double] = None,
-                             queryName: Option[String] = None) extends QueryDefinition {
 
-  def builder = {
-    val builder = QueryBuilders.idsQuery(types: _*).addIds(ids: _*)
-    boost.foreach(b => builder.boost(b.toFloat))
-    queryName.foreach(builder.queryName)
-    builder
-  }
-
-  def types(types: Iterable[String]): IdQueryDefinition = copy(types = types.toSeq)
-  def types(first: String, rest: String*): IdQueryDefinition = copy(types = first +: rest)
-
-  def queryName(name: String): IdQueryDefinition = copy(queryName = Option(name))
-  def boost(boost: Double): IdQueryDefinition = copy(boost = Option(boost))
-}
 
 
 class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
@@ -859,70 +842,7 @@ case class MatchPhrasePrefixDefinition(field: String, value: Any)
   }
 }
 
-case class MatchPhraseDefinition(field: String, value: Any)
-  extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeCutoffFrequency {
 
-  val builder = QueryBuilders.matchPhraseQuery(field, value.toString)
-  val _builder = builder
-
-  def analyzer(a: Analyzer): MatchPhraseDefinition = {
-    builder.analyzer(a.name)
-    this
-  }
-
-  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery) = {
-    builder.zeroTermsQuery(z)
-    this
-  }
-
-  def slop(s: Int): MatchPhraseDefinition = {
-    builder.slop(s)
-    this
-  }
-
-  def setLenient(lenient: Boolean): MatchPhraseDefinition = {
-    builder.setLenient(lenient)
-    this
-  }
-
-  def operator(op: MatchQueryBuilder.Operator): MatchPhraseDefinition = {
-    builder.operator(op)
-    this
-  }
-
-  def operator(op: String): MatchPhraseDefinition = {
-    op match {
-      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
-      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
-    }
-    this
-  }
-
-  def minimumShouldMatch(a: Any) = {
-    builder.minimumShouldMatch(a.toString)
-    this
-  }
-
-  def maxExpansions(max: Int) = {
-    builder.maxExpansions(max)
-    this
-  }
-
-  def fuzzyTranspositions(f: Boolean) = {
-    builder.fuzzyTranspositions(f)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
 
 case class ScriptQueryDefinition(script: ScriptDefinition)
   extends QueryDefinition {
