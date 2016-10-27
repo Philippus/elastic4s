@@ -70,42 +70,6 @@ object DefinitionAttributes {
     }
   }
 
-  trait DefinitionAttributeFrom {
-    val _builder: { def from(a: AnyRef): Any }
-
-    def from(from: Any): this.type = {
-      _builder.from(from.toString)
-      this
-    }
-  }
-
-  trait DefinitionAttributeTo {
-    val _builder: { def to(a: AnyRef): Any }
-
-    def to(to: Any): this.type = {
-      _builder.to(to.toString)
-      this
-    }
-  }
-
-  trait DefinitionAttributeLt {
-    val _builder: { def lt(a: AnyRef): Any }
-
-    def lt(lt: Any): this.type = {
-      _builder.lt(lt.toString)
-      this
-    }
-  }
-
-  trait DefinitionAttributeGt {
-    val _builder: { def gt(a: AnyRef): Any }
-
-    def gt(gt: Any): this.type = {
-      _builder.gt(gt.toString)
-      this
-    }
-  }
-
   trait DefinitionAttributePrefixLength {
     val _builder: { def prefixLength(f: Int): Any }
 
@@ -166,15 +130,6 @@ object DefinitionAttributes {
 
     def cacheKey(cacheKey: String): this.type = {
       _builder.cacheKey(cacheKey)
-      this
-    }
-  }
-
-  trait DefinitionAttributePoint {
-    val _builder: { def point(lat: Double, lon: Double): Any }
-
-    def point(lat: Double, lon: Double): this.type = {
-      _builder.point(lat, lon)
       this
     }
   }

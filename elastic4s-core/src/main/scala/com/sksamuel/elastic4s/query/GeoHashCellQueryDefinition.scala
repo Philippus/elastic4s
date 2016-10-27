@@ -7,14 +7,20 @@ import org.elasticsearch.index.query.QueryBuilders
 case class GeoHashCellQueryDefinition(field: String,
                                       geohash: String,
                                       neighbors: Option[Boolean] = None,
+                                      ignoreUnmapped: Option[Boolean] = None,
                                       precisionLevels: Option[Int] = None,
-                                      precisionString: Option[String] = None) extends QueryDefinition {
+                                      precisionString: Option[String] = None,
+                                      boost: Option[Double] = None,
+                                      queryName: Option[String] = None) extends QueryDefinition {
 
   def builder = {
     val builder = QueryBuilders.geoHashCellQuery(field, geohash)
     precisionLevels.foreach(builder.precision)
     precisionString.foreach(builder.precision)
     neighbors.foreach(builder.neighbors)
+    ignoreUnmapped.foreach(builder.ignoreUnmapped)
+    boost.map(_.toFloat).foreach(builder.boost)
+    queryName.foreach(builder.queryName)
     builder
   }
 
@@ -22,4 +28,8 @@ case class GeoHashCellQueryDefinition(field: String,
   def withPrecision(precision: Int): GeoHashCellQueryDefinition = copy(precisionLevels = Some(precision))
   def withPrecision(precision: String): GeoHashCellQueryDefinition = copy(precisionString = Some(precision))
   def neighbours(neighbors: Boolean) = copy(neighbors = Some(neighbors))
+
+  def ignoreUnmapped(ignoreUnmapped: Boolean) = copy(ignoreUnmapped = Option(ignoreUnmapped))
+  def queryName(name: String) = copy(queryName = Option(name))
+  def boost(boost: Double) = copy(boost = Option(boost))
 }
