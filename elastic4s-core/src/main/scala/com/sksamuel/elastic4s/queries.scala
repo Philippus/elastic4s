@@ -18,6 +18,7 @@ trait QueryDsl {
                     negativeQuery: QueryDefinition): BoostingQueryDefinition = BoostingQueryDefinition(positiveQuery, negativeQuery)
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
+  def commonQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
   class CommonQueryExpectsText(name: String) {
     def text(q: String): CommonTermsQueryDefinition = CommonTermsQueryDefinition(name, q)
     def query(q: String): CommonTermsQueryDefinition = text(q)
@@ -28,7 +29,7 @@ trait QueryDsl {
   def dismax(queries: Iterable[QueryDefinition]): DisMaxDefinition = new DisMaxDefinition(queries.toSeq)
   def dismax(first: QueryDefinition, rest: QueryDefinition*): DisMaxDefinition = dismax(first +: rest)
 
-  def existsQuery = ExistsQueryDefinition
+  def existsQuery(field: String) = ExistsQueryDefinition(field)
 
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition =
     FunctionScoreQueryDefinition().withQuery(query)
@@ -103,8 +104,8 @@ trait QueryDsl {
     def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
   }
 
-  def query(q: String): QueryStringQueryDefinition = queryStringQuery(q)
-  def queryStringQuery(q: String): QueryStringQueryDefinition = QueryStringQueryDefinition(q)
+  def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
+  def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)
 
   def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
 
@@ -154,8 +155,6 @@ trait QueryDsl {
   def idsQuery(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
   def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
 
-  def all: MatchAllQueryDefinition = new MatchAllQueryDefinition
-
   // -- bool query dsl ---
   def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
   def bool(mustQueries: Seq[QueryDefinition],
@@ -173,77 +172,6 @@ trait QueryDsl {
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
 
-
 trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
 }
-
-case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
-  val builder = QueryBuilders.typeQuery(`type`)
-}
-
-case class NestedQueryDefinition(path: String,
-                                 query: QueryDefinition,
-                                 boost: Option[Double] = None,
-                                 inner: Option[QueryInnerHitBuilder] = None,
-                                 queryName: Option[String] = None,
-                                 scoreMode: Option[String] = None) extends QueryDefinition {
-  require(query != null, "must specify query for nested score query")
-
-  def builder: NestedQueryBuilder = {
-    val builder = QueryBuilders.nestedQuery(path, query.builder)
-    boost.foreach(b => builder.boost(b.toFloat))
-    scoreMode.foreach(builder.scoreMode)
-    inner.foreach(builder.innerHit)
-    queryName.foreach(builder.queryName)
-    builder
-  }
-
-  def inner(name: String): NestedQueryDefinition = copy(inner = Option(new QueryInnerHitBuilder().setName(name)))
-  def inner(inner: QueryInnerHitsDefinition): NestedQueryDefinition = copy(inner = Option(inner.builder))
-
-  def scoreMode(scoreMode: String): NestedQueryDefinition = copy(scoreMode = Option(scoreMode))
-  def boost(b: Double): NestedQueryDefinition = copy(boost = Option(b))
-  def queryName(queryName: String): NestedQueryDefinition = copy(queryName = Option(queryName))
-}
-
-case class QueryInnerHitsDefinition(private[elastic4s] val name: String) {
-
-  private[elastic4s] val builder = new QueryInnerHitBuilder().setName(name)
-  private var includes: Array[String] = Array.empty
-  private var excludes: Array[String] = Array.empty
-
-  def from(f: Int): this.type = {
-    builder.setFrom(f)
-    this
-  }
-
-  def size(s: Int): this.type = {
-    builder.setSize(s)
-    this
-  }
-
-  def highlighting(highlights: HighlightDefinition*): this.type = {
-    highlights.foreach(highlight => builder.addHighlightedField(highlight.builder))
-    this
-  }
-
-  def fetchSource(fetch: Boolean): this.type = {
-    builder.setFetchSource(fetch)
-    this
-  }
-
-  def sourceInclude(includes: String*): this.type = {
-    this.includes = includes.toArray
-    builder.setFetchSource(this.includes, excludes)
-    this
-  }
-
-  def sourceExclude(excludes: String*): this.type = {
-    this.excludes = excludes.toArray
-    builder.setFetchSource(includes, this.excludes)
-    this
-  }
-}
-
-

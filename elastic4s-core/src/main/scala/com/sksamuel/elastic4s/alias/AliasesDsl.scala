@@ -10,16 +10,6 @@ import scala.language.implicitConversions
 
 trait AliasesDsl {
 
-  class AddAliasExpectsIndex(alias: String) {
-    require(alias.nonEmpty, "alias must not be null or empty")
-    def on(index: String) = AddAliasActionDefinition(alias, index)
-  }
-
-  class RemoveAliasExpectsIndex(alias: String) {
-    require(alias.nonEmpty, "alias must not be null or empty")
-    def on(index: String) = RemoveAliasActionDefinition(alias, index)
-  }
-
   implicit object GetAliasDefinitionExecutable
     extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {

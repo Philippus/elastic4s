@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
-import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
-import org.elasticsearch.client.transport.{TransportClient, NoNodeAvailableException}
+import org.elasticsearch.client.transport.{NoNodeAvailableException, TransportClient}
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.node.{Node, NodeBuilder}
+import org.elasticsearch.node.Node
 import org.elasticsearch.plugins.Plugin
+import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 
 import scala.concurrent._
 import scala.concurrent.duration._

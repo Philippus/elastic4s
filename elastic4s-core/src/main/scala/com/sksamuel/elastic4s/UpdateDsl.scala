@@ -22,6 +22,7 @@ trait UpdateDsl {
   }
 
   class UpdateExpectsIndex(id: String) {
+    require(id.toString.nonEmpty, "id must not be null or empty")
     def in(indexType: IndexAndTypes): UpdateDefinition = UpdateDefinition(indexType, id)
   }
 }

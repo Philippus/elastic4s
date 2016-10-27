@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.admin.{ClearCacheDefinition, CloseIndexDefinition, ClusterDsl, ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition, ClusterStatsDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, FieldStatsDsl, FlushIndexDefinition, GetSegmentsDefinition, GetTemplateDefinition, IndexAdminDsl, IndexExistsDefinition, IndexTemplateDsl, IndicesStatsDefinition, OpenIndexDefinition, RefreshIndexDefinition, SnapshotDsl, TypesExistsDefinition}
-import com.sksamuel.elastic4s.alias.{AliasActionDefinition, AliasesDsl, GetAliasDefinition, IndicesAliasesRequestDefinition}
+import com.sksamuel.elastic4s.admin._
+import com.sksamuel.elastic4s.alias._
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerDsl}
-import com.sksamuel.elastic4s.mappings.FieldType.{AttachmentType, BinaryType, BooleanType, ByteType, CompletionType, DateType, DoubleType, FloatType, GeoPointType, GeoShapeType, IntegerType, IpType, LongType, MultiFieldType, NestedType, ObjectType, ShortType, StringType, TokenCountType}
+import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.query.InnerHitDefinition
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -48,15 +49,10 @@ trait ElasticDsl
     with DeprecatedElasticDsl
     with ElasticImplicits {
 
-  case object add {
-    @deprecated("Use full method syntax, eg addAlias()", "3.0.0")
-    def alias(alias: String): AddAliasExpectsIndex = {
-      require(alias.nonEmpty, "alias name must not be null or empty")
-      new AddAliasExpectsIndex(alias)
-    }
+  def addAlias(alias: String) = new {
+    require(alias.nonEmpty, "alias must not be null or empty")
+    def on(index: String) = AddAliasActionDefinition(alias, index)
   }
-
-  def addAlias(name: String): AddAliasExpectsIndex = new AddAliasExpectsIndex(name)
 
   def aliases(first: AliasActionDefinition, rest: AliasActionDefinition*): IndicesAliasesRequestDefinition = aliases(first +: rest)
   def aliases(actions: Iterable[AliasActionDefinition]) = IndicesAliasesRequestDefinition(actions.toSeq)
@@ -135,42 +131,12 @@ trait ElasticDsl
   def completionSuggestion: CompletionSuggestionDefinition = completion suggestion UUID.randomUUID.toString
   def completionSuggestion(name: String): CompletionSuggestionDefinition = completion suggestion name
 
-  case object create {
-
-    def index(name: String) = {
-      require(name.nonEmpty, "index name must not be null or empty")
-      CreateIndexDefinition(name)
-    }
-
-    def snapshot(name: String) = {
-      require(name.nonEmpty, "snapshot name must not be null or empty")
-      new CreateSnapshotExpectsIn(name)
-    }
-
-    def repository(name: String): CreateRepositoryExpectsType = {
-      require(name.nonEmpty, "repository name must not be null or empty")
-      new CreateRepositoryExpectsType(name)
-    }
-
-    def template(name: String): CreateIndexTemplateExpectsPattern = {
-      require(name.nonEmpty, "template name must not be null or empty")
-      new CreateIndexTemplateExpectsPattern(name)
-    }
-  }
   def createIndex(name: String) = create index name
   def createSnapshot(name: String) = create snapshot name
   def createRepository(name: String) = create repository name
   def createTemplate(name: String) = create template name
 
-  case object delete {
-    def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-    def index(indexes: String*): DeleteIndexDefinition = index(indexes)
-    def index(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
-    def snapshot(name: String): DeleteSnapshotExpectsIn = new DeleteSnapshotExpectsIn(name)
-    def template(name: String) = DeleteIndexTemplateDefinition(name)
-  }
-
-  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
   def deleteIndex(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
   def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
@@ -337,78 +303,34 @@ trait ElasticDsl
 
   def pendingClusterTasks(local: Boolean): PendingClusterTasksDefinition = PendingClusterTasksDefinition(local)
 
-  case object mapping {
-    def name(name: String): MappingDefinition = {
-      require(name.nonEmpty, "mapping name must not be null or empty")
-      new MappingDefinition(name)
-    }
-  }
-  def mapping(name: String): MappingDefinition = mapping name name
+  def mapping(name: String): MappingDefinition = new MappingDefinition(name)
 
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets)
   def multiget(gets: GetDefinition*): MultiGetDefinition = MultiGetDefinition(gets)
 
-  case object open {
-    def index(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
-  }
   def openIndex(index: String): OpenIndexDefinition = open index index
-
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  case object optimize {
-    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-    def index(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-    def index(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-  }
-
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  def optimizeIndex(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes)
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  def optimizeIndex(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
   def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)
   def forceMerge(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
-  case object percolate {
-    def in(indexType: IndexAndTypes): PercolateDefinition = PercolateDefinition(IndexesAndTypes(indexType))
-  }
-
   def percolateIn(indexType: IndexAndTypes): PercolateDefinition = percolateIn(IndexesAndTypes(indexType))
   def percolateIn(indexesAndTypes: IndexesAndTypes): PercolateDefinition = PercolateDefinition(indexesAndTypes)
 
-  case object phrase {
-    def suggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
-  }
   def phraseSuggestion: PhraseSuggestionDefinition = phrase suggestion UUID.randomUUID.toString
   def phraseSuggestion(name: String): PhraseSuggestionDefinition = phrase suggestion name
 
-  case object put {
-    def mapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
-  }
   def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
 
-  case object recover {
-    def index(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
-    def index(indexes: String*): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes)
-  }
   def recoverIndex(indexes: String*): IndexRecoveryDefinition = recover index indexes
   def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = recover index indexes
-
-  case object refresh {
-    def index(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
-    def index(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
-  }
 
   def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refresh index indexes
   def refreshIndex(indexes: String*): RefreshIndexDefinition = refresh index indexes
 
-  case object remove {
-    @deprecated("Use dot syntax, eg removeAlias(alias", "3.0.0")
-    def alias(alias: String): RemoveAliasExpectsIndex = {
-      removeAlias(alias)
-    }
+  def removeAlias(alias: String) = new {
+    require(alias.nonEmpty, "alias must not be null or empty")
+    def on(index: String) = RemoveAliasActionDefinition(alias, index)
   }
-  def removeAlias(alias: String): RemoveAliasExpectsIndex = new RemoveAliasExpectsIndex(alias)
 
   case object register {
     def id(id: Any): RegisterExpectsIndex = {
@@ -418,17 +340,8 @@ trait ElasticDsl
   }
   def register(id: Any): RegisterExpectsIndex = register id id
 
-  case object restore {
-    def snapshot(name: String): RestoreSnapshotExpectsFrom = {
-      require(name.nonEmpty, "snapshot name must not be null or empty")
-      new RestoreSnapshotExpectsFrom(name)
-    }
-  }
-  def restoreSnapshot(name: String): RestoreSnapshotExpectsFrom = restore snapshot name
+  def restoreSnapshot(name: String): RestoreSnapshotExpectsFrom = new RestoreSnapshotExpectsFrom(name)
 
-  case object score {
-    def sort: ScoreSortDefinition = ScoreSortDefinition()
-  }
   def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
   case object script {
@@ -439,11 +352,6 @@ trait ElasticDsl
   def scriptSort(script: ScriptDefinition) = new {
     def as(`type`: String): ScriptSortDefinition = typed(`type`)
     def typed(`type`: String): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
-  }
-
-  case object search {
-    def in(indexesTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesTypes)
-    def scroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
   }
 
   def search(indexType: IndexAndTypes): SearchDefinition = search in indexType
@@ -482,10 +390,6 @@ trait ElasticDsl
     DynamicTemplateDefinition(name, mapping)
   }
 
-  case object term {
-    def suggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
-  }
-
   def termVectors(index: String, `type`: String, id: String): TermVectorsDefinition = {
     TermVectorsDefinition(index / `type`, id)
   }
@@ -498,29 +402,11 @@ trait ElasticDsl
   }
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
-  case object types {
-    def exist(types: String*): TypesExistExpectsIn = TypesExistExpectsIn(types)
-  }
   def typesExist(types: String*): TypesExistExpectsIn = TypesExistExpectsIn(types)
 
-  case object update {
-    def id(id: Any): UpdateExpectsIndex = {
-      require(id.toString.nonEmpty, "id must not be null or empty")
-      new UpdateExpectsIndex(id.toString)
-    }
-    def settings(index: String): UpdateSettingsDefinition = new UpdateSettingsDefinition(index)
-  }
   def update(id: Any): UpdateExpectsIndex = new UpdateExpectsIndex(id.toString)
 
-  case object validate {
-    def in(indexType: IndexAndTypes): ValidateDefinition = ValidateDefinition(indexType.index, indexType.types.head)
-    def in(value: String): ValidateDefinition = {
-      require(value.nonEmpty, "value must not be null or empty")
-      in(IndexAndTypes(value))
-    }
-    def in(index: String, `type`: String): ValidateDefinition = ValidateDefinition(index, `type`)
-    def in(tuple: (String, String)): ValidateDefinition = ValidateDefinition(tuple._1, tuple._2)
-  }
+  def updateSettings(index: String) = new UpdateSettingsDefinition(index)
 
   def validateIn(indexType: IndexAndTypes): ValidateDefinition = validate in indexType
   def validateIn(value: String): ValidateDefinition = validate in value
