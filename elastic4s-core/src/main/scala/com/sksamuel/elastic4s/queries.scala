@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import com.sksamuel.elastic4s.query.{BoolQueryDefinition, BoostingQueryDefinition, SpanNearQueryDefinition, SpanOrQueryDefinition}
+import com.sksamuel.elastic4s.query._
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
@@ -116,7 +116,6 @@ trait QueryDsl {
 
   def spanNotQuery(include: SpanQueryDefinition, exclude: SpanQueryDefinition): SpanNotQueryDefinition =
     SpanNotQueryDefinition(include, exclude)
-
 
   def spanMultiTermQuery(query: MultiTermQueryDefinition) = SpanMultiTermQueryDefinition(query)
 
@@ -1112,70 +1111,7 @@ case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition 
   }
 }
 
-case class MatchQueryDefinition(field: String, value: Any)
-  extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeCutoffFrequency {
 
-  val builder = QueryBuilders.matchQuery(field, value)
-  val _builder = builder
-
-  def operator(op: String): MatchQueryDefinition = {
-    op match {
-      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
-      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
-    }
-    this
-  }
-
-  def analyzer(a: Analyzer): MatchQueryDefinition = {
-    builder.analyzer(a.name)
-    this
-  }
-
-  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery) = {
-    builder.zeroTermsQuery(z)
-    this
-  }
-
-  def slop(s: Int) = {
-    builder.slop(s)
-    this
-  }
-
-  def setLenient(lenient: Boolean) = {
-    builder.setLenient(lenient)
-    this
-  }
-
-  def operator(op: MatchQueryBuilder.Operator) = {
-    builder.operator(op)
-    this
-  }
-
-  def minimumShouldMatch(a: Any) = {
-    builder.minimumShouldMatch(a.toString)
-    this
-  }
-
-  def maxExpansions(max: Int) = {
-    builder.maxExpansions(max)
-    this
-  }
-
-  def fuzzyTranspositions(f: Boolean): MatchQueryDefinition = {
-    builder.fuzzyTranspositions(f)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
 
 case class MatchPhrasePrefixDefinition(field: String, value: Any)
   extends QueryDefinition
