@@ -727,85 +727,8 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
 }
 
 
-case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends QueryDefinition {
-  def boost(b: Double): QueryDefinition = {
-    builder.boost(b.toFloat)
-    this
-  }
-}
 
-case class CommonTermsQueryDefinition(name: String, text: String)
-  extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeCutoffFrequency {
 
-  val builder = QueryBuilders.commonTermsQuery(name, text)
-  val _builder = builder
-
-  def queryName(queryName: String): CommonTermsQueryDefinition = {
-    builder.queryName(queryName)
-    this
-  }
-
-  def highFreqMinimumShouldMatch(highFreqMinimumShouldMatch: Int): CommonTermsQueryDefinition = {
-    builder.highFreqMinimumShouldMatch(highFreqMinimumShouldMatch.toString)
-    this
-  }
-
-  def highFreqOperator(operator: String): CommonTermsQueryDefinition = {
-    builder.highFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
-    this
-  }
-
-  def analyzer(analyzer: Analyzer): CommonTermsQueryDefinition = {
-    builder.analyzer(analyzer.name)
-    this
-  }
-
-  def lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch: Int): CommonTermsQueryDefinition = {
-    builder.lowFreqMinimumShouldMatch(lowFreqMinimumShouldMatch.toString)
-    this
-  }
-
-  def lowFreqOperator(operator: String): CommonTermsQueryDefinition = {
-    builder.lowFreqOperator(if (operator.toLowerCase == "and") Operator.AND else Operator.OR)
-    this
-  }
-}
-
-class DisMaxDefinition extends QueryDefinition {
-  val builder = QueryBuilders.disMaxQuery()
-
-  def query(queries: QueryDefinition*): DisMaxDefinition = {
-    queries.foreach(q => builder.add(q.builder))
-    this
-  }
-
-  def queryName(queryName: String): DisMaxDefinition = {
-    builder.queryName(queryName)
-    this
-  }
-
-  def boost(b: Double): DisMaxDefinition = {
-    builder.boost(b.toFloat)
-    this
-  }
-
-  def tieBreaker(tieBreaker: Double): DisMaxDefinition = {
-    builder.tieBreaker(tieBreaker.toFloat)
-    this
-  }
-}
-
-case class ExistsQueryDefinition(field: String) extends QueryDefinition {
-
-  val builder = QueryBuilders.existsQuery(field)
-
-  def queryName(name: String): ExistsQueryDefinition = {
-    builder.queryName(name)
-    this
-  }
-}
 
 case class IdQueryDefinition(ids: Seq[String],
                              types: Seq[String] = Nil,
@@ -1034,10 +957,6 @@ case class LongTermsQueryDefinition(field: String, values: Seq[Long]) extends Ge
 }
 
 case class FloatTermsQueryDefinition(field: String, values: Seq[Float]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class DoubleTermsQueryDefinition(field: String, values: Seq[Double]) extends GenericTermsQueryDefinition {
   val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
 }
 

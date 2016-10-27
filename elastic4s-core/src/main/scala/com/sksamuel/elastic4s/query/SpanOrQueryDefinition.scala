@@ -20,4 +20,5 @@ case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
   def boost(boost: Double) = copy(boost = Option(boost))
   def clauses(clauses: Iterable[SpanQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
   def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*) = clauses(first +: rest)
+  def withQueryName(queryName: String) = copy(queryName = Option(queryName))
 }
