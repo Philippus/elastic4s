@@ -964,15 +964,7 @@ case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
   val builder = QueryBuilders.typeQuery(`type`)
 }
 
-case class MatchAllQueryDefinition() extends QueryDefinition {
 
-  val builder = QueryBuilders.matchAllQuery
-
-  def boost(boost: Double): MatchAllQueryDefinition = {
-    builder.boost(boost.toFloat)
-    this
-  }
-}
 
 case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {
 
@@ -1029,8 +1021,6 @@ case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition 
     this
   }
 }
-
-
 
 case class MatchPhrasePrefixDefinition(field: String, value: Any)
   extends QueryDefinition
