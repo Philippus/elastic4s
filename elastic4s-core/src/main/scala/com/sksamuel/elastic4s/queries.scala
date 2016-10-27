@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.query.BoostingQueryDefinition
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
@@ -105,9 +106,8 @@ trait QueryDsl {
     }
   }
 
-  def spanOrQuery(iterable: Seq[SpanTermQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
-  def spanOrQuery(first: SpanTermQueryDefinition, rest: SpanTermQueryDefinition*): SpanOrQueryDefinition =
-    spanOrQuery(first +: rest)
+  def spanOrQuery(iterable: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
+  def spanOrQuery(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition = spanOrQuery(first +: rest)
 
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
 
@@ -795,30 +795,7 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
   }
 }
 
-class BoostingQueryDefinition extends QueryDefinition {
 
-  val builder = QueryBuilders.boostingQuery()
-
-  def positive(block: => QueryDefinition) = {
-    builder.positive(block.builder)
-    this
-  }
-
-  def negative(block: => QueryDefinition) = {
-    builder.negative(block.builder)
-    this
-  }
-
-  def positiveBoost(b: Double) = {
-    builder.boost(b.toFloat)
-    this
-  }
-
-  def negativeBoost(b: Double) = {
-    builder.negativeBoost(b.toFloat)
-    this
-  }
-}
 
 case class ConstantScoreDefinition(builder: ConstantScoreQueryBuilder) extends QueryDefinition {
   def boost(b: Double): QueryDefinition = {
@@ -919,7 +896,7 @@ case class IdQueryDefinition(ids: Seq[String],
   def boost(boost: Double): IdQueryDefinition = copy(boost = Option(boost))
 }
 
-case class SpanOrQueryDefinition(clauses: Seq[SpanTermQueryDefinition],
+case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
                                  boost: Option[Double] = None,
                                  queryName: Option[String] = None) extends SpanQueryDefinition {
 
@@ -934,8 +911,8 @@ case class SpanOrQueryDefinition(clauses: Seq[SpanTermQueryDefinition],
   }
 
   def boost(boost: Double) = copy(boost = Option(boost))
-  def clauses(clauses: Iterable[SpanTermQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
-  def clause(first: SpanTermQueryDefinition, rest: SpanTermQueryDefinition*) = clauses(first +: rest)
+  def clauses(clauses: Iterable[SpanQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
+  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*) = clauses(first +: rest)
 }
 
 class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
