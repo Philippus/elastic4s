@@ -777,70 +777,7 @@ case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
   val builder = QueryBuilders.typeQuery(`type`)
 }
 
-case class MatchPhrasePrefixDefinition(field: String, value: Any)
-  extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeFuzziness
-    with DefinitionAttributeFuzzyRewrite
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeCutoffFrequency {
 
-  def builder = _builder
-  val _builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
-
-  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = {
-    builder.analyzer(a.name)
-    this
-  }
-
-  def analyzer(name: String): MatchPhrasePrefixDefinition = {
-    builder.analyzer(name)
-    this
-  }
-
-  def zeroTermsQuery(z: MatchQueryBuilder.ZeroTermsQuery): MatchPhrasePrefixDefinition = {
-    builder.zeroTermsQuery(z)
-    this
-  }
-
-  def slop(s: Int): MatchPhrasePrefixDefinition = {
-    builder.slop(s)
-    this
-  }
-
-  def setLenient(lenient: Boolean): MatchPhrasePrefixDefinition = {
-    builder.setLenient(lenient)
-    this
-  }
-
-  def operator(op: MatchQueryBuilder.Operator): MatchPhrasePrefixDefinition = {
-    builder.operator(op)
-    this
-  }
-
-  def operator(op: String): MatchPhrasePrefixDefinition = {
-    op match {
-      case "AND" => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.AND)
-      case _ => builder.operator(org.elasticsearch.index.query.MatchQueryBuilder.Operator.OR)
-    }
-    this
-  }
-
-  def minimumShouldMatch(a: Any): MatchPhrasePrefixDefinition = {
-    builder.minimumShouldMatch(a.toString)
-    this
-  }
-
-  def maxExpansions(max: Int): MatchPhrasePrefixDefinition = {
-    builder.maxExpansions(max)
-    this
-  }
-
-  def fuzzyTranspositions(f: Boolean): MatchPhrasePrefixDefinition = {
-    builder.fuzzyTranspositions(f)
-    this
-  }
-}
 
 
 
