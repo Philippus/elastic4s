@@ -21,7 +21,8 @@ trait QueryDsl {
 
   def query = this
 
-  def boostingQuery: BoostingQueryDefinition = new BoostingQueryDefinition
+  def boostingQuery(positiveQuery: QueryDefinition,
+                    negativeQuery: QueryDefinition): BoostingQueryDefinition = BoostingQueryDefinition(positiveQuery, negativeQuery)
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
   def commonQuery = new CommonQueryExpectsField
