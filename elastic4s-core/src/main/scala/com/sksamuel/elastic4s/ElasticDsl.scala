@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.admin.{OpenIndexDefinition, TypesExistsDefinition, RefreshIndexDefinition, IndicesStatsDefinition, IndexExistsDefinition, GetSegmentsDefinition, GetTemplateDefinition, FlushIndexDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, ClusterStatsDefinition, ClusterHealthDefinition, ClusterStateDefinition, ClusterSettingsDefinition, CloseIndexDefinition, ClearCacheDefinition, ClusterDsl, SnapshotDsl, IndexTemplateDsl, IndexAdminDsl, FieldStatsDsl}
-import com.sksamuel.elastic4s.analyzers.{TokenFilterDsl, TokenizerDsl, AnalyzerDsl}
-import com.sksamuel.elastic4s.mappings.FieldType.{ObjectType, NestedType, TokenCountType, StringType, ShortType, LongType, IpType, IntegerType, GeoShapeType, DateType, DoubleType, GeoPointType, MultiFieldType, FloatType, CompletionType, BooleanType, ByteType, BinaryType, AttachmentType}
+import com.sksamuel.elastic4s.admin.{ClearCacheDefinition, CloseIndexDefinition, ClusterDsl, ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition, ClusterStatsDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, FieldStatsDsl, FlushIndexDefinition, GetSegmentsDefinition, GetTemplateDefinition, IndexAdminDsl, IndexExistsDefinition, IndexTemplateDsl, IndicesStatsDefinition, OpenIndexDefinition, RefreshIndexDefinition, SnapshotDsl, TypesExistsDefinition}
+import com.sksamuel.elastic4s.alias.{AliasActionDefinition, AliasesDsl, GetAliasDefinition, IndicesAliasesRequestDefinition}
+import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.mappings.FieldType.{AttachmentType, BinaryType, BooleanType, ByteType, CompletionType, DateType, DoubleType, FloatType, GeoPointType, GeoShapeType, IntegerType, IpType, LongType, MultiFieldType, NestedType, ObjectType, ShortType, StringType, TokenCountType}
 import com.sksamuel.elastic4s.mappings._
 
 import scala.concurrent.duration._

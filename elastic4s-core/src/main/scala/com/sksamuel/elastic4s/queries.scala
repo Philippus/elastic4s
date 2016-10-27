@@ -31,7 +31,7 @@ trait QueryDsl {
     def field(name: String) = new CommonQueryExpectsText(name)
   }
   class CommonQueryExpectsText(name: String) {
-    def text(q: String): CommonTermsQueryDefinition = new CommonTermsQueryDefinition(name, q)
+    def text(q: String): CommonTermsQueryDefinition = CommonTermsQueryDefinition(name, q)
     def query(q: String): CommonTermsQueryDefinition = text(q)
   }
 
@@ -41,21 +41,21 @@ trait QueryDsl {
 
   def existsQuery = ExistsQueryDefinition
 
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = new FunctionScoreQueryDefinition(query)
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition(query)
 
   @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
   def filteredQuery = new FilteredQueryDefinition
 
-  def fuzzyQuery(name: String, value: Any) = new FuzzyQueryDefinition(name, value)
+  def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
-  def geoHashCell(field: String, value: String): GeoHashCellQuery = new GeoHashCellQuery(field).geohash(value)
+  def geoHashCell(field: String, value: String): GeoHashCellQuery = GeoHashCellQuery(field).geohash(value)
   def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
   def geoDistanceRangeQuery(field: String) = GeoDistanceRangeQueryDefinition(field)
 
   def indicesQuery(indices: String*) = new {
-    def query(query: QueryDefinition): IndicesQueryDefinition = new IndicesQueryDefinition(indices, query)
+    def query(query: QueryDefinition): IndicesQueryDefinition = IndicesQueryDefinition(indices, query)
   }
 
   def hasChildQuery(`type`: String) = new HasChildExpectsQuery(`type`)
@@ -65,17 +65,17 @@ trait QueryDsl {
 
   def hasParentQuery(`type`: String) = new HasParentExpectsQuery(`type`)
   class HasParentExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition) = new HasParentQueryDefinition(`type`, q)
+    def query(q: QueryDefinition) = HasParentQueryDefinition(`type`, q)
   }
 
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
-  def matchQuery(field: String, value: Any): MatchQueryDefinition = new MatchQueryDefinition(field, value)
+  def matchQuery(field: String, value: Any): MatchQueryDefinition = MatchQueryDefinition(field, value)
 
-  def matchPhraseQuery(field: String, value: Any): MatchPhraseDefinition = new MatchPhraseDefinition(field, value)
+  def matchPhraseQuery(field: String, value: Any): MatchPhraseDefinition = MatchPhraseDefinition(field, value)
 
-  def matchPhrasePrefixQuery(field: String, value: Any) = new MatchPhrasePrefixDefinition(field, value)
+  def matchPhrasePrefixQuery(field: String, value: Any) = MatchPhrasePrefixDefinition(field, value)
 
-  def multiMatchQuery(text: String) = new MultiMatchQueryDefinition(text)
+  def multiMatchQuery(text: String) = MultiMatchQueryDefinition(text)
 
   def matchAllQuery = new MatchAllQueryDefinition
 
@@ -90,33 +90,37 @@ trait QueryDsl {
   }
 
   def query(q: String): QueryStringQueryDefinition = queryStringQuery(q)
-  def queryStringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
+  def queryStringQuery(q: String): QueryStringQueryDefinition = QueryStringQueryDefinition(q)
 
-  def rangeQuery(field: String): RangeQueryDefinition = new RangeQueryDefinition(field)
+  def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
 
   def regexQuery(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
-  def regexQuery(field: String, value: Any): RegexQueryDefinition = new RegexQueryDefinition(field, value)
+  def regexQuery(field: String, value: Any): RegexQueryDefinition = RegexQueryDefinition(field, value)
 
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
-  def prefixQuery(field: String, value: Any): PrefixQueryDefinition = new PrefixQueryDefinition(field, value)
+  def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)
 
   def scriptQuery(script: String): ScriptQueryDefinition = ScriptQueryDefinition(script)
 
-  def simpleStringQuery(q: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(q)
-  def stringQuery(q: String): QueryStringQueryDefinition = new QueryStringQueryDefinition(q)
+  def simpleStringQuery(q: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(q)
+  def stringQuery(q: String): QueryStringQueryDefinition = QueryStringQueryDefinition(q)
 
   def spanFirstQuery = new {
     def query(spanQuery: SpanQueryDefinition) = new {
-      def end(end: Int) = new SpanFirstQueryDefinition(spanQuery, end)
+      def end(end: Int) = SpanFirstQueryDefinition(spanQuery, end)
     }
   }
 
   def spanOrQuery: SpanOrQueryDefinition = new SpanOrQueryDefinition
+
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
-  def spanNotQuery: SpanNotQueryDefinition = new SpanNotQueryDefinition
+
+  def spanNotQuery(include: SpanQueryDefinition, exclude: SpanQueryDefinition): SpanNotQueryDefinition =
+    SpanNotQueryDefinition(include, exclude)
+
   def spanNearQuery: SpanNearQueryDefinition = new SpanNearQueryDefinition
 
-  def spanMultiTermQuery(query: MultiTermQueryDefinition) = new SpanMultiTermQueryDefinition(query)
+  def spanMultiTermQuery(query: MultiTermQueryDefinition) = SpanMultiTermQueryDefinition(query)
 
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
@@ -165,7 +169,7 @@ trait QueryDsl {
   }
   def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
-  def filter(first: QueryDefinition, rest:QueryDefinition*): BoolQueryDefinition = filter(first+:rest)
+  def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
@@ -433,7 +437,7 @@ case class MultiMatchQueryDefinition(text: String)
   }
 
   def fields(_fields: Iterable[String]) = {
-    for ( f <- _fields ) builder.field(f)
+    for (f <- _fields) builder.field(f)
     this
   }
 
@@ -710,41 +714,41 @@ case class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
   val _builder = builder
 
   /**
-   * Defines the minimum number of children that are required to match for the parent to be considered a match.
-   */
+    * Defines the minimum number of children that are required to match for the parent to be considered a match.
+    */
   def minChildren(min: Int): HasChildQueryDefinition = {
     builder.minChildren(min)
     this
   }
 
   /**
-   * Configures at what cut off point only to evaluate parent documents that contain the matching parent id terms
-   * instead of evaluating all parent docs.
-   */
+    * Configures at what cut off point only to evaluate parent documents that contain the matching parent id terms
+    * instead of evaluating all parent docs.
+    */
   def shortCircuitCutoff(shortCircuitCutoff: Int): HasChildQueryDefinition = {
     builder.setShortCircuitCutoff(shortCircuitCutoff)
     this
   }
 
   /**
-   * Defines the maximum number of children that are required to match for the parent to be considered a match.
-   */
+    * Defines the maximum number of children that are required to match for the parent to be considered a match.
+    */
   def maxChildren(max: Int): HasChildQueryDefinition = {
     builder.maxChildren(max)
     this
   }
 
   /**
-   * Defines how the scores from the matching child documents are mapped into the parent document.
-   */
+    * Defines how the scores from the matching child documents are mapped into the parent document.
+    */
   def scoreMode(scoreMode: String): HasChildQueryDefinition = {
     builder.scoreMode(scoreMode)
     this
   }
 
   /**
-   * Defines how the scores from the matching child documents are mapped into the parent document.
-   */
+    * Defines how the scores from the matching child documents are mapped into the parent document.
+    */
   @deprecated("use scoreMode", "2.1.0")
   def scoreType(scoreType: String): HasChildQueryDefinition = {
     builder.scoreType(scoreType)
@@ -1030,9 +1034,10 @@ case class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extend
   val builder = QueryBuilders.spanFirstQuery(query.builder, end)
 }
 
-class SpanNotQueryDefinition extends QueryDefinition {
+case class SpanNotQueryDefinition(include: SpanQueryDefinition,
+                                  exclude: SpanQueryDefinition) extends QueryDefinition {
 
-  val builder = QueryBuilders.spanNotQuery()
+  val builder = QueryBuilders.spanNotQuery(include.builder, exclude.builder)
 
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
@@ -1041,16 +1046,6 @@ class SpanNotQueryDefinition extends QueryDefinition {
 
   def dist(dist: Int): this.type = {
     builder.dist(dist)
-    this
-  }
-
-  def exclude(query: SpanQueryDefinition): this.type = {
-    builder.exclude(query.builder)
-    this
-  }
-
-  def include(query: SpanQueryDefinition): this.type = {
-    builder.include(query.builder)
     this
   }
 
