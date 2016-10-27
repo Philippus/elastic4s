@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.elastic4s.query._
-import org.elasticsearch.common.geo.GeoDistance
+import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
 import org.elasticsearch.index.query._
@@ -49,7 +49,13 @@ trait QueryDsl {
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
-  def geoHashCell(field: String, value: String): GeoHashCellQuery = GeoHashCellQuery(field).geohash(value)
+
+  def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
+    GeoHashCellQueryDefinition(field, value)
+
+  def geoHashCell(field: String, value: GeoPoint): GeoHashCellQueryDefinition =
+    GeoHashCellQueryDefinition(field, value.geohash)
+
   def geoPolygonQuery(field: String) = GeoPolygonQueryDefinition(field)
   def geoDistanceRangeQuery(field: String) = GeoDistanceRangeQueryDefinition(field)
 
@@ -445,27 +451,6 @@ case class GeoDistanceRangeQueryDefinition(field: String)
   }
 }
 
-case class GeoHashCellQuery(field: String)
-  extends QueryDefinition {
-
-  val builder = QueryBuilders.geoHashCellQuery(field)
-  val _builder = builder
-
-  def point(lat: Double, long: Double): this.type = {
-    builder.point(lat, long)
-    this
-  }
-
-  def geohash(geohash: String): this.type = {
-    builder.geohash(geohash)
-    this
-  }
-
-  def neighbours(neighbours: Boolean): this.type = {
-    builder.neighbors(neighbours)
-    this
-  }
-}
 
 case class HasChildQueryDefinition(`type`: String, q: QueryDefinition)
   extends QueryDefinition with DefinitionAttributeBoost {
@@ -558,9 +543,6 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
     this
   }
 }
-
-
-
 
 
 class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
@@ -776,9 +758,6 @@ case class FloatTermsQueryDefinition(field: String, values: Seq[Float]) extends 
 case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
   val builder = QueryBuilders.typeQuery(`type`)
 }
-
-
-
 
 
 case class ScriptQueryDefinition(script: ScriptDefinition)
