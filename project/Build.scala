@@ -46,6 +46,7 @@ object Build extends AutoPlugin {
       "org.apache.lucene"             % "lucene-join"               % "6.2.1",
       "org.scalactic"                 %% "scalactic"                % ScalacticVersion,
       "org.slf4j"                     % "slf4j-api"                 % Slf4jVersion,
+      "com.sksamuel.exts"             %% "exts"                     % "1.35.0",
       "commons-io"                    % "commons-io"                % CommonsIoVersion  % "test",
       "log4j"                         % "log4j"                     % Log4jVersion      % "test",
       "org.slf4j"                     % "log4j-over-slf4j"          % Slf4jVersion      % "test",

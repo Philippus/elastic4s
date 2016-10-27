@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.explain.{ExplainAction, ExplainRequest, ExplainRequestBuilder, ExplainResponse}
-import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -49,7 +48,7 @@ case class ExplainDefinition(index: String,
     builder
   }
 
-  def query(string: String): ExplainDefinition = query(new QueryStringQueryDefinition(string))
+  def query(string: String): ExplainDefinition = query(QueryStringQueryDefinition(string))
   def query(block: => QueryDefinition): ExplainDefinition = copy(query = Option(block))
   def fetchSource(fetchSource: Boolean): ExplainDefinition = copy(fetchSource = Option(fetchSource))
   def parent(parent: String): ExplainDefinition = copy(parent = Option(parent))

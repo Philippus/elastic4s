@@ -2,22 +2,22 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
-import org.elasticsearch.client.transport.{NoNodeAvailableException, TransportClient}
+import com.sksamuel.exts.Logging
+import org.elasticsearch.client.transport.NoNodeAvailableException
 import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.node.Node
 import org.elasticsearch.plugins.Plugin
+import org.elasticsearch.transport.client.PreBuiltTransportClient
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.implicitConversions
-import scala.util.Try
 
 /** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client,
-                    node: Option[Node] = None) extends IterableSearch {
+class ElasticClient(val client: org.elasticsearch.client.Client) extends IterableSearch {
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
     try {
@@ -29,14 +29,7 @@ class ElasticClient(val client: org.elasticsearch.client.Client,
     }
   }
 
-  def close(): Unit = {
-    Try {
-      client.close()
-    }
-    Try {
-      node.foreach(_.close)
-    }
-  }
+  def close(): Unit = client.close()
 
   def java: Client = client
   def admin: AdminClient = client.admin
@@ -46,13 +39,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client,
   }
 }
 
-object ElasticClient {
+object ElasticClient extends Logging {
 
   /**
    * Creates an ElasticClient which wraps an existing Client.
-   *
-   * Note: If you use this method, then calling close on the client instance will not shutdown
-   * any local node(s). Those must be managed by the caller of this method.
    *
    * @param client the client to wrap
    */
@@ -61,102 +51,100 @@ object ElasticClient {
   /**
    * Creates an ElasticClient by requesting a client from a given Node.
    *
-   * Note: This method will not manage the lifecycle of the node. Calling close on the client
-   * will shutdown only the transport mechansim between the client and the node.
-   *
    * @param node the node a client will connect to
    */
   def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
 
-  @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
-  def remote(host: String, port: Int): ElasticClient = transport(Settings.builder.build, ElasticsearchClientUri(host, port))
-
-  @deprecated("use the transport method with an instance of ElasticsearchClientUri or uri format string", "2.0.0")
-  def remote(settings: Settings, host: String, port: Int): ElasticClient = {
-    transport(settings, ElasticsearchClientUri(host, port))
-  }
-
   /**
    * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
-   * This method will use default settings.
+   * This method will use settings from the URI string and default plugins.
    *
-   * Note: The method name 'transport' refers to the fact that the client will connect to the instance(s)
-   * using the transport client rather than becoming a full node itself and joining the cluster.
-   * This is what most people think of when they talk about a client, like you would in mongo or mysql for example.
-   * To create a local node, use the fromNode method.
+   * The created client will use the standard plugins provided by the PreBuiltTransportClient instance.
    *
    * @param uri the instance(s) to connect to.
    */
-  def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.builder.build, uri)
-
-  @deprecated("use transport instead of remote", "2.0.0")
-  def remote(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.builder.build, uri)
+  @deprecated("Use ElasticClient(uri)", "3.0.0")
+  def transport(uri: ElasticsearchClientUri): ElasticClient = apply(Settings.EMPTY, uri)
+  def apply(uri: ElasticsearchClientUri): ElasticClient = apply(Settings.EMPTY, uri)
 
   /**
-   * Connects to elasticsearch instance(s) specified by the uri and setting the
-   * given settings object on the client.
+   * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
    *
-   * Note: The method name 'transport' refers to the fact that the client will connect to the instance(s)
-   * using the transport client rather than becoming a full node itself and joining the cluster.
-   * This is what most people think of when they talk about a client, like you would in mongo or mysql for example.
-   * To create a local node, use the fromNode method.
+   * Any options set on the URI will be added to the given settings object before the client is created.
+   * If a setting is specified in both the settings object and the uri, the version in the supplied
+   * settings object will be used.
+   *
+   * Any given plugins will be added to the client in addition to the standard plugins provided
+   * by the PreBuiltTransportClient instance.
    *
    * @param settings the settings as applicable to the client.
    * @param uri the instance(s) to connect to.
    * @param plugins the plugins to add to the client.
    */
-  def transport(settings: Settings, uri: ElasticsearchClientUri, plugins: Class[_ <: Plugin]*): ElasticClient = {
-    val client = plugins
-      .foldLeft(TransportClient.builder)((c, plugin) => c.addPlugin(plugin))
-      .settings(settings)
-      .build()
+  @deprecated("Use ElasticClient(settings, uri, plugins)", "3.0.0")
+  def transport(settings: Settings,
+                uri: ElasticsearchClientUri,
+                plugins: Class[_ <: Plugin]*): ElasticClient = apply(settings, uri, plugins: _*)
+
+  def apply(settings: Settings,
+            uri: ElasticsearchClientUri,
+            plugins: Class[_ <: Plugin]*): ElasticClient = {
+
+    val combinedSettings = uri.options.foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
+      if (builder.get(kv._1) == null)
+        builder.put(kv._1, kv._2)
+      builder
+    }.build()
+
+    if (!combinedSettings.getAsMap.containsKey("cluster.name")) {
+      logger.warn(
+        """No cluster.name was specified in the settings for the client." +
+        "This will still work if your cluster has the default name, but it is recommended you always set the cluster.name to avoid issues""")
+    }
+
+    val client = new PreBuiltTransportClient(combinedSettings, plugins: _*)
     for ( (host, port) <- uri.hosts ) {
       client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
     }
+
     fromClient(client)
-  }
-
-  @deprecated("use transport instead of remote", "2.0.0")
-  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)
-
-  /**
-   * Creates a local data node. This is useful for embedded usage, or for unit tests.
-   * Default settings will be applied.
-   */
-  @deprecated("must specify path.home in elasticsearch now, so this method will throw", "2.3.3")
-  def local: ElasticClient = local(Settings.settingsBuilder().build())
-
-  /**
-   * Creates a local data node. This is useful for embedded usage, or for unit tests.
-   * @param settings the settings object to set on the node
-   */
-  def local(settings: Settings): ElasticClient = {
-    val node = NodeBuilder.nodeBuilder().local(true).data(true).settings(settings).node()
-    new ElasticClient(node.client, Some(node))
   }
 }
 
 object ElasticsearchClientUri {
 
-  private val PREFIX = "elasticsearch://"
+  private val Regex = "elasticsearch://(.*?)\\?(.*?)".r
 
   implicit def stringtoUri(str: String): ElasticsearchClientUri = ElasticsearchClientUri(str)
 
+  /**
+   * Creates an ElasticsearchClientUri from a single host and port with no options.
+   */
   def apply(host: String, port: Int): ElasticsearchClientUri = apply(s"elasticsearch://$host:$port")
 
   def apply(str: String): ElasticsearchClientUri = {
-    require(str != null && str.trim.nonEmpty, "Invalid uri, must be in format elasticsearch://host:port,host:port,...")
-    val withoutPrefix = str.replace(PREFIX, "")
-    val hosts = withoutPrefix.split(',').map { host =>
-      val parts = host.split(':')
-      if (parts.length == 2) {
-        parts(0) -> parts(1).toInt
-      } else {
-        throw new IllegalArgumentException("Invalid uri, must be in format elasticsearch://host:port,host:port,...")
-      }
+    str match {
+      case Regex(hoststr, query) =>
+        val hosts = hoststr.split(',').map(_.split(':')).map {
+          case Array(host, port) => (host, port.toInt)
+          case _ => sys.error(s"Invalid hosts/ports $hosts")
+        }
+        val options = query.split('&').map(_.split('=')).map {
+          case Array(key, value) => (key, value)
+          case _ => sys.error(s"Invalid query $query")
+        }
+        ElasticsearchClientUri(str, hosts.toList, options.toMap)
+      case _ => sys.error("Invalid uri, must be in format elasticsearch://host:port,host:port?querystr")
     }
-    ElasticsearchClientUri(str, hosts.toList)
   }
 }
 
-case class ElasticsearchClientUri(uri: String, hosts: List[(String, Int)])
+/**
+* Uri used to connect to an Elasticsearch cluster. The general format is
+*
+* elasticsearch://host:port,host:port?querystring
+*
+* Multiple host:port combinations can be specified, seperated by commas.
+* Options can be specified using standard uri query string syntax, eg cluster.name=superman
+*/
+case class ElasticsearchClientUri(uri: String, hosts: List[(String, Int)], options: Map[String, String] = Map.empty)
