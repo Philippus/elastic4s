@@ -55,7 +55,7 @@ case class GetAliasResult(response: GetAliasesResponse) {
   import scala.collection.JavaConverters._
 
   def aliases: Map[String, Seq[AliasMetaData]] = {
-    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala.toSeq).toMap
+    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala).toMap
   }
 }
 
@@ -66,13 +66,13 @@ case class AddAliasActionDefinition(alias: String,
                                     searchRouting: Option[String] = None,
                                     filter: Option[QueryBuilder] = None) extends AliasActionDefinition {
 
-  def routing(route: String) = copy(routing = Option(route))
-  def searchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
-  def indexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
+  def withRouting(route: String) = copy(routing = Option(route))
+  def withSearchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
+  def withIndexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
 
-  def filter(query: String) = filter(QueryStringQueryDefinition(query))
-  def filter(query: QueryBuilder) = copy(filter = Option(query))
-  def filter(query: QueryDefinition) = copy(filter = Option(query.builder))
+  def withFilter(query: String): AddAliasActionDefinition = withFilter(QueryStringQueryDefinition(query))
+  def withFilter(query: QueryBuilder): AddAliasActionDefinition = copy(filter = Option(query))
+  def withFilter(query: QueryDefinition): AddAliasActionDefinition = withFilter(query.builder)
 
   override def build: IndicesAliasesRequest.AliasActions = {
     val action = AliasActions.add().alias(alias).index(index)
@@ -91,13 +91,13 @@ case class RemoveAliasActionDefinition(alias: String,
                                        searchRouting: Option[String] = None,
                                        filter: Option[QueryBuilder] = None) extends AliasActionDefinition {
 
-  def routing(route: String) = copy(routing = Option(route))
-  def searchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
-  def indexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
+  def withRouting(route: String) = copy(routing = Option(route))
+  def withSearchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
+  def withIndexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
 
-  def filter(query: String) = filter(QueryStringQueryDefinition(query))
-  def filter(query: QueryBuilder) = copy(filter = Option(query))
-  def filter(query: QueryDefinition) = copy(filter = Option(query.builder))
+  def withFilter(query: String): RemoveAliasActionDefinition = withFilter(QueryStringQueryDefinition(query))
+  def withFilter(query: QueryBuilder): RemoveAliasActionDefinition = copy(filter = Option(query))
+  def withFilter(query: QueryDefinition): RemoveAliasActionDefinition = withFilter(query.builder)
 
   override def build: IndicesAliasesRequest.AliasActions = {
     val action = AliasActions.remove().alias(alias).index(index)
