@@ -1,10 +1,16 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.analyzers.{CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter}
-import com.sksamuel.elastic4s.query.{FuzzyQueryDefinition, IndicesQueryDefinition}
+import com.sksamuel.elastic4s.query.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition}
 
 // a dumping ground for deprecated syntax, keeps the main file clear
 trait DeprecatedElasticDsl {
+  self: QueryDsl =>
+
+  @deprecated("use idsQuery", "2.0.0")
+  def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
+  @deprecated("use idsQuery", "2.0.0")
+  def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
 
   @deprecated("use scoreSort, geoSort, fieldSort or scriptSort", "1.6.0")
   case object by {
@@ -14,7 +20,14 @@ trait DeprecatedElasticDsl {
     def script(script: String) = ElasticDsl.script.sort(script)
   }
 
-  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
+  @deprecated("use commonQuery(field", "3.0.0")
+  def commonQuery = new CommonQueryExpectsField
+
+  class CommonQueryExpectsField {
+    def field(name: String) = new CommonQueryExpectsText(name)
+  }
+
+  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "3.0.0")
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   @deprecated("instead search on the `_index` field")
@@ -44,7 +57,7 @@ trait DeprecatedElasticDsl {
   }
 
   @deprecated("use optimizeIndex(index)", "1.6.2")
-  def optimize(indexes: String*): ForceMergeDefinition = new ForceMergeDefinition(indexes.toSeq)
+  def optimize(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
   @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
   case object shingle {
@@ -62,7 +75,7 @@ trait DeprecatedElasticDsl {
   case object sortby {
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
-    def field(field: String): FieldSortDefinition = new FieldSortDefinition(field)
+    def field(field: String): FieldSortDefinition = FieldSortDefinition(field)
     def script(script: ScriptDefinition) = ElasticDsl.script.sort(script)
   }
 

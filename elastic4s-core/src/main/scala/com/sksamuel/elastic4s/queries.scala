@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.query._
+import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
-
-/** @author Stephen Samuel */
 
 trait QueryDsl {
 
@@ -20,10 +18,6 @@ trait QueryDsl {
                     negativeQuery: QueryDefinition): BoostingQueryDefinition = BoostingQueryDefinition(positiveQuery, negativeQuery)
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
-  def commonQuery = new CommonQueryExpectsField
-  class CommonQueryExpectsField {
-    def field(name: String) = new CommonQueryExpectsText(name)
-  }
   class CommonQueryExpectsText(name: String) {
     def text(q: String): CommonTermsQueryDefinition = CommonTermsQueryDefinition(name, q)
     def query(q: String): CommonTermsQueryDefinition = text(q)
@@ -52,20 +46,37 @@ trait QueryDsl {
   def geoHashCell(field: String, value: GeoPoint): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value.geohash)
 
-  def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition = geoPolygonQuery(field, first +: rest)
-  def geoPolygonQuery(field: String, points: Seq[GeoPoint]): GeoPolygonQueryDefinition = GeoPolygonQueryDefinition(field, points)
+  def geoPolyonQuery(field: String) = new {
+    def points(first: GeoPoint, rest: GeoPoint*) = points(first +: rest)
+    def points(points: Iterable[GeoPoint]) = geoPolygonQuery(field, points)
+  }
+
+  def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition =
+    geoPolygonQuery(field, first +: rest)
+
+  def geoPolygonQuery(field: String, points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
+    GeoPolygonQueryDefinition(field, points.toSeq)
 
   def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
 
-  def hasChildQuery(`type`: String) = new HasChildExpectsQuery(`type`)
-  class HasChildExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition): HasChildQueryDefinition = HasChildQueryDefinition(`type`, q)
+  def hasChildQuery(`type`: String) = new {
+    def query(q: QueryDefinition) = new {
+      def scoreMode(scoreMode: ScoreMode) = hasChildQuery(`type`, q, scoreMode)
+    }
   }
 
-  def hasParentQuery(`type`: String) = new HasParentExpectsQuery(`type`)
-  class HasParentExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition) = HasParentQueryDefinition(`type`, q)
+  def hasChildQuery(`type`: String, query: QueryDefinition, scoreMode: ScoreMode) =
+    HasChildQueryDefinition(`type`, query, scoreMode)
+
+  def hasParentQuery(`type`: String) = new {
+    def query(query: QueryDefinition) = new {
+      def score(score: Boolean) = hasParentQuery(`type`, query, score)
+    }
   }
+
+  def hasParentQuery(`type`: String, query: QueryDefinition, score: Boolean) =
+    HasParentQueryDefinition(`type`, query, score)
+
 
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = MatchQueryDefinition(field, value)
@@ -78,8 +89,15 @@ trait QueryDsl {
 
   def matchAllQuery = new MatchAllQueryDefinition
 
-  def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisQueryDefinition = MoreLikeThisQueryDefinition(flds.toSeq)
-  def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisQueryDefinition = moreLikeThisQuery(first +: rest)
+  def moreLikeThisQuery(first: String, rest: String*) = moreLikeThisQuery(first +: rest)
+  def moreLikeThisQuery(fields: Iterable[String]) = new {
+
+    def texts(first: String, rest: String*) = texts(first +: rest)
+    def texts(texts: Iterable[String]) = MoreLikeThisQueryDefinition(fields.toSeq, texts.toSeq, Nil)
+
+    def items(first: MoreLikeThisItem, rest: MoreLikeThisItem*) = items(first +: rest)
+    def items(items: Iterable[MoreLikeThisItem]) = MoreLikeThisQueryDefinition(fields.toSeq, Nil, items.toSeq)
+  }
 
   def nestedQuery(path: String) = new {
     def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
@@ -122,35 +140,16 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition = {
-    TermsQueryDefinition(field, values.map(_.toString))
-  }
-
-  def termsQuery(field: String, values: Int*): IntTermsQueryDefinition = {
-    IntTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Long*): LongTermsQueryDefinition = {
-    LongTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Float*): FloatTermsQueryDefinition = {
-    FloatTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Double*): DoubleTermsQueryDefinition = {
-    DoubleTermsQueryDefinition(field, values)
-  }
+  def termsQuery(field: String, values: AnyRef*) = TermsQueryDefinition(field, values.map(_.toString))
+  def termsQuery(field: String, values: Int*) = IntTermsQueryDefinition(field, values)
+  def termsQuery(field: String, values: Long*) = LongTermsQueryDefinition(field, values)
+  def termsQuery(field: String, values: Float*) = FloatTermsQueryDefinition(field, values)
+  def termsQuery(field: String, values: Double*) = DoubleTermsQueryDefinition(field, values)
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)
 
   def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
-
-  @deprecated("use idsQuery", "2.0.0")
-  def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-  @deprecated("use idsQuery", "2.0.0")
-  def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
 
   def idsQuery(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
   def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
@@ -177,234 +176,6 @@ trait QueryDsl {
 
 trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
-}
-
-
-case class Item(index: String, `type`: String, id: String)
-
-case class MoreLikeThisQueryDefinition(fields: Seq[String]) extends QueryDefinition {
-
-  val _builder = QueryBuilders.moreLikeThisQuery(fields: _*)
-  val builder = _builder
-
-  def like(first: String, rest: String*): this.type = like(first +: rest)
-  def like(likes: Iterable[String]): this.type = {
-    _builder.like(likes.toSeq: _*)
-    this
-  }
-
-  def like(item: Item, rest: Item*): this.type = like(item +: rest)
-  def like(items: Seq[Item]): this.type = {
-    builder.like(items.map(item => new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id)): _ *)
-    this
-  }
-
-  def analyzer(analyser: String): this.type = {
-    _builder.analyzer(analyser)
-    this
-  }
-
-  @deprecated("Use unlike", "2.1.0")
-  def ignoreLike(first: String, rest: String*): this.type = unlike(first +: rest)
-  @deprecated("Use unlike", "2.1.0")
-  def ignoreLike(likes: Iterable[String]): this.type = {
-    _builder.unlike(likes.toSeq: _*)
-    this
-  }
-
-  def unlike(first: String, rest: String*): this.type = unlike(first +: rest)
-  def unlike(likes: Iterable[String]): this.type = {
-    _builder.unlike(likes.toSeq: _*)
-    this
-  }
-
-  def analyser(analyser: String): this.type = {
-    _builder.analyzer(analyser)
-    this
-  }
-
-  @deprecated("deprecated in elasticsearch", "2.0.0")
-  def ids(ids: String*): this.type = {
-    _builder.ids(ids: _*)
-    this
-  }
-
-  def exclude(): this.type = {
-    _builder.include(false)
-    this
-  }
-
-  def include(): this.type = {
-    _builder.include(true)
-    this
-  }
-
-  def failOnUnsupportedField(): this.type = {
-    _builder.failOnUnsupportedField(true)
-    this
-  }
-
-  def notFailOnUnsupportedField(): this.type = {
-    _builder.failOnUnsupportedField(false)
-    this
-  }
-
-  def minTermFreq(freq: Int): this.type = {
-    _builder.minTermFreq(freq)
-    this
-  }
-
-  def stopWords(stopWords: String*): this.type = {
-    _builder.stopWords(stopWords: _*)
-    this
-  }
-
-  def maxWordLength(maxWordLen: Int): this.type = {
-    _builder.maxWordLength(maxWordLen)
-    this
-  }
-
-  def minWordLength(minWordLen: Int): this.type = {
-    _builder.minWordLength(minWordLen)
-    this
-  }
-
-  def boostTerms(boostTerms: Double): this.type = {
-    _builder.boostTerms(boostTerms.toFloat)
-    this
-  }
-
-  def boost(boost: Double): this.type = {
-    _builder.boost(boost.toFloat)
-    this
-  }
-
-  def maxQueryTerms(maxQueryTerms: Int): this.type = {
-    _builder.maxQueryTerms(maxQueryTerms)
-    this
-  }
-
-  def minDocFreq(minDocFreq: Int): this.type = {
-    _builder.minDocFreq(minDocFreq)
-    this
-  }
-
-  def maxDocFreq(maxDocFreq: Int): this.type = {
-    _builder.maxDocFreq(maxDocFreq)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
-
-
-
-
-
-
-case class TermsLookupQueryDefinition(field: String)
-  extends QueryDefinition {
-
-  val builder = QueryBuilders.termsLookupQuery(field)
-  val _builder = builder
-
-  def queryName(name: String): this.type = {
-    builder.queryName(name)
-    this
-  }
-
-  def index(index: String): this.type = {
-    builder.lookupIndex(index)
-    this
-  }
-
-  def lookupType(`type`: String): this.type = {
-    builder.lookupType(`type`)
-    this
-  }
-
-  def id(id: String): this.type = {
-    builder.lookupId(id)
-    this
-  }
-
-  def path(path: String): this.type = {
-    builder.lookupPath(path)
-    this
-  }
-
-  def routing(routing: String): this.type = {
-    builder.lookupRouting(routing)
-    this
-  }
-}
-
-case class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
-
-  val builder = value match {
-    case str: String => QueryBuilders.termQuery(field, str)
-    case iter: Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
-    case other => QueryBuilders.termQuery(field, other)
-  }
-
-  def boost(boost: Double) = {
-    builder.boost(boost.toFloat)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
-
-trait GenericTermsQueryDefinition extends QueryDefinition {
-  def builder: TermsQueryBuilder
-
-  def boost(boost: Double): this.type = {
-    builder.boost(boost.toFloat)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
-
-case class TermsQueryDefinition(field: String, values: Seq[String]) extends GenericTermsQueryDefinition {
-
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-
-  @deprecated("deprecated in elasticsearch", "2.0.0")
-  def minimumShouldMatch(min: Int): TermsQueryDefinition = minimumShouldMatch(min.toString)
-
-  @deprecated("deprecated in elasticsearch", "2.0.0")
-  def minimumShouldMatch(min: String): TermsQueryDefinition = {
-    builder.minimumShouldMatch(min)
-    this
-  }
-
-  @deprecated("deprecated in elasticsearch", "2.0.0")
-  def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
-    builder.disableCoord(disableCoord)
-    this
-  }
-}
-
-case class IntTermsQueryDefinition(field: String, values: Seq[Int]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class LongTermsQueryDefinition(field: String, values: Seq[Long]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class FloatTermsQueryDefinition(field: String, values: Seq[Float]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
 }
 
 case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
