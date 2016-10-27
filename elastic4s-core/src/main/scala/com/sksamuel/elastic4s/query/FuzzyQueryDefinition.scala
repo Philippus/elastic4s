@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.query
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeBoost, DefinitionAttributePrefixLength}
-import com.sksamuel.elastic4s.MultiTermQueryDefinition
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.index.query.QueryBuilders
 

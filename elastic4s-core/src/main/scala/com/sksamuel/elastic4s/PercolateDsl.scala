@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}

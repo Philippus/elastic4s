@@ -3,18 +3,12 @@ package com.sksamuel.elastic4s.query
 import com.sksamuel.elastic4s.QueryDefinition
 import org.elasticsearch.index.query.QueryBuilders
 
-class DisMaxDefinition extends QueryDefinition {
+class DisMaxDefinition(queries: Seq[QueryDefinition]) extends QueryDefinition {
 
-  val builder = QueryBuilders.disMaxQuery()
-
-  def query(queries: QueryDefinition*): DisMaxDefinition = {
+  def builder = {
+    val builder = QueryBuilders.disMaxQuery()
     queries.foreach(q => builder.add(q.builder))
-    this
-  }
-
-  def queryName(queryName: String): DisMaxDefinition = {
-    builder.queryName(queryName)
-    this
+    builder
   }
 
   def boost(b: Double): DisMaxDefinition = {
@@ -24,6 +18,11 @@ class DisMaxDefinition extends QueryDefinition {
 
   def tieBreaker(tieBreaker: Double): DisMaxDefinition = {
     builder.tieBreaker(tieBreaker.toFloat)
+    this
+  }
+
+  def queryName(queryName: String): DisMaxDefinition = {
+    builder.queryName(queryName)
     this
   }
 }

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder, ValidateQueryResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.XContentHelper

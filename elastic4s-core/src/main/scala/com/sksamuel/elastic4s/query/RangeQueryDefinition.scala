@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.query
 
 import com.sksamuel.elastic4s.DefinitionAttributes.DefinitionAttributeBoost
-import com.sksamuel.elastic4s.MultiTermQueryDefinition
 import org.elasticsearch.index.query.QueryBuilders
 
 case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {

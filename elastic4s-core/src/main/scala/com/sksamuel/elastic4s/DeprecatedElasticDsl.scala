@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.analyzers.{StemmerTokenFilter, SnowballTokenFilter, ShingleTokenFilter, NGramTokenFilter, EdgeNGramTokenFilter, CommonGramsTokenFilter}
+import com.sksamuel.elastic4s.analyzers.{CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter}
+import com.sksamuel.elastic4s.query.{FuzzyQueryDefinition, IndicesQueryDefinition}
 
 // a dumping ground for deprecated syntax, keeps the main file clear
 trait DeprecatedElasticDsl {
@@ -11,6 +12,15 @@ trait DeprecatedElasticDsl {
     def geo(field: String): GeoDistanceSortDefinition = ElasticDsl.geo sort field
     def field(field: String): FieldSortDefinition = ElasticDsl.field.sort(field)
     def script(script: String) = ElasticDsl.script.sort(script)
+  }
+
+  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
+  def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
+
+  @deprecated("instead search on the `_index` field")
+  def indicesQuery(indices: String*) = new {
+    @deprecated("instead search on the `_index` field")
+    def query(query: QueryDefinition): IndicesQueryDefinition = IndicesQueryDefinition(indices, query)
   }
 
   @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")

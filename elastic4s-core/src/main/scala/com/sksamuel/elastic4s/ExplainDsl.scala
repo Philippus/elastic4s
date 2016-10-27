@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.explain.{ExplainAction, ExplainRequest, ExplainRequestBuilder, ExplainResponse}
 import org.elasticsearch.action.support.QuerySourceBuilder
 import org.elasticsearch.client.Client

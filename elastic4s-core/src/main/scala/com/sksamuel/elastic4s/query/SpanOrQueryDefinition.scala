@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.query
 
-import com.sksamuel.elastic4s.SpanQueryDefinition
 import org.elasticsearch.index.query.{QueryBuilders, SpanOrQueryBuilder}
 
 case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
