@@ -43,9 +43,6 @@ trait QueryDsl {
 
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition(query)
 
-  @deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
-  def filteredQuery = new FilteredQueryDefinition
-
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
@@ -900,36 +897,6 @@ case class ExistsQueryDefinition(field: String) extends QueryDefinition {
 
   def queryName(name: String): ExistsQueryDefinition = {
     builder.queryName(name)
-    this
-  }
-}
-
-@deprecated("Use boolQuery instead with a must clause for the query and a filter clause for the filter", "2.0.0")
-class FilteredQueryDefinition extends QueryDefinition {
-
-  def builder = QueryBuilders.filteredQuery(_query, _filter).boost(_boost.toFloat)
-
-  private var _query: QueryBuilder = QueryBuilders.matchAllQuery
-  private var _filter: QueryBuilder = null
-  private var _boost: Double = -1d
-
-  def boost(boost: Double): FilteredQueryDefinition = {
-    _boost = boost
-    this
-  }
-
-  def query(query: => QueryDefinition): FilteredQueryDefinition = {
-    _query = Option(query).map(_.builder).getOrElse(_query)
-    this
-  }
-
-  def filter(filter: => QueryDefinition): FilteredQueryDefinition = {
-    _filter = Option(filter).map(_.builder).orNull
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
     this
   }
 }
