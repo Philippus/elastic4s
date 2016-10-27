@@ -35,38 +35,11 @@ object DefinitionAttributes {
     }
   }
 
-  trait DefinitionAttributeBoostMode {
-    val _builder: { def boostMode(mode: String): Any }
-
-    def boostMode(mode: String): this.type = {
-      _builder.boostMode(mode)
-      this
-    }
-  }
-
-  trait DefinitionAttributeScoreMode {
-    val _builder: { def scoreMode(scoreMode: String): Any }
-
-    def scoreMode(scoreMode: String): this.type = {
-      _builder.scoreMode(scoreMode)
-      this
-    }
-  }
-
   trait DefinitionAttributeMinScore {
     val _builder: { def setMinScore(minScore: Float): Any }
 
     def minScore(min: Double): this.type = {
       _builder.setMinScore(min.toFloat)
-      this
-    }
-  }
-
-  trait DefinitionAttributeMaxBoost {
-    val _builder: { def maxBoost(maxBoost: Float): Any }
-
-    def maxBoost(max: Double): this.type = {
-      _builder.maxBoost(max.toFloat)
       this
     }
   }

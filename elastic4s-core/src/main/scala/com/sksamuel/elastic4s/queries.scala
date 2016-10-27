@@ -7,7 +7,6 @@ import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
 import org.elasticsearch.index.query._
-import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 
 import scala.language.implicitConversions
 import scala.language.reflectiveCalls
@@ -40,7 +39,11 @@ trait QueryDsl {
 
   def existsQuery = ExistsQueryDefinition
 
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition(query)
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition =
+    FunctionScoreQueryDefinition().withQuery(query)
+
+  def functionScoreQuery(query: QueryDefinition, functions: Seq[FilterFunctionDefinition]): FunctionScoreQueryDefinition =
+    FunctionScoreQueryDefinition().withQuery(query).withFunctions(functions)
 
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
@@ -176,25 +179,6 @@ trait QueryDefinition {
   def builder: org.elasticsearch.index.query.QueryBuilder
 }
 
-case class FunctionScoreQueryDefinition(query: QueryDefinition)
-  extends QueryDefinition
-    with DefinitionAttributeBoost
-    with DefinitionAttributeBoostMode
-    with DefinitionAttributeMaxBoost
-    with DefinitionAttributeScoreMode
-    with DefinitionAttributeMinScore {
-
-  val builder = new FunctionScoreQueryBuilder(query.builder)
-  val _builder = builder
-
-  def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
-    scorers.foreach(scorer => scorer._filter match {
-      case None => builder.add(scorer.builder)
-      case Some(filter) => builder.add(filter.builder, scorer.builder)
-    })
-    this
-  }
-}
 
 case class FuzzyQueryDefinition(field: String, termValue: Any)
   extends MultiTermQueryDefinition
@@ -412,7 +396,6 @@ case class GeoDistanceQueryDefinition(field: String)
 }
 
 
-
 case class GeoDistanceRangeQueryDefinition(field: String)
   extends QueryDefinition
     with DefinitionAttributeTo
@@ -575,9 +558,6 @@ case class IndicesQueryDefinition(indices: Iterable[String], query: QueryDefinit
     this
   }
 }
-
-
-
 
 
 case class IdQueryDefinition(ids: Seq[String],
