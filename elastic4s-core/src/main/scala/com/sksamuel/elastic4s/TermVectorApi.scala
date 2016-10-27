@@ -31,7 +31,6 @@ case class TermVectorsResult(original: TermVectorsResponse) {
 
 case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
                                  id: String,
-                                 dfs: Option[Boolean] = None,
                                  fieldStatistics: Option[Boolean] = None,
                                  offsets: Option[Boolean] = None,
                                  parent: Option[String] = None,
@@ -55,7 +54,6 @@ case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
     request.setId(id)
     request.setIndex(indexAndTypes.index)
     request.setType(indexAndTypes.types.head)
-    dfs.foreach(request.setDfs)
     fieldStatistics.foreach(request.setFieldStatistics)
     offsets.foreach(request.setOffsets)
     parent.foreach(request.setParent)
@@ -83,7 +81,6 @@ case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
     request
   }
 
-  def dfs(boolean: Boolean): TermVectorsDefinition = copy(dfs = Option(boolean))
   def fieldStatistics(boolean: Boolean): TermVectorsDefinition = copy(fieldStatistics = Option(boolean))
   def offsets(boolean: Boolean): TermVectorsDefinition = copy(offsets = Option(boolean))
   def parent(str: String): TermVectorsDefinition = copy(parent = Option(str))

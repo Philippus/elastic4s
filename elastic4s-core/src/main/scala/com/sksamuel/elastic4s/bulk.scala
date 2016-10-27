@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.WriteConsistencyLevel
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.bulk.{BulkItemResponse, BulkRequest, BulkResponse}
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.index.IndexResponse
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
@@ -97,13 +97,8 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition]) {
     this
   }
 
-  def refresh(refresh: Boolean): this.type = {
-    _builder.refresh(refresh)
-    this
-  }
-
-  def consistencyLevel(level: WriteConsistencyLevel): this.type = {
-    _builder.consistencyLevel(level)
+  def refresh(refresh: RefreshPolicy): this.type = {
+    _builder.setRefreshPolicy(refresh)
     this
   }
 

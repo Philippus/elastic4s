@@ -4,7 +4,7 @@ import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.index.get.GetField
-import org.elasticsearch.search.fetch.source.FetchSourceContext
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.Future
 import scala.language.implicitConversions

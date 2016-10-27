@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.{Indexable, DocumentMap, DocumentSource}
+import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Indexable}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{XContentHelper, XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
 import org.elasticsearch.index.VersionType
 
 import scala.collection.JavaConverters._
@@ -111,8 +112,8 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     this
   }
 
-  def refresh(refresh: Boolean): IndexDefinition = {
-    _request.refresh(refresh)
+  def refresh(refresh: RefreshPolicy): this.type = {
+    _request.setRefreshPolicy(refresh)
     this
   }
 

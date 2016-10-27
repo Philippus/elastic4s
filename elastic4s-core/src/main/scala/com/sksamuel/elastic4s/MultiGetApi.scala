@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributePreference, DefinitionAttributeRefresh}
-import org.elasticsearch.action.get.{GetResponse, MultiGetAction, MultiGetItemResponse, MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse}
+import com.sksamuel.elastic4s.DefinitionAttributes.DefinitionAttributePreference
+import org.elasticsearch.action.get._
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
@@ -22,7 +22,7 @@ case class MultiGetResult(original: MultiGetResponse) {
   import scala.collection.JavaConverters._
 
   @deprecated("use .responses for a scala friendly Seq, or use .original to access the java result", "2.0")
-  def getResponses() = original.getResponses
+  def getResponses = original.getResponses
 
   def responses: Seq[MultiGetItemResult] = original.iterator.asScala.map(MultiGetItemResult.apply).toList
 }
@@ -49,9 +49,7 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
   def failed: Boolean = original.isFailed
 }
 
-case class MultiGetDefinition(gets: Iterable[GetDefinition])
-  extends DefinitionAttributePreference
-    with DefinitionAttributeRefresh {
+case class MultiGetDefinition(gets: Iterable[GetDefinition]) extends DefinitionAttributePreference {
 
   val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
 
@@ -68,6 +66,11 @@ case class MultiGetDefinition(gets: Iterable[GetDefinition])
 
   def realtime(realtime: Boolean): this.type = {
     _builder.setRealtime(realtime)
+    this
+  }
+
+  def refresh(refresh: Boolean): this.type = {
+    _builder.setRefresh(refresh)
     this
   }
 }

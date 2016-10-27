@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.definitions.DefinitionRouting
 import com.sksamuel.elastic4s.source.{DocumentSource, Indexable}
-import org.elasticsearch.action.WriteConsistencyLevel
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.action.update.{UpdateAction, UpdateRequest, UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -22,7 +22,7 @@ trait UpdateDsl {
   }
 
   class UpdateExpectsIndex(id: String) {
-    def in(indexType: IndexAndTypes): UpdateDefinition = new UpdateDefinition(indexType, id)
+    def in(indexType: IndexAndTypes): UpdateDefinition = UpdateDefinition(indexType, id)
   }
 }
 
@@ -118,13 +118,8 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
     this
   }
 
-  def refresh(refresh: Boolean): this.type = {
-    _builder.setRefresh(refresh)
-    this
-  }
-
-  def consistencyLevel(consistencyLevel: WriteConsistencyLevel): this.type = {
-    _builder.setConsistencyLevel(consistencyLevel)
+  def refresh(refresh: RefreshPolicy): this.type = {
+    _builder.setRefreshPolicy(refresh)
     this
   }
 
