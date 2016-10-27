@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexAction, IndexRequestBuilder, IndexResponse}
-import org.elasticsearch.action.percolate.{PercolateAction, PercolateRequestBuilder, PercolateResponse}
+import org.elasticsearch.action.percolate.PercolateAction
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
-import org.elasticsearch.percolator.PercolatorService
+import org.elasticsearch.percolator.{PercolateResponse, PercolatorService}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -15,10 +15,6 @@ import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait PercolateDsl extends QueryDsl {
-
-  class RegisterExpectsIndex(id: String) {
-    def into(index: String) = new RegisterDefinition(index, id)
-  }
 
   implicit object RegisterDefinitionExecutable extends Executable[RegisterDefinition, IndexResponse, IndexResponse] {
     override def apply(c: Client, t: RegisterDefinition): Future[IndexResponse] = {
@@ -51,6 +47,8 @@ trait PercolateDsl extends QueryDsl {
 }
 
 class RegisterDefinition(index: String, id: String) extends BulkCompatibleDefinition {
+  require(index.nonEmpty, "index must not be null or empty")
+  require(id.toString.nonEmpty, "id must not be null or empty")
 
   private[this] var _query: QueryDefinition = _
   private val _fields = new ListBuffer[(String, Any)]

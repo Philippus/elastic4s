@@ -12,11 +12,6 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait GetDsl {
 
-  class GetWithIdExpectsFrom(id: String) {
-    def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id)
-    def from(index: IndexAndTypes): GetDefinition = GetDefinition(index, id)
-  }
-
   implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, RichGetResponse] {
     override def apply(c: Client, t: GetDefinition): Future[RichGetResponse] = {
       injectFutureAndMap(c.get(t.build, _))(RichGetResponse)
@@ -25,6 +20,7 @@ trait GetDsl {
 }
 
 case class GetDefinition(indexTypes: IndexAndTypes, id: String) {
+  require(id.toString.nonEmpty, "id must not be null or empty")
 
   private val _builder = Requests.getRequest(indexTypes.index).`type`(indexTypes.types.headOption.orNull).id(id)
   def build = _builder

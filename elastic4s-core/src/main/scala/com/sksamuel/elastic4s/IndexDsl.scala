@@ -51,6 +51,8 @@ case class IndexResult(original: IndexResponse) {
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
+  require(index != null, "index must not be null or empty")
+  require(`type` != null, "type must not be null or empty")
 
   private val _request = new IndexRequest(index, `type`)
   private val _fields = mutable.Buffer[FieldValue]()

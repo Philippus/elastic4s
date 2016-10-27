@@ -12,6 +12,8 @@ case class RemoveAliasActionDefinition(alias: String,
                                        indexRouting: Option[String] = None,
                                        searchRouting: Option[String] = None,
                                        filter: Option[QueryBuilder] = None) extends AliasActionDefinition {
+  require(alias.nonEmpty, "alias must not be null or empty")
+  require(index.nonEmpty, "index must not be null or empty")
 
   def withRouting(route: String) = copy(routing = Option(route))
   def withSearchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))

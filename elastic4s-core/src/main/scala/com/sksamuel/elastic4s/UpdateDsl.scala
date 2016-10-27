@@ -20,16 +20,12 @@ trait UpdateDsl {
       injectFuture(c.update(t.build, _))
     }
   }
-
-  class UpdateExpectsIndex(id: String) {
-    require(id.toString.nonEmpty, "id must not be null or empty")
-    def in(indexType: IndexAndTypes): UpdateDefinition = UpdateDefinition(indexType, id)
-  }
 }
 
 case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   extends BulkCompatibleDefinition
     with DefinitionRouting {
+  require(id.toString.nonEmpty, "id must not be null or empty")
 
   val _builder = new UpdateRequestBuilder(ProxyClients.client, UpdateAction.INSTANCE)
     .setIndex(indexAndTypes.index)

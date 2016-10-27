@@ -14,10 +14,6 @@ import scala.concurrent.Future
 
 trait IndexTemplateDsl {
 
-  class CreateIndexTemplateExpectsPattern(name: String) {
-    def pattern(pat: String) = new CreateIndexTemplateDefinition(name, pat)
-  }
-
   implicit object CreateIndexTemplateDefinitionExecutable
     extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
@@ -60,6 +56,8 @@ trait IndexTemplateDsl {
 }
 
 case class CreateIndexTemplateDefinition(name: String, pattern: String) {
+  require(name.nonEmpty, "template name must not be null or empty")
+  require(pattern.nonEmpty, "pattern must not be null or empty")
 
   val _mappings = new ListBuffer[MappingDefinition]
   var _analysis: Option[AnalysisDefinition] = None
@@ -74,7 +72,7 @@ case class CreateIndexTemplateDefinition(name: String, pattern: String) {
   }
 
   def analysis(analyzers: Iterable[AnalyzerDefinition]): this.type = {
-    _analysis = Some(new AnalysisDefinition(analyzers))
+    _analysis = Some(AnalysisDefinition(analyzers))
     this
   }
 

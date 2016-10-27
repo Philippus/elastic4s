@@ -24,24 +24,8 @@ import scala.concurrent.Future
   */
 trait SnapshotDsl {
 
-  class CreateRepositoryExpectsType(name: String) {
-    def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
-  }
-
-  class CreateSnapshotExpectsIn(name: String) {
-    def in(repo: String) = new CreateSnapshotDefinition(name, repo)
-  }
-
-  class GetSnapshotsExpectsFrom(snapshotNames: Seq[String]) {
-    def from(repo: String) = new GetSnapshotsDefinition(snapshotNames.toArray, repo)
-  }
-
-  class RestoreSnapshotExpectsFrom(name: String) {
-    def from(repo: String) = new RestoreSnapshotDefinition(name, repo)
-  }
-
   class DeleteSnapshotExpectsIn(name: String) {
-    def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
+
   }
 
   implicit object DeleteSnapshotDefinitionExecutable
@@ -81,6 +65,9 @@ trait SnapshotDsl {
 }
 
 class CreateRepositoryDefinition(name: String, `type`: String) {
+  require(name.nonEmpty, "repository name must not be null or empty")
+  require(`type`.nonEmpty, "repository name must not be null or empty")
+
   protected val request = new PutRepositoryRequest(name).`type`(`type`)
   def build = request
   def settings(map: Map[String, AnyRef]): this.type = {
@@ -101,6 +88,9 @@ class GetSnapshotsDefinition(snapshotNames: Array[String], repo: String) {
 }
 
 class CreateSnapshotDefinition(name: String, repo: String) {
+  require(name.nonEmpty, "snapshot name must not be null or empty")
+  require(repo.nonEmpty, "repo name must not be null or empty")
+
   val request = new CreateSnapshotRequestBuilder(ProxyClients.cluster, CreateSnapshotAction.INSTANCE, repo, name)
   def build = request.request()
 
@@ -141,6 +131,8 @@ class CreateSnapshotDefinition(name: String, repo: String) {
 }
 
 case class RestoreSnapshotDefinition(name: String, repo: String) {
+  require(name.nonEmpty, "snapshot name must not be null or empty")
+  require(repo.nonEmpty, "repo must not be null or empty")
 
   val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, RestoreSnapshotAction.INSTANCE, repo, name)
   def build = request.request()
