@@ -75,9 +75,6 @@ trait QueryDsl {
 
   def matchAllQuery = new MatchAllQueryDefinition
 
-  @deprecated("Use existsQuery with a mustNot clause", "2.2.0")
-  def missingQuery(field: String) = MissingQueryDefinition(field)
-
   def moreLikeThisQuery(flds: Iterable[String]): MoreLikeThisQueryDefinition = MoreLikeThisQueryDefinition(flds.toSeq)
   def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisQueryDefinition = moreLikeThisQuery(first +: rest)
 
@@ -347,8 +344,6 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String]) extends QueryDefinit
     this
   }
 }
-
-
 
 case class GeoPolygonQueryDefinition(field: String)
   extends QueryDefinition {
@@ -819,64 +814,6 @@ case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
   val builder = QueryBuilders.typeQuery(`type`)
 }
 
-
-
-case class RangeQueryDefinition(field: String) extends MultiTermQueryDefinition with DefinitionAttributeBoost {
-
-  val builder = QueryBuilders.rangeQuery(field)
-  val _builder = builder
-
-  def from(f: Any) = {
-    builder.from(f)
-    this
-  }
-
-  def to(t: Any) = {
-    builder.to(t)
-    this
-  }
-
-  def timeZone(timeZone: String): RangeQueryDefinition = {
-    builder.timeZone(timeZone)
-    this
-  }
-
-  def gte(d: String): RangeQueryDefinition = {
-    builder.gte(d)
-    this
-  }
-
-  def gte(d: Double): RangeQueryDefinition = {
-    builder.gte(d)
-    this
-  }
-
-  def lte(d: String): RangeQueryDefinition = {
-    builder.lte(d)
-    this
-  }
-
-  def lte(d: Double): RangeQueryDefinition = {
-    builder.lte(d)
-    this
-  }
-
-  def includeLower(includeLower: Boolean) = {
-    builder.includeLower(includeLower)
-    this
-  }
-
-  def includeUpper(includeUpper: Boolean) = {
-    builder.includeUpper(includeUpper)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
-
 case class MatchPhrasePrefixDefinition(field: String, value: Any)
   extends QueryDefinition
     with DefinitionAttributeBoost
@@ -998,27 +935,6 @@ case class MatchPhraseDefinition(field: String, value: Any)
 
   def fuzzyTranspositions(f: Boolean) = {
     builder.fuzzyTranspositions(f)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
-
-@deprecated("Use existsQuery with a mustNot clause", "2.2.0")
-case class MissingQueryDefinition(field: String) extends QueryDefinition {
-
-  val builder = QueryBuilders.missingQuery(field)
-
-  def includeNull(nullValue: Boolean): MissingQueryDefinition = {
-    builder.nullValue(nullValue)
-    this
-  }
-
-  def existence(existence: Boolean): MissingQueryDefinition = {
-    builder.existence(existence)
     this
   }
 
@@ -1246,19 +1162,6 @@ case class NestedQueryDefinition(path: String,
   def scoreMode(scoreMode: String): NestedQueryDefinition = copy(scoreMode = Option(scoreMode))
   def boost(b: Double): NestedQueryDefinition = copy(boost = Option(b))
   def queryName(queryName: String): NestedQueryDefinition = copy(queryName = Option(queryName))
-}
-
-@deprecated("use bool query with a mustNot clause", "2.1.1")
-class NotQueryDefinition(filter: QueryDefinition)
-  extends QueryDefinition {
-
-  val builder = QueryBuilders.notQuery(filter.builder)
-  val _builder = builder
-
-  def queryName(queryName: String): NotQueryDefinition = {
-    builder.queryName(queryName)
-    this
-  }
 }
 
 case class QueryInnerHitsDefinition(private[elastic4s] val name: String) {

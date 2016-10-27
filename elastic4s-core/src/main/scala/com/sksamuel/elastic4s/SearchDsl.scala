@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import java.util
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
-import com.sksamuel.elastic4s.query.BoolQueryDefinition
+import com.sksamuel.elastic4s.query.{BoolQueryDefinition, RangeQueryDefinition}
 import org.elasticsearch.action.search._
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
