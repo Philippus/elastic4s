@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions
 import org.elasticsearch.action.admin.indices.alias.get.{GetAliasesRequest, GetAliasesResponse}
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.cluster.metadata.{AliasAction, AliasMetaData}
+import org.elasticsearch.cluster.metadata.AliasMetaData
 import org.elasticsearch.index.query.QueryBuilder
 
 import scala.concurrent.Future
@@ -12,24 +13,19 @@ import scala.language.implicitConversions
 trait AliasesDsl {
 
   class AddAliasExpectsIndex(alias: String) {
-    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.ADD, index, alias))
+    require(alias.nonEmpty, "alias must not be null or empty")
+    def on(index: String) = AddAliasActionDefinition(alias, index)
   }
 
   class RemoveAliasExpectsIndex(alias: String) {
-    def on(index: String) = new MutateAliasDefinition(new AliasAction(AliasAction.Type.REMOVE, index, alias))
+    require(alias.nonEmpty, "alias must not be null or empty")
+    def on(index: String) = RemoveAliasActionDefinition(alias, index)
   }
 
   implicit object GetAliasDefinitionExecutable
     extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {
       injectFuture(c.admin.indices.getAliases(t.build, _))
-    }
-  }
-
-  implicit object MutateAliasDefinitionExecutable
-    extends Executable[MutateAliasDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
-    override def apply(c: Client, t: MutateAliasDefinition): Future[IndicesAliasesResponse] = {
-      injectFuture(c.admin.indices.aliases(t.build, _))
     }
   }
 
@@ -40,7 +36,7 @@ trait AliasesDsl {
     }
   }
 
-  implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = new GetAliasResult(resp)
+  implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = GetAliasResult(resp)
 }
 
 case class GetAliasDefinition(aliases: Seq[String]) {
@@ -63,23 +59,71 @@ case class GetAliasResult(response: GetAliasesResponse) {
   }
 }
 
-case class MutateAliasDefinition(aliasAction: AliasAction) {
+case class AddAliasActionDefinition(alias: String,
+                                    index: String,
+                                    routing: Option[String] = None,
+                                    indexRouting: Option[String] = None,
+                                    searchRouting: Option[String] = None,
+                                    filter: Option[QueryBuilder] = None) extends AliasActionDefinition {
 
-  def routing(route: String): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.routing(route))
+  def routing(route: String) = copy(routing = Option(route))
+  def searchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
+  def indexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
 
-  def filter(filter: QueryBuilder): MutateAliasDefinition = new MutateAliasDefinition(aliasAction.filter(filter))
-  def filter(filter: QueryDefinition): MutateAliasDefinition = {
-    new MutateAliasDefinition(aliasAction.filter(filter.builder))
+  def filter(query: String) = filter(QueryStringQueryDefinition(query))
+  def filter(query: QueryBuilder) = copy(filter = Option(query))
+  def filter(query: QueryDefinition) = copy(filter = Option(query.builder))
+
+  override def build: IndicesAliasesRequest.AliasActions = {
+    val action = AliasActions.add().alias(alias).index(index)
+    routing.foreach(action.routing)
+    indexRouting.foreach(action.indexRouting)
+    searchRouting.foreach(action.searchRouting)
+    searchRouting.foreach(action.filter)
+    action
   }
-
-  def build: IndicesAliasesRequest = new IndicesAliasesRequest().addAliasAction(aliasAction)
 }
 
-case class IndicesAliasesRequestDefinition(aliasMutations: MutateAliasDefinition*) {
+case class RemoveAliasActionDefinition(alias: String,
+                                       index: String,
+                                       routing: Option[String] = None,
+                                       indexRouting: Option[String] = None,
+                                       searchRouting: Option[String] = None,
+                                       filter: Option[QueryBuilder] = None) extends AliasActionDefinition {
+
+  def routing(route: String) = copy(routing = Option(route))
+  def searchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
+  def indexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
+
+  def filter(query: String) = filter(QueryStringQueryDefinition(query))
+  def filter(query: QueryBuilder) = copy(filter = Option(query))
+  def filter(query: QueryDefinition) = copy(filter = Option(query.builder))
+
+  override def build: IndicesAliasesRequest.AliasActions = {
+    val action = AliasActions.remove().alias(alias).index(index)
+    routing.foreach(action.routing)
+    indexRouting.foreach(action.indexRouting)
+    searchRouting.foreach(action.searchRouting)
+    searchRouting.foreach(action.filter)
+    action
+  }
+}
+
+case class JavaAliasAction(action: IndicesAliasesRequest.AliasActions) extends AliasActionDefinition {
+  override def build: IndicesAliasesRequest.AliasActions = action
+}
+
+trait AliasActionDefinition {
+  def build: IndicesAliasesRequest.AliasActions
+}
+
+case class IndicesAliasesRequestDefinition(actions: Seq[AliasActionDefinition]) {
 
   def build: IndicesAliasesRequest = {
-    aliasMutations.foldLeft(new IndicesAliasesRequest())((request, aliasDef) =>
-      request.addAliasAction(aliasDef.aliasAction)
-    )
+    val req = new IndicesAliasesRequest()
+    actions.foldLeft(req) { (req, action) =>
+      req.addAliasAction(action.build)
+    }
+    req
   }
 }

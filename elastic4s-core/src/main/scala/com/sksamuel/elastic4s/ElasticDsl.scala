@@ -14,87 +14,85 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait ElasticDsl
   extends IndexDsl
-  with AggregationDsl
-  with AliasesDsl
-  with AnalyzerDsl
-  with BulkDsl
-  with ClusterDsl
-  with CountDsl
-  with CreateIndexDsl
-  with DeleteIndexDsl
-  with DeleteDsl
-  with ExplainDsl
-  with FieldStatsDsl
-  with ForceMergeDsl
-  with GetDsl
-  with IndexAdminDsl
-  with IndexRecoveryDsl
-  with IndexTemplateDsl
-  with MappingDsl
+    with AliasesDsl
+    with AnalyzerDsl
+    with BulkDsl
+    with ClusterDsl
+    with CountDsl
+    with CreateIndexDsl
+    with DeleteIndexDsl
+    with DeleteDsl
+    with ExplainDsl
+    with FieldStatsDsl
+    with ForceMergeDsl
+    with GetDsl
+    with IndexAdminDsl
+    with IndexRecoveryDsl
+    with IndexTemplateDsl
+    with MappingDsl
     with MultiGetApi
-  with PercolateDsl
-  with PipelineAggregationDsl
-  with ReindexDsl
-  with ScriptDsl
-  with SearchDsl
-  with SettingsDsl
-  with ScoreDsl
-  with ScrollDsl
-  with SnapshotDsl
+    with PercolateDsl
+    with ReindexDsl
+    with ScriptDsl
+    with SearchDsl
+    with SettingsDsl
+    with ScoreDsl
+    with ScrollDsl
+    with SnapshotDsl
     with TaskApi
     with TermVectorApi
-  with TokenizerDsl
-  with TokenFilterDsl
-  with UpdateDsl
-  with ValidateDsl
-  with DeprecatedElasticDsl
-  with ElasticImplicits {
+    with TokenizerDsl
+    with TokenFilterDsl
+    with UpdateDsl
+    with ValidateDsl
+    with DeprecatedElasticDsl
+    with ElasticImplicits {
 
   case object add {
+    @deprecated("Use full method syntax, eg addAlias()", "3.0.0")
     def alias(alias: String): AddAliasExpectsIndex = {
       require(alias.nonEmpty, "alias name must not be null or empty")
       new AddAliasExpectsIndex(alias)
     }
   }
-  def addAlias(name: String): AddAliasExpectsIndex = add alias name
 
-  def aliases(aliasMutations: MutateAliasDefinition*): IndicesAliasesRequestDefinition = aliases(aliasMutations)
-  def aliases(aliasMutations: Iterable[MutateAliasDefinition]): IndicesAliasesRequestDefinition = {
-    IndicesAliasesRequestDefinition(aliasMutations.toSeq: _*)
-  }
+  def addAlias(name: String): AddAliasExpectsIndex = new AddAliasExpectsIndex(name)
 
-  def agg = aggregation
-  case object aggregation {
-    def avg(name: String) = AvgAggregationDefinition(name)
-    def children(name: String) = ChildrenAggregationDefinition(name)
-    def count(name: String) = ValueCountAggregationDefinition(name)
-    def cardinality(name: String) = CardinalityAggregationDefinition(name)
-    def datehistogram(name: String) = DateHistogramAggregation(name)
-    def daterange(name: String) = DateRangeAggregation(name)
-    def extendedstats(name: String) = ExtendedStatsAggregationDefinition(name)
-    def filter(name: String) = FilterAggregationDefinition(name)
-    def filters(name: String) = FiltersAggregationDefinition(name)
-    def geobounds(name: String) = GeoBoundsAggregationDefinition(name)
-    def geodistance(name: String) = GeoDistanceAggregationDefinition(name)
-    def geohash(name: String) = GeoHashGridAggregationDefinition(name)
-    def global(name: String) = GlobalAggregationDefinition(name)
-    def histogram(name: String) = HistogramAggregation(name)
-    def ipRange(name: String) = IpRangeAggregationDefinition(name)
-    def max(name: String) = MaxAggregationDefinition(name)
-    def min(name: String) = MinAggregationDefinition(name)
-    def missing(name: String) = MissingAggregationDefinition(name)
-    def nested(name: String) = NestedAggregationDefinition(name)
-    def reverseNested(name: String) = ReverseNestedAggregationDefinition(name)
-    def percentiles(name: String) = PercentilesAggregationDefinition(name)
-    def percentileranks(name: String) = PercentileRanksAggregationDefinition(name)
-    def range(name: String) = RangeAggregationDefinition(name)
-    def scriptedMetric(name: String) = ScriptedMetricAggregationDefinition(name)
-    def sigTerms(name: String) = SigTermsAggregationDefinition(name)
-    def stats(name: String) = StatsAggregationDefinition(name)
-    def sum(name: String) = SumAggregationDefinition(name)
-    def terms(name: String) = TermAggregationDefinition(name)
-    def topHits(name: String) =  TopHitsAggregationDefinition(name)
-  }
+  def aliases(first: AliasActionDefinition, rest: AliasActionDefinition*): IndicesAliasesRequestDefinition = aliases(first +: rest)
+  def aliases(actions: Iterable[AliasActionDefinition]) = IndicesAliasesRequestDefinition(actions.toSeq)
+
+  //  def agg = aggregation
+  //  case object aggregation {
+  //    def avg(name: String) = AvgAggregationDefinition(name)
+  //    def children(name: String) = ChildrenAggregationDefinition(name)
+  //    def count(name: String) = ValueCountAggregationDefinition(name)
+  //    def cardinality(name: String) = CardinalityAggregationDefinition(name)
+  //    def datehistogram(name: String) = DateHistogramAggregation(name)
+  //    def daterange(name: String) = DateRangeAggregation(name)
+  //    def extendedstats(name: String) = ExtendedStatsAggregationDefinition(name)
+  //    def filter(name: String) = FilterAggregationDefinition(name)
+  //    def filters(name: String) = FiltersAggregationDefinition(name)
+  //    def geobounds(name: String) = GeoBoundsAggregationDefinition(name)
+  //    def geodistance(name: String) = GeoDistanceAggregationDefinition(name)
+  //    def geohash(name: String) = GeoHashGridAggregationDefinition(name)
+  //    def global(name: String) = GlobalAggregationDefinition(name)
+  //    def histogram(name: String) = HistogramAggregation(name)
+  //    def ipRange(name: String) = IpRangeAggregationDefinition(name)
+  //    def max(name: String) = MaxAggregationDefinition(name)
+  //    def min(name: String) = MinAggregationDefinition(name)
+  //    def missing(name: String) = MissingAggregationDefinition(name)
+  //    def nested(name: String) = NestedAggregationDefinition(name)
+  //    def reverseNested(name: String) = ReverseNestedAggregationDefinition(name)
+  //    def percentiles(name: String) = PercentilesAggregationDefinition(name)
+  //    def percentileranks(name: String) = PercentileRanksAggregationDefinition(name)
+  //    def range(name: String) = RangeAggregationDefinition(name)
+  //    def scriptedMetric(name: String) = ScriptedMetricAggregationDefinition(name)
+  //    def sigTerms(name: String) = SigTermsAggregationDefinition(name)
+  //    def stats(name: String) = StatsAggregationDefinition(name)
+  //    def sum(name: String) = SumAggregationDefinition(name)
+  //    def terms(name: String) = TermAggregationDefinition(name)
+  //    def topHits(name: String) =  TopHitsAggregationDefinition(name)
+  //  }
 
   case object clear {
     def cache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
@@ -263,6 +261,7 @@ trait ElasticDsl
       new GetWithIdExpectsFrom(id.toString)
     }
 
+    @deprecated("use getAlias(alias", "3.0.0")
     def alias(aliases: String*): GetAliasDefinition = GetAliasDefinition(aliases)
 
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
@@ -282,8 +281,10 @@ trait ElasticDsl
   }
 
   def get(id: Any): GetWithIdExpectsFrom = new GetWithIdExpectsFrom(id.toString)
+
   def getAlias(first: String, rest: String*): GetAliasDefinition = GetAliasDefinition(first +: rest)
   def getAlias(aliases: Iterable[String]): GetAliasDefinition = GetAliasDefinition(aliases.toSeq)
+
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
@@ -418,12 +419,12 @@ trait ElasticDsl
   def refreshIndex(indexes: String*): RefreshIndexDefinition = refresh index indexes
 
   case object remove {
+    @deprecated("Use dot syntax, eg removeAlias(alias", "3.0.0")
     def alias(alias: String): RemoveAliasExpectsIndex = {
-      require(alias.nonEmpty, "alias must not be null or empty")
-      new RemoveAliasExpectsIndex(alias)
+      removeAlias(alias)
     }
   }
-  def removeAlias(alias: String): RemoveAliasExpectsIndex = remove alias alias
+  def removeAlias(alias: String): RemoveAliasExpectsIndex = new RemoveAliasExpectsIndex(alias)
 
   case object register {
     def id(id: Any): RegisterExpectsIndex = {
@@ -453,7 +454,7 @@ trait ElasticDsl
 
   def scriptSort(script: ScriptDefinition) = new {
     def as(`type`: String): ScriptSortDefinition = typed(`type`)
-    def typed(`type`: String):ScriptSortDefinition = ScriptSortDefinition(script, `type`)
+    def typed(`type`: String): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
   }
 
   case object search {
@@ -546,7 +547,7 @@ trait ElasticDsl
 }
 
 case class TypesExistExpectsIn(types: Seq[String]) {
-  def in(indexes: String*): TypesExistsDefinition = new TypesExistsDefinition(indexes, types)
+  def in(indexes: String*): TypesExistsDefinition = TypesExistsDefinition(indexes, types)
 }
 
 object ElasticDsl extends ElasticDsl

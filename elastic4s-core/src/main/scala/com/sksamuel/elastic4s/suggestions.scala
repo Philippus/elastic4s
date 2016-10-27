@@ -9,7 +9,7 @@ import org.elasticsearch.search.suggest.SuggestBuilder.SuggestionBuilder
 import org.elasticsearch.search.suggest.completion.{CompletionSuggestion, CompletionSuggestionBuilder, CompletionSuggestionFuzzyBuilder}
 import org.elasticsearch.search.suggest.phrase.{PhraseSuggestion, PhraseSuggestionBuilder}
 import org.elasticsearch.search.suggest.term.{TermSuggestion, TermSuggestionBuilder}
-import org.elasticsearch.search.suggest.{Suggest, SuggestBuilders}
+import org.elasticsearch.search.suggest.{Suggest, SuggestBuilders, SuggestionBuilder}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
