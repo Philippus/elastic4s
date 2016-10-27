@@ -33,7 +33,6 @@ trait ElasticDsl
     with MappingDsl
     with MultiGetApi
     with PercolateDsl
-    with ReindexDsl
     with ScriptDsl
     with SearchDsl
     with SettingsDsl
