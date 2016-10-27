@@ -5,11 +5,8 @@ import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
-import org.elasticsearch.index.query.CommonTermsQueryBuilder.Operator
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
-import org.elasticsearch.index.query.support.QueryInnerHitBuilder
-import org.elasticsearch.search.fetch.innerhits.InnerHitsBuilder.InnerHit
 
 import scala.language.implicitConversions
 import scala.language.reflectiveCalls
@@ -18,8 +15,8 @@ import scala.language.reflectiveCalls
 
 trait QueryDsl {
 
-  implicit def string2query(string: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(string)
-  implicit def tuple2query(kv: (String, String)): TermQueryDefinition = new TermQueryDefinition(kv._1, kv._2)
+  implicit def string2query(string: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(string)
+  implicit def tuple2query(kv: (String, String)): TermQueryDefinition = TermQueryDefinition(kv._1, kv._2)
 
   def query = this
 
@@ -108,7 +105,9 @@ trait QueryDsl {
     }
   }
 
-  def spanOrQuery: SpanOrQueryDefinition = new SpanOrQueryDefinition
+  def spanOrQuery(iterable: Seq[SpanTermQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
+  def spanOrQuery(first: SpanTermQueryDefinition, rest: SpanTermQueryDefinition*): SpanOrQueryDefinition =
+    spanOrQuery(first +: rest)
 
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
 
@@ -920,19 +919,29 @@ case class IdQueryDefinition(ids: Seq[String],
   def boost(boost: Double): IdQueryDefinition = copy(boost = Option(boost))
 }
 
-class SpanOrQueryDefinition extends SpanQueryDefinition with DefinitionAttributeBoost {
-  val builder = QueryBuilders.spanOrQuery
-  val _builder = builder
-  def clause(spans: SpanTermQueryDefinition*): SpanOrQueryDefinition = {
-    spans.foreach {
-      span => builder.clause(span.builder)
-    }
-    this
+case class SpanOrQueryDefinition(clauses: Seq[SpanTermQueryDefinition],
+                                 boost: Option[Double] = None,
+                                 queryName: Option[String] = None) extends SpanQueryDefinition {
+
+  def builder: SpanOrQueryBuilder = {
+
+    val initial = clauses.headOption.getOrElse(sys.error("Must have at least one clause"))
+    val builder = QueryBuilders.spanOrQuery(initial.builder)
+    clauses.tail.map(_.builder).foreach(builder.addClause)
+    boost.map(_.toFloat).foreach(builder.boost)
+    queryName.foreach(builder.queryName)
+    builder
   }
+
+  def boost(boost: Double) = copy(boost = Option(boost))
+  def clauses(clauses: Iterable[SpanTermQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
+  def clause(first: SpanTermQueryDefinition, rest: SpanTermQueryDefinition*) = clauses(first +: rest)
 }
 
 class SpanTermQueryDefinition(field: String, value: Any) extends SpanQueryDefinition {
+
   val builder = QueryBuilders.spanTermQuery(field, value.toString)
+
   def boost(boost: Double) = {
     builder.boost(boost.toFloat)
     this
