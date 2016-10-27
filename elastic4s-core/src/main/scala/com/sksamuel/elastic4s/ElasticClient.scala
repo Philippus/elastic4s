@@ -127,7 +127,7 @@ object ElasticsearchClientUri {
       case Regex(hoststr, query) =>
         val hosts = hoststr.split(',').map(_.split(':')).map {
           case Array(host, port) => (host, port.toInt)
-          case _ => sys.error(s"Invalid hosts/ports $hosts")
+          case _ => sys.error(s"Invalid hosts/ports $hoststr")
         }
         val options = query.split('&').map(_.split('=')).map {
           case Array(key, value) => (key, value)

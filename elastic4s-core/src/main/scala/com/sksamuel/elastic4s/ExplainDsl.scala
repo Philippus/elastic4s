@@ -15,12 +15,6 @@ trait ExplainDsl {
       injectFuture(builder.execute)
     }
   }
-
-  class ExplainExpectsIndex(id: String) {
-    def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
-      new ExplainDefinition(indexAndTypes.index, indexAndTypes.types.head, id)
-    }
-  }
 }
 
 case class ExplainDefinition(index: String,

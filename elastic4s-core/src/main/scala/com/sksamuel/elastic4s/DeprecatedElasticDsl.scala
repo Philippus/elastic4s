@@ -316,7 +316,11 @@ trait DeprecatedElasticDsl {
 
   case object explain {
     @deprecated("Use explain(index, type, id", "3.0.0")
-    def id(id: String): ExplainExpectsIndex = new ExplainExpectsIndex(id)
+    def id(id: String) = new {
+      def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
+        ExplainDefinition(indexAndTypes.index, indexAndTypes.types.head, id)
+      }
+    }
   }
 
   @deprecated("use optimizeIndex(index)", "1.6.2")

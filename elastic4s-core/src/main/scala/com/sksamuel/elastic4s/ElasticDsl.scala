@@ -196,8 +196,9 @@ trait ElasticDsl
 
   def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
-  def getSnapshot(names: String*) = getSnapshot(names)
-  def getSnapshot(names: Iterable[String]) = new {
+  def getSnapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
+  def getSnapshot(names: Iterable[String]): GetSnapshotExpectsFrom = new GetSnapshotExpectsFrom(names)
+  class GetSnapshotExpectsFrom(names: Iterable[String]) {
     def from(repo: String) = new GetSnapshotsDefinition(names.toArray, repo)
   }
 
@@ -208,18 +209,13 @@ trait ElasticDsl
   def indexExists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
   def indexExists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
 
-  def indexInto(indexType: IndexAndTypes): IndexDefinition = new IndexDefinition(indexType.index, indexType.types.head)
+  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
   def indexInto(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
 
   def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
   def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
 
-  case object inner {
-    def hits(name: String): QueryInnerHitsDefinition = QueryInnerHitsDefinition(name)
-    def hit(name: String): InnerHitDefinition = InnerHitDefinition(name)
-  }
-  def innerHit(name: String): InnerHitDefinition = inner hit name
-  def innerHits(name: String): QueryInnerHitsDefinition = inner hits name
+  def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
   def listTasks(first: String, rest: String*): ListTasksDefinition = listTasks(first +: rest)
   def listTasks(nodeIds: Seq[String]): ListTasksDefinition = ListTasksDefinition(nodeIds)
@@ -323,8 +319,9 @@ trait ElasticDsl
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
-  def typesExist(types: String*) = typesExist(types)
-  def typesExist(types: Iterable[String]) = new {
+  def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)
+  def typesExist(types: Iterable[String]): TypesExistExpectsIn = new TypesExistExpectsIn(types)
+  class TypesExistExpectsIn(types: Iterable[String]) {
     def in(indexes: String*): TypesExistsDefinition = TypesExistsDefinition(indexes, types.toSeq)
   }
 

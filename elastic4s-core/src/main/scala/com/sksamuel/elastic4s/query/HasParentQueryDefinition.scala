@@ -27,10 +27,11 @@ case class HasParentQueryDefinition(`type`: String,
   def queryName(queryName: String) = copy(queryName = Some(queryName))
 }
 
-case class InnerHitDefinition(highlight: Option[HighlightDefinition]) {
+case class InnerHitDefinition(name: String,
+                              highlight: Option[HighlightDefinition] = None) {
 
   def builder = {
-    val builder = new InnerHitBuilder()
+    val builder = new InnerHitBuilder().setName(name)
     highlight.foreach(highlight => builder.setHighlightBuilder(highlight.builder))
     builder
   }
