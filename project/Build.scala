@@ -18,7 +18,7 @@ object Build extends AutoPlugin {
     val ReactiveStreamsVersion = "1.0.0"
     val JacksonVersion = "2.7.5"
     val Slf4jVersion = "1.7.12"
-    val ElasticsearchVersion = "5.0.0-rc1"
+    val ElasticsearchVersion = "5.0.0"
     val Log4jVersion = "1.2.17"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.4.1"
@@ -42,14 +42,15 @@ object Build extends AutoPlugin {
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "org.elasticsearch.client"     % "transport"                % ElasticsearchVersion,
-      "org.scalactic"                %% "scalactic"               % ScalacticVersion,
-      "org.slf4j"                    % "slf4j-api"                % Slf4jVersion,
-      "commons-io"                   % "commons-io"               % CommonsIoVersion  % "test",
-      "log4j"                 % "log4j"             % Log4jVersion      % "test",
-      "org.slf4j"             % "log4j-over-slf4j"  % Slf4jVersion      % "test",
-      "org.mockito"           % "mockito-all"       % MockitoVersion    % "test",
-      "org.scalatest"         %% "scalatest"        % ScalatestVersion  % "test"
+      "org.elasticsearch.client"      % "transport"                 % ElasticsearchVersion,
+      "org.apache.lucene"             % "lucene-join"               % "6.2.1",
+      "org.scalactic"                 %% "scalactic"                % ScalacticVersion,
+      "org.slf4j"                     % "slf4j-api"                 % Slf4jVersion,
+      "commons-io"                    % "commons-io"                % CommonsIoVersion  % "test",
+      "log4j"                         % "log4j"                     % Log4jVersion      % "test",
+      "org.slf4j"                     % "log4j-over-slf4j"          % Slf4jVersion      % "test",
+      "org.mockito"                   % "mockito-all"               % MockitoVersion    % "test",
+      "org.scalatest"                 %% "scalatest"                % ScalatestVersion  % "test"
     ),
     publishTo <<= version {
       (v: String) =>
