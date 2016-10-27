@@ -4,12 +4,11 @@ import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.elastic4s.query._
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.common.unit.DistanceUnit.Distance
-import org.elasticsearch.common.unit.{DistanceUnit, Fuzziness}
 import org.elasticsearch.index.query._
 
-import scala.language.implicitConversions
-import scala.language.reflectiveCalls
+import scala.language.{implicitConversions, reflectiveCalls}
 
 /** @author Stephen Samuel */
 
@@ -45,9 +44,11 @@ trait QueryDsl {
   def functionScoreQuery(query: QueryDefinition, functions: Seq[FilterFunctionDefinition]): FunctionScoreQueryDefinition =
     FunctionScoreQueryDefinition().withQuery(query).withFunctions(functions)
 
+  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
+
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
 
   def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
@@ -186,34 +187,7 @@ trait QueryDefinition {
 }
 
 
-case class FuzzyQueryDefinition(field: String, termValue: Any)
-  extends MultiTermQueryDefinition
-    with DefinitionAttributePrefixLength
-    with DefinitionAttributeBoost {
 
-  val builder = QueryBuilders.fuzzyQuery(field, termValue.toString)
-  val _builder = builder
-
-  def fuzziness(fuzziness: Fuzziness) = {
-    builder.fuzziness(fuzziness)
-    this
-  }
-
-  def maxExpansions(maxExpansions: Int) = {
-    builder.maxExpansions(maxExpansions)
-    this
-  }
-
-  def transpositions(transpositions: Boolean) = {
-    builder.transpositions(transpositions)
-    this
-  }
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
-}
 
 case class Item(index: String, `type`: String, id: String)
 
@@ -356,51 +330,6 @@ case class GeoPolygonQueryDefinition(field: String)
     this
   }
 }
-
-case class GeoDistanceQueryDefinition(field: String)
-  extends QueryDefinition
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon {
-
-  val builder = QueryBuilders.geoDistanceQuery(field)
-  val _builder = builder
-
-  def geoDistance(geoDistance: GeoDistance): GeoDistanceQueryDefinition = {
-    builder.geoDistance(geoDistance)
-    this
-  }
-
-  def geohash(geohash: String): GeoDistanceQueryDefinition = {
-    builder.geohash(geohash)
-    this
-  }
-
-  def queryName(name: String): GeoDistanceQueryDefinition = {
-    builder.queryName(name)
-    this
-  }
-
-  def distance(distance: String): GeoDistanceQueryDefinition = {
-    builder.distance(distance)
-    this
-  }
-
-  def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = {
-    builder.distance(distance, unit)
-    this
-  }
-
-  def distance(distance: Distance): GeoDistanceQueryDefinition = {
-    builder.distance(distance.value, distance.unit)
-    this
-  }
-
-  def point(lat: Double, long: Double): GeoDistanceQueryDefinition = {
-    builder.point(lat, long)
-    this
-  }
-}
-
 
 case class GeoDistanceRangeQueryDefinition(field: String)
   extends QueryDefinition
