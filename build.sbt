@@ -6,7 +6,6 @@ lazy val root = Project("elastic4s", file("."))
     core,
     testkit,
     coreTests,
-    examples,
     jackson,
     json4s,
     streams,
@@ -74,8 +73,3 @@ lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
       name := "elastic4s-play-json",
       libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
     ).dependsOn(core, testkit % "test")
-
-lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))
-  .settings(publish := {})
-  .settings(name := "elastic4s-examples")
-  .dependsOn(core, jackson, streams)
