@@ -47,7 +47,7 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
     builder.stopWords(stopWords: _*)
   }
 
-  def analyzer(analyzer: String) = copy(analyzer = Some(analyzer))
+  def analyzer(analyzer: String): MoreLikeThisQueryDefinition = copy(analyzer = Some(analyzer))
 
   def unlikeText(first: String, rest: String*): MoreLikeThisQueryDefinition = unlikeText(first +: rest)
   def unlikeText(unlikes: Iterable[String]): MoreLikeThisQueryDefinition = copy(unlikeTexts = unlikeTexts ++ unlikes)
@@ -55,26 +55,27 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
   def unlikeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = unlikeItems(first +: rest)
   def unlikeItems(unlikes: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition = copy(unlikeItems = unlikeItems ++ unlikes.toSeq)
 
-  def include(inc: Boolean) = copy(include = Some(inc))
+  def include(inc: Boolean): MoreLikeThisQueryDefinition = copy(include = Some(inc))
 
-  def failOnUnsupportedField(failOnUnsupportedField: Boolean) = copy(failOnUnsupportedField = Some(failOnUnsupportedField))
+  def failOnUnsupportedField(failOnUnsupportedField: Boolean): MoreLikeThisQueryDefinition =
+    copy(failOnUnsupportedField = Some(failOnUnsupportedField))
 
-  def minTermFreq(minTermFreq: Int) = copy(minTermFreq = Some(minTermFreq))
+  def minTermFreq(minTermFreq: Int): MoreLikeThisQueryDefinition = copy(minTermFreq = Some(minTermFreq))
 
-  def stopWords(stopWords: Iterable[String]) = copy(stopWords = stopWords.toSeq)
-  def stopWords(first: String, rest: String*) = stopWords(first +: rest)
+  def stopWords(stopWords: Iterable[String]): MoreLikeThisQueryDefinition = copy(stopWords = stopWords.toSeq)
+  def stopWords(first: String, rest: String*): MoreLikeThisQueryDefinition = stopWords(first +: rest)
 
-  def minWordLength(minWordLen: Int) = copy(minWordLength = Some(minWordLen))
-  def maxWordLength(maxWordLen: Int) = copy(maxWordLength = Some(maxWordLen))
+  def minWordLength(minWordLen: Int): MoreLikeThisQueryDefinition = copy(minWordLength = Some(minWordLen))
+  def maxWordLength(maxWordLen: Int): MoreLikeThisQueryDefinition = copy(maxWordLength = Some(maxWordLen))
 
-  def boost(boost: Double) = copy(boost = Some(boost))
-  def boostTerms(boostTerms: Double) = copy(boostTerms = Some(boostTerms))
+  def boost(boost: Double): MoreLikeThisQueryDefinition = copy(boost = Some(boost))
+  def boostTerms(boostTerms: Double): MoreLikeThisQueryDefinition = copy(boostTerms = Some(boostTerms))
 
-  def maxQueryTerms(maxQueryTerms: Int) = copy(maxQueryTerms = Some(maxQueryTerms))
-  def minShouldMatch(minShouldMatch: String) = copy(minShouldMatch = Some(minShouldMatch))
+  def maxQueryTerms(maxQueryTerms: Int): MoreLikeThisQueryDefinition = copy(maxQueryTerms = Some(maxQueryTerms))
+  def minShouldMatch(minShouldMatch: String): MoreLikeThisQueryDefinition = copy(minShouldMatch = Some(minShouldMatch))
 
-  def minDocFreq(minDocFreq: Int) = copy(minDocFreq = Some(minDocFreq))
-  def maxDocFreq(maxDocFreq: Int) = copy(maxDocFreq = Some(maxDocFreq))
+  def minDocFreq(minDocFreq: Int): MoreLikeThisQueryDefinition = copy(minDocFreq = Some(minDocFreq))
+  def maxDocFreq(maxDocFreq: Int): MoreLikeThisQueryDefinition = copy(maxDocFreq = Some(maxDocFreq))
 
-  def queryName(queryName: String) = copy(queryName = Some(queryName))
+  def queryName(queryName: String): MoreLikeThisQueryDefinition = copy(queryName = Some(queryName))
 }

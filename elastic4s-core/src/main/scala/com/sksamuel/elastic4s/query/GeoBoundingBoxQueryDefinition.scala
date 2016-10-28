@@ -26,13 +26,28 @@ case class GeoBoundingBoxQueryDefinition(field: String,
     builder
   }
 
-  def withGeohash(geohash: String) = copy(geohash = Some(geohash))
-  def withCorners(topLeft: GeoPoint, bottomRight: GeoPoint) = copy(corners = Some(topLeft.getLat, topLeft.getLon, bottomRight.getLat, bottomRight.getLon))
-  def withCorners(top: Double, left: Double, bottom: Double, right: Double) = copy(corners = Some(top, left, bottom, right))
-  def withCornersOGC(bottomLeft: String, topRight: String) = withCornersOGC(GeoPoint.fromGeohash(bottomLeft), GeoPoint.fromGeohash(topRight))
-  def withCornersOGC(bottomLeft: GeoPoint, topRight: GeoPoint) = copy(cornersOGC = Some(bottomLeft, topRight))
-  def withType(geoExecType: GeoExecType) = copy(geoExecType = Option(geoExecType))
-  def withIgnoreUnmapped(ignoreUnmapped: Boolean) = copy(ignoreUnmapped = Option(ignoreUnmapped))
-  def withValidationMethod(validationMethod: GeoValidationMethod) = copy(validationMethod = Option(validationMethod))
-  def withQueryName(queryName: String) = copy(queryName = Option(queryName))
+  def withGeohash(geohash: String): GeoBoundingBoxQueryDefinition = copy(geohash = Some(geohash))
+
+  def withCorners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition =
+    copy(corners = Some(topLeft.getLat, topLeft.getLon, bottomRight.getLat, bottomRight.getLon))
+
+  def withCorners(top: Double, left: Double, bottom: Double, right: Double): GeoBoundingBoxQueryDefinition =
+    copy(corners = Some(top, left, bottom, right))
+
+  def withCornersOGC(bottomLeft: String, topRight: String): GeoBoundingBoxQueryDefinition =
+    withCornersOGC(GeoPoint.fromGeohash(bottomLeft), GeoPoint.fromGeohash(topRight))
+
+  def withCornersOGC(bottomLeft: GeoPoint, topRight: GeoPoint): GeoBoundingBoxQueryDefinition =
+    copy(cornersOGC = Some(bottomLeft, topRight))
+
+  def withType(geoExecType: GeoExecType): GeoBoundingBoxQueryDefinition = copy(geoExecType = Option(geoExecType))
+
+  def withIgnoreUnmapped(ignoreUnmapped: Boolean): GeoBoundingBoxQueryDefinition =
+    copy(ignoreUnmapped = Option(ignoreUnmapped))
+
+  def withValidationMethod(validationMethod: GeoValidationMethod): GeoBoundingBoxQueryDefinition =
+    copy(validationMethod = Option(validationMethod))
+
+  def withQueryName(queryName: String): GeoBoundingBoxQueryDefinition =
+    copy(queryName = Option(queryName))
 }

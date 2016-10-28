@@ -16,8 +16,15 @@ case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
     builder
   }
 
-  def boost(boost: Double) = copy(boost = Option(boost))
-  def clauses(clauses: Iterable[SpanQueryDefinition]) = copy(clauses = this.clauses ++ clauses)
-  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*) = clauses(first +: rest)
-  def withQueryName(queryName: String) = copy(queryName = Option(queryName))
+  def boost(boost: Double): SpanOrQueryDefinition =
+    copy(boost = Option(boost))
+
+  def clauses(clauses: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition =
+    copy(clauses = this.clauses ++ clauses)
+
+  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition =
+    clauses(first +: rest)
+
+  def withQueryName(queryName: String): SpanOrQueryDefinition =
+    copy(queryName = Option(queryName))
 }

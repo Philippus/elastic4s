@@ -3,8 +3,10 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, MappingDefinition, PutMappingDefinition, TimestampDefinition}
+import com.sksamuel.elastic4s.mappings.{FieldDefinition, GetMappingDefinition, MappingDefinition, PutMappingDefinition, TimestampDefinition, TypeableFields}
 import com.sksamuel.elastic4s.query.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition}
+import com.sksamuel.elastic4s.search.SearchDefinition
+import com.sksamuel.elastic4s.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition}
 
 // a dumping ground for deprecated syntax, keeps the main file clear
 trait DeprecatedElasticDsl {
@@ -57,9 +59,14 @@ trait DeprecatedElasticDsl {
 
   @deprecated("use scoreSort, geoSort, fieldSort or scriptSort", "1.6.0")
   case object by {
+
+    @deprecated("use scoreSort", "1.6.0")
     def score: ScoreSortDefinition = ElasticDsl.score.sort
-    def geo(field: String): GeoDistanceSortDefinition = ElasticDsl.geo sort field
+
+    @deprecated("use fieldSort", "1.6.0")
     def field(field: String): FieldSortDefinition = ElasticDsl.field.sort(field)
+
+    @deprecated("use scriptSort", "1.6.0")
     def script(script: String) = ElasticDsl.script.sort(script)
   }
 
@@ -206,9 +213,11 @@ trait DeprecatedElasticDsl {
     def suggestion(name: String) = FuzzyCompletionSuggestionDefinition(name)
   }
 
-  case object geo {
-    @deprecated("use geoSort(name)", "3.0.0")
-    def sort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
+  case object script {
+    @deprecated("use scriptSort(script).typed(ScriptSortType)", "3.0.0")
+    def sort(script: ScriptDefinition) = scriptSort(script)
+    @deprecated("use scriptField(name)", "3.0.0")
+    def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
 
   trait HealthKeyword
@@ -338,10 +347,25 @@ trait DeprecatedElasticDsl {
     def tokenfilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
   }
 
+  case object field extends TypeableFields {
+    val name = ""
+
+    @deprecated("use field(name)", "3.0.0")
+    def name(name: String): FieldDefinition = FieldDefinition(name)
+
+    @deprecated("use fieldSort(field)", "3.0.0")
+    def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
+
+    @deprecated("use fieldStats(fields)", "3.0.0")
+    def stats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
+
+    @deprecated("use fieldStats(fields)", "3.0.0")
+    def stats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
+  }
+
   @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
   case object sortby {
     def score: ScoreSortDefinition = new ScoreSortDefinition
-    def geo(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
     def field(field: String): FieldSortDefinition = FieldSortDefinition(field)
     def script(script: ScriptDefinition) = ElasticDsl.script.sort(script)
   }

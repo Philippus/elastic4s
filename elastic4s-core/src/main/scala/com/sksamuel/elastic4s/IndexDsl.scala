@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Indexable}
+import org.elasticsearch.action.DocWriteResponse.Result
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
@@ -47,7 +48,7 @@ case class IndexResult(original: IndexResponse) {
   def index = original.getIndex
   def `type` = original.getType
   def version: Long = original.getVersion
-  def created: Boolean = original.isCreated
+  def created: Boolean = original.getResult == Result.CREATED
 }
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {

@@ -21,10 +21,10 @@ case class HasParentQueryDefinition(`type`: String,
     builder
   }
 
-  def boost(boost: Double) = copy(boost = Some(boost))
-  def ignoreUnmapped(ignoreUnmapped: Boolean) = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def innerHit(innerHit: InnerHitDefinition) = copy(innerHit = Some(innerHit))
-  def queryName(queryName: String) = copy(queryName = Some(queryName))
+  def boost(boost: Double): HasParentQueryDefinition = copy(boost = Some(boost))
+  def ignoreUnmapped(ignoreUnmapped: Boolean): HasParentQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
+  def innerHit(innerHit: InnerHitDefinition): HasParentQueryDefinition = copy(innerHit = Some(innerHit))
+  def queryName(queryName: String): HasParentQueryDefinition = copy(queryName = Some(queryName))
 }
 
 case class InnerHitDefinition(name: String,

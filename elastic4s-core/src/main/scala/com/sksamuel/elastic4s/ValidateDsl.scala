@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.query.QueryStringQueryDefinition
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder, ValidateQueryResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.XContentHelper
 
 import scala.concurrent.Future
 
@@ -18,7 +17,7 @@ trait ValidateDsl {
 
   implicit object ValidateDefinitionShow extends Show[ValidateDefinition] {
     override def show(f: ValidateDefinition): String = {
-      Option(f.q).fold("")(q => XContentHelper.convertToJson(q.builder.buildAsBytes, true, true))
+      Option(f.q).fold("")(q => q.builder.toString)
     }
   }
 
@@ -47,7 +46,7 @@ case class ValidateDefinition(index: String, `type`: String) {
    * @return this
    */
   def query(string: String): this.type = {
-    this.q = new QueryStringQueryDefinition(string)
+    this.q = QueryStringQueryDefinition(string)
     _builder.setQuery(q.builder)
     this
   }

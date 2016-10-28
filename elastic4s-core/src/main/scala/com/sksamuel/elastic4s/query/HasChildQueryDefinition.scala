@@ -24,8 +24,8 @@ case class HasChildQueryDefinition(`type`: String,
     builder
   }
 
-  def boost(boost: Double) = copy(boost = Some(boost))
-  def ignoreUnmapped(ignoreUnmapped: Boolean) = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def innerHit(innerHit: InnerHitDefinition) = copy(innerHit = Some(innerHit))
-  def queryName(queryName: String) = copy(queryName = Some(queryName))
+  def boost(boost: Double): HasChildQueryDefinition = copy(boost = Some(boost))
+  def ignoreUnmapped(ignoreUnmapped: Boolean): HasChildQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
+  def innerHit(innerHit: InnerHitDefinition): HasChildQueryDefinition = copy(innerHit = Some(innerHit))
+  def queryName(queryName: String): HasChildQueryDefinition = copy(queryName = Some(queryName))
 }

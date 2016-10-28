@@ -1,45 +1,15 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.support.IndicesOptions
-import org.elasticsearch.common.unit.TimeValue
-
 import scala.language.reflectiveCalls
 
 /** @author Stephen Samuel */
 object DefinitionAttributes {
-
-  trait DefinitionAttributeIgnoreConflicts {
-    val _builder: { def setIgnoreConflicts(ignoreConflicts: Boolean): Any }
-
-    def ignoreConflicts(ignore: Boolean): this.type = {
-      _builder.setIgnoreConflicts(ignore)
-      this
-    }
-  }
-
-  trait DefinitionAttributeIndexesOptions {
-    val _builder: { def setIndicesOptions(options: IndicesOptions): Any }
-
-    def indexesOptions(options: IndicesOptions): this.type = {
-      _builder.setIndicesOptions(options)
-      this
-    }
-  }
 
   trait DefinitionAttributeBoost {
     val _builder: { def boost(boost: Float): Any }
 
     def boost(boost: Double): this.type = {
       _builder.boost(boost.toFloat)
-      this
-    }
-  }
-
-  trait DefinitionAttributeMinScore {
-    val _builder: { def setMinScore(minScore: Float): Any }
-
-    def minScore(min: Double): this.type = {
-      _builder.setMinScore(min.toFloat)
       this
     }
   }
@@ -96,73 +66,5 @@ object DefinitionAttributes {
       this
     }
     def preference(pref: Preference): this.type = preference(pref.elastic)
-  }
-
-  trait DefinitionAttributeLon {
-    val _builder: { def lon(l: Double): Any }
-
-    def lon(l: Double): this.type = {
-      _builder.lon(l)
-      this
-    }
-  }
-
-  trait DefinitionAttributeLat {
-    val _builder: { def lat(l: Double): Any }
-
-    def lat(lat: Double): this.type = {
-      _builder.lat(lat)
-      this
-    }
-  }
-
-  trait DefinitionAttributeCache {
-    val _builder: { def cache(b: Boolean): Any }
-
-    def cache(b: Boolean): this.type = {
-      _builder.cache(b)
-      this
-    }
-  }
-
-  trait DefinitionAttributeCacheKey {
-    val _builder: { def cacheKey(cacheKey: String): Any }
-
-    def cacheKey(cacheKey: String): this.type = {
-      _builder.cacheKey(cacheKey)
-      this
-    }
-  }
-
-  trait DefinitionAttributeRouting {
-    val _builder: { def setRouting(preference: String): Any }
-
-    def routing(routing: String): this.type = {
-      _builder.setRouting(routing)
-      this
-    }
-  }
-
-  trait DefinitionAttributeRealtime {
-    val _builder: { def setRealtime(realtime: Boolean): Any }
-
-    def realtime(realtime: Boolean): this.type = {
-      _builder.setRealtime(realtime)
-      this
-    }
-  }
-
-  trait DefinitionAttributeTimeout {
-    val _builder: { def setTimeout(value: String): Any; def setTimeout(value: TimeValue): Any }
-
-    def timeout(value: TimeValue): this.type = {
-      _builder.setTimeout(value)
-      this
-    }
-
-    def timeout(value: String): this.type = {
-      _builder.setTimeout(value)
-      this
-    }
   }
 }

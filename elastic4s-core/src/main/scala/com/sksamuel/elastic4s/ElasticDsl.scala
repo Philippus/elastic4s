@@ -8,6 +8,10 @@ import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerD
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.query.InnerHitDefinition
+import com.sksamuel.elastic4s.search.SearchDefinition
+import com.sksamuel.elastic4s.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition, ScriptSortDefinition}
+import org.elasticsearch.common.geo.GeoPoint
+import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -137,14 +141,6 @@ trait ElasticDsl
 
   def explain(index: String, `type`: String, id: String) = ExplainDefinition(index, `type`, id)
 
-  case object field extends TypeableFields {
-    val name = ""
-    def name(name: String): FieldDefinition = FieldDefinition(name)
-    def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
-    def stats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
-    def stats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
-  }
-
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -168,6 +164,7 @@ trait ElasticDsl
 
   def fieldStats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
+
   def fieldSort(field: String) = FieldSortDefinition(field)
 
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
@@ -179,7 +176,11 @@ trait ElasticDsl
   def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
     FuzzyCompletionSuggestionDefinition(name)
 
-  def geoSort(field: String): GeoDistanceSortDefinition = new GeoDistanceSortDefinition(field)
+  def geoSort(field: String) = new {
+    def points(first: GeoPoint, rest: GeoPoint*): GeoDistanceSortDefinition = points(first +: rest)
+    def points(points: Iterable[GeoPoint]): GeoDistanceSortDefinition =
+      new GeoDistanceSortDefinition(field, points.toSeq)
+  }
 
   def get(id: Any) = new {
     def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id.toString)
@@ -263,14 +264,8 @@ trait ElasticDsl
 
   def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
-  case object script {
-    def sort(script: ScriptDefinition) = scriptSort(script)
-    def field(n: String): ExpectsScript = ExpectsScript(field = n)
-  }
-
   def scriptSort(script: ScriptDefinition) = new {
-    def as(`type`: String): ScriptSortDefinition = typed(`type`)
-    def typed(`type`: String): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
+    def typed(`type`: ScriptSortType): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
   }
 
   def search(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)

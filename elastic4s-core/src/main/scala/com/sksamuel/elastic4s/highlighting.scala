@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.search.highlight.HighlightBuilder
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
 trait HighlightDsl {
-
-  implicit def string2highlightfield(name: String): HighlightDefinition = new HighlightDefinition(name)
-
+  implicit def string2highlightfield(name: String): HighlightDefinition = HighlightDefinition(name)
   def options = new HighlightOptionsDefinition
 }
 

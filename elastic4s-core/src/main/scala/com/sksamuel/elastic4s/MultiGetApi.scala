@@ -57,7 +57,7 @@ case class MultiGetDefinition(gets: Iterable[GetDefinition]) extends DefinitionA
     val item = new MultiGetRequest.Item(get.indexTypes.index, get.indexTypes.types.headOption.orNull, get.id)
     item.fetchSourceContext(get.build.fetchSourceContext)
     item.routing(get.build.routing)
-    item.fields(get.build.fields: _*)
+    item.storedFields(get.build.storedFields: _*)
     item.version(get.build.version)
     _builder.add(item)
   }

@@ -1,16 +1,12 @@
 package com.sksamuel.elastic4s.query
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeLat, DefinitionAttributeLon}
 import com.sksamuel.elastic4s.QueryDefinition
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.index.query.QueryBuilders
 
-case class GeoDistanceQueryDefinition(field: String)
-  extends QueryDefinition
-    with DefinitionAttributeLat
-    with DefinitionAttributeLon {
+case class GeoDistanceQueryDefinition(field: String) extends QueryDefinition {
 
   val builder = QueryBuilders.geoDistanceQuery(field)
   val _builder = builder

@@ -4,7 +4,7 @@ import org.apache.lucene.search.Explanation
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.aggregations.Aggregations
-import org.elasticsearch.search.highlight.HighlightField
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHitField, SearchHits, SearchShardTarget}
 import org.scalactic.{ErrorMessage, Or}
 
@@ -91,13 +91,13 @@ case class RichSearchHit(java: SearchHit) {
 
   def sourceRef: BytesReference = java.sourceRef()
   def source: Array[Byte] = if (java.source == null) Array.emptyByteArray else java.source
-  def isSourceEmpty: Boolean = java.isSourceEmpty
+  def isSourceEmpty: Boolean = !java.hasSource
   def sourceAsString: String = if (java.sourceAsString == null) "" else java.sourceAsString
   def sourceAsMap: Map[String, AnyRef] = if (java.sourceAsMap == null) Map.empty else java.sourceAsMap.asScala.toMap
   def sourceAsMutableMap: mutable.Map[String, AnyRef] = {
     if (java.sourceAsMap == null) mutable.Map.empty else java.sourceAsMap.asScala
   }
-
+isSourceEmpty
   @deprecated("use as[T]", "2.0.0")
   def mapTo[T](implicit reader: Reader[T], manifest: Manifest[T]): T = reader.read(sourceAsString)
 

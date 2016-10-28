@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
+import com.sksamuel.elastic4s.search.SearchDefinition
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.transport.NoNodeAvailableException
 import org.elasticsearch.client.{AdminClient, Client}
@@ -17,7 +18,7 @@ import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client) extends IterableSearch {
+class ElasticClient(val client: org.elasticsearch.client.Client) {
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
     try {
@@ -33,10 +34,6 @@ class ElasticClient(val client: org.elasticsearch.client.Client) extends Iterabl
 
   def java: Client = client
   def admin: AdminClient = client.admin
-
-  override def iterateSearch(query: SearchDefinition)(implicit timeout: Duration): Iterator[RichSearchResponse] = {
-    IterableSearch(this).iterateSearch(query)
-  }
 }
 
 object ElasticClient extends Logging {

@@ -32,8 +32,6 @@ case class ExplainDefinition(index: String,
   }
 
   def build(builder: ExplainRequestBuilder): ExplainRequestBuilder = {
-    // need to set the query on the request - workaround for ES internals
-    query.foreach(q => builder.request.source(new QuerySourceBuilder().setQuery(q.builder)))
     query.foreach(q => builder.setQuery(q.builder))
     fetchSource.foreach(builder.setFetchSource)
     parent.foreach(builder.setParent)

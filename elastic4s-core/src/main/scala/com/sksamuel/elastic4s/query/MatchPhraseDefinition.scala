@@ -20,8 +20,8 @@ case class MatchPhraseDefinition(field: String,
     builder
   }
 
-  def analyzer(a: Analyzer) = copy(analyzer = Some(a.name))
-  def boost(boost: Double) = copy(boost = Some(boost))
-  def slop(slop: Int) = copy(slop = Some(slop))
-  def queryName(queryName: String) = copy(queryName = Some(queryName))
+  def analyzer(a: Analyzer): MatchPhraseDefinition = copy(analyzer = Some(a.name))
+  def boost(boost: Double): MatchPhraseDefinition = copy(boost = Some(boost))
+  def slop(slop: Int): MatchPhraseDefinition = copy(slop = Some(slop))
+  def queryName(queryName: String): MatchPhraseDefinition = copy(queryName = Some(queryName))
 }

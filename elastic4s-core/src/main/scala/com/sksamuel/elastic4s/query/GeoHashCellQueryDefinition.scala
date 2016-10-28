@@ -24,12 +24,16 @@ case class GeoHashCellQueryDefinition(field: String,
     builder
   }
 
-  def point(lat: Double, long: Double) = copy(geohash = GeoHashUtils.stringEncode(lat, long))
+  def point(lat: Double, long: Double) :GeoHashCellQueryDefinition=
+    copy(geohash = GeoHashUtils.stringEncode(lat, long))
+
   def withPrecision(precision: Int): GeoHashCellQueryDefinition = copy(precisionLevels = Some(precision))
   def withPrecision(precision: String): GeoHashCellQueryDefinition = copy(precisionString = Some(precision))
-  def neighbours(neighbors: Boolean) = copy(neighbors = Some(neighbors))
+  def neighbours(neighbors: Boolean): GeoHashCellQueryDefinition = copy(neighbors = Some(neighbors))
 
-  def ignoreUnmapped(ignoreUnmapped: Boolean) = copy(ignoreUnmapped = Option(ignoreUnmapped))
-  def queryName(name: String) = copy(queryName = Option(name))
-  def boost(boost: Double) = copy(boost = Option(boost))
+  def ignoreUnmapped(ignoreUnmapped: Boolean): GeoHashCellQueryDefinition =
+    copy(ignoreUnmapped = Option(ignoreUnmapped))
+
+  def queryName(name: String): GeoHashCellQueryDefinition = copy(queryName = Option(name))
+  def boost(boost: Double): GeoHashCellQueryDefinition = copy(boost = Option(boost))
 }

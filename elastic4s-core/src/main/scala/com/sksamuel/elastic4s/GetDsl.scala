@@ -42,12 +42,7 @@ case class GetDefinition(indexTypes: IndexAndTypes, id: String) {
 
   def fields(fs: String*): GetDefinition = fields(fs)
   def fields(fs: Iterable[String]): GetDefinition = {
-    _builder.fields(fs.toSeq: _*)
-    this
-  }
-
-  def ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields: Boolean) = {
-    _builder.ignoreErrorsOnGeneratedFields(ignoreErrorsOnGeneratedFields)
+    _builder.storedFields(fs.toSeq: _*)
     this
   }
 

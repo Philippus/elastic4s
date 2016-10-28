@@ -23,6 +23,6 @@ case class GeoPolygonQueryDefinition(field: String,
     builder
   }
 
-  def boost(boost: Float) = copy(boost = Option(boost))
-  def queryName(queryName: String) = copy(queryName = Some(queryName))
+  def boost(boost: Float): GeoPolygonQueryDefinition = copy(boost = Option(boost))
+  def queryName(queryName: String): GeoPolygonQueryDefinition = copy(queryName = Some(queryName))
 }

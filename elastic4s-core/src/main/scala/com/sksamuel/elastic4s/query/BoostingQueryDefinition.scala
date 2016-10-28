@@ -17,7 +17,7 @@ case class BoostingQueryDefinition(positiveQuery: QueryDefinition,
     builder
   }
 
-  def boost(boost: Double) = copy(boost = Option(boost))
-  def negativeBoost(negativeBoost: Double) = copy(negativeBoost = Option(negativeBoost))
+  def boost(boost: Double): BoostingQueryDefinition = copy(boost = Option(boost))
+  def negativeBoost(negativeBoost: Double): BoostingQueryDefinition = copy(negativeBoost = Option(negativeBoost))
   def withQueryName(queryName: String) = copy(queryName = Option(queryName))
 }
