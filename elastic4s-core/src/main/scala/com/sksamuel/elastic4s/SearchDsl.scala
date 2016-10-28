@@ -12,8 +12,7 @@ import scala.language.implicitConversions
 trait SearchDsl
   extends QueryDsl
   with HighlightDsl
-  with ScriptFieldDsl
-  with SuggestionDsl {
+  with ScriptFieldDsl {
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 

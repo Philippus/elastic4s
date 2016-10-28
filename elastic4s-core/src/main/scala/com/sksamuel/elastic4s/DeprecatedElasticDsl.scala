@@ -44,7 +44,7 @@ trait DeprecatedElasticDsl {
 
   case object term {
     @deprecated("use termSuggestion(name)", "3.0.0")
-    def suggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
+    def suggestion(name: String) = ??? // todo TermSuggestionDefinition = TermSuggestionDefinition(name)
   }
 
   case object score {
@@ -83,7 +83,7 @@ trait DeprecatedElasticDsl {
 
   @deprecated("use phraseSuggestion(name)", "3.0.0")
   case object phrase {
-    def suggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
+    def suggestion(name: String) = ??? // todo: PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
   }
 
   case object remove {
@@ -210,7 +210,7 @@ trait DeprecatedElasticDsl {
 
   case object fuzzyCompletion {
     @deprecated("use fuzzyCompletionSuggestion(name)", "3.0.0")
-    def suggestion(name: String) = FuzzyCompletionSuggestionDefinition(name)
+    def suggestion(name: String) = ??? // todo = FuzzyCompletionSuggestionDefinition(name)
   }
 
   case object script {
@@ -320,7 +320,7 @@ trait DeprecatedElasticDsl {
 
   case object completion {
     @deprecated("use completionSuggestion(name)", "3.0.0")
-    def suggestion(name: String) = CompletionSuggestionDefinition(name)
+    def suggestion(name: String) = ??? // todo CompletionSuggestionDefinition(name)
   }
 
   case object explain {

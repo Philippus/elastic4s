@@ -47,10 +47,10 @@ case class RichSearchResponse(original: SearchResponse) {
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  def suggest: SuggestResult = SuggestResult(original.getSuggest)
-  def suggestions = suggest.suggestions
-  def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
-  def suggestion[A](sd: SuggestionDefinition): sd.R = suggestion(sd.name).asInstanceOf[sd.R]
+//  def suggest: SuggestResult = SuggestResult(original.getSuggest)
+//  def suggestions = suggest.suggestions
+//  def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
+//  def suggestion[A](sd: SuggestionDefinition): sd.R = suggestion(sd.name).asInstanceOf[sd.R]
 
   def isTimedOut: Boolean = original.isTimedOut
   def isTerminatedEarly: Boolean = original.isTerminatedEarly

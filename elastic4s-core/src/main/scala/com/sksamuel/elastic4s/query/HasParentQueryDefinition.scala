@@ -32,7 +32,8 @@ case class InnerHitDefinition(name: String,
 
   def builder = {
     val builder = new InnerHitBuilder().setName(name)
-    highlight.foreach(highlight => builder.setHighlightBuilder(highlight.builder))
+    // todo
+    // highlight.foreach(highlight => builder.setHighlightBuilder(highlight.builder))
     builder
   }
 

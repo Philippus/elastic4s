@@ -1,13 +1,6 @@
 package com.sksamuel.elastic4s
 
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
-import org.elasticsearch.index.query.functionscore.exp.ExponentialDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.fieldvaluefactor.FieldValueFactorFunctionBuilder
-import org.elasticsearch.index.query.functionscore.gauss.GaussDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.lin.LinearDecayFunctionBuilder
-import org.elasticsearch.index.query.functionscore.random.RandomScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder
-import org.elasticsearch.index.query.functionscore.weight.WeightBuilder
 import org.elasticsearch.index.query.functionscore._
 
 /** @author Stephen Samuel */

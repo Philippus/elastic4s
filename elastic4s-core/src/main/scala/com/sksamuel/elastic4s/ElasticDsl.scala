@@ -111,8 +111,8 @@ trait ElasticDsl
 
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
-  def completionSuggestion(): CompletionSuggestionDefinition = completionSuggestion(UUID.randomUUID.toString)
-  def completionSuggestion(name: String): CompletionSuggestionDefinition = CompletionSuggestionDefinition(name)
+//  def completionSuggestion(): CompletionSuggestionDefinition = completionSuggestion(UUID.randomUUID.toString)
+//  def completionSuggestion(name: String): CompletionSuggestionDefinition = CompletionSuggestionDefinition(name)
 
   def createIndex(name: String) = CreateIndexDefinition(name)
 
@@ -170,11 +170,11 @@ trait ElasticDsl
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
   def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
 
-  def fuzzyCompletionSuggestion(): FuzzyCompletionSuggestionDefinition =
-    fuzzyCompletionSuggestion(UUID.randomUUID.toString)
-
-  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
-    FuzzyCompletionSuggestionDefinition(name)
+//  def fuzzyCompletionSuggestion(): FuzzyCompletionSuggestionDefinition =
+//    fuzzyCompletionSuggestion(UUID.randomUUID.toString)
+//
+//  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
+//    FuzzyCompletionSuggestionDefinition(name)
 
   def geoSort(field: String) = new {
     def points(first: GeoPoint, rest: GeoPoint*): GeoDistanceSortDefinition = points(first +: rest)
@@ -239,8 +239,8 @@ trait ElasticDsl
   def percolateIn(indexType: IndexAndTypes): PercolateDefinition = percolateIn(IndexesAndTypes(indexType))
   def percolateIn(indexesAndTypes: IndexesAndTypes): PercolateDefinition = PercolateDefinition(indexesAndTypes)
 
-  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
-  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
+//  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
+//  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
 
   def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
 
@@ -296,8 +296,8 @@ trait ElasticDsl
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
-  def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
-  def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
+//  def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
+//  def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
 
   def dynamicTemplate(name: String) = new {
     def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(name, mapping)
@@ -309,8 +309,8 @@ trait ElasticDsl
 
   def termVectors(index: String, `type`: String, id: String) = TermVectorsDefinition(index / `type`, id)
 
-  def termSuggestion(): TermSuggestionDefinition = TermSuggestionDefinition(UUID.randomUUID.toString)
-  def termSuggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
+//  def termSuggestion(): TermSuggestionDefinition = TermSuggestionDefinition(UUID.randomUUID.toString)
+//  def termSuggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
