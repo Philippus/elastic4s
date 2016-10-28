@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.query._
+import com.sksamuel.elastic4s.source.Indexable
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query._
@@ -78,7 +79,6 @@ trait QueryDsl {
   def hasParentQuery(`type`: String, query: QueryDefinition, score: Boolean) =
     HasParentQueryDefinition(`type`, query, score)
 
-
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = MatchQueryDefinition(field, value)
 
@@ -93,19 +93,30 @@ trait QueryDsl {
   def moreLikeThisQuery(first: String, rest: String*) = moreLikeThisQuery(first +: rest)
   def moreLikeThisQuery(fields: Iterable[String]) = new {
 
-    def texts(first: String, rest: String*) = texts(first +: rest)
-    def texts(texts: Iterable[String]) = MoreLikeThisQueryDefinition(fields.toSeq, texts.toSeq, Nil)
+    def likeTexts(first: String, rest: String*) = likeTexts(first +: rest)
+    def likeTexts(texts: Iterable[String]) = MoreLikeThisQueryDefinition(fields.toSeq, texts.toSeq, Nil)
 
-    def items(first: MoreLikeThisItem, rest: MoreLikeThisItem*) = items(first +: rest)
-    def items(items: Iterable[MoreLikeThisItem]) = MoreLikeThisQueryDefinition(fields.toSeq, Nil, items.toSeq)
+    def likeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*) = likeItems(first +: rest)
+    def likeItems(items: Iterable[MoreLikeThisItem]) = MoreLikeThisQueryDefinition(fields.toSeq, Nil, items.toSeq)
   }
 
   def nestedQuery(path: String) = new {
-    def query(query: QueryDefinition) = NestedQueryDefinition(path, query)
+    def query(query: QueryDefinition) = new {
+      def scoreMode(scoreMode: ScoreMode) = NestedQueryDefinition(path, query, scoreMode)
+    }
   }
 
   def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)
+
+  def percolateQuery(field: String, `type`: String) = new {
+
+    def usingId(ref: DocRef): PercolateQueryDefinition =
+      PercolateQueryDefinition(field, `type`, ref = Some(ref))
+
+    def usingSource[T](t: T)(implicit indexable: Indexable[T]): PercolateQueryDefinition =
+      PercolateQueryDefinition(field, `type`, source = Some(indexable.json(t)))
+  }
 
   def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
 

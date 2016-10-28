@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
-import com.sksamuel.elastic4s.search.SearchDefinition
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.transport.NoNodeAvailableException
 import org.elasticsearch.client.{AdminClient, Client}
@@ -14,7 +13,6 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 
 import scala.concurrent._
-import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 /** @author Stephen Samuel */

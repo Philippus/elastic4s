@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import java.util.UUID
-
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias._
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerDsl}
@@ -36,7 +34,6 @@ trait ElasticDsl
     with IndexTemplateDsl
     with MappingDsl
     with MultiGetApi
-    with PercolateDsl
     with ScriptDsl
     with SearchDsl
     with SettingsDsl
@@ -236,8 +233,9 @@ trait ElasticDsl
   def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)
   def forceMerge(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
-  def percolateIn(indexType: IndexAndTypes): PercolateDefinition = percolateIn(IndexesAndTypes(indexType))
-  def percolateIn(indexesAndTypes: IndexesAndTypes): PercolateDefinition = PercolateDefinition(indexesAndTypes)
+  def register(query: QueryDefinition) = new {
+    def into(indexType: IndexAndType) = indexInto(indexType).source(query.builder.toString)
+  }
 
 //  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
 //  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
@@ -252,10 +250,6 @@ trait ElasticDsl
 
   def removeAlias(alias: String) = new {
     def on(index: String) = RemoveAliasActionDefinition(alias, index)
-  }
-
-  def register(id: Any) = new {
-    def into(index: String) = new RegisterDefinition(index, id.toString)
   }
 
   def restoreSnapshot(name: String) = new {

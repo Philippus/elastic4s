@@ -70,11 +70,6 @@ trait DeprecatedElasticDsl {
     def script(script: String) = ElasticDsl.script.sort(script)
   }
 
-  case object percolate {
-    @deprecated("use percolateIn(indexType)", "3.0.0")
-    def in(indexType: IndexAndTypes): PercolateDefinition = PercolateDefinition(IndexesAndTypes(indexType))
-  }
-
   @deprecated("use putMapping(index)", "3.0.0")
   case object put {
     @deprecated("use putMapping(index)", "3.0.0")
@@ -290,11 +285,6 @@ trait DeprecatedElasticDsl {
 
     @deprecated("use getSnapshot(names)", "3.0.0")
     def snapshot(names: String*) = getSnapshot(names)
-  }
-
-  case object register {
-    @deprecated("use register(id)", "3.0.0")
-    def id(id: Any) = register(id)
   }
 
   case object close {
