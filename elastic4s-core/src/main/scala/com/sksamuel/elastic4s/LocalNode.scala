@@ -8,22 +8,12 @@ import org.elasticsearch.transport.Netty3Plugin
 
 import scala.collection.JavaConverters._
 
-class LocalNode(clusterName: String, pathHome: String) {
+class LocalNode(settings: Settings) {
 
   class InternalNode(settings: Settings,
                      plugins: List[Class[_ <: Plugin]])
     extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
 
-  val map = Map(
-    "path.home" -> pathHome,
-    "transport.type" -> "local",
-    "discovery.type" -> "local",
-    "node.ingest" -> "true",
-    "script.inline" -> "true",
-    "cluster.name" -> clusterName
-  )
-
-  val settings = map.foldLeft(Settings.builder) { (settings, kv) => settings.put(kv._1, kv._2) }.build()
   val plugins = List(classOf[Netty3Plugin])
   val node = new InternalNode(settings, plugins)
 
@@ -37,4 +27,19 @@ class LocalNode(clusterName: String, pathHome: String) {
   def stop() = node.close()
 
   def client(): ElasticClient = ElasticClient.fromNode(node)
+}
+
+object LocalNode {
+  def apply(clusterName: String, pathHome: String): LocalNode = {
+    val map = Map(
+      "path.home" -> pathHome,
+      "transport.type" -> "local",
+      "discovery.type" -> "local",
+      "node.ingest" -> "true",
+      "script.inline" -> "true",
+      "cluster.name" -> clusterName
+    )
+    val settings = map.foldLeft(Settings.builder) { (settings, kv) => settings.put(kv._1, kv._2) }.build()
+    new LocalNode(settings)
+  }
 }

@@ -3,9 +3,11 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias._
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.query.InnerHitDefinition
+import com.sksamuel.elastic4s.search.query.InnerHitDefinition
+import com.sksamuel.elastic4s.search.{PercolateDsl, SearchDsl}
 import com.sksamuel.elastic4s.sort.SortDsl
 
 import scala.concurrent.duration._
@@ -30,6 +32,7 @@ trait ElasticDsl
     with IndexTemplateDsl
     with MappingDsl
     with MultiGetApi
+    with PercolateDsl
     with ScriptDsl
     with SearchDsl
     with SettingsDsl
@@ -95,8 +98,8 @@ trait ElasticDsl
 
   def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
 
-//  def completionSuggestion(): CompletionSuggestionDefinition = completionSuggestion(UUID.randomUUID.toString)
-//  def completionSuggestion(name: String): CompletionSuggestionDefinition = CompletionSuggestionDefinition(name)
+  //  def completionSuggestion(): CompletionSuggestionDefinition = completionSuggestion(UUID.randomUUID.toString)
+  //  def completionSuggestion(name: String): CompletionSuggestionDefinition = CompletionSuggestionDefinition(name)
 
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
@@ -125,11 +128,11 @@ trait ElasticDsl
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
   def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
 
-//  def fuzzyCompletionSuggestion(): FuzzyCompletionSuggestionDefinition =
-//    fuzzyCompletionSuggestion(UUID.randomUUID.toString)
-//
-//  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
-//    FuzzyCompletionSuggestionDefinition(name)
+  //  def fuzzyCompletionSuggestion(): FuzzyCompletionSuggestionDefinition =
+  //    fuzzyCompletionSuggestion(UUID.randomUUID.toString)
+  //
+  //  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
+  //    FuzzyCompletionSuggestionDefinition(name)
 
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
@@ -156,12 +159,8 @@ trait ElasticDsl
   def mapping(name: String): MappingDefinition = new MappingDefinition(name)
 
 
-  def register(query: QueryDefinition) = new {
-    def into(indexType: IndexAndType) = indexInto(indexType).source(query.builder.toString)
-  }
-
-//  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
-//  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
+  //  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
+  //  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
 
   // -- helper methods to create the field definitions --
   def attachmentField(name: String) = field(name).typed(AttachmentType)
@@ -186,8 +185,8 @@ trait ElasticDsl
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
-//  def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
-//  def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
+  //  def suggestions(suggestions: SuggestionDefinition*): SuggestDefinition = SuggestDefinition(suggestions)
+  //  def suggestions(suggestions: Iterable[SuggestionDefinition]): SuggestDefinition = SuggestDefinition(suggestions.toSeq)
 
   def dynamicTemplate(name: String) = new {
     def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(name, mapping)
@@ -199,8 +198,8 @@ trait ElasticDsl
 
   def termVectors(index: String, `type`: String, id: String) = TermVectorsDefinition(index / `type`, id)
 
-//  def termSuggestion(): TermSuggestionDefinition = TermSuggestionDefinition(UUID.randomUUID.toString)
-//  def termSuggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
+  //  def termSuggestion(): TermSuggestionDefinition = TermSuggestionDefinition(UUID.randomUUID.toString)
+  //  def termSuggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 

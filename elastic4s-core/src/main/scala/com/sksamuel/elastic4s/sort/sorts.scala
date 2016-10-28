@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.sort
 
-import com.sksamuel.elastic4s.{QueryDefinition, ScriptDefinition}
+import com.sksamuel.elastic4s.ScriptDefinition
+import com.sksamuel.elastic4s.search.QueryDefinition
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.{FieldSortBuilder, GeoDistanceSortBuilder, ScoreSortBuilder, ScriptSortBuilder, SortBuilder, SortBuilders, SortMode, SortOrder}

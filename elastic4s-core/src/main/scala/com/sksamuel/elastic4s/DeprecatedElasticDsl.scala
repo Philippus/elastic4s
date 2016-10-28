@@ -4,8 +4,8 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.mappings.{FieldDefinition, GetMappingDefinition, MappingDefinition, PutMappingDefinition, TimestampDefinition, TypeableFields}
-import com.sksamuel.elastic4s.query.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition}
-import com.sksamuel.elastic4s.search.SearchDefinition
+import com.sksamuel.elastic4s.search.query.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition}
+import com.sksamuel.elastic4s.search.{QueryDefinition, SearchDefinition}
 import com.sksamuel.elastic4s.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition}
 
 // a dumping ground for deprecated syntax, keeps the main file clear
@@ -56,19 +56,6 @@ trait DeprecatedElasticDsl {
   def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
   @deprecated("use idsQuery", "2.0.0")
   def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-
-  @deprecated("use scoreSort, geoSort, fieldSort or scriptSort", "1.6.0")
-  case object by {
-
-    @deprecated("use scoreSort", "1.6.0")
-    def score: ScoreSortDefinition = ElasticDsl.score.sort
-
-    @deprecated("use fieldSort", "1.6.0")
-    def field(field: String): FieldSortDefinition = ElasticDsl.field.sort(field)
-
-    @deprecated("use scriptSort", "1.6.0")
-    def script(script: String) = ElasticDsl.script.sort(script)
-  }
 
   @deprecated("use putMapping(index)", "3.0.0")
   case object put {

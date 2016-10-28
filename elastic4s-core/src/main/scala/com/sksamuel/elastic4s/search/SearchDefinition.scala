@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search
 import java.util
 
 import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.query.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
+import com.sksamuel.elastic4s.search.query.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
 import com.sksamuel.elastic4s.sort.SortDefinition
 import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder}
 import org.elasticsearch.action.support.IndicesOptions

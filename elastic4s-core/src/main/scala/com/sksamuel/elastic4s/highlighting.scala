@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.search.QueryDefinition
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 
 import scala.language.implicitConversions
