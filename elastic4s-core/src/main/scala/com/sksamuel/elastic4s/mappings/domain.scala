@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-/** @author Stephen Samuel */
-case class YesNo(val value: String)
+case class YesNo(value: String)
 object YesNo {
   val Yes = YesNo("yes")
   val No = YesNo("no")
@@ -11,7 +10,7 @@ object YesNo {
   }
 }
 
-case class TermVector(val value: String)
+case class TermVector(value: String)
 object TermVector {
   val No = TermVector("no")
   val Yes = TermVector("yes")
@@ -21,7 +20,7 @@ object TermVector {
   val WithPositionsOffsetsPayloads = TermVector("with_positions_offsets_payloads")
 }
 
-case class IndexOptions(val value: String)
+case class IndexOptions(value: String)
 object IndexOptions {
   val Docs = IndexOptions("docs")
   val Freqs = IndexOptions("freqs")
@@ -29,7 +28,7 @@ object IndexOptions {
   val Offsets = IndexOptions("offsets")
 }
 
-case class PostingsFormat(val value: String)
+case class PostingsFormat(value: String)
 object PostingsFormat {
   val Direct = PostingsFormat("direct")
   val Memory = PostingsFormat("memory")
@@ -39,7 +38,7 @@ object PostingsFormat {
   val Default = PostingsFormat("default")
 }
 
-case class DocValuesFormat(val value: String)
+case class DocValuesFormat(value: String)
 object DocValuesFormat {
   val Memory = DocValuesFormat("memory")
   val Disk = DocValuesFormat("disk")
@@ -52,7 +51,7 @@ object Similarity {
   val BM25 = Similarity("BM25")
 }
 
-case class PrefixTree(val value: String)
+case class PrefixTree(value: String)
 object PrefixTree {
   val Geohash = PrefixTree("geohash")
   val Quadtree = PrefixTree("quadtree")

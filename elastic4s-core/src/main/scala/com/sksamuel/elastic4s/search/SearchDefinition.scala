@@ -2,15 +2,18 @@ package com.sksamuel.elastic4s.search
 
 import java.util
 
-import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.search.query.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
-import com.sksamuel.elastic4s.sort.SortDefinition
-import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder}
+import com.sksamuel.elastic4s.SortDefinition
+import com.sksamuel.elastic4s.search.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
+import com.sksamuel.elastic4s.search.suggestions.SuggestionDefinition
+import com.sksamuel.elastic4s.{IndexesAndTypes, ProxyClients, ScriptFieldDefinition}
+import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions
+import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.{Script, ScriptService}
 import org.elasticsearch.search.sort.SortBuilder
+import org.elasticsearch.search.suggest.SuggestBuilder
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -107,15 +110,26 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  //  def suggestions(suggestions: SuggestionDefinition*): SearchDefinition = {
-  //    suggestions.foreach(_builder addSuggestion _.builder)
-  //    this
-  //  }
+  /**
+    * Adds a new suggestion to the search request, which can be looked up in the response
+    * using the name provided.
+    */
+  def suggestion(name: String, suggestion: SuggestionDefinition): SearchDefinition = {
+    val builder = _builder.request().source().suggest()
+    if (builder == null)
+      _builder.suggest(new SuggestBuilder())
+    _builder.request().source().suggest().addSuggestion(name, suggestion.builder)
+    this
+  }
+
+  def suggestions(map: Map[String, SuggestionDefinition]): SearchDefinition = {
+    map.foreach { case (name, sugg) => suggestion(name, sugg) }
+    this
+  }
 
   /** Adds a single prefix query to this search
     *
     * @param tuple - the field and prefix value
-    *
     * @return this
     */
   def prefix(tuple: (String, Any)) = {
@@ -127,7 +141,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   /** Adds a single regex query to this search
     *
     * @param tuple - the field and regex value
-    *
     * @return this
     */
   def regex(tuple: (String, Any)) = {
@@ -250,7 +263,11 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def preference(pref: Preference): SearchDefinition = preference(pref.elastic)
+  def preference(pref: Preference): SearchDefinition = {
+    _builder.setPreference(pref.`type`())
+    this
+  }
+
   def preference(pref: String): SearchDefinition = {
     _builder.setPreference(pref)
     this
@@ -272,7 +289,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   }
 
   def searchType(searchType: SearchType) = {
-    _builder.setSearchType(searchType.elasticType)
+    _builder.setSearchType(searchType)
     this
   }
 

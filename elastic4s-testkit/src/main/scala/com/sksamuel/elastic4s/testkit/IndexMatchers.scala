@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl2$}
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
@@ -13,7 +13,7 @@ trait IndexMatchers extends Matchers {
                (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
       Matcher[String] {
     def apply(left: String) = {
-      import ElasticDsl._
+      import ElasticDsl2._
       val count = client.execute(countFrom(left)).await(timeout).getCount
       MatchResult(
         count == expectedCount,

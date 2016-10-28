@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
 import org.elasticsearch.common.xcontent.XContentBuilder
+import scala.collection.JavaConverters._
 
 trait TokenFilter extends AnalyzerFilter
 
@@ -57,7 +58,7 @@ case class SynonymTokenFilter(name: String,
 
   override def build(source: XContentBuilder): Unit = {
     path.foreach(source.field("synonyms_path", _))
-    source.field("synonyms", synonyms.toArray[String]: _*)
+    source.field("synonyms", synonyms.asJava)
     format.foreach(source.field("format", _))
     ignoreCase.foreach(source.field("ignore_case", _))
     expand.foreach(source.field("expand", _))
@@ -132,7 +133,7 @@ case class KeywordMarkerTokenFilter(name: String,
   val filterType = "keyword_marker"
 
   override def build(source: XContentBuilder): Unit = {
-    if (keywords.nonEmpty) source.field("keywords", keywords.toArray[String]: _*)
+    if (keywords.nonEmpty) source.field("keywords", keywords.asJava)
     if (ignoreCase) source.field("ignore_case", ignoreCase)
   }
 
@@ -146,7 +147,7 @@ case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
   val filterType = "elision"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("articles", articles.toArray[String]: _*)
+    source.field("articles", articles.asJava)
   }
 
   def articles(articles: Seq[String]): ElisionTokenFilter = copy(articles = articles)
@@ -180,7 +181,7 @@ case class StopTokenFilter(name: String,
 
   override def build(source: XContentBuilder): Unit = {
     if (stopwords.nonEmpty)
-      source.field("stopwords", stopwords.toArray[String]: _*)
+      source.field("stopwords", stopwords.asJava)
     enablePositionIncrements.foreach(source.field("enable_position_increments", _))
     ignoreCase.foreach(source.field("ignore_case", _))
     removeTrailing.foreach(source.field("remove_trailing", _))
@@ -247,7 +248,7 @@ case class PatternCaptureTokenFilter(name: String,
 
   override def build(source: XContentBuilder): Unit = {
     if (patterns.nonEmpty)
-      source.field("patterns", patterns.toArray[String]: _*)
+      source.field("patterns", patterns.asJava)
     source.field("preserve_original", preserveOriginal)
   }
 
@@ -280,7 +281,7 @@ case class CommonGramsTokenFilter(name: String,
 
   override def build(source: XContentBuilder): Unit = {
     if (commonWords.nonEmpty)
-      source.field("common_words", commonWords.toArray[String]: _*)
+      source.field("common_words", commonWords.asJava)
     source.field("ignore_case", ignoreCase)
     source.field("query_mode", queryMode)
   }
@@ -353,7 +354,7 @@ case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil)
   val filterType = "stemmer_override"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("rules", rules: _*)
+    source.field("rules", rules.asJava)
   }
 
   def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)

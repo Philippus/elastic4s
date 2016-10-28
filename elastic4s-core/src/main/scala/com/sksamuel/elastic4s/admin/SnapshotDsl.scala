@@ -1,5 +1,4 @@
-package com.sksamuel.elastic4s
-package admin
+package com.sksamuel.elastic4s.admin
 
 import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotAction, CreateSnapshotRequestBuilder, CreateSnapshotResponse}

@@ -568,8 +568,10 @@ object attributes {
       this
     }
 
+    import scala.collection.JavaConverters._
+
     protected override def insert(source: XContentBuilder): Unit = {
-      _copyTo.foreach(source.field("copy_to", _: _*))
+      _copyTo.foreach(xs => source.field("copy_to", xs.asJava))
     }
   }
 

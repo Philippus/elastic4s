@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.search.query.QueryStringQueryDefinition
-import com.sksamuel.elastic4s.search.QueryDefinition
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder, ValidateQueryResponse}
 import org.elasticsearch.client.Client
+import com.sksamuel.elastic4s.search.query.QueryDefinition
 
 import scala.concurrent.Future
 
@@ -12,7 +11,7 @@ trait ValidateDsl {
   def validateIn(indexType: IndexAndTypes): ValidateDefinition =
     ValidateDefinition(indexType.index, indexType.types.head)
 
-  def validateIn(value: String): ValidateDefinition = validate in value
+  def validateIn(value: String): ValidateDefinition = ??? // todo validate in value
 
   implicit object ValidateDefinitionExecutable
     extends Executable[ValidateDefinition, ValidateQueryResponse, ValidateQueryResponse] {
@@ -32,7 +31,8 @@ trait ValidateDsl {
   }
 }
 
-case class ValidateDefinition(index: String, `type`: String) {
+case class ValidateDefinition(index: String,
+                              `type`: String) {
 
   private[elastic4s] var q: QueryDefinition = _
 

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.ElasticDsl2$
 import org.scalatest.WordSpec
 
-class AnalyzerDslTest extends WordSpec with ElasticDsl {
+class AnalyzerDslTest extends WordSpec with ElasticDsl2 {
 
   "analyzer dsl" should {
     "allow snowball token filter" in {

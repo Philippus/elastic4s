@@ -9,20 +9,18 @@ import scala.language.implicitConversions
 
 trait SearchDsl
   extends QueryDsl
-  with HighlightDsl
-  with ScriptFieldDsl {
+    with HighlightDsl
+    with ScriptFieldDsl {
 
   def search(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)
   def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
 
-  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
-
-  def rescore(query: QueryDefinition): RescoreDefinition = {
-    RescoreDefinition(query)
-  }
+  def rescore(query: QueryDefinition) = RescoreDefinition(query)
 
   def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
+
+  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
   implicit object SearchDefinitionExecutable
     extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
@@ -47,7 +45,9 @@ trait SearchDsl
   }
 
   implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
+
     import compat.Platform.EOL
+
     override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
   }
 

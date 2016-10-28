@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.alias
 
-import com.sksamuel.elastic4s.search.query.QueryStringQueryDefinition
 import com.sksamuel.elastic4s.search.QueryDefinition
+import com.sksamuel.elastic4s.search.queries.QueryStringQueryDefinition
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions
 import org.elasticsearch.index.query.QueryBuilder

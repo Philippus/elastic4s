@@ -5,12 +5,11 @@ lazy val root = Project("elastic4s", file("."))
   .aggregate(
     core,
     testkit,
-    coreTests,
+    circe,
     jackson,
     json4s,
-    streams,
-    circe,
-    playjson
+    playjson,
+    streams
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))

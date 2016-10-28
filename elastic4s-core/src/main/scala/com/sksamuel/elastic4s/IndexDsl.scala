@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.source.{DocumentMap, DocumentSource, Indexable}
+import com.sksamuel.elastic4s.source.DocumentMap
 import org.elasticsearch.action.DocWriteResponse.Result
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
@@ -14,7 +14,6 @@ import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-/** @author Stephen Samuel */
 trait IndexDsl {
 
   def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)

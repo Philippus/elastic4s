@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.ElasticDsl2$
 import org.scalatest.WordSpec
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 
-class IndexExistsTest extends WordSpec with ElasticSugar with ElasticDsl {
+class IndexExistsTest extends WordSpec with ElasticSugar with ElasticDsl2 {
 
   client.execute {
     create index "indexexiststest" mappings {

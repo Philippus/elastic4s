@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{TimeUnit, CountDownLatch}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{RichSearchHit, IndexDefinition, ElasticDsl}
+import com.sksamuel.elastic4s.{RichSearchHit, IndexDefinition, ElasticDsl2$}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Subscription, Subscriber}
@@ -11,7 +11,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Matchers {
 
-  import ElasticDsl._
+  import ElasticDsl2._
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 

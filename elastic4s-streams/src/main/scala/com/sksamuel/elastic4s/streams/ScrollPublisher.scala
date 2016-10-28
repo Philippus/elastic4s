@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.streams
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.search.SearchDefinition
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, RichSearchHit, RichSearchResponse}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl2$, RichSearchHit, RichSearchResponse}
 import org.elasticsearch.ElasticsearchException
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
@@ -73,7 +73,7 @@ class PublishActor(client: ElasticClient,
                    s: Subscriber[_ >: RichSearchHit],
                    max: Long) extends Actor with Stash {
 
-  import ElasticDsl._
+  import ElasticDsl2._
   import context.dispatcher
 
   private var scrollId: String = null

@@ -6,7 +6,7 @@ import java.util
 import java.util.UUID
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl2$}
 import org.elasticsearch.Version
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
@@ -120,7 +120,7 @@ trait ElasticSugar extends NodeBuilder {
       case _ => indexes
     }
     client.execute {
-      ElasticDsl.refresh index indexes
+      ElasticDsl2.refresh index indexes
     }
   }
 

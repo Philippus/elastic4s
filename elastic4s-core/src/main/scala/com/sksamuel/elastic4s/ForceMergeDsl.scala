@@ -6,7 +6,6 @@ import org.elasticsearch.client.{Client, Requests}
 import scala.concurrent.Future
 import scala.language.implicitConversions
 
-/** @author Stephen Samuel */
 trait ForceMergeDsl {
 
   def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)

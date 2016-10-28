@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
 
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConverters._
 
 class MappingDefinition(val `type`: String) {
 
@@ -26,11 +27,6 @@ class MappingDefinition(val `type`: String) {
   var _ttl: Option[Boolean] = None
   var _templates: Iterable[DynamicTemplateDefinition] = Nil
   var _id: Option[IdField] = None
-
-  @deprecated("no longer used, simply set ttl or not", "1.5.4")
-  def useTtl(useTtl: Boolean): this.type = {
-    this
-  }
 
   def all(enabled: Boolean): this.type = {
     _all = Option(enabled)
@@ -177,13 +173,13 @@ class MappingDefinition(val `type`: String) {
 
     for ( all <- _all ) json.startObject("_all").field("enabled", all).endObject()
     (_source, _sourceExcludes) match {
-      case (_, l) if l.nonEmpty => json.startObject("_source").field("excludes", l.toArray: _*).endObject()
+      case (_, l) if l.nonEmpty => json.startObject("_source").field("excludes", l.asJava).endObject()
       case (Some(source), _) => json.startObject("_source").field("enabled", source).endObject()
       case _ =>
     }
 
     if (dynamic_date_formats.nonEmpty)
-      json.field("dynamic_date_formats", dynamic_date_formats.toArray: _*)
+      json.field("dynamic_date_formats", dynamic_date_formats.asJava)
 
     for ( dd <- date_detection ) json.field("date_detection", dd)
     for ( nd <- numeric_detection ) json.field("numeric_detection", nd)
