@@ -1,10 +1,10 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import java.util.concurrent.{TimeUnit, CountDownLatch}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.BulkItemResult
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.BulkItemResult
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar {

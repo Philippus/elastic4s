@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.analyzers
+package com.sksamuel.elastic4s2.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 

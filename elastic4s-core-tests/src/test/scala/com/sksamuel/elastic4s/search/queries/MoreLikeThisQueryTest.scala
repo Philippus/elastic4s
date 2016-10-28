@@ -1,10 +1,10 @@
-package com.sksamuel.elastic4s.search.queries
+package com.sksamuel.elastic4s2.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.Item
-import com.sksamuel.elastic4s.analyzers.{KeywordAnalyzer, StandardAnalyzer}
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.ElasticDsl._
+import com.sksamuel.elastic4s2.Item
+import com.sksamuel.elastic4s2.analyzers.{KeywordAnalyzer, StandardAnalyzer}
+import com.sksamuel.elastic4s2.mappings.FieldType.StringType
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {

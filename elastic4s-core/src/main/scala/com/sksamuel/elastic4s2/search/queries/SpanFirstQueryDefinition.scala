@@ -1,0 +1,8 @@
+package com.sksamuel.elastic4s2.search.queries
+
+import com.sksamuel.elastic4s2.search.QueryDefinition
+import org.elasticsearch.index.query.QueryBuilders
+
+case class SpanFirstQueryDefinition(query: SpanQueryDefinition, end: Int) extends QueryDefinition {
+  val builder = QueryBuilders.spanFirstQuery(query.builder, end)
+}

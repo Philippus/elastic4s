@@ -1,11 +1,11 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import java.util.concurrent.{TimeUnit, CountDownLatch}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{RichSearchHit, IndexDefinition, ElasticDsl2$}
-import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.{RichSearchHit, IndexDefinition, ElasticDsl2$}
+import com.sksamuel.elastic4s2.jackson.ElasticJackson
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.reactivestreams.{Subscription, Subscriber}
 import org.scalatest.{Matchers, WordSpec}
 

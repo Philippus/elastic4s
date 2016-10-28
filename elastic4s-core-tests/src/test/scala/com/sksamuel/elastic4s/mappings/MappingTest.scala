@@ -1,11 +1,11 @@
-package com.sksamuel.elastic4s.mappings
+package com.sksamuel.elastic4s2.mappings
 
 import java.util
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.analyzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
-import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.ElasticDsl._
+import com.sksamuel.elastic4s2.analyzers.{CustomAnalyzerDefinition, FrenchLanguageAnalyzer, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
+import com.sksamuel.elastic4s2.mappings.FieldType._
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 /** @author Stephen Samuel */

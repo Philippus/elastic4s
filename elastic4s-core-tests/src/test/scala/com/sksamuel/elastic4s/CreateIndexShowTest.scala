@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s2
 
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 import org.scalatest.{WordSpec, Matchers}

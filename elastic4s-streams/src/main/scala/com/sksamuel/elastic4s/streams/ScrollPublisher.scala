@@ -1,9 +1,9 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.search.SearchDefinition
-import com.sksamuel.elastic4s.streams.PublishActor.Ready
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl2$, RichSearchHit, RichSearchResponse}
+import com.sksamuel.elastic4s2.search.SearchDefinition
+import com.sksamuel.elastic4s2.streams.PublishActor.Ready
+import com.sksamuel.elastic4s2.{ElasticClient, ElasticDsl2$, RichSearchHit, RichSearchResponse}
 import org.elasticsearch.ElasticsearchException
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
