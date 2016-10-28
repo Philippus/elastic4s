@@ -12,20 +12,29 @@ import org.elasticsearch.client.Client
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-/** @author Stephen Samuel
-  *
-  *         DSL Syntax:
-  *
-  *         repository create <repo> settings <settings>
-  *         snapshot create <name> in <repo>
-  *         snapshot delete <name> in <repo>
-  *         snapshot restore <name> from <repo>
-  *
-  */
 trait SnapshotDsl {
 
-  class DeleteSnapshotExpectsIn(name: String) {
+  def getSnapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
+  def getSnapshot(names: Iterable[String]): GetSnapshotExpectsFrom = new GetSnapshotExpectsFrom(names)
 
+  class GetSnapshotExpectsFrom(names: Iterable[String]) {
+    def from(repo: String) = new GetSnapshotsDefinition(names.toArray, repo)
+  }
+
+  def createSnapshot(name: String) = new {
+    def in(repo: String) = new CreateSnapshotDefinition(name, repo)
+  }
+
+  def deleteSnapshot(name: String) = new {
+    def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
+  }
+
+  def restoreSnapshot(name: String) = new {
+    def from(repo: String) = RestoreSnapshotDefinition(name, repo)
+  }
+
+  def createRepository(name: String) = new {
+    def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
   }
 
   implicit object DeleteSnapshotDefinitionExecutable

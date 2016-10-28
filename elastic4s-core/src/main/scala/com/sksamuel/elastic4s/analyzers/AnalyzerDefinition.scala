@@ -14,11 +14,13 @@ abstract class AnalyzerDefinition(val name: String) {
   }
 }
 
+import scala.collection.JavaConverters._
+
 case class StopAnalyzerDefinition(override val name: String,
                                   stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "stop")
-    source.field("stopwords", stopwords.toArray[String]: _*)
+    source.field("stopwords", stopwords.asJava)
   }
 
   def stopwords(stopwords: Iterable[String]): StopAnalyzerDefinition = copy(stopwords = stopwords)
@@ -30,7 +32,7 @@ case class StandardAnalyzerDefinition(override val name: String,
                                       maxTokenLength: Int = 255) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
-    source.field("stopwords", stopwords.toArray[String]: _*)
+    source.field("stopwords", stopwords.asJava)
     source.field("max_token_length", maxTokenLength)
   }
 
@@ -58,7 +60,7 @@ case class SnowballAnalyzerDefinition(override val name: String,
     source.field("type", "snowball")
     source.field("language", lang)
     if (stopwords.nonEmpty)
-      source.field("stopwords", stopwords.toArray[String]: _*)
+      source.field("stopwords", stopwords.asJava)
   }
 
   def language(lang: String): SnowballAnalyzerDefinition = copy(lang = lang)
@@ -75,10 +77,10 @@ case class CustomAnalyzerDefinition(override val name: String,
     val tokenFilters = filters.collect { case token: TokenFilter => token }
     val charFilters = filters.collect { case char: CharFilter => char }
     if (tokenFilters.nonEmpty) {
-      source.field("filter", tokenFilters.map(_.name).toArray: _*)
+      source.field("filter", tokenFilters.map(_.name).asJava)
     }
     if (charFilters.nonEmpty) {
-      source.field("char_filter", charFilters.map(_.name).toArray: _*)
+      source.field("char_filter", charFilters.map(_.name).asJava)
     }
   }
 

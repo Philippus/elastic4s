@@ -8,6 +8,8 @@ import scala.concurrent.Future
 
 trait SettingsDsl {
 
+  def updateSettings(index: String) = new UpdateSettingsDefinition(index)
+
   implicit object GetSettingsDefinitionExecutable
     extends Executable[GetSettingsDefinition, GetSettingsResponse, GetSettingsResponse] {
     override def apply(c: Client, t: GetSettingsDefinition): Future[GetSettingsResponse] = {

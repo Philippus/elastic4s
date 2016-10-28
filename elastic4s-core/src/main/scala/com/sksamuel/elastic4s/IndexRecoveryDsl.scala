@@ -7,6 +7,9 @@ import scala.concurrent.Future
 
 trait IndexRecoveryDsl {
 
+  def recoverIndex(indexes: String*): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
+  def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
+
   implicit object IndexRecoveryDefinitionExecutable
     extends Executable[IndexRecoveryDefinition, RecoveryResponse, RecoveryResponse] {
     override def apply(c: Client, t: IndexRecoveryDefinition): Future[RecoveryResponse] = {

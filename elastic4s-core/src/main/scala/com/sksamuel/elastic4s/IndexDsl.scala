@@ -17,6 +17,10 @@ import scala.concurrent.duration.FiniteDuration
 /** @author Stephen Samuel */
 trait IndexDsl {
 
+  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
+  def indexInto(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
+
+  @deprecated("use indexInto(indexType)", "3.0.0")
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
 
   implicit object IndexDefinitionExecutable

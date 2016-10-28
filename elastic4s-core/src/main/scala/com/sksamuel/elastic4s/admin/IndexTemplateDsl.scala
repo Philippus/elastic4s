@@ -14,6 +14,14 @@ import scala.concurrent.Future
 
 trait IndexTemplateDsl {
 
+  def deleteTemplate(name: String): DeleteIndexTemplateDefinition = DeleteIndexTemplateDefinition(name)
+
+  def createTemplate(name: String) = new {
+    def pattern(pat: String) = CreateIndexTemplateDefinition(name, pat)
+  }
+
+  def getTemplate(name: String): GetTemplateDefinition = GetTemplateDefinition(name)
+
   implicit object CreateIndexTemplateDefinitionExecutable
     extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {

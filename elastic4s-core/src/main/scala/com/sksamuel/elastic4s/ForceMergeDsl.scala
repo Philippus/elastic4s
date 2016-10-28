@@ -9,6 +9,9 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait ForceMergeDsl {
 
+  def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)
+  def forceMerge(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
+
   implicit object ForceMergeDefinitionExecutable
     extends Executable[ForceMergeDefinition, ForceMergeResponse, ForceMergeResponse] {
     override def apply(c: Client, t: ForceMergeDefinition): Future[ForceMergeResponse] = {

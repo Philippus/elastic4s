@@ -8,7 +8,7 @@ trait ScoreDsl {
 
   def randomScore(seed: Int) = RandomScoreDefinition(seed)
 
-  def scriptScore(script: ScriptDefinition) = new ScriptScoreDefinition(script)
+  def scriptScore(script: ScriptDefinition) =  ScriptScoreDefinition(script)
 
   def gaussianScore(field: String, origin: String, scale: String) = GaussianDecayScoreDefinition(field, origin, scale)
 

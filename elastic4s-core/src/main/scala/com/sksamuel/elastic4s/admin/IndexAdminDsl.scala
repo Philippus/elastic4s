@@ -21,6 +21,21 @@ import scala.concurrent.Future
 
 trait IndexAdminDsl {
 
+  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
+  def refreshIndex(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
+
+  def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
+  def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
+
+  def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)
+  def typesExist(types: Iterable[String]): TypesExistExpectsIn = new TypesExistExpectsIn(types)
+  class TypesExistExpectsIn(types: Iterable[String]) {
+    def in(indexes: String*): TypesExistsDefinition = TypesExistsDefinition(indexes, types.toSeq)
+  }
+
+  def closeIndex(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
+  def openIndex(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
+
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
     override def apply(c: Client, t: OpenIndexDefinition): Future[OpenIndexResponse] = {

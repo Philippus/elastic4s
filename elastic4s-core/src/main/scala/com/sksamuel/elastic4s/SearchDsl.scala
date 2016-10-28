@@ -7,12 +7,13 @@ import org.elasticsearch.client.Client
 import scala.concurrent.Future
 import scala.language.implicitConversions
 
-
-/** @author Stephen Samuel */
 trait SearchDsl
   extends QueryDsl
   with HighlightDsl
   with ScriptFieldDsl {
+
+  def search(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)
+  def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 

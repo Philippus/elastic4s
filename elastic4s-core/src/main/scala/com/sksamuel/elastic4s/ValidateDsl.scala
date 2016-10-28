@@ -8,6 +8,11 @@ import scala.concurrent.Future
 
 trait ValidateDsl {
 
+  def validateIn(indexType: IndexAndTypes): ValidateDefinition =
+    ValidateDefinition(indexType.index, indexType.types.head)
+
+  def validateIn(value: String): ValidateDefinition = validate in value
+
   implicit object ValidateDefinitionExecutable
     extends Executable[ValidateDefinition, ValidateQueryResponse, ValidateQueryResponse] {
     override def apply(c: Client, t: ValidateDefinition): Future[ValidateQueryResponse] = {

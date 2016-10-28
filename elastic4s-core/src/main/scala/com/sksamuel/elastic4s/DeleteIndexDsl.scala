@@ -8,6 +8,9 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait DeleteIndexDsl {
 
+  def deleteIndex(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
+  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
+
   implicit object DeleteIndexDefinitionExecutable
     extends Executable[DeleteIndexDefinition, DeleteIndexResponse, DeleteIndexResponse] {
     override def apply(c: Client, t: DeleteIndexDefinition): Future[DeleteIndexResponse] = {

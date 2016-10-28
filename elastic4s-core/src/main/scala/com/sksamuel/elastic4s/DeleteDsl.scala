@@ -11,6 +11,8 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait DeleteDsl extends QueryDsl {
 
+  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+
   class DeleteByIdExpectsFrom(id: Any) {
     def from(index: String): DeleteByIdDefinition = DeleteByIdDefinition(IndexAndTypes(index), id)
     def from(indexAndTypes: IndexAndTypes): DeleteByIdDefinition = DeleteByIdDefinition(indexAndTypes, id)

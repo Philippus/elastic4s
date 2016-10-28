@@ -10,6 +10,20 @@ import scala.language.implicitConversions
 
 trait AliasesDsl {
 
+  def aliases(first: AliasActionDefinition, rest: AliasActionDefinition*): IndicesAliasesRequestDefinition = aliases(first +: rest)
+  def aliases(actions: Iterable[AliasActionDefinition]) = IndicesAliasesRequestDefinition(actions.toSeq)
+
+  def addAlias(alias: String) = new {
+    def on(index: String) = AddAliasActionDefinition(alias, index)
+  }
+
+  def removeAlias(alias: String) = new {
+    def on(index: String) = RemoveAliasActionDefinition(alias, index)
+  }
+
+  def getAlias(first: String, rest: String*): GetAliasDefinition = GetAliasDefinition(first +: rest)
+  def getAlias(aliases: Iterable[String]): GetAliasDefinition = GetAliasDefinition(aliases.toSeq)
+
   implicit object GetAliasDefinitionExecutable
     extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {

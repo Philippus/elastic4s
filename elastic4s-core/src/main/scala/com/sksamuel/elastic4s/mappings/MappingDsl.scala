@@ -20,6 +20,8 @@ trait MappingDsl {
   @deprecated("use mapping(x)", "2.0.0")
   implicit def stringToMap(`type`: String): MappingDefinition = new MappingDefinition(`type`)
 
+  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
+
   implicit object GetMappingDefinitionExecutable
     extends Executable[GetMappingDefinition, GetMappingsResponse, GetMappingsResult] {
     override def apply(c: Client, t: GetMappingDefinition): Future[GetMappingsResult] = {

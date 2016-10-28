@@ -6,19 +6,14 @@ import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, TokenFilterDsl, TokenizerD
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.query.InnerHitDefinition
-import com.sksamuel.elastic4s.search.SearchDefinition
-import com.sksamuel.elastic4s.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition, ScriptSortDefinition}
-import org.elasticsearch.common.geo.GeoPoint
-import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
+import com.sksamuel.elastic4s.sort.SortDsl
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.language.implicitConversions
 
-/** @author Stephen Samuel */
 trait ElasticDsl
-  extends IndexDsl
-    with AliasesDsl
+  extends AliasesDsl
     with AnalyzerDsl
     with BulkDsl
     with ClusterDsl
@@ -29,6 +24,7 @@ trait ElasticDsl
     with FieldStatsDsl
     with ForceMergeDsl
     with GetDsl
+    with IndexDsl
     with IndexAdminDsl
     with IndexRecoveryDsl
     with IndexTemplateDsl
@@ -39,6 +35,7 @@ trait ElasticDsl
     with SettingsDsl
     with ScoreDsl
     with ScrollDsl
+    with SortDsl
     with SnapshotDsl
     with TaskApi
     with TermVectorApi
@@ -48,14 +45,6 @@ trait ElasticDsl
     with ValidateDsl
     with DeprecatedElasticDsl
     with ElasticImplicits {
-
-  def addAlias(alias: String) = new {
-    require(alias.nonEmpty, "alias must not be null or empty")
-    def on(index: String) = AddAliasActionDefinition(alias, index)
-  }
-
-  def aliases(first: AliasActionDefinition, rest: AliasActionDefinition*): IndicesAliasesRequestDefinition = aliases(first +: rest)
-  def aliases(actions: Iterable[AliasActionDefinition]) = IndicesAliasesRequestDefinition(actions.toSeq)
 
   //  def agg = aggregation
   //  case object aggregation {
@@ -97,8 +86,6 @@ trait ElasticDsl
   def clearScroll(id: String, ids: String*): ClearScrollDefinition = ClearScrollDefinition(id +: ids)
   def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
 
-  def closeIndex(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
-
   def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
   def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
 
@@ -110,33 +97,6 @@ trait ElasticDsl
 
 //  def completionSuggestion(): CompletionSuggestionDefinition = completionSuggestion(UUID.randomUUID.toString)
 //  def completionSuggestion(name: String): CompletionSuggestionDefinition = CompletionSuggestionDefinition(name)
-
-  def createIndex(name: String) = CreateIndexDefinition(name)
-
-  def createSnapshot(name: String) = new {
-    def in(repo: String) = new CreateSnapshotDefinition(name, repo)
-  }
-
-  def createRepository(name: String) = new {
-    def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
-  }
-
-  def createTemplate(name: String) = new {
-    def pattern(pat: String) = CreateIndexTemplateDefinition(name, pat)
-  }
-
-  def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
-
-  def deleteIndex(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
-  def deleteIndex(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
-
-  def deleteSnapshot(name: String) = new {
-    def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
-  }
-
-  def deleteTemplate(name: String): DeleteIndexTemplateDefinition = DeleteIndexTemplateDefinition(name)
-
-  def explain(index: String, `type`: String, id: String) = ExplainDefinition(index, `type`, id)
 
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
@@ -162,8 +122,6 @@ trait ElasticDsl
   def fieldStats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
   def fieldStats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
 
-  def fieldSort(field: String) = FieldSortDefinition(field)
-
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
   def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
 
@@ -173,20 +131,6 @@ trait ElasticDsl
 //  def fuzzyCompletionSuggestion(name: String): FuzzyCompletionSuggestionDefinition =
 //    FuzzyCompletionSuggestionDefinition(name)
 
-  def geoSort(field: String) = new {
-    def points(first: GeoPoint, rest: GeoPoint*): GeoDistanceSortDefinition = points(first +: rest)
-    def points(points: Iterable[GeoPoint]): GeoDistanceSortDefinition =
-      new GeoDistanceSortDefinition(field, points.toSeq)
-  }
-
-  def get(id: Any) = new {
-    def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id.toString)
-    def from(index: IndexAndTypes): GetDefinition = GetDefinition(index, id.toString)
-  }
-
-  def getAlias(first: String, rest: String*): GetAliasDefinition = GetAliasDefinition(first +: rest)
-  def getAlias(aliases: Iterable[String]): GetAliasDefinition = GetAliasDefinition(aliases.toSeq)
-
   def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
@@ -194,24 +138,10 @@ trait ElasticDsl
 
   def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
-  def getSnapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
-  def getSnapshot(names: Iterable[String]): GetSnapshotExpectsFrom = new GetSnapshotExpectsFrom(names)
-  class GetSnapshotExpectsFrom(names: Iterable[String]) {
-    def from(repo: String) = new GetSnapshotsDefinition(names.toArray, repo)
-  }
-
-  def getTemplate(name: String): GetTemplateDefinition = GetTemplateDefinition(name)
-
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   def indexExists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
   def indexExists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
-
-  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
-  def indexInto(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
-
-  def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
-  def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
@@ -225,13 +155,6 @@ trait ElasticDsl
 
   def mapping(name: String): MappingDefinition = new MappingDefinition(name)
 
-  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets)
-  def multiget(gets: GetDefinition*): MultiGetDefinition = MultiGetDefinition(gets)
-
-  def openIndex(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
-
-  def forceMerge(first: String, rest: String*): ForceMergeDefinition = forceMerge(first +: rest)
-  def forceMerge(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
 
   def register(query: QueryDefinition) = new {
     def into(indexType: IndexAndType) = indexInto(indexType).source(query.builder.toString)
@@ -239,33 +162,6 @@ trait ElasticDsl
 
 //  def phraseSuggestion(): PhraseSuggestionDefinition = PhraseSuggestionDefinition(UUID.randomUUID.toString)
 //  def phraseSuggestion(name: String): PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
-
-  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
-
-  def recoverIndex(indexes: String*): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
-  def recoverIndex(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
-
-  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
-  def refreshIndex(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
-
-  def removeAlias(alias: String) = new {
-    def on(index: String) = RemoveAliasActionDefinition(alias, index)
-  }
-
-  def restoreSnapshot(name: String) = new {
-    def from(repo: String) = RestoreSnapshotDefinition(name, repo)
-  }
-
-  def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
-
-  def scriptSort(script: ScriptDefinition) = new {
-    def typed(`type`: ScriptSortType): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
-  }
-
-  def search(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)
-  def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
-
-  def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
   // -- helper methods to create the field definitions --
   def attachmentField(name: String) = field(name).typed(AttachmentType)
@@ -307,23 +203,6 @@ trait ElasticDsl
 //  def termSuggestion(name: String): TermSuggestionDefinition = TermSuggestionDefinition(name)
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
-
-  def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)
-  def typesExist(types: Iterable[String]): TypesExistExpectsIn = new TypesExistExpectsIn(types)
-  class TypesExistExpectsIn(types: Iterable[String]) {
-    def in(indexes: String*): TypesExistsDefinition = TypesExistsDefinition(indexes, types.toSeq)
-  }
-
-  def update(id: Any) = new {
-    def in(indexType: IndexAndTypes): UpdateDefinition = UpdateDefinition(indexType, id.toString)
-  }
-
-  def updateSettings(index: String) = new UpdateSettingsDefinition(index)
-
-  def validateIn(indexType: IndexAndTypes): ValidateDefinition =
-    ValidateDefinition(indexType.index, indexType.types.head)
-
-  def validateIn(value: String): ValidateDefinition = validate in value
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)

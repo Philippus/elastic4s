@@ -9,6 +9,8 @@ import scala.concurrent.Future
 /** @author Stephen Samuel */
 trait ExplainDsl {
 
+  def explain(index: String, `type`: String, id: String) = ExplainDefinition(index, `type`, id)
+
   implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse, ExplainResponse] {
     override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
       val builder = t.build(c.prepareExplain(t.index, t.`type`, t.id))

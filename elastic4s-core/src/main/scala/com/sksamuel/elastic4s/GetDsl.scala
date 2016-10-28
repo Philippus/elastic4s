@@ -12,6 +12,11 @@ import scala.language.implicitConversions
 /** @author Stephen Samuel */
 trait GetDsl {
 
+  def get(id: Any) = new {
+    def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id.toString)
+    def from(index: IndexAndTypes): GetDefinition = GetDefinition(index, id.toString)
+  }
+
   implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, RichGetResponse] {
     override def apply(c: Client, t: GetDefinition): Future[RichGetResponse] = {
       injectFutureAndMap(c.get(t.build, _))(RichGetResponse)
