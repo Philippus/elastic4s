@@ -16,8 +16,8 @@ import scala.concurrent.duration.FiniteDuration
 
 trait IndexDsl {
 
-  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
   def indexInto(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
+  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
 
   @deprecated("use indexInto(indexType)", "3.0.0")
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
@@ -104,6 +104,11 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
   }
 
   def id(id: Any): IndexDefinition = {
+    _request.id(id.toString)
+    this
+  }
+
+  def withId(id: Any): IndexDefinition = {
     _request.id(id.toString)
     this
   }

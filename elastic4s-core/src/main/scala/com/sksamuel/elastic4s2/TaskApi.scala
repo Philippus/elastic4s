@@ -11,6 +11,11 @@ import scala.concurrent.duration.FiniteDuration
 
 trait TaskApi {
 
+  def cancelTasks(first: String, rest: String*): CancelTasksDefinition = cancelTasks(first +: rest)
+  def cancelTasks(nodeIds: Seq[String]): CancelTasksDefinition = CancelTasksDefinition(nodeIds)
+
+  def pendingClusterTasks(local: Boolean): PendingClusterTasksDefinition = PendingClusterTasksDefinition(local)
+
   implicit object ListTasksDefinitionExecutable
     extends Executable[ListTasksDefinition, ListTasksResponse, ListTasksResponse] {
     override def apply(client: Client, d: ListTasksDefinition): Future[ListTasksResponse] = {

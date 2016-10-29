@@ -2,6 +2,17 @@ package com.sksamuel.elastic4s2.mappings
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
+trait DynamicTemplateDsl {
+
+  def dynamicTemplate(name: String) = new {
+    def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(name, mapping)
+  }
+
+  def dynamicTemplate(name: String, mapping: TypedFieldDefinition): DynamicTemplateDefinition = {
+    DynamicTemplateDefinition(name, mapping)
+  }
+}
+
 case class DynamicTemplateDefinition(name: String,
                                      mapping: TypedFieldDefinition,
                                      _match: Option[String] = None,

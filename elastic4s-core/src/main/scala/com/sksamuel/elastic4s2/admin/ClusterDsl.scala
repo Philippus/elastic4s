@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s2.admin
 
 import com.sksamuel.elastic4s2.Executable
-import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequest, ClusterHealthResponse}
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequestBuilder, ClusterUpdateSettingsResponse}
 import org.elasticsearch.action.admin.cluster.state.{ClusterStateRequestBuilder, ClusterStateResponse}
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsResponse
@@ -11,10 +11,24 @@ import scala.concurrent.Future
 
 trait ClusterDsl {
 
+  def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
+  def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
+
+  def clusterState() = new ClusterStateDefinition
+
+  def clusterStats() = new ClusterStatsDefinition
+
+  def clusterHealth(): ClusterHealthDefinition = clusterHealth("_all")
+  def clusterHealth(first: String, rest: String*): ClusterHealthDefinition = ClusterHealthDefinition(first +: rest)
+  def clusterHealth(indices: Iterable[String]): ClusterHealthDefinition = ClusterHealthDefinition(indices.toIndexedSeq)
+
   implicit object ClusterHealthDefinitionExecutable
     extends Executable[ClusterHealthDefinition, ClusterHealthResponse, ClusterHealthResponse] {
+
     override def apply(c: Client, t: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
-      injectFuture(c.admin.cluster.health(t.build, _))
+      val builder = c.admin.cluster().prepareHealth(t.indices: _*)
+      t.build(builder)
+      injectFuture(builder.execute())
     }
   }
 
@@ -44,17 +58,6 @@ class ClusterStatsDefinition
 
 class ClusterStateDefinition {
   private[elastic4s2] def build(builder: ClusterStateRequestBuilder): ClusterStateRequestBuilder = builder
-}
-
-class ClusterHealthDefinition(indices: String*) {
-  val _builder = new ClusterHealthRequest(indices: _*)
-
-  def build = _builder
-
-  def timeout(value: String): this.type = {
-    _builder.timeout(value)
-    this
-  }
 }
 
 case class ClusterSettingsDefinition(persistentSettings: Map[String, String],

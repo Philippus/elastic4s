@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s2.jackson
 
-import com.sksamuel.elastic4s2.ElasticDsl2$
 import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
 
-  import ElasticDsl2._
+  import com.sksamuel.elastic4s2.ElasticDsl._
   import ElasticJackson.Implicits._
 
   "jackson implicits" should {
@@ -14,9 +13,9 @@ class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
 
       client.execute {
         bulk(
-          index into "jacksontest/characters" source Character("tyrion", "game of thrones") id 1,
-          index into "jacksontest/characters" source Character("hank", "breaking bad") id 2,
-          index into "jacksontest/characters" source Location("dorne", "game of thrones") id 3
+          indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId(1),
+          index into "jacksontest" / "characters" source Character("hank", "breaking bad") withId 2,
+          index into "jacksontest" / "characters" source Location("dorne", "game of thrones") withId 3
         )
       }
 
@@ -44,7 +43,7 @@ class JacksonImplicitsTest extends WordSpec with Matchers with ElasticSugar {
       blockUntilCount(3, "jacksontest")
 
       val resp = client.execute {
-        search in "jacksontest/characters" query "breaking"
+        search("jacksontest" / "characters").query("breaking")
       }.await
 
       // should populate _id, _index and _type for us from the search result

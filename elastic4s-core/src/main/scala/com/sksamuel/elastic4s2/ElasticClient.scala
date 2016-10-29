@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s2
 import java.net.InetSocketAddress
 
 import com.sksamuel.exts.Logging
+import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.NoNodeAvailableException
-import org.elasticsearch.client.{AdminClient, Client}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.node.Node
@@ -15,12 +15,11 @@ import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 import scala.concurrent._
 import scala.language.implicitConversions
 
-/** @author Stephen Samuel */
-class ElasticClient(val client: org.elasticsearch.client.Client) {
+trait ElasticClient {
 
   def execute[T, R, Q](t: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
     try {
-      executable(client, t)
+      executable(java, t)
     } catch {
       case e: ElasticsearchException => Future.failed(e)
       case e: ElasticsearchWrapperException => Future.failed(e)
@@ -28,10 +27,10 @@ class ElasticClient(val client: org.elasticsearch.client.Client) {
     }
   }
 
-  def close(): Unit = client.close()
+  def close(): Unit
 
-  def java: Client = client
-  def admin: AdminClient = client.admin
+  // return the underlying Java API client
+  def java: Client
 }
 
 object ElasticClient extends Logging {
@@ -41,14 +40,21 @@ object ElasticClient extends Logging {
    *
    * @param client the client to wrap
    */
-  def fromClient(client: Client): ElasticClient = new ElasticClient(client)
+  def fromClient(client: Client): ElasticClient = new ElasticClient {
+    def close(): Unit = client.close()
+    def java: Client = client
+  }
 
   /**
    * Creates an ElasticClient by requesting a client from a given Node.
    *
    * @param node the node a client will connect to
    */
-  def fromNode(node: Node): ElasticClient = new ElasticClient(node.client)
+  def fromNode(node: Node): ElasticClient = new ElasticClient {
+    private val client = node.client()
+    def close(): Unit = client.close()
+    def java: Client = client
+  }
 
   /**
    * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
@@ -58,9 +64,7 @@ object ElasticClient extends Logging {
    *
    * @param uri the instance(s) to connect to.
    */
-  @deprecated("Use ElasticClient(uri)", "3.0.0")
-  def transport(uri: ElasticsearchClientUri): ElasticClient = apply(Settings.EMPTY, uri)
-  def apply(uri: ElasticsearchClientUri): ElasticClient = apply(Settings.EMPTY, uri)
+  def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.EMPTY, uri)
 
   /**
    * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
@@ -76,14 +80,9 @@ object ElasticClient extends Logging {
    * @param uri the instance(s) to connect to.
    * @param plugins the plugins to add to the client.
    */
-  @deprecated("Use ElasticClient(settings, uri, plugins)", "3.0.0")
   def transport(settings: Settings,
                 uri: ElasticsearchClientUri,
-                plugins: Class[_ <: Plugin]*): ElasticClient = apply(settings, uri, plugins: _*)
-
-  def apply(settings: Settings,
-            uri: ElasticsearchClientUri,
-            plugins: Class[_ <: Plugin]*): ElasticClient = {
+                plugins: Class[_ <: Plugin]*): ElasticClient = {
 
     val combinedSettings = uri.options.foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
       if (builder.get(kv._1) == null)

@@ -2,21 +2,8 @@ package com.sksamuel.elastic4s2.search.queries.funcscorer
 
 import com.sksamuel.elastic4s2.search.QueryDefinition
 import org.elasticsearch.common.lucene.search.function.{CombineFunction, FiltersFunctionScoreQuery}
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder
-import org.elasticsearch.index.query.functionscore.{FunctionScoreQueryBuilder, ScoreFunctionBuilder}
-
-case class FilterFunctionDefinition[T](score: ScoreFunctionDefinition[T],
-                                       filter: Option[QueryDefinition] = None) {
-  def builder: FilterFunctionBuilder = {
-    filter.fold(new FilterFunctionBuilder(score.builder)) { q =>
-      new FilterFunctionBuilder(q.builder, score.builder)
-    }
-  }
-}
-
-trait ScoreFunctionDefinition[T] {
-  def builder: ScoreFunctionBuilder[T]
-}
 
 case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
                                         functions: Seq[FilterFunctionDefinition[_]] = Nil,
@@ -50,9 +37,19 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
 
   def withQuery(query: QueryDefinition): FunctionScoreQueryDefinition = copy(query = Some(query))
 
-  def withFunctions(first: FilterFunctionDefinition, rest: FilterFunctionDefinition*): FunctionScoreQueryDefinition =
+  def withFunctions(first: FilterFunctionDefinition[_],
+                    rest: FilterFunctionDefinition[_]*): FunctionScoreQueryDefinition =
     withFunctions(first +: rest)
 
-  def withFunctions(functions: Iterable[FilterFunctionDefinition]): FunctionScoreQueryDefinition =
+  def withFunctions(functions: Iterable[FilterFunctionDefinition[_]]): FunctionScoreQueryDefinition =
     copy(functions = functions.toSeq)
+}
+
+case class FilterFunctionDefinition[T](score: ScoreFunctionDefinition,
+                                       filter: Option[QueryDefinition] = None) {
+  def builder: FilterFunctionBuilder = {
+    filter.fold(new FilterFunctionBuilder(score.builder)) { q =>
+      new FilterFunctionBuilder(q.builder, score.builder)
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s2
 
+import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.node.Node
 import org.elasticsearch.node.internal.InternalSettingsPreparer
@@ -26,7 +27,24 @@ class LocalNode(settings: Settings) {
 
   def stop() = node.close()
 
-  def client(): ElasticClient = ElasticClient.fromNode(node)
+  /**
+   * Returns an ElasticClient connected to this node.
+   *
+   * If shutdownNodeOnClose is true, then will shutdown this node once the client is closed, otherwise
+   * you are required to manage the lifecycle of the local node yourself.
+   */
+  def client(shutdownNodeOnClose: Boolean = true): ElasticClient = new ElasticClient {
+
+    private val client = node.client()
+
+    override def close(): Unit = {
+      client.close()
+      if (shutdownNodeOnClose)
+        node.close()
+    }
+
+    override def java: Client = client
+  }
 }
 
 object LocalNode {

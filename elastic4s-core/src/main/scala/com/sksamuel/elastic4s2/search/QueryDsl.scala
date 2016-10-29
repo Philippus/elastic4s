@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s2.search
 
 import com.sksamuel.elastic4s2.DocRef
 import com.sksamuel.elastic4s2.search.queries._
-import com.sksamuel.elastic4s2.search.queries.funcscorer.{FilterFunctionDefinition, FunctionScoreQueryDefinition}
+import com.sksamuel.elastic4s2.search.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s2.source.Indexable
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
@@ -33,12 +33,8 @@ trait QueryDsl {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition =
-    FunctionScoreQueryDefinition().withQuery(query)
-
-  def functionScoreQuery(query: QueryDefinition,
-                         functions: Seq[FilterFunctionDefinition]): FunctionScoreQueryDefinition =
-    FunctionScoreQueryDefinition().withQuery(query).withFunctions(functions)
+  def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().withQuery(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
 

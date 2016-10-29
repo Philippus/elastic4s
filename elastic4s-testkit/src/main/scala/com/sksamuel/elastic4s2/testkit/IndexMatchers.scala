@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s2.testkit
 
+import com.sksamuel.elastic4s2.ElasticClient
 import com.sksamuel.elastic4s2.ElasticDsl._
-import com.sksamuel.elastic4s2.{ElasticClient, ElasticDsl2$}
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
@@ -10,11 +10,11 @@ trait IndexMatchers extends Matchers {
   import scala.concurrent.duration._
 
   def haveCount(expectedCount: Int)
-               (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
-      Matcher[String] {
+               (implicit client: ElasticClient,
+                timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
+
     def apply(left: String) = {
-      import ElasticDsl2._
-      val count = client.execute(countFrom(left)).await(timeout).getCount
+      val count = client.execute(search(left).size(0)).await(timeout).totalHits
       MatchResult(
         count == expectedCount,
         s"Index $left had count $count but expected $expectedCount",
@@ -24,8 +24,9 @@ trait IndexMatchers extends Matchers {
   }
 
   def containDoc(expectedId: Any)
-                (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
-      Matcher[String] {
+                (implicit client: ElasticClient,
+                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
+
     override def apply(left: String): MatchResult = {
       val exists = client.execute(get(expectedId).from(left)).await(timeout).isExists
       MatchResult(
@@ -36,8 +37,9 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beCreated(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
-      Matcher[String] {
+  def beCreated(implicit client: ElasticClient,
+                timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
+
     override def apply(left: String): MatchResult = {
       val exists = client.execute(indexExists(left)).await(timeout).isExists
       MatchResult(
@@ -48,10 +50,11 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beEmpty(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new
-      Matcher[String] {
+  def beEmpty(implicit client: ElasticClient,
+              timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
+
     override def apply(left: String): MatchResult = {
-      val count = client.execute(countFrom(left)).await(timeout).getCount
+      val count = client.execute(search(left).size(0)).await(timeout).totalHits
       MatchResult(
         count == 0,
         s"Index $left was not empty",

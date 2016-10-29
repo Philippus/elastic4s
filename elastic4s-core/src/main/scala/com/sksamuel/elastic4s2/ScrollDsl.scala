@@ -11,6 +11,9 @@ trait ScrollDsl {
 
   def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
+  def clearScroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
+  def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
+
   implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, RichSearchResponse] {
     override def apply(client: Client, s: SearchScrollDefinition): Future[RichSearchResponse] = {
       val request = client.prepareSearchScroll(s.id)

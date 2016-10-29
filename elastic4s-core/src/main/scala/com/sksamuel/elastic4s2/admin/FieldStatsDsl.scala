@@ -8,6 +8,9 @@ import scala.concurrent.Future
 
 trait FieldStatsDsl {
 
+  def fieldStats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
+  def fieldStats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
+
   implicit object FieldStatsDefinitionExecutable
     extends Executable[FieldStatsDefinition, FieldStatsResponse, FieldStatsResult] {
     override def apply(c: Client, t: FieldStatsDefinition): Future[FieldStatsResult] = {

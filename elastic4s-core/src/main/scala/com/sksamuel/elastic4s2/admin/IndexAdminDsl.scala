@@ -36,6 +36,21 @@ trait IndexAdminDsl {
   def closeIndex(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
   def openIndex(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
 
+  def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
+  def getSegments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)
+
+  def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
+  def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
+
+  def indexExists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
+  def indexExists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
+
+  def clearCache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
+  def clearCache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
+
+  def clearIndex(first: String, rest: String*): ClearCacheDefinition = clearIndex(first +: rest)
+  def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
+
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
     override def apply(c: Client, t: OpenIndexDefinition): Future[OpenIndexResponse] = {

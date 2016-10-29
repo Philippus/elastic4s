@@ -9,6 +9,8 @@ import scala.concurrent.Future
 
 trait TermVectorApi {
 
+  def termVectors(index: String, `type`: String, id: String) = TermVectorsDefinition(IndexAndTypes(index, `type`), id)
+
   implicit object TermVectorExecutable
     extends Executable[TermVectorsDefinition, TermVectorsResponse, TermVectorsResult] {
     override def apply(client: Client, t: TermVectorsDefinition): Future[TermVectorsResult] = {

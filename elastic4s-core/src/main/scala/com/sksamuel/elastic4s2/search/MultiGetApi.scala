@@ -57,7 +57,7 @@ case class MultiGetDefinition(gets: Iterable[GetDefinition]) {
   val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
 
   gets foreach { get =>
-    val item = new MultiGetRequest.Item(get.indexTypes.index, get.indexTypes.types.headOption.orNull, get.id)
+    val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
     item.fetchSourceContext(get.build.fetchSourceContext)
     item.routing(get.build.routing)
     item.storedFields(get.build.storedFields: _*)

@@ -2,12 +2,10 @@ package com.sksamuel.elastic4s2.testkit
 
 import java.io.PrintWriter
 import java.nio.file.{Path, Paths}
-import java.util
 import java.util.UUID
 
 import com.sksamuel.elastic4s2.ElasticDsl._
-import com.sksamuel.elastic4s2.{ElasticClient, ElasticDsl}
-import org.elasticsearch.Version
+import com.sksamuel.elastic4s2.{ElasticClient, LocalNode}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.Settings
@@ -59,7 +57,7 @@ trait NodeBuilder {
     writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
     writer.close()
 
-    val builder = Settings.settingsBuilder()
+    val builder = Settings.builder()
       .put("node.http.enabled", httpEnabled)
       .put("http.enabled", httpEnabled)
       .put("path.home", home.toFile.getAbsolutePath)
@@ -86,16 +84,8 @@ trait NodeBuilder {
    * Override to create the client youself.
    */
   def createLocalClient: ElasticClient = {
-    val localSettings = Settings.settingsBuilder().put(settings.build())
-    localSettings.put("node.local", true)
-    localSettings.put("node.data", true)
-    val node = new MockNode(
-      localSettings.build(),
-      Version.CURRENT,
-      util.Arrays.asList(classOf[GroovyPlugin])
-    )
-    node.start()
-    new ElasticClient(node.client(), Some(node))
+    val node = LocalNode("local", testNodeHomePath.toString)
+    node.client()
   }
 }
 
@@ -117,7 +107,7 @@ trait ElasticSugar extends NodeBuilder {
       case _ => indexes
     }
     client.execute {
-      ElasticDsl2.refresh index indexes
+      refreshIndex(indexes)
     }
   }
 
@@ -182,7 +172,7 @@ trait ElasticSugar extends NodeBuilder {
     blockUntil(s"Expected to find document $id") {
       () =>
         client.execute {
-          get id id from index / `type`
+          get(id).from(index / `type`)
         }.await.isExists
     }
   }
@@ -194,8 +184,8 @@ trait ElasticSugar extends NodeBuilder {
     blockUntil(s"Expected count of $expected") {
       () =>
         expected <= client.execute {
-          count from index types types
-        }.await.getCount
+          search(index / types.mkString(",")).size(0)
+        }.await.totalHits
     }
   }
 
@@ -203,8 +193,8 @@ trait ElasticSugar extends NodeBuilder {
     blockUntil(s"Expected count of $expected") {
       () =>
         expected == client.execute {
-          count from index types types
-        }.await.getCount
+          search(index / types.mkString(",")).size(0)
+        }.await.totalHits
     }
   }
 
@@ -212,8 +202,8 @@ trait ElasticSugar extends NodeBuilder {
     blockUntil(s"Expected empty index $index") {
       () =>
         client.execute {
-          count from index
-        }.await.getCount == 0
+          search(index).size(0)
+        }.await.totalHits == 0
     }
   }
   def blockUntilIndexExists(index: String): Unit = {
@@ -232,7 +222,7 @@ trait ElasticSugar extends NodeBuilder {
     blockUntil(s"Expected document $id to have version $version") {
       () =>
         client.execute {
-          get id id from index -> `type`
+          get(id).from(index / `type`)
         }.await.getVersion == version
     }
   }

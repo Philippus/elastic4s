@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s2.search
 
-import com.sksamuel.elastic4s2.{Executable, IndexAndTypes}
+import com.sksamuel.elastic4s2.{Executable, IndexAndType}
 import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.client.{Client, Requests}
 import org.elasticsearch.cluster.routing.Preference
@@ -14,8 +14,9 @@ import scala.language.implicitConversions
 trait GetDsl {
 
   def get(id: Any) = new {
-    def from(index: String, `type`: String): GetDefinition = GetDefinition(IndexAndTypes(index, `type`), id.toString)
-    def from(index: IndexAndTypes): GetDefinition = GetDefinition(index, id.toString)
+    def from(index: String): GetDefinition = from(index, "_all")
+    def from(index: String, `type`: String): GetDefinition = from(IndexAndType(index, `type`))
+    def from(index: IndexAndType): GetDefinition = GetDefinition(index, id.toString)
   }
 
   implicit object GetDefinitionExecutable extends Executable[GetDefinition, GetResponse, RichGetResponse] {
@@ -25,10 +26,10 @@ trait GetDsl {
   }
 }
 
-case class GetDefinition(indexTypes: IndexAndTypes, id: String) {
+case class GetDefinition(indexAndType: IndexAndType, id: String) {
   require(id.toString.nonEmpty, "id must not be null or empty")
 
-  private val _builder = Requests.getRequest(indexTypes.index).`type`(indexTypes.types.headOption.orNull).id(id)
+  private val _builder = Requests.getRequest(indexAndType.index).`type`(indexAndType.`type`).id(id)
   def build = _builder
 
   def fetchSourceContext(context: Boolean) = {

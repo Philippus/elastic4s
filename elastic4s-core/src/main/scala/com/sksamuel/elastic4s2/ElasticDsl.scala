@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s2
 
-import com.sksamuel.elastic4s2.admin.{ClearCacheDefinition, CloseIndexDefinition, ClusterDsl, ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition, ClusterStatsDefinition, DeleteIndexTemplateDefinition, FieldStatsDefinition, FieldStatsDsl, FlushIndexDefinition, ForceMergeDefinition, ForceMergeDsl, GetSegmentsDefinition, GetTemplateDefinition, IndexAdminDsl, IndexExistsDefinition, IndexRecoveryDefinition, IndexRecoveryDsl, IndexTemplateDsl, IndicesStatsDefinition, OpenIndexDefinition, RefreshIndexDefinition, SnapshotDsl}
+import com.sksamuel.elastic4s2.admin._
 import com.sksamuel.elastic4s2.alias.{AliasesDsl, GetAliasDefinition}
 import com.sksamuel.elastic4s2.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter, TokenFilterDsl, TokenizerDsl}
 import com.sksamuel.elastic4s2.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
-import com.sksamuel.elastic4s2.mappings.FieldType.{AttachmentType, BinaryType, BooleanType, ByteType, CompletionType, DateType, DoubleType, FloatType, GeoPointType, GeoShapeType, IntegerType, IpType, LongType, MultiFieldType, NestedType, ObjectType, ShortType, StringType, TokenCountType}
-import com.sksamuel.elastic4s2.mappings.{AttachmentFieldDefinition, BinaryFieldDefinition, BooleanFieldDefinition, ByteFieldDefinition, CompletionFieldDefinition, DateFieldDefinition, DoubleFieldDefinition, DynamicTemplateDefinition, FieldDefinition, FloatFieldDefinition, GeoPointFieldDefinition, GeoShapeFieldDefinition, GetMappingDefinition, IntegerFieldDefinition, IpFieldDefinition, LongFieldDefinition, MappingDefinition, MappingDsl, MultiFieldDefinition, NestedFieldDefinition, ObjectFieldDefinition, PutMappingDefinition, ShortFieldDefinition, StringFieldDefinition, TimestampDefinition, TokenCountDefinition, TypeableFields, TypedFieldDefinition}
-import com.sksamuel.elastic4s2.search.queries.funcscorer.ScoreDsl
+import com.sksamuel.elastic4s2.mappings.FieldType._
+import com.sksamuel.elastic4s2.mappings._
 import com.sksamuel.elastic4s2.search.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
-import com.sksamuel.elastic4s2.search.{GetDsl, MultiGetApi, PercolateDsl, QueryDefinition, SearchDefinition, SearchDsl}
+import com.sksamuel.elastic4s2.search.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s2.search.suggestions.SuggestionDsl
+import com.sksamuel.elastic4s2.search.{GetDsl, MultiGetApi, PercolateDsl, QueryDefinition, SearchDefinition, SearchDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -23,6 +23,7 @@ trait ElasticDsl
     with CreateIndexDsl
     with DeleteIndexDsl
     with DeleteDsl
+    with DynamicTemplateDsl
     with ExplainDsl
     with FieldStatsDsl
     with ForceMergeDsl
@@ -82,23 +83,6 @@ trait ElasticDsl
   //    def topHits(name: String) =  TopHitsAggregationDefinition(name)
   //  }
 
-  def clearCache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
-  def clearCache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
-  def clearIndex(indexes: String*): ClearCacheDefinition = ClearCacheDefinition(indexes)
-  def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
-  def clearScroll(id: String, ids: String*): ClearScrollDefinition = ClearScrollDefinition(id +: ids)
-  def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
-
-  def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
-  def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
-
-  def clusterState() = new ClusterStateDefinition
-  def clusterHealth() = new ClusterHealthDefinition()
-  def clusterStats() = new ClusterStatsDefinition
-
-  def clusterHealth(indices: String*) = new ClusterHealthDefinition(indices: _*)
-
-
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -120,36 +104,14 @@ trait ElasticDsl
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
   def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
-  def fieldStats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
-  def fieldStats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
-
-  def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
-  def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
-
-
-  def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
-
-  def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
-  def getSegments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)
-
   def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
-
-  def indexExists(indexes: Iterable[String]): IndexExistsDefinition = IndexExistsDefinition(indexes.toSeq)
-  def indexExists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
   def listTasks(first: String, rest: String*): ListTasksDefinition = listTasks(first +: rest)
   def listTasks(nodeIds: Seq[String]): ListTasksDefinition = ListTasksDefinition(nodeIds)
-
-  def cancelTasks(first: String, rest: String*): CancelTasksDefinition = cancelTasks(first +: rest)
-  def cancelTasks(nodeIds: Seq[String]): CancelTasksDefinition = CancelTasksDefinition(nodeIds)
-
-  def pendingClusterTasks(local: Boolean): PendingClusterTasksDefinition = PendingClusterTasksDefinition(local)
-
-  def mapping(name: String): MappingDefinition = new MappingDefinition(name)
 
   // -- helper methods to create the field definitions --
   def attachmentField(name: String) = field(name).typed(AttachmentType)
@@ -174,22 +136,11 @@ trait ElasticDsl
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
-  def dynamicTemplate(name: String) = new {
-    def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(name, mapping)
-  }
-
-  def dynamicTemplate(name: String, mapping: TypedFieldDefinition): DynamicTemplateDefinition = {
-    DynamicTemplateDefinition(name, mapping)
-  }
-
-  def termVectors(index: String, `type`: String, id: String) = TermVectorsDefinition(index / `type`, id)
-
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
   }
-
 
   case object add {
     @deprecated("Use full method syntax, eg addAlias()", "3.0.0")
@@ -223,7 +174,7 @@ trait ElasticDsl
 
   case object term {
     @deprecated("use termSuggestion(name)", "3.0.0")
-    def suggestion(name: String) = ??? // todo TermSuggestionDefinition = TermSuggestionDefinition(name)
+    def suggestion(name: String) = termSuggestion(name)
   }
 
   case object score {
@@ -244,7 +195,7 @@ trait ElasticDsl
 
   @deprecated("use phraseSuggestion(name)", "3.0.0")
   case object phrase {
-    def suggestion(name: String) = ??? // todo: PhraseSuggestionDefinition = PhraseSuggestionDefinition(name)
+    def suggestion(name: String) = phraseSuggestion(name)
   }
 
   case object remove {
@@ -307,7 +258,7 @@ trait ElasticDsl
   @deprecated("instead search on the `_index` field")
   def indicesQuery(indices: String*) = new {
     @deprecated("instead search on the `_index` field")
-    def query(query: QueryDefinition): IndicesQueryDefinition = IndicesQueryDefinition(indices, query)
+    def query(query: QueryDefinition) = IndicesQueryDefinition(indices, query)
   }
 
   @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
@@ -350,7 +301,7 @@ trait ElasticDsl
     def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
     @deprecated("use deleteIndex(indexes)", "3.0.0")
-    def index(indexes: String*): DeleteIndexDefinition = index(indexes)
+    def index(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
 
     @deprecated("use deleteIndex(indexes)", "3.0.0")
     def index(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
@@ -367,11 +318,6 @@ trait ElasticDsl
     def persistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
     @deprecated("use clusterTransientSettings(settings)", "3.0.0")
     def transientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
-  }
-
-  case object fuzzyCompletion {
-    @deprecated("use fuzzyCompletionSuggestion(name)", "3.0.0")
-    def suggestion(name: String) = ??? // todo = FuzzyCompletionSuggestionDefinition(name)
   }
 
   case object script {
@@ -429,7 +375,7 @@ trait ElasticDsl
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
 
     @deprecated("use clusterHealth()", "3.0.0")
-    def cluster(health: HealthKeyword): ClusterHealthDefinition = new ClusterHealthDefinition
+    def cluster(health: HealthKeyword): ClusterHealthDefinition = clusterHealth()
 
     @deprecated("use getMapping(indexes)", "3.0.0")
     def mapping(it: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(it)
@@ -476,7 +422,7 @@ trait ElasticDsl
 
   case object completion {
     @deprecated("use completionSuggestion(name)", "3.0.0")
-    def suggestion(name: String) = ??? // todo CompletionSuggestionDefinition(name)
+    def suggestion(name: String) = completionSuggestion(name)
   }
 
   case object explain {
@@ -523,7 +469,7 @@ trait ElasticDsl
   case object sortby {
     def score: ScoreSortDefinition = new ScoreSortDefinition
     def field(field: String): FieldSortDefinition = FieldSortDefinition(field)
-    def script(script: ScriptDefinition) = ElasticDsl.script.sort(script)
+    def script(script: ScriptDefinition) = scriptSort(script)
   }
 
   @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
@@ -538,7 +484,7 @@ trait ElasticDsl
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
     def in(value: String): ValidateDefinition = {
       require(value.nonEmpty, "value must not be null or empty")
-      in(IndexAndTypes(value))
+      validateIn(IndexAndTypes(value))
     }
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
     def in(index: String, `type`: String): ValidateDefinition = ValidateDefinition(index, `type`)

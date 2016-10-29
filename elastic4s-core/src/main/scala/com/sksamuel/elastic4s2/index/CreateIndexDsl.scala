@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s2.index
 
 import com.sksamuel.elastic4s2.analyzers._
+import com.sksamuel.elastic4s2.mappings.MappingDefinition
 import com.sksamuel.elastic4s2.{Executable, Show}
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.client.Client
@@ -14,6 +15,8 @@ trait CreateIndexDsl {
   def analyzers(analyzers: AnalyzerDefinition*) = new AnalyzersWrapper(analyzers)
   def tokenizers(tokenizers: Tokenizer*) = new TokenizersWrapper(tokenizers)
   def filters(filters: TokenFilter*) = new TokenFiltersWrapper(filters)
+
+  def mapping(name: String): MappingDefinition = new MappingDefinition(name)
 
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])

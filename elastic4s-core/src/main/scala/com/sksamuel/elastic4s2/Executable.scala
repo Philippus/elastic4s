@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s2
 
-import org.elasticsearch.action.ActionListener
+import org.elasticsearch.action.{ActionListener, ListenableActionFuture}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.{Future, Promise}
@@ -28,6 +28,15 @@ trait Executable[T, R, Q] {
   protected def injectFuture(f: ActionListener[R] => Any): Future[R] = {
     val p = Promise[R]()
     f(new ActionListener[R] {
+      def onFailure(e: Exception): Unit = p.tryFailure(e)
+      def onResponse(resp: R): Unit = p.trySuccess(resp)
+    })
+    p.future
+  }
+
+  protected def injectFuture(future: ListenableActionFuture[R]): Future[R] = {
+    val p = Promise[R]()
+    future.addListener(new ActionListener[R] {
       def onFailure(e: Exception): Unit = p.tryFailure(e)
       def onResponse(resp: R): Unit = p.trySuccess(resp)
     })
