@@ -44,12 +44,12 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"      % "transport"                 % ElasticsearchVersion,
       "org.apache.lucene"             % "lucene-join"               % "6.2.1",
-      "org.scalactic"                 %% "scalactic"                % ScalacticVersion,
-      "org.slf4j"                     % "slf4j-api"                 % Slf4jVersion,
       "com.sksamuel.exts"             %% "exts"                     % "1.35.0",
+      "org.typelevel"                 %% "cats"                     % "0.8.0",
+      "org.slf4j"                     % "slf4j-api"                 % Slf4jVersion,
+      "org.slf4j"                     % "log4j-over-slf4j"          % Slf4jVersion,
       "commons-io"                    % "commons-io"                % CommonsIoVersion  % "test",
       "log4j"                         % "log4j"                     % Log4jVersion      % "test",
-      "org.slf4j"                     % "log4j-over-slf4j"          % Slf4jVersion      % "test",
       "org.mockito"                   % "mockito-all"               % MockitoVersion    % "test",
       "org.scalatest"                 %% "scalatest"                % ScalatestVersion  % "test"
     ),

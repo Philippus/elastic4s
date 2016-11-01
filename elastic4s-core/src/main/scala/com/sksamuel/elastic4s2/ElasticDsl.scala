@@ -3,13 +3,14 @@ package com.sksamuel.elastic4s2
 import com.sksamuel.elastic4s2.admin._
 import com.sksamuel.elastic4s2.alias.{AliasesDsl, GetAliasDefinition}
 import com.sksamuel.elastic4s2.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s2.get.{GetDsl, MultiGetApi}
 import com.sksamuel.elastic4s2.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
 import com.sksamuel.elastic4s2.mappings.FieldType._
 import com.sksamuel.elastic4s2.mappings._
 import com.sksamuel.elastic4s2.search.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
 import com.sksamuel.elastic4s2.search.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s2.search.suggestions.SuggestionDsl
-import com.sksamuel.elastic4s2.search.{GetDsl, MultiGetApi, PercolateDsl, QueryDefinition, SearchDefinition, SearchDsl}
+import com.sksamuel.elastic4s2.search.{PercolateDsl, QueryDefinition, SearchDefinition, SearchDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -109,9 +110,6 @@ trait ElasticDsl
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
-
-  def listTasks(first: String, rest: String*): ListTasksDefinition = listTasks(first +: rest)
-  def listTasks(nodeIds: Seq[String]): ListTasksDefinition = ListTasksDefinition(nodeIds)
 
   // -- helper methods to create the field definitions --
   def attachmentField(name: String) = field(name).typed(AttachmentType)

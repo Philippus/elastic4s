@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2.source
+package com.sksamuel.elastic4s2
 
 trait DocumentSource {
   def json: String

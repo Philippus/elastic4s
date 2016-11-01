@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s2
 
-import com.sksamuel.elastic4s2.source.{DocumentMap, DocumentSource, Indexable}
 import org.elasticsearch.action.DocWriteResponse.Result
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}

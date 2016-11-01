@@ -23,6 +23,7 @@ class BoolQueryDefinition extends QueryDefinition {
   }
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): this.type = filter(first +: rest)
+
   def filter(queries: Iterable[QueryDefinition]): this.type = {
     queries.foreach(builder filter _.builder)
     this

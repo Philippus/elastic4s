@@ -16,6 +16,9 @@ trait TaskApi {
 
   def pendingClusterTasks(local: Boolean): PendingClusterTasksDefinition = PendingClusterTasksDefinition(local)
 
+  def listTasks(first: String, rest: String*): ListTasksDefinition = listTasks(first +: rest)
+  def listTasks(nodeIds: Seq[String]): ListTasksDefinition = ListTasksDefinition(nodeIds)
+
   implicit object ListTasksDefinitionExecutable
     extends Executable[ListTasksDefinition, ListTasksResponse, ListTasksResponse] {
     override def apply(client: Client, d: ListTasksDefinition): Future[ListTasksResponse] = {

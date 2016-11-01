@@ -28,7 +28,7 @@ trait IndexMatchers extends Matchers {
                  timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
-      val exists = client.execute(get(expectedId).from(left)).await(timeout).isExists
+      val exists = client.execute(get(expectedId).from(left)).await(timeout).exists
       MatchResult(
         exists,
         s"Index $left did not contain expected document $expectedId",

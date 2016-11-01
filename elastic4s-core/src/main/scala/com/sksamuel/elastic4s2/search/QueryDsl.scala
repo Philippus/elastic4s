@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s2.search
 
-import com.sksamuel.elastic4s2.DocRef
+import com.sksamuel.elastic4s2.{DocumentRef, Indexable}
 import com.sksamuel.elastic4s2.search.queries._
 import com.sksamuel.elastic4s2.search.queries.funcscorer.FunctionScoreQueryDefinition
-import com.sksamuel.elastic4s2.source.Indexable
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query._
@@ -120,7 +119,7 @@ trait QueryDsl {
 
   def percolateQuery(field: String, `type`: String) = new {
 
-    def usingId(ref: DocRef): PercolateQueryDefinition =
+    def usingId(ref: DocumentRef): PercolateQueryDefinition =
       PercolateQueryDefinition(field, `type`, ref = Some(ref))
 
     def usingSource[T](t: T)(implicit indexable: Indexable[T]): PercolateQueryDefinition =

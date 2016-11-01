@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s2
 
 import com.sksamuel.elastic4s2.definitions.DefinitionRouting
-import com.sksamuel.elastic4s2.source.{DocumentSource, Indexable}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.action.update.{UpdateAction, UpdateRequest, UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client

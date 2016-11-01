@@ -1,15 +1,14 @@
-package com.sksamuel.elastic4s2.search
+package com.sksamuel.elastic4s2.get
 
-import com.sksamuel.elastic4s2.{Executable, ProxyClients}
+import com.sksamuel.elastic4s2.Executable
 import org.elasticsearch.action.get._
 import org.elasticsearch.client.Client
-import org.elasticsearch.cluster.routing.Preference
 
 import scala.concurrent.Future
 
 trait MultiGetApi extends GetDsl {
 
-  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets)
+  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets.toSeq)
   def multiget(gets: GetDefinition*): MultiGetDefinition = MultiGetDefinition(gets)
 
   implicit object MultiGetDefinitionExecutable
@@ -50,40 +49,4 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
   def response: Option[GetResponse] = Option(original.getResponse)
   def `type`: String = original.getType
   def failed: Boolean = original.isFailed
-}
-
-case class MultiGetDefinition(gets: Iterable[GetDefinition]) {
-
-  val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
-
-  gets foreach { get =>
-    val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
-    item.fetchSourceContext(get.build.fetchSourceContext)
-    item.routing(get.build.routing)
-    item.storedFields(get.build.storedFields: _*)
-    item.version(get.build.version)
-    _builder.add(item)
-  }
-
-  def build: MultiGetRequest = _builder.request()
-
-  def realtime(realtime: Boolean): this.type = {
-    _builder.setRealtime(realtime)
-    this
-  }
-
-  def realtime(preference: Preference): this.type = {
-    _builder.setPreference(preference.`type`())
-    this
-  }
-
-  def realtime(preference: String): this.type = {
-    _builder.setPreference(preference)
-    this
-  }
-
-  def refresh(refresh: Boolean): this.type = {
-    _builder.setRefresh(refresh)
-    this
-  }
 }

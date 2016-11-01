@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s2.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.sksamuel.elastic4s2.source.DocumentSource
+import com.sksamuel.elastic4s2.DocumentSource
 
 /** @author Stephen Samuel */
 @deprecated("Prefer Indexable[T] typeclass", "1.5.12")

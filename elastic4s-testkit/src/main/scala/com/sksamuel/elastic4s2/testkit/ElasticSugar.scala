@@ -173,7 +173,7 @@ trait ElasticSugar extends NodeBuilder {
       () =>
         client.execute {
           get(id).from(index / `type`)
-        }.await.isExists
+        }.await.exists
     }
   }
 

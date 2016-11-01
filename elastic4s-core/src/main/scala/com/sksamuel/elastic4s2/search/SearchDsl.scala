@@ -12,9 +12,18 @@ trait SearchDsl
     with HighlightDsl
     with ScriptFieldDsl {
 
+  @deprecated("use searchIn", "5.0.0")
   def search(indexesAndTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesAndTypes)
-  def search(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)
+
+  @deprecated("use searchIn", "5.0.0")
+  def search(indexTypes: IndexAndTypes): SearchDefinition = SearchDefinition(indexTypes)
+
+  @deprecated("use searchIn", "5.0.0")
   def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
+
+  def searchIn(indexesAndTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesAndTypes)
+  def searchIn(indexType: IndexAndTypes): SearchDefinition = SearchDefinition(indexType)
+  def searchIn(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
 
   def rescore(query: QueryDefinition) = RescoreDefinition(query)
 
