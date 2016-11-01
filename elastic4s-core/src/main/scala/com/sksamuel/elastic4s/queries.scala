@@ -21,6 +21,31 @@ trait QueryDsl {
   implicit def string2query(string: String): SimpleStringQueryDefinition = new SimpleStringQueryDefinition(string)
   implicit def tuple2query(kv: (String, String)): TermQueryDefinition = new TermQueryDefinition(kv._1, kv._2)
 
+  implicit object IntBuildableTermsQuery extends BuildableTermsQuery[Int] {
+    def makeBuilder(field: String, values: Seq[Int]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values: _*)
+  }
+
+  implicit object LongBuildableTermsQuery extends BuildableTermsQuery[Long] {
+    def makeBuilder(field: String, values: Seq[Long]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values: _*)
+  }
+
+  implicit object FloatBuildableTermsQuery extends BuildableTermsQuery[Float] {
+    def makeBuilder(field: String, values: Seq[Float]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values: _*)
+  }
+
+  implicit object DoubleBuildableTermsQuery extends BuildableTermsQuery[Double] {
+    def makeBuilder(field: String, values: Seq[Double]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values: _*)
+  }
+
+  implicit object AnyRefBuildableTermsQuery extends BuildableTermsQuery[AnyRef] {
+    def makeBuilder(field: String, values: Seq[AnyRef]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, (values.map(_.toString)): _*)
+  }
+
   def query = this
 
   def boostingQuery: BoostingQueryDefinition = new BoostingQueryDefinition
@@ -121,24 +146,11 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, values: AnyRef*): TermsQueryDefinition = {
-    TermsQueryDefinition(field, values.map(_.toString))
+  def termsQuery[U: BuildableTermsQuery, T <: U](field: String, values: Iterable[T]): TermsQueryDefinition[U] = {
+    TermsQueryDefinition[U](field, values.toSeq)
   }
-
-  def termsQuery(field: String, values: Int*): IntTermsQueryDefinition = {
-    IntTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Long*): LongTermsQueryDefinition = {
-    LongTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Float*): FloatTermsQueryDefinition = {
-    FloatTermsQueryDefinition(field, values)
-  }
-
-  def termsQuery(field: String, values: Double*): DoubleTermsQueryDefinition = {
-    DoubleTermsQueryDefinition(field, values)
+  def termsQuery[U: BuildableTermsQuery, T <: U](field: String, value: T, rest: T*): TermsQueryDefinition[U] = {
+    TermsQueryDefinition[U](field, value +: rest)
   }
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
@@ -1165,8 +1177,10 @@ case class TermQueryDefinition(field: String, value: Any) extends QueryDefinitio
   }
 }
 
-trait GenericTermsQueryDefinition extends QueryDefinition {
-  def builder: TermsQueryBuilder
+case class TermsQueryDefinition[T](field: String, values: Seq[T])(implicit buildable: BuildableTermsQuery[T])
+  extends QueryDefinition {
+
+  val builder: TermsQueryBuilder = buildable.makeBuilder(field, values)
 
   def boost(boost: Double): this.type = {
     builder.boost(boost.toFloat)
@@ -1177,42 +1191,26 @@ trait GenericTermsQueryDefinition extends QueryDefinition {
     builder.queryName(queryName)
     this
   }
-}
-
-case class TermsQueryDefinition(field: String, values: Seq[String]) extends GenericTermsQueryDefinition {
-
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
 
   @deprecated("deprecated in elasticsearch", "2.0.0")
-  def minimumShouldMatch(min: Int): TermsQueryDefinition = minimumShouldMatch(min.toString)
+  def minimumShouldMatch(min: Int): TermsQueryDefinition[T] = minimumShouldMatch(min.toString)
 
   @deprecated("deprecated in elasticsearch", "2.0.0")
-  def minimumShouldMatch(min: String): TermsQueryDefinition = {
+  def minimumShouldMatch(min: String): TermsQueryDefinition[T] = {
     builder.minimumShouldMatch(min)
     this
   }
 
   @deprecated("deprecated in elasticsearch", "2.0.0")
-  def disableCoord(disableCoord: Boolean): TermsQueryDefinition = {
+  def disableCoord(disableCoord: Boolean): TermsQueryDefinition[T] = {
     builder.disableCoord(disableCoord)
     this
   }
+
 }
 
-case class IntTermsQueryDefinition(field: String, values: Seq[Int]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class LongTermsQueryDefinition(field: String, values: Seq[Long]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class FloatTermsQueryDefinition(field: String, values: Seq[Float]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
-}
-
-case class DoubleTermsQueryDefinition(field: String, values: Seq[Double]) extends GenericTermsQueryDefinition {
-  val builder: TermsQueryBuilder = QueryBuilders.termsQuery(field, values: _*)
+trait BuildableTermsQuery[-T] {
+  def makeBuilder(field: String, values: Seq[T]): TermsQueryBuilder
 }
 
 case class TypeQueryDefinition(`type`: String) extends QueryDefinition {
