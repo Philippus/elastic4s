@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.index.VersionType
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.{FlatSpec, Matchers}
 
-/** @author Stephen Samuel */
 class DeleteDslTest extends FlatSpec with Matchers with ElasticSugar with TypeCheckedTripleEquals {
 
   "a delete by id request" should "accept tuple for from" in {
@@ -54,6 +53,6 @@ class DeleteDslTest extends FlatSpec with Matchers with ElasticSugar with TypeCh
   }
 
   it should "accept refresh" in {
-    (delete id 141212 from "places" `type` "type1" refresh true).build.refresh() === true
+    (delete id 141212 from "places" `type` "type1" refresh RefreshPolicy.IMMEDIATE).build.getRefreshPolicy() == RefreshPolicy.IMMEDIATE
   }
 }

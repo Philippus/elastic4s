@@ -12,6 +12,8 @@ trait GetDsl {
 
   def get(id: Any) = new {
     def from(index: String): GetDefinition = from(index, "_all")
+    @deprecated("use from(index,type)", "3.0.0")
+    def from(index: (String, String)): GetDefinition = from(IndexAndType(index._1, index._2))
     def from(index: String, `type`: String): GetDefinition = from(IndexAndType(index, `type`))
     def from(index: IndexAndType): GetDefinition = GetDefinition(index, id.toString)
   }

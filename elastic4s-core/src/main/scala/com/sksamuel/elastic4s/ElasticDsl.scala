@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, Ed
 import com.sksamuel.elastic4s.delete.DeleteDsl
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
 import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
-import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl, IndexDefinition, IndexDsl}
+import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl, IndexDefinition, IndexDsl}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptDsl, ScriptFieldDefinition}

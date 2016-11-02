@@ -1,15 +1,17 @@
-package com.sksamuel.elastic4s.index
+package com.sksamuel.elastic4s.indexes
 
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, GregorianCalendar}
 
+import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.mappings.{FieldValue, SimpleFieldValue}
-import com.sksamuel.elastic4s.{JsonSugar, SimpleFieldValue, index}
 import org.elasticsearch.common.xcontent.XContentBuilder
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
 
 class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
+
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   "an index dsl" should "generate with index & type as a delimited string" in {
     val req = index into "twitter/tweets" fields Map(

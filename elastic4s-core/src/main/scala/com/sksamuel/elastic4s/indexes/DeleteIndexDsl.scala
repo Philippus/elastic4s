@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.index
+package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.Executable
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse

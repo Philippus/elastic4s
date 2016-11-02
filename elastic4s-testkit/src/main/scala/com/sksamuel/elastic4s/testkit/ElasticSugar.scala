@@ -95,7 +95,7 @@ trait NodeBuilder {
   }
 }
 
-trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll {
+trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   this: Suite =>
 
   private val logger = LoggerFactory.getLogger(getClass)

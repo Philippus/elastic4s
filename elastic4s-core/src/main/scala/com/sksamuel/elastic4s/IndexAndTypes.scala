@@ -2,6 +2,12 @@ package com.sksamuel.elastic4s
 
 import scala.language.implicitConversions
 
+/**
+* Models one or more indexes, eg
+* - "index1"
+* - "index1,index2"
+* - "_all"
+*/
 case class Indexes(values: Seq[String]) {
   def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(values, Nil)
 }
@@ -12,7 +18,20 @@ object Indexes {
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
 
-case class IndexAndType(index: String, `type`: String)
+/**
+ * Models one index associated with one type.
+ */
+case class IndexAndType(index: String, `type`: String) {
+  def toIndexAndTypes: IndexAndTypes = IndexAndTypes(index, Seq(`type`))
+  def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
+}
+
+object IndexAndType {
+  implicit def apply(str: String): IndexAndType = str.split('/') match {
+    case Array(index, tpe) => IndexAndType(index, tpe)
+    case _ => sys.error(s"Could not parse '$str' into index/type")
+  }
+}
 
 /**
  * Models one index associated with one or more types.

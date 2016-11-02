@@ -11,7 +11,6 @@ import scala.util.Random
 class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
 
   import scala.concurrent.duration._
-  import com.sksamuel.elastic4s.ElasticDsl._
 
   val n = 75000
   val b = 100
@@ -76,7 +75,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
     println(s"Insertion of $n records took ${duration.toSeconds}s")
 
     client.execute {
-      searches in "benchmark" / "articles" query "toxicology"
+      search in "benchmark" / "articles" query "toxicology"
     }.await.getHits.totalHits shouldBe n
   }
 

@@ -28,6 +28,9 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   @deprecated("use .java", "3.0.0")
   def getVersion: Long = version
 
+  @deprecated("use .exists", "3.0.0")
+  def isExists: Boolean = exists
+
   override def id: String = original.getId
   override def index: String = original.getIndex
   override def `type`: String = original.getType
@@ -45,6 +48,9 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   override def fields: Map[String, HitField] = {
     Option(original.getFields).fold(Map.empty[String, HitField])(_.asScala.toMap.mapValues(getFieldToHitField))
   }
+
+  @deprecated("use .sourceAsMap", "3.0.0")
+  def source = sourceAsMap
 
   override def sourceAsMap: Map[String, AnyRef] = Option(original.getSource).map(_.asScala.toMap).getOrElse(Map.empty)
   override def sourceAsBytes: Array[Byte] = original.getSourceAsBytes

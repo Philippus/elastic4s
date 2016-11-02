@@ -24,12 +24,12 @@ case class MultiGetDefinition(gets: Seq[GetDefinition]) {
     this
   }
 
-  def realtime(preference: Preference): this.type = {
+  def preference(preference: Preference): this.type = {
     _builder.setPreference(preference.`type`())
     this
   }
 
-  def realtime(preference: String): this.type = {
+  def preference(preference: String): this.type = {
     _builder.setPreference(preference)
     this
   }

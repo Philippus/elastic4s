@@ -14,6 +14,7 @@ import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.{Script, ScriptService}
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
+import scala.collection.JavaConverters._
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -98,9 +99,9 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
     * @return this, an instance of [[SearchDefinition]]
     */
-  def scriptfields(sfieldDefs: ScriptFieldDefinition*): this.type = {
-    import scala.collection.JavaConverters._
-    sfieldDefs.foreach {
+  def scriptfields(defs: ScriptFieldDefinition*): this.type = scriptfields(defs)
+  def scriptfields(defs: Iterable[ScriptFieldDefinition]): this.type = {
+    defs.foreach {
       case ScriptFieldDefinition(name, script, Some(lang), Some(params), scriptType) =>
         _builder.addScriptField(name, new Script(script, scriptType, lang, params.asJava))
       case ScriptFieldDefinition(name, script, Some(lang), None, scriptType) =>

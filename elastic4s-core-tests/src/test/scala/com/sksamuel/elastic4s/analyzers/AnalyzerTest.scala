@@ -8,7 +8,7 @@ import org.scalatest.{FreeSpec, Matchers}
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
-    create index "analyzer" mappings {
+    createIndex("analyzer").mappings {
       mapping("test") fields (
         stringField("keyword") analyzer KeywordAnalyzer,
         stringField("snowball") typed StringType analyzer SnowballAnalyzer,
@@ -21,12 +21,12 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
         stringField("pattern1") analyzer CustomAnalyzer("pattern1"),
         stringField("pattern2") analyzer CustomAnalyzer("pattern2"),
         stringField("ngram") analyzer CustomAnalyzer("default_ngram"),
-        "edgengram" withType StringType analyzer CustomAnalyzer("edgengram"),
-        "custom_ngram" typed StringType analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
-        "shingle" typed StringType analyzer CustomAnalyzer("shingle"),
-        "shingle2" typed StringType analyzer CustomAnalyzer("shingle2"),
-        "noshingle" typed StringType analyzer CustomAnalyzer("shingle3"),
-        "shingleseparator" typed StringType analyzer CustomAnalyzer("shingle4")
+        stringField("edgengram") analyzer CustomAnalyzer("edgengram"),
+        stringField("custom_ngram") analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
+        stringField("shingle") analyzer CustomAnalyzer("shingle"),
+        stringField("shingle2") analyzer CustomAnalyzer("shingle2"),
+        stringField("noshingle") analyzer CustomAnalyzer("shingle3"),
+        stringField("shingleseparator") analyzer CustomAnalyzer("shingle4")
         )
     } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),

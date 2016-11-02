@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-/** @author Stephen Samuel */
 class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar {
 
   client.execute {
@@ -36,7 +34,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar
     }
 
     whenReady(resp) { result =>
-      result.isExists should be(true)
+      result.exists should be(true)
       result.id shouldBe "8"
     }
   }
@@ -113,7 +111,7 @@ class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar
       get id 4 from "beer/lager" fields "ingredients"
     }
     whenReady(resp) {
-      result => println(result.field("ingredients").getValues.asScala)
+      result => println(result.field("ingredients").values)
     }
   }
 

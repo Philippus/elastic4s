@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.FieldsMapper
 import org.elasticsearch.script.Script
 import org.elasticsearch.script.ScriptService.{ScriptType => ESScriptType}
 
+import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 
 trait ScriptDsl {

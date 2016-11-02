@@ -10,7 +10,7 @@ class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl {
 
   client.execute {
     create index "settings_test" mappings {
-      "r" as Seq(
+      mapping("r") as Seq(
         field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
         field name "b" withType StringType
       )

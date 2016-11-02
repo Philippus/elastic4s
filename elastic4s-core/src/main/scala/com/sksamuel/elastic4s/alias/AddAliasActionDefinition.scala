@@ -15,13 +15,13 @@ case class AddAliasActionDefinition(alias: String,
   require(alias.nonEmpty, "alias must not be null or empty")
   require(index.nonEmpty, "index must not be null or empty")
 
-  def withRouting(route: String) = copy(routing = Option(route))
-  def withSearchRouting(searchRouting: String) = copy(searchRouting = Option(searchRouting))
-  def withIndexRouting(indexRouting: String) = copy(indexRouting = Option(indexRouting))
+  def routing(route: String): AddAliasActionDefinition = copy(routing = Option(route))
+  def searchRouting(searchRouting: String): AddAliasActionDefinition = copy(searchRouting = Option(searchRouting))
+  def indexRouting(indexRouting: String): AddAliasActionDefinition = copy(indexRouting = Option(indexRouting))
 
-  def withFilter(query: String): AddAliasActionDefinition = withFilter(QueryStringQueryDefinition(query))
-  def withFilter(query: QueryBuilder): AddAliasActionDefinition = copy(filter = Option(query))
-  def withFilter(query: QueryDefinition): AddAliasActionDefinition = withFilter(query.builder)
+  def filter(query: String): AddAliasActionDefinition = filter(QueryStringQueryDefinition(query))
+  def filter(query: QueryDefinition): AddAliasActionDefinition = filter(query.builder)
+  def filter(query: QueryBuilder): AddAliasActionDefinition = copy(filter = Option(query))
 
   override def build: IndicesAliasesRequest.AliasActions = {
     val action = AliasActions.add().alias(alias).index(index)

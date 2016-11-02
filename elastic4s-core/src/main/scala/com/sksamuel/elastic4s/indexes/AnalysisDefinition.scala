@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.index
+package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, CharFilterDefinition, CustomAnalyzerDefinition, TokenFilterDefinition, Tokenizer}
 import org.elasticsearch.common.xcontent.XContentBuilder

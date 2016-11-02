@@ -1,68 +1,16 @@
-package com.sksamuel.elastic4s.index
+package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.mappings.FieldValue
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, DocumentMap, DocumentRef, DocumentSource, Executable, FieldsMapper, IndexAndType, Indexable, Show}
-import org.elasticsearch.action.DocWriteResponse.Result
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, DocumentMap, DocumentSource, FieldsMapper, Indexable}
+import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.index.IndexRequest.OpType
-import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentHelper}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
-import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
-
-trait IndexDsl {
-
-  def indexInto(index: String, `type`: String): IndexDefinition = new IndexDefinition(index, `type`)
-  def indexInto(indexType: IndexAndType): IndexDefinition = new IndexDefinition(indexType.index, indexType.`type`)
-
-  @deprecated("use indexInto(indexType)", "3.0.0")
-  def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
-
-  implicit object IndexDefinitionExecutable
-    extends Executable[IndexDefinition, IndexResponse, IndexResult] {
-    override def apply(c: Client, t: IndexDefinition): Future[IndexResult] = {
-      injectFutureAndMap(c.index(t.build, _))(IndexResult.apply)
-    }
-  }
-
-  implicit object IndexDefinitionShow extends Show[IndexDefinition] {
-    override def show(f: IndexDefinition): String = XContentHelper.convertToJson(f.build.source, true, true)
-  }
-
-  implicit class IndexDefinitionShowOps(f: IndexDefinition) {
-    def show: String = IndexDefinitionShow.show(f)
-  }
-}
-
-case class IndexResult(original: IndexResponse) {
-
-  @deprecated("use id", "3.0.0")
-  def getId = id
-
-  @deprecated("use `type`", "3.0.0")
-  def getType = `type`
-
-  @deprecated("use index", "3.0.0")
-  def getIndex = index
-
-  @deprecated("use version", "3.0.0")
-  def getVersion = original.getVersion
-
-  @deprecated("use created", "3.0.0")
-  def isCreated: Boolean = created
-
-  def id = original.getId
-  def index = original.getIndex
-  def `type` = original.getType
-  def version: Long = original.getVersion
-  def documentRef = DocumentRef(index, `type`, id)
-
-  def created: Boolean = original.getResult == Result.CREATED
-}
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
   require(index != null, "index must not be null or empty")

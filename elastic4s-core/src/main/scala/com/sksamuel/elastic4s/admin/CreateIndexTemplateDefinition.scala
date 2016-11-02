@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.ProxyClients
 import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
-import com.sksamuel.elastic4s.index.{AnalysisDefinition, IndexSettings}
+import com.sksamuel.elastic4s.indexes.{AnalysisDefinition, IndexSettings}
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.template.put.{PutIndexTemplateAction, PutIndexTemplateRequestBuilder}
 

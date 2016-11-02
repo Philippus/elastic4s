@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.search.RichSearchHit
+import com.sksamuel.elastic4s.searches.RichSearchHit
 
 trait HitReader[T] {
   def read(hit: Hit): Either[Exception, T]

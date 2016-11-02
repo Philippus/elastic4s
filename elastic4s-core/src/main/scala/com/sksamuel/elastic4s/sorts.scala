@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.search.QueryDefinition
+import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType

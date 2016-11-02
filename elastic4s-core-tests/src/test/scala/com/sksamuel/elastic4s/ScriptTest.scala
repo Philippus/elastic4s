@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.SortOrder
 import org.scalatest.FreeSpec
 
@@ -20,12 +20,12 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
 
   "script fields" - {
     "can access doc fields" in {
-      searches in "script/tubestops" query "bank" scriptfields
+      search in "script/tubestops" query "bank" scriptfields
         scriptField("a", "doc['line'].value + ' line'") should
         haveFieldValue("northern line")
     }
     "can use params" in {
-      searches in "script/tubestops" query "earls" scriptfields (
+      search in "script/tubestops" query "earls" scriptfields (
         scriptField("a") script "'Fare is: ' + doc['zone'].value * fare" params Map("fare" -> 4.50)
         ) should haveFieldValue("Fare is: 9.0")
     }
@@ -33,8 +33,9 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
   "script sort" - {
     "sort by name length" in {
       val sorted = client.execute {
-        searches in "script/tubestops" query matchAllQuery sort {
-          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed "number" order SortOrder.DESC
+        search in "script/tubestops" query matchAllQuery sort {
+          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed ScriptSortType
+            .NUMBER order SortOrder.DESC
         }
       }.await
       sorted.hits(0).sourceAsMap("name") shouldBe "south kensington"

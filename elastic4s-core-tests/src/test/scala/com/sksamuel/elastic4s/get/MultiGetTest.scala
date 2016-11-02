@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.index.VersionType
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
@@ -16,7 +15,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   def album(number: Long, name: String, year: Int, revision: Long) = {
     (
-      index into "coldplay/albums"
+      indexInto("coldplay/albums")
         fields ("name" -> name, "year" -> year)
         id number
         version revision
@@ -45,10 +44,10 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
         get id 34 from "coldplay/albums"
       ) preference Preference.LOCAL refresh true realtime true
     ).await
-    assert(3 === resp.getResponses.size)
-    assert("3" === resp.getResponses.toSeq.head.getResponse.getId)
-    assert("5" === resp.getResponses.toSeq(1).getResponse.getId)
-    assert(!resp.getResponses.toSeq(2).getResponse.isExists)
+    assert(3 === resp.responses.size)
+    assert("3" === resp.responses.toSeq.head.getResponse.getId)
+    assert("5" === resp.responses.toSeq(1).getResponse.getId)
+    assert(!resp.responses.toSeq(2).getResponse.isExists)
   }
 
   it should "retrieve documents by id with routing" in {

@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.ElasticDsl2$
-import org.scalatest.WordSpec
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.WordSpec
 
-class TypeExistsTest extends WordSpec with ElasticSugar with ElasticDsl2 {
+class TypeExistsTest extends WordSpec with ElasticSugar {
 
   client.execute {
     index into "typeexiststest" / "quantumleap" fields "name" -> "sam"
