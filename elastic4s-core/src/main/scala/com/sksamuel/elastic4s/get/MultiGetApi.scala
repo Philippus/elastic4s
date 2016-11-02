@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.Executable
 import org.elasticsearch.action.get._
 import org.elasticsearch.client.Client
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 trait MultiGetApi extends GetDsl {

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.sksamuel.elastic4s.search.RichSearchHit
+import com.sksamuel.elastic4s.searches.RichSearchHit
 import com.sksamuel.elastic4s.{Hit, HitAs, HitReader, Indexable}
 
 object ElasticJackson {

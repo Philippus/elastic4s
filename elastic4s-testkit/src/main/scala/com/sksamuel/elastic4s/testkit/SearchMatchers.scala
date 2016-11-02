@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.ElasticClient
-import com.sksamuel.elastic4s.search.SearchDefinition
+import com.sksamuel.elastic4s.searches.SearchDefinition
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 

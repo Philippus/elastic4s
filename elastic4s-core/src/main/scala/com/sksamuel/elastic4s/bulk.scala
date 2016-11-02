@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
+import com.sksamuel.elastic4s.index.{IndexDefinition, IndexDsl, IndexResult}
+import com.sksamuel.elastic4s.update.UpdateDefinition
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.bulk.{BulkItemResponse, BulkRequest, BulkResponse}
 import org.elasticsearch.action.delete.DeleteResponse

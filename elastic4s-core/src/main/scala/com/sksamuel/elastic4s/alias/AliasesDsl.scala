@@ -40,18 +40,3 @@ trait AliasesDsl {
 
   implicit def getResponseToGetResult(resp: GetAliasesResponse): GetAliasResult = GetAliasResult(resp)
 }
-
-trait AliasActionDefinition {
-  def build: IndicesAliasesRequest.AliasActions
-}
-
-case class IndicesAliasesRequestDefinition(actions: Seq[AliasActionDefinition]) {
-
-  def build: IndicesAliasesRequest = {
-    val req = new IndicesAliasesRequest()
-    actions.foldLeft(req) { (req, action) =>
-      req.addAliasAction(action.build)
-    }
-    req
-  }
-}

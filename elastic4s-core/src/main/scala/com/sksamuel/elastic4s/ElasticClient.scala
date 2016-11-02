@@ -23,7 +23,6 @@ trait ElasticClient {
     } catch {
       case e: ElasticsearchException => Future.failed(e)
       case e: ElasticsearchWrapperException => Future.failed(e)
-      case e: NoNodeAvailableException => Future.failed(e)
     }
   }
 

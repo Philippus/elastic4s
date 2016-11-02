@@ -7,7 +7,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class ClusterDslTest extends FlatSpec with Matchers {
 
   "a cluster health request" should "accept empty indices" in {
-    val req = clusterHealth
+    val req = clusterHealth()
     req.build.indices() should equal(Array())
   }
 
@@ -17,7 +17,7 @@ class ClusterDslTest extends FlatSpec with Matchers {
   }
 
   it should "allow a timeout" in {
-    val req = clusterHealth timeout "1s"
+    val req = clusterHealth().timeout("1s")
     req.build.timeout() should equal(TimeValue.timeValueSeconds(1))
   }
 }

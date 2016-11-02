@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl2$
 import org.scalatest.WordSpec
 
 class QueryInnerHitsDslTest extends WordSpec with ElasticDsl2 {

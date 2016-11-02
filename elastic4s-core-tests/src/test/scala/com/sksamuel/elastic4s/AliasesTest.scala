@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
-import org.scalatest.{Matchers, FlatSpec}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.JavaConversions._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.mockito.MockitoSugar
 
 class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
 
@@ -37,7 +37,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
 
   "waterways index" should "return 'River Dee' in England and Wales for search" in {
     val resp = client.execute {
-      search in "waterways" query "Dee"
+      searches in "waterways" query "Dee"
     }.await
 
     assert(2 === resp.totalHits)
@@ -54,7 +54,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
 
   "english_waterways alias" should "return 'River Dee' in England for search" in {
     val resp = client.execute {
-      search in "english_waterways" query "Dee"
+      searches in "english_waterways" query "Dee"
     }.await
 
     assert(1 === resp.totalHits)

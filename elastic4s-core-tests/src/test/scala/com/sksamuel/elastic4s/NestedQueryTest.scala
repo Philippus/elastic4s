@@ -33,12 +33,12 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
   "nested object" - {
     "should be searchable by nested field" in {
       val resp1 = client.execute {
-        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage"))
+        searches in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage"))
       }.await
       resp1.totalHits shouldEqual 1
 
       val resp2 = client.execute {
-        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "simon"))
+        searches in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "simon"))
       }.await
       resp2.totalHits shouldEqual 0
     }
@@ -47,7 +47,7 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
   "nested object" - {
     "should be presented in highlighting" in {
       val resp1 = client.execute {
-        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage")).inner {
+        searches in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage")).inner {
           innerHits("actor").highlighting(highlight.field("actor.name").matchedFields("actor.name").fragmentSize(20))
         }
       }.await
@@ -66,7 +66,7 @@ class NestedQueryTest extends FreeSpec with Matchers with ElasticSugar {
   "nested object" - {
     "should have correct inner hit source" in {
       val resp1 = client.execute {
-        search in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage")).inner {
+        searches in "nested/show" query nestedQuery("actor").query(termQuery("actor.name" -> "dinklage")).inner {
           innerHits("actor").sourceExclude("birthplace")
         }
       }.await

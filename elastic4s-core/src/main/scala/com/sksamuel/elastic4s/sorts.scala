@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.search.QueryDefinition
 import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.geo.GeoPoint

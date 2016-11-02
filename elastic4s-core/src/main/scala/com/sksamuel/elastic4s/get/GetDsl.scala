@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.search.RichGetResponse
+import com.sksamuel.elastic4s.searches.RichGetResponse
 import com.sksamuel.elastic4s.{Executable, IndexAndType}
 import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.client.Client

@@ -3,21 +3,26 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.{AliasesDsl, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.delete.DeleteDsl
+import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
 import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
-import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
+import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl, IndexDefinition, IndexDsl}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.search.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
-import com.sksamuel.elastic4s.search.queries.funcscorer.ScoreDsl
-import com.sksamuel.elastic4s.search.suggestions.SuggestionDsl
-import com.sksamuel.elastic4s.search.{PercolateDsl, QueryDefinition, SearchDefinition, SearchDsl}
+import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptDsl, ScriptFieldDefinition}
+import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
+import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
+import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
+import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, HighlightDefinition, PercolateDsl, QueryDefinition, ScrollDsl, SearchDefinition, SearchDsl, SearchScrollDefinition}
+import com.sksamuel.elastic4s.task.TaskApi
+import com.sksamuel.elastic4s.update.UpdateDsl
+import com.sksamuel.elastic4s.validate.{ValidateDefinition, ValidateDsl}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 trait ElasticDsl
-  extends SuggestionDsl
-    with AliasesDsl
+  extends AliasesDsl
     with AnalyzerDsl
     with BulkDsl
     with ClusterDsl
@@ -43,6 +48,7 @@ trait ElasticDsl
     with ScrollDsl
     with SortDsl
     with SnapshotDsl
+    with SuggestionDsl
     with TaskApi
     with TermVectorApi
     with TokenizerDsl

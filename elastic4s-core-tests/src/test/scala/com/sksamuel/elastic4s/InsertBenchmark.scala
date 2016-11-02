@@ -76,7 +76,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
     println(s"Insertion of $n records took ${duration.toSeconds}s")
 
     client.execute {
-      search in "benchmark" / "articles" query "toxicology"
+      searches in "benchmark" / "articles" query "toxicology"
     }.await.getHits.totalHits shouldBe n
   }
 

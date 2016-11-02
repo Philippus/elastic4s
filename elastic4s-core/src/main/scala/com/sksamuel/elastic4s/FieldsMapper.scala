@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.mappings.{ArrayFieldValue, FieldValue, NestedFieldValue, NullFieldValue, SimpleFieldValue}
+
 /**
  * Converts between scala types and types that Elasticsearch understands.
  */

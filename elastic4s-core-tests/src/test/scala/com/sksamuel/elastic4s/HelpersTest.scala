@@ -25,6 +25,6 @@ class HelpersTest extends FlatSpec with ElasticSugar with ElasticMatchers {
     }.await
 
     blockUntilCount(3, "games")
-    search in "games" query "protoss" should haveTotalHits(1)
+    searches in "games" query "protoss" should haveTotalHits(1)
   }
 }

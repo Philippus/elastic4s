@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s
-package com.sksamuel.elastic4s.search.query
+package com.sksamuel.elastic4s.search.queries
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.index.query.MatchQueryBuilder
 import org.scalatest.{Matchers, WordSpec}

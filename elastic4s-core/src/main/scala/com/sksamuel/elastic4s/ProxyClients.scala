@@ -4,7 +4,6 @@ import java.lang.reflect.{ InvocationHandler, Method }
 
 import org.elasticsearch.client.{ ClusterAdminClient, IndicesAdminClient, Client }
 
-/** @author Stephen Samuel */
 object ProxyClients {
 
   lazy val cluster: ClusterAdminClient = proxy[ClusterAdminClient]

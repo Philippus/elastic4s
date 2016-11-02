@@ -20,12 +20,12 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
 
   "script fields" - {
     "can access doc fields" in {
-      search in "script/tubestops" query "bank" scriptfields
+      searches in "script/tubestops" query "bank" scriptfields
         scriptField("a", "doc['line'].value + ' line'") should
         haveFieldValue("northern line")
     }
     "can use params" in {
-      search in "script/tubestops" query "earls" scriptfields (
+      searches in "script/tubestops" query "earls" scriptfields (
         scriptField("a") script "'Fare is: ' + doc['zone'].value * fare" params Map("fare" -> 4.50)
         ) should haveFieldValue("Fare is: 9.0")
     }
@@ -33,7 +33,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
   "script sort" - {
     "sort by name length" in {
       val sorted = client.execute {
-        search in "script/tubestops" query matchAllQuery sort {
+        searches in "script/tubestops" query matchAllQuery sort {
           scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed "number" order SortOrder.DESC
         }
       }.await
