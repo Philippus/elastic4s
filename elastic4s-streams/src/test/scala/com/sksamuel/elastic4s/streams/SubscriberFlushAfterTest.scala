@@ -1,11 +1,11 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import java.util.concurrent.Executors
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticDsl}
+import com.sksamuel.elastic4s2.jackson.ElasticJackson
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.{BulkCompatibleDefinition, ElasticDsl2$}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -13,7 +13,7 @@ import scala.concurrent.duration._
 
 class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar {
 
-  import ElasticDsl._
+  import ElasticDsl2._
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 

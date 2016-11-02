@@ -1,15 +1,15 @@
-package com.sksamuel.elastic4s.mappings
+package com.sksamuel.elastic4s2.mappings
 
-import com.sksamuel.elastic4s.mappings.FieldType.{ DateType, GeoPointType }
-import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.mappings.FieldType.{ DateType, GeoPointType }
+import com.sksamuel.elastic4s2.ElasticDsl2$
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
 /** @author Stephen Samuel */
 class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
-  import ElasticDsl._
+  import ElasticDsl2._
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {

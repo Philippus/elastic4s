@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl}
+import com.sksamuel.elastic4s2.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl2$}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -84,7 +84,7 @@ class BulkActor[T](client: ElasticClient,
                    builder: RequestBuilder[T],
                    config: SubscriberConfig) extends Actor {
 
-  import ElasticDsl._
+  import ElasticDsl2._
   import context.{dispatcher, system}
 
   private val buffer = new ArrayBuffer[T]()

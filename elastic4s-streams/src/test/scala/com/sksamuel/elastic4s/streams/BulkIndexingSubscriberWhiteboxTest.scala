@@ -1,9 +1,9 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, ElasticDsl}
+import com.sksamuel.elastic4s2.jackson.ElasticJackson
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.{BulkCompatibleDefinition, ElasticDsl2$}
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
 import org.reactivestreams.{Subscriber, Subscription}
@@ -13,7 +13,7 @@ class BulkIndexingSubscriberWhiteboxTest
   extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
     with ElasticSugar with TestNGSuiteLike {
 
-  import ElasticDsl._
+  import ElasticDsl2._
 
   implicit val system = ActorSystem()
 

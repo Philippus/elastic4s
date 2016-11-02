@@ -1,9 +1,9 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s2.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.{ElasticDsl, RichSearchHit}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s2.jackson.ElasticJackson
+import com.sksamuel.elastic4s2.{ElasticDsl2$, RichSearchHit}
+import com.sksamuel.elastic4s2.testkit.ElasticSugar
 import org.reactivestreams.{Subscriber, Publisher}
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
@@ -14,7 +14,7 @@ class ScrollPublisherVerificationTest
     PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
   ) with ElasticSugar with TestNGSuiteLike {
 
-  import ElasticDsl._
+  import ElasticDsl2._
   import ElasticJackson.Implicits._
 
   implicit val system = ActorSystem()

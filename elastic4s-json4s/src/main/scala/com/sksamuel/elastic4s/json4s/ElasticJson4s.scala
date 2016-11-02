@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s.json4s
+package com.sksamuel.elastic4s2.json4s
 
-import com.sksamuel.elastic4s.source.Indexable
-import com.sksamuel.elastic4s.{HitAs, RichSearchHit}
+import com.sksamuel.elastic4s2.source.Indexable
+import com.sksamuel.elastic4s2.{HitAs, RichSearchHit}
 import org.json4s._
 
 import scala.reflect.Manifest

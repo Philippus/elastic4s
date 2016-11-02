@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.circe
+package com.sksamuel.elastic4s2.circe
 
-import com.sksamuel.elastic4s.RichSearchHit
+import com.sksamuel.elastic4s2.RichSearchHit
 import org.elasticsearch.search.SearchHit
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar._

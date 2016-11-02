@@ -1,13 +1,13 @@
-package com.sksamuel.elastic4s.mappings
+package com.sksamuel.elastic4s2.mappings
 
-import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s2.JsonSugar
+import com.sksamuel.elastic4s2.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
+import com.sksamuel.elastic4s2.mappings.FieldType.StringType
 import org.scalatest.{Matchers, WordSpec}
 
 class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s2.ElasticDsl._
 
   "mapping definition" should {
     "insert source exclusion directives when set" in {

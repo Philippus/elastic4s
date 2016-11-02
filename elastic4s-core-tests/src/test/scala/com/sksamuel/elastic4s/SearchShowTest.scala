@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s2
 
 import org.scalatest.{Matchers, WordSpec}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
