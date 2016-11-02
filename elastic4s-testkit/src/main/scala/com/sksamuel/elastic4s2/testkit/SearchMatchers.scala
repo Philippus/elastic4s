@@ -10,9 +10,15 @@ import scala.concurrent.duration._
 
 trait SearchMatchers extends Matchers {
 
+  @deprecated("use containId(id)", "3.0.0")
   def containResult(expectedId: Any)
-                   (implicit client: ElasticClient,
-                    timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
+                   (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = {
+    containId(expectedId)
+  }
+
+  def containId(expectedId: Any)
+               (implicit client: ElasticClient,
+                timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition): MatchResult = {
       val resp = client.execute(left).await(timeout)
       val exists = resp.hits.exists(_.id == expectedId.toString)
@@ -30,7 +36,7 @@ trait SearchMatchers extends Matchers {
       Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
-      val exists = resp.hits.exists(_.fields.exists(_._2.getValues.contains(value)))
+      val exists = resp.hits.exists(_.fields.exists(_._2.values.contains(value)))
       MatchResult(
         exists,
         s"Search $left contained unwanted field value $value",

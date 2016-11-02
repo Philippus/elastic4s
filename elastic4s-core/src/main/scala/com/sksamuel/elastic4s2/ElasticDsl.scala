@@ -182,6 +182,7 @@ trait ElasticDsl
 
   @deprecated("use idsQuery", "2.0.0")
   def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
+
   @deprecated("use idsQuery", "2.0.0")
   def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
 
@@ -253,9 +254,9 @@ trait ElasticDsl
   @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "3.0.0")
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
-  @deprecated("instead search on the `_index` field")
+  @deprecated("instead search on the `_index` field", "3.0.0")
   def indicesQuery(indices: String*) = new {
-    @deprecated("instead search on the `_index` field")
+    @deprecated("instead search on the `_index` field", "3.0.0")
     def query(query: QueryDefinition) = IndicesQueryDefinition(indices, query)
   }
 
@@ -432,9 +433,6 @@ trait ElasticDsl
     }
   }
 
-  @deprecated("use optimizeIndex(index)", "1.6.2")
-  def optimize(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-
   @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
   case object shingle {
     @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
@@ -465,8 +463,13 @@ trait ElasticDsl
 
   @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
   case object sortby {
+    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
     def score: ScoreSortDefinition = new ScoreSortDefinition
+
+    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
     def field(field: String): FieldSortDefinition = FieldSortDefinition(field)
+
+    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
     def script(script: ScriptDefinition) = scriptSort(script)
   }
 

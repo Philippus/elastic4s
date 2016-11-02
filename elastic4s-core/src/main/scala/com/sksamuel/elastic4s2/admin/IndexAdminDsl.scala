@@ -150,39 +150,6 @@ case class IndicesStatsResult(original: IndicesStatsResponse) {
 
   import scala.collection.JavaConverters._
 
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getPrimaries() = original.getPrimaries
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def asMap() = original.asMap
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getIndices() = original.getIndices
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getTotal(): CommonStats = original.getTotal
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getShards(): Array[org.elasticsearch.action.admin.indices.stats.ShardStats] = original.getShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getIndex(name: String) = original.getIndex(name)
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getAt(pos: Int) = original.getAt(pos)
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getTotalShards() = original.getTotalShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getFailedShards() = original.getFailedShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getSuccessfulShards() = original.getSuccessfulShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getShardFailures() = original.getShardFailures
-
   def primaries: CommonStats = original.getPrimaries
   def routing: Map[ShardRouting, ShardStats] = original.asMap.asScala.toMap
   def indexStats: Map[String, IndexStats] = original.getIndices.asScala.toMap

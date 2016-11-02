@@ -68,15 +68,6 @@ class MappingDefinition(val `type`: String) {
     this
   }
 
-  @deprecated("use the DynamicMapping enum version", "1.5.5")
-  def dynamic(dynamic: Boolean): this.type = {
-    _dynamic = dynamic match {
-      case true => Some(DynamicMapping.Dynamic)
-      case false => Some(DynamicMapping.False)
-    }
-    this
-  }
-
   def timestamp(enabled: Boolean,
                 path: Option[String] = None,
                 format: Option[String] = None,
@@ -139,6 +130,7 @@ class MappingDefinition(val `type`: String) {
   }
 
   def fields(fields: TypedFieldDefinition*): this.type = as(fields: _*)
+
   @deprecated("use mapping(myname).fields(myfields) or mapping myname fields myfields", "2.0")
   def as(fields: TypedFieldDefinition*): this.type = as(fields.toIterable)
 

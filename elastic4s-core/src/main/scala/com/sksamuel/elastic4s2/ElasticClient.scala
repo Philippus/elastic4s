@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s2
 
 import java.net.InetSocketAddress
 
-import com.sksamuel.exts.Logging
+import com.sksamuel.exts.{Logging, StringOption}
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.NoNodeAvailableException
 import org.elasticsearch.common.settings.Settings
@@ -107,7 +107,7 @@ object ElasticClient extends Logging {
 
 object ElasticsearchClientUri {
 
-  private val Regex = "elasticsearch://(.*?)\\?(.*?)".r
+  private val Regex = "elasticsearch://(.*?)(\\?.*?)?".r
 
   implicit def stringtoUri(str: String): ElasticsearchClientUri = ElasticsearchClientUri(str)
 
@@ -123,7 +123,10 @@ object ElasticsearchClientUri {
           case Array(host, port) => (host, port.toInt)
           case _ => sys.error(s"Invalid hosts/ports $hoststr")
         }
-        val options = query.split('&').map(_.split('=')).map {
+        val options = StringOption(query)
+          .map(_.drop(1))
+          .map(_.split('&')).getOrElse(Array.empty)
+          .map(_.split('=')).collect {
           case Array(key, value) => (key, value)
           case _ => sys.error(s"Invalid query $query")
         }

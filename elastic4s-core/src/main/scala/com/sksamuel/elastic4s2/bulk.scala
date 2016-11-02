@@ -30,22 +30,6 @@ trait BulkDsl {
 
 case class BulkResult(original: BulkResponse) {
 
-  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def getItems = original.getItems
-
-  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def getTook: TimeValue = original.getTook
-
-  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def iterator = original.iterator()
-
-  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def getTookInMillis: Long = original.getTookInMillis
-
-  @deprecated("use new scala idiomatic methods, or call .original to get the java response", "2.0")
-  def buildFailureMessage: String = original.buildFailureMessage
-
-
   import scala.concurrent.duration._
 
   def failureMessage: String = original.buildFailureMessage
@@ -58,20 +42,28 @@ case class BulkResult(original: BulkResponse) {
 }
 
 case class BulkItemResult(original: BulkItemResponse) {
+
   def failure: Failure = original.getFailure
   def failureMessage = original.getFailureMessage
+
   def id = original.getId
   def index = original.getIndex
   def itemId = original.getItemId
   def opType = original.getOpType
+
+  @deprecated("use toDeleteResult", "3.0.0")
   def deleteResponse: Option[DeleteResponse] = original.getResponse match {
     case d: DeleteResponse => Some(d)
     case _ => None
   }
-  def indexResult: Option[IndexResult] = original.getResponse match {
+
+  @deprecated("use toIndexResult", "3.0.0")
+  def indexResult: Option[IndexResult] = toIndexResult
+  def toIndexResult: Option[IndexResult] = original.getResponse match {
     case i: IndexResponse => Some(IndexResult(i))
     case _ => None
   }
+
   def `type` = original.getType
   def version = original.getVersion
   def isFailure: Boolean = original.isFailed

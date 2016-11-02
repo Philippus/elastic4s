@@ -2,10 +2,9 @@ package com.sksamuel.elastic4s2.search
 
 import java.util
 
-import com.sksamuel.elastic4s2.SortDefinition
+import com.sksamuel.elastic4s2.{ElasticDsl, IndexesAndTypes, ProxyClients, ScriptFieldDefinition, SortDefinition}
 import com.sksamuel.elastic4s2.search.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
 import com.sksamuel.elastic4s2.search.suggestions.SuggestionDefinition
-import com.sksamuel.elastic4s2.{IndexesAndTypes, ProxyClients, ScriptFieldDefinition}
 import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
@@ -49,6 +48,11 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     _builder.setQuery(block.builder)
     this
   }
+
+  /**
+   * Adds a match all query to this search definition
+   */
+  def matchAll(): SearchDefinition = query(ElasticDsl.matchAllQuery())
 
   // todo restore inner
   //  def inner(inners: InnerHitDefinition*): this.type = inner(inners)

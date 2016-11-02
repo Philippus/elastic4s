@@ -39,17 +39,27 @@ trait IndexDsl {
 
 case class IndexResult(original: IndexResponse) {
 
-  // java method aliases
+  @deprecated("use id", "3.0.0")
   def getId = id
+
+  @deprecated("use `type`", "3.0.0")
   def getType = `type`
+
+  @deprecated("use index", "3.0.0")
   def getIndex = index
+
+  @deprecated("use version", "3.0.0")
   def getVersion = original.getVersion
+
+  @deprecated("use created", "3.0.0")
   def isCreated: Boolean = created
 
   def id = original.getId
   def index = original.getIndex
   def `type` = original.getType
   def version: Long = original.getVersion
+  def documentRef = DocumentRef(index, `type`, id)
+
   def created: Boolean = original.getResult == Result.CREATED
 }
 
@@ -89,16 +99,6 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
 
   def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
     this._json = Option(indexable.json(t))
-    this
-  }
-
-  def doc(source: DocumentSource): this.type = {
-    this._source = Option(source)
-    this
-  }
-
-  def doc(map: DocumentMap): this.type = {
-    this._map = Option(map)
     this
   }
 

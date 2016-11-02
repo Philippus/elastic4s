@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s2.{Hit, HitAs, HitReader, Indexable}
 object ElasticJackson {
   object Implicits {
 
-    import JacksonJson._
+    import JacksonSupport._
 
     implicit def JacksonJsonIndexable[T]: Indexable[T] = new Indexable[T] {
       override def json(t: T): String = mapper.writeValueAsString(t)

@@ -73,20 +73,6 @@ case class SynonymTokenFilter(name: String,
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = Some(expand))
 }
 
-object SynonymTokenFilter {
-  @deprecated("for backwards compatibility, use synonymTokenFilter(name).xxx.xxx", "1.5.6")
-  def apply(name: String,
-            path: String): SynonymTokenFilter = {
-    SynonymTokenFilter(name, Option(path), Set.empty, None, None, None, None)
-  }
-  @deprecated("for backwards compatibility, use synonymTokenFilter(name).xxx.xxx", "1.5.6")
-  def apply(name: String,
-            path: String,
-            ignoreCase: Boolean): SynonymTokenFilter = {
-    SynonymTokenFilter(name, Option(path), Set.empty, Some(ignoreCase), None, None, None)
-  }
-}
-
 case class TruncateTokenFilter(name: String, length: Int = 10)
   extends TokenFilterDefinition {
 

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s2.DefinitionAttributes.{DefinitionAttributeBoost, D
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.index.query.QueryBuilders
 
-@deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
+@deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "3.0.0")
 case class FuzzyQueryDefinition(field: String, termValue: Any)
   extends MultiTermQueryDefinition
     with DefinitionAttributePrefixLength

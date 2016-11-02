@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s2.mappings
 
-import com.sksamuel.elastic4s2.{Executable, IndexAndTypes, IndexesAndType, IndexesAndTypes, ProxyClients}
+import com.sksamuel.elastic4s2.{Executable, Indexes, IndexesAndType, IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingAction, PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
@@ -12,14 +12,10 @@ import scala.language.implicitConversions
 trait MappingDsl {
 
   val NotAnalyzed: String = "not_analyzed"
-  def id: FieldDefinition = "_id"
+  def id: FieldDefinition = FieldDefinition("_id")
 
-  @deprecated("use field(x)", "2.0.0")
-  implicit def stringToField(name: String): FieldDefinition = FieldDefinition(name)
-  @deprecated("use mapping(x)", "2.0.0")
-  implicit def stringToMap(`type`: String): MappingDefinition = new MappingDefinition(`type`)
-
-  def getMapping(ixTp: IndexAndTypes): GetMappingDefinition = GetMappingDefinition(IndexesAndTypes(ixTp))
+  def getMapping(indexes: Indexes): GetMappingDefinition = getMapping(indexes.toIndexesAndTypes)
+  def getMapping(indexesAndTypes: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(indexesAndTypes)
 
   def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
 

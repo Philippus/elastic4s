@@ -25,7 +25,7 @@ class ElasticsearchClientUriTest extends FlatSpec with Matchers {
   }
 
   it should "error on missing values between commas" in {
-    intercept[IllegalArgumentException] {
+    intercept[RuntimeException] {
       ElasticsearchClientUri("elasticsearch://host1:1234,,host2:9999")
     } should not be null
   }

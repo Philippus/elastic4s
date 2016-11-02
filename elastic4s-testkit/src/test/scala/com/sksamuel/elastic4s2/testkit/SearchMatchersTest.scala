@@ -5,14 +5,21 @@ import org.scalatest.WordSpec
 
 class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar {
 
-  val indexname = getClass.getSimpleName.toLowerCase
+  val indexname = "searchmatchers"
+  val tubestops = "tubestops"
+
+  client.execute {
+    createIndex(indexname).mappings(
+      mapping(tubestops)
+    )
+  }
 
   client.execute {
     bulk(
-      index into indexname / "tubestops" fields("name" -> "south kensington", "line" -> "district"),
-      index into indexname / "tubestops" fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
-      index into indexname / "tubestops" fields("name" -> "cockfosters", "line" -> "picadilly") id 3,
-      index into indexname / "tubestops" fields("name" -> "bank", "line" -> "northern")
+      indexInto(indexname / "tubestops").fields("name" -> "south kensington", "line" -> "district"),
+      indexInto(indexname / "tubestops").fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
+      indexInto(indexname / "tubestops").fields("name" -> "cockfosters", "line" -> "picadilly").id(3),
+      indexInto(indexname / "tubestops").fields("name" -> "bank", "line" -> "northern")
     )
   }.await
 
@@ -20,7 +27,7 @@ class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar 
 
   "search matchers" should {
     "support haveHit" in {
-      (search in indexname query "picadilly") should containResult(3)
+      (search in indexname query "picadilly") should containId(3)
     }
     "support haveHits" in {
       (search in indexname query "*") should haveHits(4)

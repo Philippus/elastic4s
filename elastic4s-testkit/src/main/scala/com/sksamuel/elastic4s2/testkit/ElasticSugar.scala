@@ -4,13 +4,14 @@ import java.io.PrintWriter
 import java.nio.file.{Path, Paths}
 import java.util.UUID
 
+import com.sksamuel.elastic4s2.{ElasticClient, ElasticDsl}
 import com.sksamuel.elastic4s2.ElasticDsl._
-import com.sksamuel.elastic4s2.{ElasticClient, LocalNode}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.transport.RemoteTransportException
+import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future
@@ -24,6 +25,7 @@ trait NodeBuilder {
    * Override this if you wish to change where the home directory for the local instance will be located.
    */
   lazy val testNodeHomePath: Path = tempDirectoryPath resolve UUID.randomUUID().toString
+  lazy val testNodeDataPath: Path = tempDirectoryPath resolve UUID.randomUUID().toString
 
   def numberOfReplicas: Int = 0
 
@@ -66,7 +68,6 @@ trait NodeBuilder {
       .put("index.number_of_shards", numberOfShards)
       .put("index.number_of_replicas", numberOfReplicas)
       .put("script.inline", true)
-      .put("script.indexed", true)
       .put("index.refresh_interval", indexRefresh.toSeconds + "s")
       .put("discovery.zen.ping.multicast.enabled", "false")
       .put("es.logger.level", "INFO")
@@ -84,16 +85,26 @@ trait NodeBuilder {
    * Override to create the client youself.
    */
   def createLocalClient: ElasticClient = {
-    val node = LocalNode("local", testNodeHomePath.toString)
-    node.client()
+    val node = LocalNode(
+      getClass.getSimpleName,
+      testNodeHomePath.toAbsolutePath.toString,
+      testNodeDataPath.toAbsolutePath.toString
+    )
+    node.start()
+    node.client(true)
   }
 }
 
-trait ElasticSugar extends NodeBuilder {
+trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll {
+  this: Suite =>
 
   private val logger = LoggerFactory.getLogger(getClass)
 
   private lazy val internalClient = createLocalClient
+
+  override def afterAll(): Unit = {
+    internalClient.close()
+  }
 
   /**
    * Is invoked when a test needs access to a client for the test node.
@@ -114,7 +125,7 @@ trait ElasticSugar extends NodeBuilder {
   def blockUntilGreen(): Unit = {
     blockUntil("Expected cluster to have green status") { () =>
       client.execute {
-        get cluster health
+        clusterHealth()
       }.await.getStatus == ClusterHealthStatus.GREEN
     }
   }
@@ -155,9 +166,9 @@ trait ElasticSugar extends NodeBuilder {
   }
 
   def deleteIndex(name: String): Unit = {
-    if(doesIndexExists(name)) {
+    if (doesIndexExists(name)) {
       client.execute {
-        delete index name
+        ElasticDsl.deleteIndex(name)
       }.await
     }
   }
@@ -169,11 +180,10 @@ trait ElasticSugar extends NodeBuilder {
   }
 
   def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
-    blockUntil(s"Expected to find document $id") {
-      () =>
-        client.execute {
-          get(id).from(index / `type`)
-        }.await.exists
+    blockUntil(s"Expected to find document $id") { () =>
+      client.execute {
+        get(id).from(index / `type`)
+      }.await.exists
     }
   }
 
@@ -181,49 +191,46 @@ trait ElasticSugar extends NodeBuilder {
    * Will block until the given index and optional types have at least the given number of documents.
    */
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
-    blockUntil(s"Expected count of $expected") {
-      () =>
-        expected <= client.execute {
-          search(index / types.mkString(",")).size(0)
-        }.await.totalHits
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        searchIn(index / types).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
     }
   }
 
   def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
-    blockUntil(s"Expected count of $expected") {
-      () =>
-        expected == client.execute {
-          search(index / types.mkString(",")).size(0)
-        }.await.totalHits
+    blockUntil(s"Expected count of $expected") { () =>
+      expected == client.execute {
+        searchIn(index / types).size(0)
+      }.await.totalHits
     }
   }
 
   def blockUntilEmpty(index: String): Unit = {
-    blockUntil(s"Expected empty index $index") {
-      () =>
-        client.execute {
-          search(index).size(0)
-        }.await.totalHits == 0
+    blockUntil(s"Expected empty index $index") { () =>
+      client.execute {
+        searchIn(index).size(0)
+      }.await.totalHits == 0
     }
   }
   def blockUntilIndexExists(index: String): Unit = {
-    blockUntil(s"Expected exists index $index") {
-      () ⇒ doesIndexExists(index)
+    blockUntil(s"Expected exists index $index") { () ⇒
+      doesIndexExists(index)
     }
   }
 
   def blockUntilIndexNotExists(index: String): Unit = {
-    blockUntil(s"Expected not exists index $index") {
-      () ⇒ !doesIndexExists(index)
+    blockUntil(s"Expected not exists index $index") { () ⇒
+      !doesIndexExists(index)
     }
   }
 
   def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit = {
-    blockUntil(s"Expected document $id to have version $version") {
-      () =>
-        client.execute {
-          get(id).from(index / `type`)
-        }.await.getVersion == version
+    blockUntil(s"Expected document $id to have version $version") { () =>
+      client.execute {
+        get(id).from(index / `type`)
+      }.await.version == version
     }
   }
 }

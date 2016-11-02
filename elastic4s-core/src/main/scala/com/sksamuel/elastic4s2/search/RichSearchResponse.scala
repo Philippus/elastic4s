@@ -33,7 +33,7 @@ case class RichSearchResponse(original: SearchResponse) {
 
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
 
-  @deprecated("use to[T], which uses a Reader typeclass", "5.0.0")
+  @deprecated("use to[T], which uses a Reader typeclass", "3.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
   def to[T](implicit reader: HitReader[T], manifest: Manifest[T]) = hits.map(_.to[T])

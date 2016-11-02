@@ -40,7 +40,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
     if (java.sourceAsMap == null) mutable.Map.empty else java.sourceAsMap.asScala
   }
 
-  @deprecated("use to[T] which uses a Reader[T] typeclass", "5.0.0")
+  @deprecated("use to[T] which uses a Reader[T] typeclass", "3.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
   def to[T](implicit reader: HitReader[T], manifest: Manifest[T]): Either[Exception, T] = reader.read(this)

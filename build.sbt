@@ -13,14 +13,43 @@ lazy val root = Project("elastic4s", file("."))
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
-  .settings(name := "elastic4s-core")
+  .settings(
+    name := "elastic4s-core",
+    libraryDependencies ++= Seq(
+      "org.scalatest"                         %% "scalatest"                % ScalatestVersion,
+      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion % "test",
+      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion % "test",
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion % "test",
+      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % "2.7"
+    )
+  )
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
     name := "elastic4s-testkit",
     libraryDependencies ++= Seq(
-      "org.scalatest"       %% "scalatest"    % ScalatestVersion,
-      "org.elasticsearch"   % "elasticsearch" % ElasticsearchVersion
+      "org.scalatest"                         %% "scalatest"                % ScalatestVersion,
+      "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % "2.8.4",
+      "org.apache.lucene"                     % "lucene-core"               % "6.2.1",
+      "org.apache.lucene"                     % "lucene-analyzers-common"   % "6.2.1",
+      "org.apache.lucene"                     % "lucene-backward-codecs"    % "6.2.1",
+      "org.apache.lucene"                     % "lucene-grouping"           % "6.2.1",
+      "org.apache.lucene"                     % "lucene-highlighter"        % "6.2.1",
+      "org.apache.lucene"                     % "lucene-join"               % "6.2.1",
+      "org.apache.lucene"                     % "lucene-memory"             % "6.2.1",
+      "org.apache.lucene"                     % "lucene-misc"               % "6.2.1",
+      "org.apache.lucene"                     % "lucene-queries"            % "6.2.1",
+      "org.apache.lucene"                     % "lucene-queryparser"        % "6.2.1",
+      "org.apache.lucene"                     % "lucene-sandbox"            % "6.2.1",
+      "org.apache.lucene"                     % "lucene-spatial"            % "6.2.1",
+      "org.apache.lucene"                     % "lucene-spatial-extras"     % "6.2.1",
+      "org.apache.lucene"                     % "lucene-spatial3d"          % "6.2.1",
+      "org.apache.lucene"                     % "lucene-suggest"            % "6.2.1",
+      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % "2.7"
     )
   )
   .dependsOn(core)
