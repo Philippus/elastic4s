@@ -1,8 +1,8 @@
-package com.sksamuel.elastic4s2.analyzers
+package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s2.ElasticDsl._
-import com.sksamuel.elastic4s2.mappings.FieldType.StringType
-import com.sksamuel.elastic4s2.testkit.ElasticSugar
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {

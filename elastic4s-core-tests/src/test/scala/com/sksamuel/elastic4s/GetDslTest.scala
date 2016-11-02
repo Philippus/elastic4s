@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers

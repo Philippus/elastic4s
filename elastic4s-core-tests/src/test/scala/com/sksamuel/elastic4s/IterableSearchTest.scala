@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.ElasticDsl.{index, _}
 import org.scalatest.mock.MockitoSugar

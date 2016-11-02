@@ -1,9 +1,9 @@
-package com.sksamuel.elastic4s2.streams
+package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s2.jackson.ElasticJackson
-import com.sksamuel.elastic4s2.{ElasticDsl2$, RichSearchHit}
-import com.sksamuel.elastic4s2.testkit.ElasticSugar
+import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.{ElasticDsl2$, RichSearchHit}
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Subscriber, Publisher}
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike

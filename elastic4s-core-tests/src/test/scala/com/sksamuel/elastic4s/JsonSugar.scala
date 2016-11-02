@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule

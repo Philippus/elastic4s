@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s2.streams
+package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s2.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl2$}
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient, ElasticDsl2$}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer

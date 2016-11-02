@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s2.analyzers
+package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s2.ElasticDsl2$
+import com.sksamuel.elastic4s.ElasticDsl2$
 import org.scalatest.WordSpec
 
 class AnalyzerDslTest extends WordSpec with ElasticDsl2 {

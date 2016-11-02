@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
 package object streams {
   val DEFAULT_TIMEOUT_MILLIS = 2000l

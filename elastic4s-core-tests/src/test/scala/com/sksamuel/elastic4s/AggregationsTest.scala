@@ -1,6 +1,5 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.analyzers.KeywordAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
@@ -20,10 +19,12 @@ import scala.collection.JavaConverters._
 
 class AggregationsTest extends FreeSpec with Matchers with ElasticSugar {
 
+  import ElasticDsl._
+
   client.execute {
     create index "aggregations" mappings {
       mapping("breakingbad") fields (
-        "job" typed StringType analyzer KeywordAnalyzer
+        field("job") typed StringType analyzer KeywordAnalyzer
         )
     }
   }.await

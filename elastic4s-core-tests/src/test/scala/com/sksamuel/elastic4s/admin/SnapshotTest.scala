@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 package admin
 
 import org.scalatest.FreeSpec

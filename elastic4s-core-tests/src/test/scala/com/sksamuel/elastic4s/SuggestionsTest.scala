@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s2
+package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.source.Indexable
 import org.scalatest.{Matchers, WordSpec}

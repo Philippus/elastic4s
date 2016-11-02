@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s2.admin
+package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s2._
+import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.WordSpec
