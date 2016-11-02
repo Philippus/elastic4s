@@ -10,7 +10,6 @@ import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Entry, FlatSpec, Matchers, OneInstancePerTest}
 
-/** @author Stephen Samuel */
 class UpdateDslTest
   extends FlatSpec with MockitoSugar with OneInstancePerTest with Matchers with TypeCheckedTripleEquals {
 

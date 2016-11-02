@@ -13,9 +13,9 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute {
     create index "q" mappings {
-      "r" as Seq(
-         field("a", StringType) stored true analyzer WhitespaceAnalyzer,
-         field("b", StringType)
+      mapping("r") as Seq(
+        field("a", StringType) stored true analyzer WhitespaceAnalyzer,
+        field("b", StringType)
       )
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)

@@ -52,8 +52,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   }
 
   /**
-   * Adds a match all query to this search definition
-   */
+    * Adds a match all query to this search definition
+    */
   def matchAll(): SearchDefinition = query(ElasticDsl.matchAllQuery())
 
   // todo restore inner
@@ -96,7 +96,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   /** This method introduces zero or more script field definitions into the search construction
     *
-    * @param sfieldDefs zero or more [[ScriptFieldDefinition]] instances
+    * @param defs zero or more [[ScriptFieldDefinition]] instances
     * @return this, an instance of [[SearchDefinition]]
     */
   def scriptfields(defs: ScriptFieldDefinition*): this.type = scriptfields(defs)
@@ -120,6 +120,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * Adds a new suggestion to the search request, which can be looked up in the response
     * using the name provided.
     */
+  def suggestion(sugg: (String, SuggestionDefinition)): SearchDefinition = suggestion(sugg._1, sugg._2)
   def suggestion(name: String, suggestion: SuggestionDefinition): SearchDefinition = {
     val builder = _builder.request().source().suggest()
     if (builder == null)
@@ -269,11 +270,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def preference(pref: Preference): SearchDefinition = {
-    _builder.setPreference(pref.`type`())
-    this
-  }
-
+  def preference(pref: com.sksamuel.elastic4s.Preference): SearchDefinition = preference(pref.value)
+  def preference(pref: Preference): SearchDefinition = preference(pref.`type`)
   def preference(pref: String): SearchDefinition = {
     _builder.setPreference(pref)
     this

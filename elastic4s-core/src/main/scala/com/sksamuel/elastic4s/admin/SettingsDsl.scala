@@ -1,7 +1,8 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.{Executable, Indexes}
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
-import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsResponse, UpdateSettingsRequest}
+import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsRequest, UpdateSettingsResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future

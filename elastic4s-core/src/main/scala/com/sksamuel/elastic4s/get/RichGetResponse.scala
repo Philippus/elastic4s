@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.searches
+package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.{Hit, HitField}
 import org.elasticsearch.action.get.GetResponse

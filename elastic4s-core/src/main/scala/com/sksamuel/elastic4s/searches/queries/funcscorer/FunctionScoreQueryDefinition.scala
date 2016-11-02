@@ -6,7 +6,7 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder
 
 case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
-                                        functions: Seq[FilterFunctionDefinition[_]] = Nil,
+                                        scorers: Seq[FilterFunctionDefinition[_]] = Nil,
                                         boost: Option[Double] = None,
                                         maxBoost: Option[Double] = None,
                                         minScore: Option[Double] = None,
@@ -17,8 +17,8 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
   def builder: FunctionScoreQueryBuilder = {
 
     val builder = query match {
-      case Some(q) => new FunctionScoreQueryBuilder(q.builder, functions.map(_.builder).toArray)
-      case _ => new FunctionScoreQueryBuilder(functions.map(_.builder).toArray)
+      case Some(q) => new FunctionScoreQueryBuilder(q.builder, scorers.map(_.builder).toArray)
+      case _ => new FunctionScoreQueryBuilder(scorers.map(_.builder).toArray)
     }
 
     boost.map(_.toFloat).foreach(builder.boost)
@@ -32,17 +32,25 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
   def boost(boost: Double): FunctionScoreQueryDefinition = copy(boost = Option(boost))
   def minScore(min: Double): FunctionScoreQueryDefinition = copy(minScore = Option(min))
   def maxBoost(boost: Double): FunctionScoreQueryDefinition = copy(boost = Option(boost))
+
+  def scoreMode(mode: String) = scoreMode(FiltersFunctionScoreQuery.ScoreMode.valueOf(mode))
   def scoreMode(mode: FiltersFunctionScoreQuery.ScoreMode) = copy(scoreMode = Some(mode))
+
+  def boostMode(mode: String): FunctionScoreQueryDefinition = boostMode(CombineFunction.valueOf(mode))
   def boostMode(mode: CombineFunction): FunctionScoreQueryDefinition = copy(boostMode = Some(mode))
 
-  def withQuery(query: QueryDefinition): FunctionScoreQueryDefinition = copy(query = Some(query))
+  def query(query: QueryDefinition): FunctionScoreQueryDefinition = copy(query = Some(query))
 
-  def withFunctions(first: FilterFunctionDefinition[_],
-                    rest: FilterFunctionDefinition[_]*): FunctionScoreQueryDefinition =
-    withFunctions(first +: rest)
+  def scorers(first: ScoreFunctionDefinition,
+              rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = scorers(first +: rest)
 
-  def withFunctions(functions: Iterable[FilterFunctionDefinition[_]]): FunctionScoreQueryDefinition =
-    copy(functions = functions.toSeq)
+  def scorers(scorers: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition =
+    scoreFuncs(scorers.map(FilterFunctionDefinition(_)))
+
+  def scoreFuncs(first: FilterFunctionDefinition[_],
+                 rest: FilterFunctionDefinition[_]*): FunctionScoreQueryDefinition = scoreFuncs(first +: rest)
+
+  def scoreFuncs(functions: Iterable[FilterFunctionDefinition[_]]): FunctionScoreQueryDefinition = copy(scorers = functions.toSeq)
 }
 
 case class FilterFunctionDefinition[T](score: ScoreFunctionDefinition,

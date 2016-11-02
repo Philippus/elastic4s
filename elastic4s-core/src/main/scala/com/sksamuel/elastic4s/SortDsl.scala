@@ -9,6 +9,7 @@ trait SortDsl {
   def scoreSort(): ScoreSortDefinition = ScoreSortDefinition()
 
   def scriptSort(script: ScriptDefinition) = new {
+    def typed(`type`: String): ScriptSortDefinition = typed(ScriptSortType.valueOf(`type`))
     def typed(`type`: ScriptSortType): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
   }
 

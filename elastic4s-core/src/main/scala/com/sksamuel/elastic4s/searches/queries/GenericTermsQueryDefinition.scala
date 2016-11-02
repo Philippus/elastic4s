@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.TermsQueryBuilder
 
 trait GenericTermsQueryDefinition extends QueryDefinition {
+
   def builder: TermsQueryBuilder
 
   def boost(boost: Double): this.type = {

@@ -18,6 +18,9 @@ case class CreateIndexDefinition(name: String) {
     case None => new CreateIndexRequest(name).source(_source)
   }
 
+  def singleShard() = shards(1)
+  def singleReplica() = replicas(1)
+
   def shards(shards: Int): CreateIndexDefinition = {
     _settings.shards = shards
     this

@@ -11,7 +11,7 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
   "Search" should {
     "have a show typeclass implementation" in {
       val request = {
-        searches in "gameofthrones" / "characters" query {
+        search in "gameofthrones" / "characters" query {
           bool {
             should {
               termQuery("name", "snow")

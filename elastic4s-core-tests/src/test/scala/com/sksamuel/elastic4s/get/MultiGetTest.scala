@@ -6,11 +6,12 @@ import org.elasticsearch.index.VersionType
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
+import scala.collection.JavaConverters._
 
 class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
-    create index "coldplay" shards 2
+    createIndex("coldplay").shards(2)
   }.await
 
   def album(number: Long, name: String, year: Int, revision: Long) = {
@@ -45,9 +46,9 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.LOCAL refresh true realtime true
     ).await
     assert(3 === resp.responses.size)
-    assert("3" === resp.responses.toSeq.head.getResponse.getId)
-    assert("5" === resp.responses.toSeq(1).getResponse.getId)
-    assert(!resp.responses.toSeq(2).getResponse.isExists)
+    assert("3" === resp.responses.head.getResponse.getId)
+    assert("5" === resp.responses(1).getResponse.getId)
+    assert(!resp.responses(2).getResponse.isExists)
   }
 
   it should "retrieve documents by id with routing" in {
@@ -59,8 +60,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.LOCAL refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(!resp.getResponses.toSeq.head.getResponse.isExists)
-    assert("1" === resp.getResponses.toSeq(1).getResponse.getId)
+    assert(!resp.getResponses.head.getResponse.isExists)
+    assert("1" === resp.getResponses(1).getResponse.getId)
   }
 
   it should "retrieve documents by id with selected fields" in {
@@ -72,8 +73,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.LOCAL refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(resp.getResponses.toSeq.head.getResponse.getFields.keySet().asScala === Set("name", "year"))
-    assert(resp.getResponses.toSeq(1).getResponse.getFields.keySet().asScala === Set("name"))
+    resp.responses.head.response.getFields.keySet().asScala shouldBe Set("name", "year")
+    resp.responses.head.response.getFields.keySet().asScala shouldBe Set("name")
   }
 
   it should "retrieve documents by id with fetchSourceContext" in {
@@ -97,9 +98,9 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       ) preference Preference.LOCAL refresh true realtime true
     ).await
     assert(2 === resp.getResponses.size)
-    assert(resp.getResponses.toSeq.head.isFailed)
-    resp.getResponses.toSeq.head.getFailure.getFailure != null shouldBe true
-    assert(resp.getResponses.toSeq(1).getResponse.isExists)
-    assert(resp.getResponses.toSeq(1).getResponse.getVersion === 4)
+    assert(resp.getResponses.head.isFailed)
+    resp.getResponses.head.getFailure.getFailure != null shouldBe true
+    assert(resp.getResponses(1).getResponse.isExists)
+    assert(resp.getResponses(1).getResponse.getVersion === 4)
   }
 }

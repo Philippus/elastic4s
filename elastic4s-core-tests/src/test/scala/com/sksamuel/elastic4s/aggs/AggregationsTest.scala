@@ -49,7 +49,7 @@
 //  "terms aggregation" - {
 //    "should group by field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation terms "agg1" field "job"
 //        }
 //      }.await
@@ -66,7 +66,7 @@
 //    "should only include matching documents in the query" in {
 //      val resp = client.execute {
 //        // should match 3 documents
-//        searches in "aggregations/breakingbad" query prefixQuery("name" -> "s") aggregations {
+//        search in "aggregations/breakingbad" query prefixQuery("name" -> "s") aggregations {
 //          aggregation terms "agg1" field "job"
 //        }
 //      }.await
@@ -79,7 +79,7 @@
 //
 //    "should only return included fields" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation terms "agg1" field "job" include Array("meth kingpin", "lawyer")
 //        }
 //      }.await
@@ -92,7 +92,7 @@
 //
 //    "should not return excluded fields" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation terms "agg1" field "job" exclude  Array("meth kingpin", "lawyer")
 //        }
 //      }.await
@@ -106,7 +106,7 @@
 //
 //    "should group by field and return a missing value" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation terms "agg1" field "actor" missing("no-name")
 //        }
 //      }.await
@@ -123,7 +123,7 @@
 //  "avg aggregation" - {
 //    "should average by field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation avg "agg1" field "age"
 //        }
 //      }.await
@@ -134,7 +134,7 @@
 //    "should only include matching documents in the query" in {
 //      val resp = client.execute {
 //        // should match 3 documents
-//        searches in "aggregations/breakingbad" query prefixQuery("name" -> "g") aggregations {
+//        search in "aggregations/breakingbad" query prefixQuery("name" -> "g") aggregations {
 //          aggregation avg "agg1" field "age"
 //        }
 //      }.await
@@ -147,7 +147,7 @@
 //  "cardinality aggregation" - {
 //    "should count distinct values" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation cardinality "agg1" field "job"
 //        }
 //      }.await
@@ -160,7 +160,7 @@
 //  "missing aggregation" - {
 //    "should return documents missing a value" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation missing "agg1" field "actor"
 //        }
 //      }.await
@@ -173,7 +173,7 @@
 //  "max aggregation" - {
 //    "should count max value for field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation max "agg1" field "age"
 //        }
 //      }.await
@@ -186,7 +186,7 @@
 //  "min aggregation" - {
 //    "should count min value for field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation min "agg1" field "age"
 //        }
 //      }.await
@@ -199,7 +199,7 @@
 //  "sum aggregation" - {
 //    "should sum values for field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation sum "agg1" field "age"
 //        }
 //      }.await
@@ -212,7 +212,7 @@
 //  "value count aggregation" - {
 //    "should sum values for field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation count "agg1" field "age"
 //        }
 //      }.await
@@ -225,7 +225,7 @@
 //  "histogram aggregation" - {
 //    "should create histogram by field" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation histogram "h" field "age" interval 10
 //        }
 //      }.await
@@ -242,7 +242,7 @@
 //
 //    "should use offset" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation histogram "h" field "age" interval 10 offset 5
 //        }
 //      }.await
@@ -258,7 +258,7 @@
 //
 //    "should respect min_doc_count" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation histogram "agg1" field "age" interval 10 minDocCount 2
 //        }
 //      }.await
@@ -271,7 +271,7 @@
 //
 //    "should respect ordering" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation histogram "agg1" field "age" interval 10 order Histogram.Order.COUNT_DESC
 //        }
 //      }.await
@@ -286,7 +286,7 @@
 //  "scripted aggregation" - {
 //    "should  compute a word count on field name" in {
 //      val resp = client.execute {
-//        searches in "aggregations/breakingbad" aggregations {
+//        search in "aggregations/breakingbad" aggregations {
 //          aggregation.scriptedMetric("agg1")
 //            .initScript("_agg['wordCount'] = []")
 //            .mapScript("_agg.wordCount.add(doc['name'].values.size())")

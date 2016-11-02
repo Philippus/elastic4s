@@ -28,6 +28,7 @@ case class RichSearchResponse(original: SearchResponse) {
   @deprecated("use tookInMillis", "3.0.0")
   def getTookInMillis = original.getTookInMillis
 
+  def size: Int = original.getHits.hits().length
   def totalHits: Long = original.getHits.getTotalHits
   def maxScore: Float = original.getHits.getMaxScore
 

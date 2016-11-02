@@ -5,11 +5,11 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.WordSpec
 
-class IndexExistsTest extends WordSpec with ElasticSugar with ElasticDsl2 {
+class IndexExistsTest extends WordSpec with ElasticSugar {
 
   client.execute {
     create index "indexexiststest" mappings {
-      "r" as Seq(
+      mapping("r") as Seq(
         field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
         field name "b" withType StringType
       )

@@ -27,15 +27,16 @@ trait QueryDsl {
   def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition =
     ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))
 
-  def dismax(queries: Iterable[QueryDefinition]): DisMaxDefinition = new DisMaxDefinition(queries.toSeq)
   def dismax(first: QueryDefinition, rest: QueryDefinition*): DisMaxDefinition = dismax(first +: rest)
+  def dismax(queries: Iterable[QueryDefinition]): DisMaxDefinition = DisMaxDefinition(queries.toSeq)
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
-  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().withQuery(query)
+  def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
+  def geoBoxQuery(field: String, geohash: String) = GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
 
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
 

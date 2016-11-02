@@ -54,6 +54,9 @@ case class MatchQueryDefinition(field: String, value: Any)
     this
   }
 
+  def withAndOperator() = operator(Operator.AND)
+  def withOrOperator() = operator(Operator.AND)
+
   def operator(op: String): MatchQueryDefinition = {
     op match {
       case "AND" => builder.operator(Operator.AND)

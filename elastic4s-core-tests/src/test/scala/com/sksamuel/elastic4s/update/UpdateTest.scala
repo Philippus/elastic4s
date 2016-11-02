@@ -1,17 +1,14 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.Eventually
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration._
 
-
-/** @author Stephen Samuel */
 class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Eventually with Matchers {
 
   implicit val duration: Duration = 10.seconds
@@ -38,7 +35,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
     eventually {
       client.execute {
-        searches in "scifi" types "startrek" term "birthplace" -> "iowa"
+        search in "scifi" types "startrek" term "birthplace" -> "iowa"
       }.await.totalHits shouldBe 1
     }
   }
@@ -56,7 +53,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
     eventually {
       client.execute {
-        searches in "scifi" types "starwars" term "friends" -> "leia"
+        search in "scifi" types "starwars" term "friends" -> "leia"
       }.await.totalHits shouldBe 1
     }
   }
@@ -75,7 +72,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        searches in "scifi" types "starwars" term "location" -> "cloud"
+        search in "scifi" types "starwars" term "location" -> "cloud"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)
@@ -96,7 +93,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        searches in "scifi" types "startrek" term "character" -> "kirk"
+        search in "scifi" types "startrek" term "character" -> "kirk"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)
@@ -118,7 +115,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        searches in "scifi" types "starwars" term "character" -> "chewie"
+        search in "scifi" types "starwars" term "character" -> "chewie"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)

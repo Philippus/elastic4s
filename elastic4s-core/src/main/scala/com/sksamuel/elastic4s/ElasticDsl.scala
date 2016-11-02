@@ -15,6 +15,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, HighlightDefinition, PercolateDsl, QueryDefinition, ScrollDsl, SearchDefinition, SearchDsl, SearchScrollDefinition}
 import com.sksamuel.elastic4s.task.TaskApi
+import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.update.UpdateDsl
 import com.sksamuel.elastic4s.validate.{ValidateDefinition, ValidateDsl}
 

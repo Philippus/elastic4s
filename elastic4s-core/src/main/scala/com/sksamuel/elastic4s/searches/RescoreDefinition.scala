@@ -21,8 +21,9 @@ case class RescoreDefinition(query: QueryDefinition) {
     this
   }
 
-  def scoreMode(scoreMode: QueryRescoreMode): RescoreDefinition = {
-    builder.setScoreMode(scoreMode)
+  def scoreMode(mode: String): RescoreDefinition = scoreMode(QueryRescoreMode.valueOf(mode))
+  def scoreMode(mode: QueryRescoreMode): RescoreDefinition = {
+    builder.setScoreMode(mode)
     this
   }
 }

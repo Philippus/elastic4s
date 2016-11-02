@@ -1,13 +1,10 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.ElasticDsl2$
 import com.sksamuel.elastic4s.mappings.FieldType.DoubleType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class DynamicTemplateDefinitionTest extends WordSpec with Matchers with ElasticSugar {
-
-  import ElasticDsl2._
 
   "DynamicTemplateDefinition" should {
     "support mappings for wildcards" in {

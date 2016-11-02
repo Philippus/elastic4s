@@ -5,7 +5,7 @@ import org.elasticsearch.index.query.functionscore._
 
 trait ScoreDsl {
 
-  def randomScore(seed: Int) = RandomScoreDefinition(seed)
+  def randomScore(seed: Int) = RandomScoreFunctionDefinition(seed)
 
   def scriptScore(script: ScriptDefinition) = ScriptScoreDefinition(script)
 

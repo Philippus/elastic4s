@@ -39,24 +39,24 @@ class SearchTest
 
   "a search query" should {
     "find an indexed document that matches a string query" in {
-      searches in "musicians" -> "bands" query "anderson" should haveTotalHits(1)
+      search in "musicians" -> "bands" query "anderson" should haveTotalHits(1)
     }
     "find an indexed document in the given type only" in {
-      searches in "musicians" -> "bands" query "kate" should haveNoHits
-      searches in "musicians" -> "performers" query "kate" should haveTotalHits(1)
+      search in "musicians" -> "bands" query "kate" should haveNoHits
+      search in "musicians" -> "performers" query "kate" should haveTotalHits(1)
     }
     "return specified fields" in {
-      searches in "musicians/bands" query "jethro" fields "singer" should haveFieldValue("ian anderson")
+      search in "musicians/bands" query "jethro" fields "singer" should haveFieldValue("ian anderson")
     }
     "support source includes" in {
-      val s = searches in "musicians/bands" query "jethro" sourceInclude("keyboards", "guit*")
+      val s = search in "musicians/bands" query "jethro" sourceInclude("keyboards", "guit*")
       s should haveSourceField("keyboards")
       s should haveSourceField("guitar")
       s should not(haveSourceField("singer"))
       s should not(haveSourceField("name"))
     }
     "support source excludes" in {
-      val s = searches in "musicians/bands" query "jethro" sourceExclude("na*", "guit*")
+      val s = search in "musicians/bands" query "jethro" sourceExclude("na*", "guit*")
       s should haveSourceField("keyboards")
       s should not (haveSourceField("guitar"))
       s should haveSourceField("singer")

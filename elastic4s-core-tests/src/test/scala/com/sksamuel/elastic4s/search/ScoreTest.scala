@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
 import org.elasticsearch.common.xcontent.{ToXContent, XContentFactory}
 import org.scalatest.FlatSpec
 
 class ScoreTest extends FlatSpec with JsonSugar {
 
+  import com.sksamuel.elastic4s.ElasticDsl._
+_
   "a score dsl" should "generate correct json for a linear decay function scorer" in {
     val req = linearScore("myfield", "1 2", "2km").offset(100).decay(0.1)
     val actual = req.builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).string()

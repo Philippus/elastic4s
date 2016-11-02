@@ -1,15 +1,14 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{Indexable, searches}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    create.index("electronics").mappings("phone" ttl true)
+    create.index("electronics").mappings(mapping("phone") ttl true)
   }.await
 
   "an index request" should {
@@ -20,7 +19,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
       blockUntilCount(1, "electronics")
 
       client.execute {
-        searches in "electronics" / "phone" query termQuery("screensize", 5)
+        search in "electronics" / "phone" query termQuery("screensize", 5)
       }.await.totalHits shouldBe 1
     }
     "index from indexable typeclass" in {
@@ -37,7 +36,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
       blockUntilCount(2, "electronics")
 
       client.execute {
-        searches in "electronics" / "phone" query termQuery("speed", "4g")
+        search in "electronics" / "phone" query termQuery("speed", "4g")
       }.await.totalHits shouldBe 1
     }
     "expire a document once the TTL has passed" in {

@@ -37,7 +37,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
     "bring back results" in {
       val mysugg = termSuggestion.field("artist").text("taylor swaft")
       val resp = client.execute {
-        searches in indexType suggestions {
+        search in indexType suggestions {
           mysugg
         }
       }.await
@@ -47,14 +47,14 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
     "bring back suggestions for matching terms when mode is always" in {
       val suggestionA = term suggestion "a" field "artist" text "Razzle Kacks" mode SuggestMode.Always
       val resp = client.execute {
-        searches in indexType suggestions suggestionA
+        search in indexType suggestions suggestionA
       }.await
       resp.suggestion("a").entry("razzle").optionsText shouldBe Array("rizzle")
       resp.suggestion("a").entry("kacks").optionsText shouldBe Array("kicks")
     }
     "bring back suggestions that are more popular when popular mode is set" in {
       val resp = client.execute {
-        searches in indexType suggestions {
+        search in indexType suggestions {
           term suggestion "a" field "artist" text "Quoon" mode SuggestMode.Popular
         }
       }.await
@@ -62,7 +62,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
     }
     "allow us to set the max edits to be counted as a suitable suggestion" in {
       val resp = client.execute {
-        searches in indexType suggestions {
+        search in indexType suggestions {
           term suggestion "a" field "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
       }.await
