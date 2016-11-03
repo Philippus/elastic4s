@@ -3,35 +3,44 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.scalatest.WordSpec
+import org.scalatest.{Matchers, WordSpec}
 
-class IndexExistsTest extends WordSpec with ElasticSugar {
+class IndexExistsTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute {
-    create index "indexexiststest" mappings {
-      mapping("r") as Seq(
-        field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
-        field name "b" withType StringType
+    createIndex("flowers").mappings {
+      mapping("flowers") as Seq(
+        field("name") withType StringType stored true analyzer WhitespaceAnalyzer,
+        field("latin_name") withType StringType
       )
     }
   }.await
 
-  "index exists" should {
-    "return true for existing index" in {
-
-      val resp = client.execute {
-        index exists "indexexiststest"
-      }.await
-
-      assert(resp.isExists === true)
+  "an index exists request" should {
+    "return true for an existing index" in {
+      client.execute {
+        indexExists("flowers")
+      }.await.isExists shouldBe true
     }
     "return false for non existing index" in {
+      client.execute {
+        indexExists("qweqwewqe")
+      }.await.isExists shouldBe false
+    }
+  }
 
-      val resp = client.execute {
-        index exists "qweqwewqe"
-      }.await
+  "a delete index request" should {
+    "delete the index" in {
 
-      assert(resp.isExists === false)
+      client.execute {
+        indexExists("flowers")
+      }.await.isExists shouldBe true
+
+      deleteIndex("flowers")
+
+      client.execute {
+        indexExists("flowers")
+      }.await.isExists shouldBe false
     }
   }
 }

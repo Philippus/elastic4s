@@ -24,7 +24,6 @@ class MappingDefinition(val `type`: String) {
   var _meta: Map[String, Any] = Map.empty
   var _routing: Option[RoutingDefinition] = None
   var _timestamp: Option[TimestampDefinition] = None
-  var _ttl: Option[Boolean] = None
   var _templates: Iterable[DynamicTemplateDefinition] = Nil
   var _id: Option[IdField] = None
 
@@ -78,11 +77,6 @@ class MappingDefinition(val `type`: String) {
 
   def timestamp(timestampDefinition: TimestampDefinition): this.type = {
     this._timestamp = Option(timestampDefinition)
-    this
-  }
-
-  def ttl(enabled: Boolean): this.type = {
-    _ttl = Option(enabled)
     this
   }
 
@@ -186,8 +180,6 @@ class MappingDefinition(val `type`: String) {
     _size.foreach(x => json.startObject("_size").field("enabled", x).endObject())
 
     _timestamp.foreach(_.build(json))
-
-    for ( ttl <- _ttl ) json.startObject("_ttl").field("enabled", ttl).endObject()
 
     if (_fields.nonEmpty) {
       json.startObject("properties")

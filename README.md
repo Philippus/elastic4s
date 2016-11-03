@@ -50,6 +50,10 @@ The upcoming 3.0.0 release will be compatible with Elasticsearch 5.0.0.
 
 ##### Changelog
 
+###### 3.0.0
+
+* Version 3.0.0 is the first release compatible with 5.0.0.
+* TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
 
 ###### 2.1.1
 

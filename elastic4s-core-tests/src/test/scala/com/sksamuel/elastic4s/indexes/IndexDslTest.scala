@@ -45,11 +45,10 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     checkRequest(req, "twitter", "tweets", "/json/index/simple_single.json", Some(1234))
   }
 
-  it should "generate including routing and ttl" in {
+  it should "generate with routing" in {
     val req = index into "twitter/tweets" fields (
       "name" -> "sksamuel"
-    ) routing "users" ttl 100000
-
+    ) routing "users"
     checkRequest(req, "twitter", "tweets", "/json/index/simple_single.json", None, Some("users"), Some(100000))
   }
 

@@ -8,18 +8,18 @@ import org.scalatest.{Matchers, WordSpec}
 class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
 
   client.execute {
-    create.index("electronics").mappings(mapping("phone") ttl true)
+    createIndex("electronics").mappings(mapping("phone"))
   }.await
 
   "an index request" should {
     "index numbers" in {
       client.execute {
-        index into "electronics/phone" fields Map("screensize" -> 5)
+        indexInto("electronics" / "phone").fields(Map("screensize" -> 5))
       }
       blockUntilCount(1, "electronics")
 
       client.execute {
-        search in "electronics" / "phone" query termQuery("screensize", 5)
+        searchIn("electronics" / "phone").query(termQuery("screensize", 5))
       }.await.totalHits shouldBe 1
     }
     "index from indexable typeclass" in {
@@ -31,42 +31,13 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
       val phone = Phone("nokia blabble", "4g")
 
       client.execute {
-        index into "electronics/phone" source phone
+        indexInto("electronics" / "phone").source(phone)
       }
       blockUntilCount(2, "electronics")
 
       client.execute {
-        search in "electronics" / "phone" query termQuery("speed", "4g")
+        searchIn("electronics" / "phone").query(termQuery("speed", "4g"))
       }.await.totalHits shouldBe 1
-    }
-    "expire a document once the TTL has passed" in {
-      import scala.concurrent.duration._
-      client.execute {
-        index into "electronics/phone" fields "vender" -> "blackberry" ttl 1.seconds
-      }
-      blockUntilCount(3, "electronics")
-      blockUntilCount(2, "electronics")
-    }
-  }
-  "an index exists request" should {
-    "return true for an existing index" in {
-      client.execute {
-        index exists "electronics"
-      }.await.isExists shouldBe true
-    }
-  }
-
-  "a delete index request" should {
-    "delete the index" in {
-      client.execute {
-        index exists "electronics"
-      }.await.isExists shouldBe true
-      client.execute {
-        delete index "electronics"
-      }.await
-      client.execute {
-        index exists "electronics"
-      }.await.isExists shouldBe false
     }
   }
 }

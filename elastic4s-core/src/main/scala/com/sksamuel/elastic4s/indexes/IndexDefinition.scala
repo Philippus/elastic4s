@@ -75,16 +75,6 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     this
   }
 
-  def ttl(ttl: Long): IndexDefinition = {
-    _request.ttl(ttl)
-    this
-  }
-
-  def ttl(duration: FiniteDuration): this.type = {
-    _request.ttl(duration.toMillis)
-    this
-  }
-
   def update(update: Boolean): IndexDefinition = if (update) opType(OpType.CREATE) else opType(OpType.INDEX)
 
   def version(version: Long): IndexDefinition = {
