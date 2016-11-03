@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}

@@ -9,7 +9,6 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
 import scala.collection.mutable
-import scala.concurrent.duration.FiniteDuration
 
 class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefinition {
   require(index != null, "index must not be null or empty")
