@@ -16,7 +16,9 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 * Type safe concise DSL
 * Integrates with standard Scala futures
-* Uses Scala collections library
+* Uses Scala collections library over Java collections
+* Returns `Option` where the java methods would return null
+* Uses typeclasses for marshalling and unmarshalling of classes into elasticsearch documents
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
 
