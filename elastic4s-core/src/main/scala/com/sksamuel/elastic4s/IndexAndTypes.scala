@@ -40,7 +40,9 @@ object IndexAndType {
  * - index1/type1
  * - index1/type1,type2
  */
-case class IndexAndTypes(index: String, types: Seq[String])
+case class IndexAndTypes(index: String, types: Seq[String]) {
+  def toIndexesAndTypes = IndexesAndTypes(Seq(index), types)
+}
 
 object IndexAndTypes {
   implicit def apply(string: String): IndexAndTypes = {
@@ -87,8 +89,7 @@ object IndexesAndTypes {
   implicit def apply(indexAndType: (String, String)): IndexesAndTypes = apply(indexAndType._1, indexAndType._2)
   implicit def apply(index: String, `type`: String): IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
 
-  implicit def apply(indexAndTypes: IndexAndTypes): IndexesAndTypes =
-    IndexesAndTypes(Seq(indexAndTypes.index), indexAndTypes.types)
+  implicit def apply(indexAndTypes: IndexAndTypes): IndexesAndTypes = indexAndTypes.toIndexesAndTypes
 }
 
 case class IndexesAndType(indexes: Seq[String], `type`: String)

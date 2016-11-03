@@ -1,77 +1,36 @@
 package com.sksamuel.elastic4s.validate
 
 import com.sksamuel.elastic4s.searches.QueryDefinition
-import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
-import com.sksamuel.elastic4s.{Executable, IndexAndTypes, ProxyClients, Show}
-import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryAction, ValidateQueryRequestBuilder, ValidateQueryResponse}
+import com.sksamuel.elastic4s.{Executable, IndexesAndTypes, Show}
+import org.elasticsearch.action.ActionListener
+import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
 
 trait ValidateDsl {
 
-  def validateIn(indexType: IndexAndTypes): ValidateDefinition =
-    ValidateDefinition(indexType.index, indexType.types.head)
+  def validateIn(indexesAndTypes: IndexesAndTypes): ValidateExpectsQuery = new ValidateExpectsQuery(indexesAndTypes)
 
-  def validateIn(value: String): ValidateDefinition = ??? // todo validate in value
+  class ValidateExpectsQuery(indexesAndTypes: IndexesAndTypes) {
+    def query(query: QueryDefinition): ValidateDefinition = ValidateDefinition(indexesAndTypes, query.builder)
+  }
 
   implicit object ValidateDefinitionExecutable
     extends Executable[ValidateDefinition, ValidateQueryResponse, ValidateQueryResponse] {
-    override def apply(c: Client, t: ValidateDefinition): Future[ValidateQueryResponse] = {
-      injectFuture(c.admin.indices.validateQuery(t.build, _))
+    override def apply(c: Client, v: ValidateDefinition): Future[ValidateQueryResponse] = {
+      val f = c.admin().indices().validateQuery(v.builder.request(), _: ActionListener[ValidateQueryResponse])
+      injectFuture(f)
     }
   }
 
   implicit object ValidateDefinitionShow extends Show[ValidateDefinition] {
-    override def show(f: ValidateDefinition): String = {
-      Option(f.q).fold("")(q => q.builder.toString)
+    override def show(v: ValidateDefinition): String = {
+      v.builder.request().toString
     }
   }
 
   implicit class ValidateDefinitionShowOps(f: ValidateDefinition) {
     def show: String = ValidateDefinitionShow.show(f)
-  }
-}
-
-case class ValidateDefinition(index: String,
-                              `type`: String) {
-
-  private[elastic4s] var q: QueryDefinition = _
-
-  val _builder = {
-    new ValidateQueryRequestBuilder(ProxyClients.indices, ValidateQueryAction.INSTANCE)
-      .setIndices(index)
-      .setTypes(`type`)
-  }
-
-  def build = _builder.request
-
-  /**
-   * Adds a single string query to this search
-   *
-   * @param string the query string
-   *
-   * @return this
-   */
-  def query(string: String): this.type = {
-    this.q = QueryStringQueryDefinition(string)
-    _builder.setQuery(q.builder)
-    this
-  }
-
-  def rewrite(rewrite: Boolean): this.type = {
-    _builder.setRewrite(rewrite)
-    this
-  }
-
-  def query(block: => QueryDefinition): this.type = {
-    this.q = block
-    _builder.setQuery(q.builder)
-    this
-  }
-
-  def explain(ex: Boolean): this.type = {
-    _builder.setExplain(ex)
-    this
   }
 }

@@ -490,16 +490,16 @@ trait ElasticDsl
 
   case object validate {
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
-    def in(indexType: IndexAndTypes): ValidateDefinition = ValidateDefinition(indexType.index, indexType.types.head)
+    def in(indexType: IndexAndTypes): ValidateExpectsQuery = validateIn(indexType.toIndexesAndTypes)
+
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
-    def in(value: String): ValidateDefinition = {
-      require(value.nonEmpty, "value must not be null or empty")
-      validateIn(IndexAndTypes(value))
-    }
+    def in(value: String): ValidateExpectsQuery = validateIn(IndexesAndTypes(value))
+
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
-    def in(index: String, `type`: String): ValidateDefinition = ValidateDefinition(index, `type`)
+    def in(index: String, `type`: String): ValidateExpectsQuery = validateIn(IndexesAndTypes(index, `type`))
+
     @deprecated("use validateIn(index, type) or validateIn(index/type)", "3.0.0")
-    def in(tuple: (String, String)): ValidateDefinition = ValidateDefinition(tuple._1, tuple._2)
+    def in(tuple: (String, String)): ValidateExpectsQuery = validateIn(IndexesAndTypes(tuple))
   }
 }
 
