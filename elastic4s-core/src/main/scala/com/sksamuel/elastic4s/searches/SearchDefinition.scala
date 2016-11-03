@@ -12,7 +12,6 @@ import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.{Script, ScriptService}
-import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 import scala.collection.JavaConverters._
 
@@ -342,8 +341,11 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def fields(fields: String*): SearchDefinition = {
-    _builder.storedFields(fields: _*)
+  @deprecated("Renamed to storedFields", "3.0.0")
+  def fields(fields: String*): SearchDefinition = storedFields(fields)
+  def storedFields(first: String, rest: String*): SearchDefinition = storedFields(first +: rest)
+  def storedFields(fields: Iterable[String]): SearchDefinition = {
+    _builder.storedFields(fields.toSeq: _*)
     this
   }
 

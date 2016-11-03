@@ -131,6 +131,15 @@ final class ObjectFieldDefinition(name: String)
   }
 }
 
+final class TextFieldDefinition(name: String) {
+  def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
+    if (startObject)
+      source.startObject(name)
+    if (startObject)
+      source.endObject()
+  }
+}
+
 final class StringFieldDefinition(name: String)
   extends TypedFieldDefinition(StringType, name)
   with AttributeIndexName
@@ -151,6 +160,13 @@ final class StringFieldDefinition(name: String)
   with AttributeSimilarity
   with AttributeCopyTo
   with AttributeFields {
+
+  private var fielddata: Option[Boolean] = None
+
+  def fielddata(b: Boolean): StringFieldDefinition = {
+    this.fielddata = Option(b)
+    this
+  }
 
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
@@ -175,6 +191,8 @@ final class StringFieldDefinition(name: String)
     super[AttributeTermVector].insert(source)
     super[AttributeCopyTo].insert(source)
     super[AttributeFields].insert(source)
+
+    fielddata.foreach(source.field("fielddata", _))
 
     if (startObject)
       source.endObject()

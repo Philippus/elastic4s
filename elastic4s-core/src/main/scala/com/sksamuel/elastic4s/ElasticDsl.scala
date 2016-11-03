@@ -110,6 +110,7 @@ trait ElasticDsl
   def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
+  def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
   def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
@@ -139,6 +140,7 @@ trait ElasticDsl
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
   def shortField(name: String) = field(name, ShortType)
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
+  def textField(name: String): TextFieldDefinition = field(name, TextType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)

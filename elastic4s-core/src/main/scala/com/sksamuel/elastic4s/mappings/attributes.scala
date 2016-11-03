@@ -43,7 +43,10 @@ object attributes {
 
     private[this] var _store: Option[String] = None
 
+    @deprecated("use stored(true) or stored(false)", "3.0.0")
     def stored(param: YesNo): this.type = store(param)
+
+    @deprecated("use stored(true) or stored(false)", "3.0.0")
     def store(store: YesNo): this.type = {
       _store = Some(store.value)
       this
