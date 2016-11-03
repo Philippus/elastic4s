@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.mappings
 
-/** @author Stephen Samuel */
 abstract class FieldType(val elastic: String)
 object FieldType {
   case object AttachmentType extends FieldType("attachment")

@@ -120,7 +120,13 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * Adds a new suggestion to the search request, which can be looked up in the response
     * using the name provided.
     */
-  def suggestion(sugg: (String, SuggestionDefinition)): SearchDefinition = suggestion(sugg._1, sugg._2)
+  def suggestions(suggs: (String, SuggestionDefinition)*): SearchDefinition = {
+    suggs.foreach {
+      case (name, sugg) => suggestion(name, sugg)
+    }
+    this
+  }
+
   def suggestion(name: String, suggestion: SuggestionDefinition): SearchDefinition = {
     val builder = _builder.request().source().suggest()
     if (builder == null)

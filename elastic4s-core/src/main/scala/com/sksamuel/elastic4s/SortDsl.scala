@@ -16,9 +16,14 @@ trait SortDsl {
   def fieldSort(field: String) = FieldSortDefinition(field)
 
   def geoSort(field: String) = new {
+
+    def points(first: String, rest: String*): GeoDistanceSortDefinition = points(first +: rest)
+    def points(geohashes: Seq[String]): GeoDistanceSortDefinition =
+      new GeoDistanceSortDefinition(field, geohashes, Nil)
+
     def points(first: GeoPoint, rest: GeoPoint*): GeoDistanceSortDefinition = points(first +: rest)
     def points(points: Iterable[GeoPoint]): GeoDistanceSortDefinition =
-      new GeoDistanceSortDefinition(field, points.toSeq)
+      new GeoDistanceSortDefinition(field, Nil, points.toSeq)
   }
 
 }

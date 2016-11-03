@@ -71,7 +71,6 @@ abstract class TypedFieldDefinition(val `type`: FieldType, name: String) extends
   private[elastic4s] def build(source: XContentBuilder, startObject: Boolean = true): Unit
 }
 
-/** @author Fehmi Can Saglam */
 final class NestedFieldDefinition(name: String)
   extends TypedFieldDefinition(NestedType, name)
     with AttributeIncludeInRoot
@@ -102,7 +101,6 @@ final class NestedFieldDefinition(name: String)
   }
 }
 
-/** @author Fehmi Can Saglam */
 final class ObjectFieldDefinition(name: String)
   extends TypedFieldDefinition(ObjectType, name)
     with AttributeEnabled {

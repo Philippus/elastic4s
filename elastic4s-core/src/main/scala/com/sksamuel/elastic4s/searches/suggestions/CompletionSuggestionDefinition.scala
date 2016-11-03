@@ -4,7 +4,6 @@ import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, RegexOptions}
-import scala.collection.JavaConverters._
 
 case class CompletionSuggestionDefinition(fieldname: String,
                                           prefix: Option[String] = None,

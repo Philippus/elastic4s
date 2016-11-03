@@ -6,9 +6,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class MultiSearchShowTest extends WordSpec with Matchers with ElasticSugar with JsonSugar {
 
-  import ElasticDsl._
-
-
   "MultiSearch" should {
     "have a show typeclass implementation" in {
       val request = {

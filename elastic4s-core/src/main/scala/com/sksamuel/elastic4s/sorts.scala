@@ -81,9 +81,10 @@ case class ScriptSortDefinition(script: ScriptDefinition,
 }
 
 class GeoDistanceSortDefinition(field: String,
-                                points: Seq[GeoPoint]) extends SortDefinition[GeoDistanceSortBuilder] {
+                                geohashes: Seq[String] = Nil,
+                                points: Seq[GeoPoint] = Nil) extends SortDefinition[GeoDistanceSortBuilder] {
 
-  val builder = SortBuilders.geoDistanceSort(field, points: _*)
+  val builder = SortBuilders.geoDistanceSort(field, geohashes: _*).points(points: _*)
 
   def nested(nestedPath: String): this.type = {
     builder.setNestedPath(nestedPath)
@@ -99,6 +100,8 @@ class GeoDistanceSortDefinition(field: String,
     builder.order(order)
     this
   }
+
+  builder.geoDistance()
 
   def geoDistance(geoDistance: GeoDistance): this.type = {
     builder.geoDistance(geoDistance)
