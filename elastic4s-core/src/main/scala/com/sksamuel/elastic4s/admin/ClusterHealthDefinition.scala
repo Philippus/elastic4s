@@ -11,6 +11,7 @@ case class ClusterHealthDefinition(indices: Seq[String],
                                    waitForNodes: Option[String] = None) {
 
   def build(builder: ClusterHealthRequestBuilder): Unit = {
+    builder.setIndices(indices: _*)
     timeout.foreach(builder.setTimeout)
     waitForNodes.foreach(builder.setWaitForNodes)
     waitForActiveShards.foreach(builder.setWaitForActiveShards)
