@@ -143,6 +143,7 @@ class MappingDefinition(val `type`: String) {
     builder.endObject()
   }
 
+  // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
   def buildWithName: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject()
     builder.startObject(`type`)

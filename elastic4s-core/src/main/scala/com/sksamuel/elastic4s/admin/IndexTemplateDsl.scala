@@ -5,7 +5,6 @@ import org.elasticsearch.action.admin.indices.template.delete.DeleteIndexTemplat
 import org.elasticsearch.action.admin.indices.template.get.GetIndexTemplatesResponse
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateResponse
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.concurrent.Future
 
@@ -22,26 +21,9 @@ trait IndexTemplateDsl {
   implicit object CreateIndexTemplateDefinitionExecutable
     extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
-      import t._
-
-      val req = c.admin.indices.preparePutTemplate(t.name).setTemplate(t.pattern)
-      _mappings.foreach(mapping => {
-        req.addMapping(mapping.`type`, mapping.buildWithName)
-      })
-
-      if (_settings.settings.nonEmpty || _analysis.nonEmpty) {
-        val source = XContentFactory.jsonBuilder().startObject()
-
-        _settings.settings foreach { p => source.field(p._1, p._2) }
-
-        _analysis.foreach(_.build(source))
-
-        source.endObject()
-
-        req.setSettings(source.string())
-      }
-
-      injectFuture(req.execute)
+      val builder = c.admin.indices().preparePutTemplate(t.name)
+      t.populate(builder)
+      injectFuture(builder.execute)
     }
   }
 
