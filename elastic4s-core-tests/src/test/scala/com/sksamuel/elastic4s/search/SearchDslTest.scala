@@ -407,11 +407,12 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for multiple sorts" in {
-    val req = search in "music" types "bands" sort(
+    val sorts = Seq(
       scriptSort("document.score") typed "java" order SortOrder.ASC,
       scoreSort().order(SortOrder.DESC),
       fieldSort("dancer") order SortOrder.DESC
-      )
+    )
+    val req = search in "music" types "bands" sortBy sorts
     req.show should matchJsonResource("/json/search/search_sort_multiple.json")
   }
 
@@ -423,7 +424,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for geo bounding box filter" in {
-    val req = search in "music" types "bands" postFilter {
+    val req = searchIn("music" / "bands").postFilter {
       geoBoxQuery("box").withCorners(40.6, 56.5, 45.5, 12.55)
     }
     req.show should matchJsonResource("/json/search/search_filter_geo_boundingbox.json")

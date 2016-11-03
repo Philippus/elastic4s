@@ -89,7 +89,10 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   //    this
   //  }
 
-  def sort[T <: SortBuilder[T]](sorts: SortDefinition[T]*): SearchDefinition = {
+  @deprecated("use sortBy", "3.0.0")
+  def sort(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
+  def sortBy(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
+  def sortBy(sorts: Iterable[SortDefinition[_]]): SearchDefinition = {
     sorts.map(_.builder).foreach(_builder.request().source().sort)
     this
   }

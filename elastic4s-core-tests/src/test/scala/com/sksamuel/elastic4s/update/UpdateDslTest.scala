@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.update
 import java.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.sksamuel.elastic4s.DocumentSource
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.{NestedFieldValue, SimpleFieldValue}
 import org.scalactic.TypeCheckedTripleEquals
@@ -18,11 +17,6 @@ class UpdateDslTest
   "the update dsl" should "should support retry on conflict" in {
     val updateDef = update id 5 in "scifi/startrek" retryOnConflict 4
     assert(updateDef.build.retryOnConflict() == 4)
-  }
-
-  it should "should support consistencyLevel" in {
-    val updateDef = update id 5 in "scifi/startrek" consistencyLevel WriteConsistencyLevel.ONE
-    assert(updateDef.build.consistencyLevel() == WriteConsistencyLevel.ONE)
   }
 
   it should "should support routing" in {
@@ -72,12 +66,6 @@ class UpdateDslTest
       .asInstanceOf[util.Map[String, String]] should contain(Entry("captain", "archer"))
   }
 
-  it should "should support source" in {
-    val updateDef = update id 65 in "scifi/startrek" doc new TestSource
-    assert(updateDef.build.doc().sourceAsMap().containsKey("ship"))
-    assert(updateDef.build.doc().sourceAsMap().containsValue("enterprise"))
-  }
-
   it should "accept tuple for in" in {
     (update id 65 in "places" -> "cities").build.index === "places"
     (update id 65 in "places" -> "cities").build.`type` === "cities"
@@ -100,8 +88,3 @@ class UpdateDslTest
     update(65).in("places/cities").build.`type` === "cities"
   }
 }
-
-case class TestSource() extends DocumentSource {
-  def json: String = """{ "ship" : "enterprise"}"""
-}
-

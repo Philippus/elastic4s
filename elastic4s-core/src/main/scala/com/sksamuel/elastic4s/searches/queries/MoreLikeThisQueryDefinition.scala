@@ -1,15 +1,17 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 
+@deprecated("use DocumentRef", "3.0.0")
 case class MoreLikeThisItem(index: String, `type`: String, id: String) {
   def build: MoreLikeThisQueryBuilder.Item = new MoreLikeThisQueryBuilder.Item(index, `type`, id)
 }
 
 case class MoreLikeThisQueryDefinition(fields: Seq[String],
-                                       likeTexts: Seq[String],
-                                       likeItems: Seq[MoreLikeThisItem],
+                                       likeTexts: Seq[String] = Nil,
+                                       likeDocs: Seq[DocumentRef] = Nil,
                                        analyzer: Option[String] = None,
                                        boost: Option[Double] = None,
                                        boostTerms: Option[Double] = None,
@@ -23,12 +25,18 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        maxQueryTerms: Option[Int] = None,
                                        minShouldMatch: Option[String] = None,
                                        unlikeTexts: Seq[String] = Nil,
-                                       unlikeItems: Seq[MoreLikeThisItem] = Nil,
+                                       unlikeDocs: Seq[DocumentRef] = Nil,
                                        stopWords: Seq[String] = Nil,
                                        queryName: Option[String] = None) extends QueryDefinition {
 
   def builder: MoreLikeThisQueryBuilder = {
-    val builder = QueryBuilders.moreLikeThisQuery(fields.toArray, likeTexts.toArray, likeItems.map(_.build).toArray)
+
+    val builder = QueryBuilders.moreLikeThisQuery(
+      fields.toArray,
+      likeTexts.toArray,
+      likeDocs.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) }.toArray
+    )
+
     analyzer.foreach(builder.analyzer)
     boost.map(_.toFloat).foreach(builder.boost)
     boostTerms.map(_.toFloat).foreach(builder.boostTerms)
@@ -42,7 +50,8 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
     minTermFreq.foreach(builder.minTermFreq)
     minWordLength.foreach(builder.minWordLength)
     queryName.foreach(builder.queryName)
-    builder.unlike(unlikeItems.toArray.map(_.build))
+
+    builder.unlike(unlikeDocs.toArray.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) })
     builder.unlike(unlikeTexts.toArray)
     builder.stopWords(stopWords: _*)
   }
@@ -52,8 +61,14 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
   def unlikeText(first: String, rest: String*): MoreLikeThisQueryDefinition = unlikeText(first +: rest)
   def unlikeText(unlikes: Iterable[String]): MoreLikeThisQueryDefinition = copy(unlikeTexts = unlikeTexts ++ unlikes)
 
-  def unlikeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = unlikeItems(first +: rest)
-  def unlikeItems(unlikes: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition = copy(unlikeItems = unlikeItems ++ unlikes.toSeq)
+  def unlikeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition =
+    unlikeItems(first +: rest)
+
+  def unlikeItems(unlikes: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
+    unlikeDocs(unlikes.map { item => DocumentRef(item.index, item.`type`, item.id) })
+
+  def unlikeDocs(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
+    copy(unlikeDocs = unlikeDocs ++ unlikes)
 
   def include(inc: Boolean): MoreLikeThisQueryDefinition = copy(include = Some(inc))
 

@@ -1,13 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.index.query.MatchQueryBuilder
+import org.elasticsearch.index.query.Operator
 import org.scalatest.{Matchers, WordSpec}
 
 class MatchQueryTest extends WordSpec with Matchers with ElasticSugar  {
-
-  import ElasticDsl._
 
   client.execute {
     bulk(
@@ -23,7 +20,7 @@ class MatchQueryTest extends WordSpec with Matchers with ElasticSugar  {
     "accept _all field" in {
       val resp = client.execute {
         search in "elite" / "ships" query {
-          matchQuery("_all", "vulture dynamics").operator(MatchQueryBuilder.Operator.AND)
+          matchQuery("_all", "vulture dynamics").operator(Operator.AND)
         }
       }.await
       resp.totalHits shouldBe 1l

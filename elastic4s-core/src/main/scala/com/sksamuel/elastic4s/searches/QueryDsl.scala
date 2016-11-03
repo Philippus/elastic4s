@@ -100,13 +100,22 @@ trait QueryDsl {
     def likeTexts(first: String, rest: String*): MoreLikeThisQueryDefinition = likeTexts(first +: rest)
 
     def likeTexts(texts: Iterable[String]): MoreLikeThisQueryDefinition =
-      MoreLikeThisQueryDefinition(fields, texts.toSeq, Nil)
+      MoreLikeThisQueryDefinition(fields, texts.toSeq)
 
     def likeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition =
       likeItems(first +: rest)
 
     def likeItems(items: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
-      MoreLikeThisQueryDefinition(fields, Nil, items.toSeq)
+      likeDocs(items.map { item => DocumentRef(item.index, item.`type`, item.id) })
+
+    def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
+      MoreLikeThisQueryDefinition(fields).copy(likeDocs = docs.toSeq)
+
+    @deprecated("use likeDocs or likeTexts", "3.0.0")
+    def like(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = likeItems(first +: rest)
+
+    @deprecated("use likeDocs or likeTexts", "3.0.0")
+    def like(first: String, rest: String*): MoreLikeThisQueryDefinition = likeTexts(first +: rest)
   }
 
   def nestedQuery(path: String) = new {
