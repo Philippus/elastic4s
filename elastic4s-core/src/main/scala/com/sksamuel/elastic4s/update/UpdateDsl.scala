@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.update
 import com.sksamuel.elastic4s.definitions.DefinitionRouting
 import com.sksamuel.elastic4s.mappings.FieldValue
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, DocumentSource, Executable, FieldsMapper, IndexAndTypes, Indexable, ProxyClients}
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, Executable, FieldsMapper, IndexAndTypes, Indexable, ProxyClients}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.action.update.{UpdateAction, UpdateRequest, UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
@@ -56,14 +56,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   def doc(fields: (String, Any)*): this.type = doc(fields.toMap)
+
   def doc(iterable: Iterable[(String, Any)]): this.type = doc(iterable.toMap)
+
   def doc(map: Map[String, Any]): this.type = {
     _builder.setDoc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
-    this
-  }
-
-  def doc(source: DocumentSource): UpdateDefinition = {
-    _builder.setDoc(source.json)
     this
   }
 

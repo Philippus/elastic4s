@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.mappings.FieldValue
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, DocumentMap, DocumentSource, FieldsMapper, Indexable}
+import com.sksamuel.elastic4s.{BulkCompatibleDefinition, FieldsMapper, Indexable}
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.concurrent.duration.FiniteDuration
 
@@ -18,21 +17,11 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
 
   private val _request = new IndexRequest(index, `type`)
   private val _fields = mutable.Buffer[FieldValue]()
-  private var _source: Option[DocumentSource] = None
   private var _json: Option[String] = None
-  private var _map: Option[DocumentMap] = None
 
-  def build = _source match {
-    case Some(src) => _request.source(src.json)
-    case None =>
-      _json match {
-        case Some(json) => _request.source(json)
-        case None =>
-          _map match {
-            case Some(map) => _request.source(map.map.asJava)
-            case None => _request.source(_fieldsAsXContent)
-          }
-      }
+  def build = _json match {
+    case Some(json) => _request.source(json)
+    case None => _request.source(_fieldsAsXContent)
   }
 
   def _fieldsAsXContent: XContentBuilder = {

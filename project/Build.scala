@@ -23,6 +23,8 @@ object Build extends AutoPlugin {
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.5.4"
     val PlayJsonVersion = "2.5.9"
+    val LuceneVersion = "6.2.1"
+    val ExtsVersion = "1.35.0"
   }
 
   import autoImport._
@@ -43,8 +45,8 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
-      "org.apache.lucene"                     % "lucene-join"               % "6.2.1",
-      "com.sksamuel.exts"                     %% "exts"                     % "1.35.0",
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % "0.8.0",
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
       "commons-io"                            % "commons-io"                % CommonsIoVersion      % "test",

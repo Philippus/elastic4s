@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.cluster.routing.Preference
-
 import scala.language.reflectiveCalls
 
 object DefinitionAttributes {
@@ -66,6 +64,8 @@ object DefinitionAttributes {
       _builder.setPreference(preference)
       this
     }
-    def preference(pref: Preference): this.type = preference(pref.`type`())
+
+    def preference(pref: org.elasticsearch.cluster.routing.Preference): this.type = preference(pref.`type`())
+    def preference(pref: Preference): this.type = preference(pref.value)
   }
 }

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.searches.QueryDefinition
+import org.elasticsearch.common.lucene.search.function.FiltersFunctionScoreQuery.ScoreMode
 import org.elasticsearch.common.lucene.search.function.{CombineFunction, FiltersFunctionScoreQuery}
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder
@@ -33,8 +34,8 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
   def minScore(min: Double): FunctionScoreQueryDefinition = copy(minScore = Option(min))
   def maxBoost(boost: Double): FunctionScoreQueryDefinition = copy(boost = Option(boost))
 
-  def scoreMode(mode: String) = scoreMode(FiltersFunctionScoreQuery.ScoreMode.valueOf(mode))
-  def scoreMode(mode: FiltersFunctionScoreQuery.ScoreMode) = copy(scoreMode = Some(mode))
+  def scoreMode(mode: String): FunctionScoreQueryDefinition = scoreMode(ScoreMode.valueOf(mode))
+  def scoreMode(mode: ScoreMode): FunctionScoreQueryDefinition = copy(scoreMode = Some(mode))
 
   def boostMode(mode: String): FunctionScoreQueryDefinition = boostMode(CombineFunction.valueOf(mode))
   def boostMode(mode: CombineFunction): FunctionScoreQueryDefinition = copy(boostMode = Some(mode))
