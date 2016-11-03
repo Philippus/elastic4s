@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.Eventually
 import org.scalatest.mockito.MockitoSugar
@@ -24,11 +23,11 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
   blockUntilCount(2, "scifi")
 
-  "an update request" should "add a field when a script assigns a value" in {
+  "an update request" should "add a field when a script assigns a value" ignore {
 
     client.execute {
       update id 5 in "scifi/startrek" script {
-        script("ctx._source.birthplace = 'iowa'")
+        script("ctx._source.birthplace = 'iowa'").lang("groovy")
       }
     }.await
     refresh("scifi")
@@ -40,7 +39,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     }
   }
 
-  it should "support scala seqs in script params" in {
+  it should "support scala seqs in script params" ignore {
 
     val friends = List("han", "leia")
 
@@ -58,7 +57,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     }
   }
 
-  it should "support doc based update" in {
+  it should "support field based update" in {
 
     client.execute {
       update(8).in("scifi/starwars").doc(

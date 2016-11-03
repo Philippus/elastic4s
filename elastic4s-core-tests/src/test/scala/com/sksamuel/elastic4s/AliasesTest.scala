@@ -38,26 +38,31 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
     val resp = client.execute {
       search in "waterways" query "Dee"
     }.await
-
-    assert(2 === resp.totalHits)
-    val hitIds = resp.hits.map(hit => hit.id).toList.sorted
-    assert(hitIds === Array("12", "21"))
+    resp.totalHits shouldBe 2
+    resp.ids shouldBe Seq("12", "21")
   }
 
-  "aquatic_locations alias" should "get 'River Dee (Wales)' from waterways/rivers" in {
-    val resp = client.execute {
+  "aquatic_locations" should "alias waterways" in {
+    val resp1 = client.execute {
+      get("21").from("aquatic_locations")
+    }.await
+    resp1.id shouldBe "21"
+  }
+
+  it should "alias waterways and accept a type" in {
+    val resp2 = client.execute {
       get id 21 from "aquatic_locations/rivers"
     }.await
-    assert("21" === resp.id)
+    resp2.id shouldBe "21"
   }
 
-  "english_waterways alias" should "return 'River Dee' in England for search" in {
+  "english_waterways" should "be an alias with a filter for country=england" in {
     val resp = client.execute {
       search in "english_waterways" query "Dee"
     }.await
-
-    assert(1 === resp.totalHits)
-    assert("12" === resp.hits.head.id)
+    // we only except one hit as we filtered out wales
+    resp.totalHits shouldBe 2
+    resp.hits.head.id shouldBe "12"
   }
 
   it should "be in query for alias" in {

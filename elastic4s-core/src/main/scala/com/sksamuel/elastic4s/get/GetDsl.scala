@@ -10,7 +10,9 @@ import scala.language.implicitConversions
 trait GetDsl {
 
   def get(id: Any) = new {
-    def from(index: String): GetDefinition = from(index, "_all")
+    def from(str: String): GetDefinition = {
+      if (str.contains('/')) from(IndexAndType(str)) else from(IndexAndType(str, "_all"))
+    }
     def from(index: (String, String)): GetDefinition = from(IndexAndType(index._1, index._2))
     def from(index: String, `type`: String): GetDefinition = from(IndexAndType(index, `type`))
     def from(index: IndexAndType): GetDefinition = GetDefinition(index, id.toString)

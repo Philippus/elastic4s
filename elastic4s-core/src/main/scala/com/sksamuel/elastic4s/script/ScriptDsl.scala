@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.script
 
-import org.elasticsearch.script.ScriptService.{ScriptType => ESScriptType}
-
 import scala.language.implicitConversions
 
 trait ScriptDsl {

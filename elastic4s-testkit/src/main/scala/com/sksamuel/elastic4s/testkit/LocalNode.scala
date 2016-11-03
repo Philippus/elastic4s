@@ -5,7 +5,9 @@ import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.node.Node
 import org.elasticsearch.node.internal.InternalSettingsPreparer
+import org.elasticsearch.percolator.PercolatorPlugin
 import org.elasticsearch.plugins.Plugin
+import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty3Plugin
 
 import scala.collection.JavaConverters._
@@ -16,7 +18,7 @@ class InternalNode(settings: Settings,
 
 class LocalNode(settings: Settings) {
 
-  private val plugins = List(classOf[Netty3Plugin])
+  private val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
   private val node = new InternalNode(settings, plugins)
 
   def start(): String = {
@@ -59,6 +61,7 @@ object LocalNode {
       "http.type" -> "netty3",
       "node.ingest" -> "true",
       "script.inline" -> "true",
+      "script.stored" -> "true",
       "node.ingest" -> "true",
       "cluster.name" -> clusterName
     )

@@ -29,6 +29,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def getTookInMillis = original.getTookInMillis
 
   def size: Int = original.getHits.hits().length
+  def ids: Seq[String] = hits.map(_.id)
   def totalHits: Long = original.getHits.getTotalHits
   def maxScore: Float = original.getHits.getMaxScore
 
