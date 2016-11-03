@@ -354,13 +354,22 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  def sourceInclude(includes: String*): this.type = {
+  def sourceInclude(first: String, rest: String*): this.type = sourceInclude(first +: rest)
+  def sourceInclude(includes: Iterable[String]): this.type = {
     this.includes = includes.toArray
     _builder.setFetchSource(this.includes, this.excludes)
     this
   }
 
-  def sourceExclude(excludes: String*): this.type = {
+  def sourceExclude(first: String, rest: String*): this.type = sourceExclude(first +: rest)
+  def sourceExclude(excludes: Iterable[String]): this.type = {
+    this.excludes = excludes.toArray
+    _builder.setFetchSource(this.includes, this.excludes)
+    this
+  }
+
+  def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): this.type = {
+    this.includes = includes.toArray
     this.excludes = excludes.toArray
     _builder.setFetchSource(this.includes, this.excludes)
     this
