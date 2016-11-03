@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 case class DynamicTemplateDefinition(name: String,
-                                     mapping: TypedFieldDefinition,
+                                     mapping: TypedFieldDefinition, // definition of the field, elasticsearch calls this the mapping
                                      _match: Option[String] = None,
                                      _unmatch: Option[String] = None,
                                      _path_match: Option[String] = None,

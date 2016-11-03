@@ -6,15 +6,15 @@ import com.sksamuel.elastic4s.mappings.FieldType._
 trait DynamicTemplateDsl {
   self: ElasticDsl =>
 
-  def dynamicTemplate(name: String) = new {
-    def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(name, mapping)
+  def dynamicTemplate(nameOfTemplate: String) = new {
+    def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(nameOfTemplate, mapping)
   }
 
-  def dynamicTemplate(name: String, mapping: TypedFieldDefinition): DynamicTemplateDefinition = {
-    DynamicTemplateDefinition(name, mapping)
+  def dynamicTemplate(nameOfTemplate: String, mapping: TypedFieldDefinition): DynamicTemplateDefinition = {
+    DynamicTemplateDefinition(nameOfTemplate, mapping)
   }
 
-  def templateField(fieldType: FieldType) = fieldType match {
+  def dynamicTemplateMapping(fieldType: FieldType) = fieldType match {
     case AttachmentType => attachmentField("")
     case BinaryType => binaryField("")
     case BooleanType => booleanField("")

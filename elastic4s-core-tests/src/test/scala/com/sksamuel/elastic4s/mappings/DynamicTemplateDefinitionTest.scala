@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.mappings.FieldType.DoubleType
+import com.sksamuel.elastic4s.mappings.FieldType.{DoubleType, FloatType}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -9,25 +9,24 @@ class DynamicTemplateDefinitionTest extends WordSpec with Matchers with ElasticS
   "DynamicTemplateDefinition" should {
     "support mappings for wildcards" in {
 
-      val priceTemplate = DynamicTemplateDefinition("price", field typed DoubleType).matching("*_price")
-
+      val priceTemplate = dynamicTemplate("prices").mapping(dynamicTemplateMapping(FloatType)).matching("*_price")
       val indexName = "dynamic_template_definition1"
+      val typeName = "mytype"
+
       client.execute {
-        create index indexName mappings {
-          mapping(indexName) dynamicTemplates priceTemplate
+        createIndex(indexName).mappings {
+          mapping(typeName) dynamicTemplates priceTemplate
         }
       }.await
 
       client.execute {
-        index into indexName / "t" fields "my_price" -> 21.3
+        indexInto(indexName / typeName).fields("my_price" -> 21.3)
       }.await
 
-      val resp = client.execute {
-        getMapping(indexName / "t")
-      }.await
-
-      // should be detected and set to a double field
-      resp.mappings(indexName)("t").source.toString shouldBe """{"t":{"properties":{"my_price":{"type":"double"}}}}"""
+      // the my_price field should match *_price and thus create a new field with the type Float
+      client.execute {
+        getMapping(indexName / typeName)
+      }.await.mappings(indexName)(typeName).source.toString shouldBe """{"mytype":{"dynamic_templates":[{"prices":{"match":"*_price","mapping":{"type":"float"}}}],"properties":{"my_price":{"type":"float"}}}}"""
     }
     "support unmatch" in {
 
@@ -35,21 +34,21 @@ class DynamicTemplateDefinitionTest extends WordSpec with Matchers with ElasticS
 
       val indexName = "dynamic_template_definition2"
       client.execute {
-        create index indexName mappings {
+        createIndex(indexName).mappings {
           mapping(indexName) dynamicTemplates template
         }
       }.await
 
       client.execute {
-        index into indexName / "v" fields "my_price" -> "22"
+        indexInto(indexName / "v") fields "my_price" -> "22"
       }.await
 
       val resp = client.execute {
         getMapping(indexName / "v")
       }.await
 
-      // should have been ignored and left as String
-      resp.mappings(indexName)("v").source.toString shouldBe """{"v":{"properties":{"my_price":{"type":"string"}}}}"""
+      // my_price has been explicitly unmatched and so should be ignored and left as text
+      resp.mappings(indexName)("v").source.toString shouldBe """{"v":{"properties":{"my_price":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}"""
     }
   }
 }
