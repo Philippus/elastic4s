@@ -49,7 +49,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     val req = index into "twitter/tweets" fields (
       "name" -> "sksamuel"
     ) routing "users"
-    checkRequest(req, "twitter", "tweets", "/json/index/simple_single.json", None, Some("users"), Some(100000))
+    checkRequest(req, "twitter", "tweets", "/json/index/simple_single.json", None, Some("users"))
   }
 
   it should "generate for multiple fields" in {
@@ -234,8 +234,7 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
                            expectedType: String,
                            expectedJsonResource: String,
                            expectedId: Option[Any] = None,
-                           expectedRouting: Option[String] = None,
-                           expectedTtl: Option[Long] = None) {
+                           expectedRouting: Option[String] = None) {
     val builtRequest = req.build
 
     builtRequest.index shouldEqual expectedIndex
@@ -249,11 +248,6 @@ class IndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with Matche
     expectedRouting match {
       case Some(r) => builtRequest.routing shouldEqual r
       case None => builtRequest.routing shouldBe null
-    }
-
-    expectedTtl match {
-      case Some(t) => builtRequest.ttl.millis() shouldEqual t
-      case None => builtRequest.ttl shouldEqual null
     }
 
     req._fieldsAsXContent.string should matchJsonResource(expectedJsonResource)
