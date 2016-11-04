@@ -113,8 +113,6 @@ trait ElasticDsl
   def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
   def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
-  def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
-
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
