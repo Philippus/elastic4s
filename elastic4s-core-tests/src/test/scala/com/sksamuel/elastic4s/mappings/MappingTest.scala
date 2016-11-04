@@ -10,7 +10,7 @@ import org.scalatest.{Matchers, WordSpec}
 class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
   client.execute {
-    create index "q" mappings {
+    createIndex("q").mappings {
       mapping("r") as Seq(
         field("a", TextType) stored true analyzer WhitespaceAnalyzer,
         field("b", TextType)
@@ -18,6 +18,14 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
     }
+  }.await
+
+  client.execute {
+    createIndex("z") mappings(
+      mapping("r"),
+      mapping("s"),
+      mapping("t")
+    )
   }.await
 
   "mapping get" should {
@@ -36,6 +44,11 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
       val b = map.get("properties").asInstanceOf[util.Map[String, Any]].get("b").asInstanceOf[util.Map[String, Any]]
       b.get("type") shouldBe "text"
+    }
+    "support getting all mappings" in {
+      client.execute {
+        getMapping("z")
+      }.await.mappingsFor("z").keySet shouldBe Set("r", "s", "t")
     }
   }
   "mapping put" should {

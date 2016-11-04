@@ -13,8 +13,8 @@ case class Indexes(values: Seq[String]) {
 }
 
 object Indexes {
-  implicit def apply(index: String): Indexes = Indexes(Seq(index))
-  implicit def apply(first: String, rest: String*): Indexes = Indexes(first +: rest)
+  implicit def apply(indexes: String): Indexes = Indexes(indexes.split(','))
+  def apply(first: String, rest: String*): Indexes = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
 
@@ -95,5 +95,6 @@ object IndexesAndTypes {
 case class IndexesAndType(indexes: Seq[String], `type`: String)
 
 object IndexesAndType {
-  implicit def apply(indexAndType: IndexAndType): IndexesAndType = IndexesAndType(Seq(indexAndType.index), indexAndType.`type`)
+  implicit def apply(indexAndType: IndexAndType): IndexesAndType = IndexesAndType(Seq(indexAndType.index),
+    indexAndType.`type`)
 }

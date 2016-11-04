@@ -43,11 +43,7 @@ case class CreateIndexDefinition(name: String) {
     this
   }
 
-  def mappings(mappings: MappingDefinition*): CreateIndexDefinition = {
-    _mappings ++= mappings
-    this
-  }
-
+  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexDefinition = mappings(first +: rest)
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexDefinition = {
     _mappings ++= mappings
     this
