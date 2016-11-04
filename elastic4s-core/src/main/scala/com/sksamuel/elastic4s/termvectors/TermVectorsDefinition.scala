@@ -1,38 +1,12 @@
 package com.sksamuel.elastic4s.termvectors
 
-import com.sksamuel.elastic4s.{Executable, IndexAndTypes}
+import com.sksamuel.elastic4s.IndexAndType
 import org.elasticsearch.action.termvectors.TermVectorsRequest.FilterSettings
-import org.elasticsearch.action.termvectors.{TermVectorsRequestBuilder, TermVectorsResponse}
-import org.elasticsearch.client.Client
+import org.elasticsearch.action.termvectors.TermVectorsRequestBuilder
 import org.elasticsearch.index.VersionType
+import scala.collection.JavaConverters._
 
-import scala.concurrent.Future
-
-trait TermVectorApi {
-
-  def termVectors(index: String, `type`: String, id: String) = TermVectorsDefinition(IndexAndTypes(index, `type`), id)
-
-  implicit object TermVectorExecutable
-    extends Executable[TermVectorsDefinition, TermVectorsResponse, TermVectorsResult] {
-    override def apply(client: Client, t: TermVectorsDefinition): Future[TermVectorsResult] = {
-      injectFutureAndMap(t.build(client.prepareTermVectors).execute)(TermVectorsResult.apply)
-    }
-  }
-}
-
-case class TermVectorsResult(original: TermVectorsResponse) {
-
-  import scala.concurrent.duration._
-
-  def fields = original.getFields
-  def id: String = original.getId
-  def index: String = original.getIndex
-  def took: FiniteDuration = original.getTookInMillis.millis
-  def `type`: String = original.getType
-  def version: Long = original.getVersion
-}
-
-case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
+case class TermVectorsDefinition(indexAndType: IndexAndType,
                                  id: String,
                                  fieldStatistics: Option[Boolean] = None,
                                  offsets: Option[Boolean] = None,
@@ -52,23 +26,24 @@ case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
                                  minDocFreq: Option[Int] = None,
                                  maxDocFreq: Option[Int] = None,
                                  minWordLength: Option[Int] = None,
-                                 maxWordLength: Option[Int] = None) {
-  def build(request: TermVectorsRequestBuilder): TermVectorsRequestBuilder = {
-    request.setId(id)
-    request.setIndex(indexAndTypes.index)
-    request.setType(indexAndTypes.types.head)
-    fieldStatistics.foreach(request.setFieldStatistics)
-    offsets.foreach(request.setOffsets)
-    parent.foreach(request.setParent)
-    payloads.foreach(request.setPayloads)
-    positions.foreach(request.setPositions)
-    preference.foreach(request.setPreference)
-    realtime.foreach(b => request.setRealtime(java.lang.Boolean.valueOf(b)))
-    routing.foreach(request.setRouting)
-    fields.foreach(fields => request.setSelectedFields(fields: _*))
-    termStatistics.foreach(request.setTermStatistics)
-    version.foreach(request.setVersion)
-    versionType.foreach(request.setVersionType)
+                                 maxWordLength: Option[Int] = None,
+                                 perFieldAnalyzer: Map[String, String] = Map.empty) {
+
+  def populate(builder: TermVectorsRequestBuilder): TermVectorsRequestBuilder = {
+
+    fieldStatistics.foreach(builder.setFieldStatistics)
+    offsets.foreach(builder.setOffsets)
+    parent.foreach(builder.setParent)
+    payloads.foreach(builder.setPayloads)
+    builder.setPerFieldAnalyzer(perFieldAnalyzer.asJava)
+    positions.foreach(builder.setPositions)
+    preference.foreach(builder.setPreference)
+    realtime.foreach(b => builder.setRealtime(java.lang.Boolean.valueOf(b)))
+    routing.foreach(builder.setRouting)
+    fields.foreach(fields => builder.setSelectedFields(fields: _*))
+    termStatistics.foreach(builder.setTermStatistics)
+    version.foreach(builder.setVersion)
+    versionType.foreach(builder.setVersionType)
 
     val settings = new FilterSettings()
     maxNumTerms.foreach(settings.maxNumTerms = _)
@@ -79,9 +54,8 @@ case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
     minWordLength.foreach(settings.minWordLength = _)
     maxWordLength.foreach(settings.maxWordLength = _)
 
-    request.setFilterSettings(settings)
-
-    request
+    builder.setFilterSettings(settings)
+    builder
   }
 
   def fieldStatistics(boolean: Boolean): TermVectorsDefinition = copy(fieldStatistics = Option(boolean))
@@ -96,6 +70,9 @@ case class TermVectorsDefinition(indexAndTypes: IndexAndTypes,
   def fields(fields: String*): TermVectorsDefinition = copy(fields = Option(fields.toSeq))
   def termStatistics(boolean: Boolean): TermVectorsDefinition = copy(termStatistics = Option(boolean))
   def version(version: Long): TermVectorsDefinition = copy(version = Option(version))
+
+  def perFieldAnalyzer(perFieldAnalyzer: Map[String, String]): TermVectorsDefinition =
+    copy(perFieldAnalyzer = perFieldAnalyzer)
 
   def maxNumTerms(maxNumTerms: Int): TermVectorsDefinition = copy(maxNumTerms = Option(maxNumTerms))
   def minTermFreq(minTermFreq: Int): TermVectorsDefinition = copy(minTermFreq = Option(minTermFreq))
