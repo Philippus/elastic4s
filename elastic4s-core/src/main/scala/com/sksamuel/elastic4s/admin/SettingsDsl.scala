@@ -15,8 +15,8 @@ trait SettingsDsl {
   def getSettings(index: String, indexes: String*): GetSettingsDefinition = getSettings(index +: indexes)
   def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
-  def updateSettings(index: String, indexes: String*) = updateSettings(index +: indexes)
-  def updateSettings(indexes: Indexes) = UpdateSettingsDefinition(indexes)
+  def updateSettings(index: String, indexes: String*): UpdateSettingsDefinition = updateSettings(index +: indexes)
+  def updateSettings(indexes: Indexes): UpdateSettingsDefinition = UpdateSettingsDefinition(indexes)
 
   implicit object GetSettingsDefinitionExecutable
     extends Executable[GetSettingsDefinition, GetSettingsResponse, GetSettingsResponse] {
