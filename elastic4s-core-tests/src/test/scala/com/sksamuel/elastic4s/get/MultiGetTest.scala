@@ -40,7 +40,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     val resp = client.execute(
       multiget(
-        get id 3 from "coldplay/albums",
+        get(3).from("coldplay/albums"),
         get id 5 from "coldplay/albums",
         get id 34 from "coldplay/albums"
       ) preference Preference.LOCAL refresh true realtime true
@@ -72,9 +72,9 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
         get id 5 from "coldplay/albums" fields "name"
       ) preference Preference.LOCAL refresh true realtime true
     ).await
-    assert(2 === resp.getResponses.size)
-    resp.responses.head.response.getFields.keySet().asScala shouldBe Set("name", "year")
-    resp.responses.head.response.getFields.keySet().asScala shouldBe Set("name")
+    assert(2 === resp.responses.size)
+    resp.responses.head.response.sourceAsMap.keySet shouldBe Set("name", "year")
+    resp.responses.head.response.sourceAsMap.keySet shouldBe Set("name")
   }
 
   it should "retrieve documents by id with fetchSourceContext" in {

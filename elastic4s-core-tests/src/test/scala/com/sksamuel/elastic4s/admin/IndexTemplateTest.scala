@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.admin
 
 import java.util
 
-import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mock.MockitoSugar
@@ -17,8 +16,8 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
         createTemplate("brewery_template").pattern("te*").mappings(
           mapping("brewery").fields(
             stringField("year_founded") analyzer "test_analyzer"
-            )
-          ) analysis Seq(StandardAnalyzerDefinition("test_analyzer")) indexSetting("index.cache.query.enable", true)
+          )
+        )
       }.await
 
       val resp = client.execute {
@@ -55,7 +54,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       }.await.getHits.totalHits shouldBe 1
 
       val mappings = client.execute {
-        get mapping "templatetest" / "brewery"
+        getMapping("templatetest" / "brewery")
       }.await.mappings.get("templatetest").get("brewery")
 
       val year_founded = mappings.sourceAsMap().get("properties").asInstanceOf[util.Map[String, Any]]

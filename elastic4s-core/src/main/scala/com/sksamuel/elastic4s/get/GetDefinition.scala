@@ -27,11 +27,21 @@ case class GetDefinition(indexAndType: IndexAndType, id: String) {
     this
   }
 
+  @deprecated("use storedFields", "3.0.0")
   def fields(fs: String*): GetDefinition = fields(fs)
+
+  @deprecated("use storedFields", "3.0.0")
   def fields(fs: Iterable[String]): GetDefinition = {
     _builder.storedFields(fs.toSeq: _*)
     this
   }
+
+  def storedFields(fs: String*): GetDefinition = fields(fs)
+  def storedFields(fs: Iterable[String]): GetDefinition = {
+    _builder.storedFields(fs.toSeq: _*)
+    this
+  }
+
 
   def parent(p: String) = {
     _builder.parent(p)
