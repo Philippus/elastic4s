@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s.{Executable, Indexes}
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
 import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsRequest, UpdateSettingsResponse}
+import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
-
+import com.sksamuel.exts.OptionImplicits._
 import scala.concurrent.Future
 
 trait SettingsDsl {
@@ -26,8 +27,14 @@ trait SettingsDsl {
   }
 }
 
-case class GetSettingsDefinition(indexes: Indexes) {
-  def build: GetSettingsRequest = new GetSettingsRequest().indices(indexes.values: _*)
+case class GetSettingsDefinition(indexes: Indexes,
+                                 options: Option[IndicesOptions] = None) {
+  def build: GetSettingsRequest = {
+    val req = new GetSettingsRequest().indices(indexes.values: _*)
+    options.foreach(req.indicesOptions)
+    req
+  }
+  def options(options: IndicesOptions): GetSettingsDefinition = copy(options = options.some)
 }
 
 class UpdateSettingsDefinition(index: String) {
