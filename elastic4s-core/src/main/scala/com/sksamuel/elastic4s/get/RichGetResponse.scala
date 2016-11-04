@@ -41,7 +41,7 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   private def getFieldToHitField(f: GetField) = new HitField {
     override def name: String = f.getName
     override def value: AnyRef = f.getValue
-    override def values: Seq[AnyRef] = f.getValues.asScala
+    override def values: Seq[AnyRef] = Option(f.getValues).map(_.asScala).getOrElse(Nil)
     override def isMetadataField: Boolean = f.isMetadataField
   }
 
