@@ -15,6 +15,9 @@ trait Hit {
 
   def ref: DocumentRef = DocumentRef(index, `type`, id)
 
+  def sourceField(name: String): AnyRef = sourceAsMap(name)
+  def sourceFieldOpt(name: String): Option[AnyRef] = sourceAsMap.get(name)
+
   def sourceAsMap: Map[String, AnyRef]
   def sourceAsBytes: Array[Byte]
   def sourceAsString: String
@@ -22,10 +25,6 @@ trait Hit {
   def isSourceEmpty: Boolean
 
   def exists: Boolean
-
-  def field(name: String): HitField
-  def fieldOpt(name: String): Option[HitField]
-  def fields: Map[String, HitField]
 }
 
 trait HitField {

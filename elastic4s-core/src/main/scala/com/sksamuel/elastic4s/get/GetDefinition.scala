@@ -7,6 +7,7 @@ import org.elasticsearch.index.VersionType
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class GetDefinition(indexAndType: IndexAndType, id: String) {
+  require(indexAndType != null, "indexAndType must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   private val _builder = Requests.getRequest(indexAndType.index).`type`(indexAndType.`type`).id(id)
@@ -28,28 +29,24 @@ case class GetDefinition(indexAndType: IndexAndType, id: String) {
   }
 
   @deprecated("use storedFields", "3.0.0")
-  def fields(fs: String*): GetDefinition = fields(fs)
+  def fields(fs: String*): GetDefinition = storedFields(fs)
 
   @deprecated("use storedFields", "3.0.0")
-  def fields(fs: Iterable[String]): GetDefinition = {
-    _builder.storedFields(fs.toSeq: _*)
-    this
-  }
+  def fields(fs: Iterable[String]): GetDefinition = storedFields(fs)
 
-  def storedFields(fs: String*): GetDefinition = fields(fs)
+  def storedFields(first: String, rest: String*): GetDefinition = storedFields(first +: rest)
   def storedFields(fs: Iterable[String]): GetDefinition = {
     _builder.storedFields(fs.toSeq: _*)
     this
   }
-
 
   def parent(p: String) = {
     _builder.parent(p)
     this
   }
 
+  def preference(pref: com.sksamuel.elastic4s.Preference): GetDefinition = preference(pref.value)
   def preference(pref: Preference): GetDefinition = preference(pref.`type`())
-
   def preference(pref: String): GetDefinition = {
     _builder.preference(pref)
     this

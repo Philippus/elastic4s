@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.index.VersionType
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
@@ -11,25 +10,27 @@ import scala.collection.JavaConverters._
 class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   client.execute {
-    createIndex("coldplay").shards(2)
+    createIndex("coldplay").shards(2).mappings(
+      mapping("albums").fields(
+        textField("name").stored(true),
+        intField("year").stored(true)
+      )
+    )
   }.await
 
-  def album(number: Long, name: String, year: Int, revision: Long) = {
-    (
-      indexInto("coldplay/albums")
-        fields ("name" -> name, "year" -> year)
-        id number
-        version revision
-        versionType VersionType.EXTERNAL
-    )
-  }
+  def albumIndexRequest(id: Long, name: String, year: Int, revision: Long) =
+    indexInto("coldplay/albums")
+      .fields("name" -> name, "year" -> year)
+      .id(id)
+      .version(revision)
+      .versionType(VersionType.EXTERNAL)
 
   client.execute(
     bulk(
-      album(1, "parachutes", 2000, 5) routing "2",
-      album(3, "x&y", 2005, 4),
-      album(5, "mylo xyloto", 2011, 2),
-      album(7, "ghost stories", 2005, 1) routing "1"
+      albumIndexRequest(1, "parachutes", 2000, 5),
+      albumIndexRequest(3, "x&y", 2005, 4),
+      albumIndexRequest(5, "mylo xyloto", 2011, 2),
+      albumIndexRequest(7, "ghost stories", 2005, 1)
     )
   ).await
 
@@ -41,49 +42,58 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     val resp = client.execute(
       multiget(
         get(3).from("coldplay/albums"),
-        get id 5 from "coldplay/albums",
-        get id 34 from "coldplay/albums"
-      ) preference Preference.LOCAL refresh true realtime true
+        get(5) from "coldplay/albums",
+        get(7) from "coldplay/albums"
+      )
     ).await
-    assert(3 === resp.responses.size)
-    assert("3" === resp.responses.head.getResponse.getId)
-    assert("5" === resp.responses(1).getResponse.getId)
-    assert(!resp.responses(2).getResponse.isExists)
+
+    resp.size shouldBe 3
+
+    resp.responses.head.id shouldBe "3"
+    resp.responses.head.exists shouldBe true
+
+    resp.responses(1).id shouldBe "5"
+    resp.responses(1).exists shouldBe true
+
+    resp.responses.last.id shouldBe "7"
+    resp.responses.last.exists shouldBe true
   }
 
-  it should "retrieve documents by id with routing" in {
+  it should "set exists=false for missing documents" in {
 
     val resp = client.execute(
       multiget(
-        get id 6 from "coldplay/albums" routing "2",
-        get id 1 from "coldplay/albums" routing "2"
-      ) preference Preference.LOCAL refresh true realtime true
+        get(3).from("coldplay/albums"),
+        get(711111) from "coldplay/albums"
+      )
     ).await
-    assert(2 === resp.getResponses.size)
-    assert(!resp.getResponses.head.getResponse.isExists)
-    assert("1" === resp.getResponses(1).getResponse.getId)
+
+    resp.size shouldBe 2
+    resp.responses.head.exists shouldBe true
+    resp.responses.last.exists shouldBe false
   }
 
   it should "retrieve documents by id with selected fields" in {
 
     val resp = client.execute(
       multiget(
-        get id 3 from "coldplay/albums" fields("name", "year"),
-        get id 5 from "coldplay/albums" fields "name"
-      ) preference Preference.LOCAL refresh true realtime true
+        get(3) from "coldplay/albums" storedFields("name", "year"),
+        get(5) from "coldplay/albums" storedFields "name"
+      )
     ).await
-    assert(2 === resp.responses.size)
-    resp.responses.head.response.sourceAsMap.keySet shouldBe Set("name", "year")
-    resp.responses.head.response.sourceAsMap.keySet shouldBe Set("name")
+
+    resp.size shouldBe 2
+    resp.responses.head.response.fields.keySet shouldBe Set("name", "year")
+    resp.responses.last.response.fields.keySet shouldBe Set("name")
   }
 
   it should "retrieve documents by id with fetchSourceContext" in {
 
     val resp = client.execute(
       multiget(
-        get id 3 from "coldplay/albums" fetchSourceContext Seq("name", "year"),
-        get id 5 from "coldplay/albums" fields "name" fetchSourceContext Seq("name")
-      ) preference Preference.LOCAL refresh true realtime true
+        get(3) from "coldplay/albums" fetchSourceContext Seq("name", "year"),
+        get(5) from "coldplay/albums" storedFields "name" fetchSourceContext Seq("name")
+      )
     ).await
     assert(2 === resp.responses.size)
     assert(resp.responses.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
@@ -91,16 +101,17 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "retrieve documents by id and version" in {
+
     val resp = client.execute(
       multiget(
-        get id 3 from "coldplay/albums" version 1,
-        get id 3 from "coldplay/albums" version 4
-      ) preference Preference.LOCAL refresh true realtime true
+        get(3) from "coldplay/albums" version 1,
+        get(3) from "coldplay/albums" version 4
+      )
     ).await
-    assert(2 === resp.getResponses.size)
-    assert(resp.getResponses.head.isFailed)
-    resp.getResponses.head.getFailure.getFailure != null shouldBe true
-    assert(resp.getResponses(1).getResponse.isExists)
-    assert(resp.getResponses(1).getResponse.getVersion === 4)
+
+    resp.size shouldBe 2
+    resp.responses.head.failed shouldBe true
+    resp.responses.last.exists shouldBe true
+    resp.responses.last.response.version shouldBe 4
   }
 }

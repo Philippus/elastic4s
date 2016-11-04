@@ -43,7 +43,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   @deprecated("use to[T] which uses a Reader[T] typeclass", "3.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
-  def to[T](implicit reader: HitReader[T], manifest: Manifest[T]): Either[Exception, T] = reader.read(this)
+  def to[T](implicit reader: HitReader[T], manifest: Manifest[T]): Either[String, T] = reader.read(this)
 
   def explanation: Option[Explanation] = Option(java.explanation)
 
@@ -53,8 +53,8 @@ case class RichSearchHit(java: SearchHit) extends Hit {
 
   def stringValue(fieldName: String): String = field(fieldName).value.toString
 
-  override def field(fieldName: String): RichSearchHitField = fields(fieldName)
-  override def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
+  def field(fieldName: String): RichSearchHitField = fields(fieldName)
+  def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
   def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
 
   def fieldValue(fieldName: String): AnyRef = field(fieldName).value

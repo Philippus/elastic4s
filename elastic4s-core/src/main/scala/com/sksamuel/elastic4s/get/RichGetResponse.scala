@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.{Hit, HitField}
+import com.sksamuel.elastic4s.{Hit, HitField, HitReader}
 import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.index.get.GetField
@@ -36,6 +36,8 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   override def `type`: String = original.getType
   override def version: Long = original.getVersion
 
+  def to[T](implicit reader: HitReader[T]): Either[String, T] = reader.read(this)
+
   private def getFieldToHitField(f: GetField) = new HitField {
     override def name: String = f.getName
     override def value: AnyRef = f.getValue
@@ -43,9 +45,14 @@ case class RichGetResponse(original: GetResponse) extends Hit {
     override def isMetadataField: Boolean = f.isMetadataField
   }
 
-  override def field(name: String): HitField = getFieldToHitField(original.getField(name))
-  override def fieldOpt(name: String): Option[HitField] = Option(original.getField(name)).map(getFieldToHitField)
-  override def fields: Map[String, HitField] = {
+  @deprecated("use source instead", "3.0.0")
+  def field(name: String): HitField = getFieldToHitField(original.getField(name))
+
+  @deprecated("use source instead", "3.0.0")
+  def fieldOpt(name: String): Option[HitField] = Option(original.getField(name)).map(getFieldToHitField)
+
+  @deprecated("use source instead", "3.0.0")
+  def fields: Map[String, HitField] = {
     Option(original.getFields).fold(Map.empty[String, HitField])(_.asScala.toMap.mapValues(getFieldToHitField))
   }
 
