@@ -226,7 +226,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a match phrase query" in {
-    val req = searchIn("*").types("bands", "artists").limit(5).query {
+    val req = search("*").types("bands", "artists").limit(5).query {
       matchPhraseQuery("name", "coldplay")
         .slop(3)
         .boost(15)
@@ -236,7 +236,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a match phrase prefix query" in {
-    val req = searchIn("*").types("bands", "artists").limit(5).query {
+    val req = search("*").types("bands", "artists").limit(5).query {
       matchPhrasePrefixQuery("name", "coldplay")
         .maxExpansions(3)
         .slop(3)
@@ -424,7 +424,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for geo bounding box filter" in {
-    val req = searchIn("music" / "bands").postFilter {
+    val req = search("music" / "bands").postFilter {
       geoBoxQuery("box").withCorners(40.6, 56.5, 45.5, 12.55)
     }
     req.show should matchJsonResource("/json/search/search_filter_geo_boundingbox.json")

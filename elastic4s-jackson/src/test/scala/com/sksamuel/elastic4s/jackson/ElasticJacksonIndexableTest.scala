@@ -5,7 +5,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
   import ElasticJackson.Implicits._
 
   "ElasticJackson implicits" should {
@@ -24,19 +23,19 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSug
     "read a case class" in {
 
       val resp = client.execute {
-        searchIn("jacksontest" / "characters").query("breaking")
+        search("jacksontest" / "characters").query("breaking")
       }.await
-      resp.to[Character] shouldBe List(Right(Character("hank", "breaking bad")))
+      resp.to[Character] shouldBe List(Character("hank", "breaking bad"))
 
     }
     "populate special fields" in {
 
       val resp = client.execute {
-        searchIn("jacksontest" / "characters").query("breaking")
+        search("jacksontest" / "characters").query("breaking")
       }.await
 
       // should populate _id, _index and _type for us from the search result
-      resp.to[CharacterWithIdTypeAndIndex] shouldBe
+      resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
         List(Right(CharacterWithIdTypeAndIndex("2", "jacksontest", "characters", "hank", "breaking bad")))
     }
   }

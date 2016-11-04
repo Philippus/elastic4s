@@ -46,7 +46,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
 
   "hit reader" should "unmarshall search results" in {
     val teams = client.execute {
-      searchIn("football").matchAll()
+      search("football").matchAll()
     }.await.to[Team]
 
     teams.toSet shouldBe Set(

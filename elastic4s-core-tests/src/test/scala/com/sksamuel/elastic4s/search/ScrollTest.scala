@@ -9,7 +9,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
     createIndex("katebush").mappings(
       mapping("songs").fields(
         intField("year"),
-        stringField("name").fielddata(true).stored(true)
+        textField("name").fielddata(true).stored(true)
       )
     )
   }
@@ -36,7 +36,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
     "return all results" in {
 
       val resp1 = client.execute {
-        searchIn("katebush" / "songs")
+        search("katebush" / "songs")
           .query("1985")
           .scroll("1m")
           .limit(2)

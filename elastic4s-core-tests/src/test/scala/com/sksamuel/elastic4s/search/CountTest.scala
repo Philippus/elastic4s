@@ -23,21 +23,21 @@ class CountTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a search request of size 0" should "return total count when no query is specified" in {
     val resp = client.execute {
-      searchIn("london").size(0)
+      search("london").size(0)
     }.await
     assert(3 === resp.totalHits)
   }
 
   it should "return the document count for the correct type" in {
     val resp = client.execute {
-      searchIn("london" / "landmarks").size(0)
+      search("london" / "landmarks").size(0)
     }.await
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count based on the specified query" in {
     val resp = client.execute {
-      searchIn("london" / "landmarks").size(0).query("tower")
+      search("london" / "landmarks").size(0).query("tower")
     }.await
     assert(1 === resp.totalHits)
   }

@@ -19,7 +19,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
       blockUntilCount(1, "electronics")
 
       client.execute {
-        searchIn("electronics" / "phone").query(termQuery("screensize", 5))
+        search("electronics" / "phone").query(termQuery("screensize", 5))
       }.await.totalHits shouldBe 1
     }
     "index from indexable typeclass" in {
@@ -36,7 +36,7 @@ class IndexTest extends WordSpec with MockitoSugar with ElasticSugar with Matche
       blockUntilCount(2, "electronics")
 
       client.execute {
-        searchIn("electronics" / "phone").query(termQuery("speed", "4g"))
+        search("electronics" / "phone").query(termQuery("speed", "4g"))
       }.await.totalHits shouldBe 1
     }
   }

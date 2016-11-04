@@ -43,7 +43,7 @@ class SearchTest
       search in "musicians" -> "performers" query "kate" should haveTotalHits(1)
     }
     "return source" in {
-      searchIn("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")
+      search("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")
     }
     "support source includes" in {
       val s = search in "musicians/bands" query "jethro" sourceInclude("keyboards", "guit*")
@@ -60,8 +60,8 @@ class SearchTest
       s should not(haveSourceField("name"))
     }
     "support limits" in {
-      searchIn("musicians").matchAll().limit(2) should haveHits(2)
-      searchIn("musicians").matchAll().limit(2) should haveTotalHits(3)
+      search("musicians").matchAll().limit(2) should haveHits(2)
+      search("musicians").matchAll().limit(2) should haveTotalHits(3)
     }
   }
 }

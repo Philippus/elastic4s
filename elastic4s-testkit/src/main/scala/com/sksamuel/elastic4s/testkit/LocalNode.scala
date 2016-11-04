@@ -62,7 +62,6 @@ object LocalNode {
       "node.ingest" -> "true",
       "script.inline" -> "true",
       "script.stored" -> "true",
-      "node.ingest" -> "true",
       "cluster.name" -> clusterName
     )
     val settings = map.foldLeft(Settings.builder) { (settings, kv) => settings.put(kv._1, kv._2) }.build()

@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.{HitAs, HitReader}
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.search.SearchHits
 import org.elasticsearch.search.aggregations.Aggregations
+import cats.syntax.either._
 
 import scala.concurrent.duration._
 
@@ -38,7 +39,8 @@ case class RichSearchResponse(original: SearchResponse) {
   @deprecated("use to[T], which uses a Reader typeclass", "3.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
-  def to[T](implicit reader: HitReader[T], manifest: Manifest[T]) = hits.map(_.to[T])
+  def to[T](implicit reader: HitReader[T], manifest: Manifest[T]): IndexedSeq[T] = safeTo[T].flatMap(_.toOption)
+  def safeTo[T](implicit reader: HitReader[T], manifest: Manifest[T]): IndexedSeq[Either[String, T]] = hits.map(_.to[T])
 
   def scrollId: String = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)

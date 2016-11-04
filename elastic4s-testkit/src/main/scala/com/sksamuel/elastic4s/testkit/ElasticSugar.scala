@@ -193,7 +193,7 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
-        searchIn(index / types).matchAll().size(0)
+        search(index / types).matchAll().size(0)
       }.await
       expected <= result.totalHits
     }
@@ -202,7 +202,7 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       expected == client.execute {
-        searchIn(index / types).size(0)
+        search(index / types).size(0)
       }.await.totalHits
     }
   }
@@ -210,7 +210,7 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   def blockUntilEmpty(index: String): Unit = {
     blockUntil(s"Expected empty index $index") { () =>
       client.execute {
-        searchIn(index).size(0)
+        search(index).size(0)
       }.await.totalHits == 0
     }
   }
