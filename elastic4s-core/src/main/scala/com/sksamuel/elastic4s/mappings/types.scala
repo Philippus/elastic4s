@@ -33,6 +33,8 @@ trait TypeableFields {
   def withType(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def withType(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def withType(ft: ShortType.type) = new ShortFieldDefinition(name)
+
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
   def withType(ft: StringType.type) = new StringFieldDefinition(name)
   def withType(ft: TokenCountType.type) = new TokenCountDefinition(name)
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
@@ -52,6 +54,8 @@ trait TypeableFields {
   def typed(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
+
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
@@ -131,10 +135,58 @@ final class ObjectFieldDefinition(name: String)
   }
 }
 
-final class TextFieldDefinition(name: String) {
+final class TextFieldDefinition(name: String)
+  extends TypedFieldDefinition(TextType, name)
+  with AttributeIndexName
+  with AttributeStore
+  with AttributeIndex
+  with AttributeTermVector
+  with AttributeNullValue[String]
+  with AttributeOmitNorms
+  with AttributeIndexOptions
+  with AttributeAnalyzer
+  with AttributeSearchAnalyzer
+  with AttributeIncludeInAll
+  with AttributeIgnoreAbove
+  with AttributePositionOffsetGap
+  with AttributePostingsFormat
+  with AttributeDocValues
+  with AttributeSimilarity
+  with AttributeCopyTo
+  with AttributeFields {
+
+  private var fielddata: Option[Boolean] = None
+
+  def fielddata(b: Boolean): TextFieldDefinition = {
+    this.fielddata = Option(b)
+    this
+  }
+
   def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
     if (startObject)
       source.startObject(name)
+
+    insertType(source)
+    super[AttributeAnalyzer].insert(source)
+    super[AttributeDocValues].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexName].insert(source)
+    super[AttributeIndexOptions].insert(source)
+    super[AttributeIgnoreAbove].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributeOmitNorms].insert(source)
+    super[AttributePositionOffsetGap].insert(source)
+    super[AttributePostingsFormat].insert(source)
+    super[AttributeSearchAnalyzer].insert(source)
+    super[AttributeSimilarity].insert(source)
+    super[AttributeStore].insert(source)
+    super[AttributeTermVector].insert(source)
+    super[AttributeCopyTo].insert(source)
+    super[AttributeFields].insert(source)
+
+    fielddata.foreach(source.field("fielddata", _))
+
     if (startObject)
       source.endObject()
   }

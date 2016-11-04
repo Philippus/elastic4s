@@ -1,13 +1,15 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.{Executable, Indexes, IndexesAndType, IndexesAndTypes, ProxyClients}
+import java.util
+
+import com.sksamuel.elastic4s.{Executable, IndexAndType, Indexes, IndexesAndType, IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingAction, PutMappingRequest, PutMappingRequestBuilder, PutMappingResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.cluster.metadata.MappingMetaData
-
 import scala.concurrent.Future
 import scala.language.implicitConversions
+import scala.collection.JavaConverters._
 
 trait MappingDsl {
 
@@ -48,10 +50,17 @@ case class GetMappingDefinition(indexesAndTypes: IndexesAndTypes) {
 
 case class GetMappingsResult(original: GetMappingsResponse) {
 
-  import scala.collection.JavaConverters._
 
   @deprecated("use .mappings to use scala maps, or use original.getMappings to use the java client", "2.0")
   def getMappings = original.getMappings
+
+  def mappingFor(indexAndType: IndexAndType): MappingMetaData = mappings(indexAndType.index)(indexAndType.`type`)
+
+  def propertiesFor(indexAndType: IndexAndType): Map[String, Any] =
+    mappingFor(indexAndType).sourceAsMap().get("properties").asInstanceOf[util.Map[String, _]].asScala.toMap
+
+  def fieldFor(indexAndType: IndexAndType, field: String): Map[String, Any] =
+    propertiesFor(indexAndType).get("field").asInstanceOf[util.Map[String, _]].asScala.toMap
 
   // returns mappings of index name to a map of types to mapping data
   def mappings: Map[String, Map[String, MappingMetaData]] = {

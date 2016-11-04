@@ -109,7 +109,10 @@ trait ElasticDsl
   def field(name: String, ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
+
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
+
   def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
   def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
@@ -137,7 +140,10 @@ trait ElasticDsl
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
   def shortField(name: String) = field(name, ShortType)
+
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
   def stringField(name: String): StringFieldDefinition = field(name, StringType)
+
   def textField(name: String): TextFieldDefinition = field(name, TextType)
   def tokenCountField(name: String) = field(name).typed(TokenCountType)
 

@@ -11,7 +11,10 @@ case object SimpleAnalyzer extends Analyzer("simple")
 case object StopAnalyzer extends Analyzer("stop")
 case object KeywordAnalyzer extends Analyzer("keyword")
 case object PatternAnalyzer extends Analyzer("pattern")
+
+@deprecated("Use the language-specific analyzer in modules/analysis instead", "3.0.0")
 case object SnowballAnalyzer extends Analyzer("snowball")
+
 case class CustomAnalyzer(override val name: String) extends Analyzer(name)
 
 abstract class LanguageAnalyzer(name: String) extends Analyzer(name: String)
