@@ -19,11 +19,12 @@ trait QueryDsl {
                     negativeQuery: QueryDefinition): BoostingQueryDefinition = BoostingQueryDefinition(positiveQuery, negativeQuery)
 
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
-  def commonQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
   class CommonQueryExpectsText(name: String) {
     def text(q: String): CommonTermsQueryDefinition = CommonTermsQueryDefinition(name, q)
     def query(q: String): CommonTermsQueryDefinition = text(q)
   }
+
+  def commonQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
 
   def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition =
     ConstantScoreDefinition(QueryBuilders.constantScoreQuery(query.builder))

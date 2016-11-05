@@ -9,7 +9,8 @@ import scala.language.implicitConversions
 
 trait GetDsl {
 
-  def get(id: Any) = new {
+  def get(id: Any): GetExpectsFrom = new GetExpectsFrom(id)
+  class GetExpectsFrom(id: Any) {
     def from(str: String): GetDefinition = {
       if (str.contains('/')) from(IndexAndType(str)) else from(IndexAndType(str, "_all"))
     }

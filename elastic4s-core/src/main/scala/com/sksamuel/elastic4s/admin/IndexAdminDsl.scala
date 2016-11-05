@@ -9,8 +9,9 @@ import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.action.admin.indices.rollover.RolloverResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
-import org.elasticsearch.action.admin.indices.stats.{ShardStats, IndexStats, CommonStats, IndicesStatsResponse}
+import org.elasticsearch.action.admin.indices.stats.{CommonStats, IndexStats, IndicesStatsResponse, ShardStats}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 import org.elasticsearch.cluster.routing.ShardRouting
@@ -51,6 +52,8 @@ trait IndexAdminDsl {
   def clearIndex(first: String, rest: String*): ClearCacheDefinition = clearIndex(first +: rest)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
 
+  def rollover(alias: String): RolloverDefinition = RolloverDefinition(alias)
+
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
     override def apply(c: Client, t: OpenIndexDefinition): Future[OpenIndexResponse] = {
@@ -76,6 +79,15 @@ trait IndexAdminDsl {
     extends Executable[IndexExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
     override def apply(c: Client, t: IndexExistsDefinition): Future[IndicesExistsResponse] = {
       injectFuture(c.admin.indices.prepareExists(t.indexes: _*).execute)
+    }
+  }
+
+  implicit object RolloverDefinitionExecutable
+    extends Executable[RolloverDefinition, RolloverResponse, RolloverResponse] {
+    override def apply(c: Client, r: RolloverDefinition): Future[RolloverResponse] = {
+      val builder = c.admin().indices().prepareRolloverIndex(r.sourceAlias)
+      r.populate(builder)
+      injectFuture(builder.execute)
     }
   }
 
