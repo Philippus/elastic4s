@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.node.Node
@@ -16,16 +17,25 @@ class InternalNode(settings: Settings,
                    plugins: List[Class[_ <: Plugin]])
   extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
 
-class LocalNode(settings: Settings) {
+class LocalNode(settings: Settings) extends Logging {
 
   private val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
   private val node = new InternalNode(settings, plugins)
 
   def start(): String = {
     node.start()
+
+    Runtime.getRuntime.addShutdownHook(new Thread() {
+      override def run(): Unit = {
+        logger.info(s"Shutting down local node ${settings.get("cluster.name")}")
+        LocalNode.this.stop()
+      }
+    })
+
     val nodeId = node.client().admin().cluster().prepareState().get().getState().getNodes().getLocalNodeId()
-    node.client().admin().cluster().prepareNodesInfo(nodeId).get().getNodes().iterator().next()
+    val ipAndPort = node.client().admin().cluster().prepareNodesInfo(nodeId).get().getNodes().iterator().next()
       .getHttp().address().publishAddress().toString()
+    ipAndPort
   }
 
   def stop() = node.close()
@@ -38,7 +48,10 @@ class LocalNode(settings: Settings) {
    */
   def client(shutdownNodeOnClose: Boolean = true): ElasticClient = new ElasticClient {
 
-    private val client = node.client()
+    private val client = {
+      node.start()
+      node.client()
+    }
 
     override def close(): Unit = {
       client.close()
