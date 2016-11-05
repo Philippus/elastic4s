@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{Indexable, searches}
 import org.scalatest.{Matchers, WordSpec}
 
 class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {

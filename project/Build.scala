@@ -12,19 +12,19 @@ object Build extends AutoPlugin {
     val org = "com.sksamuel.elastic4s"
     val ScalaVersion = "2.11.8"
     val ScalatestVersion = "3.0.0"
-    val ScalacticVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
     val AkkaVersion = "2.3.16"
     val ReactiveStreamsVersion = "1.0.0"
-    val JacksonVersion = "2.8.4"
+    val JacksonVersion = "2.8.3"
     val Slf4jVersion = "1.7.12"
     val ElasticsearchVersion = "5.0.0"
-    val Log4jVersion = "2.7"
+    val Log4jVersion = "2.6.2"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.5.4"
     val PlayJsonVersion = "2.5.9"
     val LuceneVersion = "6.2.1"
     val ExtsVersion = "1.35.1"
+    val CatsVersion = "0.8.0"
   }
 
   import autoImport._
@@ -47,7 +47,7 @@ object Build extends AutoPlugin {
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
       "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
-      "org.typelevel"                         %% "cats"                     % "0.8.0",
+      "org.typelevel"                         %% "cats"                     % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
       "commons-io"                            % "commons-io"                % CommonsIoVersion      % "test",
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",

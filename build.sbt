@@ -47,10 +47,11 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
       "org.apache.lucene"                     % "lucene-spatial-extras"     % "6.2.1",
       "org.apache.lucene"                     % "lucene-spatial3d"          % "6.2.1",
       "org.apache.lucene"                     % "lucene-suggest"            % "6.2.1",
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion,
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % "2.7"
+      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % Log4jVersion
     )
   )
   .dependsOn(core)
