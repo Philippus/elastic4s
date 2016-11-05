@@ -13,6 +13,7 @@ trait SearchDsl
     with HighlightDsl
     with ScriptFieldDsl {
 
+  def search(indexes: Indexes): SearchDefinition = search(indexes.toIndexesAndTypes)
   def search(indexTypes: IndexAndTypes): SearchDefinition = search(indexTypes.toIndexesAndTypes)
   def search(indexesAndTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesAndTypes)
 

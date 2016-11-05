@@ -2,17 +2,17 @@ package com.sksamuel.elastic4s
 package admin
 
 import org.scalatest.FreeSpec
-import org.scalatest.mock.MockitoSugar
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.mockito.MockitoSugar
 
 import scala.concurrent.duration._
 
 class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with ElasticDsl {
 
   client.execute(bulk(
-    index into "pizza/toppings" fields ("name" -> "chicken"),
-    index into "pizza/toppings" fields ("name" -> "pepperoni"),
-    index into "pizza/toppings" fields ("name" -> "onions")
+    indexInto("pizza/toppings") fields ("name" -> "chicken"),
+    indexInto("pizza/toppings") fields ("name" -> "pepperoni"),
+    indexInto("pizza/toppings") fields ("name" -> "onions")
   )).await
 
   refresh("pizza")
@@ -22,30 +22,30 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
     "can be snapshotted, fetched and restored" in {
 
       client.execute {
-        create repository "_snapshot" `type` "fs" settings Map("location" -> "snapshottest")
+        createRepository("_snapshot") `type` "fs" settings Map("location" -> testNodeHomePath.toAbsolutePath.toString)
       }.await(10.seconds)
 
       client.execute {
-        create snapshot "snap" in "_snapshot" index "pizza" waitForCompletion true
+        createSnapshot("snap") in "_snapshot" index "pizza" waitForCompletion true
       }.await(10.seconds)
 
       client.execute {
-        get snapshot "snap" from "_snapshot"
+        getSnapshot("snap") from "_snapshot"
       }.await(10.seconds)
 
       client.execute(bulk(
-        index into "pizza/toppings" fields ("name" -> "spicy meatballs")
+        indexInto("pizza/toppings") fields ("name" -> "spicy meatballs")
       )).await
 
       refresh("pizza")
       blockUntilCount(4, "pizza")
 
       client.execute {
-        close index "pizza"
+        closeIndex("pizza")
       }.await
 
       client.execute {
-        restore snapshot "snap" from "_snapshot" index "pizza"
+        restoreSnapshot("snap") from "_snapshot" index "pizza"
       }.await(10.seconds)
 
       // the doc added after the snapshot should be gone now

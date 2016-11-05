@@ -17,7 +17,7 @@ import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, HighlightDefiniti
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
 import com.sksamuel.elastic4s.update.UpdateDsl
-import com.sksamuel.elastic4s.validate.{ValidateDefinition, ValidateDsl}
+import com.sksamuel.elastic4s.validate.ValidateDsl
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}

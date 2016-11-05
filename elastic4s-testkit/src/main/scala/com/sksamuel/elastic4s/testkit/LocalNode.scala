@@ -17,6 +17,9 @@ class InternalNode(settings: Settings,
                    plugins: List[Class[_ <: Plugin]])
   extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
 
+// creates a new LocalNode from the given settings
+// the settings must provide path.home, path.data and cluster.name at least
+// prefer the apply methods on the companion object
 class LocalNode(settings: Settings) extends Logging {
 
   private val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
@@ -65,19 +68,25 @@ class LocalNode(settings: Settings) extends Logging {
 
 object LocalNode {
 
-  def apply(clusterName: String, pathHome: String, pathData: String): LocalNode = {
+  // creates a new LocalNode with default settings using the cluster name and paths provided
+  def settings(clusterName: String, pathHome: String, pathData: String): Settings = {
     val map = Map(
       "path.home" -> pathHome,
+      "path.repo" -> pathHome,
       "path.data" -> pathData,
+      "cluster.name" -> clusterName,
       "transport.type" -> "local",
       "discovery.type" -> "local",
       "http.type" -> "netty3",
       "node.ingest" -> "true",
       "script.inline" -> "true",
       "script.stored" -> "true",
-      "cluster.name" -> clusterName
+      "http.enabled" -> "true"
     )
-    val settings = map.foldLeft(Settings.builder) { (settings, kv) => settings.put(kv._1, kv._2) }.build()
-    new LocalNode(settings)
+    Settings.builder().put(map.asJava).build()
+  }
+
+  def apply(clusterName: String, pathHome: String, pathData: String): LocalNode = {
+    new LocalNode(settings(clusterName, pathHome, pathData))
   }
 }

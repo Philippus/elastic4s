@@ -9,17 +9,22 @@ import scala.language.implicitConversions
 * - "_all"
 */
 case class Indexes(values: Seq[String]) {
+  // returns an IndexesAndTypes where the types is empty
   def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(values, Nil)
+  def size = values.size
+  def isEmpty = values.isEmpty
+  def isNonEmpty = values.nonEmpty
 }
 
 object Indexes {
+  val All = Indexes("_all")
   implicit def apply(indexes: String): Indexes = Indexes(indexes.split(','))
   def apply(first: String, rest: String*): Indexes = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
 
 /**
- * Models one index associated with one type.
+ * Models exactly one index associated with exactly one type.
  */
 case class IndexAndType(index: String, `type`: String) {
   def toIndexAndTypes: IndexAndTypes = IndexAndTypes(index, Seq(`type`))
@@ -59,9 +64,11 @@ object IndexAndTypes {
 }
 
 /**
- * Models one or more indexes associated with one or more types.
+ * Models one or more indexes associated with zero or more types.
  *
  * So for example,
+ * - index1
+ * - index1/index2
  * - index1/type1
  * - index1/type1,type2
  * - index1,index2/type1
@@ -92,6 +99,7 @@ object IndexesAndTypes {
   implicit def apply(indexAndTypes: IndexAndTypes): IndexesAndTypes = indexAndTypes.toIndexesAndTypes
 }
 
+// Models one ore more indexes associated with exactly one type
 case class IndexesAndType(indexes: Seq[String], `type`: String)
 
 object IndexesAndType {

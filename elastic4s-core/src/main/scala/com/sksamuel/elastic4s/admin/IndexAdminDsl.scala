@@ -22,8 +22,9 @@ import scala.concurrent.Future
 
 trait IndexAdminDsl {
 
-  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
-  def refreshIndex(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
+  def refreshIndex(first: String, rest: String*): RefreshIndexDefinition = refreshIndex(first +: rest)
+  def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refreshIndex(Indexes(indexes))
+  def refreshIndex(indexes: Indexes): RefreshIndexDefinition = RefreshIndexDefinition(indexes.values)
 
   def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
   def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)

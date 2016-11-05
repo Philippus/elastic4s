@@ -4,8 +4,7 @@ import java.io.PrintWriter
 import java.nio.file.{Path, Paths}
 import java.util.UUID
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl}
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, Indexes}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.settings.Settings
@@ -14,7 +13,6 @@ import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 trait NodeBuilder {
@@ -98,9 +96,8 @@ trait NodeBuilder {
 trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   this: Suite =>
 
-  private val logger = LoggerFactory.getLogger(getClass)
-
   private lazy val internalClient = createLocalClient
+  private val logger = LoggerFactory.getLogger(getClass)
 
   override def afterAll(): Unit = {
     internalClient.close()
@@ -112,14 +109,14 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
    */
   implicit def client: ElasticClient = internalClient
 
-  def refresh(indexes: String*): Future[RefreshResponse] = {
-    val i = indexes.size match {
-      case 0 => Seq("_all")
-      case _ => indexes
-    }
+  // refresh all indexes
+  def refreshAll(): RefreshResponse = refresh(Indexes.All)
+
+  // refreshes all specified indexes
+  def refresh(indexes: Indexes): RefreshResponse = {
     client.execute {
       refreshIndex(indexes)
-    }
+    }.await
   }
 
   def blockUntilGreen(): Unit = {
@@ -141,7 +138,8 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
       try {
         done = predicate()
       } catch {
-        case e: Throwable => logger.warn("problem while testing predicate", e)
+        case e: Throwable =>
+          logger.warn("problem while testing predicate", e)
       }
     }
 
@@ -210,7 +208,7 @@ trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
   def blockUntilEmpty(index: String): Unit = {
     blockUntil(s"Expected empty index $index") { () =>
       client.execute {
-        search(index).size(0)
+        search(Indexes(index)).size(0)
       }.await.totalHits == 0
     }
   }
