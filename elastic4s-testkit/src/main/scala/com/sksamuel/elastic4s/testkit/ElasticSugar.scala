@@ -15,99 +15,20 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 
-trait NodeBuilder {
-
-  private val logger = LoggerFactory.getLogger(getClass)
-
-  /**
-   * Override this if you wish to change where the home directory for the local instance will be located.
-   */
-  lazy val testNodeHomePath: Path = tempDirectoryPath resolve UUID.randomUUID().toString
-  lazy val testNodeDataPath: Path = tempDirectoryPath resolve UUID.randomUUID().toString
-
-  def numberOfReplicas: Int = 0
-
-  def numberOfShards: Int = 1
-
-  def indexRefresh: FiniteDuration = 1.seconds
-
-  def httpEnabled: Boolean = true
-
-  lazy val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
-
-  lazy val testNodeConfPath: Path = testNodeHomePath resolve "config"
-
-  /**
-   * Override this if you wish to control all the settings used by the client.
-   */
-  protected def settings: Settings.Builder = {
-
-    val home = testNodeHomePath
-    logger.info(s"Elasticsearch test-server located at $home")
-    home.toFile.mkdirs()
-    home.toFile.deleteOnExit()
-
-    val conf = testNodeConfPath
-    conf.toFile.mkdirs()
-    conf.toFile.deleteOnExit()
-
-    // todo this needs to come out of here and into the analyzer test alone when we can isolate nodes
-    val newStopListFile = (testNodeConfPath resolve "stoplist.txt").toFile
-    val writer = new PrintWriter(newStopListFile)
-    writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
-    writer.close()
-
-    val builder = Settings.builder()
-      .put("node.http.enabled", httpEnabled)
-      .put("http.enabled", httpEnabled)
-      .put("path.home", home.toFile.getAbsolutePath)
-      .put("path.repo", home.toFile.getAbsolutePath)
-      .put("path.conf", conf.toFile.getAbsolutePath)
-      .put("index.number_of_shards", numberOfShards)
-      .put("index.number_of_replicas", numberOfReplicas)
-      .put("script.inline", true)
-      .put("index.refresh_interval", indexRefresh.toSeconds + "s")
-      .put("discovery.zen.ping.multicast.enabled", "false")
-      .put("es.logger.level", "INFO")
-      .put("cluster.name", getClass.getSimpleName)
-    configureSettings(builder)
-  }
-
-  /**
-   * Invoked by the sugar trait to setup the settings builder that was created by settings()
-   */
-  def configureSettings(builder: Settings.Builder): Settings.Builder = builder
-
-  /**
-   * Invoked to create a local client for the elastic node.
-   * Override to create the client youself.
-   */
-  def createLocalClient: ElasticClient = {
-    val node = LocalNode(
-      getClass.getSimpleName,
-      testNodeHomePath.toAbsolutePath.toString,
-      testNodeDataPath.toAbsolutePath.toString
-    )
-    node.start()
-    node.client(true)
-  }
+@deprecated("Use TestNode", "5.0.0")
+trait NodeBuilder extends LocalTestNode {
+  this: Suite =>
 }
 
-trait ElasticSugar extends NodeBuilder with BeforeAndAfterAll with ElasticDsl {
+/**
+* Provides helper methods for things like refreshing an index, and blocking until an
+* index has a certain count of documents. These methods are very useful when writing
+* tests to allow for blocking, iterative coding
+*/
+trait ElasticSugar extends LocalTestNode with ElasticDsl {
   this: Suite =>
 
-  private lazy val internalClient = createLocalClient
   private val logger = LoggerFactory.getLogger(getClass)
-
-  override def afterAll(): Unit = {
-    internalClient.close()
-  }
-
-  /**
-   * Is invoked when a test needs access to a client for the test node.
-   * Can override this if you wish to control precisely how the client is created.
-   */
-  implicit def client: ElasticClient = internalClient
 
   // refresh all indexes
   def refreshAll(): RefreshResponse = refresh(Indexes.All)

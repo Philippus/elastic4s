@@ -1,32 +1,38 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import java.io.PrintWriter
+
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
+  // setup the stop file list
+  val newStopListFile = (testNodeConfPath resolve "stoplist.txt").toFile
+  val writer = new PrintWriter(newStopListFile)
+  writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
+  writer.close()
+
   client.execute {
     createIndex("analyzer").mappings {
       mapping("test") fields (
-        stringField("keyword") analyzer KeywordAnalyzer,
-        stringField("snowball") typed StringType analyzer SnowballAnalyzer,
-        stringField("whitespace") analyzer WhitespaceAnalyzer,
-        stringField("stop") analyzer StopAnalyzer,
-        stringField("apos") analyzer CustomAnalyzer("apos"),
-        stringField("stop_path") analyzer CustomAnalyzer("stop_path"),
-        stringField("standard1") analyzer CustomAnalyzer("standard1"),
-        stringField("simple1") analyzer SimpleAnalyzer,
-        stringField("pattern1") analyzer CustomAnalyzer("pattern1"),
-        stringField("pattern2") analyzer CustomAnalyzer("pattern2"),
-        stringField("ngram") analyzer CustomAnalyzer("default_ngram"),
-        stringField("edgengram") analyzer CustomAnalyzer("edgengram"),
-        stringField("custom_ngram") analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
-        stringField("shingle") analyzer CustomAnalyzer("shingle"),
-        stringField("shingle2") analyzer CustomAnalyzer("shingle2"),
-        stringField("noshingle") analyzer CustomAnalyzer("shingle3"),
-        stringField("shingleseparator") analyzer CustomAnalyzer("shingle4")
+        textField("keyword") analyzer KeywordAnalyzer,
+        textField("snowball") analyzer SnowballAnalyzer,
+        textField("whitespace") analyzer WhitespaceAnalyzer,
+        textField("stop") analyzer StopAnalyzer,
+        textField("apos") analyzer CustomAnalyzer("apos"),
+        textField("stop_path") analyzer CustomAnalyzer("stop_path"),
+        textField("standard1") analyzer CustomAnalyzer("standard1"),
+        textField("simple1") analyzer SimpleAnalyzer,
+        textField("pattern1") analyzer CustomAnalyzer("pattern1"),
+        textField("pattern2") analyzer CustomAnalyzer("pattern2"),
+        textField("ngram") analyzer CustomAnalyzer("default_ngram"),
+        textField("edgengram") analyzer CustomAnalyzer("edgengram"),
+        textField("custom_ngram") analyzer CustomAnalyzer("my_ngram") searchAnalyzer KeywordAnalyzer,
+        textField("shingle") analyzer CustomAnalyzer("shingle"),
+        textField("shingle2") analyzer CustomAnalyzer("shingle2"),
+        textField("noshingle") analyzer CustomAnalyzer("shingle3"),
+        textField("shingleseparator") analyzer CustomAnalyzer("shingle4")
         )
     } analysis(
       PatternAnalyzerDefinition("pattern1", "\\d", lowercase = false),
@@ -136,25 +142,25 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "custom EdgeNGram Tokenizer" - {
     "should support side option" in {
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "es")
+        search("analyzer/test") query matchQuery("edgengram" -> "es")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "nes")
+        search("analyzer/test") query matchQuery("edgengram" -> "nes")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "ones")
+        search("analyzer/test") query matchQuery("edgengram" -> "ones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "rones")
+        search("analyzer/test") query matchQuery("edgengram" -> "rones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "hrones")
+        search("analyzer/test") query matchQuery("edgengram" -> "hrones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "thrones")
+        search("analyzer/test") query matchQuery("edgengram" -> "thrones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query matchQuery("edgengram" -> "ga")
+        search("analyzer/test") query matchQuery("edgengram" -> "ga")
       }.await.totalHits shouldBe 0
     }
   }
@@ -162,7 +168,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "SnowballAnalyzer" - {
     "should stem words" in {
       client.execute {
-        search in "analyzer/test" query termQuery("snowball" -> "sky")
+        search("analyzer/test").query(termQuery("snowball" -> "sky"))
       }.await.totalHits shouldBe 1
     }
   }
@@ -170,7 +176,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "StandardAnalyzer" - {
     "should honour max token length" in {
       client.execute {
-        search in "analyzer/test" query termQuery("standard1" -> "aaaaaaaaaaa")
+        search("analyzer/test") query termQuery("standard1" -> "aaaaaaaaaaa")
       }.await.totalHits shouldBe 0
     }
   }
@@ -178,27 +184,27 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "PatternAnalyzer" - {
     "should split on regex special character" in {
       client.execute {
-        search in "analyzer/test" query termQuery("pattern1" -> "abc")
+        search("analyzer/test") query termQuery("pattern1" -> "abc")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("pattern1" -> "def")
+        search("analyzer/test") query termQuery("pattern1" -> "def")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("pattern1" -> "123")
+        search("analyzer/test") query termQuery("pattern1" -> "123")
       }.await.totalHits shouldBe 0
       client.execute {
-        search in "analyzer/test" query termQuery("pattern1" -> "abc123def")
+        search("analyzer/test") query termQuery("pattern1" -> "abc123def")
       }.await.totalHits shouldBe 0
     }
     "should split on normal character" in {
       client.execute {
-        search in "analyzer/test" query termQuery("pattern2" -> "coldplay")
+        search("analyzer/test") query termQuery("pattern2" -> "coldplay")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("pattern2" -> "jethro tull")
+        search("analyzer/test") query termQuery("pattern2" -> "jethro tull")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("pattern2" -> "jethro")
+        search("analyzer/test") query termQuery("pattern2" -> "jethro")
       }.await.totalHits shouldBe 0
     }
   }
@@ -214,10 +220,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "StopAnalyzerPath" - {
     "should exclude stop words from config/stoplist.txt" in {
       client.execute {
-        search in "analyzer/test" query termQuery("stop_path" -> "and")
+        search("analyzer/test") query termQuery("stop_path" -> "and")
       }.await.totalHits shouldBe 0
       client.execute {
-        search in "analyzer/test" query termQuery("stop_path" -> "testing") // not in stoplist
+        search("analyzer/test") query termQuery("stop_path" -> "testing") // not in stoplist
       }.await.totalHits shouldBe 1
     }
   }
@@ -280,7 +286,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "ShingleTokenFilter(output_unigrams_if_no_shingles = true)" - {
     "should keep one term field" in {
       client.execute {
-        search in "analyzer/test" query termQuery("noshingle" -> "keep")
+        search("analyzer/test") query termQuery("noshingle" -> "keep")
       }.await.totalHits shouldBe 1
     }
   }
@@ -288,7 +294,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "ShingleTokenFilter(token_separator = '#')" - {
     "should use '#' in 'one two' to define shingle term as 'one#two' " in {
       client.execute {
-        search in "analyzer/test" query termQuery("shingleseparator" -> "one#two")
+        search("analyzer/test") query termQuery("shingleseparator" -> "one#two")
       }.await.totalHits shouldBe 1
     }
   }
@@ -296,10 +302,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "ApostropheCharFilter" - {
     "should remove the apostrophe and the characters after it" in {
       client.execute {
-        search in "analyzer/test" query termQuery("apos" -> "didn")
+        search("analyzer/test") query termQuery("apos" -> "didn")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("apos" -> "didn't")
+        search("analyzer/test") query termQuery("apos" -> "didn't")
       }.await.totalHits shouldBe 0
     }
   }
