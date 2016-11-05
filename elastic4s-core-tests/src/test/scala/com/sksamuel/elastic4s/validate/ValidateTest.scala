@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.validate
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -11,7 +10,7 @@ class ValidateTest extends WordSpec with ElasticSugar with Matchers {
   implicit val duration: Duration = 10.seconds
 
   client.execute {
-    index into "food/pasta" fields(
+    indexInto("food/pasta") fields(
       "name" -> "maccaroni",
       "color" -> "yellow"
       )
@@ -22,13 +21,13 @@ class ValidateTest extends WordSpec with ElasticSugar with Matchers {
   "a validate query" should {
     "return valid when the query is valid for a string query" in {
       val resp = client.execute {
-        validate in "food/pasta" query "maccaroni"
+        validateIn("food/pasta") query "maccaroni"
       }.await
       resp.isValid shouldBe true
     }
     "return valid when the query is valid for a dsl query" in {
       val resp = client.execute {
-        validate in "food/pasta" query {
+        validateIn("food/pasta") query {
           bool {
             should {
               termQuery("name", "maccaroni")

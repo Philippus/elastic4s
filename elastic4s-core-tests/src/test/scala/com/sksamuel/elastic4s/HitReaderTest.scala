@@ -50,9 +50,28 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
     }.await.to[Team]
 
     teams.toSet shouldBe Set(
+      Team("Arsenal", "The Library", 1886),
+      Team("Middlesbrough", "Fortress Riverside", 1876)
+    )
+  }
+
+  it should "unmarshall safely search results" in {
+    val teams = client.execute {
+      search("football").matchAll()
+    }.await.safeTo[Team]
+
+    teams.toSet shouldBe Set(
       Right(Team("Arsenal", "The Library", 1886)),
       Right(Team("Middlesbrough", "Fortress Riverside", 1876))
     )
+  }
+
+  it should "unmarshall safely a get response" in {
+    val team = client.execute {
+      get(1).from(IndexName)
+    }.await.safeTo[Team]
+
+    team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
   }
 
   it should "unmarshall a get response" in {
@@ -60,7 +79,21 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
       get(1).from(IndexName)
     }.await.to[Team]
 
-    team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+    team shouldBe Team("Middlesbrough", "Fortress Riverside", 1876)
+  }
+
+  it should "unmarshall safely multi get results" in {
+    val teams = client.execute {
+      multiget(
+        get(1).from(IndexName),
+        get(2).from(IndexName)
+      )
+    }.await.safeTo[Team]
+
+    teams.toSet shouldBe Set(
+      Right(Team("Arsenal", "The Library", 1886)),
+      Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+    )
   }
 
   it should "unmarshall multi get results" in {
@@ -72,8 +105,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
     }.await.to[Team]
 
     teams.toSet shouldBe Set(
-      Right(Team("Arsenal", "The Library", 1886)),
-      Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+      Team("Arsenal", "The Library", 1886),
+      Team("Middlesbrough", "Fortress Riverside", 1876)
     )
   }
 }
