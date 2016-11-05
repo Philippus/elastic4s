@@ -6,19 +6,19 @@ import org.elasticsearch.action.index.IndexResponse
 
 case class IndexResult(original: IndexResponse) {
 
-  @deprecated("use id", "3.0.0")
+  @deprecated("use id", "5.0.0")
   def getId = id
 
-  @deprecated("use `type`", "3.0.0")
+  @deprecated("use `type`", "5.0.0")
   def getType = `type`
 
-  @deprecated("use index", "3.0.0")
+  @deprecated("use index", "5.0.0")
   def getIndex = index
 
-  @deprecated("use version", "3.0.0")
+  @deprecated("use version", "5.0.0")
   def getVersion = original.getVersion
 
-  @deprecated("use created", "3.0.0")
+  @deprecated("use created", "5.0.0")
   def isCreated: Boolean = created
 
   def id = original.getId

@@ -34,7 +34,7 @@ trait TypeableFields {
   def withType(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def withType(ft: ShortType.type) = new ShortFieldDefinition(name)
 
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def withType(ft: StringType.type) = new StringFieldDefinition(name)
   def withType(ft: TokenCountType.type) = new TokenCountDefinition(name)
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
@@ -55,7 +55,7 @@ trait TypeableFields {
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
 
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 

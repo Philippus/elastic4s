@@ -22,7 +22,7 @@ case class MatchQueryDefinition(field: String, value: Any)
     this
   }
 
-  @deprecated("for phrase queries use match phrase query", "3.0.0")
+  @deprecated("for phrase queries use match phrase query", "5.0.0")
   def slop(s: Int) = {
     builder.slop(s)
     this
@@ -33,7 +33,7 @@ case class MatchQueryDefinition(field: String, value: Any)
     this
   }
 
-  @deprecated("use lenient(Boolean)", "3.0.0")
+  @deprecated("use lenient(Boolean)", "5.0.0")
   def setLenient(lenient: Boolean) = {
     builder.lenient(lenient)
     this

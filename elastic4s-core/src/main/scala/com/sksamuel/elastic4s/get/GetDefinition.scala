@@ -28,10 +28,10 @@ case class GetDefinition(indexAndType: IndexAndType, id: String) {
     this
   }
 
-  @deprecated("use storedFields", "3.0.0")
+  @deprecated("use storedFields", "5.0.0")
   def fields(fs: String*): GetDefinition = storedFields(fs)
 
-  @deprecated("use storedFields", "3.0.0")
+  @deprecated("use storedFields", "5.0.0")
   def fields(fs: Iterable[String]): GetDefinition = storedFields(fs)
 
   def storedFields(first: String, rest: String*): GetDefinition = storedFields(first +: rest)

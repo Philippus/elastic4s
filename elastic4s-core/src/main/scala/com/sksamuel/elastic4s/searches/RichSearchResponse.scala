@@ -14,19 +14,19 @@ case class RichSearchResponse(original: SearchResponse) {
   def getAggregations = original.getAggregations
 
   // java aliases
-  @deprecated("use suggest", "3.0.0")
+  @deprecated("use suggest", "5.0.0")
   def getSuggest = original.getSuggest
 
-  @deprecated("use scrollId or scrollIdOpt", "3.0.0")
+  @deprecated("use scrollId or scrollIdOpt", "5.0.0")
   def getScrollId: String = original.getScrollId
 
-  @deprecated("use hits", "3.0.0")
+  @deprecated("use hits", "5.0.0")
   def getHits: SearchHits = original.getHits
 
-  @deprecated("use took", "3.0.0")
+  @deprecated("use took", "5.0.0")
   def getTook = original.getTook
 
-  @deprecated("use tookInMillis", "3.0.0")
+  @deprecated("use tookInMillis", "5.0.0")
   def getTookInMillis = original.getTookInMillis
 
   def size: Int = original.getHits.hits().length
@@ -36,11 +36,11 @@ case class RichSearchResponse(original: SearchResponse) {
 
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
 
-  @deprecated("use to[T], which uses a Reader typeclass", "3.0.0")
+  @deprecated("use to[T], which uses a Reader typeclass", "5.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
-  def to[T](implicit reader: HitReader[T], manifest: Manifest[T]): IndexedSeq[T] = safeTo[T].flatMap(_.toOption)
-  def safeTo[T](implicit reader: HitReader[T], manifest: Manifest[T]): IndexedSeq[Either[String, T]] = hits.map(_.to[T])
+  def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
+  def safeTo[T: HitReader]: IndexedSeq[Either[String, T]] = hits.map(_.safeTo[T]).toIndexedSeq
 
   def scrollId: String = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)

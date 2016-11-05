@@ -45,10 +45,10 @@ class MultiSearchTest
     }
 
     whenReady(futureResponse) { response =>
-      response.items.size shouldBe 2
+      response.responses.size shouldBe 2
       response.size shouldBe 2
-      response.items.head.response.get.hits.head.id shouldBe "14"
-      response.items.tail.head.response.get.hits.head.id shouldBe "51"
+      response.responses.head.response.hits.head.id shouldBe "14"
+      response.responses.tail.head.response.hits.head.id shouldBe "51"
     }
   }
 }

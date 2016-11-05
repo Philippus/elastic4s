@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 
 trait SearchMatchers extends Matchers {
 
-  @deprecated("use containId(id)", "3.0.0")
+  @deprecated("use containId(id)", "5.0.0")
   def containResult(expectedId: Any)
                    (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = {
     containId(expectedId)

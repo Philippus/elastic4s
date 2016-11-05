@@ -88,7 +88,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   //    this
   //  }
 
-  @deprecated("use sortBy", "3.0.0")
+  @deprecated("use sortBy", "5.0.0")
   def sort(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
   def sortBy(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
   def sortBy(sorts: Iterable[SortDefinition[_]]): SearchDefinition = {
@@ -238,7 +238,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  @deprecated("Set fuzzy query using query(fuzzyQuery(...)) syntax", "3.0.0")
+  @deprecated("Set fuzzy query using query(fuzzyQuery(...)) syntax", "5.0.0")
   def fuzzy(tuple: (String, Any)) = {
     val q = FuzzyQueryDefinition(tuple._1, tuple._2)
     _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
@@ -341,7 +341,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  @deprecated("Renamed to storedFields", "3.0.0")
+  @deprecated("Renamed to storedFields", "5.0.0")
   def fields(fields: String*): SearchDefinition = storedFields(fields)
   def storedFields(first: String, rest: String*): SearchDefinition = storedFields(first +: rest)
   def storedFields(fields: Iterable[String]): SearchDefinition = {

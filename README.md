@@ -32,7 +32,7 @@ The upcoming 3.0.0 release will be compatible with Elasticsearch 5.0.0.
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|3.0.x (In progress)|5.0.x|
+|5.0.x (In progress)|5.0.x|
 |2.4.x|2.4.X|
 |2.3.x|2.3.X|
 |2.2.1|2.2.X|

@@ -30,7 +30,7 @@ object ElasticJackson {
       }
     }
 
-    @deprecated("use Reader which can be used for both get and search APIs", "3.0.0")
+    @deprecated("use Reader which can be used for both get and search APIs", "5.0.0")
     implicit def JacksonJsonHitAs[T: Manifest]: HitAs[T] = new HitAs[T] {
       override def as(hit: RichSearchHit): T = {
         val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]

@@ -8,13 +8,13 @@ import scala.collection.JavaConverters._
 case class RichSearchHitField(java: SearchHitField) extends HitField {
 
   // java method aliases
-  @deprecated("use name", "3.0.0")
+  @deprecated("use name", "5.0.0")
   def getName: String = name
 
-  @deprecated("use value", "3.0.0")
+  @deprecated("use value", "5.0.0")
   def getValue: AnyRef = value
 
-  @deprecated("use values", "3.0.0")
+  @deprecated("use values", "5.0.0")
   def getValues: Seq[AnyRef] = values
 
   override def name: String = java.name()

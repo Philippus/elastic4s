@@ -54,13 +54,13 @@ case class BulkItemResult(original: BulkItemResponse) {
   def itemId = original.getItemId
   def opType = original.getOpType
 
-  @deprecated("use toDeleteResult", "3.0.0")
+  @deprecated("use toDeleteResult", "5.0.0")
   def deleteResponse: Option[DeleteResponse] = original.getResponse match {
     case d: DeleteResponse => Some(d)
     case _ => None
   }
 
-  @deprecated("use toIndexResult", "3.0.0")
+  @deprecated("use toIndexResult", "5.0.0")
   def indexResult: Option[IndexResult] = toIndexResult
   def toIndexResult: Option[IndexResult] = original.getResponse match {
     case i: IndexResponse => Some(IndexResult(i))

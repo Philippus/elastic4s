@@ -17,7 +17,7 @@ trait SearchDsl
   def search(indexesAndTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesAndTypes)
 
   @deprecated("please use typed version which allows better checking at compile time." +
-    "eg searchIn(\"index\" / \"type\"), or searchIn(\"index1,index2\" / \"type1,type2\")", "3.0.0")
+    "eg searchIn(\"index\" / \"type\"), or searchIn(\"index1,index2\" / \"type1,type2\")", "5.0.0")
   def search(indexes: String*): SearchDefinition = SearchDefinition(IndexesAndTypes(indexes))
 
   def rescore(query: QueryDefinition) = RescoreDefinition(query)

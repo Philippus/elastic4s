@@ -49,14 +49,14 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
     resp.size shouldBe 3
 
-    resp.responses.head.id shouldBe "3"
-    resp.responses.head.exists shouldBe true
+    resp.items.head.id shouldBe "3"
+    resp.items.head.exists shouldBe true
 
-    resp.responses(1).id shouldBe "5"
-    resp.responses(1).exists shouldBe true
+    resp.items(1).id shouldBe "5"
+    resp.items(1).exists shouldBe true
 
-    resp.responses.last.id shouldBe "7"
-    resp.responses.last.exists shouldBe true
+    resp.items.last.id shouldBe "7"
+    resp.items.last.exists shouldBe true
   }
 
   it should "set exists=false for missing documents" in {
@@ -69,8 +69,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     ).await
 
     resp.size shouldBe 2
-    resp.responses.head.exists shouldBe true
-    resp.responses.last.exists shouldBe false
+    resp.items.head.exists shouldBe true
+    resp.items.last.exists shouldBe false
   }
 
   it should "retrieve documents by id with selected fields" in {
@@ -83,8 +83,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     ).await
 
     resp.size shouldBe 2
-    resp.responses.head.response.fields.keySet shouldBe Set("name", "year")
-    resp.responses.last.response.fields.keySet shouldBe Set("name")
+    resp.items.head.response.fields.keySet shouldBe Set("name", "year")
+    resp.items.last.response.fields.keySet shouldBe Set("name")
   }
 
   it should "retrieve documents by id with fetchSourceContext" in {
@@ -95,9 +95,9 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
         get(5) from "coldplay/albums" storedFields "name" fetchSourceContext Seq("name")
       )
     ).await
-    assert(2 === resp.responses.size)
-    assert(resp.responses.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
-    assert(resp.responses.last.original.getResponse.getSource.asScala.keySet === Set("name"))
+    assert(2 === resp.items.size)
+    assert(resp.items.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
+    assert(resp.items.last.original.getResponse.getSource.asScala.keySet === Set("name"))
   }
 
   it should "retrieve documents by id and version" in {
@@ -110,8 +110,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     ).await
 
     resp.size shouldBe 2
-    resp.responses.head.failed shouldBe true
-    resp.responses.last.exists shouldBe true
-    resp.responses.last.response.version shouldBe 4
+    resp.items.head.failed shouldBe true
+    resp.items.last.exists shouldBe true
+    resp.items.last.response.version shouldBe 4
   }
 }

@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
+import org.elasticsearch.common.geo.builders.ShapeBuilder
 import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
@@ -40,6 +41,8 @@ trait QueryDsl {
 
   def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
 
+  def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
+
   def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value)
 
@@ -57,7 +60,7 @@ trait QueryDsl {
   def geoPolygonQuery(field: String, points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
-  def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
+  def geoShapeQuery(field: String, shape: ShapeBuilder): GeoShapeDefinition = GeoShapeDefinition(field, shape)
 
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
@@ -111,10 +114,10 @@ trait QueryDsl {
     def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
       MoreLikeThisQueryDefinition(fields).copy(likeDocs = docs.toSeq)
 
-    @deprecated("use likeDocs or likeTexts", "3.0.0")
+    @deprecated("use likeDocs or likeTexts", "5.0.0")
     def like(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = likeItems(first +: rest)
 
-    @deprecated("use likeDocs or likeTexts", "3.0.0")
+    @deprecated("use likeDocs or likeTexts", "5.0.0")
     def like(first: String, rest: String*): MoreLikeThisQueryDefinition = likeTexts(first +: rest)
   }
 

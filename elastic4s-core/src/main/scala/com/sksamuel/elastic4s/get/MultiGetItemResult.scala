@@ -7,22 +7,22 @@ import scala.util.{Failure, Success, Try}
 
 case class MultiGetItemResult(original: MultiGetItemResponse) {
 
-  @deprecated("use id", "3.0.0")
+  @deprecated("use id", "5.0.0")
   def getId = original.getId
 
-  @deprecated("use index", "3.0.0")
+  @deprecated("use index", "5.0.0")
   def getIndex = original.getIndex
 
-  @deprecated("use `type`lol", "3.0.0")
+  @deprecated("use `type`lol", "5.0.0")
   def getType = original.getType
 
-  @deprecated("use failed", "3.0.0")
+  @deprecated("use failed", "5.0.0")
   def isFailed = original.isFailed
 
-  @deprecated("use response or result", "3.0.0")
+  @deprecated("use response or result", "5.0.0")
   def getResponse = original.getResponse
 
-  @deprecated("use failure", "3.0.0")
+  @deprecated("use failure", "5.0.0")
   def getFailure = original.getFailure
 
   def index = original.getIndex
@@ -30,8 +30,13 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
   def id = original.getId
   def documentRef = DocumentRef(index, `type`, id)
 
-  def to[T: HitReader]: Either[String, T] = responseTry match {
-    case Success(get) => get.to[T]
+  def to[T: HitReader]: T = responseTry match {
+    case Success(get) => get.to
+    case Failure(e) => throw e
+  }
+
+  def safeTo[T: HitReader]: Either[String, T] = responseTry match {
+    case Success(get) => get.safeTo
     case Failure(e) => Left(e.getMessage)
   }
 

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 
-@deprecated("use DocumentRef", "3.0.0")
+@deprecated("use DocumentRef", "5.0.0")
 case class MoreLikeThisItem(index: String, `type`: String, id: String) {
   def build: MoreLikeThisQueryBuilder.Item = new MoreLikeThisQueryBuilder.Item(index, `type`, id)
 }

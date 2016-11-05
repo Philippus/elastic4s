@@ -21,7 +21,7 @@ object FieldType {
   case object ObjectType extends FieldType("object")
   case object ShortType extends FieldType("short")
 
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "3.0.0")
+  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   case object StringType extends FieldType("string")
 
   case object TextType extends FieldType("text")
