@@ -1,19 +1,18 @@
 package com.sksamuel.elastic4s.streams
 
-import java.util.concurrent.{TimeUnit, CountDownLatch}
+import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{RichSearchHit, IndexDefinition, ElasticDsl2$}
-import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.searches.RichSearchHit
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.reactivestreams.{Subscription, Subscriber}
+import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Matchers {
 
-  import ElasticDsl2._
-  import ElasticJackson.Implicits._
   import ReactiveElastic._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val indexName = getClass.getSimpleName.toLowerCase
   val indexType = "emperor"
@@ -44,14 +43,14 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
 
   implicit object RichSearchHitRequestBuilder extends RequestBuilder[RichSearchHit] {
     override def request(hit: RichSearchHit): IndexDefinition = {
-      index into indexName / indexType source hit.sourceAsString
+      indexInto(indexName / indexType).doc(hit.sourceAsString)
     }
   }
 
   ensureIndexExists(indexName)
 
   client.execute {
-    bulk(emperors.map(index into indexName / indexType source _))
+    bulk(emperors.map(indexInto(indexName / indexType).source(_)))
   }.await
 
   blockUntilCount(emperors.length, indexName)
@@ -59,7 +58,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
   "elastic-streams" should {
     "publish all data from the index" in {
 
-      val publisher = client.publisher(search in indexName / indexType query "*:*" scroll "1m")
+      val publisher = client.publisher(search(indexName / indexType) query "*:*" scroll "1m")
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch = new CountDownLatch(emperors.length)

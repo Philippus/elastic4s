@@ -23,7 +23,10 @@ class InternalNode(settings: Settings,
 class LocalNode(settings: Settings) extends Logging {
 
   private val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
-  private val node = new InternalNode(settings, plugins)
+  private val node = {
+    println(s"Instantiating internal node with ${settings.getAsMap.asScala}")
+    new InternalNode(settings, plugins)
+  }
 
   def start(): String = {
     node.start()

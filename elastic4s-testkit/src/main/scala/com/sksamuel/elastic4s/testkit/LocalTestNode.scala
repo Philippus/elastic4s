@@ -4,16 +4,10 @@ import java.nio.file.{Path, Paths}
 import java.util.UUID
 
 import com.sksamuel.elastic4s.ElasticClient
-import org.elasticsearch.common.settings.Settings
-import org.scalatest.{BeforeAndAfterAll, Suite}
-import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 
-trait LocalTestNode extends BeforeAndAfterAll {
-  this: Suite =>
-
-  private val logger = LoggerFactory.getLogger(getClass)
+trait LocalTestNode {
 
   /**
    * Override this if you wish to change where the home directory for the local instance will be located.
@@ -38,21 +32,11 @@ trait LocalTestNode extends BeforeAndAfterAll {
   }
 
   /**
- * Is invoked when a test needs access to a client for the test node.
- * Can override this if you wish to control precisely how the client is created.
- */
-  implicit def client: ElasticClient = internalClient
-
-  private lazy val internalClient = createLocalClient
-
-  override def afterAll(): Unit = {
-    internalClient.close()
-  }
-
-  /**
-   * Invoked by the sugar trait to setup the settings builder that was created by settings()
+   * Is invoked when a test needs access to a client for the test node.
+   * Can override this if you wish to control precisely how the client is created.
    */
-  def configureSettings(builder: Settings.Builder): Settings.Builder = builder
+  implicit def client: ElasticClient = internalClient
+  private lazy val internalClient = createLocalClient
 
   /**
    * Invoked to create a local client for the elastic node.

@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkItemResult}
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.mappings.DynamicMapping.Strict
-import com.sksamuel.elastic4s.mappings.FieldType.{IntegerType, StringType}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
@@ -56,12 +55,13 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
     "index all receveid data and ignore failures" in {
 
       client.execute {
-        createIndex(strictIndex) mappings ("ships" fields (
-          "name" typed StringType,
-          "description" typed IntegerType,
-          "size" typed IntegerType
+        createIndex(strictIndex).mappings(
+          mapping("ships").fields(
+            textField("name"),
+            intField("description"),
+            intField("size")
           ) dynamic Strict
-          )
+        )
       }.await
       implicit val builder = new ShipRequestBuilder(strictIndex)
 
@@ -77,14 +77,13 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       ShipPublisher.subscribe(subscriber)
       completionLatch.await(5, TimeUnit.SECONDS)
 
-      ackLatch.getCount should be (0)
-      errorLatch.getCount should be (0)
+      ackLatch.getCount should be(0)
+      errorLatch.getCount should be(0)
 
       blockUntilCount(Ship.ships.length - errorsExpected, strictIndex)
     }
   }
 }
-
 
 object Ship {
 
@@ -112,14 +111,14 @@ object Ship {
 
 }
 
-
 class ShipRequestBuilder(indexName: String = "bulkindexsubint") extends RequestBuilder[Ship] {
+
   import ElasticJackson.Implicits._
+
   override def request(ship: Ship): BulkCompatibleDefinition = {
-    index into s"$indexName/ships" source ship
+    indexInto(s"$indexName/ships") source ship
   }
 }
-
 
 object ShipPublisher extends Publisher[Ship] {
 
@@ -137,7 +136,6 @@ object ShipPublisher extends Publisher[Ship] {
   }
 }
 
-
 object ShipEndlessPublisher extends Publisher[Ship] {
 
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
@@ -151,6 +149,5 @@ object ShipEndlessPublisher extends Publisher[Ship] {
     })
   }
 }
-
 
 case class Ship(name: String, description: Option[String] = None, size: Int = Random.nextInt(100))

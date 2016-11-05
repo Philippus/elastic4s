@@ -1,19 +1,12 @@
 package com.sksamuel.elastic4s.testkit
 
-import java.io.PrintWriter
-import java.nio.file.{Path, Paths}
-import java.util.UUID
-
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, Indexes}
+import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
-import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.transport.RemoteTransportException
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.Suite
 import org.slf4j.LoggerFactory
-
-import scala.concurrent.duration._
 
 @deprecated("Use TestNode", "5.0.0")
 trait NodeBuilder extends LocalTestNode {
