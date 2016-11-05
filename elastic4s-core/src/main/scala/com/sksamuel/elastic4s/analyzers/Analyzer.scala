@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.XContentBuilder
 
-/** @author Stephen Samuel */
 abstract class Analyzer(val name: String)
 
 case object WhitespaceAnalyzer extends Analyzer("whitespace")

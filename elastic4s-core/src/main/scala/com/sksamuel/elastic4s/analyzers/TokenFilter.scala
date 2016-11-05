@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.elasticsearch.common.xcontent.XContentBuilder
 import scala.collection.JavaConverters._
+import com.sksamuel.exts.OptionImplicits._
 
 trait TokenFilter extends AnalyzerFilter
 
@@ -157,7 +158,9 @@ case class LimitTokenFilter(name: String,
 }
 
 case class StopTokenFilter(name: String,
+                           language: Option[String] = None,
                            stopwords: Iterable[String] = Nil,
+                           stopwordsPath: Option[String] = None,
                            enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
                            removeTrailing: Option[Boolean] = None,
                            ignoreCase: Option[Boolean] = None)
@@ -168,6 +171,8 @@ case class StopTokenFilter(name: String,
   override def build(source: XContentBuilder): Unit = {
     if (stopwords.nonEmpty)
       source.field("stopwords", stopwords.asJava)
+    language.foreach(source.field("stopwords", _))
+    stopwordsPath.foreach(source.field("stopwords_path", _))
     enablePositionIncrements.foreach(source.field("enable_position_increments", _))
     ignoreCase.foreach(source.field("ignore_case", _))
     removeTrailing.foreach(source.field("remove_trailing", _))
@@ -176,6 +181,7 @@ case class StopTokenFilter(name: String,
   def ignoreCase(boolean: Boolean): StopTokenFilter = copy(ignoreCase = Option(boolean))
   def removeTrailing(boolean: Boolean): StopTokenFilter = copy(removeTrailing = Option(boolean))
   def enablePositionIncrements(boolean: Boolean): StopTokenFilter = copy(enablePositionIncrements = Option(boolean))
+  def language(language: String): StopTokenFilter = copy(language = language.some)
   def stopwords(stopwords: Iterable[String]): StopTokenFilter = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
 }
