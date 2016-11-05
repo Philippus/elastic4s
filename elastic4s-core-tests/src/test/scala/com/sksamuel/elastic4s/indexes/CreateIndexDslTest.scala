@@ -231,9 +231,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support copy to a single field" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        field("first_name") typed StringType index "analyzed" copyTo "full_name",
-        field("last_name") typed StringType index "analyzed" copyTo "full_name",
-        field("full_name") typed StringType index "analyzed"
+        field("first_name") typed TextType index "analyzed" copyTo "full_name",
+        field("last_name") typed TextType index "analyzed" copyTo "full_name",
+        field("full_name") typed TextType index "analyzed"
       ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.Dynamic
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
@@ -242,9 +242,9 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support copy to multiple fields" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        field("title") typed StringType index "analyzed" copyTo("meta_data", "article_info"),
-        field("meta_data") typed StringType index "analyzed",
-        field("article_info") typed StringType index "analyzed"
+        field("title") typed TextType index "analyzed" copyTo("meta_data", "article_info"),
+        field("meta_data") typed TextType index "analyzed",
+        field("article_info") typed TextType index "analyzed"
       ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.Strict
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
@@ -253,10 +253,10 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support multi fields" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        field("title") typed StringType index "analyzed" fields (
-          field("raw") typed StringType index "not_analyzed"),
-        field("meta_data") typed StringType index "analyzed",
-        field("article_info") typed StringType index "analyzed"
+        field("title") typed TextType index "analyzed" fields (
+          field("raw") typed TextType index "not_analyzed"),
+        field("meta_data") typed TextType index "analyzed",
+        field("article_info") typed TextType index "analyzed"
       ) size true numericDetection true boostNullValue 1.2 boost "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_fields.json")

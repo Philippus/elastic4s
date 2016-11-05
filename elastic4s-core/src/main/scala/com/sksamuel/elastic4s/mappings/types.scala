@@ -36,7 +36,11 @@ trait TypeableFields {
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def withType(ft: StringType.type) = new StringFieldDefinition(name)
+
+  def withType(ft: TextType.type) = new TextFieldDefinition(name)
+
   def withType(ft: TokenCountType.type) = new TokenCountDefinition(name)
+
   def typed(ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def typed(ft: BinaryType.type) = new BinaryFieldDefinition(name)
   def typed(ft: BooleanType.type) = new BooleanFieldDefinition(name)
@@ -57,6 +61,8 @@ trait TypeableFields {
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def typed(ft: StringType.type) = new StringFieldDefinition(name)
+
+  def typed(ft: TextType.type) = new TextFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
