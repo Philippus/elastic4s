@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.searches.SearchDefinition
+import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.searches.{RichSearchHit, RichSearchResponse, SearchDefinition}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl2$, RichSearchHit, RichSearchResponse}
 import org.elasticsearch.ElasticsearchException
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
@@ -73,10 +73,10 @@ class PublishActor(client: ElasticClient,
                    s: Subscriber[_ >: RichSearchHit],
                    max: Long) extends Actor with Stash {
 
-  import ElasticDsl2._
+  import com.sksamuel.elastic4s.ElasticDsl._
   import context.dispatcher
 
-  private var scrollId: String = null
+  private var scrollId: String = _
   private var processed: Long = 0
   private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
 
@@ -114,7 +114,7 @@ class PublishActor(client: ElasticClient,
     case PublishActor.Request(n) if n > queue.size =>
       Option(scrollId) match {
         case None => client.execute(query).onComplete(result => self ! result)
-        case Some(id) => client.execute(search scroll id keepAlive keepAlive).onComplete(result => self ! result)
+        case Some(id) => client.execute(searchScroll(id) keepAlive keepAlive).onComplete(result => self ! result)
       }
       // we switch state while we're waiting on elasticsearch, so we know not to send another request to ES
       // because we are using a scroll and can only have one active request at at time.

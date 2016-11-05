@@ -14,9 +14,9 @@ object Build extends AutoPlugin {
     val ScalatestVersion = "3.0.0"
     val ScalacticVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
-    val AkkaVersion = "2.3.12"
+    val AkkaVersion = "2.3.16"
     val ReactiveStreamsVersion = "1.0.0"
-    val JacksonVersion = "2.7.5"
+    val JacksonVersion = "2.8.4"
     val Slf4jVersion = "1.7.12"
     val ElasticsearchVersion = "5.0.0"
     val Log4jVersion = "2.7"
@@ -24,7 +24,7 @@ object Build extends AutoPlugin {
     val CirceVersion = "0.5.4"
     val PlayJsonVersion = "2.5.9"
     val LuceneVersion = "6.2.1"
-    val ExtsVersion = "1.35.0"
+    val ExtsVersion = "1.35.1"
   }
 
   import autoImport._

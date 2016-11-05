@@ -7,10 +7,10 @@ lazy val root = Project("elastic4s", file("."))
     testkit,
     coreTests,
 //    circe,
-    jackson
+    jackson,
 //    json4s,
 //    playjson,
-//    streams
+    streams
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -66,13 +66,13 @@ lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"
   )
   .dependsOn(core, testkit % "test")
 
-//lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
-//  .settings(
-//    name := "elastic4s-streams",
-//    libraryDependencies += "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
-//    libraryDependencies += "org.reactivestreams" % "reactive-streams" % ReactiveStreamsVersion,
-//    libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
-//  ).dependsOn(core, testkit % "test", jackson % "test")
+lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
+  .settings(
+    name := "elastic4s-streams",
+    libraryDependencies += "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+    libraryDependencies += "org.reactivestreams" % "reactive-streams" % ReactiveStreamsVersion,
+    libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
+  ).dependsOn(core, testkit % "test", jackson % "test")
 
 lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   .settings(
