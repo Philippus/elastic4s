@@ -1,10 +1,11 @@
 {
-    "gauss": {
-        "myfield": {
-            "origin": "1 2",
-            "scale": "3km",
-            "decay": 0.2,
-            "offset": "1km"
-        }
-    }
+  "gauss": {
+    "myfield": {
+      "origin": "1 2",
+      "scale": "3km",
+      "offset": "1km",
+      "decay": 0.2
+    },
+    "multi_value_mode": "MIN"
+  }
 }
