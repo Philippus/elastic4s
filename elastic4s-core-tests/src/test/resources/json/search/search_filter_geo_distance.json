@@ -1,17 +1,32 @@
 {
   "post_filter": {
     "bool": {
-      "must_not": {
-        "geo_distance": {
-          "distance": "45.0yd"
+      "must_not": [
+        {
+          "geo_distance": {
+            "distance": 41.147999999999996,
+            "distance_type": "sloppy_arc",
+            "validation_method": "STRICT",
+            "ignore_unmapped": false,
+            "boost": 1.0
+          }
         }
-      },
-      "should": {
-        "geo_distance": {
-          "distance": "120mi",
-          "distance_type": "factor"
+      ],
+      "should": [
+        {
+          "geo_distance": {
+            "distance": 193121.28,
+            "distance_type": "factor",
+            "validation_method": "STRICT",
+            "ignore_unmapped": false,
+            "boost": 1.0
+          }
         }
-      }
+      ],
+      "disable_coord": false,
+      "adjust_pure_negative": true,
+      "boost": 1.0
     }
-  }
+  },
+  "ext": {}
 }

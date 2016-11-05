@@ -1,7 +1,13 @@
 {
-  "post_filter": {
+  "size": 5,
+  "query": {
     "prefix": {
-      "singer": "chris martin"
+      "bands": {
+        "value": "coldplay",
+        "rewrite": "yes",
+        "boost": 5.0
+      }
     }
-  }
+  },
+  "ext": {}
 }

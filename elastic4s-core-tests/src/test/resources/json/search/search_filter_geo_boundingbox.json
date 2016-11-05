@@ -1,16 +1,21 @@
 {
   "post_filter": {
-    "geo_bbox": {
+    "geo_bounding_box": {
       "box": {
         "top_left": [
-          40.6,
-          56.5
+          56.5,
+          40.6
         ],
         "bottom_right": [
-          45.5,
-          12.55
+          112.55,
+          33.5
         ]
-      }
+      },
+      "validation_method": "STRICT",
+      "type": "MEMORY",
+      "ignore_unmapped": false,
+      "boost": 1.0
     }
-  }
+  },
+  "ext": {}
 }

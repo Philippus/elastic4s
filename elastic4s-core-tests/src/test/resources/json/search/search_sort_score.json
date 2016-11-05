@@ -1,9 +1,10 @@
 {
-    "sort": [
-        {
-            "_score": {
-                "reverse": true
-            }
-        }
-    ]
+  "sort": [
+    {
+      "_score": {
+        "order": "asc"
+      }
+    }
+  ],
+  "ext": {}
 }

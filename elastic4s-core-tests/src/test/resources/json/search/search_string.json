@@ -1,22 +1,30 @@
 {
-    "size": 5,
-    "query": {
-        "query_string": {
-            "query": "coldplay",
-            "default_field": "name",
-            "tie_breaker": 0.5,
-            "default_operator": "or",
-            "analyzer": "whitespace",
-            "auto_generate_phrase_queries": true,
-            "allow_leading_wildcard": true,
-            "enable_position_increments": true,
-            "boost": 6.5,
-            "fuzzy_prefix_length": 3,
-            "fuzzy_max_expansions": 4,
-            "phrase_slop": 10,
-            "analyze_wildcard": true,
-            "rewrite": "writer",
-            "lenient": true
-        }
+  "size": 5,
+  "query": {
+    "query_string": {
+      "query": "coldplay",
+      "default_field": "name",
+      "fields": [],
+      "use_dis_max": true,
+      "tie_breaker": 0.5,
+      "default_operator": "or",
+      "analyzer": "whitespace",
+      "auto_generate_phrase_queries": true,
+      "max_determined_states": 10000,
+      "allow_leading_wildcard": true,
+      "lowercase_expanded_terms": true,
+      "enable_position_increment": true,
+      "fuzziness": "AUTO",
+      "fuzzy_prefix_length": 3,
+      "fuzzy_max_expansions": 4,
+      "phrase_slop": 10,
+      "analyze_wildcard": true,
+      "rewrite": "writer",
+      "lenient": true,
+      "locale": "und",
+      "escape": false,
+      "boost": 6.5
     }
+  },
+  "ext": {}
 }

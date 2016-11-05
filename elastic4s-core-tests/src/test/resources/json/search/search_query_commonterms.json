@@ -3,16 +3,18 @@
         "common": {
             "name": {
                 "query": "some text here",
+                "disable_coord": true,
                 "high_freq_operator": "AND",
                 "low_freq_operator": "OR",
                 "analyzer": "whitespace",
-                "boost": 12.3,
                 "cutoff_frequency": 14.4,
                 "minimum_should_match": {
                     "low_freq": "3",
                     "high_freq": "2"
-                }
+                },
+                "boost": 12.3
             }
         }
-    }
+    },
+    "ext": {}
 }

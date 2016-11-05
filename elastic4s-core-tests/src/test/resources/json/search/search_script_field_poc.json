@@ -1,6 +1,8 @@
 {
   "query": {
-    "match_all": {}
+    "match_all": {
+      "boost": 1.0
+    }
   },
   "script_fields": {
     "balance": {
@@ -10,14 +12,17 @@
         "params": {
           "fieldName": "rate_of_return"
         }
-      }
+      },
+      "ignore_failure": false
     },
     "date": {
       "script": {
         "inline": "doc['date'].value",
         "lang": "groovy",
         "params": {}
-      }
+      },
+      "ignore_failure": false
     }
-  }
+  },
+  "ext": {}
 }

@@ -3,18 +3,23 @@
     {
       "_script": {
         "script": {
-          "inline": "document.score"
+          "inline": "document.score",
+          "lang": "painless"
         },
-        "type": "java"
+        "type": "string",
+        "order": "asc"
       }
     },
     {
-      "_score": {}
+      "_score": {
+        "order": "desc"
+      }
     },
     {
       "dancer": {
         "order": "desc"
       }
     }
-  ]
+  ],
+  "ext": {}
 }

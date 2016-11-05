@@ -3,54 +3,76 @@
     "function_score": {
       "query": {
         "simple_query_string": {
-          "query": "coldplay"
+          "query": "coldplay",
+          "flags": -1,
+          "default_operator": "or",
+          "lowercase_expanded_terms": true,
+          "lenient": false,
+          "analyze_wildcard": false,
+          "locale": "und",
+          "boost": 1.0
         }
       },
       "functions": [
         {
+          "filter": {
+            "match_all": {
+              "boost": 1.0
+            }
+          },
           "weight": 1.2,
           "random_score": {
             "seed": 1234
           }
         },
         {
+          "filter": {
+            "match_all": {
+              "boost": 1.0
+            }
+          },
           "weight": 0.5,
           "script_score": {
             "script": {
-              "inline": "some script here"
+              "inline": "some script here",
+              "lang": "painless"
             }
           }
         },
         {
           "filter": {
-            "term": {
-              "band": "coldplay"
+            "match_all": {
+              "boost": 1.0
             }
           },
           "gauss": {
             "field1": {
               "origin": "1m",
-              "scale": "2m"
-            }
+              "scale": "2m",
+              "decay": 0.5
+            },
+            "multi_value_mode": "MEDIAN"
           }
         },
         {
           "filter": {
-            "term": {
-              "band": "taylor swift"
+            "match_all": {
+              "boost": 1.0
             }
           },
           "field_value_factor": {
             "field": "field2",
-            "factor": 1.2
+            "factor": 1.2,
+            "modifier": "none"
           }
         }
       ],
       "score_mode": "multiply",
       "boost_mode": "max",
-      "max_boost": 1.9,
-      "boost": 1.4,
-      "min_score": 1.2
+      "max_boost": 3.4028235E38,
+      "min_score": 1.2,
+      "boost": 1.9
     }
-  }
+  },
+  "ext": {}
 }

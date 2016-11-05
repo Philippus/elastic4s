@@ -3,8 +3,10 @@
     "term": {
       "singer": {
         "value": "chris martin",
+        "boost": 1.0,
         "_name": "namey"
       }
     }
-  }
+  },
+  "ext": {}
 }

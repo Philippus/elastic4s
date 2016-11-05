@@ -1,15 +1,25 @@
 {
-    "rescore": {
-        "window_size": 14,
-        "query": {
-            "rescore_query": {
-                "simple_query_string": {
-                    "query": "coldplay"
-                }
-            },
-            "query_weight": 1.4,
-            "rescore_query_weight": 5.4,
-            "score_mode": "modey"
-        }
+  "rescore": [
+    {
+      "window_size": 14,
+      "query": {
+        "rescore_query": {
+          "simple_query_string": {
+            "query": "coldplay",
+            "flags": -1,
+            "default_operator": "or",
+            "lowercase_expanded_terms": true,
+            "lenient": false,
+            "analyze_wildcard": false,
+            "locale": "und",
+            "boost": 1.0
+          }
+        },
+        "query_weight": 1.4,
+        "rescore_query_weight": 5.4,
+        "score_mode": "max"
+      }
     }
+  ],
+  "ext": {}
 }

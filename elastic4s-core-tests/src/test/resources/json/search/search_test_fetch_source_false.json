@@ -1,8 +1,7 @@
 {
-  "from": 5,
   "query": {
     "query_string": {
-      "query": "sammy",
+      "query": "coldplay",
       "fields": [],
       "use_dis_max": true,
       "tie_breaker": 0.0,
@@ -20,5 +19,6 @@
       "boost": 1.0
     }
   },
+  "_source": false,
   "ext": {}
 }

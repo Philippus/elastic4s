@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefi
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.geo.builders.ShapeBuilder
+import org.elasticsearch.common.unit.DistanceUnit
+import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
@@ -40,7 +42,17 @@ trait QueryDsl {
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
   def geoBoxQuery(field: String, geohash: String) = GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
 
-  def geoDistanceQuery(field: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field)
+  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
+  class GeoDistanceExpectsPoint(field: String) {
+    def geohash(geohash: String) = GeoDistanceQueryDefinition(field).geohash(geohash)
+    def point(lat: Double, long: Double) = GeoDistanceQueryDefinition(field).point(lat, long)
+  }
+
+  class GeoDistanceExpectsDistance(gdef: GeoDistanceQueryDefinition) {
+    def distance(distance: String): GeoDistanceQueryDefinition = gdef.distance(distance)
+    def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = gdef.distance(distance, unit)
+    def distance(distance: Distance): GeoDistanceQueryDefinition = gdef.distance(distance.value, distance.unit)
+  }
 
   def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
 

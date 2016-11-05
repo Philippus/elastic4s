@@ -58,7 +58,7 @@ case class ScriptSortDefinition(script: ScriptDefinition,
 
   val builder = SortBuilders.scriptSort(script.toJavaAPI, scriptSortType)
 
-  def sortMode(mode: String): this.type = sortMode(SortMode.valueOf(mode))
+  def sortMode(mode: String): this.type = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): this.type = {
     builder.sortMode(mode)
     this

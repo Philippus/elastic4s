@@ -16,11 +16,15 @@
             30.0
           ],
           [
-            -122.200927734375,
-            -88.231201171875
+            10.0,
+            10.0
           ]
         ]
-      }
+      },
+      "validation_method": "STRICT",
+      "ignore_unmapped": false,
+      "boost": 1.0
     }
-  }
+  },
+  "ext": {}
 }

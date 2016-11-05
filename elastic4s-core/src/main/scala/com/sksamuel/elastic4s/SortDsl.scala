@@ -10,7 +10,7 @@ trait SortDsl {
 
   def scriptSort(script: ScriptDefinition): ScriptSortExpectsType = new ScriptSortExpectsType(script)
   class ScriptSortExpectsType(script: ScriptDefinition) {
-    def typed(`type`: String): ScriptSortDefinition = typed(ScriptSortType.valueOf(`type`))
+    def typed(`type`: String): ScriptSortDefinition = typed(ScriptSortType.valueOf(`type`.toUpperCase))
     def typed(`type`: ScriptSortType): ScriptSortDefinition = ScriptSortDefinition(script, `type`)
   }
 

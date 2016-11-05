@@ -1,21 +1,40 @@
 {
-    "post_filter": {
-        "bool": {
-            "must": {
-                "term": {
-                    "name": "sammy"
-                }
-            },
-            "must_not": {
-                "term": {
-                    "type": "rap"
-                }
-            },
-            "should": {
-                "term": {
-                    "location": "oxford"
-                }
+  "post_filter": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "name": {
+              "value": "sammy",
+              "boost": 1.0
             }
+          }
         }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "type": {
+              "value": "rap",
+              "boost": 1.0
+            }
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "location": {
+              "value": "oxford",
+              "boost": 1.0
+            }
+          }
+        }
+      ],
+      "disable_coord": false,
+      "adjust_pure_negative": true,
+      "boost": 1.0
     }
+  },
+  "ext": {}
 }

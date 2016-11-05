@@ -1,11 +1,11 @@
 {
-    "sort": [
-        {
-            "singer": {
-                "order": "desc"
-            }
-        }
-    ],
-    "track_scores": true
+  "sort": [
+    {
+      "singer": {
+        "order": "desc"
+      }
+    }
+  ],
+  "track_scores": true,
+  "ext": {}
 }
-

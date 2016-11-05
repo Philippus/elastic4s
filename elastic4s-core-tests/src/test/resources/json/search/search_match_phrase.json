@@ -1,23 +1,14 @@
 {
-    "size": 5,
-    "query": {
-        "match": {
-            "name": {
-                "query": "coldplay",
-                "type": "phrase",
-                "operator": "AND",
-                "analyzer": "snowball",
-                "boost": 15.0,
-                "slop": 3,
-                "fuzziness": "2.0",
-                "prefix_length": 4,
-                "max_expansions": 4,
-                "minimum_should_match": "75%",
-                "fuzzy_transpositions": true,
-                "lenient": true,
-                "zero_terms_query": "ALL",
-                "cutoff_frequency": 3.4
-            }
-        }
+  "size": 5,
+  "query": {
+    "match_phrase": {
+      "name": {
+        "query": "coldplay",
+        "analyzer": "snowball",
+        "slop": 3,
+        "boost": 15.0
+      }
     }
+  },
+  "ext": {}
 }

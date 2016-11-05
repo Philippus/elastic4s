@@ -1,12 +1,13 @@
 {
-    "size": 5,
-    "query": {
-        "wildcard": {
-            "name": {
-                "wildcard": "*coldplay",
-                "boost": 7.6,
-                "rewrite": "no"
-            }
-        }
+  "size": 5,
+  "query": {
+    "wildcard": {
+      "name": {
+        "wildcard": "*coldplay",
+        "rewrite": "no",
+        "boost": 7.6
+      }
     }
+  },
+  "ext": {}
 }

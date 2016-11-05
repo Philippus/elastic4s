@@ -4,5 +4,6 @@
     "match_all": {
       "boost": 4.0
     }
-  }
+  },
+  "ext": {}
 }

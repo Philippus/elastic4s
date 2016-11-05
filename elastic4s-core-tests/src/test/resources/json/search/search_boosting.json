@@ -1,19 +1,50 @@
 {
-    "size": 5,
-    "query": {
-        "boosting": {
-            "positive": {
-                "query_string": {
-                    "query": "coldplay"
-                }
-            },
-            "negative": {
-                "query_string": {
-                    "query": "jethro tull"
-                }
-            },
-            "negative_boost": 5.6,
-            "boost": 7.6
+  "size": 5,
+  "query": {
+    "boosting": {
+      "positive": {
+        "query_string": {
+          "query": "coldplay",
+          "fields": [],
+          "use_dis_max": true,
+          "tie_breaker": 0.0,
+          "default_operator": "or",
+          "auto_generate_phrase_queries": false,
+          "max_determined_states": 10000,
+          "lowercase_expanded_terms": true,
+          "enable_position_increment": true,
+          "fuzziness": "AUTO",
+          "fuzzy_prefix_length": 0,
+          "fuzzy_max_expansions": 50,
+          "phrase_slop": 0,
+          "locale": "und",
+          "escape": false,
+          "boost": 1.0
         }
+      },
+      "negative": {
+        "query_string": {
+          "query": "jethro tull",
+          "fields": [],
+          "use_dis_max": true,
+          "tie_breaker": 0.0,
+          "default_operator": "or",
+          "auto_generate_phrase_queries": false,
+          "max_determined_states": 10000,
+          "lowercase_expanded_terms": true,
+          "enable_position_increment": true,
+          "fuzziness": "AUTO",
+          "fuzzy_prefix_length": 0,
+          "fuzzy_max_expansions": 50,
+          "phrase_slop": 0,
+          "locale": "und",
+          "escape": false,
+          "boost": 1.0
+        }
+      },
+      "negative_boost": 5.6,
+      "boost": 7.6
     }
+  },
+  "ext": {}
 }

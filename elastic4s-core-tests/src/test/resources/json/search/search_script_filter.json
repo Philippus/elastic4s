@@ -2,8 +2,11 @@
   "post_filter": {
     "script": {
       "script": {
-        "inline": "doc['creationYear'].value > 2013"
-      }
+        "inline": "doc['creationYear'].value > 2013",
+        "lang": "painless"
+      },
+      "boost": 1.0
     }
-  }
+  },
+  "ext": {}
 }

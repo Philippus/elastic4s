@@ -4,6 +4,7 @@
       "_script": {
         "script": {
           "inline": "doc.score",
+          "lang": "painless",
           "params": {
             "param1": "value1",
             "param2": "value2"
@@ -13,5 +14,6 @@
         "order": "desc"
       }
     }
-  ]
+  ],
+  "ext": {}
 }

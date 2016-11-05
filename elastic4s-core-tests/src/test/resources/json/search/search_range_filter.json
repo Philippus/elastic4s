@@ -5,8 +5,10 @@
         "from": "2010-01-01",
         "to": "2012-12-12",
         "include_lower": true,
-        "include_upper": true
+        "include_upper": true,
+        "boost": 1.0
       }
     }
-  }
+  },
+  "ext": {}
 }

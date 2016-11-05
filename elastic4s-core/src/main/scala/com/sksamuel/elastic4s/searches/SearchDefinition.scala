@@ -12,9 +12,10 @@ import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.{Script, ScriptService}
+import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes) {
@@ -90,9 +91,13 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   @deprecated("use sortBy", "5.0.0")
   def sort(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
+
   def sortBy(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
+
   def sortBy(sorts: Iterable[SortDefinition[_]]): SearchDefinition = {
-    sorts.map(_.builder).foreach(_builder.request().source().sort)
+    sorts.foreach { sort =>
+      _builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(_builder, sort.builder)
+    }
     this
   }
 
@@ -129,11 +134,14 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
+  var suggest: SuggestBuilder = _
+
   def suggestion(name: String, suggestion: SuggestionDefinition): SearchDefinition = {
-    val builder = _builder.request().source().suggest()
-    if (builder == null)
-      _builder.suggest(new SuggestBuilder())
-    _builder.request().source().suggest().addSuggestion(name, suggestion.builder)
+    if (suggest == null) {
+      suggest = new SuggestBuilder()
+      _builder.suggest(suggest)
+    }
+    suggest.addSuggestion(name, suggestion.builder)
     this
   }
 

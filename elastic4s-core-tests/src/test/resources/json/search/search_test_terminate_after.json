@@ -1,8 +1,24 @@
 {
-    "query": {
-        "query_string": {
-            "query": "coldplay"
-        }
-    },
-    "terminate_after": 5
+  "terminate_after": 5,
+  "query": {
+    "query_string": {
+      "query": "coldplay",
+      "fields": [],
+      "use_dis_max": true,
+      "tie_breaker": 0.0,
+      "default_operator": "or",
+      "auto_generate_phrase_queries": false,
+      "max_determined_states": 10000,
+      "lowercase_expanded_terms": true,
+      "enable_position_increment": true,
+      "fuzziness": "AUTO",
+      "fuzzy_prefix_length": 0,
+      "fuzzy_max_expansions": 50,
+      "phrase_slop": 0,
+      "locale": "und",
+      "escape": false,
+      "boost": 1.0
+    }
+  },
+  "ext": {}
 }

@@ -8,31 +8,46 @@
             "drummmer": {
               "value": "will*",
               "flags_value": 65535,
+              "max_determinized_states": 10000,
               "boost": 5.0
             }
           }
         },
         {
           "term": {
-            "singer": "chris"
+            "singer": {
+              "value": "chris",
+              "boost": 1.0
+            }
           }
         }
       ],
-      "must_not": {
-        "term": {
-          "singer": "anderson"
+      "must_not": [
+        {
+          "term": {
+            "singer": {
+              "value": "anderson",
+              "boost": 1.0
+            }
+          }
         }
-      },
-      "should": {
-        "term": {
-          "bassist": "berryman"
+      ],
+      "should": [
+        {
+          "term": {
+            "bassist": {
+              "value": "berryman",
+              "boost": 1.0
+            }
+          }
         }
-      },
-      "boost": 2.4,
+      ],
       "disable_coord": true,
-      "minimum_should_match": "2",
       "adjust_pure_negative": false,
+      "minimum_should_match": "2",
+      "boost": 2.4,
       "_name": "booly"
     }
-  }
+  },
+  "ext": {}
 }

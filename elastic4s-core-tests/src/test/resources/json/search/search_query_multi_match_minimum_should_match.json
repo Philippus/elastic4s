@@ -1,14 +1,22 @@
 {
-    "query": {
-        "multi_match": {
-            "query" : "this is my query",
-            "fields":[
-                "name",
-                "location",
-                "genre"
-            ],
-            "type": "best_fields",
-            "minimum_should_match": "2<-1 5<80%"
-        }
-   }
+  "query": {
+    "multi_match": {
+      "query": "this is my query",
+      "fields": [
+        "genre^1.0",
+        "location^1.0",
+        "name^1.0"
+      ],
+      "type": "best_fields",
+      "operator": "OR",
+      "slop": 0,
+      "prefix_length": 0,
+      "max_expansions": 50,
+      "minimum_should_match": "2<-1 5<80%",
+      "lenient": false,
+      "zero_terms_query": "NONE",
+      "boost": 1.0
+    }
+  },
+  "ext": {}
 }

@@ -1,13 +1,15 @@
 {
-    "size": 5,
-    "query": {
-        "regexp": {
-            "drummmer": {
-                "value": "will*",
-                "flags_value": 1,
-                "boost": 4.0,
-                "rewrite": "rewrite-to"
-            }
-        }
+  "size": 5,
+  "query": {
+    "regexp": {
+      "drummmer": {
+        "value": "will*",
+        "flags_value": 1,
+        "max_determinized_states": 10000,
+        "rewrite": "rewrite-to",
+        "boost": 4.0
+      }
     }
+  },
+  "ext": {}
 }

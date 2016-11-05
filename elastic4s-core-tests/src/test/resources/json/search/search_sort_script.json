@@ -12,5 +12,6 @@
         "nested_path": "a.b.c"
       }
     }
-  ]
+  ],
+  "ext": {}
 }

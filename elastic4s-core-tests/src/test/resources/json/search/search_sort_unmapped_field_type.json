@@ -1,10 +1,11 @@
 {
-    "sort": [
-        {
-            "singer.weight": {
-                "order": "desc",
-                "unmapped_type": "long"
-            }
-        }
-    ]
+  "sort": [
+    {
+      "singer.weight": {
+        "order": "desc",
+        "unmapped_type": "long"
+      }
+    }
+  ],
+  "ext": {}
 }
