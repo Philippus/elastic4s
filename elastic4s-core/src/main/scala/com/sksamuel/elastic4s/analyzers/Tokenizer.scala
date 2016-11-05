@@ -33,6 +33,8 @@ abstract class CustomizedTokenizer(override val name: String) extends Tokenizer(
   override def customized: Boolean = true
 }
 
+case class PredefinedTokenizer(override val name: String) extends Tokenizer(name)
+
 case class UaxUrlEmailTokenizer(override val name: String,
                                 maxTokenLength: Int = 255) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {

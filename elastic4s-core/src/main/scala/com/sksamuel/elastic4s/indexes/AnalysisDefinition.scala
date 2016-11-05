@@ -40,11 +40,7 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition]) {
     }
 
     source.startObject("analyzer")
-    analyzers.foreach(analyzer => {
-      source.startObject(analyzer.name)
-      analyzer.build(source)
-      source.endObject()
-    })
+    analyzers.foreach(_.buildWithName(source))
     source.endObject()
 
     val tokenizers = this.tokenizers

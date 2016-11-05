@@ -7,6 +7,9 @@ trait AnalyzerFilter {
   def name: String
 }
 
+case class PredefinedTokenFilter(name: String) extends TokenFilter
+case class PredefinedCharFilter(name: String) extends CharFilter
+
 trait AnalyzerFilterDefinition {
   def filterType: String
   protected[elastic4s] def build(source: XContentBuilder): Unit

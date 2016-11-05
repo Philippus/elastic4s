@@ -4,7 +4,31 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 // Base class for analyzers that have custom parameters set.
 abstract class AnalyzerDefinition(val name: String) {
+
+  def buildWithName(source: XContentBuilder): Unit = {
+    source.startObject(name)
+    build(source)
+    source.endObject()
+  }
+
+  def buildWithName(): XContentBuilder = {
+    val xc = XContentFactory.jsonBuilder()
+    xc.startObject()
+    buildWithName(xc)
+    xc.endObject()
+    xc
+  }
+
+  def build(): XContentBuilder = {
+    val xc = XContentFactory.jsonBuilder()
+    xc.startObject()
+    build(xc)
+    xc.endObject()
+    xc
+  }
+
   def build(source: XContentBuilder): Unit
+
   def json: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder
     builder.startObject()
@@ -71,6 +95,7 @@ case class SnowballAnalyzerDefinition(override val name: String,
 case class CustomAnalyzerDefinition(override val name: String,
                                     tokenizer: Tokenizer,
                                     filters: Seq[AnalyzerFilter] = Nil) extends AnalyzerDefinition(name) {
+
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
