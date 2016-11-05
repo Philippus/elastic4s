@@ -77,7 +77,11 @@ class IndexDefinition(index: String, `type`: String) extends BulkCompatibleDefin
     this
   }
 
-  def update(update: Boolean): IndexDefinition = if (update) opType(OpType.CREATE) else opType(OpType.INDEX)
+  @deprecated("use createOnly(boolean)", "5.0.0")
+  def update(update: Boolean): IndexDefinition = createOnly(update)
+
+  // if set to true then trying to update a document will fail
+  def createOnly(createOnly: Boolean): IndexDefinition = if (createOnly) opType(OpType.CREATE) else opType(OpType.INDEX)
 
   def version(version: Long): IndexDefinition = {
     _request.version(version)
