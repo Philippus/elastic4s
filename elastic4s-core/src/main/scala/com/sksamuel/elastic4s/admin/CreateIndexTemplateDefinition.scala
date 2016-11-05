@@ -1,15 +1,22 @@
 package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
+import com.sksamuel.elastic4s.indexes.AnalysisDefinition
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder
 import org.elasticsearch.common.settings.Settings
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.common.io.stream.BytesStreamOutput
+import org.elasticsearch.common.xcontent.XContentFactory
+
+import scala.collection.JavaConverters._
 
 case class CreateIndexTemplateDefinition(name: String,
                                          pattern: String,
                                          settings: Settings = Settings.EMPTY,
                                          mappings: Seq[MappingDefinition] = Nil,
+                                         analysis: Option[AnalysisDefinition] = None,
                                          order: Option[Int] = None,
                                          create: Option[Boolean] = None,
                                          aliases: Seq[Alias] = Nil) {
@@ -18,18 +25,47 @@ case class CreateIndexTemplateDefinition(name: String,
   require(pattern.nonEmpty, "pattern must not be null or empty")
 
   def populate(builder: PutIndexTemplateRequestBuilder) = {
+
     builder.setTemplate(pattern)
-    builder.setSettings(settings)
     order.foreach(builder.setOrder)
     create.foreach(builder.setCreate)
+    aliases.foreach(builder.addAlias)
+
     mappings.foreach { mapping =>
       builder.addMapping(mapping.`type`, mapping.buildWithName)
     }
-    aliases.foreach(builder.addAlias)
+
+    if (!settings.isEmpty || analysis.nonEmpty) {
+      val source = XContentFactory.jsonBuilder().startObject()
+      settings.getAsMap.asScala.foreach { p => source.field(p._1, p._2) }
+      analysis.foreach(_.build(source))
+      source.endObject()
+      builder.setSettings(source.string())
+    }
+
+    val output = new BytesStreamOutput()
+    builder.request().writeTo(output)
+    builder
   }
 
-  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexTemplateDefinition = mappings(first +: rest)
+  def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexTemplateDefinition =
+    analysis(first +: rest)
+
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexTemplateDefinition =
+    copy(analysis = AnalysisDefinition(analyzers).some)
+
+  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexTemplateDefinition =
+    mappings(first +: rest)
+
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexTemplateDefinition = copy(mappings = mappings.toSeq)
+
+  // adds a new setting
+  def indexSetting(key: String, value: Double) = settings(Settings.builder().put(settings).put(key, value).build())
+  def indexSetting(key: String, value: Long) = settings(Settings.builder().put(settings).put(key, value).build())
+  def indexSetting(key: String, value: Boolean) = settings(Settings.builder().put(settings).put(key, value).build())
+  def indexSetting(key: String, value: String) = settings(Settings.builder().put(settings).put(key, value).build())
+
+  // replaces all settings with the given settings
   def settings(settings: Settings): CreateIndexTemplateDefinition = copy(settings = settings)
   def order(order: Int): CreateIndexTemplateDefinition = copy(order = order.some)
   def create(create: Boolean): CreateIndexTemplateDefinition = copy(create = create.some)

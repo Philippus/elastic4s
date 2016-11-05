@@ -21,7 +21,7 @@ trait IndexTemplateDsl {
   implicit object CreateIndexTemplateDefinitionExecutable
     extends Executable[CreateIndexTemplateDefinition, PutIndexTemplateResponse, PutIndexTemplateResponse] {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
-      val builder = c.admin.indices().preparePutTemplate(t.name)
+      val builder = c.admin.indices.preparePutTemplate(t.name)
       t.populate(builder)
       injectFuture(builder.execute)
     }

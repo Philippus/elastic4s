@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.admin
 
 import java.util
 
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
+import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.scalatest.mock.MockitoSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
@@ -13,69 +14,66 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
     "be stored" in {
 
       client.execute {
-        createTemplate("brewery_template").pattern("te*").mappings(
-          mapping("brewery").fields(
-            stringField("year_founded") analyzer "test_analyzer"
+        createTemplate("brewery_template").pattern("brew*").mappings(
+          mapping("brands").fields(
+            textField("name"),
+            doubleField("year_founded") analyzer "test_analyzer"
           )
-        )
+        ).analysis(StandardAnalyzerDefinition("test_analyzer"))
       }.await
 
       val resp = client.execute {
-        get template "brewery_template"
+        getTemplate("brewery_template")
       }.await
 
       resp.getIndexTemplates.get(0).name shouldBe "brewery_template"
-      resp.getIndexTemplates.get(0).template() shouldBe "te*"
+      resp.getIndexTemplates.get(0).template() shouldBe "brew*"
 
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
-
-      source should include( """"year_founded":{"type":"string"""")
-
-      val settings = resp.getIndexTemplates.get(0).getSettings
-      settings.get("index.cache.query.enable") should equal("true")
-
+      source shouldBe """{"brands":{"properties":{"name":{"type":"text"},"year_founded":{"type":"double"}}}}"""
     }
-    "apply template to new indexes" in {
+    "apply template to new indexes that match the pattern" in {
 
+      // this should match the earlier template of brew*
       client.execute {
-        create index "templatetest"
+        createIndex("brewers")
       }.await
 
       client.execute {
-        index into "templatetest" / "brewery" fields (
+        indexInto("brewers" / "brands") fields(
+          "name" -> "fullers",
           "year_founded" -> 1829
-          )
+        ) refresh RefreshPolicy.IMMEDIATE
       }.await
 
-      blockUntilCount(1, "templatetest", "brewery")
+      blockUntilCount(1, "brewers")
 
+      // check that the document was indexed
       client.execute {
-        search in "templatetest" / "brewery" query termQuery("year_founded", 1829)
-      }.await.getHits.totalHits shouldBe 1
+        search("brewers" / "brands") query termQuery("year_founded", 1829)
+      }.await.totalHits shouldBe 1
 
-      val mappings = client.execute {
-        getMapping("templatetest" / "brewery")
-      }.await.mappings.get("templatetest").get("brewery")
+      // the mapping for this index should match the template
+      val properties = client.execute {
+        getMapping("brewers" / "brands")
+      }.await.propertiesFor("brewers" / "brands")
 
-      val year_founded = mappings.sourceAsMap().get("properties").asInstanceOf[util.Map[String, Any]]
-        .get("year_founded").asInstanceOf[util.Map[String, Any]]
+      val year_founded = properties("year_founded").asInstanceOf[util.Map[String, Any]]
 
-      // note: this field would be long if the template wasn't applied, because we index an int.
-      // but the template should be applied to override it to string
-      year_founded.get("type") shouldBe "string"
+      // note: this field would be long/int if the template wasn't applied, because we indexed an integer.
+      // but the template should be applied to override it to a double
+      year_founded.get("type") shouldBe "double"
     }
     "support template before any index creation" in {
 
       client.execute {
-        create template "malbec" pattern "malbec*" mappings (
-          mapping name "user" fields (
-            field name "distance" typed StringType
-            )
+        createTemplate("malbec") pattern "malbec*" mappings (
+          mapping("user") fields textField("distance")
           )
       }.await
 
       client.execute {
-        index into "malbec" / "user" fields (
+        indexInto("malbec" / "user") fields (
           "distance" -> 1234
           )
       }.await
