@@ -5,7 +5,8 @@ import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}
 import com.sksamuel.exts.OptionImplicits._
 
-case class TermSuggestionDefinition(fieldname: String,
+case class TermSuggestionDefinition(name: String,
+                                    fieldname: String,
                                     accuracy: Option[Double] = None,
                                     maxEdits: Option[Int] = None,
                                     maxInspections: Option[Int] = None,
@@ -37,7 +38,6 @@ case class TermSuggestionDefinition(fieldname: String,
     prefixLength.foreach(builder.prefixLength)
     sort.foreach(builder.sort)
     stringDistance.foreach(builder.stringDistance)
-    suggestMode.foreach(builder.suggestMode)
 
     builder
   }
@@ -50,8 +50,13 @@ case class TermSuggestionDefinition(fieldname: String,
   def minWordLength(minWordLength: Int): TermSuggestionDefinition = copy(minWordLength = minWordLength.some)
   def prefixLength(prefixLength: Int): TermSuggestionDefinition = copy(prefixLength = prefixLength.some)
   def sort(sort: SortBy): TermSuggestionDefinition = copy(sort = sort.some)
-  def stringDistance(stringDistance: StringDistanceImpl): TermSuggestionDefinition = copy(stringDistance = stringDistance.some)
-  def suggestMode(suggestMode: SuggestMode): TermSuggestionDefinition = copy(suggestMode = suggestMode.some)
+
+  def stringDistance(dist: String): TermSuggestionDefinition =
+    stringDistance(StringDistanceImpl.valueOf(dist.toUpperCase))
+  def stringDistance(dist: StringDistanceImpl): TermSuggestionDefinition = copy(stringDistance = dist.some)
+
+  def mode(suggestMode: String): TermSuggestionDefinition = mode(SuggestMode.valueOf(suggestMode.toUpperCase))
+  def mode(suggestMode: SuggestMode): TermSuggestionDefinition = copy(suggestMode = suggestMode.some)
 
   override def analyzer(analyzer: String): TermSuggestionDefinition = copy(analyzer = analyzer.some)
   override def text(text: String): TermSuggestionDefinition = copy(text = text.some)

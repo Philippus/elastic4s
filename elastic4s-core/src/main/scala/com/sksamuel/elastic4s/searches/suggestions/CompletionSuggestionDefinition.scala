@@ -5,7 +5,8 @@ import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, RegexOptions}
 
-case class CompletionSuggestionDefinition(fieldname: String,
+case class CompletionSuggestionDefinition(name: String,
+                                          fieldname: String,
                                           prefix: Option[String] = None,
                                           regex: Option[String] = None,
                                           regexOptions: Option[RegexOptions] = None,

@@ -8,33 +8,9 @@ import org.elasticsearch.search.suggest.{Suggest, SuggestionBuilder}
 
 import scala.collection.JavaConverters._
 
-case class SuggestDefinition(suggestions: Seq[SuggestionDefinition])
 
-trait SuggestionDefinition {
 
-  type B <: SuggestionBuilder[B]
 
-  def builder: B
-
-  val fieldname: String
-
-  def size: Option[Int]
-  def shardSize: Option[Int]
-  def text: Option[String]
-  def analyzer: Option[String]
-
-  def size(size: Int): SuggestionDefinition
-  def shardSize(shardSize: Int): SuggestionDefinition
-  def text(text: String): SuggestionDefinition
-  def analyzer(analyzer: String): SuggestionDefinition
-
-  def populate(builder: B): Unit = {
-    analyzer.foreach(builder.analyzer)
-    shardSize.foreach(builder.shardSize(_))
-    size.foreach(builder.size)
-    text.foreach(builder.text)
-  }
-}
 
 case class SuggestResult(suggestions: Seq[SuggestionResult],
                          suggest: org.elasticsearch.search.suggest.Suggest) {
@@ -102,7 +78,6 @@ trait SuggestionEntry {
     .getOptions
     .asScala
     .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option]))
-    .toSeq
 }
 
 case class TermSuggestionEntry(entry: TermSuggestion.Entry) extends SuggestionEntry {

@@ -124,30 +124,26 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
+  var suggest: SuggestBuilder = _
+
   /**
     * Adds a new suggestion to the search request, which can be looked up in the response
     * using the name provided.
     */
-  def suggestions(suggs: (String, SuggestionDefinition)*): SearchDefinition = {
-    suggs.foreach {
-      case (name, sugg) => suggestion(name, sugg)
-    }
+  def suggestions(first: SuggestionDefinition, rest: SuggestionDefinition*): SearchDefinition =
+    suggestions(first +: rest)
+
+  def suggestions(suggs: Iterable[SuggestionDefinition]): SearchDefinition = {
+    suggs.foreach(suggestion)
     this
   }
 
-  var suggest: SuggestBuilder = _
-
-  def suggestion(name: String, suggestion: SuggestionDefinition): SearchDefinition = {
+  def suggestion(suggestion: SuggestionDefinition): SearchDefinition = {
     if (suggest == null) {
       suggest = new SuggestBuilder()
       _builder.suggest(suggest)
     }
-    suggest.addSuggestion(name, suggestion.builder)
-    this
-  }
-
-  def suggestions(map: Map[String, SuggestionDefinition]): SearchDefinition = {
-    map.foreach { case (name, sugg) => suggestion(name, sugg) }
+    suggest.addSuggestion(suggestion.name, suggestion.builder)
     this
   }
 

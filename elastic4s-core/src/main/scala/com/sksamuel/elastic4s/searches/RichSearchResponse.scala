@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.searches
 
+import cats.syntax.either._
+import com.sksamuel.elastic4s.searches.suggestions.{CompletionSuggestionResult, PhraseSuggestionResult, SuggestResult, SuggestionResult, TermSuggestionResult}
 import com.sksamuel.elastic4s.{HitAs, HitReader}
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.search.SearchHits
 import org.elasticsearch.search.aggregations.Aggregations
-import cats.syntax.either._
 
 import scala.concurrent.duration._
 
@@ -57,10 +58,14 @@ case class RichSearchResponse(original: SearchResponse) {
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  //  def suggest: SuggestResult = SuggestResult(original.getSuggest)
-  //  def suggestions = suggest.suggestions
-  //  def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
-  //  def suggestion[A](sd: SuggestionDefinition): sd.R = suggestion(sd.name).asInstanceOf[sd.R]
+  def suggest: SuggestResult = SuggestResult(original.getSuggest)
+  def suggestions = suggest.suggestions
+  def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
+
+  def termSuggestion(name: String): TermSuggestionResult = suggestion(name).asInstanceOf[TermSuggestionResult]
+  def completionSuggestion(name: String): CompletionSuggestionResult =
+    suggestion(name).asInstanceOf[CompletionSuggestionResult]
+  def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
   def isTimedOut: Boolean = original.isTimedOut
   def isTerminatedEarly: Boolean = original.isTerminatedEarly

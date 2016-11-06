@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
-import com.sksamuel.elastic4s.{JsonSugar}
+import com.sksamuel.elastic4s.JsonSugar
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
@@ -14,6 +14,7 @@ import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.{SortMode, SortOrder}
+import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
@@ -740,26 +741,26 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   //      )
   //    req.show should matchJsonResource("/json/search/search_highlighting.json")
   //  }
-  //
-  //  it should "generate correct json for multiple suggestions" in {
-  //    val req = search in( "music" types "bands" query "coldplay" suggestions(
-  //      term suggestion "my-suggestion-1" text "clocks by culdpaly" field "names" maxEdits 4 mode Popular shardSize 2 accuracy 0.6,
-  //      term suggestion "my-suggestion-2" text "aqualuck by jethro toll" field "names" size 5 mode Missing minDocFreq 0.2 prefixLength 3,
-  //      term suggestion "my-suggestion-3" text "bountiful day by u22" field "names" analyzer StandardAnalyzer maxInspections 3 stringDistance "levenstein",
-  //      term suggestion "my-suggestion-4" text "whatever some text" field "names" maxTermFreq 0.5 minWordLength 5 mode SuggestMode
-  //        .Always
-  //      )
-  //    req.show should matchJsonResource("/json/search/search_suggestions_multiple.json")
-  //  }
-  //
-  //  // for backwards compatibility default suggester is the term suggester
-  //  it should "generate correct json for suggestions" in {
-  //    val req = search in( "music" types "bands" query termQuery("name", "coldplay") suggestions(
-  //      term suggestion "suggestion-1" text "clocks by culdpaly" field "name" maxEdits 2,
-  //      term suggestion "suggestion-2" text "aqualuck by jethro toll" field "name"
-  //      )
-  //    req.show should matchJsonResource("/json/search/search_suggestions.json")
-  //  }
+
+  it should "generate correct json for multiple suggestions" in {
+    val req = search("music") types "bands" query "coldplay" suggestions(
+      term suggestion "my-suggestion-1" on "names" text "clocks by culdpaly" maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
+      term suggestion "my-suggestion-2" on "names" text "aqualuck by jethro toll" size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
+      term suggestion "my-suggestion-3" on "names" text "bountiful day by u22" maxInspections 3 stringDistance "levenstein",
+      term suggestion "my-suggestion-4" on "names" text "whatever some text" maxTermFreq 0.5 minWordLength 5 mode
+        SuggestMode.ALWAYS
+    )
+    req.show should matchJsonResource("/json/search/search_suggestions_multiple.json")
+  }
+
+  // for backwards compatibility default suggester is the term suggester
+  it should "generate correct json for suggestions" in {
+    val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
+      term suggestion "suggestion-1" field "name" text "clocks by culdpaly" maxEdits 2,
+      term suggestion "suggestion-2" field "name" text "aqualuck by jethro toll"
+    )
+    req.show should matchJsonResource("/json/search/search_suggestions.json")
+  }
 
   it should "generate correct json for script fields" in {
     val req =
@@ -770,19 +771,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_script_field_poc.json")
   }
 
-  //  it should "generate correct json for suggestions of multiple suggesters" in {
-  //    val req = search in( "music" types "bands" query termQuery("name", "coldplay") suggestions(
-  //      term suggestion "suggestion-term" text "culdpaly" field "name" maxEdits 2,
-  //      phrase suggestion "suggestion-phrase" text "aqualuck by jethro toll" field "name",
-  //      completion suggestion "suggestion-completion" text "cold" field "ac"
-  //      )
-  //    req.show should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
-  //  }
+  it should "generate correct json for suggestions of multiple suggesters" in {
+    val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
+      term suggestion "suggestion-term" on "name" text "culdpaly" maxEdits 2,
+      phrase suggestion "suggestion-phrase" on "name" text "aqualuck by jethro toll",
+      completion suggestion "suggestion-completion" on "ac" text "cold"
+    )
+    req.show should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
+  }
 
   it should "generate correct json for completion suggestions" in {
-    val req = search("music") types "bands" query "coldplay" suggestions (
-      "sugg" -> completionSuggestion("my-suggestion-1").text("wildcats by ratatat")
-      )
+    val req = search("music") types "bands" query "coldplay" suggestions
+      completionSuggestion("my-suggestion-1").on("artist").text("wildcats by ratatat")
     req.show should matchJsonResource("/json/search/search_suggestions_context.json")
   }
 

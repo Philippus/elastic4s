@@ -5,7 +5,8 @@ import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestionBuilder.CandidateGenerator
 import org.elasticsearch.search.suggest.phrase.{PhraseSuggestionBuilder, SmoothingModel}
 
-case class PhraseSuggestionDefinition(fieldname: String,
+case class PhraseSuggestionDefinition(name: String,
+                                      fieldname: String,
                                       analyzer: Option[String] = None,
                                       candidateGenerator: Option[CandidateGenerator] = None,
                                       collateParams: Option[CandidateGenerator] = None,

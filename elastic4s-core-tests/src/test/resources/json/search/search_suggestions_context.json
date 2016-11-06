@@ -20,10 +20,10 @@
     }
   },
   "suggest": {
-    "sugg": {
+    "my-suggestion-1": {
       "text": "wildcats by ratatat",
       "completion": {
-        "field": "my-suggestion-1"
+        "field": "artist"
       }
     }
   },

@@ -1,28 +1,47 @@
 {
-    "query": {
-        "term": {
-            "name": "coldplay"
-        }
-    },
-    "suggest": {
-        "suggestion-term": {
-            "text": "culdpaly",
-            "term": {
-                "field": "name",
-                "max_edits": 2
-            }
-        },
-        "suggestion-phrase": {
-            "text": "aqualuck by jethro toll",
-            "phrase": {
-                "field": "name"
-            }
-        },
-        "suggestion-completion": {
-            "text": "cold",
-            "completion": {
-                "field": "ac"
-            }
-        }
+  "query": {
+    "term": {
+      "name": {
+        "value": "coldplay",
+        "boost": 1.0
+      }
     }
+  },
+  "suggest": {
+    "suggestion-completion": {
+      "text": "cold",
+      "completion": {
+        "field": "ac"
+      }
+    },
+    "suggestion-term": {
+      "text": "culdpaly",
+      "term": {
+        "field": "name",
+        "suggest_mode": "MISSING",
+        "accuracy": 0.5,
+        "sort": "SCORE",
+        "string_distance": "INTERNAL",
+        "max_edits": 2,
+        "max_inspections": 5,
+        "max_term_freq": 0.01,
+        "prefix_length": 1,
+        "min_word_length": 4,
+        "min_doc_freq": 0.0
+      }
+    },
+    "suggestion-phrase": {
+      "text": "aqualuck by jethro toll",
+      "phrase": {
+        "field": "name",
+        "real_word_error_likelihood": 0.95,
+        "confidence": 1.0,
+        "separator": " ",
+        "max_errors": 0.5,
+        "force_unigrams": true,
+        "token_limit": 10
+      }
+    }
+  },
+  "ext": {}
 }
