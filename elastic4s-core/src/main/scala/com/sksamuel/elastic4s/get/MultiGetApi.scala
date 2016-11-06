@@ -15,6 +15,7 @@ trait MultiGetApi extends GetDsl {
     extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResult] {
     override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResult] = {
       val builder = c.prepareMultiGet()
+      t.populate(builder)
       injectFutureAndMap(builder.execute)(MultiGetResult.apply)
     }
   }

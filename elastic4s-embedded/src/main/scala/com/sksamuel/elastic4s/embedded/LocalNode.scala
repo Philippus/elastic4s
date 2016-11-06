@@ -15,6 +15,7 @@ import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty3Plugin
 
 import scala.collection.JavaConverters._
+import scala.util.Try
 
 class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava) with Logging {
@@ -46,9 +47,9 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     }
 
     if (removeData) {
-      deleteDir(pathData.toFile)
-      deleteDir(pathRepo.toFile)
-      deleteDir(pathHome.toFile)
+      Try { deleteDir(pathData.toAbsolutePath.toFile) }
+      Try { deleteDir(pathRepo.toAbsolutePath.toFile) }
+      Try { deleteDir(pathHome.toAbsolutePath.toFile) }
     }
   }
 
@@ -103,7 +104,7 @@ object LocalNode {
       .put("discovery.type", "local")
       .put("http.type", "netty3")
       .build()
-    println(s"Instantiating internal node with ${mergedSettings.getAsMap.asScala}")
+    //println(s"Instantiating internal node with ${mergedSettings.getAsMap.asScala}")
     new LocalNode(mergedSettings, plugins)
   }
 

@@ -10,7 +10,6 @@ import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.elasticsearch.index.VersionType
 
-import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
 
 case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
@@ -38,7 +37,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   // Sets the object to use for updates when a script is not specified.
-  def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = {
+  def doc[T](t: T)(implicit indexable: Indexable[T]): this.type = {
     _builder.setDoc(indexable.json(t))
     this
   }
@@ -56,7 +55,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(source: XContentBuilder): UpdateDefinition = {
+  def doc(source: XContentBuilder): this.type = {
     _builder.setDoc(source)
     this
   }
@@ -68,7 +67,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert[T: Indexable](t: T): UpdateDefinition = {
+  def docAsUpsert[T: Indexable](t: T): this.type = {
     docAsUpsert(true)
     doc(t)
   }
@@ -92,7 +91,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   @deprecated("use docAsUpsert(false|true)", "5.0.0")
-  def docAsUpsert: UpdateDefinition = docAsUpsert(shouldUpsertDoc = true)
+  def docAsUpsert: this.type = docAsUpsert(shouldUpsertDoc = true)
 
   // should the doc be also used for a new document
   def docAsUpsert(shouldUpsertDoc: Boolean): this.type = {
@@ -142,7 +141,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
 
   // executes this script as the update operation
   def script(script: ScriptDefinition): UpdateDefinition = {
-    _builder.setScript(script.toJavaAPI)
+    _builder.setScript(script.build)
     this
   }
 
@@ -153,17 +152,10 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
   }
 
   @deprecated("use doc(t)", "5.0.0")
-  def source[T](t: T)(implicit indexable: Indexable[T]): this.type = {
-    _builder.setDoc(indexable.json(t))
-    this
-  }
+  def source[T: Indexable](t: T): this.type = doc(t)
 
   @deprecated("use docAsUpsert(t)", "5.0.0")
-  def sourceAsUpsert[T](t: T)(implicit indexable: Indexable[T]): this.type = {
-    source(t)
-    docAsUpsert(true)
-    this
-  }
+  def sourceAsUpsert[T: Indexable](t: T): this.type = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): this.type = {
     _builder.setTimeout(TimeValue.timeValueMillis(duration.toMillis))

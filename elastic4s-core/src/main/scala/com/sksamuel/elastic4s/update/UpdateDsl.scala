@@ -15,7 +15,7 @@ trait UpdateDsl {
     def in(indexType: IndexAndTypes): UpdateDefinition = UpdateDefinition(indexType, id.toString)
   }
 
-  def update(indexes: Indexes): UpdateExpectsQuery = new UpdateExpectsQuery(indexes)
+  def updateIn(indexes: Indexes): UpdateExpectsQuery = new UpdateExpectsQuery(indexes)
   class UpdateExpectsQuery(indexes: Indexes) {
     def query(query: QueryDefinition) = UpdateByQueryDefinition(indexes, query)
   }
