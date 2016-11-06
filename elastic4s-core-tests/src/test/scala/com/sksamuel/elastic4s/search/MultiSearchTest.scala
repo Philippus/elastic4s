@@ -38,8 +38,8 @@ class MultiSearchTest
     val futureResponse = futureInserts flatMap { _ =>
       client execute {
         multi(
-          search in "jtull/albums" query "aqualung",
-          search in "jtull/albums" query "passion"
+          search("jtull/albums") query "aqualung",
+          search("jtull/albums") query "passion"
         )
       }
     }

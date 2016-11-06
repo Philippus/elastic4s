@@ -36,6 +36,9 @@ trait QueryDsl {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
+  def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
+  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
+
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
@@ -201,18 +204,26 @@ trait QueryDsl {
   def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
 
   // -- bool query dsl ---
+  @deprecated("this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)", "5.0.0")
   def bool(block: => BoolQueryDefinition): BoolQueryDefinition = block
+
   def bool(mustQueries: Seq[QueryDefinition],
            shouldQueries: Seq[QueryDefinition],
            notQueries: Seq[QueryDefinition]): BoolQueryDefinition = {
     must(mustQueries).should(shouldQueries).not(notQueries)
   }
-  def must(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().must(queries: _*)
+
+  def boolQuery(): BoolQueryDefinition = new BoolQueryDefinition()
+
+  // short cut for a boolean query with musts
+  def must(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = must(first +: rest)
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
-  def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
-  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
+
+  // short cut for a boolean query with shoulds
   def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
+
+  // short cut for a boolean query with nots
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
