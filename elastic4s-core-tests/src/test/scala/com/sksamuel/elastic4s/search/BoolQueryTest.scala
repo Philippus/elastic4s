@@ -43,7 +43,7 @@ class BoolQueryTest extends FlatSpec with ElasticSugar with Matchers {
     }.await
 
     resp.totalHits shouldBe 5
-    resp.hits.head.sourceField("style") shouldBe "serif"
+    resp.hits.map(_.sourceField("style")).toSet shouldBe Set("comic", "serif")
   }
 
   it should "support must" in {

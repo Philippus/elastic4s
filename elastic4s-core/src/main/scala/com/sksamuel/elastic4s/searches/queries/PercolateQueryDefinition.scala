@@ -11,13 +11,14 @@ case class PercolateQueryDefinition(field: String,
                                     source: Option[String] = None) extends QueryDefinition {
 
   def builder: PercolateQueryBuilder = {
+
     val builder = ref match {
       case Some(DocumentRef(docIndex, docType, docId)) =>
         new PercolateQueryBuilder(field, `type`, docIndex, docType, docId, null, null, null)
       case _ =>
-        new PercolateQueryBuilder(field, `type`, new BytesArray(source.get.getBytes))
-      case _ =>
-        sys.error("Must specify id or source")
+        source.fold(sys.error("Must specify id or source")) { src =>
+          new PercolateQueryBuilder(field, `type`, new BytesArray(src.getBytes))
+        }
     }
     builder
   }
