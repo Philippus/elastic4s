@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
+import com.sksamuel.elastic4s.embedded.{ClassLocalNodeProvider, LocalNodeProvider}
 import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
@@ -8,9 +9,8 @@ import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
 import org.slf4j.LoggerFactory
 
-@deprecated("Use LocalTestNode", "5.0.0")
-trait NodeBuilder extends LocalTestNode {
-  this: Suite =>
+trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider {
+  this: Suite with LocalNodeProvider =>
 }
 
 /**
@@ -18,9 +18,10 @@ trait NodeBuilder extends LocalTestNode {
 * index has a certain count of documents. These methods are very useful when writing
 * tests to allow for blocking, iterative coding
 */
-trait ElasticSugar extends SingleTestNode with ElasticDsl {
-  this: Suite =>
+trait AbstractElasticSugar extends ElasticDsl {
+  this: Suite with LocalNodeProvider =>
 
+  implicit val _client = this.client
   private val logger = LoggerFactory.getLogger(getClass)
 
   // refresh all indexes

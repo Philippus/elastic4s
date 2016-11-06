@@ -8,7 +8,8 @@ import org.scalatest.{FreeSpec, Matchers}
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
 
   // setup the stop file list
-  val newStopListFile = (testNodeConfPath resolve "stoplist.txt").toFile
+  node.pathConfig.toFile.mkdirs()
+  val newStopListFile = (node.pathConfig resolve "stoplist.txt").toFile
   val writer = new PrintWriter(newStopListFile)
   writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
   writer.close()
@@ -112,7 +113,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "KeywordAnalyzer" - {
     "should index entire string as a single token" in {
       client.execute {
-        search in "analyzer" / "test" query termQuery("keyword" -> "feather")
+        search("analyzer" / "test") query termQuery("keyword" -> "feather")
       }.await.totalHits shouldBe 0
     }
   }
@@ -120,10 +121,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "default NGramTokenizer" - {
     "should index 2 combinations" in {
       client.execute {
-        search in "analyzer/test" query termQuery("ngram" -> "cr")
+        search("analyzer/test") query termQuery("ngram" -> "cr")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer/test" query termQuery("ngram" -> "craf")
+        search("analyzer/test") query termQuery("ngram" -> "craf")
       }.await.totalHits shouldBe 0
     }
   }
@@ -131,10 +132,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "custom NGramTokenizer" - {
     "should index specified combinations" in {
       client.execute {
-        search in "analyzer/test" query matchQuery("custom_ngram" -> "dy")
+        search("analyzer/test") query matchQuery("custom_ngram" -> "dy")
       }.await.totalHits shouldBe 1
       client.execute {
-        search in "analyzer" / "test" query matchQuery("custom_ngram" -> "dc50")
+        search("analyzer" / "test") query matchQuery("custom_ngram" -> "dc50")
       }.await.totalHits shouldBe 1
     }
   }

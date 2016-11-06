@@ -22,7 +22,7 @@ class SnapshotTest extends FreeSpec with MockitoSugar with ElasticSugar with Ela
     "can be snapshotted, fetched and restored" in {
 
       client.execute {
-        createRepository("_snapshot") `type` "fs" settings Map("location" -> testNodeHomePath.toAbsolutePath.toString)
+        createRepository("_snapshot") `type` "fs" settings Map("location" -> node.pathRepo.toAbsolutePath.toString)
       }.await(10.seconds)
 
       client.execute {

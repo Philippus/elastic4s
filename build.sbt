@@ -4,6 +4,7 @@ lazy val root = Project("elastic4s", file("."))
   .settings(name := "elastic4s")
   .aggregate(
     core,
+    embedded,
     testkit,
     coreTests,
     circe,
@@ -25,11 +26,10 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     )
   )
 
-lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
+lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
-    name := "elastic4s-testkit",
+    name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
-      "org.scalatest"                         %% "scalatest"                % ScalatestVersion,
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % "2.8.4",
       "org.apache.lucene"                     % "lucene-core"               % "6.2.1",
@@ -55,6 +55,15 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
     )
   )
   .dependsOn(core)
+
+lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
+  .settings(
+    name := "elastic4s-testkit",
+    libraryDependencies ++= Seq(
+      "org.scalatest"                         %% "scalatest"                % ScalatestVersion
+    )
+  )
+  .dependsOn(core, embedded)
 
 lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"))
   .settings(
