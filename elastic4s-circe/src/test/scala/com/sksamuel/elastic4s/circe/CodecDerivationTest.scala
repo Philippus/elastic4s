@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.circe
 
-import com.sksamuel.elastic4s.RichSearchHit
+import com.sksamuel.elastic4s.searches.RichSearchHit
 import org.elasticsearch.search.SearchHit
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar._
@@ -54,14 +54,14 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
     "be implicitly found if circe.generic.auto is in imported" in {
       """
         import io.circe.generic.auto._
-        import com.sksamuel.elastic4s.source.Indexable
+        import com.sksamuel.elastic4s.Indexable
         implicitly[Indexable[Cafe]]
       """ should compile
     }
 
     "not compile if no decoder is in scope" in {
       """
-        import com.sksamuel.elastic4s.source.Indexable
+        import com.sksamuel.elastic4s.Indexable
         implicitly[Indexable[Cafe]]
       """ shouldNot compile
     }

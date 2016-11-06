@@ -27,7 +27,8 @@ class SegmentsTest extends WordSpec with Matchers with ElasticSugar with ScalaFu
         getSegments("*")
       }
       whenReady(f) { resp =>
-        resp.indices.keys.toSet shouldBe Set("segments_movies", "segments_tv", "segments_theatre")
+        Set("segments_movies", "segments_tv", "segments_theatre").foreach { index => }
+        resp.indices.keys.toSet should contain(index)
       }
     }
   }

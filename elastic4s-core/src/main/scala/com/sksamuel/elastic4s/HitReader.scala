@@ -1,5 +1,5 @@
 package com.sksamuel.elastic4s
 
 trait HitReader[T] {
-  def read(hit: Hit): Either[String, T]
+  def read(hit: Hit): Either[Throwable, T]
 }

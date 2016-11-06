@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s
 import org.elasticsearch.common.bytes.BytesReference
 
 /**
-  * A common trait for Get and Search API results so that Readable typeclass
-  * can unmarshall either get or search results into a type.
+  * A common trait for Get, MultiGet, Search and MultiSearch API results so that
+  * the HitReader typeclass can unmarshall results from any of those.
   */
 trait Hit {
 

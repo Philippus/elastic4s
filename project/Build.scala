@@ -20,7 +20,7 @@ object Build extends AutoPlugin {
     val ElasticsearchVersion = "5.0.0"
     val Log4jVersion = "2.6.2"
     val CommonsIoVersion = "2.4"
-    val CirceVersion = "0.5.4"
+    val CirceVersion = "0.6.0-RC1"
     val PlayJsonVersion = "2.5.9"
     val LuceneVersion = "6.2.1"
     val ExtsVersion = "1.35.1"

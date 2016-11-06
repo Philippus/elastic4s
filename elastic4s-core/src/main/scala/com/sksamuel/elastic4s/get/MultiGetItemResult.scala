@@ -35,9 +35,9 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
     case Failure(e) => throw e
   }
 
-  def safeTo[T: HitReader]: Either[String, T] = responseTry match {
+  def safeTo[T: HitReader]: Either[Throwable, T] = responseTry match {
     case Success(get) => get.safeTo
-    case Failure(e) => Left(e.getMessage)
+    case Failure(e) => Left(e)
   }
 
   def response: RichGetResponse = responseOpt.get

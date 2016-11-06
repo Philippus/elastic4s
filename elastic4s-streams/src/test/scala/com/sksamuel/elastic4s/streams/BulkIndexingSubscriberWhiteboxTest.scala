@@ -1,5 +1,5 @@
-//package com.sksamuel.elastic4s.streams
-//
+package com.sksamuel.elastic4s.streams
+
 //import akka.actor.ActorSystem
 //import com.sksamuel.elastic4s.BulkCompatibleDefinition
 //import com.sksamuel.elastic4s.jackson.ElasticJackson
@@ -86,7 +86,5 @@
 //    Item("berkeley")
 //  )
 //}
-//
-//case class Item(name: String)
-//
-//
+
+case class Item(name: String)

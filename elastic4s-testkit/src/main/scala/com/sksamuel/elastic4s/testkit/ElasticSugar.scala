@@ -8,7 +8,7 @@ import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
 import org.slf4j.LoggerFactory
 
-@deprecated("Use TestNode", "5.0.0")
+@deprecated("Use LocalTestNode", "5.0.0")
 trait NodeBuilder extends LocalTestNode {
   this: Suite =>
 }
@@ -18,7 +18,7 @@ trait NodeBuilder extends LocalTestNode {
 * index has a certain count of documents. These methods are very useful when writing
 * tests to allow for blocking, iterative coding
 */
-trait ElasticSugar extends LocalTestNode with ElasticDsl {
+trait ElasticSugar extends SingleTestNode with ElasticDsl {
   this: Suite =>
 
   private val logger = LoggerFactory.getLogger(getClass)

@@ -40,7 +40,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): Array[T] = hits.map(_.as[T])
 
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
-  def safeTo[T: HitReader]: IndexedSeq[Either[String, T]] = hits.map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.map(_.safeTo[T]).toIndexedSeq
 
   def scrollId: String = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)

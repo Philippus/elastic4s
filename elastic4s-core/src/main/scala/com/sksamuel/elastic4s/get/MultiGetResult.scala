@@ -16,7 +16,7 @@ case class MultiGetResult(original: MultiGetResponse) {
   def items: Seq[MultiGetItemResult] = original.iterator.asScala.map(MultiGetItemResult.apply).toList
 
   def to[T: HitReader]: Seq[T] = safeTo[T].flatMap(_.toOption)
-  def safeTo[T: HitReader]: Seq[Either[String, T]] = items.map(_.safeTo)
+  def safeTo[T: HitReader]: Seq[Either[Throwable, T]] = items.map(_.safeTo)
 
   // returns only those items which were successful
   def successes: Seq[RichGetResponse] = items.flatMap(_.responseOpt)

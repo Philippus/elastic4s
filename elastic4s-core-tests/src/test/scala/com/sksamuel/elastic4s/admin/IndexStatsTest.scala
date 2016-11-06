@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
@@ -28,7 +27,9 @@ class IndexStatsTest extends WordSpec with Matchers with ElasticSugar with Scala
         indexStats("*")
       }
       whenReady(f) { resp =>
-        resp.indexNames shouldBe Set("segments_movies", "segments_tv", "segments_theatre")
+        Set("segments_movies", "segments_tv", "segments_theatre").foreach { index =>
+          resp.indexNames should contain(index)
+        }
       }
     }
   }

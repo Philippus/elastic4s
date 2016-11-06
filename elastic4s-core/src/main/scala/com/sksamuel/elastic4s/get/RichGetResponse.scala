@@ -36,8 +36,8 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   override def `type`: String = original.getType
   override def version: Long = original.getVersion
 
-  def to[T: HitReader]: T = safeTo[T].fold(msg => sys.error(msg), t => t)
-  def safeTo[T](implicit reader: HitReader[T]): Either[String, T] = reader.read(this)
+  def to[T: HitReader]: T = safeTo[T].fold(e => throw e, t => t)
+  def safeTo[T](implicit reader: HitReader[T]): Either[Throwable, T] = reader.read(this)
 
   private def getFieldToHitField(f: GetField) = new HitField {
     override def name: String = f.getName

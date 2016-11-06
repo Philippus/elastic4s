@@ -16,8 +16,8 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
   client.execute(
     bulk(
-      index into "scifi/startrek" fields "character" -> "kirk" id 5,
-      index into "scifi/starwars" fields "character" -> "lando" id 8
+      indexInto("scifi/startrek") fields "character" -> "kirk" id 5,
+      indexInto("scifi/starwars") fields "character" -> "lando" id 8
     )
   ).await
 
@@ -26,7 +26,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
   "an update request" should "add a field when a script assigns a value" ignore {
 
     client.execute {
-      update id 5 in "scifi/startrek" script {
+      update(5) in "scifi/startrek" script {
         script("ctx._source.birthplace = 'iowa'").lang("groovy")
       }
     }.await
@@ -34,7 +34,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
     eventually {
       client.execute {
-        search in "scifi" types "startrek" term "birthplace" -> "iowa"
+        search("scifi") types "startrek" term "birthplace" -> "iowa"
       }.await.totalHits shouldBe 1
     }
   }
@@ -104,9 +104,9 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
   it should "insert non existent doc when using docAsUpsert" in {
 
     client.execute {
-      update(14).in("scifi/starwars").doc(
+      update(14).in("scifi/starwars").docAsUpsert(
         "character" -> "chewie"
-      ).docAsUpsert
+      )
     }.await
     refresh("scifi")
 

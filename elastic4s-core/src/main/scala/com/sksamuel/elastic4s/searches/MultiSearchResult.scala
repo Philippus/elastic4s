@@ -16,7 +16,7 @@ case class MultiSearchResult(original: MultiSearchResponse) {
 
   // returns all the matches as a single sequence
   // if you wish to return the seq of seq, then use responses and map individually
-  def safeTo[T: HitReader]: Seq[Either[String, T]] = responses.flatMap(_.safeTo[T])
+  def safeTo[T: HitReader]: Seq[Either[Throwable, T]] = responses.flatMap(_.safeTo[T])
 
   @deprecated("use items", "5.0.0")
   def getResponses(): Array[MultiSearchResponse.Item] = original.getResponses

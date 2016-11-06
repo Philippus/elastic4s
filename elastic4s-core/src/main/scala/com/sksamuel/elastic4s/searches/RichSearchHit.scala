@@ -44,8 +44,8 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   @deprecated("use to[T] which uses a Reader[T] typeclass", "5.0.0")
   def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
 
-  def to[T: HitReader : ClassTag]: T = safeTo[T].fold(msg => sys.error(msg), t => t)
-  def safeTo[T](implicit reader: HitReader[T]): Either[String, T] = reader.read(this)
+  def to[T: HitReader : ClassTag]: T = safeTo[T].fold(e => throw e, t => t)
+  def safeTo[T](implicit reader: HitReader[T]): Either[Throwable, T] = reader.read(this)
 
   def explanation: Option[Explanation] = Option(java.explanation)
 

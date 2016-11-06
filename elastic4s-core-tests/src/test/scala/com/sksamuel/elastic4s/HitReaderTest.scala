@@ -17,7 +17,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
   }
 
   implicit val HitReader = new HitReader[Team] {
-    override def read(hit: Hit): Either[String, Team] =
+    override def read(hit: Hit): Either[Throwable, Team] =
       Right(Team(
         hit.sourceField("name").toString,
         hit.sourceField("stadium").toString,

@@ -18,5 +18,5 @@ case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
   def responseOpt: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
 
   def to[T: HitReader]: IndexedSeq[T] = response.to[T]
-  def safeTo[T: HitReader]: IndexedSeq[Either[String, T]] = response.safeTo[T]
+  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = response.safeTo[T]
 }
