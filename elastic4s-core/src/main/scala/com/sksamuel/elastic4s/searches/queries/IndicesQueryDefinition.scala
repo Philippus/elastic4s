@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.QueryBuilders
 
-@deprecated("instead search on the `_index` field")
+@deprecated("query instead search on the `_index` field", "5.0.0")
 case class IndicesQueryDefinition(indices: Iterable[String],
                                   query: QueryDefinition)
   extends QueryDefinition {

@@ -1,41 +1,30 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.ProxyClients
-import org.elasticsearch.action.get.{MultiGetAction, MultiGetRequest, MultiGetRequestBuilder}
+import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.action.get.{MultiGetRequest, MultiGetRequestBuilder}
 import org.elasticsearch.cluster.routing.Preference
 
-case class MultiGetDefinition(gets: Seq[GetDefinition]) {
+case class MultiGetDefinition(gets: Seq[GetDefinition],
+                              preference: Option[String] = None,
+                              realtime: Option[Boolean] = None,
+                              refresh: Option[Boolean] = None) {
 
-  val _builder = new MultiGetRequestBuilder(ProxyClients.client, MultiGetAction.INSTANCE)
-
-  gets foreach { get =>
-    val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
-    item.fetchSourceContext(get.build.fetchSourceContext)
-    item.routing(get.build.routing)
-    item.storedFields(get.build.storedFields: _*)
-    item.version(get.build.version)
-    _builder.add(item)
+  def populate(builder: MultiGetRequestBuilder): Unit = {
+    preference.foreach(builder.setPreference)
+    realtime.foreach(builder.setRealtime)
+    refresh.foreach(builder.setRefresh)
+    gets foreach { get =>
+      val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
+      item.fetchSourceContext(get.build.fetchSourceContext)
+      item.routing(get.build.routing)
+      item.storedFields(get.build.storedFields: _*)
+      item.version(get.build.version)
+      builder.add(item)
+    }
   }
 
-  def build: MultiGetRequest = _builder.request()
-
-  def realtime(realtime: Boolean): this.type = {
-    _builder.setRealtime(realtime)
-    this
-  }
-
-  def preference(preference: Preference): this.type = {
-    _builder.setPreference(preference.`type`())
-    this
-  }
-
-  def preference(preference: String): this.type = {
-    _builder.setPreference(preference)
-    this
-  }
-
-  def refresh(refresh: Boolean): this.type = {
-    _builder.setRefresh(refresh)
-    this
-  }
+  def realtime(realtime: Boolean): MultiGetDefinition = copy(realtime = realtime.some)
+  def refresh(refresh: Boolean): MultiGetDefinition = copy(refresh = refresh.some)
+  def preference(preference: String): MultiGetDefinition = copy(preference = preference.some)
+  def preference(preference: Preference): MultiGetDefinition = copy(preference = preference.`type`.some)
 }

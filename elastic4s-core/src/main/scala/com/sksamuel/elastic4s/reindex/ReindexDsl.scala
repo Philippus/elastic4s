@@ -15,7 +15,7 @@ trait ReindexDsl {
     def into(index: String, `type`: String): ReindexDefinition = ReindexDefinition(sourceIndexes, index, `type`.some)
   }
 
-  implicit object SearchDefinitionExecutable
+  implicit object ReindexDefinitionExecutable
     extends Executable[ReindexDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
     override def apply(c: Client, r: ReindexDefinition): Future[BulkIndexByScrollResponse] = {
       val builder = new ReindexRequestBuilder(ProxyClients.client, ReindexAction.INSTANCE)

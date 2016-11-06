@@ -20,7 +20,10 @@ case class ScriptDefinition(script: String,
 
   def scriptType(scriptType: ScriptType): ScriptDefinition = copy(scriptType = scriptType)
 
-  def toJavaAPI: Script = {
+  @deprecated("use build", "5.0.0")
+  def toJavaAPI: Script = build
+
+  def build: Script = {
     if (params.isEmpty) {
       new Script(script, scriptType, lang.orNull, null)
     } else {
