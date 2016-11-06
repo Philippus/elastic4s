@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.Executors
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Publisher, Subscriber, Subscription}

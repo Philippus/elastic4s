@@ -38,6 +38,7 @@ case class TermSuggestionDefinition(name: String,
     prefixLength.foreach(builder.prefixLength)
     sort.foreach(builder.sort)
     stringDistance.foreach(builder.stringDistance)
+    suggestMode.foreach(builder.suggestMode)
 
     builder
   }

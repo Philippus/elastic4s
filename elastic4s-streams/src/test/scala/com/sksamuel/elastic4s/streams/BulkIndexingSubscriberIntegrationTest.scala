@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkItemResult}
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkItemResult}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.mappings.DynamicMapping.Strict
 import com.sksamuel.elastic4s.testkit.ElasticSugar

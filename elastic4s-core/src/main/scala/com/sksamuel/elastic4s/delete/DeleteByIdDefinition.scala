@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, IndexAndTypes}
+import com.sksamuel.elastic4s.IndexAndTypes
+import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Requests
 import org.elasticsearch.index.VersionType

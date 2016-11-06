@@ -58,7 +58,7 @@
       "term": {
         "field": "names",
         "shard_size": 2,
-        "suggest_mode": "MISSING",
+        "suggest_mode": "POPULAR",
         "accuracy": 0.6,
         "sort": "SCORE",
         "string_distance": "INTERNAL",
@@ -74,7 +74,7 @@
       "text": "whatever some text",
       "term": {
         "field": "names",
-        "suggest_mode": "MISSING",
+        "suggest_mode": "ALWAYS",
         "accuracy": 0.5,
         "sort": "SCORE",
         "string_distance": "INTERNAL",

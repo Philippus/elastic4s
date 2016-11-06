@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, FieldsMapper, IndexAndTypes, Indexable, ProxyClients}
+import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.{FieldsMapper, IndexAndTypes, Indexable, ProxyClients}
 import com.sksamuel.elastic4s.definitions.DefinitionRouting
 import com.sksamuel.elastic4s.mappings.FieldValue
 import com.sksamuel.elastic4s.script.ScriptDefinition

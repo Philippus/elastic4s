@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.{AliasesDsl, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.bulk.BulkDsl
 import com.sksamuel.elastic4s.delete.DeleteDsl
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
 import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}

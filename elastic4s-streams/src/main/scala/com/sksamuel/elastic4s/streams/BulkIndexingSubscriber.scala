@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult, ElasticClient}
+import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * An implementation of the reactive API Subscriber.

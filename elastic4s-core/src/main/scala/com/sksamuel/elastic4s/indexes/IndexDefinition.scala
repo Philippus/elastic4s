@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.indexes
 
+import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.mappings.FieldValue
-import com.sksamuel.elastic4s.{BulkCompatibleDefinition, FieldsMapper, Indexable}
+import com.sksamuel.elastic4s.{FieldsMapper, Indexable}
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
-import java.util.concurrent.{TimeUnit, CountDownLatch}
+import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.BulkItemResult
+import com.sksamuel.elastic4s.bulk.BulkItemResult
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
