@@ -189,11 +189,45 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsQuery(field: String, values: AnyRef*) = TermsQueryDefinition(field, values.map(_.toString))
-  def termsQuery(field: String, values: Int*) = IntTermsQueryDefinition(field, values)
-  def termsQuery(field: String, values: Long*) = LongTermsQueryDefinition(field, values)
-  def termsQuery(field: String, values: Float*) = FloatTermsQueryDefinition(field, values)
-  def termsQuery(field: String, values: Double*) = DoubleTermsQueryDefinition(field, values)
+  def termsQuery[T: BuildableTermsQuery](field: String,
+                                         first: T, rest: T*): TermsQueryDefinition = termsQuery(field, first +: rest)
+
+  def termsQuery[T](field: String, values: Iterable[T])
+                   (implicit buildable: BuildableTermsQuery[T]) = TermsQueryDefinition(buildable.builder(field, values))
+
+  trait BuildableTermsQuery[T] {
+    def builder(field: String, values: Iterable[T]): TermsQueryBuilder
+  }
+
+  implicit object IntBuildableTermsQuery extends BuildableTermsQuery[Int] {
+    def builder(field: String, values: Iterable[Int]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.toSeq: _*)
+  }
+
+  implicit object LongBuildableTermsQuery extends BuildableTermsQuery[Long] {
+    def builder(field: String, values: Iterable[Long]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.toSeq: _*)
+  }
+
+  implicit object FloatBuildableTermsQuery extends BuildableTermsQuery[Float] {
+    def builder(field: String, values: Iterable[Float]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.toSeq: _*)
+  }
+
+  implicit object DoubleBuildableTermsQuery extends BuildableTermsQuery[Double] {
+    def builder(field: String, values: Iterable[Double]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.toSeq: _*)
+  }
+
+  implicit object StringBuildableTermsQuery extends BuildableTermsQuery[String] {
+    def builder(field: String, values: Iterable[String]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.toSeq: _*)
+  }
+
+  implicit object AnyRefBuildableTermsQuery extends BuildableTermsQuery[AnyRef] {
+    def builder(field: String, values: Iterable[AnyRef]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(field, values.map(_.toString).toSeq: _*)
+  }
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)
@@ -227,5 +261,3 @@ trait QueryDsl {
   def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
 }
-
-

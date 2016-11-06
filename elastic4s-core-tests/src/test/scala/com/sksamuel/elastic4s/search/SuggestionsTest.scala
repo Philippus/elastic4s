@@ -41,8 +41,8 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
         }
       }.await
 
-      resp.suggestion("artistsugg").entry("taylor").options.isEmpty shouldBe true
-      resp.termSuggestion("artistsugg").entry("swaft").optionsText shouldBe Seq("swift")
+      resp.suggestion("a").entry("taylor").options.isEmpty shouldBe true
+      resp.termSuggestion("a").entry("swuft").optionsText shouldBe Seq("swift")
     }
     "bring back suggestions for matching terms when mode is always" in {
 

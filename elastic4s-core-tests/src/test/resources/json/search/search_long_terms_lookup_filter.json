@@ -1,0 +1,12 @@
+{
+  "post_filter": {
+    "terms": {
+      "formedYear": [
+        2013,
+        2014
+      ],
+      "boost": 1.0
+    }
+  },
+  "ext": {}
+}
