@@ -431,6 +431,18 @@ final class GeoPointFieldDefinition(name: String)
   }
 }
 
+final class PercolatorFieldDefinition(name: String)
+  extends TypedFieldDefinition(PercolatorType, name) {
+
+  def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
+    if (startObject)
+      source.startObject(name)
+    insertType(source)
+    if (startObject)
+      source.endObject()
+  }
+}
+
 final class GeoShapeFieldDefinition(name: String)
   extends TypedFieldDefinition(GeoShapeType, name)
     with AttributeStore

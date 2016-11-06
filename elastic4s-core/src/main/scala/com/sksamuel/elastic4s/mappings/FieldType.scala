@@ -20,6 +20,7 @@ object FieldType {
   case object MultiFieldType extends FieldType("multi_field")
   case object NestedType extends FieldType("nested")
   case object ObjectType extends FieldType("object")
+  case object PercolatorType extends FieldType("percolator")
   case object ShortType extends FieldType("short")
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")

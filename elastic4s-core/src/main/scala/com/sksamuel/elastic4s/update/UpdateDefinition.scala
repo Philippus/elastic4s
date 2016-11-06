@@ -151,10 +151,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
     this
   }
 
-  @deprecated("use doc(t)", "5.0.0")
   def source[T: Indexable](t: T): this.type = doc(t)
-
-  @deprecated("use docAsUpsert(t)", "5.0.0")
   def sourceAsUpsert[T: Indexable](t: T): this.type = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): this.type = {

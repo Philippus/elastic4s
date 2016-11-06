@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
+import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.indices.IndexAlreadyExistsException
@@ -101,6 +101,24 @@ trait AbstractElasticSugar extends ElasticDsl {
       client.execute {
         get(id).from(index / `type`)
       }.await.exists
+    }
+  }
+
+  def blockUntilCount(expected: Long, index: String): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        search(index).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
+    }
+  }
+
+  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        search(indexAndTypes).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
     }
   }
 

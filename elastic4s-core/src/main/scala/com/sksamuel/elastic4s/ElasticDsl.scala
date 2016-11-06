@@ -111,6 +111,7 @@ trait ElasticDsl
   def field(name: String, ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def field(name: String, ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
+  def field(name: String, ft: PercolatorType.type): PercolatorFieldDefinition = new PercolatorFieldDefinition(name)
   def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
@@ -140,6 +141,9 @@ trait ElasticDsl
   def intField(name: String) = field(name, IntegerType)
   def ipField(name: String) = field(name, IpType)
   def longField(name: String) = field(name, LongType)
+
+  def percolatorField(name: String) = field(name, PercolatorType)
+
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
   def shortField(name: String) = field(name, ShortType)

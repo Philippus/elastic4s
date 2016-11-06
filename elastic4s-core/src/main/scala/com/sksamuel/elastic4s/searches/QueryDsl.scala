@@ -146,10 +146,16 @@ trait QueryDsl {
   def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)
 
-  def percolateQuery(field: String, `type`: String) = new {
+  def percolateQuery(`type`: String, field: String = "query") = new {
+
+    def usingId(index: String, `type`: String, id: Any): PercolateQueryDefinition =
+      usingId(DocumentRef(index, `type`, id.toString))
 
     def usingId(ref: DocumentRef): PercolateQueryDefinition =
       PercolateQueryDefinition(field, `type`, ref = Some(ref))
+
+    def usingSource(json: String): PercolateQueryDefinition =
+      PercolateQueryDefinition(field, `type`, source = Some(json))
 
     def usingSource[T](t: T)(implicit indexable: Indexable[T]): PercolateQueryDefinition =
       PercolateQueryDefinition(field, `type`, source = Some(indexable.json(t)))
