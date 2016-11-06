@@ -49,7 +49,6 @@ object Build extends AutoPlugin {
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
-      "commons-io"                            % "commons-io"                % CommonsIoVersion      % "test",
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion      % "test"
     ),

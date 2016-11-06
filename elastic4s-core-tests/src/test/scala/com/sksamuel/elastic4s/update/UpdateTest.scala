@@ -52,7 +52,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
 
     eventually {
       client.execute {
-        search in "scifi" types "starwars" term "friends" -> "leia"
+        search("scifi") types "starwars" term "friends" -> "leia"
       }.await.totalHits shouldBe 1
     }
   }
@@ -71,7 +71,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        search in "scifi" types "starwars" term "location" -> "cloud"
+        search("scifi") types "starwars" term "location" -> "cloud"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)
@@ -92,7 +92,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        search in "scifi" types "startrek" term "character" -> "kirk"
+        search("scifi") types "startrek" term "character" -> "kirk"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)
@@ -114,7 +114,7 @@ class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Event
     var hits = 0l
     while (k < 10 && hits == 0) {
       val resp = client.execute {
-        search in "scifi" types "starwars" term "character" -> "chewie"
+        search("scifi") types "starwars" term "character" -> "chewie"
       }.await
       hits = resp.totalHits
       Thread.sleep(k * 200)

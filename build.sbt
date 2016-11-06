@@ -15,16 +15,7 @@ lazy val root = Project("elastic4s", file("."))
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
-  .settings(
-    name := "elastic4s-core",
-    libraryDependencies ++= Seq(
-      "org.scalatest"                         %% "scalatest"                % ScalatestVersion,
-      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion % "test",
-      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion % "test",
-      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion % "test",
-      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % "2.7"
-    )
-  )
+  .settings(name := "elastic4s-core")
 
 lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
@@ -50,8 +41,7 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion,
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % Log4jVersion
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion
     )
   )
   .dependsOn(core)
@@ -69,6 +59,8 @@ lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"
   .settings(
     name := "elastic4s-core-tests",
     libraryDependencies ++= Seq(
+      "commons-io"                    % "commons-io"              % CommonsIoVersion      % "test",
+      "org.mockito"                   % "mockito-all"             % MockitoVersion        % "test",
       "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion % "test",
       "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion % "test",
       "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
