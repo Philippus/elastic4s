@@ -34,7 +34,7 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     .getNodes().iterator().next().getHttp().address().publishAddress().toString()
   logger.info(s"LocalNode started @ $ipAndPort")
 
-  def stop() = {
+  def stop(removeData: Boolean = false) = {
     super.close()
 
     def deleteDir(dir: File): Unit = {
@@ -45,7 +45,7 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
       dir.delete()
     }
 
-    if (settings.getAsBoolean("shutdown.clean", false)) {
+    if (removeData) {
       deleteDir(pathData.toFile)
       deleteDir(pathRepo.toFile)
       deleteDir(pathHome.toFile)

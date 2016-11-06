@@ -1,16 +1,19 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.embedded.{ClassLocalNodeProvider, LocalNodeProvider}
 import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.transport.RemoteTransportException
-import org.scalatest.Suite
+import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
 
-trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider {
+trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with BeforeAndAfterAll {
   this: Suite with LocalNodeProvider =>
+
+  override def afterAll(): Unit = {
+    node.stop(true)
+  }
 }
 
 /**
@@ -21,7 +24,8 @@ trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider {
 trait AbstractElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
-  implicit val _client = this.client
+  implicit val node = getNode
+  implicit val client = node.elastic4sclient(false)
   private val logger = LoggerFactory.getLogger(getClass)
 
   // refresh all indexes
