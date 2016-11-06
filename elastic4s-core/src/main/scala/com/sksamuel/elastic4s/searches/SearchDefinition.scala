@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s.searches
 import java.util
 
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
-import com.sksamuel.elastic4s.{ElasticDsl, IndexesAndTypes, ProxyClients, SortDefinition}
+import com.sksamuel.elastic4s.{ElasticDsl, IndexesAndTypes, ProxyClients}
 import com.sksamuel.elastic4s.searches.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
+import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDefinition
 import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.Executable
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.search.{ClearScrollResponse, SearchResponse}
 import org.elasticsearch.client.Client
 
@@ -11,13 +12,13 @@ trait ScrollDsl {
 
   def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
-  def clearScroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
+  def clearScroll(first: String, rest: String*): ClearScrollDefinition = clearScroll(first +: rest)
   def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
 
   implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, RichSearchResponse] {
     override def apply(client: Client, s: SearchScrollDefinition): Future[RichSearchResponse] = {
       val request = client.prepareSearchScroll(s.id)
-      s._keepAlive.foreach(request.setScroll)
+      s.keepAlive.foreach(request.setScroll)
       injectFutureAndMap(request.execute)(RichSearchResponse)
     }
   }
@@ -31,22 +32,15 @@ trait ScrollDsl {
   }
 }
 
-case class SearchScrollDefinition(id: String) {
+case class SearchScrollDefinition(id: String,
+                                  keepAlive: Option[String] = None) {
 
-  private[elastic4s] var _keepAlive: Option[String] = None
-
-  def keepAlive(time: String): this.type = {
-    _keepAlive = Option(time)
-    this
-  }
-
-  def keepAlive(duration: FiniteDuration): this.type = {
-    _keepAlive = Option(duration.toSeconds + "s")
-    this
-  }
+  def keepAlive(keepAlive: String): SearchScrollDefinition = copy(keepAlive = keepAlive.some)
+  def keepAlive(duration: FiniteDuration): SearchScrollDefinition = copy(duration.toSeconds + "s")
 }
 
 case class ClearScrollDefinition(ids: Seq[String])
+
 case class ClearScrollResult(response: ClearScrollResponse) {
   def number = response.getNumFreed
   def success = response.isSucceeded

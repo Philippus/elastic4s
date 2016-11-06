@@ -9,11 +9,13 @@ import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
 import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl, IndexDefinition, IndexDsl}
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.reindex.ReindexDsl
 import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptDsl, ScriptFieldDefinition}
 import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
-import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, HighlightDefinition, PercolateDsl, QueryDefinition, ScrollDsl, SearchDefinition, SearchDsl, SearchScrollDefinition}
+import com.sksamuel.elastic4s.searches._
+import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
 import com.sksamuel.elastic4s.update.UpdateDsl
@@ -42,6 +44,7 @@ trait ElasticDsl
     with MappingDsl
     with MultiGetApi
     with PercolateDsl
+    with ReindexDsl
     with ScriptDsl
     with SearchDsl
     with SettingsDsl

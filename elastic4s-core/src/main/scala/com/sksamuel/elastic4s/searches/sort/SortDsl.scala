@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.searches.sort
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.common.geo.GeoPoint
@@ -26,5 +26,4 @@ trait SortDsl {
     def points(points: Iterable[GeoPoint]): GeoDistanceSortDefinition =
       new GeoDistanceSortDefinition(field, Nil, points.toSeq)
   }
-
 }

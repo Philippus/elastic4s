@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 trait MultiGetApi extends GetDsl {
 
-  def multiget(gets: GetDefinition*): MultiGetDefinition = multiget(gets)
+  def multiget(first: GetDefinition, rest: GetDefinition*): MultiGetDefinition = multiget(first +: rest)
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets.toSeq)
 
   implicit object MultiGetDefinitionExecutable

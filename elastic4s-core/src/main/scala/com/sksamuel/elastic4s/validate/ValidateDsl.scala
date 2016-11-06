@@ -11,7 +11,6 @@ import scala.concurrent.Future
 trait ValidateDsl {
 
   def validateIn(indexesAndTypes: IndexesAndTypes): ValidateExpectsQuery = new ValidateExpectsQuery(indexesAndTypes)
-
   class ValidateExpectsQuery(indexesAndTypes: IndexesAndTypes) {
     def query(query: QueryDefinition): ValidateDefinition = ValidateDefinition(indexesAndTypes, query.builder)
   }
