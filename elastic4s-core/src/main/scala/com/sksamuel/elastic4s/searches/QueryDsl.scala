@@ -9,6 +9,7 @@ import org.elasticsearch.common.geo.builders.ShapeBuilder
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.index.query._
+import org.elasticsearch.indices.TermsLookup
 
 import scala.language.{implicitConversions, reflectiveCalls}
 
@@ -194,6 +195,9 @@ trait QueryDsl {
 
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
+
+  def termsLookupQuery(field: String, ref: DocumentRef, path: String) =
+    TermsQueryDefinition(QueryBuilders.termsLookupQuery(field, new TermsLookup(ref.index, ref.`type`, ref.id, path)))
 
   def termsQuery[T: BuildableTermsQuery](field: String,
                                          first: T, rest: T*): TermsQueryDefinition = termsQuery(field, first +: rest)
