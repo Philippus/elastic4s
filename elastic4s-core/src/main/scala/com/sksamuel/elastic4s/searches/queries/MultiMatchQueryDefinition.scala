@@ -33,6 +33,11 @@ case class MultiMatchQueryDefinition(text: String)
     this
   }
 
+  def field(name: String, boost: Float): MultiMatchQueryDefinition = {
+    builder.field(name, boost)
+    this
+  }
+
   def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
 
   def lenient(l: Boolean): MultiMatchQueryDefinition = {
