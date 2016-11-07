@@ -11,6 +11,7 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.rollover.RolloverResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
+import org.elasticsearch.action.admin.indices.shrink.ShrinkResponse
 import org.elasticsearch.action.admin.indices.stats.{CommonStats, IndexStats, IndicesStatsResponse, ShardStats}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
@@ -54,6 +55,17 @@ trait IndexAdminDsl {
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
 
   def rollover(alias: String): RolloverDefinition = RolloverDefinition(alias)
+
+  def shrink(source: String, target: String): ShrinkDefinition = ShrinkDefinition(source, target)
+
+  implicit object ShrinkDefinitionExecutable
+    extends Executable[ShrinkDefinition, ShrinkResponse, ShrinkResponse] {
+    override def apply(c: Client, t: ShrinkDefinition): Future[ShrinkResponse] = {
+      val builder = c.admin().indices().prepareShrinkIndex(t.source, t.target)
+      t.populate(builder)
+      injectFuture(builder.execute)
+    }
+  }
 
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
