@@ -1,21 +1,15 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.{Hit, HitAs, HitReader}
+import com.sksamuel.elastic4s.{Hit, HitAs}
+import com.sksamuel.exts.StringOption
 import org.apache.lucene.search.Explanation
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHits, SearchShardTarget}
 
 import scala.collection.JavaConverters._
-import scala.reflect.ClassTag
 
 case class RichSearchHit(java: SearchHit) extends Hit {
-
-  import scala.collection.mutable
-
-  // java method aliases
-  @deprecated("use .java", "2.1.2")
-  def hit = java
 
   override def id: String = java.id
   override def index: String = java.index
@@ -28,30 +22,16 @@ case class RichSearchHit(java: SearchHit) extends Hit {
 
   override def exists = true
 
-  override def sourceAsBytes: Array[Byte] = if (java.source == null) Array.emptyByteArray else java.source
+  override def sourceAsBytes: Array[Byte] = Option(java.source).getOrElse(Array.empty)
   override def sourceAsByteRef: BytesReference = java.sourceRef()
-  override def sourceAsString: String = if (java.sourceAsString == null) "" else java.sourceAsString
-  override def sourceAsMap: Map[String, AnyRef] = if (java.sourceAsMap == null) Map.empty else java.sourceAsMap.asScala.toMap
+  override def sourceAsString: String = StringOption(java.sourceAsString).getOrElse("")
+  override def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
   override def isSourceEmpty: Boolean = !java.hasSource
-
-  @deprecated("use sourceAsByteRef", "2.1.2")
-  def sourceRef: BytesReference = java.sourceRef()
-
-  def sourceAsMutableMap: mutable.Map[String, AnyRef] = {
-    if (java.sourceAsMap == null) mutable.Map.empty else java.sourceAsMap.asScala
-  }
-
-  @deprecated("use to[T] which uses a Reader[T] typeclass", "5.0.0")
-  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
-
-  def to[T: HitReader : ClassTag]: T = safeTo[T].fold(e => throw e, t => t)
-  def safeTo[T](implicit reader: HitReader[T]): Either[Throwable, T] = reader.read(this)
 
   def explanation: Option[Explanation] = Option(java.explanation)
 
-  def fields: Map[String, RichSearchHitField] = {
-    if (java.fields == null) Map.empty else java.fields.asScala.toMap.mapValues(RichSearchHitField)
-  }
+  def fields: Map[String, RichSearchHitField] =
+    Option(java.fields).map(_.asScala.toMap).getOrElse(Map.empty).mapValues(RichSearchHitField)
 
   def stringValue(fieldName: String): String = field(fieldName).value.toString
 
@@ -62,15 +42,13 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   def fieldValue(fieldName: String): AnyRef = field(fieldName).value
   def fieldValueOpt(fieldName: String): AnyRef = fieldOpt(fieldName).map(_.value)
 
-  def highlightFields: Map[String, HighlightField] = {
-    if (java.highlightFields == null) Map.empty else java.highlightFields().asScala.toMap
-  }
+  def highlightFields: Map[String, HighlightField] =
+    Option(java.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
 
-  def sortValues: Array[AnyRef] = if (java.sortValues == null) Array.empty else java.sortValues
-  def matchedQueries: Array[String] = if (java.matchedQueries == null) Array.empty else java.matchedQueries
-  def innerHits: Map[String, SearchHits] = {
-    if (java.getInnerHits == null) Map.empty else java.getInnerHits.asScala.toMap
-  }
+  def sortValues: IndexedSeq[AnyRef] = Option(java.sortValues).map(_.toIndexedSeq).getOrElse(Array.empty[AnyRef])
+  def matchedQueries: IndexedSeq[String] = Option(java.matchedQueries).map(_.toIndexedSeq).getOrElse(Array.empty[String])
+
+  def innerHits: Map[String, SearchHits] = Option(java.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 
   override def equals(other: Any): Boolean = other match {
     case hit: SearchHit => equals(RichSearchHit(hit))
@@ -79,4 +57,13 @@ case class RichSearchHit(java: SearchHit) extends Hit {
     case _ => false
   }
 
+  @deprecated("use to[T] which uses a Reader[T] typeclass", "5.0.0")
+  def as[T](implicit hitas: HitAs[T], manifest: Manifest[T]): T = hitas.as(this)
+
+  @deprecated("use sourceAsByteRef", "2.1.2")
+  def sourceRef: BytesReference = java.sourceRef()
+
+  // java method aliases
+  @deprecated("use .java", "2.1.2")
+  def hit = java
 }

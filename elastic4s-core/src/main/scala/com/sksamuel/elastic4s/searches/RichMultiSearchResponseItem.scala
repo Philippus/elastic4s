@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.HitReader
 import org.elasticsearch.action.search.MultiSearchResponse
 
-case class MultiSearchResultItem(item: MultiSearchResponse.Item) {
+case class RichMultiSearchResponseItem(item: MultiSearchResponse.Item) {
 
   def isFailure: Boolean = item.isFailure
   def isSuccess: Boolean = !isFailure

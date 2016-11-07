@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.HitField
 import org.elasticsearch.index.get.GetField
 
 import scala.collection.JavaConverters._

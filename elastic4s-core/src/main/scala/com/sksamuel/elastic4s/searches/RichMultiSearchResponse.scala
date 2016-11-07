@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.HitReader
 import org.elasticsearch.action.search.MultiSearchResponse
 
-case class MultiSearchResult(original: MultiSearchResponse) {
+case class RichMultiSearchResponse(original: MultiSearchResponse) {
 
   def size = responses.size
 
-  def responses: Seq[MultiSearchResultItem] = original.getResponses.map(MultiSearchResultItem.apply)
+  def responses: Seq[RichMultiSearchResponseItem] = original.getResponses.map(RichMultiSearchResponseItem.apply)
 
   // returns all the matches as a single sequence, dropping errors.
   // if you wish to retain errors use safeTo

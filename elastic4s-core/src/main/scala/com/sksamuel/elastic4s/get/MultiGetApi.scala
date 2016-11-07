@@ -12,11 +12,11 @@ trait MultiGetApi extends GetDsl {
   def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets.toSeq)
 
   implicit object MultiGetDefinitionExecutable
-    extends Executable[MultiGetDefinition, MultiGetResponse, MultiGetResult] {
-    override def apply(c: Client, t: MultiGetDefinition): Future[MultiGetResult] = {
+    extends Executable[MultiGetDefinition, MultiGetResponse, RichMultiGetResponse] {
+    override def apply(c: Client, t: MultiGetDefinition): Future[RichMultiGetResponse] = {
       val builder = c.prepareMultiGet()
       t.populate(builder)
-      injectFutureAndMap(builder.execute)(MultiGetResult.apply)
+      injectFutureAndMap(builder.execute)(RichMultiGetResponse.apply)
     }
   }
 }

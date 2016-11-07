@@ -7,13 +7,13 @@ import cats.syntax.either._
 
 import scala.collection.JavaConverters._
 
-case class MultiGetResult(original: MultiGetResponse) {
+case class RichMultiGetResponse(original: MultiGetResponse) {
 
   @deprecated("use responses", "5.0.0")
   def getResponses = items
 
   def size = items.size
-  def items: Seq[MultiGetItemResult] = original.iterator.asScala.map(MultiGetItemResult.apply).toList
+  def items: Seq[RichMultiGetItemResponse] = original.iterator.asScala.map(RichMultiGetItemResponse.apply).toList
 
   def to[T: HitReader]: Seq[T] = safeTo[T].flatMap(_.toOption)
   def safeTo[T: HitReader]: Seq[Either[Throwable, T]] = items.map(_.safeTo)

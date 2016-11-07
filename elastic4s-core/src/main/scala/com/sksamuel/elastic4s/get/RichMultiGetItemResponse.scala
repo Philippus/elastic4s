@@ -5,7 +5,7 @@ import org.elasticsearch.action.get.{MultiGetItemResponse, MultiGetResponse}
 
 import scala.util.{Failure, Success, Try}
 
-case class MultiGetItemResult(original: MultiGetItemResponse) {
+case class RichMultiGetItemResponse(original: MultiGetItemResponse) {
 
   @deprecated("use id", "5.0.0")
   def getId = original.getId
@@ -28,7 +28,7 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
   def index = original.getIndex
   def `type`: String = original.getType
   def id = original.getId
-  def documentRef = DocumentRef(index, `type`, id)
+  def ref = DocumentRef(index, `type`, id)
 
   def to[T: HitReader]: T = responseTry match {
     case Success(get) => get.to
@@ -38,6 +38,16 @@ case class MultiGetItemResult(original: MultiGetItemResponse) {
   def safeTo[T: HitReader]: Either[Throwable, T] = responseTry match {
     case Success(get) => get.safeTo
     case Failure(e) => Left(e)
+  }
+
+  def toOpt[T: HitReader]: Option[T] = responseTry match {
+    case Success(get) => response.toOpt[T]
+    case Failure(e) => throw e
+  }
+
+  def safeToOpt[T: HitReader]: Option[Either[Throwable, T]] = responseTry match {
+    case Success(get) => get.safeToOpt[T]
+    case Failure(e) => Option(Left(e))
   }
 
   def response: RichGetResponse = responseOpt.get

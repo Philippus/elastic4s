@@ -35,9 +35,9 @@ trait SearchDsl
   }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse, MultiSearchResult] {
-    override def apply(c: Client, t: MultiSearchDefinition): Future[MultiSearchResult] = {
-      injectFutureAndMap(c.multiSearch(t.build, _))(MultiSearchResult.apply)
+    extends Executable[MultiSearchDefinition, MultiSearchResponse, RichMultiSearchResponse] {
+    override def apply(c: Client, t: MultiSearchDefinition): Future[RichMultiSearchResponse] = {
+      injectFutureAndMap(c.multiSearch(t.build, _))(RichMultiSearchResponse.apply)
     }
   }
 
