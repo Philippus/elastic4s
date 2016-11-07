@@ -1,26 +1,27 @@
 {
-    "highlight": {
-        "tags_schema": "styled",
-        "pre_tags": [
-            "<b>"
-        ],
-        "post_tags": [
-            "</b>"
-        ],
-        "order": "score",
-        "encoder": "html",
-        "require_field_match": false,
-        "fields": {
-            "name": {
-                "fragment_size": 100,
-                "number_of_fragments": 3,
-                "fragment_offset": 4
-            },
-            "type": {
-                "fragment_size": 44,
-                "number_of_fragments": 100,
-                "type": "some-type"
-            }
-        }
+  "highlight": {
+    "pre_tags": [
+      "<b>"
+    ],
+    "post_tags": [
+      "</b>"
+    ],
+    "order": "score",
+    "boundary_max_scan": 4,
+    "boundary_chars": "\\b",
+    "encoder": "html",
+    "fields": {
+      "name": {
+        "fragment_size": 100,
+        "number_of_fragments": 3,
+        "fragment_offset": 4
+      },
+      "type": {
+        "fragment_size": 44,
+        "number_of_fragments": 100,
+        "type": "some-type"
+      }
     }
+  },
+  "ext": {}
 }

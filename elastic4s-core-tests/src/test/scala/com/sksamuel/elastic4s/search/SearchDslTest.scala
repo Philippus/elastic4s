@@ -759,16 +759,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   //    }
   //    req.show should matchJsonResource("/json/search/search_aggregations_nested.json")
   //  }
-  //
-  //  it should "generate correct json for highlighting" in {
-  //    val req = search in( "music" types "bands" highlighting(
-  //      options tagSchema TagSchema.Styled boundaryChars "\\b" boundaryMaxScan 4 order HighlightOrder
-  //        .Score preTags "<b>" postTags "</b>" encoder HighlightEncoder.Html,
-  //      "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
-  //      "type" numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
-  //      )
-  //    req.show should matchJsonResource("/json/search/search_highlighting.json")
-  //  }
+
+  it should "generate correct json for highlighting" in {
+    val req = search("music").highlighting(
+      highlightOptions().tagsSchema("styled") boundaryChars "\\b" boundaryMaxScan 4 order "score" preTags
+        "<b>" postTags "</b>" encoder "html",
+      "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
+      "type" numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
+    )
+    req.show should matchJsonResource("/json/search/search_highlighting.json")
+  }
 
   it should "generate correct json for multiple suggestions" in {
     val req = search("music") types "bands" query "coldplay" suggestions(

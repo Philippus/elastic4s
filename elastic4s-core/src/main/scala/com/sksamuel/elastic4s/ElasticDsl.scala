@@ -17,6 +17,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
+import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
@@ -177,8 +178,6 @@ trait ElasticDsl
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
-
-  def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
@@ -415,7 +414,7 @@ trait ElasticDsl
 
   case object highlight {
     @deprecated("use highlight(field)", "5.0.0")
-    def field(field: String): HighlightDefinition = HighlightDefinition(field)
+    def field(field: String): HighlightFieldDefinition = HighlightFieldDefinition(field)
   }
 
   case object index {

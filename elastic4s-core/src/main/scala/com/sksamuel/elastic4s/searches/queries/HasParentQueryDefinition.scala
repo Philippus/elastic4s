@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.{HighlightDefinition, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
 import org.elasticsearch.index.query.{HasParentQueryBuilder, InnerHitBuilder, QueryBuilders}
 
 case class HasParentQueryDefinition(`type`: String,
@@ -28,7 +29,7 @@ case class HasParentQueryDefinition(`type`: String,
 }
 
 case class InnerHitDefinition(name: String,
-                              highlight: Option[HighlightDefinition] = None) {
+                              highlight: Option[HighlightFieldDefinition] = None) {
 
   def builder = {
     val builder = new InnerHitBuilder().setName(name)
@@ -37,5 +38,5 @@ case class InnerHitDefinition(name: String,
     builder
   }
 
-  def highlighting(highlight: HighlightDefinition) = copy(highlight = Some(highlight))
+  def highlighting(highlight: HighlightFieldDefinition) = copy(highlight = Some(highlight))
 }

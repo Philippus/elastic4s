@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.script.ScriptFieldDsl
+import com.sksamuel.elastic4s.searches.highlighting.HighlightDsl
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
 

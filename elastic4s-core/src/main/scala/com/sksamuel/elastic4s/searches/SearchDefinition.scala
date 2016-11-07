@@ -4,6 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
+import com.sksamuel.elastic4s.searches.highlighting.{HighlightFieldDefinition, HighlightOptionsDefinition}
 import com.sksamuel.elastic4s.searches.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDefinition
@@ -14,6 +15,7 @@ import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.{Script, ScriptService}
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
@@ -160,19 +162,23 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * @param tuple - the field and regex value
     * @return this
     */
-  def regex(tuple: (String, Any)) = {
-    val q = RegexQueryDefinition(tuple._1, tuple._2)
+  @deprecated("use regexQuery(...)", "5.0.0")
+  def regex(tuple: (String, Any)) = regexQuery(tuple)
+
+  def regexQuery(tuple: (String, Any)): SearchDefinition = regexQuery(tuple._1, tuple._2)
+  def regexQuery(field: String, value: Any): SearchDefinition = {
+    val q = RegexQueryDefinition(field, value)
     _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
     this
   }
 
-  def term(tuple: (String, Any)) = {
-    val q = TermQueryDefinition(tuple._1, tuple._2)
-    _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
-    this
-  }
+  @deprecated("use termQuery()", "5.0.0")
+  def term(tuple: (String, Any)): SearchDefinition = termQuery(tuple)
+  @deprecated("use termQuery()", "5.0.0")
+  def term(field: String, value: Any): SearchDefinition = termQuery(field, value)
 
-  def term(field: String, value: String) = {
+  def termQuery(tuple: (String, Any)): SearchDefinition = termQuery(tuple._1, tuple._2)
+  def termQuery(field: String, value: Any): SearchDefinition = {
     val q = TermQueryDefinition(field, value)
     query(q)
     this
@@ -245,21 +251,25 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  //  def highlighting(options: HighlightOptionsDefinition, highlights: HighlightDefinition*) = {
-  //    options._encoder.foreach(encoder => _builder.setHighlighterEncoder(encoder.elastic))
-  //    options._tagSchema.foreach(arg => _builder.setHighlighterTagsSchema(arg.elastic))
-  //    options._order.foreach(arg => _builder.setHighlighterOrder(arg.elastic))
-  //    _builder.setHighlighterPostTags(options._postTags: _*)
-  //    _builder.setHighlighterPreTags(options._preTags: _*)
-  //    _builder.setHighlighterRequireFieldMatch(options._requireFieldMatch)
-  //    highlights.foreach(highlight => _builder.addHighlightedField(highlight.builder))
-  //    this
-  //  }
-  //
-  //  def highlighting(highlights: HighlightDefinition*): SearchDefinition = {
-  //    highlights.foreach(highlight => _builder.addHighlightedField(highlight.builder))
-  //    this
-  //  }
+  def highlighting(first: HighlightFieldDefinition,
+                   rest: HighlightFieldDefinition*): SearchDefinition =
+    highlighting(HighlightOptionsDefinition(), first +: rest)
+
+  def highlighting(fields: Iterable[HighlightFieldDefinition]): SearchDefinition =
+    highlighting(HighlightOptionsDefinition(), fields)
+
+  def highlighting(options: HighlightOptionsDefinition,
+                   first: HighlightFieldDefinition,
+                   rest: HighlightFieldDefinition*): SearchDefinition = highlighting(options, first +: rest)
+
+  def highlighting(options: HighlightOptionsDefinition,
+                   fields: Iterable[HighlightFieldDefinition]): SearchDefinition = {
+    val h = new HighlightBuilder()
+    options.populate(h)
+    fields.map(_.builder).foreach(h.field)
+    _builder.highlighter(h)
+    this
+  }
 
   def routing(r: String): SearchDefinition = {
     _builder.setRouting(r)
