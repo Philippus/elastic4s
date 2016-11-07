@@ -55,6 +55,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
     this
   }
 
+  def doc(source: String): this.type = {
+    _builder.setDoc(source)
+    this
+  }
+
   // Sets the fields to use for updates when a script is not specified.
   def doc(source: XContentBuilder): this.type = {
     _builder.setDoc(source)
