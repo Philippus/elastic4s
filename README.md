@@ -712,22 +712,6 @@ val resp = client.execute { index into "bands/rock" fields ("name"->"coldplay", 
 resp.isInstanceOf[IndexResponse] // true
 ```
 
-## Helpers
-
-Helpers provide higher level APIs to work with Elasticsearch.
-
-#### Reindexing data
-
-Use the `reindex` helper to reindex data from source index to target index.
-
-```scala
-client.reindex(
-  sourceIndex = "sourceIndex",
-  targetIndex = "targetIndex",
-  chunkSize = 500,
-  scroll = "5m")
-```
-
 ## DSL Completeness
 
 As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query,
