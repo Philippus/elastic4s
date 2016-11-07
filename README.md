@@ -797,30 +797,29 @@ publisher.subscribe(subscriber)
 
 ## Using Elastic4s in your project
 
-For gradle users, add:
+For gradle users, add (replace 2.12 with 2.11 for Scala 2.11):
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s-core_2.11:2.3.0'
+compile 'com.sksamuel.elastic4s:elastic4s-core_2.12:x.x.x'
 ```
 
 For SBT users simply add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "x.x.x"
 ```
 
-For Maven users simply add (replace 2.11 with 2.10 for Scala 2.10):
+For Maven users simply add (replace 2.12 with 2.11 for Scala 2.11):
 
 ```xml
 <dependency>
     <groupId>com.sksamuel.elastic4s</groupId>
-    <artifactId>elastic4s-core_2.11</artifactId>
-    <version>2.3.0</version>
+    <artifactId>elastic4s-core_2.12</artifactId>
+    <version>x.x.x</version>
 </dependency>
 ```
 
-The above is just an example and is not always up to date. Check the latest released version on
-[maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
+Check for the latest released versions on [maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
 
 ## Building and Testing
 
