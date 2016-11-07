@@ -18,17 +18,17 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Integrates with standard Scala futures
 * Uses Scala collections library over Java collections
 * Returns `Option` where the java methods would return null
-* Uses typeclasses for marshalling and unmarshalling of classes into elasticsearch documents
+* Uses Scala `Duration`s instead of strings/longs for time values
+* Uses typeclasses for marshalling and unmarshalling of classes to/from elasticsearch documents, backed by Jackson, Circe, Json4s and PlayJson implementations
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
+* Provides embedded node and testkit subprojects, ideal for your tests
 
 #### Release
 
 The latest release is 2.4.0 which is compatible with Elasticsearch 2.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
-
-The upcoming 3.0.0 release will be compatible with Elasticsearch 5.0.0.
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
@@ -50,10 +50,43 @@ The upcoming 3.0.0 release will be compatible with Elasticsearch 5.0.0.
 
 ##### Changelog
 
-###### 3.0.0
+###### 5.0.0
 
-* Version 3.0.0 is the first release compatible with 5.0.0.
+Elasticsearch 5.0 is a huge release. There have been some queries and actions removed completely, and plenty of methods have been renamed. The full breaking changes log in Elasticsearch itself is here:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
+
+These are changes in the scala client:
+
 * TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
+* Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.
+* Infix notation has (mostly) been deprecated
+* New typeclass `HitReader` for reading data from searches. This typeclass handles errors (it returns `Either[Throwable, T]`) and now works for search, get, multisearch and multiget.
+* PercolatorQuery has been added (Elasticsearch have removed the previous percolator actions)
+* Scala specific re-index has been removed and the elasticsearch re-index action has been added #556
+* Update by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Delete by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Rollover has been added #658
+* Suggestions action has been removed in Elasticsearch, suggestions are now available on the search action
+* Search API has methods for getting the correct suggestion result back, eg `resp.termSuggestion("mysugg1")`
+* Multimatchquery now supports boosting individual fields #545
+* Existing bool syntax has been deprecated in favour of a more explicit syntax #580
+* Terms lookup query has been added #631
+* Terms query now supports Iterables #597 #599
+* New module added for embedded nodes
+* `successFn` has been added to elastic-streams. This is only invoked if there are no errors. #615
+* Cluster health supports parameters #600
+* Added indices options to GetSettings
+* Removed most of the methods deprecated prior to 2.0
+* Create template now supports alias #652
+* Fixed bug in docAsUpsert #651 #592
+* Support predefined Analyzers / Filters #602
+* Support for predefined language-specific stopwords #596
+* Support geo_shape queries #639
+* More like this request has been removed, use more like this query 
+* Added better name for update in index into #535
+* Allow querying mappings for all types in an index #619
+* Add shutdown listener to close local node on JVM exit #655
+
 
 ###### 2.1.1
 
@@ -423,27 +456,6 @@ The next step is to import the implicit into scope with `import ElasticJackson.I
 want to use the `source` method. With that implicit in scope, you can now pass any type you like to `source`
 and Jackson will marshall it to json for you.
 
-Another way that existed prior to the `Indexable` typeclass was the `DocumentSource` or `DocumentMap` abstractions.
-For these, you provide an instance of `DocumentSource` that returns a Json String, or an instance of DocumentMap
-that provides a `Map[String, Any]`.
-
-```scala
-
-case class Character(name: String, location: String)
-
-case class CharacterSource(c: Character) extends DocumentSource {
-  def json : String = s""" { "name" : "${c.name}", "location" : "${c.location}" } """
-}
-
-val jonsnow = Character("jon snow", "the wall")
-client.execute {
-  index into "music" / "bands" doc CharacterSource(jonsnow)
-}
-```
-
-There isn't much difference, but the typeclass approach (the former) is considered more idomatic scala.
-More details on the [document traits](guide/source.md) page.
-
 Beautiful!
 
 ## Searching
@@ -677,22 +689,6 @@ This is especially useful when testing.
 ```scala
 val resp = client.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }.await
 resp.isInstanceOf[IndexResponse] // true
-```
-
-## Helpers
-
-Helpers provide higher level APIs to work with Elasticsearch.
-
-#### Reindexing data
-
-Use the `reindex` helper to reindex data from source index to target index.
-
-```scala
-client.reindex(
-  sourceIndex = "sourceIndex",
-  targetIndex = "targetIndex",
-  chunkSize = 500,
-  scroll = "5m")
 ```
 
 ## DSL Completeness
