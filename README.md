@@ -50,10 +50,43 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ##### Changelog
 
-###### 3.0.0
+###### 5.0.0
 
-* Version 3.0.0 is the first release compatible with 5.0.0.
+Elasticsearch 5.0 is a huge release. The full breaking changes log is here:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
+
+These are changes in the scala client:
+
 * TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
+* Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.
+* Infix notation has (mostly) been deprecated
+* New typeclass `HitReader` for reading data from searches. This typeclass handles errors (it returns `Either[Throwable, T]`) and now works for search, get, multisearch and multiget.
+* PercolatorQuery has been added (Elasticsearch have removed the previous percolator actions)
+* Scala specific re-index has been removed and the elasticsearch re-index action has been added #556
+* Update by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Delete by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Rollover has been added #658
+* Suggestions action has been removed in Elasticsearch, suggestions are now available on the search action
+* Search API has methods for getting the correct suggestion result back, eg `resp.termSuggestion("mysugg1")`
+* Multimatchquery now supports boosting individual fields #545
+* Existing bool syntax has been deprecated in favour of a more explicit syntax #580
+* Terms lookup query has been added #631
+* Terms query now supports Iterables #597 #599
+* New module added for embedded nodes
+* `successFn` has been added to elastic-streams. This is only invoked if there are no errors. #615
+* Cluster health supports parameters #600
+* Added indices options to GetSettings
+* Removed most of the methods deprecated prior to 2.0
+* Create template now supports alias #652
+* Fixed bug in docAsUpsert #651 #592
+* Support predefined Analyzers / Filters #602
+* Support for predefined language-specific stopwords #596
+* Support geo_shape queries #639
+* More like this request has been removed, use more like this query 
+* Added better name for update in index into #535
+* Allow querying mappings for all types in an index #619
+* Add shutdown listener to close local node on JVM exit #655
+
 
 ###### 2.1.1
 
