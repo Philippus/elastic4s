@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy

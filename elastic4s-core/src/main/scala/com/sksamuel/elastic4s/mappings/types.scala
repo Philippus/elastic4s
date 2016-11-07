@@ -141,6 +141,48 @@ final class ObjectFieldDefinition(name: String)
   }
 }
 
+final class KeywordFieldDefinition(name: String)
+  extends TypedFieldDefinition(KeywordType, name)
+    with AttributeBoost
+    with AttributeDocValues
+    with AttributeFields
+    with AttributeIgnoreAbove
+    with AttributeIncludeInAll
+    with AttributeIndex
+    with AttributeIndexOptions
+    with AttributeNorms
+    with AttributeNullValue[String]
+    with AttributeStore
+    with AttributeSearchAnalyzer
+    with AttributeSimilarity
+    {
+
+  def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
+    if (startObject)
+      source.startObject(name)
+
+    insertType(source)
+    super[AttributeBoost].insert(source)
+    super[AttributeDocValues].insert(source)
+    super[AttributeFields].insert(source)
+    super[AttributeIgnoreAbove].insert(source)
+    super[AttributeIncludeInAll].insert(source)
+    super[AttributeIndex].insert(source)
+    super[AttributeIndexOptions].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributeNorms].insert(source)
+    super[AttributeNullValue].insert(source)
+    super[AttributeStore].insert(source)
+    super[AttributeSearchAnalyzer].insert(source)
+    super[AttributeSimilarity].insert(source)
+
+    fielddata.foreach(source.field("fielddata", _))
+
+    if (startObject)
+      source.endObject()
+  }
+}
+
 final class TextFieldDefinition(name: String)
   extends TypedFieldDefinition(TextType, name)
   with AttributeIndexName

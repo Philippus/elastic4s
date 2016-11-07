@@ -1,9 +1,8 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 import org.scalatest.FlatSpec
 import org.scalatest.concurrent.Eventually
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 
 import scala.concurrent.duration._
 

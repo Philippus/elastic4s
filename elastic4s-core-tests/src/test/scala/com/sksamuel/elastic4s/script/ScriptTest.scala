@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.script
 
 import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType

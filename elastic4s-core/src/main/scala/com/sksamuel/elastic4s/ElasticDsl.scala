@@ -16,6 +16,7 @@ import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDef
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.searches._
+import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
@@ -27,6 +28,7 @@ import scala.concurrent.{Await, Future}
 
 trait ElasticDsl
   extends AliasesDsl
+    with AggregationDsl
     with AnalyzerDsl
     with BulkDsl
     with ClusterDsl
@@ -62,39 +64,94 @@ trait ElasticDsl
     with ValidateDsl
     with ElasticImplicits {
 
-  //  def agg = aggregation
-  //  case object aggregation {
-  //    def avg(name: String) = AvgAggregationDefinition(name)
-  //    def children(name: String) = ChildrenAggregationDefinition(name)
-  //    def count(name: String) = ValueCountAggregationDefinition(name)
-  //    def cardinality(name: String) = CardinalityAggregationDefinition(name)
-  //    def datehistogram(name: String) = DateHistogramAggregation(name)
-  //    def daterange(name: String) = DateRangeAggregation(name)
-  //    def extendedstats(name: String) = ExtendedStatsAggregationDefinition(name)
-  //    def filter(name: String) = FilterAggregationDefinition(name)
-  //    def filters(name: String) = FiltersAggregationDefinition(name)
-  //    def geobounds(name: String) = GeoBoundsAggregationDefinition(name)
-  //    def geodistance(name: String) = GeoDistanceAggregationDefinition(name)
-  //    def geohash(name: String) = GeoHashGridAggregationDefinition(name)
-  //    def global(name: String) = GlobalAggregationDefinition(name)
-  //    def histogram(name: String) = HistogramAggregation(name)
-  //    def ipRange(name: String) = IpRangeAggregationDefinition(name)
-  //    def max(name: String) = MaxAggregationDefinition(name)
-  //    def min(name: String) = MinAggregationDefinition(name)
-  //    def missing(name: String) = MissingAggregationDefinition(name)
-  //    def nested(name: String) = NestedAggregationDefinition(name)
-  //    def reverseNested(name: String) = ReverseNestedAggregationDefinition(name)
-  //    def percentiles(name: String) = PercentilesAggregationDefinition(name)
-  //    def percentileranks(name: String) = PercentileRanksAggregationDefinition(name)
-  //    def range(name: String) = RangeAggregationDefinition(name)
-  //    def scriptedMetric(name: String) = ScriptedMetricAggregationDefinition(name)
-  //    def sigTerms(name: String) = SigTermsAggregationDefinition(name)
-  //    def stats(name: String) = StatsAggregationDefinition(name)
-  //    def sum(name: String) = SumAggregationDefinition(name)
-  //    def terms(name: String) = TermAggregationDefinition(name)
-  //    def topHits(name: String) =  TopHitsAggregationDefinition(name)
-  //  }
+  @deprecated("Use xxxAggregation(...) methods", "5.0.0")
+  def agg = aggregation
 
+  @deprecated("Use xxxAggregation(...) methods", "5.0.0")
+  case object aggregation {
+
+    def avg(name: String) = AvgAggregationDefinition(name)
+
+    @deprecated("Use valueCountAggregation(...)", "5.0.0")
+    def count(name: String) = valueCountAggregation(name)
+
+    @deprecated("Use cardinalityAggregation(...)", "5.0.0")
+    def cardinality(name: String) = cardinalityAggregation(name)
+
+    @deprecated("Use dateHistogramAggregation(...)", "5.0.0")
+    def datehistogram(name: String) = dateHistogramAggregation(name)
+
+    @deprecated("Use dateRangeAggregation(...)", "5.0.0")
+    def daterange(name: String) = dateRangeAggregation(name)
+
+    @deprecated("Use extendedStatsAggregation(...)", "5.0.0")
+    def extendedstats(name: String) = extendedStatsAggregation(name)
+
+    @deprecated("Use filterAggregation(...)", "5.0.0")
+    def filter(name: String) = filterAggregation(name)
+
+    @deprecated("Use filtersAggregation(...)", "5.0.0")
+    def filters(name: String) = filtersAggregation(name)
+
+    @deprecated("Use geoBoundsAggregation(...)", "5.0.0")
+    def geobounds(name: String) = geoBoundsAggregation(name)
+
+    @deprecated("Use geoDistanceAggregation(...)", "5.0.0")
+    def geodistance(name: String) = geoDistanceAggregation(name)
+
+    @deprecated("Use geoHashGridAggregation(...)", "5.0.0")
+    def geohash(name: String) = geoHashGridAggregation(name)
+
+    @deprecated("Use globalAggregation(...)", "5.0.0")
+    def global(name: String) = globalAggregation(name)
+
+    @deprecated("Use histogramAggregation(...)", "5.0.0")
+    def histogram(name: String) = histogramAggregation(name)
+
+    @deprecated("Use ipRangeAggregation(...)", "5.0.0")
+    def ipRange(name: String) = ipRangeAggregation(name)
+
+    @deprecated("Use maxAggregation(...)", "5.0.0")
+    def max(name: String) = maxAggregation(name)
+
+    @deprecated("Use minAggregation(...)", "5.0.0")
+    def min(name: String) = minAggregation(name)
+
+    @deprecated("Use missingAggregation(...)", "5.0.0")
+    def missing(name: String) = missingAggregation(name)
+
+    @deprecated("Use reverseNestedAggregation(...)", "5.0.0")
+    def reverseNested(name: String) = reverseNestedAggregation(name)
+
+    @deprecated("Use percentilesAggregation(...)", "5.0.0")
+    def percentiles(name: String) = percentilesAggregation(name)
+
+    @deprecated("Use percentileRanksAggregation(...)", "5.0.0")
+    def percentileranks(name: String) = percentileRanksAggregation(name)
+
+    @deprecated("Use rangeAggregation(...)", "5.0.0")
+    def range(name: String) = rangeAggregation(name)
+
+    @deprecated("Use scriptedMetricAggregation(...)", "5.0.0")
+    def scriptedMetric(name: String) = scriptedMetricAggregation(name)
+
+    @deprecated("Use sigTermsAggregation(...)", "5.0.0")
+    def sigTerms(name: String) = sigTermsAggregation(name)
+
+    @deprecated("Use statsAggregation(...)", "5.0.0")
+    def stats(name: String) = statsAggregation(name)
+
+    @deprecated("Use sumAggregation(...)", "5.0.0")
+    def sum(name: String) = sumAggregation(name)
+
+    @deprecated("Use termsAggregation(...)", "5.0.0")
+    def terms(name: String) = termsAggregation(name)
+
+    @deprecated("Use topHitsAggregation(...)", "5.0.0")
+    def topHits(name: String) = topHitsAggregation(name)
+  }
+
+  @deprecated("use field(name, type)", "5.0.0")
   def field(name: String): FieldDefinition = FieldDefinition(name)
   def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
   def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
@@ -108,30 +165,30 @@ trait ElasticDsl
   def field(name: String, ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
   def field(name: String, ft: IntegerType.type) = new IntegerFieldDefinition(name)
   def field(name: String, ft: IpType.type) = new IpFieldDefinition(name)
+  def field(name: String, ft: KeywordType.type) = new KeywordFieldDefinition(name)
   def field(name: String, ft: LongType.type) = new LongFieldDefinition(name)
   def field(name: String, ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def field(name: String, ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def field(name: String, ft: PercolatorType.type): PercolatorFieldDefinition = new PercolatorFieldDefinition(name)
   def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
+  def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
+  def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
-
-  def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
-  def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
 
   def highlight(field: String): HighlightDefinition = HighlightDefinition(field)
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
   // -- helper methods to create the field definitions --
-  def attachmentField(name: String) = field(name).typed(AttachmentType)
-  def binaryField(name: String) = field(name).typed(BinaryType)
-  def booleanField(name: String) = field(name).typed(BooleanType)
-  def byteField(name: String) = field(name).typed(ByteType)
-  def completionField(name: String) = field(name).typed(CompletionType)
-  def dateField(name: String) = field(name).typed(DateType)
+  def attachmentField(name: String) = field(name, AttachmentType)
+  def binaryField(name: String) = field(name, BinaryType)
+  def booleanField(name: String) = field(name, BooleanType)
+  def byteField(name: String) = field(name, ByteType)
+  def completionField(name: String) = field(name, CompletionType)
+  def dateField(name: String) = field(name, DateType)
   def doubleField(name: String) = field(name, DoubleType)
   def floatField(name: String) = field(name, FloatType)
   def geopointField(name: String) = field(name, GeoPointType)
@@ -141,6 +198,9 @@ trait ElasticDsl
   def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
   def intField(name: String) = field(name, IntegerType)
   def ipField(name: String) = field(name, IpType)
+
+  def keywordField(name: String) = field(name, KeywordType)
+
   def longField(name: String) = field(name, LongType)
 
   def percolatorField(name: String) = field(name, PercolatorType)

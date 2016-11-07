@@ -183,6 +183,20 @@ object attributes {
     }
   }
 
+  trait AttributeNorms extends Attribute { self: TypedFieldDefinition =>
+
+    private[this] var _norms: Option[Boolean] = None
+
+    def norms(omitNorms: Boolean): this.type = {
+      _norms = Some(omitNorms)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _norms.foreach(source.field("norms", _))
+    }
+  }
+
   trait AttributeOmitNorms extends Attribute { self: TypedFieldDefinition =>
 
     private[this] var _omitNorms: Option[Boolean] = None

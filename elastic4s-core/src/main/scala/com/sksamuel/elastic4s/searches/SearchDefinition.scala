@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.searches
 import java.util
 
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
-import com.sksamuel.elastic4s.{ElasticDsl, IndexesAndTypes, ProxyClients}
+import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDefinition
+import com.sksamuel.elastic4s.{ElasticDsl, IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
@@ -75,20 +76,16 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
-  //  def aggregations(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = {
-  //    iterable.foreach(agg => _builder.addAggregation(agg.builder))
-  //    this
-  //  }
-  //  def aggregations(a: AbstractAggregationDefinition*): SearchDefinition = aggregations(a.toIterable)
-  //  def aggs(first: AbstractAggregationDefinition, rest: AbstractAggregationDefinition*): SearchDefinition = {
-  //    aggregations(first +: rest)
-  //  }
-  //  def aggs(iterable: Iterable[AbstractAggregationDefinition]): SearchDefinition = aggregations(iterable)
-  //
-  //  def aggregations(json: String): this.type = {
-  //    _builder.setAggregations(json.getBytes("UTF-8"))
-  //    this
-  //  }
+  def aggregations(iterable: Iterable[AggregationDefinition]): SearchDefinition = {
+    iterable.foreach(agg => _builder.addAggregation(agg.builder))
+    this
+  }
+
+  def aggregations(first: AggregationDefinition, rest: AggregationDefinition*): SearchDefinition =
+    aggregations(first +: rest)
+
+  def aggs(first: AggregationDefinition, rest: AggregationDefinition*): SearchDefinition = aggregations(first +: rest)
+  def aggs(iterable: Iterable[AggregationDefinition]): SearchDefinition = aggregations(iterable)
 
   @deprecated("use sortBy", "5.0.0")
   def sort(sorts: SortDefinition[_]*): SearchDefinition = sortBy(sorts)
@@ -210,11 +207,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * } searchType SearchType.Scan
     * }}}
     */
-  def extraSource(json: String): SearchDefinition = {
-    // todo
-    // _builder.setExtraSource(json)
-    this
-  }
+  def extraSource(json: String): SearchDefinition = ??? // todo
 
   /**
     * Sets the source of the request as a json string. Note, setting anything other
@@ -232,11 +225,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * } searchType SearchType.Scan
     * }}}
     */
-  def source(json: String): SearchDefinition = {
-    // todo
-    // _builder.setSource(SearchSourceBuilder.fromXContent() json)
-    this
-  }
+  def source(json: String): SearchDefinition = ??? // todo
 
   def explain(enabled: Boolean): SearchDefinition = {
     _builder.setExplain(enabled)
