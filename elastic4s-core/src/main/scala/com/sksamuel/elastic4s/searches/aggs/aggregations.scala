@@ -25,18 +25,20 @@ object AggregationResults {
 trait AggregationDefinition {
 
   type B <: AggregationBuilder
-  def builder: B
+  val builder: B
 
-//  def aggregations(it: Iterable[AbstractAggregationDefinition]): Self = {
-//    it.foreach { aad => aggregationBuilder.subAggregation(aad.builder) }
-//    this.asInstanceOf[Self]
-//  }
-//
-//  def aggregations(a: AbstractAggregationDefinition*): Self = aggregations(a.toIterable)
-//
-//  def aggs(a: AbstractAggregationDefinition*): Self = aggregations(a)
-//
-//  def aggs(a: Iterable[AbstractAggregationDefinition]): Self = aggregations(a)
+  def subAggregation(agg: AggregationDefinition): this.type = {
+    builder.subAggregation(agg.builder)
+    this
+  }
+
+  def subAggregations(first: AggregationDefinition, rest: AggregationDefinition*): this.type =
+    subAggregations(first +: rest)
+
+  def subAggregations(aggs: Iterable[AggregationDefinition]): this.type = {
+    aggs.foreach(subAggregation)
+    this
+  }
 }
 
 

@@ -8,3 +8,4 @@ case class NestedAggregationDefinition(name: String, path: String) extends Aggre
   type B = NestedAggregationBuilder
   override val builder: B = AggregationBuilders.nested(name, path)
 }
+
