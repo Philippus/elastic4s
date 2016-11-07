@@ -18,17 +18,17 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Integrates with standard Scala futures
 * Uses Scala collections library over Java collections
 * Returns `Option` where the java methods would return null
-* Uses typeclasses for marshalling and unmarshalling of classes into elasticsearch documents
+* Uses Scala `Duration`s instead of strings/longs for time values
+* Uses typeclasses for marshalling and unmarshalling of classes to/from elasticsearch documents, backed by Jackson, Circe, Json4s and PlayJson implementations
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
+* Provides embedded node and testkit subprojects, ideal for your tests
 
 #### Release
 
 The latest release is 2.4.0 which is compatible with Elasticsearch 2.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
-
-The upcoming 3.0.0 release will be compatible with Elasticsearch 5.0.0.
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
