@@ -2,8 +2,10 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramAggregationBuilder, ExtendedBounds, Histogram}
+import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramAggregationBuilder, DateHistogramInterval, ExtendedBounds, Histogram}
 import org.joda.time.DateTimeZone
+
+import scala.concurrent.duration.FiniteDuration
 
 case class DateHistogramAggregation(name: String) extends AggregationDefinition {
 
@@ -17,6 +19,16 @@ case class DateHistogramAggregation(name: String) extends AggregationDefinition 
 
   def interval(interval: Long): DateHistogramAggregation = {
     builder.interval(interval)
+    this
+  }
+
+  def dateHistogramInterval(interval: DateHistogramInterval): DateHistogramAggregation = {
+    builder.dateHistogramInterval(interval)
+    this
+  }
+
+  def interval(interval: FiniteDuration): DateHistogramAggregation = {
+    dateHistogramInterval(DateHistogramInterval.seconds(interval.toSeconds.toInt))
     this
   }
 
