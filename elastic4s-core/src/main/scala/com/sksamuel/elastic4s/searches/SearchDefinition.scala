@@ -172,6 +172,12 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     this
   }
 
+  def term(field: String, value: String) = {
+    val q = TermQueryDefinition(field, value)
+    query(q)
+    this
+  }
+
   def range(field: String) = {
     val q = RangeQueryDefinition(field)
     _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
