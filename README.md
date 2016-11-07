@@ -456,27 +456,6 @@ The next step is to import the implicit into scope with `import ElasticJackson.I
 want to use the `source` method. With that implicit in scope, you can now pass any type you like to `source`
 and Jackson will marshall it to json for you.
 
-Another way that existed prior to the `Indexable` typeclass was the `DocumentSource` or `DocumentMap` abstractions.
-For these, you provide an instance of `DocumentSource` that returns a Json String, or an instance of DocumentMap
-that provides a `Map[String, Any]`.
-
-```scala
-
-case class Character(name: String, location: String)
-
-case class CharacterSource(c: Character) extends DocumentSource {
-  def json : String = s""" { "name" : "${c.name}", "location" : "${c.location}" } """
-}
-
-val jonsnow = Character("jon snow", "the wall")
-client.execute {
-  index into "music" / "bands" doc CharacterSource(jonsnow)
-}
-```
-
-There isn't much difference, but the typeclass approach (the former) is considered more idomatic scala.
-More details on the [document traits](guide/source.md) page.
-
 Beautiful!
 
 ## Searching
