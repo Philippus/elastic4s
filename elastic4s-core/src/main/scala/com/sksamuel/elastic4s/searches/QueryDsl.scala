@@ -37,6 +37,10 @@ trait QueryDsl {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
+  def fieldNamesQuery(first: String, rest: String*): TermsQueryDefinition = fieldNamesQuery(first +: rest)
+  def fieldNamesQuery(names: Iterable[String]): TermsQueryDefinition =
+    termsQuery("_field_names", names)(StringBuildableTermsQuery)
+
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
 

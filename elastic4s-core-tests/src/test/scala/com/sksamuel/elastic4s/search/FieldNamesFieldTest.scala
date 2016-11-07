@@ -32,5 +32,13 @@ class FieldNamesFieldTest extends FlatSpec with Matchers with ElasticSugar {
     client.execute {
       search("space").query(termsQuery("_field_names", "location"))
     }.await.totalHits shouldBe 1
+
+    client.execute {
+      search("space").query(fieldNamesQuery("name"))
+    }.await.totalHits shouldBe 2
+
+    client.execute {
+      search("space").query(fieldNamesQuery("location"))
+    }.await.totalHits shouldBe 1
   }
 }
