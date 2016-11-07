@@ -176,8 +176,6 @@ final class KeywordFieldDefinition(name: String)
     super[AttributeSearchAnalyzer].insert(source)
     super[AttributeSimilarity].insert(source)
 
-    fielddata.foreach(source.field("fielddata", _))
-
     if (startObject)
       source.endObject()
   }
