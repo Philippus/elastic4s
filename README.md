@@ -52,7 +52,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 5.0.0
 
-Elasticsearch 5.0 is a huge release. The full breaking changes log is here:
+Elasticsearch 5.0 is a huge release. There have been some queries and actions removed completely, and plenty of methods have been renamed. The full breaking changes log in Elasticsearch itself is here:
 https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
 
 These are changes in the scala client:
