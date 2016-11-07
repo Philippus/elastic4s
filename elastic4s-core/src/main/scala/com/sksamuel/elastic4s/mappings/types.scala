@@ -53,6 +53,7 @@ trait TypeableFields {
   def typed(ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
   def typed(ft: IntegerType.type) = new IntegerFieldDefinition(name)
   def typed(ft: IpType.type) = new IpFieldDefinition(name)
+  def typed(ft: KeywordType.type) = new KeywordFieldDefinition(name)
   def typed(ft: LongType.type) = new LongFieldDefinition(name)
   def typed(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def typed(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)

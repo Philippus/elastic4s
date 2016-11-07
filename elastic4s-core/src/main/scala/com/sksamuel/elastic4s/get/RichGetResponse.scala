@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.{Hit, HitField, HitReader}
+import com.sksamuel.elastic4s.{Hit, HitReader}
 import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.index.get.GetField
-
+import com.sksamuel.exts.OptionImplicits._
 import scala.collection.JavaConverters._
 
 case class RichGetResponse(original: GetResponse) extends Hit {
@@ -39,6 +39,9 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   def to[T: HitReader]: T = safeTo[T].fold(e => throw e, t => t)
   def safeTo[T](implicit reader: HitReader[T]): Either[Throwable, T] = reader.read(this)
 
+  def toOption[T: HitReader]: Option[T] = if (exists) to[T].some else None
+  def toSafeOption[T: HitReader]: Option[Either[Throwable, T]] = if (exists) safeTo[T].some else None
+
   private def getFieldToHitField(f: GetField) = new HitField {
     override def name: String = f.getName
     override def value: AnyRef = f.getValue
@@ -46,13 +49,13 @@ case class RichGetResponse(original: GetResponse) extends Hit {
     override def isMetadataField: Boolean = f.isMetadataField
   }
 
-  @deprecated("use source instead", "5.0.0")
+  @deprecated("use sourceAsMap instead", "5.0.0")
   def field(name: String): HitField = getFieldToHitField(original.getField(name))
 
-  @deprecated("use source instead", "5.0.0")
+  @deprecated("use sourceAsMap instead", "5.0.0")
   def fieldOpt(name: String): Option[HitField] = Option(original.getField(name)).map(getFieldToHitField)
 
-  @deprecated("use source instead", "5.0.0")
+  @deprecated("use sourceAsMap instead", "5.0.0")
   def fields: Map[String, HitField] = {
     Option(original.getFields).fold(Map.empty[String, HitField])(_.asScala.toMap.mapValues(getFieldToHitField))
   }
@@ -70,4 +73,11 @@ case class RichGetResponse(original: GetResponse) extends Hit {
 
   @deprecated("Use the source methods instead", "5.0.0")
   def iterator: Iterator[GetField] = original.iterator.asScala
+}
+
+trait HitField {
+  def name: String
+  def value: AnyRef
+  def values: Seq[AnyRef]
+  def isMetadataField: Boolean
 }
