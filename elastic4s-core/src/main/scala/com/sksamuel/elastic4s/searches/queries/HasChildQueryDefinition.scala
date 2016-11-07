@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.index.query.{HasChildQueryBuilder, QueryBuilders}
+import com.sksamuel.exts.OptionImplicits._
 
 case class HasChildQueryDefinition(`type`: String,
                                    query: QueryDefinition,
@@ -26,6 +27,7 @@ case class HasChildQueryDefinition(`type`: String,
 
   def boost(boost: Double): HasChildQueryDefinition = copy(boost = Some(boost))
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasChildQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
+  def minMaxChildren(min: Int, max: Int): HasChildQueryDefinition = copy(minMaxChildren = (min, max).some)
   def innerHit(innerHit: InnerHitDefinition): HasChildQueryDefinition = copy(innerHit = Some(innerHit))
   def queryName(queryName: String): HasChildQueryDefinition = copy(queryName = Some(queryName))
 }

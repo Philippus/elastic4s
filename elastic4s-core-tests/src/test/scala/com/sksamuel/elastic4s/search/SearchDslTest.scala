@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.JsonSugar
+import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
@@ -12,6 +13,8 @@ import org.elasticsearch.index.query.{Operator, RegexpFlag, SimpleQueryStringFla
 import org.elasticsearch.index.search.MatchQuery
 import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 import org.elasticsearch.search.MultiValueMode
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
+import org.elasticsearch.search.aggregations.bucket.terms.Terms
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.{SortMode, SortOrder}
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
@@ -172,23 +175,23 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_match_all.json")
   }
 
-  //  it should "generate json for a hasChild query" in {
-  //    val req = search in( "*" types("users", "tweets") limit 5 query {
-  //      hasChildQuery("sometype") query {
-  //        "coldplay"
-  //      } boost 1.2 scoreMode "type"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_haschild_query.json")
-  //  }
+  it should "generate json for a hasChild query" in {
+    val req = search in ("*") types("users", "tweets") limit 5 query {
+      hasChildQuery("sometype") query {
+        "coldplay"
+      } scoreMode "avg" boost 1.2
+    }
+    req.show should matchJsonResource("/json/search/search_haschild_query.json")
+  }
 
-  //  it should "generate json for a hasParent query" in {
-  //    val req = search in( "*" types("users", "tweets") limit 5 query {
-  //      hasParentQuery("sometype") query {
-  //        "coldplay"
-  //      } boost 1.2 scoreType "type"
-  //    } searchType SearchType.QueryThenFetch preference new Preference.Custom("custompref")
-  //    req.show should matchJsonResource("/json/search/search_hasparent_query.json")
-  //  }
+  it should "generate json for a hasParent query" in {
+    val req = search in ("*") types("users", "tweets") limit 5 query {
+      hasParentQuery("sometype") query {
+        "coldplay"
+      } scoreMode true boost 1.2
+    } searchType SearchType.QUERY_AND_FETCH
+    req.show should matchJsonResource("/json/search/search_hasparent_query.json")
+  }
 
   it should "generate json for a boolean compound query" in {
     val req = search("*") types("bands", "artists") limit 5 query {
@@ -219,7 +222,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a boolean query with filter" in {
-    val req = search ("*") limit 5 query {
+    val req = search("*") limit 5 query {
       bool {
         must(termQuery("title", "Search")).filter(termQuery("status", "published"))
       }
@@ -317,59 +320,59 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_prefix_filter.json")
   }
 
-  //  it should "generate json for has child filter with filter" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      hasChildQuery("singer").query {
-  //        termQuery("name", "chris")
-  //      }.minChildren(2).maxChildren(4).shortCircuitCutoff(3).boost(2.3).queryName("namey")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_haschild_filter.json")
-  //  }
-  //
-  //  it should "generate json for has parent filter with filter" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      hasParentQuery("singer").query {
-  //        termQuery("name", "chris")
-  //      }.boost(2.3).scoreType("scoreType").queryName("spidername")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_hasparent_filter.json")
-  //  }
-  //
-  //  it should "generate json for nested filter with filter" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      nestedQuery("singer").query {
-  //        termQuery("name", "chris")
-  //      } queryName "namey"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_nested_filter.json")
-  //  }
-  //
-  //  it should "generate json for has child filter with query" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      hasChildQuery("singer") query {
-  //        termQuery("name", "chris")
-  //      } queryName "namey"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_haschild_filter_query.json")
-  //  }
-  //
-  //  it should "generate json for has parent filter with query" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      hasParentQuery("singer") query {
-  //        termQuery("name", "chris")
-  //      } queryName "namey"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_hasparent_filter_query.json")
-  //  }
-  //
-  //  it should "generate json for nested filter with query" in {
-  //    val req = search in( "music" types "bands" postFilter {
-  //      nestedQuery("singer") query {
-  //        termQuery("name", "chris")
-  //      } queryName "namey"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_nested_filter_query.json")
-  //  }
+  it should "generate json for has child filter with filter" in {
+    val req = search("music") types "bands" postFilter {
+      hasChildQuery("singer").query {
+        termQuery("name", "chris")
+      }.scoreMode(ScoreMode.Min).minMaxChildren(2, 4).boost(2.3).queryName("namey")
+    }
+    req.show should matchJsonResource("/json/search/search_haschild_filter.json")
+  }
+
+  it should "generate json for has parent filter with filter" in {
+    val req = search("music") types "bands" postFilter {
+      hasParentQuery("singer").query {
+        termQuery("name", "chris")
+      }.scoreMode(true).boost(2.3).queryName("spidername")
+    }
+    req.show should matchJsonResource("/json/search/search_hasparent_filter.json")
+  }
+
+  it should "generate json for nested filter with filter" in {
+    val req = search("music") types "bands" postFilter {
+      nestedQuery("singer").query {
+        termQuery("name", "chris")
+      }.scoreMode(ScoreMode.Min) queryName "namey"
+    }
+    req.show should matchJsonResource("/json/search/search_nested_filter.json")
+  }
+
+  it should "generate json for has child filter with query" in {
+    val req = search("music") types "bands" postFilter {
+      hasChildQuery("singer") query {
+        termQuery("name", "chris")
+      } scoreMode (ScoreMode.Min) queryName "namey"
+    }
+    req.show should matchJsonResource("/json/search/search_haschild_filter_query.json")
+  }
+
+  it should "generate json for has parent filter with query" in {
+    val req = search in ("music") types "bands" postFilter {
+      hasParentQuery("singer") query {
+        termQuery("name", "chris")
+      } scoreMode (true) queryName "namey"
+    }
+    req.show should matchJsonResource("/json/search/search_hasparent_filter_query.json")
+  }
+
+  it should "generate json for nested filter with query" in {
+    val req = search in ("music") types "bands" postFilter {
+      nestedQuery("singer") query {
+        termQuery("name", "chris")
+      } scoreMode (ScoreMode.Min) queryName "namey"
+    }
+    req.show should matchJsonResource("/json/search/search_nested_filter_query.json")
+  }
 
   it should "generate json for id filter" in {
     val req = search("music") types "bands" postFilter {
@@ -399,14 +402,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_sort_field.json")
   }
 
-  //  it should "generate json for nested field sort" in {
-  //    val req = search in( "music" types "bands" sort {
-  //      fieldSort("singer.weight") ignoreUnmapped true order SortOrder.DESC mode MultiMode.Sum nestedFilter {
-  //        termQuery("singer.name", "coldplay")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_sort_nested_field.json")
-  //  }
+  it should "generate json for nested field sort" in {
+    val req = search("music") types "bands" sort {
+      fieldSort("singer.weight") order SortOrder.DESC mode SortMode.SUM nestedFilter {
+        termQuery("singer.name", "coldplay")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_sort_nested_field.json")
+  }
 
   it should "generate correct json for score sort" in {
     val req = search("music") types "bands" sortBy {
@@ -417,7 +420,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for script sort" in {
     val req = search("music") types "bands" sortBy {
-      scriptSort(script("document.score").lang("java")) typed "number" order SortOrder.DESC nestedPath "a.b.c" sortMode "min"
+      scriptSort(script("document.score").lang("java")) typed "number" order SortOrder
+        .DESC nestedPath "a.b.c" sortMode "min"
     } preference com.sksamuel.elastic4s.Preference.Custom("custom-node")
     req.show should matchJsonResource("/json/search/search_sort_script.json")
   }
@@ -512,7 +516,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       bool(
         should(
-          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.FACTOR geohash "geo1234" distance "120mi"
+          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance
+            .FACTOR geohash "geo1234" distance "120mi"
         ) not (
           geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.YARD)
           )
@@ -567,142 +572,142 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_filter_bool.json")
   }
 
-  //  it should "generate correct json for datehistogram aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation datehistogram "years" field "date" interval DateHistogramInterval.YEAR minDocCount 0
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
-  //  }
-  //
-  //  it should "generate correct json for range aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation range "range_agg" field "score" range(10.0, 15.0)
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_range.json")
-  //  }
-  //
-  //  it should "generate correct json for date range aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation daterange "daterange_agg" field "date" range("now-1Y", "now")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_daterange.json")
-  //  }
-  //
-  //  it should "generate correct json for date range aggregation with unbounded from" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation daterange "daterange_agg" field "date" unboundedFrom("key", "now-1Y")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_daterange_from.json")
-  //  }
+  it should "generate correct json for datehistogram aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation datehistogram "years" field "date" interval DateHistogramInterval.YEAR minDocCount 0
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
+  }
 
-  //  it should "generate correct json for date range aggregation with unbounded to" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation daterange "daterange_agg" field "date" unboundedTo("key", "now")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_daterange_to.json")
-  //  }
-  //
-  //  it should "generate correct json for histogram aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation histogram "score_histogram" field "score" interval 2
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_histogram.json")
-  //  }
-  //
-  //  it should "generate correct json for filter aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation filter "my_filter_agg" filter {
-  //        bool {
-  //          must {
-  //            termQuery("name", "sammy")
-  //          } should {
-  //            termQuery("location", "oxford")
-  //          } not {
-  //            termQuery("type", "rap")
-  //          }
-  //        }
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_filter.json")
-  //  }
-  //
-  //  it should "generate correct json for terms aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.count(false)
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_terms.json")
-  //  }
-  //
-  //  it should "generate correct json for top hits aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation terms "top-tags" field "tags" size 3 order Terms.Order.count(false) aggregations (
-  //        aggregation topHits "top_tag_hits" size 1 sort {
-  //          fieldSort("last_activity_date") order SortOrder.DESC
-  //        } fetchSource(Array("title"), Array.empty)
-  //        )
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_top_hits.json")
-  //  }
-  //
-  //  it should "generate correct json for geobounds aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation geobounds "geo_agg" field "geo_point" wrapLongitude true
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_geobounds.json")
-  //  }
-  //
-  //  it should "generate correct json for geodistance aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation geodistance "geo_agg" field "geo_point" point(45.0, 27.0) geoDistance GeoDistance.ARC range(1.0, 1.0)
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_geodistance.json")
-  //  }
-  //
-  //  it should "generate correct json for sub aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY aggs(
-  //        aggregation terms "keywords" field "keyword" size 5,
-  //        aggregation terms "countries" field "country")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
-  //  }
-  //
-  //  it should "generate correct json for min aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation min "grades_min" field "grade" script {
-  //        script("doc['grade'].value").lang("lua").param("apple", "bad")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_min.json")
-  //  }
-  //
-  //  it should "generate correct json for max aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation max "grades_max" field "grade" script {
-  //        script("doc['grade'].value").lang("lua")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_max.json")
-  //  }
-  //
-  //  it should "generate correct json for sum aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation sum "grades_sum" field "grade" script {
-  //        script("doc['grade'].value").lang("lua") params Map("classsize" -> "30", "room" -> "101A")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_sum.json")
-  //  }
-  //
-  //  it should "generate correct json for avg aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation avg "grades_avg" field "grade" script {
-  //        script("doc['grade'].value").lang("lua")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_avg.json")
-  //  }
-  //
+  it should "generate correct json for range aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation range "range_agg" field "score" range(10.0, 15.0)
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_range.json")
+  }
+
+  it should "generate correct json for date range aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation daterange "daterange_agg" field "date" range("now-1Y", "now")
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_daterange.json")
+  }
+
+  it should "generate correct json for date range aggregation with unbounded from" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation daterange "daterange_agg" field "date" unboundedFrom("key", "now-1Y")
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_daterange_from.json")
+  }
+
+  it should "generate correct json for date range aggregation with unbounded to" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation daterange "daterange_agg" field "date" unboundedTo("key", "now")
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_daterange_to.json")
+  }
+
+  it should "generate correct json for histogram aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation histogram "score_histogram" field "score" interval 2
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_histogram.json")
+  }
+
+  it should "generate correct json for filter aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      filterAggregation("my_filter_agg").query {
+        bool {
+          must {
+            termQuery("name", "sammy")
+          } should {
+            termQuery("location", "oxford")
+          } not {
+            termQuery("type", "rap")
+          }
+        }
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_filter.json")
+  }
+
+  it should "generate correct json for terms aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.count(false)
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_terms.json")
+  }
+
+  it should "generate correct json for top hits aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation terms "top-tags" field "tags" size 3 order Terms.Order.count(true) subAggregation (
+        aggregation topHits "top_tag_hits" size 1 sort {
+          fieldSort("last_activity_date") order SortOrder.DESC
+        } fetchSource(Array("title"), Array.empty)
+        )
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_top_hits.json")
+  }
+
+  it should "generate correct json for geobounds aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation geobounds "geo_agg" field "geo_point"
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_geobounds.json")
+  }
+
+  it should "generate correct json for geodistance aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation geodistance "geo_agg" origin(45.0, 27.0) field "geo_point" geoDistance GeoDistance.ARC range(1.0, 1.0)
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_geodistance.json")
+  }
+
+  it should "generate correct json for sub aggregation" in {
+    val req = search in ("music") types "bands" aggs {
+      aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY aggs(
+        aggregation terms "keywords" field "keyword" size 5,
+        aggregation terms "countries" field "country")
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
+  }
+
+  it should "generate correct json for min aggregation" in {
+    val req = search in ("school") types "student" aggs {
+      aggregation min "grades_min" field "grade" script {
+        script("doc['grade'].value").lang("lua").param("apple", "bad")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_min.json")
+  }
+
+  it should "generate correct json for max aggregation" in {
+    val req = search in ("school") types "student" aggs {
+      aggregation max "grades_max" field "grade" script {
+        script("doc['grade'].value").lang("lua")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_max.json")
+  }
+
+  it should "generate correct json for sum aggregation" in {
+    val req = search in ("school") types "student" aggs {
+      aggregation sum "grades_sum" field "grade" script {
+        script("doc['grade'].value").lang("lua") params Map("classsize" -> "30", "room" -> "101A")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_sum.json")
+  }
+
+  it should "generate correct json for avg aggregation" in {
+    val req = search in ("school") types "student" aggs {
+      aggregation avg "grades_avg" field "grade" script {
+        script("doc['grade'].value").lang("lua")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_avg.json")
+  }
+
   it should "generate correct json for stats aggregation" in {
     val req = search("school") aggs {
       aggregation stats "grades_stats" field "grade" script {
@@ -720,45 +725,45 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     }
     req.show should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
   }
-  //
-  //  it should "generate correct json for percentiles aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation percentiles "grades_percentiles" field "grade" percents(95, 99, 99.9) compression 200
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_percentiles.json")
-  //  }
-  //
-  //  it should "generate correct json for percentileranks aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation percentileranks "grades_percentileranks" field "grade" percents(95, 99, 99.9) compression 200
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
-  //  }
-  //
-  //  it should "generate correct json for value count aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation count "grades_count" field "grade" script {
-  //        script("doc['grade'].value").lang("lua")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_count.json")
-  //  }
-  //
-  //  it should "generate correct json for cardinality aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation cardinality "grades_cardinality" field "grade" rehash true precisionThreshold 40000
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_cardinality.json")
-  //  }
-  //
-  //  it should "generate correct json for nested aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation nested "nested_agg" path "nested_obj" aggs {
-  //        aggregation terms "my_nested_terms_agg" field "keyword"
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_nested.json")
-  //  }
+
+  it should "generate correct json for percentiles aggregation" in {
+    val req = search("school") aggs {
+      aggregation percentiles "grades_percentiles" field "grade" percents(95, 99, 99.9) compression 200
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_percentiles.json")
+  }
+
+  it should "generate correct json for percentileranks aggregation" in {
+    val req = search("school") aggs {
+      aggregation percentileranks "grades_percentileranks" field "grade" percents(95, 99, 99.9) compression 200
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
+  }
+
+  it should "generate correct json for value count aggregation" in {
+    val req = search in ("school") aggs {
+      aggregation count "grades_count" field "grade" script {
+        script("doc['grade'].value").lang("lua")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_count.json")
+  }
+
+  it should "generate correct json for cardinality aggregation" in {
+    val req = search("school") aggs {
+      aggregation cardinality "grades_cardinality" field "grade" rehash true precisionThreshold 40000
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_cardinality.json")
+  }
+
+  it should "generate correct json for nested aggregation" in {
+    val req = search("music") aggs {
+      aggregation nested "nested_agg" path "nested_obj" aggs {
+        aggregation terms "my_nested_terms_agg" field "keyword"
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_nested.json")
+  }
 
   it should "generate correct json for highlighting" in {
     val req = search("music").highlighting(
@@ -814,17 +819,17 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_suggestions_context.json")
   }
 
-  //  it should "generate correct json for nested query" in {
-  //    val req = search in( "music" types "bands" query {
-  //      nestedQuery("obj1") query {
-  //        constantScoreQuery {
-  //          termQuery("name", "sammy")
-  //        }
-  //      } scoreMode "avg" boost 14.5 queryName "namey"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_query_nested.json")
-  //  }
-  //
+  it should "generate correct json for nested query" in {
+    val req = search in ("music") types "bands" query {
+      nestedQuery("obj1") query {
+        constantScoreQuery {
+          termQuery("name", "sammy")
+        }
+      } scoreMode (ScoreMode.Avg) boost 14.5 queryName "namey"
+    }
+    req.show should matchJsonResource("/json/search/search_query_nested.json")
+  }
+
   //  it should "generate correct json for nested query with inner highlight" in {
   //    val req = search in( "music" types "bands" query {
   //      nestedQuery("obj1") query {
@@ -873,12 +878,12 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_simple_string_query.json")
   }
 
-  //  it should "generate correct json for global aggregation" in {
-  //    val req = search in( "music" types "bands" aggs {
-  //      aggregation global "global_agg"
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_global.json")
-  //  }
+  it should "generate correct json for global aggregation" in {
+    val req = search("music") aggs {
+      aggregation global "global_agg"
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_global.json")
+  }
 
   it should "generate json for ignored field type sort" in {
     val req = search("music") types "bands" sortBy {

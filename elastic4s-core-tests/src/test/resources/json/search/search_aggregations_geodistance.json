@@ -3,18 +3,22 @@
         "geo_agg": {
             "geo_distance": {
                 "field": "geo_point",
-                "distance_type": "arc",
-                "center": {
+                "origin": {
                     "lat": 45.0,
                     "lon": 27.0
                 },
                 "ranges": [
                     {
+                        "key": "1.0-1.0",
                         "from": 1.0,
                         "to": 1.0
                     }
-                ]
+                ],
+                "keyed": false,
+                "unit": "m",
+                "distance_type": "ARC"
             }
         }
-    }
+    },
+    "ext": {}
 }

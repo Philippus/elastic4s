@@ -22,6 +22,11 @@ case class DateHistogramAggregation(name: String) extends AggregationDefinition 
     this
   }
 
+  def interval(interval: DateHistogramInterval): DateHistogramAggregation = {
+    builder.dateHistogramInterval(interval)
+    this
+  }
+
   def dateHistogramInterval(interval: DateHistogramInterval): DateHistogramAggregation = {
     builder.dateHistogramInterval(interval)
     this

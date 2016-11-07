@@ -1,3 +1,4 @@
+
 {
   "aggregations": {
     "grades_min": {
@@ -12,5 +13,6 @@
         }
       }
     }
-  }
+  },
+  "ext": {}
 }

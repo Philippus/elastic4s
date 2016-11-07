@@ -1,3 +1,4 @@
+
 {
   "aggregations": {
     "grades_sum": {
@@ -13,5 +14,6 @@
         }
       }
     }
-  }
+  },
+  "ext": {}
 }

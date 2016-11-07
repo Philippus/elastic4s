@@ -1,3 +1,4 @@
+
 {
   "aggregations": {
     "grades_max": {
@@ -9,5 +10,6 @@
         }
       }
     }
-  }
+  },
+  "ext": {}
 }

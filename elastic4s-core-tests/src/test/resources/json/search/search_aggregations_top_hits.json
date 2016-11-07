@@ -4,12 +4,21 @@
             "terms": {
                 "field": "tags",
                 "size": 3,
-                "order":{"_count":"desc"}
+                "shard_size": -1,
+                "min_doc_count": 1,
+                "shard_min_doc_count": 0,
+                "show_term_doc_count_error": false,
+                "order": {
+                    "_count": "asc"
+                }
             },
             "aggregations": {
                 "top_tag_hits": {
                     "top_hits": {
-                        "size" : 1,
+                        "from": 0,
+                        "size": 1,
+                        "version": false,
+                        "explain": false,
                         "_source": {
                             "includes": [
                                 "title"
@@ -27,5 +36,6 @@
                 }
             }
         }
-    }
+    },
+    "ext": {}
 }

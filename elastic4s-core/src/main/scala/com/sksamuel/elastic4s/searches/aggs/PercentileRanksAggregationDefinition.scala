@@ -14,6 +14,12 @@ case class PercentileRanksAggregationDefinition(name: String) extends Aggregatio
     this
   }
 
+  @deprecated("use values(doubles)", "5.0.0")
+  def percents(values: Double*): PercentileRanksAggregationDefinition = {
+    builder.values(values: _*)
+    this
+  }
+
   def values(values: Double*): PercentileRanksAggregationDefinition = {
     builder.values(values: _*)
     this

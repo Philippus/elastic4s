@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.searches
 
 import cats.syntax.either._
+import com.sksamuel.elastic4s.searches.aggs.RichAggregations
 import com.sksamuel.elastic4s.searches.suggestions.{CompletionSuggestionResult, PhraseSuggestionResult, SuggestResult, SuggestionResult, TermSuggestionResult}
 import com.sksamuel.elastic4s.{HitAs, HitReader}
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.search.SearchHits
-import org.elasticsearch.search.aggregations.Aggregations
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 
 import scala.concurrent.duration._
 
@@ -32,8 +31,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def tookInMillis: Long = original.getTookInMillis
   def took: Duration = original.getTookInMillis.millis
 
-  def aggregations: Aggregations = original.getAggregations
-  def termAggregation(name: String) = aggregations.getAsMap.get(name).asInstanceOf[StringTerms]
+  def aggregations: RichAggregations = RichAggregations(original.getAggregations)
 
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty

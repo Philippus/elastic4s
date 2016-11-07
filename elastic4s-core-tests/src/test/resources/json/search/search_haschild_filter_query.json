@@ -3,11 +3,20 @@
     "has_child": {
       "query": {
         "term": {
-          "name": "chris"
+          "name": {
+            "value": "chris",
+            "boost": 1.0
+          }
         }
       },
-      "child_type": "singer",
+      "type": "singer",
+      "score_mode": "min",
+      "min_children": 0,
+      "max_children": 2147483647,
+      "ignore_unmapped": false,
+      "boost": 1.0,
       "_name": "namey"
     }
-  }
+  },
+  "ext": {}
 }

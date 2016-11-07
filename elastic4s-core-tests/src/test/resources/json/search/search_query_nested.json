@@ -1,3 +1,4 @@
+
 {
   "query": {
     "nested": {
@@ -5,15 +6,21 @@
         "constant_score": {
           "filter": {
             "term": {
-              "name": "sammy"
+              "name": {
+                "value": "sammy",
+                "boost": 1.0
+              }
             }
-          }
+          },
+          "boost": 1.0
         }
       },
       "path": "obj1",
+      "ignore_unmapped": false,
       "score_mode": "avg",
       "boost": 14.5,
       "_name": "namey"
     }
-  }
+  },
+  "ext": {}
 }

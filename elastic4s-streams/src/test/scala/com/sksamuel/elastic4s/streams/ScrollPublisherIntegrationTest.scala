@@ -69,7 +69,6 @@ class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Mat
         override def onSubscribe(s: Subscription): Unit = s.request(1000)
         override def onNext(t: RichSearchHit): Unit = documentLatch.countDown()
       })
-      client
 
       completionLatch.await(5, TimeUnit.SECONDS) should be (true)
       documentLatch.await(5, TimeUnit.SECONDS) should be (true)

@@ -120,6 +120,11 @@ trait ElasticDsl
     @deprecated("Use minAggregation(...)", "5.0.0")
     def min(name: String) = minAggregation(name)
 
+    @deprecated("Use nestedAggregation(...)", "5.0.0")
+    def nested(name: String) = new {
+      def path(path: String) = nestedAggregation(name, path)
+    }
+
     @deprecated("Use missingAggregation(...)", "5.0.0")
     def missing(name: String) = missingAggregation(name)
 

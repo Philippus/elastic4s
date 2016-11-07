@@ -27,7 +27,7 @@ trait SearchDsl
   def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
 
-  def templateSearch(search: SearchDefinition) = SearchTemplateDefinition(search)
+//  def templateSearch(search: SearchDefinition) = SearchTemplateDefinition(search)
 
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
@@ -38,14 +38,14 @@ trait SearchDsl
     }
   }
 
-  implicit object SearchTemplateDefinitionExecutable
-    extends Executable[SearchTemplateDefinition, SearchTemplateResponse, RichSearchTemplateResponse] {
-    override def apply(client: Client, t: SearchTemplateDefinition): Future[RichSearchTemplateResponse] = {
-      val builder = SearchTemplateAction.INSTANCE.newRequestBuilder(client)
-      t.populate(builder)
-      injectFutureAndMap(builder.execute)(RichSearchTemplateResponse.apply)
-    }
-  }
+  //  implicit object SearchTemplateDefinitionExecutable
+  //    extends Executable[SearchTemplateDefinition, SearchTemplateResponse, RichSearchTemplateResponse] {
+  //    override def apply(client: Client, t: SearchTemplateDefinition): Future[RichSearchTemplateResponse] = {
+  //      val builder = SearchTemplateAction.INSTANCE.newRequestBuilder(client)
+  //      t.populate(builder)
+  //      injectFutureAndMap(builder.execute)(RichSearchTemplateResponse.apply)
+  //    }
+  //  }
 
   implicit object MultiSearchDefinitionExecutable
     extends Executable[MultiSearchDefinition, MultiSearchResponse, RichMultiSearchResponse] {

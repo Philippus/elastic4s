@@ -30,6 +30,15 @@ case class TopHitsAggregationDefinition(name: String) extends AggregationDefinit
     this
   }
 
+  @deprecated("use sortBy", "5.0.0")
+  def sort(first: SortDefinition[_], rest: SortDefinition[_]*): this.type = sortBy(first +: rest)
+
+  @deprecated("use sortBy", "5.0.0")
+  def sort(sorts: Iterable[SortDefinition[_]]): this.type = {
+    sorts.map(_.builder).foreach(builder.sort)
+    this
+  }
+
   def sortBy(first: SortDefinition[_], rest: SortDefinition[_]*): this.type = sortBy(first +: rest)
   def sortBy(sorts: Iterable[SortDefinition[_]]): this.type = {
     sorts.map(_.builder).foreach(builder.sort)

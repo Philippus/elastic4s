@@ -3,13 +3,18 @@
     "has_parent": {
       "query": {
         "term": {
-          "name": "chris"
+          "name": {
+            "value": "chris",
+            "boost": 1.0
+          }
         }
       },
       "parent_type": "singer",
-      "score_mode": "scoreType",
+      "score": true,
+      "ignore_unmapped": false,
       "boost": 2.3,
       "_name": "spidername"
     }
-  }
+  },
+  "ext": {}
 }

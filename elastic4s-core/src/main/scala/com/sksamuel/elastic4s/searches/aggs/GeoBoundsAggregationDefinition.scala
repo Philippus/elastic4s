@@ -10,10 +10,8 @@ case class GeoBoundsAggregationDefinition(name: String)
   type B = DateRangeAggregationBuilder
   val builder: B = AggregationBuilders.dateRange(name)
 
-  val aggregationBuilder = AggregationBuilders.geoBounds(name)
-
   def script(script: Script): GeoBoundsAggregationDefinition = {
-    aggregationBuilder.script(script)
+    builder.script(script)
     this
   }
 
@@ -29,6 +27,11 @@ case class GeoBoundsAggregationDefinition(name: String)
 
   def addUnboundedFrom(from: Double): GeoBoundsAggregationDefinition = {
     builder.addUnboundedFrom(from)
+    this
+  }
+
+  def field(field: String) = {
+    builder.field(field)
     this
   }
 }

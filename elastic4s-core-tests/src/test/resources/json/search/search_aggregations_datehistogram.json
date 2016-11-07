@@ -1,11 +1,17 @@
 {
-    "aggregations": {
-        "years": {
-            "date_histogram": {
-                "field": "date",
-                "interval": "1y",
-                "min_doc_count":0
-            }
-        }
+  "aggregations": {
+    "years": {
+      "date_histogram": {
+        "field": "date",
+        "interval": "1y",
+        "offset": 0,
+        "order": {
+          "_key": "asc"
+        },
+        "keyed": false,
+        "min_doc_count": 0
+      }
     }
+  },
+  "ext": {}
 }

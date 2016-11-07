@@ -1,15 +1,24 @@
 {
-    "size": 5,
-    "query": {
-        "has_parent": {
-            "query": {
-                "simple_query_string": {
-                    "query": "coldplay"
-                }
-            },
-            "parent_type": "sometype",
-            "score_mode": "type",
-            "boost": 1.2
+  "size": 5,
+  "query": {
+    "has_parent": {
+      "query": {
+        "simple_query_string": {
+          "query": "coldplay",
+          "flags": -1,
+          "default_operator": "or",
+          "lowercase_expanded_terms": true,
+          "lenient": false,
+          "analyze_wildcard": false,
+          "locale": "und",
+          "boost": 1.0
         }
+      },
+      "parent_type": "sometype",
+      "score": true,
+      "ignore_unmapped": false,
+      "boost": 1.2
     }
+  },
+  "ext": {}
 }

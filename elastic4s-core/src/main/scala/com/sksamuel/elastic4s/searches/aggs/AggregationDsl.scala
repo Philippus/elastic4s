@@ -32,6 +32,7 @@ trait AggregationDsl {
 
   def geoDistanceAggregation(name: String) = new GeoDistanceAggregationExpectsOrigin(name)
   class GeoDistanceAggregationExpectsOrigin(name: String) {
+    def origin(lat: Double, long: Double): GeoDistanceAggregationDefinition = origin(new GeoPoint(lat, long))
     def origin(origin: GeoPoint): GeoDistanceAggregationDefinition = GeoDistanceAggregationDefinition(name, origin)
   }
 

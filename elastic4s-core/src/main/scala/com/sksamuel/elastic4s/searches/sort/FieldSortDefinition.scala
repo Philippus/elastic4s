@@ -27,7 +27,8 @@ case class FieldSortDefinition(field: String) extends SortDefinition[FieldSortBu
     this
   }
 
-  def mode(mode: SortMode) = {
+  def mode(m: String): FieldSortDefinition = mode(SortMode.valueOf(m.toUpperCase))
+  def mode(mode: SortMode): FieldSortDefinition = {
     builder.sortMode(mode)
     this
   }

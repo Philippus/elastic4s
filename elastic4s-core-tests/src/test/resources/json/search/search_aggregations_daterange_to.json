@@ -1,3 +1,4 @@
+
 {
     "aggregations": {
         "daterange_agg": {
@@ -8,8 +9,10 @@
                         "key": "key",
                         "to": "now"
                     }
-                ]
+                ],
+                "keyed": false
             }
         }
-    }
+    },
+    "ext": {}
 }

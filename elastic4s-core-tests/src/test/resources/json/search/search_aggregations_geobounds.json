@@ -1,10 +1,12 @@
 {
     "aggregations": {
         "geo_agg": {
-            "geo_bounds": {
+            "date_range": {
                 "field": "geo_point",
-                "wrap_longitude": true
+                "ranges": [],
+                "keyed": false
             }
         }
-    }
+    },
+    "ext": {}
 }

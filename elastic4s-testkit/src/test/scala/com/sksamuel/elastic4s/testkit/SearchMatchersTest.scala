@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.WordSpec
 
 class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar {

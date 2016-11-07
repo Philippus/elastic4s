@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.searches.QueryDefinition
-import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
-import org.elasticsearch.index.query.{HasParentQueryBuilder, InnerHitBuilder, QueryBuilders}
+import org.elasticsearch.index.query.{HasParentQueryBuilder, QueryBuilders}
 
 case class HasParentQueryDefinition(`type`: String,
                                     query: QueryDefinition,
@@ -26,17 +25,4 @@ case class HasParentQueryDefinition(`type`: String,
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasParentQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
   def innerHit(innerHit: InnerHitDefinition): HasParentQueryDefinition = copy(innerHit = Some(innerHit))
   def queryName(queryName: String): HasParentQueryDefinition = copy(queryName = Some(queryName))
-}
-
-case class InnerHitDefinition(name: String,
-                              highlight: Option[HighlightFieldDefinition] = None) {
-
-  def builder = {
-    val builder = new InnerHitBuilder().setName(name)
-    // todo
-    // highlight.foreach(highlight => builder.setHighlightBuilder(highlight.builder))
-    builder
-  }
-
-  def highlighting(highlight: HighlightFieldDefinition) = copy(highlight = Some(highlight))
 }

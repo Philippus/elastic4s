@@ -90,9 +90,15 @@ trait QueryDsl {
     HasChildQueryDefinition(`type`, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition) = new ExpectsScoreMode(q)
+    def query(q: QueryDefinition): ExpectsScoreMode = new ExpectsScoreMode(q)
+    def query(q: String): ExpectsScoreMode = new ExpectsScoreMode(q)
     class ExpectsScoreMode(q: QueryDefinition) {
-      def scoreMode(scoreMode: ScoreMode) = hasChildQuery(`type`, q, scoreMode)
+      def scoreMode(str: String): HasChildQueryDefinition = {
+        val mode = ScoreMode.values().find(_.name.toLowerCase == str.toLowerCase)
+          .getOrElse(sys.error(s"$str is not a valid score mode"))
+        scoreMode(mode)
+      }
+      def scoreMode(scoreMode: ScoreMode): HasChildQueryDefinition = hasChildQuery(`type`, q, scoreMode)
     }
   }
 

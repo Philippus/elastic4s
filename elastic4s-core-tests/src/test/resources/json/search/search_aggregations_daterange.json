@@ -1,15 +1,18 @@
+
 {
-    "aggregations": {
-        "daterange_agg": {
-            "date_range": {
-                "field": "date",
-                "ranges": [
-                    {
-                        "from": "now-1Y",
-                        "to": "now"
-                    }
-                ]
-            }
-        }
+  "aggregations": {
+    "daterange_agg": {
+      "date_range": {
+        "field": "date",
+        "ranges": [
+          {
+            "from": "now-1Y",
+            "to": "now"
+          }
+        ],
+        "keyed": false
+      }
     }
+  },
+  "ext": {}
 }
