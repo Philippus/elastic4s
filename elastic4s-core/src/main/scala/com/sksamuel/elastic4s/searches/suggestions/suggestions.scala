@@ -1,21 +1,16 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
+import org.elasticsearch.search.suggest.Suggest
 import org.elasticsearch.search.suggest.Suggest.Suggestion
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestion
 import org.elasticsearch.search.suggest.term.TermSuggestion
-import org.elasticsearch.search.suggest.{Suggest, SuggestionBuilder}
 
 import scala.collection.JavaConverters._
-
-
-
-
 
 case class SuggestResult(suggestions: Seq[SuggestionResult],
                          suggest: org.elasticsearch.search.suggest.Suggest) {
   def suggestion(name: String): SuggestionResult = suggestions.find(_.name == name).get
-  //def suggestion(d: SuggestionDefinition): d.R = suggestion(d.fieldname).asInstanceOf[d.R]
 }
 
 object SuggestResult {

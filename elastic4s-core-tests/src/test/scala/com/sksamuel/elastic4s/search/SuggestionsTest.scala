@@ -61,7 +61,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
           termSuggestion("a") on "artist" text "Quoon" mode SuggestMode.POPULAR
         }
       }.await
-      resp.suggestion("a").entry("quoon").optionsText shouldBe Array("queen")
+      resp.termSuggestion("a").entry("quoon").optionsText shouldBe Array("queen")
 
     }
     "allow us to set the max edits to be counted as a suitable suggestion" in {
@@ -71,7 +71,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
           termSuggestion("a") on "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
       }.await
-      resp.suggestion("a").entry("quean").optionsText shouldBe Array("queen")
+      resp.termSuggestion("a").entry("quean").optionsText shouldBe Array("queen")
     }
     //    "allow us to set min word length to be suggested for" in {
     //      val resp = client.execute {
