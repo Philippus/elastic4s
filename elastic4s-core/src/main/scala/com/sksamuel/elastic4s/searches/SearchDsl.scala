@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.script.ScriptFieldDsl
 import com.sksamuel.elastic4s.searches.highlighting.HighlightDsl
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.Client
+import org.elasticsearch.script.mustache.{SearchTemplateAction, SearchTemplateResponse}
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -26,12 +27,23 @@ trait SearchDsl
   def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
 
+  def templateSearch(search: SearchDefinition) = SearchTemplateDefinition(search)
+
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
   implicit object SearchDefinitionExecutable
     extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[RichSearchResponse] = {
       injectFutureAndMap(c.search(t.build, _))(RichSearchResponse.apply)
+    }
+  }
+
+  implicit object SearchTemplateDefinitionExecutable
+    extends Executable[SearchTemplateDefinition, SearchTemplateResponse, RichSearchTemplateResponse] {
+    override def apply(client: Client, t: SearchTemplateDefinition): Future[RichSearchTemplateResponse] = {
+      val builder = SearchTemplateAction.INSTANCE.newRequestBuilder(client)
+      t.populate(builder)
+      injectFutureAndMap(builder.execute)(RichSearchTemplateResponse.apply)
     }
   }
 

@@ -7,7 +7,7 @@ import org.elasticsearch.index.query.QueryBuilders
 case class ScriptQueryDefinition(script: ScriptDefinition)
   extends QueryDefinition {
 
-  val builder = QueryBuilders.scriptQuery(script.toJavaAPI)
+  val builder = QueryBuilders.scriptQuery(script.build)
   val _builder = builder
 
   def queryName(queryName: String): ScriptQueryDefinition = {

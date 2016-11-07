@@ -703,23 +703,23 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   //    req.show should matchJsonResource("/json/search/search_aggregations_avg.json")
   //  }
   //
-  //  it should "generate correct json for stats aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation stats "grades_stats" field "grade" script {
-  //        script("doc['grade'].value").lang("lua")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_stats.json")
-  //  }
-  //
-  //  it should "generate correct json for extendedstats aggregation" in {
-  //    val req = search in( "school" types "student" aggs {
-  //      aggregation extendedstats "grades_extendedstats" field "grade" script {
-  //        script("doc['grade'].value").lang("lua")
-  //      }
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
-  //  }
+  it should "generate correct json for stats aggregation" in {
+    val req = search("school") aggs {
+      aggregation stats "grades_stats" field "grade" script {
+        script("doc['grade'].value").lang("lua")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_stats.json")
+  }
+
+  it should "generate correct json for extendedstats aggregation" in {
+    val req = search("school") aggs {
+      aggregation extendedstats "grades_extendedstats" field "grade" script {
+        script("doc['grade'].value").lang("lua")
+      }
+    }
+    req.show should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
+  }
   //
   //  it should "generate correct json for percentiles aggregation" in {
   //    val req = search in( "school" types "student" aggs {

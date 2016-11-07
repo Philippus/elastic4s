@@ -39,8 +39,8 @@ class SearchTest
       search in "musicians" -> "bands" query "anderson" should haveTotalHits(1)
     }
     "find an indexed document in the given type only" in {
-      search in "musicians" -> "bands" query "kate" should haveNoHits
-      search in "musicians" -> "performers" query "kate" should haveTotalHits(1)
+      search("musicians" -> "bands") query "kate" should haveNoHits
+      search("musicians" -> "performers") query "kate" should haveTotalHits(1)
     }
     "return source" in {
       search("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")

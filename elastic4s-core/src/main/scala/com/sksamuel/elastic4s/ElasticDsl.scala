@@ -17,6 +17,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
+import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.task.TaskApi
@@ -48,6 +49,7 @@ trait ElasticDsl
     with MappingDsl
     with MultiGetApi
     with PercolateDsl
+    with PipelineAggregationDsl
     with ReindexDsl
     with ScriptDsl
     with SearchDsl

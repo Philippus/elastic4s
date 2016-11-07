@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
 import org.scalatest.{FreeSpec, Matchers}
 
-class TermAggregationTest extends FreeSpec with Matchers with ElasticSugar {
+class TermsAggregationTest extends FreeSpec with Matchers with ElasticSugar {
 
   client.execute {
     createIndex("aggregations") mappings {

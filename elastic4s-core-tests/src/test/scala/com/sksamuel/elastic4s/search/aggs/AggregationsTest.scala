@@ -148,23 +148,7 @@
 //    }
 //  }
 //
-//  "histogram aggregation" - {
-//    "should create histogram by field" in {
-//      val resp = client.execute {
-//        search in "aggregations/breakingbad" aggregations {
-//          aggregation histogram "h" field "age" interval 10
-//        }
-//      }.await
-//      resp.totalHits shouldBe 10
-//
-//      val buckets = resp.aggregations.get[Histogram]("h").getBuckets.asScala
-//      buckets.size shouldBe 5
-//      buckets.find(_.getKey == 20).get.getDocCount shouldBe 1
-//      buckets.find(_.getKey == 30).get.getDocCount shouldBe 1
-//      buckets.find(_.getKey == 40).get.getDocCount shouldBe 3
-//      buckets.find(_.getKey == 50).get.getDocCount shouldBe 4
-//      buckets.find(_.getKey == 60).get.getDocCount shouldBe 1
-//    }
+
 //
 //    "should use offset" in {
 //      val resp = client.execute {

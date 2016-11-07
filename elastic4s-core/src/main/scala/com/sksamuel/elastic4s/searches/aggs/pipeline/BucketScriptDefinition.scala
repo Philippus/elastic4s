@@ -1,0 +1,27 @@
+package com.sksamuel.elastic4s.searches.aggs.pipeline
+
+import com.sksamuel.elastic4s.script.ScriptDefinition
+import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
+import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
+import org.elasticsearch.search.aggregations.pipeline.bucketscript.BucketScriptPipelineAggregationBuilder
+
+case class BucketScriptDefinition(name: String,
+                                  script: ScriptDefinition,
+                                  bucketsPaths: Seq[String],
+                                  format: Option[String] = None,
+                                  gapPolicy: Option[GapPolicy] = None,
+                                  metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
+
+  type T = BucketScriptPipelineAggregationBuilder
+
+  def builder: T = {
+    val builder = PipelineAggregatorBuilders.bucketScript(name, script.build, bucketsPaths: _*)
+    format.foreach(builder.format)
+    gapPolicy.foreach(builder.gapPolicy)
+    builder
+  }
+
+  def format(format: String): BucketScriptDefinition = copy(format = Some(format))
+  def gapPolicy(gapPolicy: GapPolicy): BucketScriptDefinition = copy(gapPolicy = Some(gapPolicy))
+  def metadata(metadata: Map[String, AnyRef]): BucketScriptDefinition = copy(metadata = metadata)
+}

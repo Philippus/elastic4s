@@ -92,6 +92,7 @@ class LocalElasticClient(node: LocalNode, shutdownNodeOnClose: Boolean) extends 
 object LocalNode {
 
   // creates a LocalNode with all settings provided by the user
+  // and using default plugins
   def apply(settings: Settings) = {
     require(settings.getAsMap.containsKey("cluster.name"))
     require(settings.getAsMap.containsKey("path.home"))
@@ -99,12 +100,13 @@ object LocalNode {
     require(settings.getAsMap.containsKey("path.repo"))
 
     val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
+
     val mergedSettings = Settings.builder().put(settings)
       .put("transport.type", "local")
       .put("discovery.type", "local")
       .put("http.type", "netty3")
       .build()
-    //println(s"Instantiating internal node with ${mergedSettings.getAsMap.asScala}")
+
     new LocalNode(mergedSettings, plugins)
   }
 

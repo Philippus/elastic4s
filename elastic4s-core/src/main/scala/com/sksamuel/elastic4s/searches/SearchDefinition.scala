@@ -353,6 +353,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   @deprecated("Renamed to storedFields", "5.0.0")
   def fields(fields: String*): SearchDefinition = storedFields(fields)
+
   def storedFields(first: String, rest: String*): SearchDefinition = storedFields(first +: rest)
   def storedFields(fields: Iterable[String]): SearchDefinition = {
     _builder.storedFields(fields.toSeq: _*)
