@@ -21,19 +21,23 @@ trait SnapshotDsl {
     def from(repo: String) = new GetSnapshotsDefinition(names.toArray, repo)
   }
 
-  def createSnapshot(name: String) = new {
+  def createSnapshot(name: String) = new CreateSnapshotExpectsIn(name)
+  class CreateSnapshotExpectsIn(name: String) {
     def in(repo: String) = new CreateSnapshotDefinition(name, repo)
   }
 
-  def deleteSnapshot(name: String) = new {
+  def deleteSnapshot(name: String) = new DeleteSnapshotExpectsIn(name)
+  class DeleteSnapshotExpectsIn(name: String) {
     def in(repo: String) = new DeleteSnapshotDefinition(name, repo)
   }
 
-  def restoreSnapshot(name: String) = new {
+  def restoreSnapshot(name: String) = new RestoreSnapshotExpectsFrom(name)
+  class RestoreSnapshotExpectsFrom(name: String) {
     def from(repo: String) = RestoreSnapshotDefinition(name, repo)
   }
 
-  def createRepository(name: String) = new {
+  def createRepository(name: String) = new CreateRepositoryExpectsType(name)
+  class CreateRepositoryExpectsType(name: String) {
     def `type`(`type`: String) = new CreateRepositoryDefinition(name, `type`)
   }
 

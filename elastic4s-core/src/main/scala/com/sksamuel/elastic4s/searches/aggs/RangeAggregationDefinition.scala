@@ -13,6 +13,11 @@ case class RangeAggregationDefinition(name: String) extends AggregationDefinitio
     this
   }
 
+  def field(field: String): RangeAggregationDefinition = {
+    builder.field(field)
+    this
+  }
+
   def unboundedTo(to: Double): this.type = {
     builder.addUnboundedTo(to)
     this

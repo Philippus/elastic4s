@@ -17,18 +17,21 @@ trait AggregationDsl {
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition = ExtendedStatsAggregationDefinition(
     name)
 
-  def filterAggregation(name: String) = new {
+  def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
+  class FilterAggregationExpectsQuery(name: String) {
     def query(query: QueryDefinition) = FilterAggregationDefinition(name, query)
   }
 
-  def filtersAggregation(name: String) = new {
+  def filtersAggregation(name: String) = new FiltersAggregationExpectsQueries(name)
+  class FiltersAggregationExpectsQueries(name: String) {
     def queries(first: QueryDefinition, rest: QueryDefinition*): FiltersAggregationDefinition = queries(first +: rest)
     def queries(queries: Iterable[QueryDefinition]): FiltersAggregationDefinition =
       FiltersAggregationDefinition(name, queries)
   }
   def geoBoundsAggregation(name: String): GeoBoundsAggregationDefinition = GeoBoundsAggregationDefinition(name)
 
-  def geoDistanceAggregation(name: String) = new {
+  def geoDistanceAggregation(name: String) = new GeoDistanceAggregationExpectsOrigin(name)
+  class GeoDistanceAggregationExpectsOrigin(name: String) {
     def origin(origin: GeoPoint): GeoDistanceAggregationDefinition = GeoDistanceAggregationDefinition(name, origin)
   }
 

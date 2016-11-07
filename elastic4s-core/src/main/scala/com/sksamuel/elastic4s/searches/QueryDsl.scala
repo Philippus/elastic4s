@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.{DocumentRef, Indexable}
-import com.sksamuel.elastic4s.searches.queries._
+import com.sksamuel.elastic4s.searches.queries.{SpanQueryDefinition, _}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
@@ -70,7 +70,8 @@ trait QueryDsl {
   def geoHashCell(field: String, value: GeoPoint): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value.geohash)
 
-  def geoPolyonQuery(field: String) = new {
+  def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
+  class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
     def points(points: Iterable[GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
   }
@@ -89,7 +90,8 @@ trait QueryDsl {
     HasChildQueryDefinition(`type`, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition) = new {
+    def query(q: QueryDefinition) = new ExpectsScoreMode(q)
+    class ExpectsScoreMode(q: QueryDefinition) {
       def scoreMode(scoreMode: ScoreMode) = hasChildQuery(`type`, q, scoreMode)
     }
   }
@@ -100,7 +102,8 @@ trait QueryDsl {
     HasParentQueryDefinition(`type`, query, score)
 
   class HasParentQueryExpectsQuery(`type`: String) {
-    def query(q: QueryDefinition) = new {
+    def query(q: QueryDefinition) = new ExpectsScoreMode(q)
+    class ExpectsScoreMode(q: QueryDefinition) {
       def scoreMode(scoreMode: Boolean) = hasParentQuery(`type`, q, scoreMode)
     }
   }
@@ -142,8 +145,10 @@ trait QueryDsl {
     def like(first: String, rest: String*): MoreLikeThisQueryDefinition = likeTexts(first +: rest)
   }
 
-  def nestedQuery(path: String) = new {
-    def query(query: QueryDefinition) = new {
+  def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
+  class NestedQueryExpectsQuery(path: String) {
+    class NestedQueryExpectsScoreMode(query: QueryDefinition)
+    def query(query: QueryDefinition) = new NestedQueryExpectsScoreMode(path) {
       def scoreMode(scoreMode: ScoreMode) = NestedQueryDefinition(path, query, scoreMode)
     }
   }
@@ -151,8 +156,8 @@ trait QueryDsl {
   def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)
 
-  def percolateQuery(`type`: String, field: String = "query") = new {
-
+  def percolateQuery(`type`: String, field: String = "query") = new PercolateExpectsUsing(`type`, field)
+  class PercolateExpectsUsing(`type`: String, field: String) {
     def usingId(index: String, `type`: String, id: Any): PercolateQueryDefinition =
       usingId(DocumentRef(index, `type`, id.toString))
 
@@ -179,13 +184,13 @@ trait QueryDsl {
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(q)
   def stringQuery(q: String): QueryStringQueryDefinition = QueryStringQueryDefinition(q)
 
-  def spanFirstQuery = new {
-    def query(spanQuery: SpanQueryDefinition) = new {
-      def end(end: Int) = SpanFirstQueryDefinition(spanQuery, end)
-    }
+  def spanFirstQuery(query: SpanQueryDefinition) = new SpanFirstExpectsEnd(query)
+  class SpanFirstExpectsEnd(query: SpanQueryDefinition) {
+    def end(end: Int) = SpanFirstQueryDefinition(query, end)
   }
 
-  def spanNearQuery(defs: Iterable[SpanQueryDefinition], slop: Int): SpanNearQueryDefinition = SpanNearQueryDefinition(defs.toSeq, slop)
+  def spanNearQuery(defs: Iterable[SpanQueryDefinition], slop: Int): SpanNearQueryDefinition =
+    SpanNearQueryDefinition(defs.toSeq, slop)
 
   def spanOrQuery(iterable: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
   def spanOrQuery(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition = spanOrQuery(first +: rest)

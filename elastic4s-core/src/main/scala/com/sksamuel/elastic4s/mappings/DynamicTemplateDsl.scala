@@ -6,7 +6,8 @@ import com.sksamuel.elastic4s.mappings.FieldType._
 trait DynamicTemplateDsl {
   self: ElasticDsl =>
 
-  def dynamicTemplate(nameOfTemplate: String) = new {
+  def dynamicTemplate(nameOfTemplate: String) = new DynamicTemplateExpectsMapping(nameOfTemplate)
+  class DynamicTemplateExpectsMapping(nameOfTemplate: String) {
     def mapping(mapping: TypedFieldDefinition) = DynamicTemplateDefinition(nameOfTemplate, mapping)
   }
 
