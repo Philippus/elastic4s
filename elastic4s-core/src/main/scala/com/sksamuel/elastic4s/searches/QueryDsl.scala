@@ -47,6 +47,7 @@ trait QueryDsl {
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
+
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
   def geoBoxQuery(field: String, geohash: String) = GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
 
@@ -114,6 +115,8 @@ trait QueryDsl {
     }
   }
 
+  def innerHits(name: String): InnerHitDefinition = InnerHitDefinition(name)
+
   def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = MatchQueryDefinition(field, value)
 
@@ -155,7 +158,12 @@ trait QueryDsl {
   class NestedQueryExpectsQuery(path: String) {
     class NestedQueryExpectsScoreMode(query: QueryDefinition)
     def query(query: QueryDefinition) = new NestedQueryExpectsScoreMode(path) {
-      def scoreMode(scoreMode: ScoreMode) = NestedQueryDefinition(path, query, scoreMode)
+      def scoreMode(mode: String): NestedQueryDefinition = {
+        val m = ScoreMode.values().find(_.name.toLowerCase == mode.toLowerCase)
+          .getOrElse(sys.error(s"Unknown score mode $mode"))
+        scoreMode(m)
+      }
+      def scoreMode(scoreMode: ScoreMode): NestedQueryDefinition = NestedQueryDefinition(path, query, scoreMode)
     }
   }
 

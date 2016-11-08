@@ -1,28 +1,40 @@
+
 {
-    "query" : {
-        "nested" : {
-            "path" : "obj1",
-            "query" : {
-                "constant_score" : {
-                    "filter" : {
-                        "term" : {
-                            "name" : "sammy"
-                        }
-                    }
-                }
-            },
-            "score_mode" : "avg",
-            "inner_hits" : {
-                "name" : "obj1",
-                "size" : 6,
-                "highlight" : {
-                    "fields" : {
-                        "name" : {
-                            "fragment_size" : 20
-                        }
-                    }
-                }
+  "query": {
+    "nested": {
+      "query": {
+        "constant_score": {
+          "filter": {
+            "term": {
+              "name": {
+                "value": "sammy",
+                "boost": 1.0
+              }
             }
+          },
+          "boost": 1.0
         }
+      },
+      "path": "obj1",
+      "ignore_unmapped": false,
+      "score_mode": "avg",
+      "boost": 1.0,
+      "inner_hits": {
+        "name": "obj1",
+        "from": 0,
+        "size": 6,
+        "version": false,
+        "explain": false,
+        "track_scores": false,
+        "highlight": {
+          "fields": {
+            "name": {
+              "fragment_size": 20
+            }
+          }
+        }
+      }
     }
+  },
+  "ext": {}
 }

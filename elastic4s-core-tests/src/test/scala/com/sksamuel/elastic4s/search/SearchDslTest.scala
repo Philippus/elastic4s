@@ -15,6 +15,7 @@ import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
 import org.elasticsearch.search.aggregations.bucket.terms.Terms
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.{SortMode, SortOrder}
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
@@ -176,7 +177,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a hasChild query" in {
-    val req = search in ("*") types("users", "tweets") limit 5 query {
+    val req = search("*") types("users", "tweets") limit 5 query {
       hasChildQuery("sometype") query {
         "coldplay"
       } scoreMode "avg" boost 1.2
@@ -185,7 +186,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for a hasParent query" in {
-    val req = search in ("*") types("users", "tweets") limit 5 query {
+    val req = search("*") types("users", "tweets") limit 5 query {
       hasParentQuery("sometype") query {
         "coldplay"
       } scoreMode true boost 1.2
@@ -351,25 +352,25 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       hasChildQuery("singer") query {
         termQuery("name", "chris")
-      } scoreMode (ScoreMode.Min) queryName "namey"
+      } scoreMode ScoreMode.Min queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_haschild_filter_query.json")
   }
 
   it should "generate json for has parent filter with query" in {
-    val req = search in ("music") types "bands" postFilter {
+    val req = search("music") types "bands" postFilter {
       hasParentQuery("singer") query {
         termQuery("name", "chris")
-      } scoreMode (true) queryName "namey"
+      } scoreMode true queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_hasparent_filter_query.json")
   }
 
   it should "generate json for nested filter with query" in {
-    val req = search in ("music") types "bands" postFilter {
+    val req = search("music") types "bands" postFilter {
       nestedQuery("singer") query {
         termQuery("name", "chris")
-      } scoreMode (ScoreMode.Min) queryName "namey"
+      } scoreMode ScoreMode.Min queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_nested_filter_query.json")
   }
@@ -573,49 +574,49 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for datehistogram aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation datehistogram "years" field "date" interval DateHistogramInterval.YEAR minDocCount 0
     }
     req.show should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
   }
 
   it should "generate correct json for range aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation range "range_agg" field "score" range(10.0, 15.0)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_range.json")
   }
 
   it should "generate correct json for date range aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation daterange "daterange_agg" field "date" range("now-1Y", "now")
     }
     req.show should matchJsonResource("/json/search/search_aggregations_daterange.json")
   }
 
   it should "generate correct json for date range aggregation with unbounded from" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation daterange "daterange_agg" field "date" unboundedFrom("key", "now-1Y")
     }
     req.show should matchJsonResource("/json/search/search_aggregations_daterange_from.json")
   }
 
   it should "generate correct json for date range aggregation with unbounded to" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation daterange "daterange_agg" field "date" unboundedTo("key", "now")
     }
     req.show should matchJsonResource("/json/search/search_aggregations_daterange_to.json")
   }
 
   it should "generate correct json for histogram aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation histogram "score_histogram" field "score" interval 2
     }
     req.show should matchJsonResource("/json/search/search_aggregations_histogram.json")
   }
 
   it should "generate correct json for filter aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       filterAggregation("my_filter_agg").query {
         bool {
           must {
@@ -632,15 +633,15 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for terms aggregation" in {
-    val req = search in ("music") types "bands" aggs {
-      aggregation terms "my_terms_agg" field "keyword" size 10 order Terms.Order.count(false)
+    val req = search("music") types "bands" aggs {
+      termsAggregation("my_terms_agg") field "keyword" size 10 order Terms.Order.count(false)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
   it should "generate correct json for top hits aggregation" in {
-    val req = search in ("music") types "bands" aggs {
-      aggregation terms "top-tags" field "tags" size 3 order Terms.Order.count(true) subAggregation (
+    val req = search("music") types "bands" aggs {
+      termsAggregation("top-tags") field "tags" size 3 order Terms.Order.count(true) subAggregation (
         aggregation topHits "top_tag_hits" size 1 sort {
           fieldSort("last_activity_date") order SortOrder.DESC
         } fetchSource(Array("title"), Array.empty)
@@ -650,30 +651,30 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for geobounds aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation geobounds "geo_agg" field "geo_point"
     }
     req.show should matchJsonResource("/json/search/search_aggregations_geobounds.json")
   }
 
   it should "generate correct json for geodistance aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation geodistance "geo_agg" origin(45.0, 27.0) field "geo_point" geoDistance GeoDistance.ARC range(1.0, 1.0)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_geodistance.json")
   }
 
   it should "generate correct json for sub aggregation" in {
-    val req = search in ("music") types "bands" aggs {
+    val req = search("music") types "bands" aggs {
       aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY aggs(
-        aggregation terms "keywords" field "keyword" size 5,
-        aggregation terms "countries" field "country")
+        termsAggregation("keywords") field "keyword" size 5,
+        termsAggregation("countries") field "country")
     }
     req.show should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
   }
 
   it should "generate correct json for min aggregation" in {
-    val req = search in ("school") types "student" aggs {
+    val req = search("school") types "student" aggs {
       aggregation min "grades_min" field "grade" script {
         script("doc['grade'].value").lang("lua").param("apple", "bad")
       }
@@ -682,7 +683,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for max aggregation" in {
-    val req = search in ("school") types "student" aggs {
+    val req = search("school") types "student" aggs {
       aggregation max "grades_max" field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
@@ -691,8 +692,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for sum aggregation" in {
-    val req = search in ("school") types "student" aggs {
-      aggregation sum "grades_sum" field "grade" script {
+    val req = search("school") types "student" aggs {
+      sumAggregation("grades_sum") field "grade" script {
         script("doc['grade'].value").lang("lua") params Map("classsize" -> "30", "room" -> "101A")
       }
     }
@@ -700,7 +701,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for avg aggregation" in {
-    val req = search in ("school") types "student" aggs {
+    val req = search("school") types "student" aggs {
       aggregation avg "grades_avg" field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
@@ -741,7 +742,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for value count aggregation" in {
-    val req = search in ("school") aggs {
+    val req = search("school") aggs {
       aggregation count "grades_count" field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
@@ -777,10 +778,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multiple suggestions" in {
     val req = search("music") types "bands" query "coldplay" suggestions(
-      term suggestion "my-suggestion-1" on "names" text "clocks by culdpaly" maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
-      term suggestion "my-suggestion-2" on "names" text "aqualuck by jethro toll" size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
-      term suggestion "my-suggestion-3" on "names" text "bountiful day by u22" maxInspections 3 stringDistance "levenstein",
-      term suggestion "my-suggestion-4" on "names" text "whatever some text" maxTermFreq 0.5 minWordLength 5 mode
+      termSuggestion("my-suggestion-1") on "names" text "clocks by culdpaly" maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
+      termSuggestion("my-suggestion-2") on "names" text "aqualuck by jethro toll" size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
+      termSuggestion("my-suggestion-3") on "names" text "bountiful day by u22" maxInspections 3 stringDistance "levenstein",
+      termSuggestion("my-suggestion-4") on "names" text "whatever some text" maxTermFreq 0.5 minWordLength 5 mode
         SuggestMode.ALWAYS
     )
     req.show should matchJsonResource("/json/search/search_suggestions_multiple.json")
@@ -789,8 +790,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   // for backwards compatibility default suggester is the term suggester
   it should "generate correct json for suggestions" in {
     val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
-      term suggestion "suggestion-1" field "name" text "clocks by culdpaly" maxEdits 2,
-      term suggestion "suggestion-2" field "name" text "aqualuck by jethro toll"
+      termSuggestion("suggestion-1") on "name" text "clocks by culdpaly" maxEdits 2,
+      termSuggestion("suggestion-2") on "name" text "aqualuck by jethro toll"
     )
     req.show should matchJsonResource("/json/search/search_suggestions.json")
   }
@@ -808,7 +809,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
       term suggestion "suggestion-term" on "name" text "culdpaly" maxEdits 2,
       phrase suggestion "suggestion-phrase" on "name" text "aqualuck by jethro toll",
-      completion suggestion "suggestion-completion" on "ac" text "cold"
+      completionSuggestion("suggestion-completion") on "ac" text "cold"
     )
     req.show should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
   }
@@ -820,38 +821,38 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate correct json for nested query" in {
-    val req = search in ("music") types "bands" query {
+    val req = search("music") types "bands" query {
       nestedQuery("obj1") query {
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode (ScoreMode.Avg) boost 14.5 queryName "namey"
+      } scoreMode ScoreMode.Avg boost 14.5 queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_query_nested.json")
   }
 
-  //  it should "generate correct json for nested query with inner highlight" in {
-  //    val req = search in( "music" types "bands" query {
-  //      nestedQuery("obj1") query {
-  //        constantScoreQuery {
-  //          termQuery("name", "sammy")
-  //        }
-  //      } scoreMode "avg" inner
-  //        innerHits("obj1").size(6).highlighting(highlight("name").fragmentSize(20))
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
-  //  }
-  //
-  //  it should "generate correct json for nested query with inner-hits source modulation" in {
-  //    val req = search in( "music" types "bands" query {
-  //      nestedQuery("obj1") query {
-  //        constantScoreQuery {
-  //          termQuery("name", "sammy")
-  //        }
-  //      } scoreMode "avg" inner innerHits("obj1").sourceExclude("bla")
-  //    }
-  //    req.show should matchJsonResource("/json/search/search_query_nested_inner_hits_source.json")
-  //  }
+  it should "generate correct json for nested query with inner highlight" in {
+    val req = search("music") query {
+      nestedQuery("obj1") query {
+        constantScoreQuery {
+          termQuery("name", "sammy")
+        }
+      } scoreMode "avg" inner
+        innerHits("obj1").size(6).highlighting(highlight("name").fragmentSize(20))
+    }
+    req.show should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
+  }
+
+  it should "generate correct json for nested query with inner-hits source modulation" in {
+    val req = search("music") query {
+      nestedQuery("obj1") query {
+        constantScoreQuery {
+          termQuery("name", "sammy")
+        }
+      } scoreMode "avg" inner innerHits("obj1").fetchSource(new FetchSourceContext("incme", "excme"))
+    }
+    req.show should matchJsonResource("/json/search/search_query_nested_inner_hits_source.json")
+  }
 
   it should "generate correct json for a SpanTermQueryDefinition" in {
     val req = search("*") types("users", "tweets") query {
@@ -880,7 +881,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for global aggregation" in {
     val req = search("music") aggs {
-      aggregation global "global_agg"
+      globalAggregation("global_agg")
     }
     req.show should matchJsonResource("/json/search/search_aggregations_global.json")
   }
