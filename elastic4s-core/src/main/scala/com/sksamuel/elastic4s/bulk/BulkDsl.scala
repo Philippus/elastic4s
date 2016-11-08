@@ -14,10 +14,12 @@ trait BulkDsl {
   def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = BulkDefinition(requests.toSeq)
   def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
 
+  def bulkProcessor(): BulkProcessorBuilder = BulkProcessorBuilder()
+
   implicit object BulkDefinitionExecutable
-    extends Executable[BulkDefinition, BulkResponse, BulkResult] {
-    override def apply(c: Client, t: BulkDefinition): Future[BulkResult] = {
-      injectFutureAndMap(c.bulk(t.build, _))(BulkResult.apply)
+    extends Executable[BulkDefinition, BulkResponse, RichBulkResponse] {
+    override def apply(c: Client, t: BulkDefinition): Future[RichBulkResponse] = {
+      injectFutureAndMap(c.bulk(t.build, _))(RichBulkResponse.apply)
     }
   }
 }

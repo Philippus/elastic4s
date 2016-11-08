@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.bulk.BulkItemResult
+import com.sksamuel.elastic4s.bulk.RichBulkItemResponse
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -22,7 +22,7 @@ class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar {
       val latch = new CountDownLatch(Ship.ships.length)
 
       val config = SubscriberConfig(listener = new ResponseListener {
-        override def onAck(resp: BulkItemResult): Unit = latch.countDown()
+        override def onAck(resp: RichBulkItemResponse): Unit = latch.countDown()
       })
       val subscriber = client.subscriber[Ship](config)
       ShipPublisher.subscribe(subscriber)

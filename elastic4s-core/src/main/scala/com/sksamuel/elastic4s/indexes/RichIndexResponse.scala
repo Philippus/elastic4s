@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import org.elasticsearch.action.DocWriteResponse.Result
 import org.elasticsearch.action.index.IndexResponse
 
-case class IndexResult(original: IndexResponse) {
+case class RichIndexResponse(original: IndexResponse) {
 
   @deprecated("use id", "5.0.0")
   def getId = id
@@ -25,7 +25,7 @@ case class IndexResult(original: IndexResponse) {
   def index = original.getIndex
   def `type` = original.getType
   def version: Long = original.getVersion
-  def documentRef = DocumentRef(index, `type`, id)
+  def ref = DocumentRef(index, `type`, id)
 
   def result = original.getResult
   def created: Boolean = original.getResult == Result.CREATED

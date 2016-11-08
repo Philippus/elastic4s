@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.indexes.IndexResult
+import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.indexes.RichIndexResponse
 import org.elasticsearch.action.bulk.BulkItemResponse
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.delete.DeleteResponse
 import org.elasticsearch.action.index.IndexResponse
 
-case class BulkItemResult(original: BulkItemResponse) {
+case class RichBulkItemResponse(original: BulkItemResponse) {
 
   def failure: Failure = original.getFailure
   def failureOpt: Option[Failure] = Option(failure)
@@ -14,8 +15,12 @@ case class BulkItemResult(original: BulkItemResponse) {
   def failureMessage: String = original.getFailureMessage
   def failureMessageOpt: Option[String] = Option(failureMessage)
 
-  def id = original.getId
   def index = original.getIndex
+  def `type` = original.getType
+  def id = original.getId
+  def ref = DocumentRef(index, `type`, id)
+  def version = original.getVersion
+
   def itemId = original.getItemId
   def opType = original.getOpType
 
@@ -26,13 +31,11 @@ case class BulkItemResult(original: BulkItemResponse) {
   }
 
   @deprecated("use toIndexResult", "5.0.0")
-  def indexResult: Option[IndexResult] = toIndexResult
-  def toIndexResult: Option[IndexResult] = original.getResponse match {
-    case i: IndexResponse => Some(IndexResult(i))
+  def indexResult: Option[RichIndexResponse] = toIndexResult
+  def toIndexResult: Option[RichIndexResponse] = original.getResponse match {
+    case i: IndexResponse => Some(RichIndexResponse(i))
     case _ => None
   }
 
-  def `type` = original.getType
-  def version = original.getVersion
   def isFailure: Boolean = original.isFailed
 }

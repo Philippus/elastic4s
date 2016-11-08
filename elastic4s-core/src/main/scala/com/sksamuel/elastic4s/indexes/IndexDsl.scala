@@ -14,9 +14,9 @@ trait IndexDsl {
   def index(kv: (String, String)): IndexDefinition = new IndexDefinition(kv._1, kv._2)
 
   implicit object IndexDefinitionExecutable
-    extends Executable[IndexDefinition, IndexResponse, IndexResult] {
-    override def apply(c: Client, t: IndexDefinition): Future[IndexResult] = {
-      injectFutureAndMap(c.index(t.build, _))(IndexResult.apply)
+    extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
+    override def apply(c: Client, t: IndexDefinition): Future[RichIndexResponse] = {
+      injectFutureAndMap(c.index(t.build, _))(RichIndexResponse.apply)
     }
   }
 

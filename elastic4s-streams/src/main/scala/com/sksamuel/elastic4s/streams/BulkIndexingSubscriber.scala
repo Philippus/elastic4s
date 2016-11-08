@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor._
 import com.sksamuel.elastic4s.ElasticClient
-import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, BulkItemResult, BulkResult}
+import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, RichBulkItemResponse, RichBulkResponse}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
 
@@ -69,9 +69,9 @@ object BulkActor {
 
   case object ForceIndexing
 
-  case class Result(items: Seq[BulkItemResult])
+  case class Result(items: Seq[RichBulkItemResponse])
 
-  case class FailedResult(items: Seq[BulkItemResult])
+  case class FailedResult(items: Seq[RichBulkItemResponse])
 
   case class Request(n: Int)
 
@@ -195,7 +195,7 @@ class BulkActor[T](client: ElasticClient,
   private def send(req: BulkDefinition, attempts: Int): Unit = {
 
     // returns just requests that failed as a new bulk definition
-    def retryDef(resp: BulkResult): BulkDefinition = {
+    def retryDef(resp: RichBulkResponse): BulkDefinition = {
       val failureIds = resp.failures.map(_.itemId).toSet
       val failedReqs = req.requests.zipWithIndex.filter { case (_, index) => failureIds.contains(index) }.map(_._1)
       val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
@@ -204,7 +204,7 @@ class BulkActor[T](client: ElasticClient,
 
     client.execute(req).onComplete {
       case Failure(e) => self ! e
-      case Success(resp: BulkResult) =>
+      case Success(resp: RichBulkResponse) =>
 
         if (resp.hasFailures) {
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
@@ -260,13 +260,13 @@ trait RequestBuilder[T] {
  * Notified on each acknowledgement
  */
 trait ResponseListener {
-  def onAck(resp: BulkItemResult): Unit
-  def onFailure(resp: BulkItemResult): Unit = ()
+  def onAck(resp: RichBulkItemResponse): Unit
+  def onFailure(resp: RichBulkItemResponse): Unit = ()
 }
 
 object ResponseListener {
   def noop = new ResponseListener {
-    override def onAck(resp: BulkItemResult): Unit = ()
+    override def onAck(resp: RichBulkItemResponse): Unit = ()
   }
 }
 

@@ -4,7 +4,7 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkItemResult}
+import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, RichBulkItemResponse}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.mappings.DynamicMapping.Strict
 import com.sksamuel.elastic4s.testkit.ElasticSugar
@@ -71,8 +71,8 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       val ackLatch = new CountDownLatch(Ship.ships.length - errorsExpected)
       val errorLatch = new CountDownLatch(errorsExpected)
       val subscriber = client.subscriber[Ship](10, 2, listener = new ResponseListener {
-        override def onAck(resp: BulkItemResult): Unit = ackLatch.countDown()
-        override def onFailure(resp: BulkItemResult): Unit = errorLatch.countDown()
+        override def onAck(resp: RichBulkItemResponse): Unit = ackLatch.countDown()
+        override def onFailure(resp: RichBulkItemResponse): Unit = errorLatch.countDown()
       }, completionFn = () => completionLatch.countDown(), maxAttempts = 2, failureWait = 100.millis)
       ShipPublisher.subscribe(subscriber)
       completionLatch.await(5, TimeUnit.SECONDS)

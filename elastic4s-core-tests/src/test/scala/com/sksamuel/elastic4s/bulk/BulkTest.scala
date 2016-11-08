@@ -6,7 +6,6 @@ import org.scalatest.concurrent.Eventually
 
 import scala.concurrent.duration._
 
-/** @author Stephen Samuel */
 class BulkTest extends FlatSpec with ElasticSugar with Eventually with ElasticMatchers {
 
   override implicit def patienceConfig = PatienceConfig(timeout = 5.seconds)
