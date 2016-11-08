@@ -96,8 +96,8 @@ lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
 lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
   .settings(
     name := "elastic4s-json4s",
-    libraryDependencies += "org.json4s" %% "json4s-core" % "3.2.11",
-    libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
+    libraryDependencies += "org.json4s" %% "json4s-core"    % "3.5.0",
+    libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.5.0"
   ).dependsOn(core, testkit % "test")
 
 lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
