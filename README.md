@@ -26,13 +26,13 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 2.4.0 which is compatible with Elasticsearch 2.4.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 5.0.0-ALPHA3 which is compatible with Elasticsearch 5.0.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|5.0.x (In progress)|5.0.x|
+|5.0.0-ALPHA3|5.0.x|
 |2.4.x|2.4.X|
 |2.3.x|2.3.X|
 |2.2.1|2.2.X|
@@ -52,10 +52,10 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 ###### 5.0.0
 
-Elasticsearch 5.0 is a huge release. There have been some queries and actions removed completely, and plenty of methods have been renamed. The full breaking changes log in Elasticsearch itself is here:
+Elasticsearch 5.0 is a huge release from the people at Elastic. There have been some queries and actions removed completely, and plenty of methods have been renamed or changed. The full breaking changes log in Elasticsearch itself is here:
 https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
 
-These are changes in the scala client:
+These are the majority of changes in the scala client. As part of upgrading, there will certainly be some tweaking required.
 
 * TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
 * Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.
