@@ -12,8 +12,7 @@
       "path": "singer",
       "ignore_unmapped": false,
       "score_mode": "min",
-      "boost": 1.0,
-      "_name": "namey"
+      "boost": 1.0
     }
   },
   "ext": {}

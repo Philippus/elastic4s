@@ -10,7 +10,7 @@ lazy val root = Project("elastic4s", file("."))
     circe,
     jackson,
     json4s,
-    playjson,
+  //  playjson,
     streams
   )
 
@@ -22,7 +22,7 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
     name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
-      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % "2.8.4",
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % JacksonVersion,
       "org.apache.lucene"                     % "lucene-core"               % "6.2.1",
       "org.apache.lucene"                     % "lucene-analyzers-common"   % "6.2.1",
       "org.apache.lucene"                     % "lucene-backward-codecs"    % "6.2.1",
@@ -61,9 +61,9 @@ lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"
     libraryDependencies ++= Seq(
       "commons-io"                    % "commons-io"              % CommonsIoVersion      % "test",
       "org.mockito"                   % "mockito-all"             % MockitoVersion        % "test",
-      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion % "test",
-      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion % "test",
-      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
+      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
+      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
+      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
     )
   )
   .dependsOn(core, testkit % "test")
@@ -71,37 +71,37 @@ lazy val coreTests = Project("elastic4s-core-tests", file("elastic4s-core-tests"
 lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
   .settings(
     name := "elastic4s-streams",
-    libraryDependencies += "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
-    libraryDependencies += "org.reactivestreams" % "reactive-streams" % ReactiveStreamsVersion,
-    libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
+    libraryDependencies += "com.typesafe.akka"        %% "akka-actor"           % AkkaVersion,
+    libraryDependencies += "org.reactivestreams"      % "reactive-streams"      % ReactiveStreamsVersion,
+    libraryDependencies += "org.reactivestreams"      % "reactive-streams-tck"  % ReactiveStreamsVersion % "test"
   ).dependsOn(core, testkit % "test", jackson % "test")
 
 lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   .settings(
     name := "elastic4s-jackson",
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
-    libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % JacksonVersion
+    libraryDependencies += "com.fasterxml.jackson.core"       % "jackson-core" % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.core"       % "jackson-databind" % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.module"     %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
+    libraryDependencies += "com.fasterxml.jackson.datatype"   % "jackson-datatype-joda" % JacksonVersion
   ).dependsOn(core, testkit % "test")
 
 lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
 .settings(
   name := "elastic4s-circe",
-  libraryDependencies += "io.circe" %% "circe-core"     % CirceVersion,
-  libraryDependencies +=  "io.circe" %% "circe-generic" % CirceVersion,
-  libraryDependencies +=  "io.circe" %% "circe-parser"  % CirceVersion
+  libraryDependencies += "io.circe"       %% "circe-core"     % CirceVersion,
+  libraryDependencies +=  "io.circe"      %% "circe-generic" % CirceVersion,
+    libraryDependencies +=  "io.circe"    %% "circe-parser"  % CirceVersion
 ).dependsOn(core, testkit % "test")
 
 lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
   .settings(
     name := "elastic4s-json4s",
-    libraryDependencies += "org.json4s" %% "json4s-core"    % "3.5.0",
-    libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.5.0"
+    libraryDependencies += "org.json4s" %% "json4s-core"    % Json4sVersion,
+    libraryDependencies += "org.json4s" %% "json4s-jackson" % Json4sVersion
   ).dependsOn(core, testkit % "test")
 
-lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
-    .settings(
-      name := "elastic4s-play-json",
-      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
-    ).dependsOn(core, testkit % "test")
+//lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
+//    .settings(
+//      name := "elastic4s-play-json",
+//      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
+//    ).dependsOn(core, testkit % "test")

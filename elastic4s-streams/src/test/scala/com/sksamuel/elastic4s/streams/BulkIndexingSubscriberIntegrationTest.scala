@@ -87,7 +87,7 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
 
 object Ship {
 
-  val ships = Array(
+  val ships = List(
     Ship("clipper"),
     Ship("anaconda"),
     Ship("courier", Some("Fast ship that delivers")),
@@ -127,7 +127,7 @@ object ShipPublisher extends Publisher[Ship] {
     s.onSubscribe(new Subscription {
       override def cancel(): Unit = ()
       override def request(n: Long): Unit = {
-        remaining.take(n.toInt).foreach(s.onNext)
+        remaining.take(n.toInt).foreach(t => s.onNext(t))
         remaining = remaining.drop(n.toInt)
         if (remaining.isEmpty)
           s.onComplete()
@@ -143,7 +143,7 @@ object ShipEndlessPublisher extends Publisher[Ship] {
     s.onSubscribe(new Subscription {
       override def cancel(): Unit = ()
       override def request(n: Long): Unit = {
-        remaining.take(n.toInt).foreach(s.onNext)
+        remaining.take(n.toInt).foreach(t => s.onNext(t))
         remaining = remaining.drop(n.toInt)
       }
     })

@@ -343,7 +343,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       nestedQuery("singer").query {
         termQuery("name", "chris")
-      }.scoreMode(ScoreMode.Min) queryName "namey"
+      }.scoreMode("Min") queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_nested_filter.json")
   }
@@ -370,7 +370,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       nestedQuery("singer") query {
         termQuery("name", "chris")
-      } scoreMode ScoreMode.Min queryName "namey"
+      } scoreMode "Min"
     }
     req.show should matchJsonResource("/json/search/search_nested_filter_query.json")
   }
@@ -826,7 +826,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode ScoreMode.Avg boost 14.5 queryName "namey"
+      } scoreMode "Avg" boost 14.5 queryName "namey"
     }
     req.show should matchJsonResource("/json/search/search_query_nested.json")
   }

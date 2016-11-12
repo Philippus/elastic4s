@@ -21,7 +21,7 @@ class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar 
 
   implicit object SpaceshipRequestBuilder extends RequestBuilder[Spaceship] {
     override def request(ship: Spaceship): BulkCompatibleDefinition = {
-      index into "subscriberflushaftertest" / "ships" source ship
+      indexInto("subscriberflushaftertest" / "ships").source(ship)
     }
   }
 
@@ -85,7 +85,7 @@ class SpaceshipSlowPublisher(duration: FiniteDuration) extends Publisher[Spacesh
         executor.submit(new Runnable {
           override def run(): Unit = {
             while (remaining.nonEmpty) {
-              remaining.take(1).foreach(s.onNext)
+              remaining.take(1).foreach(t => s.onNext(t))
               remaining = remaining.drop(1)
               Thread.sleep(duration.toMillis)
             }
