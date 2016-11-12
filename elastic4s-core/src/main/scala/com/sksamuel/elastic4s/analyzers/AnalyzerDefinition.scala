@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import scala.collection.JavaConverters._
 
 // Base class for analyzers that have custom parameters set.
 abstract class AnalyzerDefinition(val name: String) {
@@ -37,8 +38,6 @@ abstract class AnalyzerDefinition(val name: String) {
     builder
   }
 }
-
-import scala.collection.JavaConverters._
 
 case class StopAnalyzerDefinition(override val name: String,
                                   stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {

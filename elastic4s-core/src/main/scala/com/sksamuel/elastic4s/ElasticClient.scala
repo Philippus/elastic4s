@@ -62,6 +62,8 @@ object ElasticClient extends Logging {
    *
    * @param uri the instance(s) to connect to.
    */
+  @deprecated("use transport", "5.0.0")
+  def remote(uri: ElasticsearchClientUri): ElasticClient = transport(uri)
   def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.EMPTY, uri)
 
   /**
@@ -78,6 +80,8 @@ object ElasticClient extends Logging {
    * @param uri the instance(s) to connect to.
    * @param plugins the plugins to add to the client.
    */
+  @deprecated("use transport", "5.0.0")
+  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri)
   def transport(settings: Settings,
                 uri: ElasticsearchClientUri,
                 plugins: Class[_ <: Plugin]*): ElasticClient = {
