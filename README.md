@@ -33,7 +33,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 |Elastic4s Release|Target Elasticsearch version|
 |-------|---------------------|
-|5.0.0-ALPHA3|5.0.x|
+|5.0.0|5.0.x|
 |2.4.x|2.4.X|
 |2.3.x|2.3.X|
 |2.2.1|2.2.X|
