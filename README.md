@@ -387,7 +387,7 @@ import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.StopAnalyzer
 
 client.execute {
-    create index "places" mappings (
+    createIndex("places") mappings (
         mapping("cities") as (
             keywordField("id"),
             textField("name") boost 4,
@@ -687,7 +687,7 @@ And some requests don't convert to json in the Java client so aren't yet support
 Also, for clarity, it should be pointed out that the client doesn't send JSON to the server, it uses a binary protocol. So the provided json
 format should be treated as a debugging tool only.
 
-The requests that support `.show` are `search`, `multi`, `create index`, `index into`, `validate`, `percolate`, `count`.
+The requests that support `.show` are `search`, `multi`, `createIndex`, `index into`, `validate`, `percolate`, `count`.
 
 ## Synchronous Operations
 
