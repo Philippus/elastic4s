@@ -344,7 +344,7 @@ val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name
 val client = ElasticClient.transport(uri)
 ```
 
-If you need to pass settings to the client, then you need to invoke remote() with a settings object.
+If you need to pass settings to the client, then you need to invoke `transport` with a settings object.
 For example to specify the cluster name (if you changed the default then you must specify the cluster name).
 
 ```scala
