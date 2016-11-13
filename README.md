@@ -31,7 +31,7 @@ The latest release is 5.0.0-ALPHA3 which is compatible with Elasticsearch 5.0.x.
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
-|Elastic4s Release|Target Elasticsearch version|
+| Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
 |5.0.0|5.0.x|
 |2.4.x|2.4.X|
@@ -326,15 +326,16 @@ val settings = Settings.builder()
       .put("http.enabled", false)
       .build()
 val node = LocalNode(settings)
-val client = node.elastic4sclient()
-val client = ElasticClient.local(settings.build)
+val client = node.elastic4sclient(<shutdownNodeOnClose>)
 ```
 
-To connect to a remote elastic cluster then you need to use the transport() function specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+If `shutdownNodeOnClose` is true, then once close is called on the client, the local node will be stopped. Otherwise you will manage the lifecycle of the local node yourself (stopping it before exiting the process).
+
+To connect to a stand alone elasticsearch cluster then you need to use the `transport` function specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
 
 ```scala
 // single node
-val client = ElasticClient.r("host1", 9300)
+val client = ElasticClient.transport("host1", 9300)
 ```
 
 For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host:port,host:port,...?param=value&param2=value2"`. For example:
