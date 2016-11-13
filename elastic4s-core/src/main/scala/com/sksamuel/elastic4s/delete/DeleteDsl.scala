@@ -13,7 +13,7 @@ trait DeleteDsl extends QueryDsl {
 
   def deleteIn(indexes: Indexes) = new DeleteByQueryExpectsQuery(indexes)
   class DeleteByQueryExpectsQuery(indexes: Indexes) {
-    def in(query: QueryDefinition): DeleteByQueryDefinition = DeleteByQueryDefinition(indexes, query)
+    def by(query: QueryDefinition): DeleteByQueryDefinition = DeleteByQueryDefinition(indexes, query)
   }
 
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)

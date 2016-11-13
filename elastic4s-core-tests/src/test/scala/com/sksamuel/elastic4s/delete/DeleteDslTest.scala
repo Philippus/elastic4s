@@ -53,6 +53,10 @@ class DeleteDslTest extends FlatSpec with Matchers with ElasticSugar with TypeCh
   }
 
   it should "accept refresh" in {
-    (delete id 141212 from "places" `type` "type1" refresh RefreshPolicy.IMMEDIATE).build.getRefreshPolicy() == RefreshPolicy.IMMEDIATE
+    (delete(141212) from "places" `type` "type1" refresh RefreshPolicy.IMMEDIATE).build.getRefreshPolicy() == RefreshPolicy.IMMEDIATE
+  }
+
+  "a delete by query request" should "support the dsl syntax" in {
+    deleteIn("places").by("query")
   }
 }
