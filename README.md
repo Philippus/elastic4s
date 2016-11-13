@@ -83,7 +83,7 @@ These are the majority of changes in the scala client. As part of upgrading, the
 * Support predefined Analyzers / Filters #602
 * Support for predefined language-specific stopwords #596
 * Support geo_shape queries #639
-* More like this request has been removed, use more like this query 
+* More like this request has been removed, use more like this query
 * Added better name for update in index into #535
 * Allow querying mappings for all types in an index #619
 * Add shutdown listener to close local node on JVM exit #655
@@ -261,82 +261,86 @@ the DSL closely mirrors the standard Java API / REST API.
 
 | Operation                                 | Syntax |
 |-------------------------------------------|----------------|
-| [Add Alias](guide/aliases.md)             | `add alias "<alias>" on "<index>"` |
-| Cancel Tasks                              | `cancelTasks(nodeIds)` |
-| Clear index cache                         | `clear cache <name>` |
+| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)` |
+| Cancel Tasks                              | `cancelTasks(<nodeIds>)` |
+| Clear index cache                         | `clearCache(<index>)` |
 | Close index                               | `closeIndex(<name>)` |
-| [Count](guide/count.md)                   | `count from <indexes> types <types> <queryblock>` |
-| Cluster health                            | `get cluster health` |
-| Cluster stats                             | `get cluster stats` |
-| [Create Index](guide/createindex.md)      | `createIndex(<name>) mappings { mappings block> } [settings]`|
-| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>) type(<type>) settings <settings>` |
-| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>) in <repo> ...` |
-| Create Template                           | `createTemplate(<name>) pattern <pattern> mappings {...} [settings]`|
-| [Delete by id](guide/delete.md)           | `delete id <id> from <index/type> [settings]`
+| Cluster health                            | `clusterHealth()` |
+| Cluster stats                             | `clusterStats()` |
+| [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`|
+| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)` |
+| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)` |
+| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|
+| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)` |
 | [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`
-| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>) ...` |
+| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)` |
 | Delete Template                           | `deleteTemplate(<name>)` |
-| [Explain](guide/explain.md)               | `explain id <id> in <index/type> query { <queryblock> }`
-| Field stats                               | `field stats <indexes>` |
-| Flush Index                               | `flush index <name>` |
-| [Get](guide/get.md)                       | `get id <id> from <index/type> [settings]` |
+| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`
+| Field stats                               | `fieldStats(<indexes>)` |
+| Flush Index                               | `flushIndex(<index>)` |
+| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` |
 | Get Alias                                 | `getAlias(<name>).on(<index>)` |
 | Get Mapping                               | `getMapping(<index> / <type>)` |
 | Get Segments                              | `getSegments(<indexes>)` |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |
 | Get Template                              | `getTemplate(<name>)` |
-| [Index](guide/index.md)                   | `index into <index/type> fields { <fieldblock> } [settings]` |
+| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` |
 | Index exists                              | `indexExists(<name>)` |
 | Index Status                              | `indexStatus(<index>)` |
 | List Tasks                                | `listTasks(nodeIds)` |
-| More like this                            | `morelike id <id> in <index/type> { fields <fieldsblock> } [settings]` |
-| [Multiget](guide/multiget.md)             | `multiget ( get id 1 from index, get id 2 from index, ... )` |
-| [Multisearch](guide/multisearch.md)       | `multi ( search ..., search ..., ...)`|
+| [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |
+| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`|
 | Open index                                | `openIndex(<name>)` |
-| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>*) [settings]` |
-| Percolate Doc                             | `percolateIn(<index>) doc <fieldsblock>` |
+| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |
 | Recover Index                             | `recoverIndex(<name>)` |
 | Refresh index                             | `refreshIndex(<name>)` |
-| Register Query                            | `register id <id> into <index> query { <queryblock> }` |
+| Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |
 | [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |
-| [Restore Snapshot](guide/snapshot.md)     | `restore snapshot <name> from <repo> ...` |
-| [Search](guide/search.md)                 | `search in <index/type> query ... postFilter ... sort ...` |
+| [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |
+| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` |
 | Search scroll                             | `searchScroll(<scrollId>)` |
 | Type Exists                               | `typesExists(<types>) in <index>` |
-| [Update](guide/update.md)                 | `update id <id> in <index/type> script <script> [settings]` |
-| [Validate](guide/validate.md)             | `validateIn(<index/type>) query <queryblock>` |
+| [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` |
+| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
 ## Client
 
-A locally configured node and client can be created simply by invoking `local` on the `ElasticClient` object:
+A locally configured node and client can be created be including the elatic4s-embedded module. Then a local node
+can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return
+a handle to the client by invoking the `elastic4sclient` function.
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
-val client = ElasticClient.local
+val node = LocalNode(clusterName, pathHome)
+val client = node.elastic4sclient()
 ```
 
 To specify settings for the local node you can pass in a settings object like this:
 ```scala
-val settings = Settings.settingsBuilder()
+val settings = Settings.builder()
+      .put("cluster.name", "elasticsearch")
+      .put("path.home", "mypath")
       .put("http.enabled", false)
-      .put("path.home", "/var/elastic/")
+      .build()
+val node = LocalNode(settings)
+val client = node.elastic4sclient()
 val client = ElasticClient.local(settings.build)
 ```
 
-To connect to a remote elastic cluster then you need to use the remote() call specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+To connect to a remote elastic cluster then you need to use the transport() function specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
 
 ```scala
 // single node
-val client = ElasticClient.remote("host1", 9300)
+val client = ElasticClient.r("host1", 9300)
 ```
 
-For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host:port,host:port,..."` (Note, no parameters can be added). For example:
+For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host:port,host:port,...?param=value&param2=value2"`. For example:
 ```scala
-val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876")
-val client = ElasticClient.remote(uri)
+val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=escluster")
+val client = ElasticClient.transport(uri)
 ```
 
 If you need to pass settings to the client, then you need to invoke remote() with a settings object.
@@ -344,8 +348,8 @@ For example to specify the cluster name (if you changed the default then you mus
 
 ```scala
 import org.elasticsearch.common.settings.Settings
-val settings = Settings.settingsBuilder().put("cluster.name", "myClusterName").build()
-val client = ElasticClient.remote(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
+val settings = Settings.builder().put("cluster.name", "myClusterName").build()
+val client = ElasticClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
 ```
 
 If you already have a handle to a Node in the Java API then you can create a client from it easily:
@@ -362,13 +366,13 @@ will look like (eg what fields it will contain) as Elasticsearch will adapt the 
 To create an index called "places" that is fully dynamic we can simply use:
 
 ```scala
-client.execute { create index "places" }
+client.execute { createIndex("places") }
 ```
 
 We can optionally set the number of shards and / or replicas
 
 ```scala
-client.execute { create index "places" shards 3 replicas 2 }
+client.execute { createIndex("places") shards 3 replicas 2 }
 ```
 
 Sometimes we want to specify the properties of the fields in the index in advance.
@@ -383,17 +387,17 @@ import com.sksamuel.elastic4s.StopAnalyzer
 
 client.execute {
     create index "places" mappings (
-        "cities" as (
-            "id" typed IntegerType,
-            "name" typed StringType boost 4,
-            "content" typed StringType analyzer StopAnalyzer
+        mapping("cities") as (
+            keywordField("id"),
+            textField("name") boost 4,
+            textField("content") analyzer StopAnalyzer
         )
     )
 }
 ```
 
 Then Elasticsearch is configured with those mappings for those fields only.
-It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will be "fixed".
+It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will have their type preset.
 
 More examples on the create index syntax can be [found here](guide/createindex.md).
 
@@ -412,7 +416,7 @@ We must also include at least one field. Fields are specified as standard tuples
 
 ```scala
 client.execute {
-  index into "places" / "cities" id "uk" fields (
+  indexInto("places" / "cities") id "uk" fields (
     "name" -> "London",
     "country" -> "United Kingdom",
     "continent" -> "Europe",
@@ -425,11 +429,11 @@ There are many additional options we can set such as routing, version, parent, t
 See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options, all of
 which exist in the DSL as keywords that reflect their name in the official API.
 
-## Indexing from Classes
+## Indexing Typeclass
 
 Sometimes it is useful to index directly from your domain model, and not have to create maps of fields inline. For this
 elastic4s provides the `Indexable` typeclass. Simply provide an implicit instance of `Indexable[T]` in scope for any
-class T that you wish to index, and then you can use `source t` on the index request. For example:
+class T that you wish to index, and then you can use `doc(t)` on the index request. For example:
 
 ```scala
 // a simple example of a domain model
@@ -443,21 +447,24 @@ implicit object CharacterIndexable extends Indexable[Character] {
 // now the index request reads much cleaner
 val jonsnow = Character("jon snow", "the wall")
 client.execute {
-  index into "gameofthrones" / "characters" source jonsnow
+  indexInto("gameofthrones" / "characters").doc(jonsnow)
 }
 ```
 
 Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
-it done automagically. For those people, elastic4s provides a [Jackson](http://wiki.fasterxml.com)
-based implementation of `Indexable[Any]` that will convert anything to Json.
-To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the
-build.
+it done automagically. For those people, elastic4s provides extensions for the well known Scala Json libraries that
+can be used to generate JSon generically.
 
-The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
-want to use the `source` method. With that implicit in scope, you can now pass any type you like to `source`
-and Jackson will marshall it to json for you.
+Simply add the import for your chosen library below and then with those implicits in scope, you can now pass any type
+ you like to `doc` and an Indexable will be derived automatically.
 
-Beautiful!
+| Library | Elastic4s Module | Import |
+|---------|------------------|--------|
+|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search|ga|1|elastic4s-jackson)|import ElasticJackson.Implicits._|
+|[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search|ga|1|elastic4s-json4s)|import ElasticJson4s.Implicits._|
+|[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search|ga|1|elastic4s-circe)|import io.circe.generic.auto._
+
+                                                                                                                         import com.sksamuel.elastic4s.circe._|
 
 ## Searching
 
@@ -467,40 +474,40 @@ in the higher complexity of the query DSL.
 
 To do a simple text search, where the query is parsed from a single string
 ```scala
-search in "places" / "cities" query "London"
+search("places" / "cities").query("London")
 ```
 
 That is actually an example of a SimpleStringQueryDefinition. The string is implicitly converted to that type of query.
 It is the same as specifying the query type directly:
 
 ```scala
-search in "places" / "cities" query simpleStringQuery("London")
+search("places" / "cities"),query(simpleStringQuery("London"))
 ```
 
 The simple string example is the only time we don't need to specify the query type.
 We can search for everything by not specifying a query at all.
 ```scala
-search in "places" / "cities"
+search("places" / "cities")
 ```
 
 We might want to limit the number of results and / or set the offset.
 ```scala
-search in "places" / "cities" query "paris" start 5 limit 10
+search("places" / "cities") query "paris" start 5 limit 10
 ```
 
 We can search against certain fields only:
 ```scala
-search in "places" / "cities" query termQuery("country", "France")
+search("places" / "cities") query termQuery("country", "France")
 ```
 
 Or by a prefix:
 ```scala
-search in "places" / "cities" query prefixQuery("country", "France")
+search("places" / "cities") query prefixQuery("country", "France")
 ```
 
 Or by a regular expression (slow, but handy sometimes!):
 ```scala
-search in "places" / "cities" query regexQuery("country", "France")
+search("places" / "cities") query regexQuery("country", "France")
 ```
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
@@ -509,26 +516,29 @@ Read more about search syntax [here](guide/search.md).
 Read about [multisearch here](guide/multisearch.md).
 Read about [suggestions here](guide/suggestions.md).
 
-## Search Conversion
+## HitReader Typeclass
 
 By default Elasticsearch search responses contain an array of `SearchHit` instances which contain things like the id,
 index, type, version, etc as well as the document source as a string or map. Elastic4s provides a means to convert these
-back to meaningful domain types quite easily using the `HitAs[T]` typeclass. Provide an implementation of this typeclass, as
-an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call `as[T]` on the response.
+back to meaningful domain types quite easily using the `HitReader[T]` typeclass.
+
+Provide an implementation of this typeclass, as an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call `to[T]` or `safeTo[T]` on the response.
+The difference between to and safeTo is that to will drop any errors and just return successful conversions, whereas safeTo returns
+a sequence of `Either[Throwable, T]`.
 
 A full example:
 
 ```scala
 case class Character(name: String, location: String)
 
-implicit object CharacterHitAs extends HitAs[Character] {
-  override def as(hit: RichSearchHit): Character = {
+implicit object CharacterHitReader extends HitReader[Character] {
+  override def read(hit: Hit): Either[Throwable, Character] = {
     Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString)
   }
 }
 
 val resp = client.execute {
-  search in "gameofthrones" / "characters" query "kings landing"
+  search("gameofthrones" / "characters").query("kings landing")
 }.await // don't block in real code
 
 // .as[Character] will look for an implicit HitAs[Character] in scope
@@ -537,12 +547,8 @@ val characters :Seq[Character] = resp.as[Character]
 
 ```
 
-This is basically the inverse of the `Indexable` typeclass. And just like Indexable, there is a general purpose
-Jackson `HitAs[Any]` implementation for those who wish to have some sugar.
-To use this, you need to add the [jackson extension](http://search.maven.org/#search|ga|1|elastic4s-jackson) to the build.
-
-The next step is to import the implicit into scope with `import ElasticJackson.Implicits._` where ever you
-want to use the `as[T]` methods.
+This is basically the inverse of the `Indexable` typeclass. And just like Indexable, the json modules provide implementations
+out of the box for any types. The imports are the same as for the Indexable typeclasses.
 
 As a bonus feature of the Jackson implementation, if your domain object has fields called `_timestamp`, `_id`, `_type`, `_index`, or
 `_version` then those special fields will be automatically populated as well.
@@ -570,7 +576,7 @@ In this example we are retrieving the document with id 'coldplay' from the bands
 
 ```scala
 client.execute {
- get id "coldplay" from "bands" / "rock"
+ get("coldplay").from("bands" / "rock")
 }
 ```
 
@@ -579,8 +585,8 @@ We can get multiple documents at once too. Notice the following multiget wrappin
 ```scala
 client.execute {
   multiget(
-    get id "coldplay" from "bands/rock",
-    get id "keane" from "bands/rock"
+    get("coldplay").from("bands" / "rock"),
+    get("keane").from("bands" / "rock")
   )
 }
 ```
@@ -594,17 +600,16 @@ We think they're a little past their best (controversial). This operation assume
 
 ```scala
 client.execute {
-  delete id "u2" from "bands/rock"
+  delete("u2").from("bands/rock")
 }
 ```
 
 We can take this a step further by deleting by a query rather than id.
-In this sense the delete is very similar to an SQL delete statement.
-In this example we're deleting all bands where their type is rap.
+In this example we're deleting all bands where their type is pop.
 
 ```scala
 client.execute {
-    delete from index "bands" types "rock" where termQuery("type", "rap")
+  deleteIn("bands").by(termQuery("type", "pop"))
 }
 ```
 
@@ -616,7 +621,7 @@ We can update existing documents without having to do a full index, by updating 
 
 ```scala
 client.execute {
-  update 25 in "scifi/starwars" docAsUpsert (
+  update(25).in("scifi" / "starwars"). docAsUpsert (
     "character" -> "chewie",
     "race" -> "wookie"
   )
@@ -627,11 +632,13 @@ Read more about updates and see [more examples](guide/update.md).
 
 ## More like this
 
-If you want to return documents that are "similar" to   a current document we can do that very easily with the more like this query.
+If you want to return documents that are "similar" to  a current document we can do that very easily with the more like this query.
 
 ```scala
 client.execute {
-  morelike id 4 from "beers/lager" percentTermsToMatch 0.5
+  search("drinks" / "beer") query {
+    moreLikeThisQuery("name").likeTexts("coors", "beer", "molson") minTermFreq 1 minDocFreq 1
+  }
 }
 ```
 
@@ -649,8 +656,8 @@ client.execute {
     index into "bands/rock" fields "name"->"coldplay",
     index into "bands/rock" fields "name"->"kings of leon",
     index into "bands/pop" fields (
-      "name"->"elton john",
-      "best_album"->"tumbleweed connection"
+      "name" -> "elton john",
+      "best_album" -> "tumbleweed connection"
     )
   )
 }
@@ -688,8 +695,9 @@ or when creating the initial index. You can call `.await` on any operation to bl
 This is especially useful when testing.
 
 ```scala
-val resp = client.execute { index into "bands/rock" fields ("name"->"coldplay", "debut"->"parachutes") }.await
-resp.isInstanceOf[IndexResponse] // true
+val resp = client.execute {
+  index("bands" / "rock") fields ("name"->"coldplay", "debut"->"parachutes")
+}.await
 ```
 
 ## DSL Completeness
@@ -703,10 +711,9 @@ However there are settings and operations (mostly admin / cluster related) that 
 cover (pull requests welcome!).
 In these cases it is necessary to drop back to the Java API.
 This can be done by calling .java on the client object to get the underlying java elastic client,
-or .admin to get the admin based client, eg, the following request is a Java API request.
 
 ```scala
-client.admin.cluster.prepareHealth.setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
+client.java.admin.cluster.prepareHealth.setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
 ```
 
 This way you can still access everything the normal Java client covers in the cases
@@ -725,7 +732,7 @@ stream data from some publisher into elasticsearch. Or you can create an elastic
 First you have to add an additional dependeny to your `build.sbt`
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "1.7.4"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "x.x.x"
 ```
 
 Import the new API with
@@ -841,6 +848,7 @@ folder. There is no need to configure anything externally.
 * Hotel Urbano
 * Immobilien Scout
 * Deutsche Bank
+* Goldman Sachs
 * HMRC
 * Canal+
 
