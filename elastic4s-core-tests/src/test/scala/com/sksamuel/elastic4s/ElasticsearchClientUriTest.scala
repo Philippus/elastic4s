@@ -19,9 +19,14 @@ class ElasticsearchClientUriTest extends FlatSpec with Matchers {
     uri.hosts shouldBe List("host1" -> 1234)
   }
 
+  it should "parse everything" in {
+    ElasticsearchClientUri("elasticsearch://host1:1234,host2:9999?a=b&c=d").hosts shouldBe
+      List(("host1", 1234), ("host2", 9999))
+    ElasticsearchClientUri("elasticsearch://host1:1234,host2:9999?a=b&c=d").options shouldBe Map("a" -> "b", "c" -> "d")
+  }
+
   it should "parse options" in {
-    ElasticsearchClientUri("elasticsearch://host1:1234,host2:9999?a=b&c=d").options shouldBe
-      Map("a" -> "b", "c" -> "d")
+    ElasticsearchClientUri("elasticsearch://host1:1234,host2:9999?a=b&c=d").options shouldBe Map("a" -> "b", "c" -> "d")
   }
 
   it should "error on missing values between commas" in {
