@@ -17,7 +17,7 @@ object Build extends AutoPlugin {
     val ReactiveStreamsVersion = "1.0.0"
     val JacksonVersion = "2.8.4"
     val Slf4jVersion = "1.7.12"
-    val ElasticsearchVersion = "5.0.0"
+    val ElasticsearchVersion = "5.0.1"
     val Log4jVersion = "2.6.2"
     val CommonsIoVersion = "2.4"
     val CirceVersion = "0.6.0"
