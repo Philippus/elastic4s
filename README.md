@@ -231,7 +231,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 
 object Test extends App {
 
-  val client = ElasticClient.local
+  val client = ElasticClient.transport(ElasticsearchUri(host, port))
 
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
@@ -306,7 +306,36 @@ the DSL closely mirrors the standard Java API / REST API.
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
-## Client
+## Connecting to a Cluster
+
+To connect to a stand alone elasticsearch cluster then you need to use the `transport` method on the `ElasticClient` object  specifying the uri of the cluster. The uri is an instance of `ElasticsearchUri` which can be created from a host and port or from a string. Please note that the uri uses the port of the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+
+```scala
+val client = ElasticClient.transport(ElasticsearchUri("host1", 9300))
+```
+
+For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
+```scala
+val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=mycluster")
+val client = ElasticClient.transport(uri)
+```
+
+If you need to pass settings to the client, then you need to invoke `transport` with a settings object.
+For example to specify the cluster name (if you changed the default then you must specify the cluster name).
+
+```scala
+import org.elasticsearch.common.settings.Settings
+val settings = Settings.builder().put("cluster.name", "myClusterName").build()
+val client = ElasticClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
+```
+
+If you already have a handle to a Node in the Java API then you can create a client from it easily:
+```scala
+val node = ... // node from the java API somewhere
+val client = ElasticClient.fromNode(node)
+```
+
+## Embedded Node
 
 A locally configured node and client can be created be including the elatic4s-embedded module. Then a local node
 can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return
@@ -330,34 +359,6 @@ val client = node.elastic4sclient(<shutdownNodeOnClose>)
 ```
 
 If `shutdownNodeOnClose` is true, then once close is called on the client, the local node will be stopped. Otherwise you will manage the lifecycle of the local node yourself (stopping it before exiting the process).
-
-To connect to a stand alone elasticsearch cluster then you need to use the `transport` function specifying the hostnames and ports. Please note that this is the port for the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
-
-```scala
-// single node
-val client = ElasticClient.transport("host1", 9300)
-```
-
-For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host:port,host:port,...?param=value&param2=value2"`. For example:
-```scala
-val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=escluster")
-val client = ElasticClient.transport(uri)
-```
-
-If you need to pass settings to the client, then you need to invoke `transport` with a settings object.
-For example to specify the cluster name (if you changed the default then you must specify the cluster name).
-
-```scala
-import org.elasticsearch.common.settings.Settings
-val settings = Settings.builder().put("cluster.name", "myClusterName").build()
-val client = ElasticClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
-```
-
-If you already have a handle to a Node in the Java API then you can create a client from it easily:
-```scala
-val node = ... // node from the java API somewhere
-val client = ElasticClient.fromNode(node)
-```
 
 ## Create Index
 
