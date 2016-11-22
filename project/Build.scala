@@ -52,7 +52,7 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
-      "org.apache.lucene" % "lucene-join"     % LuceneVersion               % "compileonly",
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion         % "compileonly",
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
