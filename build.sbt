@@ -14,6 +14,8 @@ lazy val root = Project("elastic4s", file("."))
     streams
   )
 
+
+
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
 
