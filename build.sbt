@@ -14,8 +14,6 @@ lazy val root = Project("elastic4s", file("."))
     streams
   )
 
-
-
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
 
@@ -25,21 +23,6 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
     libraryDependencies ++= Seq(
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % JacksonVersion,
-      "org.apache.lucene"                     % "lucene-core"               % "6.2.1",
-      "org.apache.lucene"                     % "lucene-analyzers-common"   % "6.2.1",
-      "org.apache.lucene"                     % "lucene-backward-codecs"    % "6.2.1",
-      "org.apache.lucene"                     % "lucene-grouping"           % "6.2.1",
-      "org.apache.lucene"                     % "lucene-highlighter"        % "6.2.1",
-      "org.apache.lucene"                     % "lucene-join"               % "6.2.1",
-      "org.apache.lucene"                     % "lucene-memory"             % "6.2.1",
-      "org.apache.lucene"                     % "lucene-misc"               % "6.2.1",
-      "org.apache.lucene"                     % "lucene-queries"            % "6.2.1",
-      "org.apache.lucene"                     % "lucene-queryparser"        % "6.2.1",
-      "org.apache.lucene"                     % "lucene-sandbox"            % "6.2.1",
-      "org.apache.lucene"                     % "lucene-spatial"            % "6.2.1",
-      "org.apache.lucene"                     % "lucene-spatial-extras"     % "6.2.1",
-      "org.apache.lucene"                     % "lucene-spatial3d"          % "6.2.1",
-      "org.apache.lucene"                     % "lucene-suggest"            % "6.2.1",
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion,
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
