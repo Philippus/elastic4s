@@ -231,7 +231,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 
 object Test extends App {
 
-  val client = ElasticClient.transport(ElasticsearchUri(host, port))
+  val client = ElasticClient.transport(ElasticsearchClientUri(host, port))
 
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
@@ -308,10 +308,10 @@ Please also note [some java interoperability notes](guide/javainterop.md).
 
 ## Connecting to a Cluster
 
-To connect to a stand alone elasticsearch cluster then you need to use the `transport` method on the `ElasticClient` object  specifying the uri of the cluster. The uri is an instance of `ElasticsearchUri` which can be created from a host and port or from a string. Please note that the uri uses the port of the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+To connect to a stand alone elasticsearch cluster then you need to use the `transport` method on the `ElasticClient` object  specifying the uri of the cluster. The uri is an instance of `ElasticsearchClientUri` which can be created from a host and port or from a string. Please note that the uri uses the port of the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
 
 ```scala
-val client = ElasticClient.transport(ElasticsearchUri("host1", 9300))
+val client = ElasticClient.transport(ElasticsearchClientUri("host1", 9300))
 ```
 
 For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
