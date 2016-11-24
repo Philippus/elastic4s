@@ -97,7 +97,7 @@ object ElasticClient extends Logging {
     *
     * @param settings the settings as applicable to the client.
     * @param uri the instance(s) to connect to.
-    * @param enableXPack enable the XPack transport client with a secured Elastic cluster
+    * @param enableXPack enable the XPack transport client for a secured elasticsearch cluster
     * @param plugins the plugins to add to the client.
     */
   def transport(settings: Settings,
