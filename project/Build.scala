@@ -53,6 +53,7 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
       "org.elasticsearch.client"              % "rest"                      % ElasticsearchVersion,
+      "org.elasticsearch.client"              % "x-pack-transport"          % ElasticsearchVersion,
       "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
