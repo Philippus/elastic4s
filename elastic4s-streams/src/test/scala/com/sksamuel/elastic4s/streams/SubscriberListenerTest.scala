@@ -29,5 +29,20 @@ class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar {
 
       latch.await(1, TimeUnit.MINUTES) shouldBe true
     }
+
+    "invoke enhanced listener for each confirmed doc" in {
+
+      val latch = new CountDownLatch(Ship.ships.length)
+
+      val config = SubscriberConfig().withTypedListener(new TypedResponseListener[Ship] {
+        override def onAck(resp: RichBulkItemResponse, original: Ship): Unit = {
+          latch.countDown()
+        }
+      })
+      val subscriber = client.subscriber[Ship](config)
+      ShipPublisher.subscribe(subscriber)
+
+      latch.await(1, TimeUnit.MINUTES) shouldBe true
+    }
   }
 }
