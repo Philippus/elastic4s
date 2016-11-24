@@ -15,13 +15,19 @@ object ReactiveElastic {
 
     def subscriber[T](config: SubscriberConfig)
                      (implicit builder: RequestBuilder[T], actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] = {
-      new BulkIndexingSubscriber[T](client, builder, config)
+      new BulkIndexingSubscriber[T](client, builder, TypedSubscriberConfig(config))
+    }
+
+    def subscriber[T](extendedConfig: TypedSubscriberConfig[T])
+                     (implicit builder: RequestBuilder[T], actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] = {
+      new BulkIndexingSubscriber[T](client, builder, extendedConfig)
     }
 
     def subscriber[T](batchSize: Int = 100,
                       concurrentRequests: Int = 5,
                       refreshAfterOp: Boolean = false,
                       listener: ResponseListener = ResponseListener.noop,
+                      typedListener: TypedResponseListener[T] = TypedResponseListener.noop,
                       completionFn: () => Unit = () => (),
                       errorFn: Throwable => Unit = _ => (),
                       flushInterval: Option[FiniteDuration] = None,
@@ -40,7 +46,7 @@ object ReactiveElastic {
         flushInterval = flushInterval,
         flushAfter = flushAfter,
         maxAttempts = maxAttempts
-      )
+      ).withTypedListener(typedListener)
       subscriber(config)
     }
 
