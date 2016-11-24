@@ -42,6 +42,7 @@ object Build extends AutoPlugin {
     crossScalaVersions := Seq("2.11.8", "2.12.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
+    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
     fork in Test := true,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
