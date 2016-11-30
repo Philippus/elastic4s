@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
+import scala.concurrent.duration._
 
 class ScrollTest extends WordSpec with Matchers with ElasticSugar {
 
@@ -64,6 +65,24 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
         searchScroll(resp4.scrollId)
       }.await
       resp5.hits.map(_.fieldValue("name")).toList shouldBe List("waking the watch")
+    }
+  }
+
+  "a 'searchScroll.keepAlive'" should {
+    "not interpret FiniteDuration as 'id'" in {
+      val resp1 = client.execute {
+        search("katebush" / "songs")
+          .query("1985")
+          .scroll("1m")
+          .limit(2)
+          .sortBy(fieldSort("name"))
+          .storedFields("name")
+      }.await
+
+      val resp2 = client.execute {
+        searchScroll(resp1.scrollId).keepAlive(1 minute)
+      }.await
+      resp2.hits.map(_.fieldValue("name")).toList shouldBe List("dream of sheep", "hello earth")
     }
   }
 }

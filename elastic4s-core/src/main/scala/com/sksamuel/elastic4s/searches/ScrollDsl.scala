@@ -36,7 +36,7 @@ case class SearchScrollDefinition(id: String,
                                   keepAlive: Option[String] = None) {
 
   def keepAlive(keepAlive: String): SearchScrollDefinition = copy(keepAlive = keepAlive.some)
-  def keepAlive(duration: FiniteDuration): SearchScrollDefinition = copy(duration.toSeconds + "s")
+  def keepAlive(duration: FiniteDuration): SearchScrollDefinition = copy(keepAlive = Some(duration.toSeconds + "s"))
 }
 
 case class ClearScrollDefinition(ids: Seq[String])
