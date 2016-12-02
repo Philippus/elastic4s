@@ -225,9 +225,12 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 
 #### Dependencies
 
-Starting from version 1.5.13 the main artifact has been renamed to elastic4s-core_2.x. Please update your build scripts. There is now an elastic4s-testkit_2.x which brings in a couple of useful methods for waiting until the node/cluster is in some expected state. Very useful when trying unit tests.
+Starting from version 5.0.0, the underlying Elasticsearch Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
+I do not know the reasoning behind this, as they are needed for the Java client to work.
+The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
 
-If you previously used the Jackson support for DocumentSource or Indexables then you need to add a new dependency elastic4s-jackson_2.x. This will allow you to do `import ElasticJackson.Implicits._` which puts a Jackson based `Indexable` into scope, which allows any class to be indexed automagically without the need to manually create maps or json objects. Similarly, if you are using `response.hitsAs[T]`, then the same import brings in a `Reader` that will convert any type to a case class.
+The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions.
+Therefore if you bring in elastic4s (or even just the raw Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
 
 ## Introduction
 
