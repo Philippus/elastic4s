@@ -27,9 +27,16 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 #### Release
 
-The latest release is 5.0.0-ALPHA3 which is compatible with Elasticsearch 5.0.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 5.0.4 which is compatible with Elasticsearch 5.0.x. There are releases for both Scala 2.10 and Scala 2.11. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
+
+Starting from version 5.0.0, the underlying Elasticsearch Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
+I do not know the reasoning behind this, as they are needed for the Java client to work.
+The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
+
+The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions.
+Therefore if you bring in elastic4s (or even just the raw Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
@@ -222,15 +229,6 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 * Added `matched_fields` and highlight filter to highlighter
 * Supported `stopwords_list` in filter
 * Reworked testkit to allow more configuration over the creating of the test clients
-
-#### Dependencies
-
-Starting from version 5.0.0, the underlying Elasticsearch Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
-I do not know the reasoning behind this, as they are needed for the Java client to work.
-The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
-
-The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions.
-Therefore if you bring in elastic4s (or even just the raw Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
 
 ## Introduction
 
