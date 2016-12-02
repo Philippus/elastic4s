@@ -42,6 +42,7 @@ object Build extends AutoPlugin {
     crossScalaVersions := Seq("2.11.8", "2.12.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
+    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
     fork in Test := true,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
@@ -53,6 +54,7 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
       "org.elasticsearch.client"              % "rest"                      % ElasticsearchVersion,
+      "org.elasticsearch.client"              % "x-pack-transport"          % ElasticsearchVersion,
       "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
