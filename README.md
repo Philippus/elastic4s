@@ -33,7 +33,7 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
-|5.0.0|5.0.x|
+|5.0.x|5.0.x|
 |2.4.x|2.4.X|
 |2.3.x|2.3.X|
 |2.2.1|2.2.X|
@@ -50,6 +50,24 @@ For more information read [Using Elastic4s in your project](#using-elastic4s-in-
 |0.90.13.2|0.90.x|
 
 ##### Changelog
+
+###### 5.0.4
+
+* elastic4s-xpack-security module.
+* Added missing geoShapeQuery for indexed shape
+
+###### 5.0.3
+
+* Fixed issue with search scroll id using a scala Duration
+
+###### 5.0.2
+
+* Elastic4s now brings in the required netty and lucene dependencies that the `elasticsearch-transport` module needs, but doesn't bring in transitively.
+* Added strongly typed listener to `elastic4s-streams`.
+
+###### 5.0.1
+
+* Released `elastic4s-play-json` for Elasticsearch 5.
 
 ###### 5.0.0
 
