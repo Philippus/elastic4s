@@ -19,6 +19,8 @@ trait AggregationDsl {
 
   def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
+    @deprecated("use query", "5.0.0")
+    def filter(query: QueryDefinition) = FilterAggregationDefinition(name, query)
     def query(query: QueryDefinition) = FilterAggregationDefinition(name, query)
   }
 
