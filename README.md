@@ -353,6 +353,15 @@ val node = ... // node from the java API somewhere
 val client = ElasticClient.fromNode(node)
 ```
 
+## X-Pack-Security
+
+Elastic4s also supports the xpack-security add on. To use this, create a client using the `XPackElasticClient` object
+instead of ElasticClient. Eg,
+
+```scala
+val client = XPackElasticClient(settings, uri, <plugins>...)
+```
+
 ## Embedded Node
 
 A locally configured node and client can be created be including the elatic4s-embedded module. Then a local node
