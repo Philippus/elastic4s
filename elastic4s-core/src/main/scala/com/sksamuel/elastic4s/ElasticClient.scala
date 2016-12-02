@@ -9,7 +9,6 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.node.Node
 import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.transport.client.PreBuiltTransportClient
-import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 
 import scala.concurrent._
@@ -65,25 +64,7 @@ object ElasticClient extends Logging {
    */
   @deprecated("use transport", "5.0.0")
   def remote(uri: ElasticsearchClientUri): ElasticClient = transport(uri)
-  def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.EMPTY, uri, false)
-
-  /**
-   * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
-   *
-   * Any options set on the URI will be added to the given settings object before the client is created.
-   * If a setting is specified in both the settings object and the uri, the version in the supplied
-   * settings object will be used.
-   *
-   * Any given plugins will be added to the client in addition to the standard plugins provided
-   * by the PreBuiltTransportClient instance.
-   *
-   * @param settings the settings as applicable to the client.
-   * @param uri the instance(s) to connect to.
-   * @param plugins the plugins to add to the client.
-   */
-  @deprecated("use transport", "5.0.0")
-  def remote(settings: Settings, uri: ElasticsearchClientUri): ElasticClient = transport(settings, uri, false)
-  def transport(settings: Settings, uri: ElasticsearchClientUri, plugins: Class[_ <: Plugin]*): ElasticClient = transport(settings, uri, false, plugins:_*)
+  def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.EMPTY, uri)
 
   /**
     * Creates an ElasticClient connected to the elasticsearch instance(s) specified by the uri.
@@ -97,12 +78,10 @@ object ElasticClient extends Logging {
     *
     * @param settings the settings as applicable to the client.
     * @param uri the instance(s) to connect to.
-    * @param enableXPack enable the XPack transport client for a secured elasticsearch cluster
     * @param plugins the plugins to add to the client.
     */
   def transport(settings: Settings,
                 uri: ElasticsearchClientUri,
-                enableXPack: Boolean,
                 plugins: Class[_ <: Plugin]*): ElasticClient = {
 
     val combinedSettings = uri.options.foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
@@ -117,16 +96,10 @@ object ElasticClient extends Logging {
         "This will still work if your cluster has the default name, but it is recommended you always set the cluster.name to avoid issues""")
     }
 
-    val client = if (enableXPack) {
-      new PreBuiltXPackTransportClient(combinedSettings, plugins: _*)
-    } else {
-      new PreBuiltTransportClient(combinedSettings, plugins: _*)
-    }
-
+    val client = new PreBuiltTransportClient(combinedSettings, plugins: _*)
     for ( (host, port) <- uri.hosts ) {
       client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
     }
-
     fromClient(client)
   }
 }

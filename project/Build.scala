@@ -14,7 +14,7 @@ object Build extends AutoPlugin {
     val CatsVersion = "0.8.1"
     val CirceVersion = "0.6.1"
     val CommonsIoVersion = "2.4"
-    val ElasticsearchVersion = "5.0.1"
+    val ElasticsearchVersion = "5.0.2"
     val ExtsVersion = "1.36.0"
     val JacksonVersion = "2.8.4"
     val Json4sVersion = "3.5.0"
@@ -42,7 +42,6 @@ object Build extends AutoPlugin {
     crossScalaVersions := Seq("2.11.8", "2.12.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
-    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
     fork in Test := true,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
@@ -54,7 +53,6 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
       "org.elasticsearch.client"              % "rest"                      % ElasticsearchVersion,
-      "org.elasticsearch.client"              % "x-pack-transport"          % ElasticsearchVersion,
       "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,

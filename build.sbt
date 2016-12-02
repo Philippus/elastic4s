@@ -17,6 +17,13 @@ lazy val root = Project("elastic4s", file("."))
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
 
+lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
+  .settings(
+    name := "elastic4s-xpack-security",
+    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
+    libraryDependencies += "org.elasticsearch.client" % "x-pack-transport" % ElasticsearchVersion
+  ).dependsOn(core, testkit % "test")
+
 lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
     name := "elastic4s-embedded",
