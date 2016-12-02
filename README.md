@@ -355,8 +355,8 @@ val client = ElasticClient.fromNode(node)
 
 ## X-Pack-Security
 
-Elastic4s also supports the xpack-security add on. To use this, create a client using the `XPackElasticClient` object
-instead of ElasticClient. Eg,
+Elastic4s also supports the xpack-security add on. To use this, add the `elastic-xpack-security` dependency to your build
+and create a client using the `XPackElasticClient` object instead of the `ElasticClient` object. Eg,
 
 ```scala
 val client = XPackElasticClient(settings, uri, <plugins>...)
