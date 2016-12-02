@@ -1,30 +1,29 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.geo.builders.ShapeBuilder
 import org.elasticsearch.common.geo.{ShapeRelation, SpatialStrategy}
-import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.query.GeoShapeQueryBuilder
 
 case class GeoShapeDefinition(field: String,
-                              shape: ShapeBuilder,
+                              _builder: GeoShapeQueryBuilder,
                               relation: Option[ShapeRelation] = None,
                               boost: Option[Float] = None,
                               queryName: Option[String] = None,
                               strategy: Option[SpatialStrategy] = None,
                               indexedShapeIndex: Option[String] = None,
                               indexedShapePath: Option[String] = None,
-                              ignoreUnmapped: Option[Boolean] = None) {
+                              ignoreUnmapped: Option[Boolean] = None) extends QueryDefinition {
 
-  def builder = {
-    val builder = QueryBuilders.geoShapeQuery(field, shape)
-    ignoreUnmapped.foreach(builder.ignoreUnmapped)
-    indexedShapeIndex.foreach(builder.indexedShapeIndex)
-    indexedShapePath.foreach(builder.indexedShapePath)
-    relation.foreach(builder.relation)
-    strategy.foreach(builder.strategy)
-    boost.foreach(builder.boost)
-    queryName.foreach(builder.queryName)
-    builder
+  override def builder = {
+    ignoreUnmapped.foreach(_builder.ignoreUnmapped)
+    indexedShapeIndex.foreach(_builder.indexedShapeIndex)
+    indexedShapePath.foreach(_builder.indexedShapePath)
+    relation.foreach(_builder.relation)
+    strategy.foreach(_builder.strategy)
+    boost.foreach(_builder.boost)
+    queryName.foreach(_builder.queryName)
+    _builder
   }
 
   def relation(relation: ShapeRelation): GeoShapeDefinition = copy(relation = relation.some)

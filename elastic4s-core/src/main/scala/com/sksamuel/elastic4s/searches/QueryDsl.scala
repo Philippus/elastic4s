@@ -83,7 +83,13 @@ trait QueryDsl {
   def geoPolygonQuery(field: String, points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
-  def geoShapeQuery(field: String, shape: ShapeBuilder): GeoShapeDefinition = GeoShapeDefinition(field, shape)
+  def geoShapeQuery(field: String, shape: ShapeBuilder): GeoShapeDefinition =
+    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, shape))
+
+  def geoShapeQuery(field: String,
+                    indexedShapeId: String,
+                    indexedShapeType: String): GeoShapeDefinition =
+    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, indexedShapeId, indexedShapeType))
 
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
