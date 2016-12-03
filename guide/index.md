@@ -61,7 +61,7 @@ index into "family" -> "soprano" fields (
 ```
 
 
-More examples can be found in [IndexDslTest.scala](../src/test/scala/com/sksamuel/elastic4s/IndexDslTest.scala).
+More examples can be found in [IndexDslTest.scala](../elastic4s-core-tests/src/test/scala/com/sksamuel/elastic4s/indexes/IndexDslTest.scala).
 
 ### Indexing with Explicit Fields
 
