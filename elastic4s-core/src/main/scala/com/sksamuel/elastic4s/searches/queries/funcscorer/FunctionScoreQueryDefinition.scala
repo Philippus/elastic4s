@@ -7,7 +7,7 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder
 
 case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
-                                        scorers: Seq[FilterFunctionDefinition[_]] = Nil,
+                                        scorers: Seq[FilterFunctionDefinition] = Nil,
                                         boost: Option[Double] = None,
                                         maxBoost: Option[Double] = None,
                                         minScore: Option[Double] = None,
@@ -48,14 +48,17 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
   def scorers(scorers: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition =
     scoreFuncs(scorers.map(FilterFunctionDefinition(_)))
 
-  def scoreFuncs(first: FilterFunctionDefinition[_],
-                 rest: FilterFunctionDefinition[_]*): FunctionScoreQueryDefinition = scoreFuncs(first +: rest)
+  def scoreFuncs(first: FilterFunctionDefinition,
+                 rest: FilterFunctionDefinition*): FunctionScoreQueryDefinition = scoreFuncs(first +: rest)
 
-  def scoreFuncs(functions: Iterable[FilterFunctionDefinition[_]]): FunctionScoreQueryDefinition = copy(scorers = functions.toSeq)
+  def scoreFuncs(functions: Iterable[FilterFunctionDefinition]): FunctionScoreQueryDefinition = copy(scorers = functions.toSeq)
 }
 
-case class FilterFunctionDefinition[T](score: ScoreFunctionDefinition,
-                                       filter: Option[QueryDefinition] = None) {
+case class FilterFunctionDefinition(score: ScoreFunctionDefinition,
+                                    filter: Option[QueryDefinition] = None) {
+
+  def filter(query: QueryDefinition): FilterFunctionDefinition = FilterFunctionDefinition(score, Some(query))
+
   def builder: FilterFunctionBuilder = {
     filter.fold(new FilterFunctionBuilder(score.builder)) { q =>
       new FilterFunctionBuilder(q.builder, score.builder)
