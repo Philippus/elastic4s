@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
  */
 class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
                                                  builder: RequestBuilder[T],
-                                                 config: SubscriberConfig)
+                                                 config: TypedSubscriberConfig[T])
                                                 (implicit actorRefFactory: ActorRefFactory) extends Subscriber[T] {
 
   private var actor: ActorRef = _
@@ -71,13 +71,12 @@ object BulkActor {
   case object ForceIndexing
 
 
-  case class Result(items: Seq[BulkItemResult])
+  case class Result[T](items: Seq[BulkItemResult], originals: Seq[T])
 
 
   case class Request(n: Int)
 
-
-  case class Send(req: BulkDefinition, attempts: Int)
+  case class Send[T](req: BulkDefinition, originals: Seq[T], attempts: Int)
 
 
 }
@@ -86,10 +85,11 @@ object BulkActor {
 class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
-                   config: SubscriberConfig) extends Actor {
+                   typedConfig: TypedSubscriberConfig[T]) extends Actor {
 
   import ElasticDsl._
   import context.{dispatcher, system}
+  import typedConfig.{ baseConfig => config }
 
   private val buffer = new ArrayBuffer[T]()
   buffer.sizeHint(config.batchSize)
@@ -146,19 +146,24 @@ class BulkActor[T](client: ElasticClient,
       subscription.request(n)
       requested = requested + n
 
-    case BulkActor.Send(req, attempts) => send(req, attempts)
+    case msg: BulkActor.Send[T] => send(msg.req, msg.originals, msg.attempts)
 
     case BulkActor.ForceIndexing =>
       if (buffer.nonEmpty)
         index()
 
-    case BulkActor.Result(items) =>
-      confirmed = confirmed + items.size
-      items.foreach(config.listener.onAck)
+    case msg: BulkActor.Result[T] =>
+      confirmed = confirmed + msg.items.size
+      msg.items
+        .zip(msg.originals)
+        .foreach { case (item, original) =>
+          config.listener.onAck(item)
+          typedConfig.typedListener.onAck(item, original)
+        }
       // need to check if we're completed, because if we are then this might be the last pending conf
       // and if it is, we can shutdown.
       if (completed) shutdownIfAllConfirmed()
-      else self ! BulkActor.Request(items.size)
+      else self ! BulkActor.Request(msg.items.size)
 
     case t: T =>
       buffer.append(t)
@@ -182,13 +187,22 @@ class BulkActor[T](client: ElasticClient,
     }
   }
 
-  private def send(req: BulkDefinition, attempts: Int): Unit = {
+  private def send(req: BulkDefinition, originals: Seq[T], attempts: Int): Unit = {
+    require(req.requests.size == originals.size, "Requests size does not match originals size")
 
-    // returns just requests that failed as a new bulk definition
-    def retryDef(resp: BulkResult): BulkDefinition = {
+    def filterByIndexes[S](sequence: Seq[S], indexes: Set[Int]) =
+      sequence.zipWithIndex
+        .filter { case (_, index) => indexes.contains(index) }
+        .map { case (seqItem, _) => seqItem }
+    def getOriginalForResponse(response: BulkItemResult) = originals(response.itemId)
+
+    // returns just requests that failed as a new bulk definition (+ originals)
+    def getRetryDef(resp: BulkResult): (BulkDefinition, Seq[T]) = {
       val failureIds = resp.failures.map(_.itemId).toSet
-      val failedReqs = req.requests.zipWithIndex.filter { case (_, index) => failureIds.contains(index) }.map(_._1)
-      BulkDefinition(failedReqs).refresh(config.refreshAfterOp)
+      val retryOriginals = filterByIndexes(originals, failureIds)
+      val failedReqs = filterByIndexes(req.requests, failureIds)
+
+      (BulkDefinition(failedReqs).refresh(config.refreshAfterOp), retryOriginals)
     }
 
     client.execute(req).onComplete {
@@ -196,17 +210,24 @@ class BulkActor[T](client: ElasticClient,
       case Success(resp: BulkResult) =>
 
         if (resp.hasFailures) {
-          resp.failures.foreach(config.listener.onFailure)
+          resp.failures
+            .zip(resp.failures.map(getOriginalForResponse))
+            .foreach{ case (failure, original) =>
+              config.listener.onFailure(failure)
+              typedConfig.typedListener.onFailure(failure, original)
+            }
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
-          if (attempts > 0)
-            system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef(resp), attempts - 1))
-          else
+          if (attempts > 0) {
+            val (retryDef, originals) = getRetryDef(resp)
+            system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
+          } else {
             throw new RuntimeException("Bulk operation failed too many times: " + resp.failureMessage)
+          }
         }
 
         if (resp.hasSuccesses)
-          self ! BulkActor.Result(resp.successes)
+          self ! BulkActor.Result(resp.successes, resp.successes.map(getOriginalForResponse))
     }
   }
 
@@ -227,7 +248,7 @@ class BulkActor[T](client: ElasticClient,
     }
 
     sent = sent + buffer.size
-    self ! BulkActor.Send(bulkDef, config.maxAttempts)
+    self ! BulkActor.Send(bulkDef, buffer.toList, config.maxAttempts)
 
     buffer.clear
 
@@ -256,12 +277,23 @@ trait ResponseListener {
 }
 
 
+trait TypedResponseListener[-T] {
+  def onAck(resp: BulkItemResult, original: T): Unit
+  def onFailure(resp: BulkItemResult, original: T): Unit = ()
+}
+
 object ResponseListener {
   def noop = new ResponseListener {
     override def onAck(resp: BulkItemResult): Unit = ()
   }
 }
 
+
+object TypedResponseListener {
+  val noop = new TypedResponseListener[Any] {
+    override def onAck(resp: BulkItemResult, original: Any): Unit = ()
+  }
+}
 
 /**
  * @param listener a listener which is notified on each acknowledge batch item
@@ -290,4 +322,11 @@ case class SubscriberConfig(batchSize: Int = 100,
                             failureWait: FiniteDuration = 2.seconds,
                             maxAttempts: Int = 5,
                             flushInterval: Option[FiniteDuration] = None,
-                            flushAfter: Option[FiniteDuration] = None)
+                            flushAfter: Option[FiniteDuration] = None) {
+
+  def withTypedListener[T](typedListener: TypedResponseListener[T]): TypedSubscriberConfig[T] =
+    TypedSubscriberConfig(this, typedListener)
+}
+
+case class TypedSubscriberConfig[T](baseConfig: SubscriberConfig,
+                                    typedListener: TypedResponseListener[T] = TypedResponseListener.noop)
