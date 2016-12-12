@@ -18,8 +18,7 @@
     "date": {
       "script": {
         "inline": "doc['date'].value",
-        "lang": "groovy",
-        "params": {}
+        "lang": "groovy"
       },
       "ignore_failure": false
     }

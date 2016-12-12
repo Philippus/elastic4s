@@ -14,7 +14,7 @@ import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
-import org.elasticsearch.script.{Script, ScriptService}
+import org.elasticsearch.script.{Script, ScriptService, ScriptType}
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
@@ -109,16 +109,12 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   def scriptfields(defs: ScriptFieldDefinition*): this.type = scriptfields(defs)
   def scriptfields(defs: Iterable[ScriptFieldDefinition]): this.type = {
     defs.foreach {
-      case ScriptFieldDefinition(name, script, Some(lang), Some(params), scriptType) =>
-        _builder.addScriptField(name, new Script(script, scriptType, lang, params.asJava))
-      case ScriptFieldDefinition(name, script, Some(lang), None, scriptType) =>
-        _builder.addScriptField(name, new Script(script, scriptType, lang, new util.HashMap()))
-      case ScriptFieldDefinition(name, script, None, Some(params), scriptType) =>
-        _builder.addScriptField(name, new Script(script, scriptType, null, params.asJava))
-      case ScriptFieldDefinition(name, script, None, None, ScriptService.ScriptType.INLINE) =>
+      case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
         _builder.addScriptField(name, new Script(script))
-      case ScriptFieldDefinition(name, script, None, None, scriptType) =>
-        _builder.addScriptField(name, new Script(script, scriptType, null, new util.HashMap()))
+      case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
+        _builder.addScriptField(name, new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
+                                                 options.map(_.asJava).getOrElse(new util.HashMap()),
+                                                 params.map(_.asJava).getOrElse(new util.HashMap())))
     }
     this
   }

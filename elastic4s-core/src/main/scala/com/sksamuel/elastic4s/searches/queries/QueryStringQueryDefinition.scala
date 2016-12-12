@@ -41,8 +41,13 @@ case class QueryStringQueryDefinition(query: String)
     this
   }
 
+  @deprecated("Lowercase expanded terms has been deprecated by Elasticsearch", "5.1.1")
   def lowercaseExpandedTerms(lowercaseExpandedTerms: Boolean): this.type = {
-    builder.lowercaseExpandedTerms(lowercaseExpandedTerms)
+    this
+  }
+
+  def splitOnWhitespace(splitOnWhitespace: Boolean): this.type = {
+    builder.splitOnWhitespace(splitOnWhitespace)
     this
   }
 

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
+import org.elasticsearch.ResourceAlreadyExistsException
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
-import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
@@ -71,7 +71,7 @@ trait AbstractElasticSugar extends ElasticDsl {
         createIndex(index)
       }.await
     } catch {
-      case _: IndexAlreadyExistsException => // Ok, ignore.
+      case _: ResourceAlreadyExistsException => // Ok, ignore.
       case _: RemoteTransportException => // Ok, ignore.
     }
   }

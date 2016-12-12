@@ -8,10 +8,8 @@
             "query": "coldplay",
             "flags": -1,
             "default_operator": "or",
-            "lowercase_expanded_terms": true,
             "lenient": false,
             "analyze_wildcard": false,
-            "locale": "und",
             "boost": 1.0
           }
         },
@@ -20,10 +18,8 @@
             "query": "london",
             "flags": -1,
             "default_operator": "or",
-            "lowercase_expanded_terms": true,
             "lenient": false,
             "analyze_wildcard": false,
-            "locale": "und",
             "boost": 1.0
           }
         }

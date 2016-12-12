@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.script
 
-import org.elasticsearch.script.ScriptService
+import org.elasticsearch.script.ScriptType
 
 case class ScriptFieldDefinition(field: String,
                                  script: String,
                                  language: Option[String] = None,
                                  parameters: Option[Map[String, AnyRef]] = None,
-                                 scriptType: ScriptService.ScriptType = ScriptService.ScriptType.INLINE) {
+                                 options: Option[Map[String, String]] = None,
+                                 scriptType: ScriptType = ScriptType.INLINE) {
 
   def lang(l: String): ScriptFieldDefinition = copy(language = Option(l))
 
@@ -18,5 +19,5 @@ case class ScriptFieldDefinition(field: String,
     copy(parameters = Some(ps.toMap.map(e => e._1 -> e._2.asInstanceOf[AnyRef])))
   }
 
-  def scriptType(scriptType: ScriptService.ScriptType): ScriptFieldDefinition = copy(scriptType = scriptType)
+  def scriptType(scriptType: ScriptType): ScriptFieldDefinition = copy(scriptType = scriptType)
 }
