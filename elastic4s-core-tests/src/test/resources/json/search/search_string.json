@@ -12,7 +12,6 @@
       "auto_generate_phrase_queries": true,
       "max_determined_states": 10000,
       "allow_leading_wildcard": true,
-      "lowercase_expanded_terms": true,
       "enable_position_increment": true,
       "fuzziness": "AUTO",
       "fuzzy_prefix_length": 3,
@@ -21,8 +20,8 @@
       "analyze_wildcard": true,
       "rewrite": "writer",
       "lenient": true,
-      "locale": "und",
       "escape": false,
+      "split_on_whitespace": true,
       "boost": 6.5
     }
   },

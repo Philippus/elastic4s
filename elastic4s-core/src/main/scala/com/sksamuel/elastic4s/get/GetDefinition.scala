@@ -19,7 +19,12 @@ case class GetDefinition(indexAndType: IndexAndType, id: String) {
   }
 
   def fetchSourceContext(include: Iterable[String], exclude: Iterable[String] = Nil) = {
-    _builder.fetchSourceContext(new FetchSourceContext(include.toArray, exclude.toArray))
+    _builder.fetchSourceContext(new FetchSourceContext(true, include.toArray, exclude.toArray))
+    this
+  }
+
+  def fetchSourceContext(context: Boolean, include: Iterable[String], exclude: Iterable[String]) = {
+    _builder.fetchSourceContext(new FetchSourceContext(context, include.toArray, exclude.toArray))
     this
   }
 

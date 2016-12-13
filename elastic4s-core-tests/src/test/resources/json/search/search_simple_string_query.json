@@ -8,10 +8,8 @@
       "analyzer": "whitespace",
       "flags": 548,
       "default_operator": "and",
-      "lowercase_expanded_terms": true,
       "lenient": false,
       "analyze_wildcard": false,
-      "locale": "und",
       "boost": 1.0
     }
   },

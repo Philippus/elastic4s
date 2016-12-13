@@ -103,7 +103,6 @@ object LocalNode {
 
     val mergedSettings = Settings.builder().put(settings)
       .put("transport.type", "local")
-      .put("discovery.type", "local")
       .put("http.type", "netty3")
       .build()
 

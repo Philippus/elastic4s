@@ -849,7 +849,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode "avg" inner innerHits("obj1").fetchSource(new FetchSourceContext("incme", "excme"))
+      } scoreMode "avg" inner innerHits("obj1").fetchSource(new FetchSourceContext(true, Seq("incme").toArray, Seq("excme").toArray))
     }
     req.show should matchJsonResource("/json/search/search_query_nested_inner_hits_source.json")
   }
