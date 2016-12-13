@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{MultiMatchQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.search.MatchQuery
+import scala.collection.JavaConverters._
 
 case class MultiMatchQueryDefinition(text: String)
   extends QueryDefinition
@@ -70,6 +71,16 @@ case class MultiMatchQueryDefinition(text: String)
       case "AND" => builder.operator(Operator.AND)
       case _ => builder.operator(Operator.OR)
     }
+    this
+  }
+
+  def slop(slop: Int): MultiMatchQueryDefinition = {
+    builder.slop(slop)
+    this
+  }
+
+  def fields(fields: Map[String, Float]): MultiMatchQueryDefinition = {
+    builder.fields(fields.map { case (s, f) => s -> java.lang.Float.valueOf(f) }.asJava)
     this
   }
 
