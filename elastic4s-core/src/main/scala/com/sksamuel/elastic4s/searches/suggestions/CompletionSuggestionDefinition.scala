@@ -23,7 +23,7 @@ case class CompletionSuggestionDefinition(name: String,
     super.populate(builder)
 
     prefix.foreach { prefix =>
-      builder.prefix(prefix, fuzziness.orNull)
+      fuzziness.fold(builder.prefix(prefix))(builder.prefix(prefix, _))
     }
 
     regex.foreach { regex =>

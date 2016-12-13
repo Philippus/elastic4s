@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.search
+package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
@@ -11,7 +11,8 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
   }
 
-  private val indexType = "suggestionstest" / "music"
+  private val Index = "termsuggest"
+  private val indexType = Index / "music"
 
   client.execute(
     bulk(
@@ -30,7 +31,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
     )
   ).await
 
-  blockUntilCount(8, "suggestionstest")
+  blockUntilCount(12, Index)
 
   "suggestions" should {
     "support results lookup by name" in {

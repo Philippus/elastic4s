@@ -44,19 +44,19 @@ object SuggestionResult {
 case class TermSuggestionResult(suggestion: TermSuggestion) extends SuggestionResult {
   type R = TermSuggestion
   type E = TermSuggestionEntry
-  def entries: Seq[TermSuggestionEntry] = suggestion.getEntries.asScala.map(TermSuggestionEntry).toSeq
+  def entries: Seq[TermSuggestionEntry] = suggestion.getEntries.asScala.map(TermSuggestionEntry)
 }
 
 case class PhraseSuggestionResult(suggestion: PhraseSuggestion) extends SuggestionResult {
   type R = PhraseSuggestion
   type E = PhraseSuggestionEntry
-  def entries: Seq[PhraseSuggestionEntry] = suggestion.getEntries.asScala.map(PhraseSuggestionEntry).toSeq
+  def entries: Seq[PhraseSuggestionEntry] = suggestion.getEntries.asScala.map(PhraseSuggestionEntry)
 }
 
 case class CompletionSuggestionResult(suggestion: CompletionSuggestion) extends SuggestionResult {
   type R = CompletionSuggestion
   type E = CompletionSuggestionEntry
-  def entries: Seq[CompletionSuggestionEntry] = suggestion.getEntries.asScala.map(CompletionSuggestionEntry).toSeq
+  def entries: Seq[CompletionSuggestionEntry] = suggestion.getEntries.asScala.map(CompletionSuggestionEntry)
 }
 
 // scala version of Suggest.Suggestion.Entry
