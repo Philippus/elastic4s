@@ -57,6 +57,7 @@ object Build extends AutoPlugin {
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
+      "com.vividsolutions"                    % "jts"                       % "1.13",
       "io.netty"                              % "netty-all"                 % "4.1.6.Final",
       "org.apache.logging.log4j"              % "log4j-api"                 % "2.7",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
