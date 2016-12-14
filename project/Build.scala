@@ -19,7 +19,7 @@ object Build extends AutoPlugin {
     val JacksonVersion = "2.8.4"
     val Json4sVersion = "3.5.0"
     val Log4jVersion = "2.6.2"
-    val LuceneVersion = "6.2.1"
+    val LuceneVersion = "6.3.0"
     val MockitoVersion = "1.9.5"
     val PlayJsonVersion = "2.5.9"
     val ReactiveStreamsVersion = "1.0.0"
@@ -74,7 +74,6 @@ object Build extends AutoPlugin {
       "org.apache.lucene"                     % "lucene-spatial-extras"     % LuceneVersion,
       "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
       "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
-      "io.netty"                              % "netty-all"                 % "4.1.5.Final",
       "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6",
       "org.apache.httpcomponents"             % "httpclient"                % "4.5.2",
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",
