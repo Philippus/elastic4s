@@ -7,7 +7,7 @@ import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.phrase.PhraseSuggestionBuilder.CandidateGenerator
 import org.elasticsearch.search.suggest.phrase.{PhraseSuggestionBuilder, SmoothingModel}
 
-import scala.collection.JavaConverters.mapAsJavaMap
+import scala.collection.JavaConverters._
 
 case class PhraseSuggestionDefinition(name: String,
                                       fieldname: String,
@@ -38,7 +38,7 @@ case class PhraseSuggestionDefinition(name: String,
     super.populate(builder)
     analyzer.foreach(builder.analyzer)
     candidateGenerator.foreach(builder.addCandidateGenerator)
-    builder.collateParams(mapAsJavaMap(collateParams))
+    builder.collateParams(collateParams.asJava)
     collatePrune.foreach(builder.collatePrune)
     collateQuery.foreach(builder.collateQuery)
     confidence.foreach(builder.confidence)
@@ -80,7 +80,13 @@ case class PhraseSuggestionDefinition(name: String,
       .string()
 
     val options = Map("content_type" -> XContentType.JSON.mediaType())
-    val template = new Script(Script.DEFAULT_SCRIPT_TYPE, Script.DEFAULT_TEMPLATE_LANG, collateQueryAsJson, mapAsJavaMap(options), mapAsJavaMap(Map.empty))
+    val template = new Script(
+      Script.DEFAULT_SCRIPT_TYPE,
+      Script.DEFAULT_TEMPLATE_LANG,
+      collateQueryAsJson,
+      options.asJava,
+      Map.empty[String, AnyRef].asJava
+    )
 
     collateQuery(template)
   }
