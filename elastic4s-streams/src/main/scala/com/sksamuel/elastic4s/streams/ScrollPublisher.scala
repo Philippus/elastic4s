@@ -145,6 +145,7 @@ class PublishActor(client: ElasticClient,
     // if we had no results from ES then we have nothing left to publish and our work here is done
     case Success(resp: RichSearchResponse) if resp.isEmpty =>
       s.onComplete()
+      client.execute(clearScroll(scrollId))
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
     case Success(resp: RichSearchResponse) =>
