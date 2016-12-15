@@ -890,6 +890,7 @@ folder. There is no need to configure anything externally.
 * Goldman Sachs
 * HMRC
 * Canal+
+* AOE
 
 _Raise a PR to add your company here_
 
