@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder, TermsAggregator}
@@ -77,7 +78,7 @@ case class TermsAggregationDefinition(name: String) extends AggregationDefinitio
   }
 
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition = {
-    builder.includeExclude(new IncludeExclude(include, exclude))
+    builder.includeExclude(new IncludeExclude(include.some.orNull, exclude.some.orNull))
     this
   }
 
