@@ -12,7 +12,7 @@ object Build extends AutoPlugin {
     val org = "com.sksamuel.elastic4s"
     val AkkaVersion = "2.4.16"
     val CatsVersion = "0.8.1"
-    val CirceVersion = "0.6.2"
+    val CirceVersion = "0.6.1"
     val CommonsIoVersion = "2.4"
     val ElasticsearchVersion = "5.1.1"
     val ExtsVersion = "1.37.0"
