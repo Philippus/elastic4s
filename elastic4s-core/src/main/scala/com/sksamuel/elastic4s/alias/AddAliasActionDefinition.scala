@@ -28,7 +28,7 @@ case class AddAliasActionDefinition(alias: String,
     routing.foreach(action.routing)
     indexRouting.foreach(action.indexRouting)
     searchRouting.foreach(action.searchRouting)
-    searchRouting.foreach(action.filter)
+    filter.foreach(action.filter)
     action
   }
 }
