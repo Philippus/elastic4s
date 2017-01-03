@@ -10,12 +10,12 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org = "com.sksamuel.elastic4s"
-    val AkkaVersion = "2.4.14"
+    val AkkaVersion = "2.4.16"
     val CatsVersion = "0.8.1"
-    val CirceVersion = "0.6.1"
+    val CirceVersion = "0.6.2"
     val CommonsIoVersion = "2.4"
     val ElasticsearchVersion = "5.1.1"
-    val ExtsVersion = "1.36.0"
+    val ExtsVersion = "1.37.0"
     val JacksonVersion = "2.8.4"
     val Json4sVersion = "3.5.0"
     val Log4jVersion = "2.6.2"
