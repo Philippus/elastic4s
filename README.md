@@ -58,6 +58,14 @@ Therefore if you bring in elastic4s (or even just the raw Java transport client)
 
 ##### Changelog
 
+###### 5.1.5
+
+* Fixed filter in add alias
+
+######
+
+* Added com.vividsolutions.jts.geom to build to avoid "stub issues"
+
 ###### 5.1.3
 
 * Added explicit search scroll close in reactive streams #695
