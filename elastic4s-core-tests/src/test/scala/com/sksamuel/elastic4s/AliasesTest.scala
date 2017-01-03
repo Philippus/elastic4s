@@ -27,7 +27,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
   }.await
 
   client.execute {
-    add alias "english_waterways" on "waterways" filter termQuery("country", "england")
+    addAlias("english_waterways").on("waterways").filter(termQuery("country", "england"))
   }.await
 
   client.execute {
@@ -51,17 +51,17 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
 
   it should "alias waterways and accept a type" in {
     val resp2 = client.execute {
-      get id 21 from "aquatic_locations/rivers"
+      get(21).from("aquatic_locations/rivers")
     }.await
     resp2.id shouldBe "21"
   }
 
   "english_waterways" should "be an alias with a filter for country=england" in {
     val resp = client.execute {
-      search in "english_waterways" query "Dee"
+      search("english_waterways").query("dee")
     }.await
-    // we only except one hit as we filtered out wales
-    resp.totalHits shouldBe 2
+    // 'english_waterways' has a filter for England only, so we only expect to find one River dee
+    resp.totalHits shouldBe 1
     resp.hits.head.id shouldBe "12"
   }
 
@@ -97,7 +97,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ElasticSugar with Matc
     }.await
 
     val respAfterMovingAlias = client.execute {
-      get alias "moving_alias" on("waterways", "waterways_updated")
+      getAlias("moving_alias").on("waterways", "waterways_updated")
     }.await
 
     compareAliasesForIndex(respAfterMovingAlias, "waterways_updated", Set("moving_alias"))
