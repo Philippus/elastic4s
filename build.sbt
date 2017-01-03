@@ -10,7 +10,7 @@ lazy val root = Project("elastic4s", file("."))
     circe,
     jackson,
     json4s,
-    //  playjson,
+    playjson,
     streams,
     xpacksecurity
   )
@@ -93,8 +93,8 @@ lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
     libraryDependencies += "org.json4s" %% "json4s-jackson" % Json4sVersion
   ).dependsOn(core, testkit % "test")
 
-//lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
-//    .settings(
-//      name := "elastic4s-play-json",
-//      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
-//    ).dependsOn(core, testkit % "test")
+lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
+    .settings(
+      name := "elastic4s-play-json",
+      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
+    ).dependsOn(core, testkit % "test")
