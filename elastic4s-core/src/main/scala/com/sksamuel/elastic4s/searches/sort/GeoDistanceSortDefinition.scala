@@ -10,7 +10,11 @@ class GeoDistanceSortDefinition(field: String,
                                 geohashes: Seq[String] = Nil,
                                 points: Seq[GeoPoint] = Nil) extends SortDefinition[GeoDistanceSortBuilder] {
 
-  val builder = SortBuilders.geoDistanceSort(field, geohashes: _*).points(points: _*)
+  val builder: GeoDistanceSortBuilder = if (geohashes.nonEmpty) {
+    SortBuilders.geoDistanceSort(field, geohashes: _*).points(points: _*)
+  } else {
+    SortBuilders.geoDistanceSort(field, points: _*)
+  }
 
   def nested(nestedPath: String): this.type = {
     builder.setNestedPath(nestedPath)
