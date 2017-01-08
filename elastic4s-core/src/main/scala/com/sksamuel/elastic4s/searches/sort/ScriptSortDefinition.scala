@@ -8,7 +8,7 @@ import org.elasticsearch.search.sort.{ScriptSortBuilder, SortBuilders, SortMode,
 case class ScriptSortDefinition(script: ScriptDefinition,
                                 scriptSortType: ScriptSortType) extends SortDefinition[ScriptSortBuilder] {
 
-  val builder = SortBuilders.scriptSort(script.toJavaAPI, scriptSortType)
+  val builder = SortBuilders.scriptSort(script.build, scriptSortType)
 
   def sortMode(mode: String): this.type = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): this.type = {

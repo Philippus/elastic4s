@@ -4,9 +4,6 @@ import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -23,21 +20,6 @@ case class UpdateByQueryDefinition(sourceIndexes: Indexes,
                                    timeout: Option[FiniteDuration] = None,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
-
-  def populate(builder: UpdateByQueryRequestBuilder): Unit = {
-    builder.source(sourceIndexes.values: _*)
-    builder.filter(query.builder)
-    requestsPerSecond.foreach(builder.setRequestsPerSecond)
-    maxRetries.foreach(builder.setMaxRetries)
-    refresh.foreach(builder.refresh)
-    waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
-    timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
-    retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
-    shouldStoreResult.foreach(builder.setShouldStoreResult)
-    abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
-    pipeline.foreach(builder.setPipeline)
-    script.map(_.build).foreach(builder.script)
-  }
 
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryDefinition =
     copy(abortOnVersionConflict = abortOnVersionConflict.some)

@@ -84,7 +84,7 @@ class BulkActor[T](client: ElasticClient,
                    builder: RequestBuilder[T],
                    typedConfig: TypedSubscriberConfig[T]) extends Actor {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.TransportDsl._
   import context.{dispatcher, system}
   import typedConfig.{ baseConfig => config }
 

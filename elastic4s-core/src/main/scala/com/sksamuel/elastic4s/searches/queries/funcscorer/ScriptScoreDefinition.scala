@@ -10,7 +10,7 @@ case class ScriptScoreDefinition(script: ScriptDefinition,
   override type B = ScriptScoreFunctionBuilder
 
   def builder = {
-    val builder = ScoreFunctionBuilders.scriptFunction(script.toJavaAPI)
+    val builder = ScoreFunctionBuilders.scriptFunction(script.build)
     weight.map(_.toFloat).foreach(builder.setWeight)
     builder
   }

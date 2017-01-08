@@ -16,7 +16,7 @@ class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar {
 
   "bulk processor" should "insert all data" in {
 
-    val processor = bulkProcessor().actionCount(3).concurrentRequests(2).build(client)
+    val processor = BulkProcessorBuilder().actionCount(3).concurrentRequests(2).build(client)
 
     processor.add(indexInto("books" / "plays").fields("name" -> "Midsummer Nights Dream"))
     processor.add(indexInto("books" / "plays").fields("name" -> "Cymbeline"))
@@ -29,7 +29,7 @@ class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar {
 
   it should "honour action count" in {
 
-    val processor = bulkProcessor().actionCount(2).concurrentRequests(1).build(client)
+    val processor = BulkProcessorBuilder().actionCount(2).concurrentRequests(1).build(client)
 
     processor.add(indexInto("books" / "novels").fields("name" -> "Moby Dick"))
     processor.add(indexInto("books" / "novels").fields("name" -> "Uncle Toms Cabin"))

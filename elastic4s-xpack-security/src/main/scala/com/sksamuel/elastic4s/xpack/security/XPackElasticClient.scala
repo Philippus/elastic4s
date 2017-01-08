@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.xpack.security
 
 import java.net.InetSocketAddress
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticsearchClientUri}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticsearchClientUri, ElasticClient$}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.plugins.Plugin
