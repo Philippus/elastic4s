@@ -1,16 +1,15 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.{AbstractElasticClient, ElasticsearchClientUri, JsonFormat}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
-import org.elasticsearch.client.{Client, Response, ResponseListener, RestClient}
-import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
+import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source
+import scala.util.control.NonFatal
 
-trait HttpClient extends AbstractElasticClient with Logging {
-
+trait HttpClient extends Logging {
   // returns the underlying java rest client
   def rest: RestClient
 
@@ -39,10 +38,11 @@ trait HttpClient extends AbstractElasticClient with Logging {
       p.future
     }
     catch {
-      case e: ElasticsearchException => Future.failed(e)
-      case e: ElasticsearchWrapperException => Future.failed(e)
+      case NonFatal(e) => Future.failed(e)
     }
   }
+
+  def close(): Unit
 }
 
 object HttpClient {
@@ -58,8 +58,6 @@ object HttpClient {
     override def close(): Unit = rest.close()
     // returns the underlying java rest client
     override def rest: RestClient = client
-    // return the underlying Java TCP client
-    override def java: Client = ???
   }
 
   def apply(uri: ElasticsearchClientUri): HttpClient = {
