@@ -1,25 +1,3 @@
-//    val req = index into "twitter/tweets" fields Map(
-//      "user" -> "sammy",
-//      "post_date" -> "2009-11-15T14:12:12",
-//      "message" -> "trying out Elastic Search Scala DSL"
-//    )
-//
-//    checkRequest(req, "twitter", "tweets", "/json/index/simple_multiple.json")
-//  }
-//
-//  it should "generate nested fields" in {
-//    val req = index into "twitter/tweets" fields (
-//      "user" -> Map(
-//        "handle" -> "sammy",
-//        "name" -> "Sam"
-//      ),
-//        "post_date" -> "2011-11-15T14:12:12",
-//        "message" -> "Nested message"
-//    )
-//
-//    checkRequest(req, "twitter", "tweets", "/json/index/nested.json")
-//  }
-//
 //  it should "generate array fields" in {
 //    val req = index into "twitter/tweets" fields (
 //      "user" -> "sammy",
@@ -48,30 +26,6 @@
 //    )
 //
 //    checkRequest(req, "twitter", "tweets", "/json/index/array.json")
-//  }
-//
-//  it should "generate array of nested fields" in {
-//    val req = index into "twitter/tweets" fields (
-//      "user" -> "sammy",
-//      "post_date" -> "2011-11-15T14:12:12",
-//      "message" -> "Array of nested message",
-//      "tags" -> Array(
-//        Map(
-//          "id" -> 642,
-//          "text" -> "array"
-//        ),
-//        Map(
-//          "id" -> 883,
-//          "text" -> "search"
-//        ),
-//        Map(
-//          "id" -> 231,
-//          "text" -> "test"
-//        )
-//      )
-//    )
-//
-//    checkRequest(req, "twitter", "tweets", "/json/index/array_nested.json")
 //  }
 //
 //  it should "custom field values" in {

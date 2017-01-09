@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-class HttpGetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar with HttpDsl {
+class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar with HttpDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
@@ -84,16 +84,16 @@ class HttpGetTest extends FlatSpec with Matchers with ScalaFutures with ElasticS
     }
   }
 
-  it should "throw exception for unknown doc" ignore {
-
-    val resp = http.execute {
-      get(131313) from "beer/lager"
-    }
-
-    whenReady(resp) { response =>
-      response.exists shouldBe false
-    }
-  }
+  //  it should "throw exception for unknown doc" ignore {
+  //
+  //    val resp = http.execute {
+  //      get(131313) from "beer/lager"
+  //    }
+  //
+  //    whenReady(resp) { response =>
+  //      response.exists shouldBe false
+  //    }
+  //  }
 
   it should "retrieve multi value fields" in {
 

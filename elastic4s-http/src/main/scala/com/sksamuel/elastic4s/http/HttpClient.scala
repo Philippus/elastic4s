@@ -45,7 +45,7 @@ trait HttpClient extends Logging {
   def close(): Unit
 }
 
-object HttpClient {
+object HttpClient extends Logging {
 
   /**
     * Creates a new HttpClient from an existing java RestClient.
@@ -62,6 +62,7 @@ object HttpClient {
 
   def apply(uri: ElasticsearchClientUri): HttpClient = {
     val hosts = uri.hosts.map { case (host, port) => new HttpHost("localhost", 9200, "http") }
+    logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
     val client = RestClient.builder(hosts: _*).build()
     HttpClient.fromRestClient(client)
   }
