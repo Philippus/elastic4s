@@ -23,7 +23,6 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
       .fields("name" -> name, "year" -> year)
       .id(id)
       .version(revision)
-      .versionType(VersionType.EXTERNAL)
 
   client.execute(
     bulk(

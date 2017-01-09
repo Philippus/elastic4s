@@ -40,7 +40,7 @@ case class BulkProcessorBuilder(name: Option[String] = None,
     name.foreach(builder.setName)
     size.foreach(builder.setBulkSize)
 
-    new BulkProcessor(builder.build())
+    new BulkProcessor(client.java, builder.build())
   }
 
   def name(name: String): BulkProcessorBuilder = copy(name = name.some)
