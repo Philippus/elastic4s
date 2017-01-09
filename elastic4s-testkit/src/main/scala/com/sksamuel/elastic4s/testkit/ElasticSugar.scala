@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes, TransportDsl}
+import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
 import org.elasticsearch.ResourceAlreadyExistsException
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
@@ -21,7 +21,7 @@ trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with
 * index has a certain count of documents. These methods are very useful when writing
 * tests to allow for blocking, iterative coding
 */
-trait AbstractElasticSugar extends TransportDsl {
+trait AbstractElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
   implicit val node = getNode

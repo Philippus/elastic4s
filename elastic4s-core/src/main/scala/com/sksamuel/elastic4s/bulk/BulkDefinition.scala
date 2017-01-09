@@ -12,3 +12,5 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition],
   def timeout(timeout: String): BulkDefinition = copy(timeout = timeout.some)
   def refresh(refresh: String): BulkDefinition = copy(refresh = refresh.some)
 }
+
+trait BulkCompatibleDefinition

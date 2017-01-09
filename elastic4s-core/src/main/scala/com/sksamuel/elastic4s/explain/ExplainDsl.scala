@@ -2,23 +2,13 @@ package com.sksamuel.elastic4s.explain
 
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
-import com.sksamuel.elastic4s.{DocumentRef, Executable, ProxyClients}
-import org.elasticsearch.action.explain.{ExplainAction, ExplainRequest, ExplainRequestBuilder, ExplainResponse}
-import org.elasticsearch.client.Client
-
-import scala.concurrent.Future
+import com.sksamuel.elastic4s.{DocumentRef, ProxyClients}
+import org.elasticsearch.action.explain.{ExplainAction, ExplainRequest, ExplainRequestBuilder}
 
 trait ExplainDsl {
 
   def explain(ref: DocumentRef) = ExplainDefinition(ref.index, ref.`type`, ref.id)
   def explain(index: String, `type`: String, id: String) = ExplainDefinition(index, `type`, id)
-
-  implicit object ExplainDefinitionExecutable extends Executable[ExplainDefinition, ExplainResponse, ExplainResponse] {
-    override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
-      val builder = t.build(c.prepareExplain(t.index, t.`type`, t.id))
-      injectFuture(builder.execute)
-    }
-  }
 }
 
 case class ExplainDefinition(index: String,

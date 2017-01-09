@@ -6,8 +6,8 @@ import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait IndexMatchers extends Matchers {
 
+  import com.sksamuel.elastic4s.ElasticDsl._
   import scala.concurrent.duration._
-  import com.sksamuel.elastic4s.TransportDsl._
 
   def haveCount(expectedCount: Int)
                (implicit client: ElasticClient,

@@ -5,16 +5,16 @@ import java.util
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.highlighting.{HighlightFieldDefinition, HighlightOptionsDefinition}
-import com.sksamuel.elastic4s.searches.queries.{BoolQueryDefinition, FuzzyQueryDefinition, PrefixQueryDefinition, QueryStringQueryDefinition, RangeQueryDefinition, RegexQueryDefinition, TermQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDefinition
-import com.sksamuel.elastic4s.{ElasticDsl, IndexesAndTypes, ProxyClients}
+import com.sksamuel.elastic4s.{IndexesAndTypes, ProxyClients}
 import org.elasticsearch.action.search.{SearchAction, SearchRequestBuilder, SearchType}
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
-import org.elasticsearch.script.{Script, ScriptService, ScriptType}
+import org.elasticsearch.script.{Script, ScriptType}
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
@@ -58,7 +58,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   /**
     * Adds a match all query to this search definition
     */
-  def matchAll(): SearchDefinition = query(ElasticDsl.matchAllQuery())
+  def matchAll(): SearchDefinition = query(new MatchAllQueryDefinition)
 
   // todo restore inner
   //  def inner(inners: InnerHitDefinition*): this.type = inner(inners)

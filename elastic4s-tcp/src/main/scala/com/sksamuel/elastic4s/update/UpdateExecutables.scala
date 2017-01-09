@@ -11,13 +11,6 @@ import scala.concurrent.Future
 
 trait UpdateExecutables {
 
-  implicit object UpdateDefinitionExecutable
-    extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
-    override def apply(c: Client, t: UpdateDefinition): Future[RichUpdateResponse] = {
-      injectFutureAndMap(c.update(t.build, _))(RichUpdateResponse.apply)
-    }
-  }
-
   implicit object UpdateByQueryDefinitionExecutable
     extends Executable[UpdateByQueryDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
     override def apply(c: Client, t: UpdateByQueryDefinition): Future[BulkIndexByScrollResponse] = {
@@ -35,6 +28,13 @@ trait UpdateExecutables {
       t.pipeline.foreach(builder.setPipeline)
       t.script.map(_.build).foreach(builder.script)
       injectFuture(builder.execute)
+    }
+  }
+
+  implicit object UpdateDefinitionExecutable
+    extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
+    override def apply(c: Client, t: UpdateDefinition): Future[RichUpdateResponse] = {
+      injectFutureAndMap(c.update(t.build, _))(RichUpdateResponse.apply)
     }
   }
 }

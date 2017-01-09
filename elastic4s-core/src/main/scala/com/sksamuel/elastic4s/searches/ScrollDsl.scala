@@ -1,11 +1,8 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.Executable
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.search.{ClearScrollResponse, SearchResponse}
-import org.elasticsearch.client.Client
+import org.elasticsearch.action.search.ClearScrollResponse
 
-import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 trait ScrollDsl {
@@ -14,22 +11,6 @@ trait ScrollDsl {
 
   def clearScroll(first: String, rest: String*): ClearScrollDefinition = clearScroll(first +: rest)
   def clearScroll(ids: Iterable[String]): ClearScrollDefinition = ClearScrollDefinition(ids.toSeq)
-
-  implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, RichSearchResponse] {
-    override def apply(client: Client, s: SearchScrollDefinition): Future[RichSearchResponse] = {
-      val request = client.prepareSearchScroll(s.id)
-      s.keepAlive.foreach(request.setScroll)
-      injectFutureAndMap(request.execute)(RichSearchResponse)
-    }
-  }
-
-  implicit object ClearScrollDefinitionExecutable
-    extends Executable[ClearScrollDefinition, ClearScrollResponse, ClearScrollResult] {
-    override def apply(client: Client, s: ClearScrollDefinition): Future[ClearScrollResult] = {
-      import scala.collection.JavaConverters._
-      injectFutureAndMap(client.prepareClearScroll.setScrollIds(s.ids.asJava).execute)(resp => ClearScrollResult(resp))
-    }
-  }
 }
 
 case class SearchScrollDefinition(id: String,

@@ -2,24 +2,24 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.{AliasesDsl, GetAliasDefinition}
-import com.sksamuel.elastic4s.analyzers.{AnalyzerDsl, CommonGramsTokenFilter, EdgeNGramTokenFilter, NGramTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerTokenFilter, TokenFilterDsl, TokenizerDsl}
+import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.bulk.BulkDsl
 import com.sksamuel.elastic4s.delete.DeleteDsl
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
 import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
-import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl, IndexDefinition, IndexDsl}
+import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.reindex.ReindexDsl
 import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptDsl, ScriptFieldDefinition}
-import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
-import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
-import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
+import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
+import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
+import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
 import com.sksamuel.elastic4s.update.UpdateDsl
@@ -28,8 +28,11 @@ import com.sksamuel.elastic4s.validate.ValidateDsl
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
+// the entry point for TCP users. This is the trait that should be mixed in, or use the object
+// version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
-  extends AliasesDsl
+  extends ElasticSyntax
+    with AliasesDsl
     with AggregationDsl
     with AnalyzerDsl
     with BulkDsl
@@ -65,6 +68,7 @@ trait ElasticDsl
     with TokenFilterDsl
     with UpdateDsl
     with ValidateDsl
+    with TcpExecutables
     with ElasticImplicits {
 
   @deprecated("Use xxxAggregation(...) methods", "5.0.0")

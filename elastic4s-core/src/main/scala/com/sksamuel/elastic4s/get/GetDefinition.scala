@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.{FetchSource, IndexAndType}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.client.Requests
 
 case class GetDefinition(indexAndType: IndexAndType,
                          id: String,
