@@ -433,7 +433,7 @@ trait ElasticDsl
     def exists(indexes: String*): IndexExistsDefinition = IndexExistsDefinition(indexes)
 
     @deprecated("use indexInto(index / type)", "5.0.0")
-    def into(indexType: IndexAndTypes): IndexDefinition = new IndexDefinition(indexType.index, indexType.types.head)
+    def into(indexType: IndexAndTypes): IndexDefinition = IndexDefinition(IndexAndType(indexType.index, indexType.types.head))
 
     @deprecated("use indexStats(indexes)", "5.0.0")
     def stats(indexes: Indexes): IndicesStatsDefinition = indexStats(indexes)

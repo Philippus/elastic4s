@@ -1,7 +1,12 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.http.get.GetHttpExecutable
+import com.sksamuel.elastic4s.http.get.GetHttpExecutables
+import com.sksamuel.elastic4s.http.index.IndexHttpExecutables
+import com.sksamuel.exts.Logging
 
-trait HttpDsl {
-  implicit val _get = GetHttpExecutable
-}
+trait HttpDsl
+  extends Logging
+    with IndexHttpExecutables
+    with GetHttpExecutables
+
+object HttpDsl extends HttpDsl

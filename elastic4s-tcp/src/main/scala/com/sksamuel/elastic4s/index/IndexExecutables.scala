@@ -10,40 +10,39 @@ import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.concurrent.Future
 
-object IndexDefinitionExecutable
-  extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
-
-  def builder(c: Client, t: IndexDefinition): IndexRequestBuilder = {
-    val builder = c.prepareIndex(t.index, t.`type`)
-    t.id.map(_.toString).foreach(builder.setId)
-    t.source match {
-      case Some(json) => builder.setSource(json)
-      case _ =>
-        val source = XContentFactory.jsonBuilder().startObject()
-        t.fields.foreach(_.output(source))
-        source.endObject()
-        builder.setSource(source)
-    }
-    t.parent.foreach(builder.setParent)
-    t.refresh.map(RefreshPolicy.valueOf).foreach(builder.setRefreshPolicy)
-    t.version.foreach(builder.setVersion)
-    t.routing.foreach(builder.setRouting)
-    t.pipeline.foreach(builder.setPipeline)
-    t.timestamp.foreach(builder.setTimestamp)
-    t.timestamp.foreach(builder.setSource)
-    t.opType.map(b => OpType.fromId(b.toByte)).foreach(builder.setOpType)
-    builder
-  }
-
-  override def apply(c: Client,
-                     t: IndexDefinition): Future[RichIndexResponse] = {
-    val req = builder(c, t)
-    injectFutureAndMap(req.execute)(RichIndexResponse.apply)
-  }
-}
-
 trait IndexExecutables {
 
+  implicit object IndexDefinitionExecutable
+    extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
+
+    def builder(c: Client, t: IndexDefinition): IndexRequestBuilder = {
+      val builder = c.prepareIndex(t.indexAndType.index, t.indexAndType.`type`)
+      t.id.map(_.toString).foreach(builder.setId)
+      t.source match {
+        case Some(json) => builder.setSource(json)
+        case _ =>
+          val source = XContentFactory.jsonBuilder().startObject()
+          t.fields.foreach(_.output(source))
+          source.endObject()
+          builder.setSource(source)
+      }
+      t.parent.foreach(builder.setParent)
+      t.refresh.map(RefreshPolicy.valueOf).foreach(builder.setRefreshPolicy)
+      t.version.foreach(builder.setVersion)
+      t.routing.foreach(builder.setRouting)
+      t.pipeline.foreach(builder.setPipeline)
+      t.timestamp.foreach(builder.setTimestamp)
+      t.timestamp.foreach(builder.setSource)
+      t.opType.map(b => OpType.fromId(b.toByte)).foreach(builder.setOpType)
+      builder
+    }
+
+    override def apply(c: Client,
+                       t: IndexDefinition): Future[RichIndexResponse] = {
+      val req = builder(c, t)
+      injectFutureAndMap(req.execute)(RichIndexResponse.apply)
+    }
+  }
 
   implicit object IndexDefinitionShow
     extends Show[IndexDefinition] {
