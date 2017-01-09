@@ -6,7 +6,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration._
 
-/** @author Stephen Samuel */
 class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {
 
   "the bulk dsl" should "accept index and delete types" in {

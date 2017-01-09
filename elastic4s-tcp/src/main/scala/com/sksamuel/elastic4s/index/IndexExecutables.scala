@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.indexes.{IndexDefinition, RichIndexResponse}
 import com.sksamuel.elastic4s.{Executable, Show}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.XContentFactory
 
@@ -27,7 +26,7 @@ trait IndexExecutables {
           builder.setSource(source)
       }
       t.parent.foreach(builder.setParent)
-      t.refresh.map(RefreshPolicy.valueOf).foreach(builder.setRefreshPolicy)
+      t.refresh.foreach(builder.setRefreshPolicy)
       t.version.foreach(builder.setVersion)
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
