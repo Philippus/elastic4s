@@ -35,6 +35,8 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     .getNodes.iterator().next().getHttp.address().publishAddress().toString
   logger.info(s"LocalNode started @ $ipAndPort")
 
+  val ip: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
+
   def stop(removeData: Boolean = false) = {
     super.close()
 

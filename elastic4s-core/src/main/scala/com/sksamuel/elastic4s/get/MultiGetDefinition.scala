@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.get
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetRequestBuilder}
 import org.elasticsearch.cluster.routing.Preference
+import org.elasticsearch.index.VersionType
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class MultiGetDefinition(gets: Seq[GetDefinition],
                               preference: Option[String] = None,
@@ -14,11 +16,21 @@ case class MultiGetDefinition(gets: Seq[GetDefinition],
     realtime.foreach(builder.setRealtime)
     refresh.foreach(builder.setRefresh)
     gets foreach { get =>
+
       val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
-      item.fetchSourceContext(get.build.fetchSourceContext)
-      item.routing(get.build.routing)
-      item.storedFields(get.build.storedFields: _*)
-      item.version(get.build.version)
+
+      get.fetchSource.foreach { context =>
+        item.fetchSourceContext(new FetchSourceContext(context.enabled, context.includes.toArray, context.excludes.toArray))
+      }
+
+      get.routing.foreach(item.routing)
+      get.version.foreach(item.version)
+      get.versionType.map(VersionType.fromString).foreach(item.versionType)
+      get.parent.foreach(item.parent)
+
+      if (get.storedFields.nonEmpty)
+        item.storedFields(get.storedFields: _*)
+
       builder.add(item)
     }
   }

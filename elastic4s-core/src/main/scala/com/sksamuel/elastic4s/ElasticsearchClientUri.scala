@@ -1,15 +1,8 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.exts.StringOption
-import org.elasticsearch.client.Client
 
 import scala.language.implicitConversions
-
-trait AbstractElasticClient {
-  def close(): Unit
-  // return the underlying Java TCP client
-  def java: Client
-}
 
 object ElasticsearchClientUri {
 

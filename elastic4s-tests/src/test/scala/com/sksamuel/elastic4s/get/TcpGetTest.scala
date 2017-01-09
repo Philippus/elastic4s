@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar {
+class TcpGetTest extends FlatSpec with Matchers with ScalaFutures with ElasticSugar {
 
   client.execute {
     createIndex("beer").mappings {

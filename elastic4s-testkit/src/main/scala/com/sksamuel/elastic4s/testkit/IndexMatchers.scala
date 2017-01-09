@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticClient
-import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait IndexMatchers extends Matchers {
 
   import scala.concurrent.duration._
+  import com.sksamuel.elastic4s.TransportDsl._
 
   def haveCount(expectedCount: Int)
                (implicit client: ElasticClient,

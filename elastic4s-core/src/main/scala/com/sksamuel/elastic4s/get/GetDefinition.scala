@@ -1,37 +1,30 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{FetchSource, IndexAndType}
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.client.Requests
-import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.index.VersionType
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
-case class GetDefinition(indexAndType: IndexAndType, id: String) {
+case class GetDefinition(indexAndType: IndexAndType,
+                         id: String,
+                         storedFields: Seq[String] = Nil,
+                         parent: Option[String] = None,
+                         preference: Option[String] = None,
+                         realtime: Option[Boolean] = None,
+                         refresh: Option[Boolean] = None,
+                         routing: Option[String] = None,
+                         version: Option[Long] = None,
+                         versionType: Option[String] = None,
+                         fetchSource: Option[FetchSource] = None) {
   require(indexAndType != null, "indexAndType must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
-  private val _builder = Requests.getRequest(indexAndType.index).`type`(indexAndType.`type`).id(id)
-  def build = _builder
+  def fetchSourceContext(sourceEnabled: Boolean): GetDefinition =
+    copy(fetchSource = FetchSource(sourceEnabled, Nil, Nil).some)
 
-  def fetchSourceContext(context: Boolean) = {
-    _builder.fetchSourceContext(new FetchSourceContext(context))
-    this
-  }
+  def fetchSourceContext(include: Iterable[String], exclude: Iterable[String] = Nil): GetDefinition =
+    copy(fetchSource = FetchSource(true, include.toSeq, exclude.toSeq).some)
 
-  def fetchSourceContext(include: Iterable[String], exclude: Iterable[String] = Nil) = {
-    _builder.fetchSourceContext(new FetchSourceContext(true, include.toArray, exclude.toArray))
-    this
-  }
-
-  def fetchSourceContext(context: Boolean, include: Iterable[String], exclude: Iterable[String]) = {
-    _builder.fetchSourceContext(new FetchSourceContext(context, include.toArray, exclude.toArray))
-    this
-  }
-
-  def fetchSourceContext(context: FetchSourceContext) = {
-    _builder.fetchSourceContext(context)
-    this
-  }
+  def fetchSourceContext(context: FetchSource): GetDefinition = copy(fetchSource = context.some)
 
   @deprecated("use storedFields", "5.0.0")
   def fields(fs: String*): GetDefinition = storedFields(fs)
@@ -40,45 +33,17 @@ case class GetDefinition(indexAndType: IndexAndType, id: String) {
   def fields(fs: Iterable[String]): GetDefinition = storedFields(fs)
 
   def storedFields(first: String, rest: String*): GetDefinition = storedFields(first +: rest)
-  def storedFields(fs: Iterable[String]): GetDefinition = {
-    _builder.storedFields(fs.toSeq: _*)
-    this
-  }
+  def storedFields(fs: Iterable[String]): GetDefinition = copy(storedFields = fs.toSeq)
 
-  def parent(p: String) = {
-    _builder.parent(p)
-    this
-  }
+  def parent(p: String): GetDefinition = copy(parent = p.some)
 
   def preference(pref: com.sksamuel.elastic4s.Preference): GetDefinition = preference(pref.value)
-  def preference(pref: Preference): GetDefinition = preference(pref.`type`())
-  def preference(pref: String): GetDefinition = {
-    _builder.preference(pref)
-    this
-  }
+  def preference(pref: String): GetDefinition = copy(preference = pref.some)
 
-  def realtime(r: Boolean) = {
-    _builder.realtime(r)
-    this
-  }
+  def realtime(r: Boolean): GetDefinition = copy(realtime = r.some)
+  def refresh(r: Boolean): GetDefinition = copy(refresh = r.some)
+  def routing(r: String): GetDefinition = copy(routing = r.some)
+  def version(ver: Long): GetDefinition = copy(version = ver.some)
 
-  def refresh(refresh: Boolean) = {
-    _builder.refresh(refresh)
-    this
-  }
-
-  def routing(r: String) = {
-    _builder.routing(r)
-    this
-  }
-
-  def version(version: Long) = {
-    _builder.version(version)
-    this
-  }
-
-  def versionType(versionType: VersionType) = {
-    _builder.versionType(versionType)
-    this
-  }
+  def versionType(versionType: String): GetDefinition = copy(versionType = versionType.some)
 }

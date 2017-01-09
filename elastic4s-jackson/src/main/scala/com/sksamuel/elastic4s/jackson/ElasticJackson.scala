@@ -3,15 +3,25 @@ package com.sksamuel.elastic4s.jackson
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.{Hit, HitAs, HitReader, Indexable}
+import com.sksamuel.elastic4s._
+import com.sksamuel.exts.Logging
 
 import scala.util.control.NonFatal
 
 object ElasticJackson {
 
-  object Implicits {
+  object Implicits extends Logging {
 
     implicit val mapper = JacksonSupport.mapper
+
+    implicit def format[T: Manifest](implicit mapper: ObjectMapper): JsonFormat[T] = new JsonFormat[T] {
+      override def toJson(t: T): String = mapper.writeValueAsString(t)
+      override def fromJson(json: String): T = {
+        val t = manifest.runtimeClass.asInstanceOf[Class[T]]
+        logger.debug(s"Deserializing $json to $t")
+        mapper.readValue[T](json, t)
+      }
+    }
 
     implicit def JacksonJsonIndexable[T](implicit mapper: ObjectMapper): Indexable[T] = new Indexable[T] {
       override def json(t: T): String = mapper.writeValueAsString(t)
