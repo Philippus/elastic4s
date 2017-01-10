@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.alias
 
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
 import org.elasticsearch.cluster.metadata.AliasMetaData
+
 import scala.collection.JavaConverters._
 
 case class GetAliasResult(response: GetAliasesResponse) {
