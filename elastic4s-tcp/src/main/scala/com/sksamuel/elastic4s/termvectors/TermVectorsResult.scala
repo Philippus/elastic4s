@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.termvectors
 
 import org.elasticsearch.action.termvectors.TermVectorsResponse
+
 import scala.concurrent.duration._
 
 case class TermVectorsResult(original: TermVectorsResponse) {

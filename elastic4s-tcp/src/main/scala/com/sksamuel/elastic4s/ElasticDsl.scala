@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.reindex.ReindexDsl
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptDsl, ScriptFieldDefinition}
+import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptApi, ScriptFieldDefinition}
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
@@ -19,7 +19,7 @@ import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDef
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.task.TaskApi
-import com.sksamuel.elastic4s.termvectors.TermVectorDsl
+import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.validate.ValidateDsl
 
 import scala.concurrent.duration._
@@ -45,7 +45,6 @@ trait ElasticDsl
     with PercolateDsl
     with PipelineAggregationDsl
     with ReindexDsl
-    with ScriptDsl
     with SearchDsl
     with SettingsDsl
     with ScoreDsl
@@ -54,7 +53,7 @@ trait ElasticDsl
     with SnapshotDsl
     with SuggestionDsl
     with TaskApi
-    with TermVectorDsl
+    with TermVectorApi
     with TokenizerDsl
     with TokenFilterDsl
     with ValidateDsl
@@ -206,7 +205,12 @@ trait ElasticDsl
   def percolatorField(name: String) = field(name, PercolatorType)
 
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
+  case class ExpectsScript(field: String) {
+    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field, script, None, None)
+  }
+
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
+
   def shortField(name: String) = field(name, ShortType)
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")

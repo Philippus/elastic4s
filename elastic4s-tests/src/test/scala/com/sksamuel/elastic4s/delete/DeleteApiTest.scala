@@ -30,7 +30,7 @@ class DeleteApiTest extends FlatSpec with Matchers with ElasticSugar with TypeCh
   }
 
   it should "accept version and version type" in {
-    val req = delete id 141212 from "places" / "type1" version 53423l versionType VersionType.EXTERNAL
+    val req = delete id 141212 from "places" / "type1" version 53423l versionType VersionType.External
   }
 
   it should "accept refresh" in {

@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
 import com.sksamuel.elastic4s.indexes.IndexApi
+import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.update.UpdateApi
 
@@ -17,5 +18,6 @@ trait ElasticApi
     with ExplainApi
     with GetApi
     with IndexApi
+    with ScriptApi
     with TaskApi
     with UpdateApi

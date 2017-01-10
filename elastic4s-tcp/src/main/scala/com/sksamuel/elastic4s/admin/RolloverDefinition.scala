@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.admin.indices.rollover.RolloverRequestBuilder
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.TimeValue
 
-import com.sksamuel.exts.OptionImplicits._
 import scala.concurrent.duration.FiniteDuration
 
 case class RolloverDefinition(sourceAlias: String,

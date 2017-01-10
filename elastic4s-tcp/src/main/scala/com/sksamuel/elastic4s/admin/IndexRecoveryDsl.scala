@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
-import org.elasticsearch.action.admin.indices.recovery.RecoveryRequest
-import org.elasticsearch.action.admin.indices.recovery.RecoveryResponse
+import org.elasticsearch.action.admin.indices.recovery.{RecoveryRequest, RecoveryResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future

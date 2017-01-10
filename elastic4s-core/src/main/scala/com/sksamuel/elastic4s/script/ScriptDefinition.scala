@@ -1,14 +1,10 @@
 package com.sksamuel.elastic4s.script
 
-import com.sksamuel.elastic4s.FieldsMapper
-import org.elasticsearch.script.{ Script, ScriptType }
-
-import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 
 case class ScriptDefinition(script: String,
                             lang: Option[String] = None,
-                            scriptType: ScriptType = ScriptType.INLINE,
+                            scriptType: String = ScriptType.Inline,
                             params: Map[String, Any] = Map.empty,
                             options: Map[String, String] = Map.empty) {
 
@@ -18,21 +14,7 @@ case class ScriptDefinition(script: String,
   def params(seq: Seq[(String, Any)]): ScriptDefinition = params(seq.toMap)
   def params(map: Map[String, Any]): ScriptDefinition = copy(params = params ++ map)
 
-  def scriptType(scriptType: ScriptType): ScriptDefinition = copy(scriptType = scriptType)
-
-  @deprecated("use build", "5.0.0")
-  def toJavaAPI: Script = build
-
-  def build: Script = {
-    if (params.isEmpty) {
-      new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
-                 options.asJava, Map.empty.asJava)
-    } else {
-      val mappedParams = FieldsMapper.mapper(params).asJava
-      new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
-                 options.asJava, mappedParams)
-    }
-  }
+  def scriptType(scriptType: String): ScriptDefinition = copy(scriptType = scriptType)
 }
 
 object ScriptDefinition {
