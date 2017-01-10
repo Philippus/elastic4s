@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.Executable
-import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
+import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteExecutables}
 import com.sksamuel.elastic4s.index.IndexExecutables
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.update.{UpdateDefinition, UpdateExecutables}
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 trait BulkExecutables {
 
-  val execs = new IndexExecutables with UpdateExecutables {}
+  val execs = new IndexExecutables with UpdateExecutables with DeleteExecutables {}
 
   implicit object BulkDefinitionExecutable
     extends Executable[BulkDefinition, BulkResponse, RichBulkResponse] {
@@ -22,7 +22,7 @@ trait BulkExecutables {
       t.refresh.foreach(builder.setRefreshPolicy)
       t.requests.foreach {
         case index: IndexDefinition => builder.add(execs.IndexDefinitionExecutable.builder(c, index))
-        case delete: DeleteByIdDefinition => builder.add(delete.build)
+        case delete: DeleteByIdDefinition => builder.add(execs.DeleteByIdDefinitionExecutable.builder(c, delete))
         case update: UpdateDefinition => builder.add(execs.UpdateDefinitionExecutable.builder(c, update))
       }
       injectFutureAndMap(builder.execute)(RichBulkResponse.apply)

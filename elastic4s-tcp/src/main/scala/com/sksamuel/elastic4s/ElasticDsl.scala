@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.alias.{AliasesApi, GetAliasDefinition}
+import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.bulk.BulkApi
-import com.sksamuel.elastic4s.delete.DeleteDsl
-import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainApi}
-import com.sksamuel.elastic4s.get.{GetApi, MultiGetApi}
+import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
@@ -22,7 +20,6 @@ import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefin
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorDsl
-import com.sksamuel.elastic4s.update.UpdateDsl
 import com.sksamuel.elastic4s.validate.ValidateDsl
 
 import scala.concurrent.duration._
@@ -31,25 +28,20 @@ import scala.concurrent.{Await, Future}
 // the entry point for TCP users. This is the trait that should be mixed in, or use the object
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
-  extends AliasesApi
+  extends ElasticApi
     with AggregationDsl
     with AnalyzerDsl
     with BulkApi
     with ClusterDsl
     with CreateIndexDsl
     with DeleteIndexDsl
-    with DeleteDsl
     with DynamicTemplateDsl
-    with ExplainApi
     with FieldStatsDsl
     with ForceMergeDsl
-    with GetApi
-    with IndexDsl
     with IndexAdminDsl
     with IndexRecoveryDsl
     with IndexTemplateDsl
     with MappingDsl
-    with MultiGetApi
     with PercolateDsl
     with PipelineAggregationDsl
     with ReindexDsl
@@ -65,7 +57,6 @@ trait ElasticDsl
     with TermVectorDsl
     with TokenizerDsl
     with TokenFilterDsl
-    with UpdateDsl
     with ValidateDsl
     with TcpExecutables
     with ElasticImplicits {

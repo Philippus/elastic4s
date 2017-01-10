@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.bulk
 
 import java.util.concurrent.TimeUnit
 
-import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
+import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteExecutables}
 import com.sksamuel.elastic4s.index.IndexExecutables
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import org.elasticsearch.client.Client
@@ -13,10 +13,10 @@ import scala.util.control.NonFatal
 
 class BulkProcessor(c: Client, processor: org.elasticsearch.action.bulk.BulkProcessor) {
 
-  private val execs = new IndexExecutables {}
+  private val execs = new IndexExecutables with DeleteExecutables {}
 
   def add(index: IndexDefinition) = processor.add(execs.IndexDefinitionExecutable.builder(c, index).request())
-  def add(delete: DeleteByIdDefinition) = processor.add(delete.build)
+  def add(delete: DeleteByIdDefinition) = processor.add(execs.DeleteByIdDefinitionExecutable.builder(c, delete).request())
 
   def close(duration: FiniteDuration): Boolean = processor.awaitClose(duration.toNanos, TimeUnit.NANOSECONDS)
 

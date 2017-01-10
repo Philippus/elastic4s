@@ -1,46 +1,22 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.IndexAndTypes
+import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.client.Requests
-import org.elasticsearch.index.VersionType
+import com.sksamuel.exts.OptionImplicits._
 
-case class DeleteByIdDefinition(indexType: IndexAndTypes, id: Any) extends BulkCompatibleDefinition {
+case class DeleteByIdDefinition(indexType: IndexAndType,
+                                id: Any,
+                                parent: Option[String] = None,
+                                routing: Option[String] = None,
+                                refresh: Option[String] = None,
+                                waitForActiveShards: Option[Int] = None,
+                                version: Option[Long] = None,
+                                versionType: Option[String] = None) extends BulkCompatibleDefinition {
 
-  private[elastic4s] val builder = {
-    Requests.deleteRequest(indexType.index).`type`(indexType.types.headOption.orNull).id(id.toString)
-  }
-
-  def `type`(_type: String): DeleteByIdDefinition = {
-    builder.`type`(_type)
-    this
-  }
-
-  def parent(parent: String): DeleteByIdDefinition = {
-    builder.parent(parent)
-    this
-  }
-
-  def routing(routing: String): DeleteByIdDefinition = {
-    builder.routing(routing)
-    this
-  }
-
-  def refresh(refresh: RefreshPolicy): this.type = {
-    builder.setRefreshPolicy(refresh)
-    this
-  }
-
-  def version(version: Long): DeleteByIdDefinition = {
-    builder.version(version)
-    this
-  }
-
-  def versionType(versionType: VersionType): DeleteByIdDefinition = {
-    builder.versionType(versionType)
-    this
-  }
-
-  def build = builder
+  def routing(routing: String): DeleteByIdDefinition = copy(routing = routing.some)
+  def parent(parent: String): DeleteByIdDefinition = copy(parent = parent.some)
+  def refresh(refresh: String): DeleteByIdDefinition = copy(refresh = refresh.some)
+  def waitForActiveShards(waitForActiveShards: Int): DeleteByIdDefinition = copy(waitForActiveShards = waitForActiveShards.some)
+  def version(version: Long): DeleteByIdDefinition = copy(version = version.some)
+  def versionType(versionType: String): DeleteByIdDefinition = copy(versionType = versionType.some)
 }

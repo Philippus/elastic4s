@@ -15,4 +15,7 @@ trait GetApi {
     def from(index: String, `type`: String): GetDefinition = from(IndexAndType(index, `type`))
     def from(index: IndexAndType): GetDefinition = GetDefinition(index, id.toString)
   }
+
+  def multiget(first: GetDefinition, rest: GetDefinition*): MultiGetDefinition = multiget(first +: rest)
+  def multiget(gets: Iterable[GetDefinition]): MultiGetDefinition = MultiGetDefinition(gets.toSeq)
 }

@@ -3,9 +3,6 @@ package com.sksamuel.elastic4s.delete
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -20,19 +17,6 @@ case class DeleteByQueryDefinition(sourceIndexes: Indexes,
                                    timeout: Option[FiniteDuration] = None,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
-
-  def populate(builder: DeleteByQueryRequestBuilder) = {
-    builder.source(sourceIndexes.values: _*)
-    builder.filter(query.builder)
-    requestsPerSecond.foreach(builder.setRequestsPerSecond)
-    maxRetries.foreach(builder.setMaxRetries)
-    refresh.foreach(builder.refresh)
-    waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
-    timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
-    retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
-    shouldStoreResult.foreach(builder.setShouldStoreResult)
-    abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
-  }
 
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryDefinition =
     copy(abortOnVersionConflict = abortOnVersionConflict.some)

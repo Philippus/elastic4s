@@ -22,7 +22,9 @@ trait GetExecutables {
       t.refresh.foreach(req.setRefresh)
       t.parent.foreach(req.setParent)
       t.fetchSource.foreach { context =>
-        req.setFetchSource(context.enabled).setFetchSource(context.includes.toArray, context.excludes.toArray)
+        req.setFetchSource(context.enabled)
+        if (context.includes.nonEmpty || context.excludes.nonEmpty)
+          req.setFetchSource(context.includes.toArray, context.excludes.toArray)
       }
       t.preference.foreach(req.setPreference)
       t.version.foreach(req.setVersion)
