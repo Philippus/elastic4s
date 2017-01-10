@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.QueryBuilders
 
 @deprecated("query instead search on the `_index` field", "5.0.0")

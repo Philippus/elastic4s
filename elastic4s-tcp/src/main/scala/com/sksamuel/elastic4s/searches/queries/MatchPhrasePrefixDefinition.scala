@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.QueryBuilders
 
 case class MatchPhrasePrefixDefinition(field: String, value: Any)

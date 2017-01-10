@@ -146,7 +146,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         .fuzzyTranspositions(true)
         .maxExpansions(4)
         .withAndOperator()
-        .zeroTermsQuery(ZeroTermsQuery.ALL)
+        .zeroTermsQuery("all")
         .minimumShouldMatch("75%")
         .fuzziness(2f)
         .prefixLength(4)

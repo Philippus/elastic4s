@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.sort
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.sort.{FieldSortBuilder, SortBuilders, SortMode, SortOrder}
 
 case class FieldSortDefinition(field: String) extends SortDefinition[FieldSortBuilder] {

@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.explain
 
 import com.sksamuel.elastic4s.IndexAndType
-import com.sksamuel.elastic4s.searches.QueryDefinition
-import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.{QueryDefinition, QueryStringQueryDefinition}
 
 case class ExplainDefinition(indexAndType: IndexAndType,
                              id: String,

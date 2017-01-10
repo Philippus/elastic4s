@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeCutoffFrequency, DefinitionAttributeFuzziness, DefinitionAttributeFuzzyRewrite, DefinitionAttributePrefixLength}
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{MultiMatchQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.search.MatchQuery
+
 import scala.collection.JavaConverters._
 
 case class MultiMatchQueryDefinition(text: String)

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 
 @deprecated("use DocumentRef", "5.0.0")

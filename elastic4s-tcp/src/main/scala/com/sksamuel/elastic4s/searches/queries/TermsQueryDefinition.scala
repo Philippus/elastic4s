@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.TermsQueryBuilder
 
 case class TermsQueryDefinition(builder: TermsQueryBuilder) extends QueryDefinition {

@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query.{GeoPolygonQueryBuilder, GeoValidationMethod, QueryBuilders}
 

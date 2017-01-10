@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.index.query.{HasChildQueryBuilder, QueryBuilders}
 import com.sksamuel.exts.OptionImplicits._

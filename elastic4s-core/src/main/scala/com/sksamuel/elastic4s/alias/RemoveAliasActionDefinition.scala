@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.alias
 
-import com.sksamuel.elastic4s.searches.QueryDefinition
-import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.{QueryDefinition, QueryStringQueryDefinition}
 import com.sksamuel.exts.OptionImplicits._
 
 case class RemoveAliasActionDefinition(alias: String,

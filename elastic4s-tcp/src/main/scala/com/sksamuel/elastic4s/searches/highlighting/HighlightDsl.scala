@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.highlighting
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 
 import scala.language.implicitConversions

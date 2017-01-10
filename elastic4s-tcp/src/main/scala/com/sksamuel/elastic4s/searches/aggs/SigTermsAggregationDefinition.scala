@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude

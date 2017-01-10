@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.validate
 
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 
 trait ValidateApi {
 

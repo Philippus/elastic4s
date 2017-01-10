@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.rescore.{QueryRescoreMode, RescoreBuilder}
 
 case class RescoreDefinition(query: QueryDefinition) {

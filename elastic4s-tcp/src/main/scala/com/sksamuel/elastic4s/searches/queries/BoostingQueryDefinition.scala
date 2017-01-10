@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{BoostingQueryBuilder, QueryBuilders}
 
 case class BoostingQueryDefinition(positiveQuery: QueryDefinition,

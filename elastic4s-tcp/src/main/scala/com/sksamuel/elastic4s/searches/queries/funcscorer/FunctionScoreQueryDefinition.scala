@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
-import com.sksamuel.elastic4s.searches.{QueryBuilderFn, QueryDefinition}
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.common.lucene.search.function.FiltersFunctionScoreQuery.ScoreMode
 import org.elasticsearch.common.lucene.search.function.{CombineFunction, FiltersFunctionScoreQuery}
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.index.query.functionscore._
 
 trait ScoreDsl {

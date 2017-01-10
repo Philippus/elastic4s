@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.validate
 
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class ValidateDefinition(indexesAndTypes: IndexesAndTypes,

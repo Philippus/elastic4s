@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeBoost, DefinitionAttributeCutoffFrequency}
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import com.sksamuel.elastic4s.searches.QueryDefinition
 import org.elasticsearch.index.query.{Operator, QueryBuilders}
 
 case class CommonTermsQueryDefinition(name: String, text: String)

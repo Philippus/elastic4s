@@ -31,7 +31,7 @@ class IndexTcpTest extends WordSpec with MockitoSugar with ElasticSugar with Mat
       indexInto("electronics" / "phone").source(phone)
     ).refresh(RefreshPolicy.Immediate)
   }
-  blockUntilCount(4, "electronics")
+  blockUntilCount(6, "electronics")
 
   "an index request" should {
     "index fields" in {

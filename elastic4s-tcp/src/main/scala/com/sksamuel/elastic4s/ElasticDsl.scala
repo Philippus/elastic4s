@@ -13,7 +13,7 @@ import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
-import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IdQueryDefinition, IndicesQueryDefinition, InnerHitDefinition}
+import com.sksamuel.elastic4s.searches.queries.{FuzzyQueryDefinition, IndicesQueryDefinition, InnerHitDefinition, QueryDefinition}
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.task.TaskApi

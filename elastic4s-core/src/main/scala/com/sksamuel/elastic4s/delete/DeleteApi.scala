@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.searches.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.elastic4s.{IndexAndType, Indexes}
 
 import scala.language.implicitConversions
