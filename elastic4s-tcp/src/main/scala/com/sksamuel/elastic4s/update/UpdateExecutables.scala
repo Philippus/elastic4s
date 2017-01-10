@@ -64,6 +64,7 @@ trait UpdateExecutables {
       if (t.upsertFields.nonEmpty) {
         _builder.setUpsert(fieldsAsXContent(FieldsMapper.mapFields(t.upsertFields)))
       }
+
       if (t.documentFields.nonEmpty) {
         _builder.setDoc(fieldsAsXContent(FieldsMapper.mapFields(t.documentFields)))
       }

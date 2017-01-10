@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.index.VersionType
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar

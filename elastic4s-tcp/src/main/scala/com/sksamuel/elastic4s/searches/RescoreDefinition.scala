@@ -1,30 +1,22 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.search.rescore.{QueryRescoreMode, RescoreBuilder}
+import org.elasticsearch.search.rescore.{QueryRescorerBuilder, RescoreBuilder}
 
-case class RescoreDefinition(query: QueryDefinition) {
+object QueryRescoreMode {
+  val Avg = "Avg"
+  val Max = "Max"
+  val Min = "Min"
+  val Total = "Total"
+  val Multiply = "Multiply"
+}
 
-  val builder = RescoreBuilder.queryRescorer(QueryBuilderFn(query))
-
-  def window(size: Int): RescoreDefinition = {
-    builder.windowSize(size)
-    this
-  }
-
-  def originalQueryWeight(weight: Double): RescoreDefinition = {
-    builder.setQueryWeight(weight.toFloat)
-    this
-  }
-
-  def rescoreQueryWeight(weight: Double): RescoreDefinition = {
-    builder.setRescoreQueryWeight(weight.toFloat)
-    this
-  }
-
-  def scoreMode(mode: String): RescoreDefinition = scoreMode(QueryRescoreMode.valueOf(mode))
-  def scoreMode(mode: QueryRescoreMode): RescoreDefinition = {
-    builder.setScoreMode(mode)
-    this
+object RescoreBuilderFn {
+  def apply(r: RescoreDefinition): QueryRescorerBuilder = {
+    val builder = RescoreBuilder.queryRescorer(QueryBuilderFn(r.query))
+    r.windowSize.foreach(builder.windowSize)
+    r.originalQueryWeight.map(_.toFloat).foreach(builder.setQueryWeight)
+    r.restoreQueryWeight.map(_.toFloat).foreach(builder.setRescoreQueryWeight)
+    r.scoreMode.map(org.elasticsearch.search.rescore.QueryRescoreMode.fromString).foreach(builder.setScoreMode)
+    builder
   }
 }

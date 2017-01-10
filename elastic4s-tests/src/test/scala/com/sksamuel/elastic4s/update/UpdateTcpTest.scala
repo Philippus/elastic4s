@@ -107,7 +107,7 @@ class UpdateTcpTest extends FlatSpec with MockitoSugar with ElasticSugar with Ev
       update(14).in("scifi/starwars").docAsUpsert(
         "character" -> "chewie"
       )
-    }.await
+    }
     refresh("scifi")
 
     var k = 0

@@ -297,7 +297,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   }
 
   def rescore(rescorers: RescoreDefinition*): SearchDefinition = {
-    rescorers.foreach(rescorer => _builder.addRescorer(rescorer.builder))
+    rescorers.map(RescoreBuilderFn.apply).foreach(_builder.addRescorer)
     this
   }
 

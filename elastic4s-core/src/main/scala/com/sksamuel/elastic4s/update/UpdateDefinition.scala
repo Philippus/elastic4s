@@ -51,10 +51,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   //def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert[T: Indexable](t: T): UpdateDefinition = {
-    docAsUpsert(true)
-    doc(t)
-  }
+  def docAsUpsert[T: Indexable](t: T): UpdateDefinition = doc(t).copy(docAsUpsert = true.some)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
   def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toMap)
@@ -63,10 +60,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = docAsUpsert(iterable.toMap)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(map: Map[String, Any]): UpdateDefinition = {
-    docAsUpsert(true)
-    doc(map)
-  }
+  def docAsUpsert(map: Map[String, Any]): UpdateDefinition = doc(map).copy(docAsUpsert = true.some)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
   //  def docAsUpsert(value: FieldValue): UpdateDefinition = {
