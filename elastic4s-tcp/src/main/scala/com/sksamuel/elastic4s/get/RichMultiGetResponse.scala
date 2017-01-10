@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.get
 
+import cats.syntax.either._
 import com.sksamuel.elastic4s.HitReader
 import org.elasticsearch.action.get.MultiGetResponse
 import org.elasticsearch.action.get.MultiGetResponse.Failure
-import cats.syntax.either._
 
 import scala.collection.JavaConverters._
 

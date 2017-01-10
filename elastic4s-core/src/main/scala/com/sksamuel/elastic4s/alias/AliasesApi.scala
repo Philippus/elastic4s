@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.alias
 
 import scala.language.implicitConversions
 
-trait AliasesDsl {
+trait AliasesApi {
 
   def aliases(first: AliasActionDefinition, rest: AliasActionDefinition*): IndicesAliasesRequestDefinition = aliases(first +: rest)
   def aliases(actions: Iterable[AliasActionDefinition]) = IndicesAliasesRequestDefinition(actions.toSeq)

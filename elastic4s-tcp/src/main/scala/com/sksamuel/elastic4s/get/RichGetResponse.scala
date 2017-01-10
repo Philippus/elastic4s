@@ -69,9 +69,4 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   def iterator: Iterator[GetField] = original.iterator.asScala
 }
 
-trait HitField {
-  def name: String
-  def value: AnyRef
-  def values: Seq[AnyRef]
-  def isMetadataField: Boolean
-}
+

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.alias.{AliasesDsl, GetAliasDefinition}
+import com.sksamuel.elastic4s.alias.{AliasesApi, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.delete.DeleteDsl
-import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
+import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainApi}
 import com.sksamuel.elastic4s.get.{GetApi, MultiGetApi}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
@@ -31,8 +31,7 @@ import scala.concurrent.{Await, Future}
 // the entry point for TCP users. This is the trait that should be mixed in, or use the object
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
-  extends ElasticSyntax
-    with AliasesDsl
+  extends AliasesApi
     with AggregationDsl
     with AnalyzerDsl
     with BulkApi
@@ -41,7 +40,7 @@ trait ElasticDsl
     with DeleteIndexDsl
     with DeleteDsl
     with DynamicTemplateDsl
-    with ExplainDsl
+    with ExplainApi
     with FieldStatsDsl
     with ForceMergeDsl
     with GetApi
@@ -519,7 +518,7 @@ trait ElasticDsl
     @deprecated("Use explain(index, type, id", "5.0.0")
     def id(id: String) = new {
       def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
-        ExplainDefinition(indexAndTypes.index, indexAndTypes.types.head, id)
+        ExplainDefinition(IndexAndType(indexAndTypes.index, indexAndTypes.types.head), id)
       }
     }
   }
