@@ -1,9 +1,11 @@
-package com.sksamuel.elastic4s.indexes
+package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
+import com.sksamuel.elastic4s.indexes.IndexSettings
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+
 import scala.concurrent.duration._
 
 case class CreateIndexDefinition(name: String) {

@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import java.lang.reflect.{ InvocationHandler, Method }
+import java.lang.reflect.{InvocationHandler, Method}
 
-import org.elasticsearch.client.{ ClusterAdminClient, IndicesAdminClient, Client }
+import org.elasticsearch.client.{Client, ClusterAdminClient, IndicesAdminClient}
 
 object ProxyClients {
 

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import java.io.PrintWriter
 
+import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}
 

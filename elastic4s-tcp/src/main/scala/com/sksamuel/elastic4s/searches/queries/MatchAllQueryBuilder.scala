@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import MatchAllQueryDefinition
 import org.elasticsearch.index.query.{MatchAllQueryBuilder, QueryBuilders}
 
 object MatchAllQueryBuilder {

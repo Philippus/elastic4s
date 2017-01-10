@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.searches
 
+import java.nio.ByteBuffer
+
 import com.sksamuel.elastic4s.Hit
 import com.sksamuel.exts.StringOption
 import org.apache.lucene.search.Explanation
-import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField
 import org.elasticsearch.search.{SearchHit, SearchHits, SearchShardTarget}
 
@@ -23,7 +24,6 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   override def exists = true
 
   override def sourceAsBytes: Array[Byte] = Option(java.source).getOrElse(Array.empty)
-  override def sourceAsByteRef: BytesReference = java.sourceRef()
   override def sourceAsString: String = StringOption(java.sourceAsString).getOrElse("")
   override def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
   override def isSourceEmpty: Boolean = !java.hasSource

@@ -22,6 +22,29 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
+    .settings(libraryDependencies ++= Seq(
+      "com.vividsolutions"                    % "jts"                       % "1.13",
+      "io.netty"                              % "netty-all"                 % "4.1.6.Final",
+      "org.apache.logging.log4j"              % "log4j-api"                 % "2.7",
+      "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-grouping"           % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-highlighter"        % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-memory"             % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-misc"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-queries"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-queryparser"        % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-sandbox"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial-extras"     % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
+      "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6"
+    ))
   .dependsOn(core)
 
 lazy val http = Project("elastic4s-http", file("elastic4s-http"))

@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
-import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 class MappingDefinition(val `type`: String) {
 

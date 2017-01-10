@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s
 
+import java.nio.ByteBuffer
+
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.bytes.BytesReference
 
 import scala.collection.mutable
 
@@ -30,7 +31,7 @@ trait Hit {
   def sourceAsMap: Map[String, AnyRef]
   def sourceAsBytes: Array[Byte]
   def sourceAsString: String
-  def sourceAsByteRef: BytesReference
+  def sourceAsByteBuffer: ByteBuffer = ByteBuffer.wrap(sourceAsBytes)
   def isSourceEmpty: Boolean
 
   def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)

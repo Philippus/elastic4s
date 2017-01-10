@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import org.elasticsearch.common.xcontent.XContentBuilder
 
-/** @author Fehmi Can Saglam */
 object attributes {
 
   sealed trait Attribute { self: FieldDefinition =>

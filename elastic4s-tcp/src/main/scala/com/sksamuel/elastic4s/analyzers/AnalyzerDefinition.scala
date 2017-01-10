@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+
 import scala.collection.JavaConverters._
 
 // Base class for analyzers that have custom parameters set.

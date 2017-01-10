@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class PatternTokenizerTest extends WordSpec with TokenizerDsl with Matchers {
+class PatternTokenizerTest extends WordSpec with TokenizerApi with Matchers {
 
   "PatternTokenizer builder" should {
     "set flags" in {

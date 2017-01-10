@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import IdQueryDefinition
 import org.elasticsearch.index.query.{IdsQueryBuilder, QueryBuilders}
 
 object IdQueryBuilder {

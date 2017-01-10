@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.index
 
-import com.sksamuel.elastic4s.indexes.{IndexDefinition, RichIndexResponse}
+import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.mappings.XContentFieldValueWriter
 import com.sksamuel.elastic4s.{Executable, Show}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
@@ -21,7 +22,7 @@ trait IndexExecutables {
         case Some(json) => builder.setSource(json)
         case _ =>
           val source = XContentFactory.jsonBuilder().startObject()
-          t.fields.foreach(_.output(source))
+          t.fields.foreach(XContentFieldValueWriter(source, _))
           source.endObject()
           builder.setSource(source)
       }

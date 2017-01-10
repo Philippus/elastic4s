@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.indexes
+package com.sksamuel.elastic4s.index
 
-import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, CharFilterDefinition, CustomAnalyzerDefinition, TokenFilterDefinition, Tokenizer}
+import com.sksamuel.elastic4s.analyzers._
 import org.elasticsearch.common.xcontent.XContentBuilder
 
 case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition]) {

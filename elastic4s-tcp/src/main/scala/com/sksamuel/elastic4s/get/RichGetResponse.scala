@@ -59,7 +59,6 @@ case class RichGetResponse(original: GetResponse) extends Hit {
 
   override def sourceAsMap: Map[String, AnyRef] = Option(original.getSource).map(_.asScala.toMap).getOrElse(Map.empty)
   override def sourceAsBytes: Array[Byte] = original.getSourceAsBytes
-  override def sourceAsByteRef: BytesReference = original.getSourceAsBytesRef
   override def sourceAsString: String = original.getSourceAsString
   override def isSourceEmpty: Boolean = original.isSourceEmpty
 

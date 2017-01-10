@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.explain.ExplainDefinition
+import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
@@ -49,7 +50,7 @@ trait ElasticDsl
     with SuggestionDsl
     with TaskApi
     with TermVectorApi
-    with TokenizerDsl
+    with TokenizerApi
     with TokenFilterDsl
     with TcpExecutables
     with ElasticImplicits {

@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.indexes
+package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.mappings.MappingDefinition

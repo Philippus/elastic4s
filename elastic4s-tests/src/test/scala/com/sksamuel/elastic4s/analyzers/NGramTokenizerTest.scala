@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class NGramTokenizerTest extends WordSpec with TokenizerDsl with Matchers {
+class NGramTokenizerTest extends WordSpec with TokenizerApi with Matchers {
 
   "NGramTokenizer builder" should {
     "set min and max ngrams" in {

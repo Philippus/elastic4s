@@ -65,7 +65,6 @@ object DefinitionAttributes {
       this
     }
 
-    def preference(pref: org.elasticsearch.cluster.routing.Preference): this.type = preference(pref.`type`())
     def preference(pref: Preference): this.type = preference(pref.value)
   }
 }

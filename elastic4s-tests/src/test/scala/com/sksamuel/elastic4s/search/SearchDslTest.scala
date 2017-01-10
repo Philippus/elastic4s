@@ -11,7 +11,6 @@ import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
 import org.elasticsearch.index.query.{Operator, RegexpFlag, SimpleQueryStringFlag}
 import org.elasticsearch.index.search.MatchQuery
-import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
 import org.elasticsearch.search.aggregations.bucket.terms.Terms

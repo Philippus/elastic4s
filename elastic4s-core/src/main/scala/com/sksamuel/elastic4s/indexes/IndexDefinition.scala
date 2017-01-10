@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.mappings.FieldValue
-import com.sksamuel.elastic4s.{FieldsMapper, IndexAndType, Indexable}
+import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable}
 import com.sksamuel.exts.OptionImplicits._
 
 case class IndexDefinition(indexAndType: IndexAndType,

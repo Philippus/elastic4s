@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentBuilder}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+
 import scala.collection.JavaConverters._
 
 abstract class Tokenizer(val name: String) {

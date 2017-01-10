@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class KeywordTokenizerTest extends WordSpec with TokenizerDsl with Matchers {
+class KeywordTokenizerTest extends WordSpec with TokenizerApi with Matchers {
 
   "KeywordTokenizer builder" should {
     "set buffer size" in {

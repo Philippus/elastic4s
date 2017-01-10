@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
-
 abstract class Analyzer(val name: String)
 
 case object WhitespaceAnalyzer extends Analyzer("whitespace")
@@ -49,12 +47,3 @@ case object SpanishLanguageAnalyzer extends LanguageAnalyzer("spanish")
 case object SwedishLanguageAnalyzer extends LanguageAnalyzer("swedish")
 case object TurkishLanguageAnalyzer extends LanguageAnalyzer("turkish")
 case object ThaiLanguageAnalyzer extends LanguageAnalyzer("thai")
-
-abstract class LanguageAnalyzerDef(override val name: String,
-                                   stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
-  def build(source: XContentBuilder): Unit = {
-    source.startObject(name)
-    source.field("lang", name)
-    source.endObject()
-  }
-}

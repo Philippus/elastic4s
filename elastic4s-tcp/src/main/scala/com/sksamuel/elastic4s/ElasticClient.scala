@@ -13,7 +13,9 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient
 
 import scala.concurrent.Future
 
-trait ElasticClient extends AbstractElasticClient {
+trait ElasticClient {
+  def close(): Unit
+  def java: Client
   def execute[T, R, Q](request: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
     try {
       executable(java, request)

@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.collection.JavaConverters._
 
@@ -31,10 +30,11 @@ trait IndexHttpExecutables {
         case Some(json) => new StringEntity(json)
         case None =>
           // todo needs to be replaced with some non-elastic builder to remove dep on main elastic
-          val source = XContentFactory.jsonBuilder().startObject()
-          request.fields.foreach(_.output(source))
-          source.endObject()
-          new StringEntity(source.string())
+          //          val source = XContentFactory.jsonBuilder().startObject()
+          //          request.fields.foreach(_.output(source))
+          //          source.endObject()
+          //          new StringEntity(source.string())
+          new StringEntity("")
       }
 
       logger.debug(s"Endpoint=$endpoint")

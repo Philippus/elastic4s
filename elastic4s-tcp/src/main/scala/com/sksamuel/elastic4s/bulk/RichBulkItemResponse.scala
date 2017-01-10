@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.indexes.RichIndexResponse
+import com.sksamuel.elastic4s.index.RichIndexResponse
 import org.elasticsearch.action.bulk.BulkItemResponse
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.delete.DeleteResponse

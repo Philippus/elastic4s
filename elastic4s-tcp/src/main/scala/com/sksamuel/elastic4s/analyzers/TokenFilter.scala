@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
-import scala.collection.JavaConverters._
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.common.xcontent.XContentBuilder
+
+import scala.collection.JavaConverters._
 
 trait TokenFilter extends AnalyzerFilter
 

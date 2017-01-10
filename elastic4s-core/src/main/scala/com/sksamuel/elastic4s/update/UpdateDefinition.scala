@@ -2,10 +2,8 @@ package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.mappings.FieldValue
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -25,22 +23,18 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
                             version: Option[Long] = None,
                             versionType: Option[String] = None,
                             waitForActiveShards: Option[Int] = None,
-                            upsert: Option[String] = None,
-                            document: Option[String] = None) extends BulkCompatibleDefinition {
+                            upsertSource: Option[String] = None,
+                            upsertFields: Map[String, Any] = Map.empty,
+                            documentFields: Map[String, Any] = Map.empty,
+                            documentSource: Option[String] = None) extends BulkCompatibleDefinition {
   require(indexAndTypes != null, "indexAndTypes must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
-
-  private[elastic4s] def _fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
-    val source = XContentFactory.jsonBuilder().startObject()
-    fields.foreach(_.output(source))
-    source.endObject()
-  }
 
   // detects if a doc has not change and if so will not perform any action
   def detectNoop(detectNoop: Boolean): UpdateDefinition = copy(detectNoop = detectNoop.some)
 
   // Sets the object to use for updates when a script is not specified.
-  def doc[T](t: T)(implicit indexable: Indexable[T]) = copy(document = indexable.json(t).some)
+  def doc[T](t: T)(implicit indexable: Indexable[T]) = copy(documentSource = indexable.json(t).some)
 
   // Sets the fields to use for updates when a script is not specified.
   def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
@@ -49,15 +43,12 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = doc(iterable.toMap)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(map: Map[String, Any]): UpdateDefinition = doc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
+  def doc(map: Map[String, Any]): UpdateDefinition = copy(documentFields = map)
 
-  def doc(doc: String): UpdateDefinition = copy(document = doc.some)
-
-  // Sets the fields to use for updates when a script is not specified.
-  def doc(source: XContentBuilder): UpdateDefinition = copy()
+  def doc(doc: String): UpdateDefinition = copy(documentSource = doc.some)
 
   // Sets the field to use for updates when a script is not specified.
-  def doc(value: FieldValue): UpdateDefinition = doc(_fieldsAsXContent(Seq(value)))
+  //def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
   def docAsUpsert[T: Indexable](t: T): UpdateDefinition = {
@@ -78,10 +69,10 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   }
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(value: FieldValue): UpdateDefinition = {
-    docAsUpsert(true)
-    doc(value)
-  }
+  //  def docAsUpsert(value: FieldValue): UpdateDefinition = {
+  //    docAsUpsert(true)
+  //    doc(value)
+  //  }
 
   // should the doc be also used for a new document
   def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = copy(docAsUpsert = shouldUpsertDoc.some)
@@ -113,10 +104,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def ttl(ttl: String): UpdateDefinition = copy(ttl = ttl.some)
 
   // If the document does not already exist, the contents of the upsert element will be inserted as a new document.
-  def upsert(map: Map[String, Any]): UpdateDefinition = upsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
-
-  // If the document does not already exist, the contents of the upsert element will be inserted as a new document.
-  def upsert(source: XContentBuilder): UpdateDefinition = copy(upsert = source.string().some)
+  def upsert(map: Map[String, Any]): UpdateDefinition = copy(upsertFields = map)
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
   def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toMap)

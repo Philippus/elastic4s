@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import org.elasticsearch.index.query.{Operator, QueryBuilders, SimpleQueryStringBuilder, SimpleQueryStringFlag}
+import org.elasticsearch.index.query.{Operator, QueryBuilders, SimpleQueryStringFlag}
 
 case class SimpleStringQueryDefinition(query: String) extends QueryDefinition {
 

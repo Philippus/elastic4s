@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class StandardTokenizerTest extends WordSpec with TokenizerDsl with Matchers {
+class StandardTokenizerTest extends WordSpec with TokenizerApi with Matchers {
 
   "StandardTokenizer builder" should {
     "set max token length" in {

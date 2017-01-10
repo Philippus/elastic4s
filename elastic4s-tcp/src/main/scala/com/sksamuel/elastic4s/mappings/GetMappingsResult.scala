@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.IndexAndType
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.cluster.metadata.MappingMetaData
+
 import scala.collection.JavaConverters._
 
 case class GetMappingsResult(original: GetMappingsResponse) {
