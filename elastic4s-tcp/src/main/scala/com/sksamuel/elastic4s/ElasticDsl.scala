@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.{AliasesDsl, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.bulk.BulkDsl
+import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.delete.DeleteDsl
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainDsl}
-import com.sksamuel.elastic4s.get.{GetDsl, MultiGetApi}
+import com.sksamuel.elastic4s.get.{GetApi, MultiGetApi}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
@@ -35,7 +35,7 @@ trait ElasticDsl
     with AliasesDsl
     with AggregationDsl
     with AnalyzerDsl
-    with BulkDsl
+    with BulkApi
     with ClusterDsl
     with CreateIndexDsl
     with DeleteIndexDsl
@@ -44,7 +44,7 @@ trait ElasticDsl
     with ExplainDsl
     with FieldStatsDsl
     with ForceMergeDsl
-    with GetDsl
+    with GetApi
     with IndexDsl
     with IndexAdminDsl
     with IndexRecoveryDsl

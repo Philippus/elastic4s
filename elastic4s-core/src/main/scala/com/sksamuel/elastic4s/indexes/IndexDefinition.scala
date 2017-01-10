@@ -5,17 +5,6 @@ import com.sksamuel.elastic4s.mappings.FieldValue
 import com.sksamuel.elastic4s.{FieldsMapper, IndexAndType, Indexable}
 import com.sksamuel.exts.OptionImplicits._
 
-object OpType {
-  val Index = "index"
-  val Create = "create"
-}
-
-object RefreshPolicy {
-  val None = "false"
-  val Wait = "wait_for"
-  val Immediate = "true"
-}
-
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
                            opType: Option[String] = None,

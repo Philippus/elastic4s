@@ -1,210 +1,131 @@
 package com.sksamuel.elastic4s.update
 
+import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.{FieldsMapper, IndexAndTypes, Indexable, ProxyClients}
-import com.sksamuel.elastic4s.definitions.DefinitionRouting
 import com.sksamuel.elastic4s.mappings.FieldValue
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.action.update.{UpdateAction, UpdateRequest, UpdateRequestBuilder}
-import org.elasticsearch.common.unit.TimeValue
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-import org.elasticsearch.index.VersionType
 
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class UpdateDefinition(indexAndTypes: IndexAndTypes, id: String)
-  extends BulkCompatibleDefinition
-    with DefinitionRouting {
+case class UpdateDefinition(indexAndTypes: IndexAndTypes,
+                            id: String,
+                            detectNoop: Option[Boolean] = None,
+                            docAsUpsert: Option[Boolean] = None,
+                            fetchSource: Option[FetchSource] = None,
+                            parent: Option[String] = None,
+                            retryOnConflict: Option[Int] = None,
+                            refresh: Option[String] = None,
+                            routing: Option[String] = None,
+                            script: Option[ScriptDefinition] = None,
+                            scriptedUpsert: Option[Boolean] = None,
+                            timeout: Option[Duration] = None,
+                            ttl: Option[String] = None,
+                            version: Option[Long] = None,
+                            versionType: Option[String] = None,
+                            waitForActiveShards: Option[Int] = None,
+                            upsert: Option[String] = None,
+                            document: Option[String] = None) extends BulkCompatibleDefinition {
+  require(indexAndTypes != null, "indexAndTypes must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
-  val _builder = new UpdateRequestBuilder(ProxyClients.client, UpdateAction.INSTANCE)
-    .setIndex(indexAndTypes.index)
-    .setType(indexAndTypes.types.headOption.orNull)
-    .setId(id)
-
-  def build: UpdateRequest = _builder.request
-
-  private def _fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
+  private[elastic4s] def _fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject()
     fields.foreach(_.output(source))
     source.endObject()
   }
 
   // detects if a doc has not change and if so will not perform any action
-  def detectNoop(detectNoop: Boolean): this.type = {
-    _builder.setDetectNoop(detectNoop)
-    this
-  }
+  def detectNoop(detectNoop: Boolean): UpdateDefinition = copy(detectNoop = detectNoop.some)
 
   // Sets the object to use for updates when a script is not specified.
-  def doc[T](t: T)(implicit indexable: Indexable[T]): this.type = {
-    _builder.setDoc(indexable.json(t))
-    this
-  }
+  def doc[T](t: T)(implicit indexable: Indexable[T]) = copy(document = indexable.json(t).some)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(fields: (String, Any)*): this.type = doc(fields.toMap)
+  def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(iterable: Iterable[(String, Any)]): this.type = doc(iterable.toMap)
+  def doc(iterable: Iterable[(String, Any)]): UpdateDefinition = doc(iterable.toMap)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(map: Map[String, Any]): this.type = {
-    _builder.setDoc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
-    this
-  }
+  def doc(map: Map[String, Any]): UpdateDefinition = doc(_fieldsAsXContent(FieldsMapper.mapFields(map)))
 
-  def doc(source: String): this.type = {
-    _builder.setDoc(source)
-    this
-  }
+  def doc(doc: String): UpdateDefinition = copy(document = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(source: XContentBuilder): this.type = {
-    _builder.setDoc(source)
-    this
-  }
+  def doc(source: XContentBuilder): UpdateDefinition = copy()
 
   // Sets the field to use for updates when a script is not specified.
-  def doc(value: FieldValue): this.type = {
-    _builder.setDoc(_fieldsAsXContent(Seq(value)))
-    this
-  }
+  def doc(value: FieldValue): UpdateDefinition = doc(_fieldsAsXContent(Seq(value)))
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert[T: Indexable](t: T): this.type = {
+  def docAsUpsert[T: Indexable](t: T): UpdateDefinition = {
     docAsUpsert(true)
     doc(t)
   }
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(fields: (String, Any)*): this.type = docAsUpsert(fields.toMap)
+  def docAsUpsert(fields: (String, Any)*): UpdateDefinition = docAsUpsert(fields.toMap)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(iterable: Iterable[(String, Any)]): this.type = docAsUpsert(iterable.toMap)
+  def docAsUpsert(iterable: Iterable[(String, Any)]): UpdateDefinition = docAsUpsert(iterable.toMap)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(map: Map[String, Any]): this.type = {
+  def docAsUpsert(map: Map[String, Any]): UpdateDefinition = {
     docAsUpsert(true)
     doc(map)
   }
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(value: FieldValue): this.type = {
+  def docAsUpsert(value: FieldValue): UpdateDefinition = {
     docAsUpsert(true)
     doc(value)
   }
 
-  @deprecated("use docAsUpsert(false|true)", "5.0.0")
-  def docAsUpsert: this.type = docAsUpsert(shouldUpsertDoc = true)
-
   // should the doc be also used for a new document
-  def docAsUpsert(shouldUpsertDoc: Boolean): this.type = {
-    _builder.setDocAsUpsert(shouldUpsertDoc: Boolean)
-    this
-  }
+  def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = copy(docAsUpsert = shouldUpsertDoc.some)
 
-  def fetchSource(fetch: Boolean): this.type = {
-    _builder.setFetchSource(fetch)
-    this
-  }
+  def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = FetchSource(fetch, Nil, Nil).some)
 
-  def fetchSource(includes: Iterable[String], excludes: Iterable[String]): this.type = {
-    _builder.setFetchSource(includes.toArray, excludes.toArray)
-    this
-  }
+  def fetchSource(includes: Iterable[String],
+                  excludes: Iterable[String]): UpdateDefinition =
+    copy(fetchSource = FetchSource(true, includes.toSeq, excludes.toSeq).some)
 
-  @deprecated("use setFetchSource", "5.0.0")
-  def fields(fs: String*): this.type = fields(fs)
+  def parent(parent: String): UpdateDefinition = copy(parent = parent.some)
 
-  @deprecated("use setFetchSource", "5.0.0")
-  def fields(fs: Iterable[String]): this.type = {
-    _builder.setFields(fs.toSeq: _*)
-    this
-  }
-
-  @deprecated("use setFetchSource", "5.0.0")
-  def includeSource: this.type = {
-    _builder.setFields("_source")
-    this
-  }
-
-  def parent(parent: String): this.type = {
-    _builder.setParent(parent)
-    this
-  }
-
-  def refresh(refresh: RefreshPolicy): this.type = {
-    _builder.setRefreshPolicy(refresh)
-    this
-  }
-
-  def retryOnConflict(retryOnConflict: Int): this.type = {
-    _builder.setRetryOnConflict(retryOnConflict)
-    this
-  }
+  def routing(routing: String): UpdateDefinition = copy(routing = routing.some)
+  def refresh(refresh: String): UpdateDefinition = copy(refresh = refresh.some)
+  def retryOnConflict(retryOnConflict: Int): UpdateDefinition = copy(retryOnConflict = retryOnConflict.some)
 
   // executes this script as the update operation
-  def script(script: ScriptDefinition): UpdateDefinition = {
-    _builder.setScript(script.build)
-    this
-  }
+  def script(script: ScriptDefinition): UpdateDefinition = copy(script = script.some)
 
   // If the document does not already exist, the script will be executed instead.
-  def scriptedUpsert(upsert: Boolean): this.type = {
-    _builder.setScriptedUpsert(upsert)
-    this
-  }
+  def scriptedUpsert(upsert: Boolean): UpdateDefinition = copy(scriptedUpsert = upsert.some)
 
-  def source[T: Indexable](t: T): this.type = doc(t)
-  def sourceAsUpsert[T: Indexable](t: T): this.type = docAsUpsert(t)
+  def source[T: Indexable](t: T): UpdateDefinition = doc(t)
+  def sourceAsUpsert[T: Indexable](t: T): UpdateDefinition = docAsUpsert(t)
 
-  def timeout(duration: FiniteDuration): this.type = {
-    _builder.setTimeout(TimeValue.timeValueMillis(duration.toMillis))
-    this
-  }
+  def timeout(duration: FiniteDuration): UpdateDefinition = copy(timeout = duration.some)
 
-  def ttl(ttl: Long): this.type = {
-    _builder.setTtl(ttl)
-    this
-  }
-
-  def ttl(ttl: String): this.type = {
-    _builder.setTtl(ttl)
-    this
-  }
+  def ttl(ttl: Long): UpdateDefinition = copy(ttl.toString)
+  def ttl(ttl: String): UpdateDefinition = copy(ttl = ttl.some)
 
   // If the document does not already exist, the contents of the upsert element will be inserted as a new document.
-  def upsert(map: Map[String, Any]): this.type = {
-    _builder.setUpsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
-    this
-  }
+  def upsert(map: Map[String, Any]): UpdateDefinition = upsert(_fieldsAsXContent(FieldsMapper.mapFields(map)))
 
   // If the document does not already exist, the contents of the upsert element will be inserted as a new document.
-  def upsert(source: XContentBuilder): UpdateDefinition = {
-    _builder.setUpsert(source)
-    this
-  }
+  def upsert(source: XContentBuilder): UpdateDefinition = copy(upsert = source.string().some)
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
-  def upsert(fields: (String, Any)*): this.type = upsert(fields.toMap)
+  def upsert(fields: (String, Any)*): UpdateDefinition = upsert(fields.toMap)
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
-  def upsert(iterable: Iterable[(String, Any)]): this.type = upsert(iterable.toMap)
+  def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = upsert(iterable.toMap)
 
-  def versionType(versionType: VersionType): this.type = {
-    _builder.setVersionType(versionType)
-    this
-  }
-
-  def version(version: Long): this.type = {
-    _builder.setVersion(version)
-    this
-  }
-
-  def waitForActiveShards(count: Int): this.type = {
-    _builder.setWaitForActiveShards(count)
-    this
-  }
+  def versionType(versionType: String): UpdateDefinition = copy(versionType = versionType.some)
+  def version(version: Long): UpdateDefinition = copy(version = version.some)
+  def waitForActiveShards(waitForActiveShards: Int): UpdateDefinition =
+    copy(waitForActiveShards = waitForActiveShards.some)
 }

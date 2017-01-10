@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.indexes.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar

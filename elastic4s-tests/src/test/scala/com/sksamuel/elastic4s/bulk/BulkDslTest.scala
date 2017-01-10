@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.indexes.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FlatSpec, Matchers}
 

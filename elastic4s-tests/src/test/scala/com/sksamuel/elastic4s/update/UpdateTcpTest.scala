@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration._
 
-class UpdateTest extends FlatSpec with MockitoSugar with ElasticSugar with Eventually with Matchers {
+class UpdateTcpTest extends FlatSpec with MockitoSugar with ElasticSugar with Eventually with Matchers {
 
   implicit val duration: Duration = 10.seconds
 

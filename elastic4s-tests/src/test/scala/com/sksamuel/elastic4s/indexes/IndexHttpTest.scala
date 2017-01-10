@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{HttpClient, HttpDsl}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mockito.MockitoSugar

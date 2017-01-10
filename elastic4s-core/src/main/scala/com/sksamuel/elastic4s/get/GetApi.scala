@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.IndexAndType
 
 import scala.language.implicitConversions
 
-trait GetDsl {
+trait GetApi {
 
   def get(id: Any): GetExpectsFrom = new GetExpectsFrom(id)
   class GetExpectsFrom(id: Any) {

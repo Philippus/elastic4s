@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.indexes.IndexDsl
 
 import scala.language.implicitConversions
 
-trait BulkDsl {
+trait BulkApi {
   this: IndexDsl =>
 
   def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = BulkDefinition(requests.toSeq)

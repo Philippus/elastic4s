@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
+
 import scala.collection.JavaConverters._
 
 case class Phone(name: String, speed: String)
