@@ -3,13 +3,11 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.reindex.ReindexDsl
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptApi, ScriptFieldDefinition}
+import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
@@ -20,7 +18,6 @@ import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefin
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
-import com.sksamuel.elastic4s.validate.ValidateDsl
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -31,7 +28,6 @@ trait ElasticDsl
   extends ElasticApi
     with AggregationDsl
     with AnalyzerDsl
-    with BulkApi
     with ClusterDsl
     with CreateIndexDsl
     with DeleteIndexDsl
@@ -44,7 +40,6 @@ trait ElasticDsl
     with MappingDsl
     with PercolateDsl
     with PipelineAggregationDsl
-    with ReindexDsl
     with SearchDsl
     with SettingsDsl
     with ScoreDsl
@@ -56,7 +51,6 @@ trait ElasticDsl
     with TermVectorApi
     with TokenizerDsl
     with TokenFilterDsl
-    with ValidateDsl
     with TcpExecutables
     with ElasticImplicits {
 
@@ -265,12 +259,6 @@ trait ElasticDsl
     def sort: ScoreSortDefinition = ScoreSortDefinition()
   }
 
-  @deprecated("use idsQuery", "2.0.0")
-  def ids(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-
-  @deprecated("use idsQuery", "2.0.0")
-  def ids(ids: String*): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-
   @deprecated("use putMapping(index)", "5.0.0")
   case object put {
     @deprecated("use putMapping(index)", "5.0.0")
@@ -316,19 +304,6 @@ trait ElasticDsl
     def index(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
   }
 
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  case object optimize {
-    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-    def index(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-    @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-    def index(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-  }
-
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  def optimizeIndex(indexes: String*): ForceMergeDefinition = ForceMergeDefinition(indexes)
-  @deprecated("elasticsearch has renamed this forceMerge", "2.1.0")
-  def optimizeIndex(indexes: Iterable[String]): ForceMergeDefinition = ForceMergeDefinition(indexes.toSeq)
-
   @deprecated("use commonQuery(field", "5.0.0")
   def commonQuery = new CommonQueryExpectsField
 
@@ -343,26 +318,6 @@ trait ElasticDsl
   def indicesQuery(indices: String*) = new {
     @deprecated("instead search on the `_index` field", "5.0.0")
     def query(query: QueryDefinition) = IndicesQueryDefinition(indices, query)
-  }
-
-  @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
-  case object commonGrams {
-    @deprecated("prefer the method commonGramsTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
-  }
-
-  @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
-  case object edgeNGram {
-    @deprecated("prefer the method edgeNGramTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
-  }
-  @deprecated("prefer the method edgeNGramTokenFilter(\"name\") <-- note capitalization", "2.0.0")
-  def edgeNGramTokenfilter(name: String): EdgeNGramTokenFilter = EdgeNGramTokenFilter(name)
-
-  @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
-  case object ngram {
-    @deprecated("prefer the method ngramTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
   }
 
   case object create {
@@ -518,18 +473,6 @@ trait ElasticDsl
     }
   }
 
-  @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
-  case object shingle {
-    @deprecated("prefer the method shingleTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
-  }
-
-  @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
-  case object snowball {
-    @deprecated("prefer the method snowballTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
-  }
-
   case object field extends TypeableFields {
     val name = ""
 
@@ -544,24 +487,6 @@ trait ElasticDsl
 
     @deprecated("use fieldStats(fields)", "5.0.0")
     def stats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
-  }
-
-  @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
-  case object sortby {
-    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
-    def score: ScoreSortDefinition = new ScoreSortDefinition
-
-    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
-    def field(field: String): FieldSortDefinition = FieldSortDefinition(field)
-
-    @deprecated("use score sort, geo sort, field sort or script sort", "1.6.1")
-    def script(script: ScriptDefinition) = scriptSort(script)
-  }
-
-  @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
-  case object stemmer {
-    @deprecated("prefer the method stemmerTokenFilter(\"name\")", "2.0.0")
-    def tokenfilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
   }
 
   case object validate {

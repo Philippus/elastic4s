@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import com.sksamuel.elastic4s.{Executable, ScriptBuilder}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
@@ -14,10 +15,11 @@ trait UpdateExecutables {
 
   implicit object UpdateByQueryDefinitionExecutable
     extends Executable[UpdateByQueryDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
+
     override def apply(c: Client, t: UpdateByQueryDefinition): Future[BulkIndexByScrollResponse] = {
       val builder = UpdateByQueryAction.INSTANCE.newRequestBuilder(c)
       builder.source(t.sourceIndexes.values: _*)
-      builder.filter(t.query.builder)
+      builder.filter(QueryBuilderFn(t.query))
       t.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       t.maxRetries.foreach(builder.setMaxRetries)
       t.refresh.foreach(builder.refresh)
@@ -27,7 +29,7 @@ trait UpdateExecutables {
       t.shouldStoreResult.foreach(builder.setShouldStoreResult)
       t.abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
       t.pipeline.foreach(builder.setPipeline)
-      t.script.map(_.build).foreach(builder.script)
+      t.script.map(ScriptBuilder.apply).foreach(builder.script)
       injectFuture(builder.execute)
     }
   }
@@ -53,7 +55,7 @@ trait UpdateExecutables {
       t.retryOnConflict.foreach(_builder.setRetryOnConflict)
       t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
       t.parent.foreach(_builder.setParent)
-      t.script.map(_.build).foreach(_builder.setScript)
+      t.script.map(ScriptBuilder.apply).foreach(_builder.setScript)
       t.scriptedUpsert.foreach(_builder.setScriptedUpsert)
       t.version.foreach(_builder.setVersion)
       t.versionType.map(VersionType.fromString).foreach(_builder.setVersionType)

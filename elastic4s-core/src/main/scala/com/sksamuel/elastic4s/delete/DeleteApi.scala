@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.searches.{QueryDefinition, QueryDsl}
+import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.elastic4s.{IndexAndType, Indexes}
 
 import scala.language.implicitConversions
 
-trait DeleteApi extends QueryDsl {
+trait DeleteApi {
 
   def deleteIn(indexes: Indexes) = new DeleteByQueryExpectsQuery(indexes)
   class DeleteByQueryExpectsQuery(indexes: Indexes) {

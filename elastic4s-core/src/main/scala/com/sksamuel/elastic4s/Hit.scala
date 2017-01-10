@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.bytes.BytesReference
 

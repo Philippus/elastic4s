@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.explain
 
 import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.explain.{ExplainRequestBuilder, ExplainResponse}
 import org.elasticsearch.client.Client
 
@@ -12,7 +13,7 @@ trait ExplainExecutables {
     def builder(c: Client, t: ExplainDefinition): ExplainRequestBuilder = {
 
       val _builder = c.prepareExplain(t.indexAndType.index, t.indexAndType.`type`, t.id)
-      t.query.foreach(q => _builder.setQuery(q.builder))
+      t.query.foreach(q => _builder.setQuery(QueryBuilderFn(q)))
       t.fetchSource.foreach(_builder.setFetchSource)
       t.parent.foreach(_builder.setParent)
       t.preference.foreach(_builder.setPreference)

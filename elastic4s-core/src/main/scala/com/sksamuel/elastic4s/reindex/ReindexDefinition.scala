@@ -3,9 +3,6 @@ package com.sksamuel.elastic4s.reindex
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.searches.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.ReindexRequestBuilder
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -21,20 +18,6 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              retryBackoffInitialTime: Option[FiniteDuration] = None,
                              shouldStoreResult: Option[Boolean] = None,
                              size: Option[Int] = None) {
-
-  def populate(builder: ReindexRequestBuilder): Unit = {
-    builder.source(sourceIndexes.values: _*)
-    targetType.fold(builder.destination(targetIndex))(builder.destination(targetIndex, _))
-    filter.map(_.builder).foreach(builder.filter)
-    timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
-    requestsPerSecond.foreach(builder.setRequestsPerSecond)
-    maxRetries.foreach(builder.setMaxRetries)
-    refresh.foreach(builder.refresh)
-    waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
-    retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
-    shouldStoreResult.foreach(builder.setShouldStoreResult)
-    size.foreach(builder.size)
-  }
 
   def timeout(timeout: FiniteDuration): ReindexDefinition = copy(timeout = timeout.some)
 

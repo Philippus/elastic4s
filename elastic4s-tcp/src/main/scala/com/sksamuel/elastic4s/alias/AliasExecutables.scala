@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.alias
 
 import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesResponse
 import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, IndicesAliasesResponse}
@@ -15,7 +16,7 @@ object AliasActionBuilders {
     t.routing.foreach(action.routing)
     t.indexRouting.foreach(action.indexRouting)
     t.searchRouting.foreach(action.searchRouting)
-    t.filter.map(_.builder).foreach(action.filter)
+    t.filter.map(QueryBuilderFn.apply).foreach(action.filter)
     action
   }
 
@@ -24,7 +25,7 @@ object AliasActionBuilders {
     t.routing.foreach(action.routing)
     t.indexRouting.foreach(action.indexRouting)
     t.searchRouting.foreach(action.searchRouting)
-    t.filter.map(_.builder).foreach(action.filter)
+    t.filter.map(QueryBuilderFn.apply).foreach(action.filter)
     action
   }
 }

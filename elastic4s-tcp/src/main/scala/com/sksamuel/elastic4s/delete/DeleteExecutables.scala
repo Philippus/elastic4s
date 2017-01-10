@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
@@ -38,7 +39,7 @@ trait DeleteExecutables {
 
     def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition) = {
       builder.source(d.sourceIndexes.values: _*)
-      builder.filter(d.query.builder)
+      builder.filter(QueryBuilderFn(d.query))
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       d.maxRetries.foreach(builder.setMaxRetries)
       d.refresh.foreach(builder.refresh)
