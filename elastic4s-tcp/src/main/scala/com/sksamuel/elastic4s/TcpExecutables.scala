@@ -10,6 +10,7 @@ import com.sksamuel.elastic4s.mappings.MappingExecutables
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
 import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchExecutables}
 import com.sksamuel.elastic4s.task.TaskExecutables
+import com.sksamuel.elastic4s.termvectors.TermVectorsExecutables
 import com.sksamuel.elastic4s.update.UpdateExecutables
 import com.sksamuel.elastic4s.validate.ValidateExecutables
 

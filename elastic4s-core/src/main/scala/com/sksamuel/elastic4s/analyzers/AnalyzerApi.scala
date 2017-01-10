@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-trait AnalyzerDsl {
+trait AnalyzerApi {
 
   def stopAnalyzer(name: String): StopAnalyzerDefinition = StopAnalyzerDefinition(name)
   def standardAnalyzer(name: String): StandardAnalyzerDefinition = StandardAnalyzerDefinition(name)

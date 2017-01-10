@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class PatternAnalyzerTest extends WordSpec with AnalyzerDsl with Matchers {
+class PatternAnalyzerTest extends WordSpec with AnalyzerApi with Matchers {
 
   "PatternAnalyzer builder" should {
     "set language" in {

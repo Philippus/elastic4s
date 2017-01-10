@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class StopAnalyzerTest extends WordSpec with AnalyzerDsl with Matchers {
+class StopAnalyzerTest extends WordSpec with AnalyzerApi with Matchers {
 
   "StopAnalyzer builder" should {
     "set stopwords" in {

@@ -27,7 +27,7 @@ import scala.concurrent.{Await, Future}
 trait ElasticDsl
   extends ElasticApi
     with AggregationDsl
-    with AnalyzerDsl
+    with AnalyzerApi
     with ClusterDsl
     with CreateIndexDsl
     with DeleteIndexDsl
