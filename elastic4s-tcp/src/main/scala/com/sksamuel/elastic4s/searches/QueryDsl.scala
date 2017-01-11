@@ -188,8 +188,8 @@ trait QueryDsl {
 
   def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
 
-  def regexQuery(tuple: (String, Any)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
-  def regexQuery(field: String, value: Any): RegexQueryDefinition = RegexQueryDefinition(field, value)
+  def regexQuery(tuple: (String, String)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
+  def regexQuery(field: String, value: String): RegexQueryDefinition = RegexQueryDefinition(field, value)
 
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)

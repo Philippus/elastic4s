@@ -149,7 +149,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     */
   def prefix(tuple: (String, Any)) = {
     val q = PrefixQueryDefinition(tuple._1, tuple._2)
-    _builder.setQuery(q.builder)
+    _builder.setQuery(QueryBuilderFn(PrefixQueryDefinition(tuple._1, tuple._2)))
     this
   }
 
@@ -159,12 +159,12 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     * @return this
     */
   @deprecated("use regexQuery(...)", "5.0.0")
-  def regex(tuple: (String, Any)) = regexQuery(tuple)
+  def regex(tuple: (String, String)) = regexQuery(tuple)
 
-  def regexQuery(tuple: (String, Any)): SearchDefinition = regexQuery(tuple._1, tuple._2)
-  def regexQuery(field: String, value: Any): SearchDefinition = {
+  def regexQuery(tuple: (String, String)): SearchDefinition = regexQuery(tuple._1, tuple._2)
+  def regexQuery(field: String, value: String): SearchDefinition = {
     val q = RegexQueryDefinition(field, value)
-    _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
+    _builder.setQuery(QueryBuilderFn(q))
     this
   }
 
@@ -182,7 +182,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   def range(field: String) = {
     val q = RangeQueryDefinition(field)
-    _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
+    _builder.setQuery(QueryBuilderFn(q))
     this
   }
 

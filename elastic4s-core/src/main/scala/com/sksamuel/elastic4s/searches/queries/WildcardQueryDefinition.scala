@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.index.query.MultiTermQueryBuilder
 
 case class WildcardQueryDefinition(field: String,
                                    query: Any,
@@ -13,5 +12,4 @@ case class WildcardQueryDefinition(field: String,
   def queryName(queryName: String): WildcardQueryDefinition = copy(queryName = queryName.some)
   def boost(boost: Double): WildcardQueryDefinition = copy(boost = boost.some)
   def rewrite(rewrite: String): WildcardQueryDefinition = copy(rewrite = rewrite.some)
-  override def builder: MultiTermQueryBuilder = ???
 }

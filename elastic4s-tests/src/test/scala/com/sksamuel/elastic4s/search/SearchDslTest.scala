@@ -3,13 +3,13 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.searches.queries.ScoreMode
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, ScoreMode}
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
-import org.elasticsearch.index.query.{Operator, RegexpFlag, SimpleQueryStringFlag}
+import org.elasticsearch.index.query.{Operator, SimpleQueryStringFlag}
 import org.elasticsearch.index.search.MatchQuery
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval

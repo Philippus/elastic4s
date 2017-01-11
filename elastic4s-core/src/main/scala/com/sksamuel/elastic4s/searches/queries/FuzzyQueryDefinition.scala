@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.index.query.MultiTermQueryBuilder
 
 @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
 case class FuzzyQueryDefinition(field: String,
@@ -23,5 +22,4 @@ case class FuzzyQueryDefinition(field: String,
   def fuzziness(fuzziness: String): FuzzyQueryDefinition = copy(fuzziness = fuzziness.some)
   def transpositions(transpositions: Boolean): FuzzyQueryDefinition = copy(transpositions = transpositions.some)
   def maxExpansions(maxExpansions: Int): FuzzyQueryDefinition = copy(maxExpansions = maxExpansions.some)
-  override def builder: MultiTermQueryBuilder = ???
 }
