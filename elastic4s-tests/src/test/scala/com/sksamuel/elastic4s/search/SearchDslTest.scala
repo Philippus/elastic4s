@@ -561,7 +561,12 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geo polygon filter" in {
     val req = search("music") types "bands" postFilter {
-      geoPolygonQuery("distance", new GeoPoint(10, 10), new GeoPoint(20, 20), new GeoPoint(30, 30))
+      geoPolygonQuery(
+        "distance",
+        com.sksamuel.elastic4s.GeoPoint(10, 10),
+        com.sksamuel.elastic4s.GeoPoint(20, 20),
+        com.sksamuel.elastic4s.GeoPoint(30, 30)
+      )
     }
     req.show should matchJsonResource("/json/search/search_filter_geo_polygon.json")
   }
@@ -882,7 +887,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         .analyzer("whitespace")
         .defaultOperator("AND")
         .field("name")
-        .flags(SimpleQueryStringFlag.PRECEDENCE, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.SLOP)
+      // .flags(SimpleQueryStringFlag.PRECEDENCE, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.SLOP)
     }
     req.show should matchJsonResource("/json/search/search_simple_string_query.json")
   }

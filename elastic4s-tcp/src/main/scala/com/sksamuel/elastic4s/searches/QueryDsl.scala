@@ -9,7 +9,6 @@ import org.elasticsearch.common.geo.builders.ShapeBuilder
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.index.query._
-import org.elasticsearch.indices.TermsLookup
 
 import scala.language.{implicitConversions, reflectiveCalls}
 
@@ -37,9 +36,9 @@ trait QueryDsl {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
-  def fieldNamesQuery(first: String, rest: String*): TermsQueryDefinition = fieldNamesQuery(first +: rest)
-  def fieldNamesQuery(names: Iterable[String]): TermsQueryDefinition =
-    termsQuery("_field_names", names)(StringBuildableTermsQuery)
+  def fieldNamesQuery(first: String, rest: String*): TermsQueryDefinition[String] = fieldNamesQuery(first +: rest)
+  def fieldNamesQuery(names: Iterable[String]): TermsQueryDefinition[String] =
+    termsQuery("_field_names", names)(new BuildableTermsQueryImplicits {}.StringBuildableTermsQuery)
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
@@ -63,7 +62,7 @@ trait QueryDsl {
     def distance(distance: Distance): GeoDistanceQueryDefinition = gdef.distance(distance.value, distance.unit)
   }
 
-  def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
+  def geoDistanceRangeQuery(field: String, geoPoint: com.sksamuel.elastic4s.GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
 
   def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value)
@@ -73,14 +72,14 @@ trait QueryDsl {
 
   def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
-    def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
-    def points(points: Iterable[GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
+    def points(first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
+    def points(points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
   }
 
-  def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition =
+  def geoPolygonQuery(field: String, first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition =
     geoPolygonQuery(field, first +: rest)
 
-  def geoPolygonQuery(field: String, points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
+  def geoPolygonQuery(field: String, points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
   def geoShapeQuery(field: String, shape: ShapeBuilder): GeoShapeDefinition =
@@ -220,48 +219,11 @@ trait QueryDsl {
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 
-  def termsLookupQuery(field: String, ref: DocumentRef, path: String) =
-    TermsQueryDefinition(QueryBuilders.termsLookupQuery(field, new TermsLookup(ref.index, ref.`type`, ref.id, path)))
-
   def termsQuery[T: BuildableTermsQuery](field: String,
-                                         first: T, rest: T*): TermsQueryDefinition = termsQuery(field, first +: rest)
+                                         first: T, rest: T*): TermsQueryDefinition[T] = termsQuery(field, first +: rest)
 
   def termsQuery[T](field: String, values: Iterable[T])
-                   (implicit buildable: BuildableTermsQuery[T]) = TermsQueryDefinition(buildable.builder(field, values))
-
-  trait BuildableTermsQuery[T] {
-    def builder(field: String, values: Iterable[T]): TermsQueryBuilder
-  }
-
-  implicit object IntBuildableTermsQuery extends BuildableTermsQuery[Int] {
-    def builder(field: String, values: Iterable[Int]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.toSeq: _*)
-  }
-
-  implicit object LongBuildableTermsQuery extends BuildableTermsQuery[Long] {
-    def builder(field: String, values: Iterable[Long]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.toSeq: _*)
-  }
-
-  implicit object FloatBuildableTermsQuery extends BuildableTermsQuery[Float] {
-    def builder(field: String, values: Iterable[Float]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.toSeq: _*)
-  }
-
-  implicit object DoubleBuildableTermsQuery extends BuildableTermsQuery[Double] {
-    def builder(field: String, values: Iterable[Double]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.toSeq: _*)
-  }
-
-  implicit object StringBuildableTermsQuery extends BuildableTermsQuery[String] {
-    def builder(field: String, values: Iterable[String]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.toSeq: _*)
-  }
-
-  implicit object AnyRefBuildableTermsQuery extends BuildableTermsQuery[AnyRef] {
-    def builder(field: String, values: Iterable[AnyRef]): TermsQueryBuilder =
-      QueryBuilders.termsQuery(field, values.map(_.toString).toSeq: _*)
-  }
+                   (implicit buildable: BuildableTermsQuery[T]) = TermsQueryDefinition(field, values)
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)

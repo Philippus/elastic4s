@@ -1,27 +1,18 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import org.elasticsearch.common.geo.GeoPoint
-import org.elasticsearch.index.query.{GeoPolygonQueryBuilder, GeoValidationMethod, QueryBuilders}
-
-import scala.collection.JavaConverters._
+import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.GeoPoint
 
 case class GeoPolygonQueryDefinition(field: String,
                                      points: Seq[GeoPoint],
                                      ignoreUnmapped: Option[Boolean] = None,
-                                     validationMethod: Option[GeoValidationMethod] = None,
+                                     validationMethod: Option[String] = None,
                                      boost: Option[Float] = None,
                                      queryName: Option[String] = None)
   extends QueryDefinition {
 
-  def builder: GeoPolygonQueryBuilder = {
-    val builder = QueryBuilders.geoPolygonQuery(field, points.asJava)
-    boost.foreach(builder.boost)
-    queryName.foreach(builder.queryName)
-    validationMethod.foreach(builder.setValidationMethod)
-    ignoreUnmapped.foreach(builder.ignoreUnmapped)
-    builder
-  }
-
+  def ignoreUnmapped(ignoreUnmapped: Boolean): GeoPolygonQueryDefinition = copy(ignoreUnmapped = ignoreUnmapped.some)
+  def validationMethod(method: String): GeoPolygonQueryDefinition = copy(validationMethod = method.some)
   def boost(boost: Float): GeoPolygonQueryDefinition = copy(boost = Option(boost))
   def queryName(queryName: String): GeoPolygonQueryDefinition = copy(queryName = Some(queryName))
 }

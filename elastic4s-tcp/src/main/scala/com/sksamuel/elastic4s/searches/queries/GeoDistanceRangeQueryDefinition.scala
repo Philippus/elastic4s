@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import com.sksamuel.elastic4s
+import com.sksamuel.elastic4s.GeoPoint
+import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.index.query.{GeoDistanceRangeQueryBuilder, GeoValidationMethod, QueryBuilders}
 
 case class GeoDistanceRangeQueryDefinition(field: String,
@@ -16,7 +18,7 @@ case class GeoDistanceRangeQueryDefinition(field: String,
                                            includeUpper: Option[Boolean] = None) extends QueryDefinition {
 
   def builder: GeoDistanceRangeQueryBuilder = {
-    val builder = QueryBuilders.geoDistanceRangeQuery(field, geopoint)
+    val builder = QueryBuilders.geoDistanceRangeQuery(field, new org.elasticsearch.common.geo.GeoPoint(geopoint.lat, geopoint.long))
     geoDistance.foreach(builder.geoDistance)
     includeLower.foreach(builder.includeLower)
     includeUpper.foreach(builder.includeUpper)

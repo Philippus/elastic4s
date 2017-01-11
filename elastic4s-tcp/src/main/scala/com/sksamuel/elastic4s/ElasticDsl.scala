@@ -53,6 +53,7 @@ trait ElasticDsl
     with TokenizerApi
     with TokenFilterDsl
     with TcpExecutables
+    with BuildableTermsQueryImplicits
     with ElasticImplicits {
 
   @deprecated("Use xxxAggregation(...) methods", "5.0.0")
