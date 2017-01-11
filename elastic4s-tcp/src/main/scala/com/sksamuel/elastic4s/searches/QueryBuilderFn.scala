@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{BoolQueryBuilder, DisMaxQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
+import org.elasticsearch.index.query.{BoolQueryBuilder, DisMaxQueryBuilder, MatchPhrasePrefixQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -27,6 +27,20 @@ object QueryBuilderFn {
     case q: DisMaxDefinition => DisMaxBuilder(q)
     case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
     case q: BoolQueryDefinition => BoolQueryBuilder(q)
+    case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBuilder(q)
+  }
+}
+
+object MatchPhrasePrefixBuilder {
+  def apply(q: MatchPhrasePrefixDefinition): MatchPhrasePrefixQueryBuilder = {
+    val _builder = QueryBuilders.matchPhrasePrefixQuery(q.field, q.value.toString)
+    q.queryName.foreach(_builder.queryName)
+    q.boost.map(_.toFloat).foreach(_builder.boost)
+    q.analyzer.foreach(_builder.analyzer)
+    q.maxExpansions.foreach(_builder.maxExpansions)
+    q.queryName.foreach(_builder.queryName)
+    q.slop.foreach(_builder.slop)
+    _builder
   }
 }
 

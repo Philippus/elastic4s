@@ -1,33 +1,21 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.DefinitionAttributes._
 import com.sksamuel.elastic4s.analyzers.Analyzer
-import org.elasticsearch.index.query.QueryBuilders
+import com.sksamuel.exts.OptionImplicits._
 
-case class MatchPhrasePrefixDefinition(field: String, value: Any)
-  extends QueryDefinition
-    with DefinitionAttributeBoost {
+case class MatchPhrasePrefixDefinition(field: String,
+                                       value: Any,
+                                       analyzer: Option[String] = None,
+                                       queryName: Option[String] = None,
+                                       boost: Option[Double] = None,
+                                       maxExpansions: Option[Int] = None,
+                                       slop: Option[Int] = None)
+  extends QueryDefinition {
 
-  def builder = _builder
-  val _builder = QueryBuilders.matchPhrasePrefixQuery(field, value.toString)
-
-  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = {
-    builder.analyzer(a.name)
-    this
-  }
-
-  def analyzer(name: String): MatchPhrasePrefixDefinition = {
-    builder.analyzer(name)
-    this
-  }
-
-  def slop(s: Int): MatchPhrasePrefixDefinition = {
-    builder.slop(s)
-    this
-  }
-
-  def maxExpansions(max: Int): MatchPhrasePrefixDefinition = {
-    builder.maxExpansions(max)
-    this
-  }
+  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = analyzer(a.name)
+  def analyzer(name: String): MatchPhrasePrefixDefinition = copy(analyzer = name.some)
+  def queryName(queryName: String): MatchPhrasePrefixDefinition = copy(queryName = queryName.some)
+  def boost(boost: Double): MatchPhrasePrefixDefinition = copy(boost = boost.some)
+  def maxExpansions(max: Int): MatchPhrasePrefixDefinition = copy(maxExpansions = max.some)
+  def slop(slop: Int): MatchPhrasePrefixDefinition = copy(slop = slop.some)
 }
