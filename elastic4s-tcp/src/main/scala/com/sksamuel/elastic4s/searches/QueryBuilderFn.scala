@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{DisMaxQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
+import org.elasticsearch.index.query.{DisMaxQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -24,9 +25,18 @@ object QueryBuilderFn {
     case q: GeoPolygonQueryDefinition => GeoPolygonQueryBuilder(q)
     case q: TermsQueryDefinition[_] => TermsQueryBuilder(q)
     case q: DisMaxDefinition => DisMaxBuilder(q)
+    case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
   }
 }
 
+object ScriptQueryBuilder {
+  def apply(q: ScriptQueryDefinition): ScriptQueryBuilder = {
+    val builder = QueryBuilders.scriptQuery(ScriptBuilder(q.script))
+    q.boost.map(_.toFloat).foreach(builder.boost)
+    q.queryName.foreach(builder.queryName)
+    builder
+  }
+}
 
 object DisMaxBuilder {
   def apply(q: DisMaxDefinition): DisMaxQueryBuilder = {

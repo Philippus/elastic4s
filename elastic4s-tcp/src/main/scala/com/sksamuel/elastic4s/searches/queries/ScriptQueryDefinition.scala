@@ -1,17 +1,13 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import org.elasticsearch.index.query.QueryBuilders
+import com.sksamuel.exts.OptionImplicits._
 
-case class ScriptQueryDefinition(script: ScriptDefinition)
+case class ScriptQueryDefinition(script: ScriptDefinition,
+                                 boost: Option[Double] = None,
+                                 queryName: Option[String] = None)
   extends QueryDefinition {
 
-  val builder = QueryBuilders.scriptQuery(ScriptBuilder(script))
-  val _builder = builder
-
-  def queryName(queryName: String): ScriptQueryDefinition = {
-    builder.queryName(queryName)
-    this
-  }
+  def queryName(queryName: String): ScriptQueryDefinition = copy(queryName = queryName.some)
+  def boost(boost: Double): ScriptQueryDefinition = copy(boost = boost.some)
 }
