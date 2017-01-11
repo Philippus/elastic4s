@@ -28,6 +28,7 @@ object QueryBuilderFn {
     case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
     case q: BoolQueryDefinition => BoolQueryBuilder(q)
     case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBuilder(q)
+    case q: TypeQueryDefinition => QueryBuilders.typeQuery(q.`type`)
   }
 }
 
@@ -126,7 +127,7 @@ object SimpleStringQueryBuilder {
   def apply(q: SimpleStringQueryDefinition): SimpleQueryStringBuilder = {
     val builder = QueryBuilders.simpleQueryStringQuery(q.query)
     q.queryName.foreach(builder.queryName)
-    q.analyzer.foreach(builder.queryName)
+    q.analyzer.foreach(builder.analyzer)
     q.analyzeWildcard.foreach(builder.analyzeWildcard)
     q.fields.foreach {
       case (name, -1D) => builder.field(name)
