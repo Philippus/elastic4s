@@ -51,7 +51,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   }
 
   def bool(block: => BoolQueryDefinition): SearchDefinition = {
-    _builder.setQuery(block.builder)
+    _builder.setQuery(QueryBuilderFn(block))
     this
   }
 

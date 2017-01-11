@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{DisMaxQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
+import org.elasticsearch.index.query.{BoolQueryBuilder, DisMaxQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -26,6 +26,23 @@ object QueryBuilderFn {
     case q: TermsQueryDefinition[_] => TermsQueryBuilder(q)
     case q: DisMaxDefinition => DisMaxBuilder(q)
     case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
+    case q: BoolQueryDefinition => BoolQueryBuilder(q)
+  }
+}
+
+object BoolQueryBuilder {
+  def apply(q: BoolQueryDefinition): BoolQueryBuilder = {
+    val builder = QueryBuilders.boolQuery()
+    q.adjustPureNegative.foreach(builder.adjustPureNegative)
+    q.minimumShouldMatch.foreach(builder.minimumNumberShouldMatch)
+    q.disableCoord.foreach(builder.disableCoord)
+    q.queryName.foreach(builder.queryName)
+    q.boost.map(_.toFloat).foreach(builder.boost)
+    q.must.map(QueryBuilderFn.apply).foreach(builder.must)
+    q.filters.map(QueryBuilderFn.apply).foreach(builder.filter)
+    q.not.map(QueryBuilderFn.apply).foreach(builder.mustNot)
+    q.should.map(QueryBuilderFn.apply).foreach(builder.should)
+    builder
   }
 }
 

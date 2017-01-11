@@ -179,7 +179,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("*") types("users", "tweets") limit 5 query {
       hasChildQuery("sometype") query {
         "coldplay"
-      } scoreMode "avg" boost 1.2
+      } scoreMode "Avg" boost 1.2
     }
     req.show should matchJsonResource("/json/search/search_haschild_query.json")
   }

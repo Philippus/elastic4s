@@ -243,17 +243,17 @@ trait QueryDsl {
     must(mustQueries).should(shouldQueries).not(notQueries)
   }
 
-  def boolQuery(): BoolQueryDefinition = new BoolQueryDefinition()
+  def boolQuery(): BoolQueryDefinition = BoolQueryDefinition()
 
   // short cut for a boolean query with musts
   def must(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = must(first +: rest)
-  def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().must(queries)
+  def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().must(queries)
 
   // short cut for a boolean query with shoulds
-  def should(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().should(queries: _*)
-  def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().should(queries)
+  def should(queries: QueryDefinition*): BoolQueryDefinition = BoolQueryDefinition().should(queries: _*)
+  def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().should(queries)
 
   // short cut for a boolean query with nots
-  def not(queries: QueryDefinition*): BoolQueryDefinition = new BoolQueryDefinition().not(queries: _*)
-  def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().not(queries)
+  def not(queries: QueryDefinition*): BoolQueryDefinition = BoolQueryDefinition().not(queries: _*)
+  def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().not(queries)
 }
