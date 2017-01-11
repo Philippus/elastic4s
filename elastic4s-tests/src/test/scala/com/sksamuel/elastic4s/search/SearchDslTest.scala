@@ -2,14 +2,14 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
-import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.{JsonSugar, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, ScoreMode}
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
-import org.elasticsearch.index.query.{Operator, SimpleQueryStringFlag}
+import org.elasticsearch.index.query.Operator
 import org.elasticsearch.index.search.MatchQuery
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
@@ -887,7 +887,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         .analyzer("whitespace")
         .defaultOperator("AND")
         .field("name")
-      // .flags(SimpleQueryStringFlag.PRECEDENCE, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.SLOP)
+       .flags(SimpleQueryStringFlag.PRECEDENCE, SimpleQueryStringFlag.OR, SimpleQueryStringFlag.SLOP)
     }
     req.show should matchJsonResource("/json/search/search_simple_string_query.json")
   }

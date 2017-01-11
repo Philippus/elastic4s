@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.SimpleQueryStringFlag
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.exts.OptionImplicits._
 
@@ -10,9 +11,11 @@ case class SimpleStringQueryDefinition(query: String,
                                        queryName: Option[String] = None,
                                        lenient: Option[Boolean] = None,
                                        fields: Seq[(String, Double)] = Nil,
+                                       flags: Seq[SimpleQueryStringFlag] = Nil,
                                        minimumShouldMatch: Option[Int] = None
                                       ) extends QueryDefinition {
 
+  def flags(flags: SimpleQueryStringFlag*): SimpleStringQueryDefinition = copy(flags = flags)
   def analyzer(analyzer: String): SimpleStringQueryDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): SimpleStringQueryDefinition = copy(analyzer = analyzer.name.some)
   def queryName(queryName: String): SimpleStringQueryDefinition = copy(queryName = queryName.some)

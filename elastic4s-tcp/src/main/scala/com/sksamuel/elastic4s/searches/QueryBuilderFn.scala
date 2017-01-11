@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{BoolQueryBuilder, DisMaxQueryBuilder, MatchPhrasePrefixQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, TermsQueryBuilder}
+import org.elasticsearch.index.query.{BoolQueryBuilder, DisMaxQueryBuilder, MatchPhrasePrefixQueryBuilder, Operator, QueryBuilder, QueryBuilders, RangeQueryBuilder, RegexpQueryBuilder, ScriptQueryBuilder, SimpleQueryStringBuilder, SimpleQueryStringFlag, TermsQueryBuilder}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -129,6 +129,11 @@ object SimpleStringQueryBuilder {
     q.queryName.foreach(builder.queryName)
     q.analyzer.foreach(builder.analyzer)
     q.analyzeWildcard.foreach(builder.analyzeWildcard)
+    if (q.flags.nonEmpty)
+      builder.flags(
+        q.flags.map(_.name)
+          .map(org.elasticsearch.index.query.SimpleQueryStringFlag.valueOf): _*)
+
     q.fields.foreach {
       case (name, -1D) => builder.field(name)
       case (name, boost) => builder.field(name, boost.toFloat)
