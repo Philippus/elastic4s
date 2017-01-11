@@ -1,18 +1,17 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.DefinitionAttributes.{DefinitionAttributeBoost, DefinitionAttributeRewrite}
-import org.elasticsearch.index.query.QueryBuilders
+import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.index.query.MultiTermQueryBuilder
 
-case class WildcardQueryDefinition(field: String, query: Any)
-  extends QueryDefinition with MultiTermQueryDefinition
-    with DefinitionAttributeRewrite
-    with DefinitionAttributeBoost {
+case class WildcardQueryDefinition(field: String,
+                                   query: Any,
+                                   boost: Option[Double] = None,
+                                   queryName: Option[String] = None,
+                                   rewrite: Option[String] = None)
+  extends QueryDefinition with MultiTermQueryDefinition {
 
-  val builder = QueryBuilders.wildcardQuery(field, query.toString)
-  val _builder = builder
-
-  def queryName(queryName: String): this.type = {
-    builder.queryName(queryName)
-    this
-  }
+  def queryName(queryName: String): WildcardQueryDefinition = copy(queryName = queryName.some)
+  def boost(boost: Double): WildcardQueryDefinition = copy(boost = boost.some)
+  def rewrite(rewrite: String): WildcardQueryDefinition = copy(rewrite = rewrite.some)
+  override def builder: MultiTermQueryBuilder = ???
 }

@@ -149,7 +149,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
     */
   def prefix(tuple: (String, Any)) = {
     val q = PrefixQueryDefinition(tuple._1, tuple._2)
-    _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
+    _builder.setQuery(q.builder)
     this
   }
 
@@ -237,13 +237,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   def explain(enabled: Boolean): SearchDefinition = {
     _builder.setExplain(enabled)
-    this
-  }
-
-  @deprecated("Set fuzzy query using query(fuzzyQuery(...)) syntax", "5.0.0")
-  def fuzzy(tuple: (String, Any)) = {
-    val q = FuzzyQueryDefinition(tuple._1, tuple._2)
-    _builder.setQuery(QueryBuilders.wrapperQuery(q.builder.buildAsBytes))
     this
   }
 

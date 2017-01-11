@@ -10,7 +10,26 @@ object QueryBuilderFn {
     case q: MatchQueryDefinition => MatchQueryBuilder(q)
     case q: IdQueryDefinition => IdQueryBuilder(q)
     case q: TermQueryDefinition => TermQueryBuilder(q)
+    case q: PrefixQueryDefinition => PrefixQueryBuilderFn(q)
+    case q: WildcardQueryDefinition => WildcardQueryBuilder(q)
+    case q: ExistsQueryDefinition => ExistsQueryBuilder(q)
+    case q: MatchPhraseDefinition => MatchPhraseBuilder(q)
+    case q: BoostingQueryDefinition => BoostingQueryBuilder(q)
+    case q: FuzzyQueryDefinition => FuzzyQueryBuilder(q)
+    case q: HasChildQueryDefinition => HasChildQueryBuilder(q)
+    case q: HasParentQueryDefinition => HasParentQueryBuilder(q)
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
