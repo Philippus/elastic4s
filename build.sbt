@@ -115,12 +115,12 @@ lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   ).dependsOn(core, testkit % "test")
 
 lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
-.settings(
-  name := "elastic4s-circe",
-  libraryDependencies += "io.circe"       %% "circe-core"     % CirceVersion,
-  libraryDependencies +=  "io.circe"      %% "circe-generic" % CirceVersion,
-    libraryDependencies +=  "io.circe"    %% "circe-parser"  % CirceVersion
-).dependsOn(core, testkit % "test")
+  .settings(
+    name := "elastic4s-circe",
+    libraryDependencies += "io.circe" %% "circe-core"     % CirceVersion,
+    libraryDependencies += "io.circe" %% "circe-generic"  % CirceVersion,
+    libraryDependencies += "io.circe" %% "circe-parser"   % CirceVersion
+  ).dependsOn(core, testkit % "test")
 
 lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
   .settings(
