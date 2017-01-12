@@ -1,23 +1,11 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import org.elasticsearch.index.query.{QueryBuilders, SpanOrQueryBuilder}
-
 case class SpanOrQueryDefinition(clauses: Seq[SpanQueryDefinition],
                                  boost: Option[Double] = None,
                                  queryName: Option[String] = None) extends SpanQueryDefinition {
 
-  def builder: SpanOrQueryBuilder = {
-
-    val initial = clauses.headOption.getOrElse(sys.error("Must have at least one clause"))
-    val builder = QueryBuilders.spanOrQuery(initial.builder)
-    clauses.tail.map(_.builder).foreach(builder.addClause)
-    boost.map(_.toFloat).foreach(builder.boost)
-    queryName.foreach(builder.queryName)
-    builder
-  }
-
-  def boost(boost: Double): SpanOrQueryDefinition =
-    copy(boost = Option(boost))
+  def boost(boost: Double): SpanOrQueryDefinition = copy(boost = Option(boost))
+  def queryName(queryName: String): SpanOrQueryDefinition = withQueryName(queryName)
 
   def clauses(clauses: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition =
     copy(clauses = this.clauses ++ clauses)

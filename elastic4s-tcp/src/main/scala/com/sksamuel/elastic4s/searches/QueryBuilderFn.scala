@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{CommonTermsQueryBuilder, Operator, QueryBuilder, QueryBuilders}
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -31,20 +31,11 @@ object QueryBuilderFn {
     case q: MultiMatchQueryDefinition => MultiMatchQueryBuilderFn(q)
     case q: ConstantScoreDefinition => ConstantScoreBuilder(q)
     case q: CommonTermsQueryDefinition => CommonTermsQueryBuilder(q)
-  }
-}
-
-object CommonTermsQueryBuilder {
-  def apply(q: CommonTermsQueryDefinition): CommonTermsQueryBuilder = {
-    val _builder = QueryBuilders.commonTermsQuery(q.name, q.text)
-    q.analyzer.foreach(_builder.analyzer)
-    q.cutoffFrequency.map(_.toFloat).foreach(_builder.cutoffFrequency)
-    q.highFreqMinimumShouldMatch.map(_.toString).foreach(_builder.highFreqMinimumShouldMatch)
-    q.lowFreqMinimumShouldMatch.map(_.toString).foreach(_builder.lowFreqMinimumShouldMatch)
-    q.queryName.foreach(_builder.queryName)
-    q.boost.map(_.toFloat).foreach(_builder.boost)
-    q.lowFreqOperator.map(Operator.fromString).foreach(_builder.lowFreqOperator)
-    q.highFreqOperator.map(Operator.fromString).foreach(_builder.highFreqOperator)
-    _builder
+    case q: SpanTermQueryDefinition => SpanTermQueryBuilder(q)
+    case q: SpanFirstQueryDefinition => SpanFirstQueryBuilder(q)
+    case q: SpanNearQueryDefinition => SpanNearQueryBuilder(q)
+    case q: SpanMultiTermQueryDefinition => SpanMultiTermQueryBuilder(q)
+    case q: SpanNotQueryDefinition => SpanNotQueryBuilder(q)
+    case q: SpanOrQueryDefinition => SpanOrQueryBuilder(q)
   }
 }
