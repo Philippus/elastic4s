@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.searches.queries._
-import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilder, QueryBuilders}
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -38,7 +38,6 @@ object QueryBuilderFn {
     case q: SpanNotQueryDefinition => SpanNotQueryBuilder(q)
     case q: SpanOrQueryDefinition => SpanOrQueryBuilder(q)
     case q: MoreLikeThisQueryDefinition => MoreLikeThisQueryBuilderFn(q)
+    case q: GeoDistanceQueryDefinition => GeoDistanceQueryBuilder(q)
   }
 }
-
-

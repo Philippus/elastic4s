@@ -1,47 +1,30 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import org.elasticsearch.common.geo.GeoDistance
-import org.elasticsearch.common.unit.DistanceUnit
-import org.elasticsearch.common.unit.DistanceUnit.Distance
-import org.elasticsearch.index.query.QueryBuilders
+import com.sksamuel.elastic4s.{DistanceUnit, GeoDistance}
+import com.sksamuel.exts.OptionImplicits._
 
-case class GeoDistanceQueryDefinition(field: String) extends QueryDefinition {
+case class GeoDistanceQueryDefinition(field: String,
+                                      geoDistance: Option[GeoDistance] = None,
+                                      boost: Option[Double] = None,
+                                      geohash: Option[String] = None,
+                                      queryName: Option[String] = None,
+                                      distanceStr: Option[String] = None,
+                                      distance: Option[(Double, DistanceUnit)] = None,
+                                      point: Option[(Double, Double)] = None
+                                     ) extends QueryDefinition {
 
-  val builder = QueryBuilders.geoDistanceQuery(field)
-  val _builder = builder
+  def queryName(queryName: String): GeoDistanceQueryDefinition = copy(queryName = queryName.some)
+  def boost(boost: Double): GeoDistanceQueryDefinition = copy(boost = boost.some)
 
-  def geoDistance(geoDistance: GeoDistance): GeoDistanceQueryDefinition = {
-    builder.geoDistance(geoDistance)
-    this
-  }
+  def geoDistance(geoDistance: GeoDistance): GeoDistanceQueryDefinition =
+    copy(geoDistance = geoDistance.some)
 
-  def geohash(geohash: String): GeoDistanceQueryDefinition = {
-    builder.geohash(geohash)
-    this
-  }
+  def geohash(geohash: String): GeoDistanceQueryDefinition = copy(geohash = geohash.some)
 
-  def queryName(name: String): GeoDistanceQueryDefinition = {
-    builder.queryName(name)
-    this
-  }
+  def distance(distance: String): GeoDistanceQueryDefinition = copy(distanceStr = distance.some)
 
-  def distance(distance: String): GeoDistanceQueryDefinition = {
-    builder.distance(distance)
-    this
-  }
+  def point(lat: Double, long: Double): GeoDistanceQueryDefinition = copy(point = (lat, long).some)
 
-  def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = {
-    builder.distance(distance, unit)
-    this
-  }
-
-  def distance(distance: Distance): GeoDistanceQueryDefinition = {
-    builder.distance(distance.value, distance.unit)
-    this
-  }
-
-  def point(lat: Double, long: Double): GeoDistanceQueryDefinition = {
-    builder.point(lat, long)
-    this
-  }
+  def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition =
+    copy(distance = (distance, unit).some)
 }

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import com.sksamuel.elastic4s.GeoDistance
+import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceAggregationBuilder
@@ -22,7 +23,7 @@ case class GeoDistanceAggregationDefinition(name: String, origin: GeoPoint) exte
   }
 
   def geoDistance(geoDistance: GeoDistance): GeoDistanceAggregationDefinition = {
-    builder.distanceType(geoDistance)
+    builder.distanceType(org.elasticsearch.common.geo.GeoDistance.valueOf(geoDistance.name))
     this
   }
 

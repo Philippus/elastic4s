@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.{DocumentRef, Indexable}
+import com.sksamuel.elastic4s.{DistanceUnit, DocumentRef, Indexable}
 import com.sksamuel.elastic4s.searches.queries.{SpanQueryDefinition, _}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.geo.builders.ShapeBuilder
-import org.elasticsearch.common.unit.DistanceUnit
-import org.elasticsearch.common.unit.DistanceUnit.Distance
 import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
@@ -58,7 +56,6 @@ trait QueryDsl {
   class GeoDistanceExpectsDistance(gdef: GeoDistanceQueryDefinition) {
     def distance(distance: String): GeoDistanceQueryDefinition = gdef.distance(distance)
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = gdef.distance(distance, unit)
-    def distance(distance: Distance): GeoDistanceQueryDefinition = gdef.distance(distance.value, distance.unit)
   }
 
   def geoDistanceRangeQuery(field: String, geoPoint: com.sksamuel.elastic4s.GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)

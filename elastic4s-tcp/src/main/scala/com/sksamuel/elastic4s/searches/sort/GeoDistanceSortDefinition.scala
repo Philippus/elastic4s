@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.searches.sort
 
+import com.sksamuel.elastic4s.GeoDistance
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.GeoValidationMethod
 import org.elasticsearch.search.sort.{GeoDistanceSortBuilder, SortBuilders, SortMode, SortOrder}
@@ -56,7 +57,7 @@ class GeoDistanceSortDefinition(field: String,
   }
 
   def geoDistance(geoDistance: GeoDistance): this.type = {
-    builder.geoDistance(geoDistance)
+    builder.geoDistance(org.elasticsearch.common.geo.GeoDistance.valueOf(geoDistance.name))
     this
   }
 }

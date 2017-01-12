@@ -2,12 +2,11 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
-import com.sksamuel.elastic4s.{JsonSugar, MatchType, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, ScoreMode, ZeroTermsQuery}
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
-import org.elasticsearch.common.unit.DistanceUnit
+import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type
 import org.elasticsearch.index.query.Operator
 import org.elasticsearch.index.search.MatchQuery
@@ -519,8 +518,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       bool(
         should(
-          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance
-            .FACTOR geohash "geo1234" distance "120mi"
+          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.FACTOR geohash "geo1234" distance "120mi"
         ) not (
           geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.YARD)
           )
