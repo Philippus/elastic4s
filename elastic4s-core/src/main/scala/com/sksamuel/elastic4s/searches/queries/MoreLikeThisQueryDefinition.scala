@@ -1,12 +1,9 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DocumentRef
-import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 
 @deprecated("use DocumentRef", "5.0.0")
-case class MoreLikeThisItem(index: String, `type`: String, id: String) {
-  def build: MoreLikeThisQueryBuilder.Item = new MoreLikeThisQueryBuilder.Item(index, `type`, id)
-}
+case class MoreLikeThisItem(index: String, `type`: String, id: String)
 
 case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        likeTexts: Seq[String] = Nil,
@@ -27,33 +24,6 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        unlikeDocs: Seq[DocumentRef] = Nil,
                                        stopWords: Seq[String] = Nil,
                                        queryName: Option[String] = None) extends QueryDefinition {
-
-  def builder: MoreLikeThisQueryBuilder = {
-
-    val builder = QueryBuilders.moreLikeThisQuery(
-      fields.toArray,
-      likeTexts.toArray,
-      likeDocs.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) }.toArray
-    )
-
-    analyzer.foreach(builder.analyzer)
-    boost.map(_.toFloat).foreach(builder.boost)
-    boostTerms.map(_.toFloat).foreach(builder.boostTerms)
-    maxWordLength.foreach(builder.maxWordLength)
-    failOnUnsupportedField.foreach(builder.failOnUnsupportedField)
-    include.foreach(builder.include)
-    maxDocFreq.foreach(builder.maxDocFreq)
-    maxQueryTerms.foreach(builder.maxQueryTerms)
-    minDocFreq.foreach(builder.minDocFreq)
-    minShouldMatch.foreach(builder.minimumShouldMatch)
-    minTermFreq.foreach(builder.minTermFreq)
-    minWordLength.foreach(builder.minWordLength)
-    queryName.foreach(builder.queryName)
-
-    builder.unlike(unlikeDocs.toArray.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) })
-    builder.unlike(unlikeTexts.toArray)
-    builder.stopWords(stopWords: _*)
-  }
 
   def analyzer(analyzer: String): MoreLikeThisQueryDefinition = copy(analyzer = Some(analyzer))
 
