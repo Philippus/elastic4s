@@ -28,8 +28,7 @@ trait QueryDsl {
 
   def commonQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
 
-  def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition =
-    ConstantScoreDefinition(QueryBuilders.constantScoreQuery(QueryBuilderFn(query)))
+  def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition = ConstantScoreDefinition(query)
 
   def dismax(first: QueryDefinition, rest: QueryDefinition*): DisMaxDefinition = dismax(first +: rest)
   def dismax(queries: Iterable[QueryDefinition]): DisMaxDefinition = DisMaxDefinition(queries.toSeq)
@@ -41,7 +40,7 @@ trait QueryDsl {
     termsQuery("_field_names", names)(new BuildableTermsQueryImplicits {}.StringBuildableTermsQuery)
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
-  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = new BoolQueryDefinition().filter(queries)
+  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().filter(queries)
 
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
