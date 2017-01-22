@@ -1,6 +1,5 @@
-package com.sksamuel.elastic4s.mappings
+package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s._
 import org.elasticsearch.common.xcontent.XContentBuilder
 
 object XContentFieldValueWriter {

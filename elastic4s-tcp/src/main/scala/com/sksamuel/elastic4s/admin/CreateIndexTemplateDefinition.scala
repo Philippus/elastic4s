@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
 import com.sksamuel.elastic4s.index.AnalysisDefinition
-import com.sksamuel.elastic4s.mappings.MappingDefinition
+import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder
 import org.elasticsearch.common.settings.Settings
@@ -32,7 +32,7 @@ case class CreateIndexTemplateDefinition(name: String,
     aliases.foreach(builder.addAlias)
 
     mappings.foreach { mapping =>
-      builder.addMapping(mapping.`type`, mapping.buildWithName)
+      builder.addMapping(mapping.`type`, MappingContentBuilder.build(mapping))
     }
 
     if (!settings.isEmpty || analysis.nonEmpty) {

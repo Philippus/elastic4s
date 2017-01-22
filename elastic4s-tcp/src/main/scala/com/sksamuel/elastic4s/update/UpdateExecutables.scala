@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.mappings.XContentFieldValueWriter
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
-import com.sksamuel.elastic4s.{Executable, FieldValue, FieldsMapper, ScriptBuilder}
+import com.sksamuel.elastic4s._
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client

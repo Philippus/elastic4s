@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 abstract class FieldType(val elastic: String)
+
 object FieldType {
   case object AttachmentType extends FieldType("attachment")
   case object BinaryType extends FieldType("binary")

@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.mappings.FieldType._
 
-trait DynamicTemplateDsl {
-  self: ElasticDsl =>
+trait DynamicTemplateApi {
+  self: ElasticApi =>
 
   def dynamicTemplate(nameOfTemplate: String) = new DynamicTemplateExpectsMapping(nameOfTemplate)
   class DynamicTemplateExpectsMapping(nameOfTemplate: String) {

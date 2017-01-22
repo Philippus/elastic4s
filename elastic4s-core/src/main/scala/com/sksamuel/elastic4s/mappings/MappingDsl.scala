@@ -15,7 +15,7 @@ trait MappingDsl {
   def getMapping(indexes: Indexes): GetMappingDefinition = getMapping(indexes.toIndexesAndTypes)
   def getMapping(indexesAndTypes: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(indexesAndTypes)
 
-  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
+  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = PutMappingDefinition(indexesAndType)
 }
 
 

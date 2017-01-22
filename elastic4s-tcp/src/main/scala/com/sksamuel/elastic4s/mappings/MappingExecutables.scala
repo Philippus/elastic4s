@@ -22,7 +22,11 @@ trait MappingExecutables {
   implicit object PutMappingDefinitionExecutable
     extends Executable[PutMappingDefinition, PutMappingResponse, PutMappingResponse] {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
-      injectFuture(c.admin.indices.putMapping(t.request, _))
+      val listener = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
+        .setType(t.indexesAndType.`type`)
+        .setSource(MappingContentBuilder.build(t))
+        .execute()
+      injectFuture(listener)
     }
   }
 }

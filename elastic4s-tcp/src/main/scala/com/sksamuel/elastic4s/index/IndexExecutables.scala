@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.indexes.IndexDefinition
-import com.sksamuel.elastic4s.mappings.XContentFieldValueWriter
-import com.sksamuel.elastic4s.{Executable, Show}
+import com.sksamuel.elastic4s.{Executable, Show, XContentFieldValueWriter}
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.client.Client

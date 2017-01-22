@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.mappings.MappingDefinition
+import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.admin.indices.rollover.RolloverRequestBuilder
 import org.elasticsearch.common.settings.Settings
@@ -23,7 +23,7 @@ case class RolloverDefinition(sourceAlias: String,
     maxIndexAgeCondition.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.addMaxIndexAgeCondition)
     maxIndexDocsCondition.foreach(builder.addMaxIndexDocsCondition)
     dryRun.foreach(builder.dryRun)
-    mappings.foreach { mapping => builder.mapping(mapping.`type`, mapping.buildWithName.string) }
+    mappings.foreach { mapping => builder.mapping(mapping.`type`, MappingContentBuilder.buildWithName(mapping, mapping.`type`).string) }
     newIndexName.foreach(builder.setNewIndexName)
     settings.foreach(builder.settings)
     waitForActiveShards.foreach(builder.waitForActiveShards)

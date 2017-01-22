@@ -16,7 +16,7 @@ trait CreateIndexDsl {
   def tokenizers(tokenizers: Tokenizer*) = new TokenizersWrapper(tokenizers)
   def filters(filters: TokenFilter*) = new TokenFiltersWrapper(filters)
 
-  def mapping(name: String): MappingDefinition = new MappingDefinition(name)
+  def mapping(name: String): MappingDefinition = MappingDefinition(name)
 
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])

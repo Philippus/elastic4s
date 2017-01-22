@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
 import com.sksamuel.elastic4s.indexes.IndexSettings
-import com.sksamuel.elastic4s.mappings.MappingDefinition
+import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
@@ -91,7 +91,7 @@ case class CreateIndexDefinition(name: String) {
       source.startObject("mappings")
       for (mapping <- _mappings) {
         source.startObject(mapping.`type`)
-        mapping.build(source)
+        MappingContentBuilder.build(mapping, source)
         source.endObject()
       }
       source.endObject()

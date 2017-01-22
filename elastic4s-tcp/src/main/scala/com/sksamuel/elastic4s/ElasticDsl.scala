@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
 import com.sksamuel.elastic4s.indexes._
-import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
 import com.sksamuel.elastic4s.searches._
@@ -31,7 +30,7 @@ trait ElasticDsl
     with ClusterDsl
     with CreateIndexDsl
     with DeleteIndexDsl
-    with DynamicTemplateDsl
+    with DynamicTemplateApi
     with FieldStatsDsl
     with ForceMergeDsl
     with IndexAdminDsl
@@ -47,8 +46,6 @@ trait ElasticDsl
     with SortDsl
     with SnapshotDsl
     with SuggestionDsl
-    with TaskApi
-    with TermVectorApi
     with TokenizerApi
     with TokenFilterDsl
     with TcpExecutables
@@ -147,57 +144,7 @@ trait ElasticDsl
     def topHits(name: String) = topHitsAggregation(name)
   }
 
-  @deprecated("use field(name, type)", "5.0.0")
-  def field(name: String): FieldDefinition = FieldDefinition(name)
-  def field(name: String, ft: AttachmentType.type) = new AttachmentFieldDefinition(name)
-  def field(name: String, ft: BinaryType.type) = new BinaryFieldDefinition(name)
-  def field(name: String, ft: BooleanType.type) = new BooleanFieldDefinition(name)
-  def field(name: String, ft: ByteType.type) = new ByteFieldDefinition(name)
-  def field(name: String, ft: CompletionType.type) = new CompletionFieldDefinition(name)
-  def field(name: String, ft: DateType.type) = new DateFieldDefinition(name)
-  def field(name: String, ft: DoubleType.type) = new DoubleFieldDefinition(name)
-  def field(name: String, ft: FloatType.type) = new FloatFieldDefinition(name)
-  def field(name: String, ft: GeoPointType.type) = new GeoPointFieldDefinition(name)
-  def field(name: String, ft: GeoShapeType.type) = new GeoShapeFieldDefinition(name)
-  def field(name: String, ft: IntegerType.type) = new IntegerFieldDefinition(name)
-  def field(name: String, ft: IpType.type) = new IpFieldDefinition(name)
-  def field(name: String, ft: KeywordType.type) = new KeywordFieldDefinition(name)
-  def field(name: String, ft: LongType.type) = new LongFieldDefinition(name)
-  def field(name: String, ft: MultiFieldType.type) = new MultiFieldDefinition(name)
-  def field(name: String, ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
-  def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
-  def field(name: String, ft: PercolatorType.type): PercolatorFieldDefinition = new PercolatorFieldDefinition(name)
-  def field(name: String, ft: ShortType.type) = new ShortFieldDefinition(name)
-  def field(name: String, ft: TextType.type) = new TextFieldDefinition(name)
-  def field(name: String, ft: TokenCountType.type) = new TokenCountDefinition(name)
-
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-  def field(name: String, ft: StringType.type) = new StringFieldDefinition(name)
-
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
-
-  // -- helper methods to create the field definitions --
-  def attachmentField(name: String) = field(name, AttachmentType)
-  def binaryField(name: String) = field(name, BinaryType)
-  def booleanField(name: String) = field(name, BooleanType)
-  def byteField(name: String) = field(name, ByteType)
-  def completionField(name: String) = field(name, CompletionType)
-  def dateField(name: String) = field(name, DateType)
-  def doubleField(name: String) = field(name, DoubleType)
-  def floatField(name: String) = field(name, FloatType)
-  def geopointField(name: String) = field(name, GeoPointType)
-  def geoshapeField(name: String) = field(name, GeoShapeType)
-  def multiField(name: String) = field(name, MultiFieldType)
-  def nestedField(name: String): NestedFieldDefinition = field(name).typed(NestedType)
-  def objectField(name: String): ObjectFieldDefinition = field(name).typed(ObjectType)
-  def intField(name: String) = field(name, IntegerType)
-  def ipField(name: String) = field(name, IpType)
-
-  def keywordField(name: String) = field(name, KeywordType)
-
-  def longField(name: String) = field(name, LongType)
-
-  def percolatorField(name: String) = field(name, PercolatorType)
 
   def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
   case class ExpectsScript(field: String) {
@@ -205,15 +152,6 @@ trait ElasticDsl
   }
 
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
-
-  def shortField(name: String) = field(name, ShortType)
-
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-  def stringField(name: String): StringFieldDefinition = field(name, StringType)
-
-  def textField(name: String): TextFieldDefinition = field(name, TextType)
-  def tokenCountField(name: String) = field(name).typed(TokenCountType)
-
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 
   implicit class RichFuture[T](future: Future[T]) {
@@ -263,7 +201,7 @@ trait ElasticDsl
   @deprecated("use putMapping(index)", "5.0.0")
   case object put {
     @deprecated("use putMapping(index)", "5.0.0")
-    def mapping(indexesAndType: IndexesAndType): PutMappingDefinition = new PutMappingDefinition(indexesAndType)
+    def mapping(indexAndType: IndexAndType): PutMappingDefinition = new PutMappingDefinition(indexAndType)
   }
 
   @deprecated("use phraseSuggestion(name)", "5.0.0")
@@ -296,7 +234,7 @@ trait ElasticDsl
     @deprecated("use mapping(name)", "5.0.0")
     def name(name: String): MappingDefinition = {
       require(name.nonEmpty, "mapping name must not be null or empty")
-      new MappingDefinition(name)
+      MappingDefinition(`type` = name)
     }
   }
 

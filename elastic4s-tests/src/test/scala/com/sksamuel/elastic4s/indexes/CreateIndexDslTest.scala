@@ -207,7 +207,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           field("name") typed StringType index "analyzed",
           field("untouched") typed StringType index "not_analyzed"
         )
-        ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.False
+        ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.False
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
   }
@@ -223,7 +223,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
           field("last_name") typed StringType index "analyzed",
           field("any_name") typed StringType index "analyzed"
         )
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_multi_field_type_2.json")
   }
@@ -234,7 +234,7 @@ class CreateIndexDslTest extends FlatSpec with MockitoSugar with JsonSugar with 
         field("first_name") typed TextType index "analyzed" copyTo "full_name",
         field("last_name") typed TextType index "analyzed" copyTo "full_name",
         field("full_name") typed TextType index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.Dynamic
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Dynamic
     )
     req._source.string should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
   }
