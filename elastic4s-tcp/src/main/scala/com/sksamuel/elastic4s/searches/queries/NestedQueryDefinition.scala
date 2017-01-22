@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.index.query.{NestedQueryBuilder, QueryBuilders}
 
 case class NestedQueryDefinition(path: String,
                                  query: QueryDefinition,
@@ -12,15 +10,6 @@ case class NestedQueryDefinition(path: String,
                                  inner: Option[InnerHitDefinition] = None,
                                  queryName: Option[String] = None) extends QueryDefinition {
   require(query != null, "must specify query for nested score query")
-
-  def builder: NestedQueryBuilder = {
-    val builder = QueryBuilders.nestedQuery(path, QueryBuilderFn(query), scoreMode)
-    boost.map(_.toFloat).map(builder.boost)
-    inner.map(_.builder).foreach(builder.innerHit)
-    queryName.foreach(builder.queryName)
-    ignoreUnmapped.foreach(builder.ignoreUnmapped)
-    builder
-  }
 
   def boost(b: Double): NestedQueryDefinition = copy(boost = Option(b))
   def ignoreUnmapped(ignoreUnmapped: Boolean): NestedQueryDefinition = copy(ignoreUnmapped = Option(ignoreUnmapped))

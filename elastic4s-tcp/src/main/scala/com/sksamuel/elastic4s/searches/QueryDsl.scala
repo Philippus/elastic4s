@@ -1,11 +1,15 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.{DistanceUnit, DocumentRef, Indexable}
-import com.sksamuel.elastic4s.searches.queries.{SpanQueryDefinition, _}
+import com.sksamuel.elastic4s.searches.queries._
+import com.sksamuel.elastic4s.searches.queries.`match`._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.geo._
+import com.sksamuel.elastic4s.searches.queries.span._
+import com.sksamuel.elastic4s.{DocumentRef, Indexable}
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.geo.builders.ShapeBuilder
+import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
@@ -75,10 +79,12 @@ trait QueryDsl {
   def geoPolygonQuery(field: String, first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition =
     geoPolygonQuery(field, first +: rest)
 
-  def geoPolygonQuery(field: String, points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition =
+  def geoPolygonQuery(field: String,
+                      points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
-  def geoShapeQuery(field: String, shape: ShapeBuilder): GeoShapeDefinition =
+  def geoShapeQuery(field: String,
+                    shape: ShapeBuilder): GeoShapeDefinition =
     GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, shape))
 
   def geoShapeQuery(field: String,
@@ -88,14 +94,15 @@ trait QueryDsl {
 
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
-  def hasChildQuery(`type`: String, query: QueryDefinition, scoreMode: String): HasChildQueryDefinition =
+  def hasChildQuery(`type`: String, query: QueryDefinition, scoreMode: ScoreMode): HasChildQueryDefinition =
     HasChildQueryDefinition(`type`, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
     def query(q: QueryDefinition): ExpectsScoreMode = new ExpectsScoreMode(q)
     def query(q: String): ExpectsScoreMode = new ExpectsScoreMode(q)
     class ExpectsScoreMode(q: QueryDefinition) {
-      def scoreMode(scoreMode: String): HasChildQueryDefinition = hasChildQuery(`type`, q, scoreMode)
+      def scoreMode(mode: String): HasChildQueryDefinition = scoreMode(ScoreMode.valueOf(mode))
+      def scoreMode(scoreMode: ScoreMode): HasChildQueryDefinition = hasChildQuery(`type`, q, scoreMode)
     }
   }
 
@@ -205,7 +212,7 @@ trait QueryDsl {
   def spanOrQuery(iterable: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
   def spanOrQuery(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition = spanOrQuery(first +: rest)
 
-  def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = new SpanTermQueryDefinition(field, value)
+  def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = SpanTermQueryDefinition(field, value)
 
   def spanNotQuery(include: SpanQueryDefinition, exclude: SpanQueryDefinition): SpanNotQueryDefinition =
     SpanNotQueryDefinition(include, exclude)

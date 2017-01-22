@@ -4,10 +4,8 @@ import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.VersionType
 import org.elasticsearch.index.reindex.{BulkIndexByScrollResponse, DeleteByQueryAction, DeleteByQueryRequestBuilder}
 
 import scala.concurrent.Future
@@ -20,11 +18,11 @@ trait DeleteExecutables {
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
       val _builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
       t.routing.foreach(_builder.setRouting)
-      t.refresh.map(RefreshPolicy.parse).foreach(_builder.setRefreshPolicy)
+      t.refresh.foreach(_builder.setRefreshPolicy)
       t.parent.foreach(_builder.setParent)
       t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
       t.version.foreach(_builder.setVersion)
-      t.versionType.map(VersionType.fromString).foreach(_builder.setVersionType)
+      t.versionType.foreach(_builder.setVersionType)
       _builder
     }
 

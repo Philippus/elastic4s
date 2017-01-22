@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
+import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -29,7 +30,7 @@ class IndexTcpTest extends WordSpec with MockitoSugar with ElasticSugar with Mat
       indexInto("electronics" / "phone").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
       indexInto("electronics" / "phone").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
       indexInto("electronics" / "phone").source(phone)
-    ).refresh(RefreshPolicy.Immediate)
+    ).refresh(RefreshPolicy.IMMEDIATE)
   }
   blockUntilCount(6, "electronics")
 

@@ -52,9 +52,12 @@ trait AggregationDsl {
   def nestedAggregation(name: String, path: String): NestedAggregationDefinition =
     NestedAggregationDefinition(name, path)
 
-  def percentilesAggregation(name: String): PercentilesAggregationDefinition = PercentilesAggregationDefinition(name)
-  def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition = PercentileRanksAggregationDefinition(
-    name)
+  def percentilesAggregation(name: String): PercentilesAggregationDefinition =
+    PercentilesAggregationDefinition(name)
+
+  def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition =
+    PercentileRanksAggregationDefinition(name)
+
   def rangeAggregation(name: String): RangeAggregationDefinition = RangeAggregationDefinition(name)
 
   def reverseNestedAggregation(name: String): ReverseNestedAggregationDefinition =

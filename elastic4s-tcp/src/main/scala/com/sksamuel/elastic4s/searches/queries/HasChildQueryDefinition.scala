@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
+import org.apache.lucene.search.join.ScoreMode
 
 case class HasChildQueryDefinition(`type`: String,
                                    query: QueryDefinition,
-                                   scoreMode: String,
+                                   scoreMode: ScoreMode,
                                    boost: Option[Double] = None,
                                    ignoreUnmapped: Option[Boolean] = None,
                                    innerHit: Option[InnerHitDefinition] = None,
@@ -17,13 +18,4 @@ case class HasChildQueryDefinition(`type`: String,
   def minMaxChildren(min: Int, max: Int): HasChildQueryDefinition = copy(minMaxChildren = (min, max).some)
   def innerHit(innerHit: InnerHitDefinition): HasChildQueryDefinition = copy(innerHit = Some(innerHit))
   def queryName(queryName: String): HasChildQueryDefinition = copy(queryName = Some(queryName))
-}
-
-object ScoreMode {
-  val First = "First"
-  val Avg = "Avg"
-  val Max = "Max"
-  val Sum = "Sum"
-  val Min = "Min"
-  val Multiply = "Multiply"
 }

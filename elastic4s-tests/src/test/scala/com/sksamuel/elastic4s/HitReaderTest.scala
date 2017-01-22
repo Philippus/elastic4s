@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 
@@ -40,7 +41,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Ma
     bulk(
       indexRequest(1, Team("Middlesbrough", "Fortress Riverside", 1876)),
       indexRequest(2, Team("Arsenal", "The Library", 1886))
-    ).refresh(RefreshPolicy.Immediate)
+    ).refresh(RefreshPolicy.IMMEDIATE)
   ).await
 
   "hit reader" should "unmarshall search results" in {

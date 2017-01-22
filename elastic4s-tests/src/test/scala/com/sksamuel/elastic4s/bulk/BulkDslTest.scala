@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration._
@@ -22,7 +22,7 @@ class BulkDslTest extends FlatSpec with Matchers with ElasticSugar {
       bulk(
         index into "knightrider/character" fields "name" -> "michael",
         delete id 12 from "knightrider/vehicle"
-      ).refresh(RefreshPolicy.Immediate)
+      ).refresh(RefreshPolicy.IMMEDIATE)
     }
   }
 

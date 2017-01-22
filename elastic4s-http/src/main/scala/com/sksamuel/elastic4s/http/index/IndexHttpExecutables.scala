@@ -19,7 +19,7 @@ trait IndexHttpExecutables {
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.opType.foreach(params.put("op_type", _))
+      request.opType.foreach(opType => params.put("op_type", opType.lowercase))
       request.routing.foreach(params.put("routing", _))
       request.parent.foreach(params.put("parent", _))
       request.timeout.foreach(params.put("timeout", _))

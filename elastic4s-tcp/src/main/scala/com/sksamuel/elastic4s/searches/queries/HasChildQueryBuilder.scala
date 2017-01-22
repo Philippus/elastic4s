@@ -5,7 +5,11 @@ import org.elasticsearch.index.query.{HasChildQueryBuilder, QueryBuilders}
 
 object HasChildQueryBuilder {
   def apply(q: HasChildQueryDefinition): HasChildQueryBuilder = {
-    val builder = QueryBuilders.hasChildQuery(q.`type`, QueryBuilderFn(q.query), org.apache.lucene.search.join.ScoreMode.valueOf(q.scoreMode))
+    val builder = QueryBuilders.hasChildQuery(
+      q.`type`,
+      QueryBuilderFn(q.query),
+      q.scoreMode
+    )
     q.boost.map(_.toFloat).foreach(builder.boost)
     q.innerHit.map(_.builder).foreach(builder.innerHit)
     q.ignoreUnmapped.foreach(builder.ignoreUnmapped)

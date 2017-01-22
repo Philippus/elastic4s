@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable, RefreshPolicy}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
 import com.sksamuel.elastic4s.http.{HttpClient, HttpDsl}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -35,7 +36,7 @@ class IndexHttpTest extends WordSpec with MockitoSugar with ElasticSugar with Ma
 
   for (req <- requests) {
     http.execute {
-      req.refresh(RefreshPolicy.Immediate)
+      req.refresh(RefreshPolicy.IMMEDIATE)
     }
   }
   blockUntilCount(4, "electronics")

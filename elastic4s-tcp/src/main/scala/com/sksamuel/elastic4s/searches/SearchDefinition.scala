@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, ScriptType}
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.highlighting.{HighlightFieldDefinition, HighlightOptionsDefinition}
 import com.sksamuel.elastic4s.searches.queries._
+import com.sksamuel.elastic4s.searches.queries.`match`.MatchAllQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDefinition
 import com.sksamuel.elastic4s.{IndexesAndTypes, ProxyClients}

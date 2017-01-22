@@ -14,7 +14,7 @@ object Build extends AutoPlugin {
     val CatsVersion = "0.8.1"
     val CirceVersion = "0.6.1"
     val CommonsIoVersion = "2.4"
-    val ElasticsearchVersion = "5.1.1"
+    val ElasticsearchVersion = "5.1.2"
     val ExtsVersion = "1.37.0"
     val JacksonVersion = "2.8.4"
     val Json4sVersion = "3.5.0"
@@ -54,6 +54,7 @@ object Build extends AutoPlugin {
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats"                     % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
+      "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion      % "test"
     ),

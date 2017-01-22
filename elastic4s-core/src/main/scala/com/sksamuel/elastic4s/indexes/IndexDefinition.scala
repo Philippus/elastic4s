@@ -3,11 +3,13 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable}
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.action.index.IndexRequest.OpType
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
-                           opType: Option[String] = None,
-                           refresh: Option[String] = None,
+                           opType: Option[OpType] = None,
+                           refresh: Option[RefreshPolicy] = None,
                            parent: Option[String] = None,
                            pipeline: Option[String] = None,
                            routing: Option[String] = None,
@@ -27,17 +29,20 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def id(id: Any): IndexDefinition = withId(id)
   def withId(id: Any): IndexDefinition = copy(id = id.some)
 
-  def opType(opType: String): IndexDefinition = copy(opType = opType.some)
+  def opType(opType: String): IndexDefinition = copy(opType = OpType.fromString(opType).some)
+  def opType(opType: OpType): IndexDefinition = copy(opType = opType.some)
+
   def pipeline(pipeline: String): IndexDefinition = copy(pipeline = pipeline.some)
   def parent(parent: String): IndexDefinition = copy(parent = parent.some)
-  def refresh(refresh: String): IndexDefinition = copy(refresh = refresh.some)
+  def refresh(refresh: String): IndexDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
+  def refresh(refresh: RefreshPolicy): IndexDefinition = copy(refresh = refresh.some)
   def timestamp(timestamp: String): IndexDefinition = copy(timestamp = timestamp.some)
   def routing(routing: String): IndexDefinition = copy(routing = routing.some)
   def version(version: Long): IndexDefinition = copy(version = version.some)
   def version(timeout: String): IndexDefinition = copy(timeout = timeout.some)
 
   // if set to true then trying to update a document will fail
-  def createOnly(createOnly: Boolean): IndexDefinition = if (createOnly) opType(OpType.Create) else opType(OpType.Index)
+  def createOnly(createOnly: Boolean): IndexDefinition = if (createOnly) opType(OpType.CREATE) else opType(OpType.INDEX)
 
   def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toMap)
   def fields(_fields: Iterable[(String, Any)]): IndexDefinition = fields(_fields.toMap)

@@ -33,7 +33,7 @@ trait IndexExecutables {
       t.pipeline.foreach(builder.setPipeline)
       t.timestamp.foreach(builder.setTimestamp)
       t.timestamp.foreach(builder.setSource)
-      t.opType.map(b => OpType.fromId(b.toByte)).foreach(builder.setOpType)
+      t.opType.foreach(builder.setOpType)
       builder
     }
 

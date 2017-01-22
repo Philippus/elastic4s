@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.SimpleQueryStringFlag
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.index.query.SimpleQueryStringFlag
 
 case class SimpleStringQueryDefinition(query: String,
                                        analyzer: Option[String] = None,
