@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.get.GetApi
 import com.sksamuel.elastic4s.indexes.IndexApi
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
+import com.sksamuel.elastic4s.searches.HighlightApi
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.update.UpdateApi
 import com.sksamuel.elastic4s.validate.ValidateApi
@@ -19,6 +20,7 @@ trait ElasticApi
     with DeleteApi
     with ExplainApi
     with GetApi
+    with HighlightApi
     with IndexApi
     with ReindexApi
     with ScriptApi

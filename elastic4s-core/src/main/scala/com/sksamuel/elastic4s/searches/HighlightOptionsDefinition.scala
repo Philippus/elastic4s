@@ -1,24 +1,6 @@
-package com.sksamuel.elastic4s.searches.highlighting
+package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
-
-import scala.language.implicitConversions
-
-trait HighlightDsl {
-
-  @deprecated("use highlight(name)", "5.0.0")
-  implicit def string2highlightfield(name: String): HighlightFieldDefinition = HighlightFieldDefinition(name)
-
-  @deprecated("use highlightOptions()", "5.0.0")
-  def options = HighlightOptionsDefinition()
-
-  def highlightOptions() = HighlightOptionsDefinition()
-
-  def highlight(field: String) = HighlightFieldDefinition(field)
-}
-
 import com.sksamuel.exts.OptionImplicits._
 
 case class HighlightOptionsDefinition(encoder: Option[String] = None,
@@ -40,28 +22,6 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
                                       preTags: Seq[String] = Nil,
                                       requireFieldMatch: Option[Boolean] = None
                                      ) {
-  def populate(builder: HighlightBuilder) = {
-    encoder.foreach(builder.encoder)
-    tagsSchema.foreach(builder.tagsSchema)
-    forceSource.foreach(bool => builder.forceSource(bool))
-    useExplicitFieldOrder.foreach(builder.useExplicitFieldOrder)
-    boundaryChars.map(_.toCharArray).foreach(builder.boundaryChars)
-    boundaryMaxScan.foreach(int => builder.boundaryMaxScan(int))
-    fragmenter.foreach(builder.fragmenter)
-    fragmentSize.foreach(int => builder.fragmentSize(int))
-    highlighterType.foreach(builder.highlighterType)
-    highlightFilter.foreach(bool => builder.highlightFilter(bool))
-    highlightQuery.map(QueryBuilderFn.apply).foreach(builder.highlightQuery)
-    noMatchSize.foreach(int => builder.noMatchSize(int))
-    numOfFragments.foreach(int => builder.numOfFragments(int))
-    order.foreach(builder.order)
-    phraseLimit.foreach(int => builder.phraseLimit(int))
-    if (postTags.nonEmpty)
-      builder.postTags(postTags: _*)
-    if (preTags.nonEmpty)
-      builder.preTags(preTags: _*)
-    requireFieldMatch.foreach(bool => builder.requireFieldMatch(bool))
-  }
 
   def boundaryChars(boundaryChars: String): HighlightOptionsDefinition = copy(boundaryChars = boundaryChars.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightOptionsDefinition = copy(boundaryMaxScan = boundaryMaxScan.some)

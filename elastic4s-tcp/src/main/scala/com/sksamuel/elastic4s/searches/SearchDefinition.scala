@@ -4,7 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, ScriptType}
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
-import com.sksamuel.elastic4s.searches.highlighting.{HighlightFieldDefinition, HighlightOptionsDefinition}
+import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.`match`.MatchAllQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
@@ -16,7 +16,6 @@ import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 import org.elasticsearch.script.Script
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
@@ -254,10 +253,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
 
   def highlighting(options: HighlightOptionsDefinition,
                    fields: Iterable[HighlightFieldDefinition]): SearchDefinition = {
-    val h = new HighlightBuilder()
-    options.populate(h)
-    fields.map(_.builder).foreach(h.field)
-    _builder.highlighter(h)
+    val builder = HighlightBuilderFn(options, fields.toSeq)
+    _builder.highlighter(builder)
     this
   }
 

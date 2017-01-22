@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
+import com.sksamuel.elastic4s.searches.{HighlightFieldDefinition, HighlightOptionsDefinition}
+import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import org.elasticsearch.index.query.InnerHitBuilder
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import com.sksamuel.exts.OptionImplicits._
+
 import scala.collection.JavaConverters._
 
 case class InnerHitDefinition(name: String,
@@ -33,8 +34,7 @@ case class InnerHitDefinition(name: String,
     if (storedFieldNames.nonEmpty)
       builder.setStoredFieldNames(storedFieldNames.asJava)
     if (highlights.nonEmpty) {
-      val h = new HighlightBuilder()
-      highlights.map(_.builder).foreach(h.field)
+      val h = HighlightBuilderFn(HighlightOptionsDefinition(), highlights)
       builder.setHighlightBuilder(h)
     }
     builder

@@ -12,7 +12,6 @@ import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
-import com.sksamuel.elastic4s.searches.highlighting.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
