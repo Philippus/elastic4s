@@ -1,16 +1,20 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.`match`._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
+import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
+import org.elasticsearch.percolator.PercolateQueryBuilder
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
-    case q: QueryStringQueryDefinition => QueryStringBuilder.builder(q)
+    case q: BoolQueryDefinition => BoolQueryBuilder(q)
+    case q: BoostingQueryDefinition => BoostingQueryBuilder(q)
     case q: MatchAllQueryDefinition => MatchAllQueryBuilder(q)
     case q: MatchQueryDefinition => MatchQueryBuilder(q)
     case q: IdQueryDefinition => IdQueryBuilder(q)
@@ -19,20 +23,20 @@ object QueryBuilderFn {
     case q: WildcardQueryDefinition => WildcardQueryBuilder(q)
     case q: ExistsQueryDefinition => ExistsQueryBuilder(q)
     case q: MatchPhraseDefinition => MatchPhraseBuilder(q)
-    case q: BoostingQueryDefinition => BoostingQueryBuilder(q)
     case q: DisMaxDefinition => DisMaxBuilder(q)
     case q: FunctionScoreQueryDefinition => FunctionScoreBuilderFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBuilder(q)
     case q: HasChildQueryDefinition => HasChildQueryBuilder(q)
     case q: HasParentQueryDefinition => HasParentQueryBuilder(q)
     case q: GeoShapeDefinition => GeoShapeQueryBuilder(q)
+    case q: QueryStringQueryDefinition => QueryStringBuilder.builder(q)
+    case q: PercolateQueryDefinition => PercolateQueryBuilder(q)
     case q: SimpleStringQueryDefinition => SimpleStringQueryBuilder(q)
     case q: RegexQueryDefinition => RegexQueryBuilder(q)
     case q: RangeQueryDefinition => RangeQueryBuilder(q)
     case q: GeoPolygonQueryDefinition => GeoPolygonQueryBuilder(q)
     case q: TermsQueryDefinition[_] => TermsQueryBuilder(q)
     case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
-    case q: BoolQueryDefinition => BoolQueryBuilder(q)
     case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBuilder(q)
     case q: TypeQueryDefinition => QueryBuilders.typeQuery(q.`type`)
     case q: MultiMatchQueryDefinition => MultiMatchQueryBuilderFn(q)
@@ -48,6 +52,20 @@ object QueryBuilderFn {
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBuilder(q)
     case q: NestedQueryDefinition => NestedQueryBuilder(q)
     case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBuilder(q)
+  }
+}
+
+object PercolateQueryBuilder {
+  def apply(q: PercolateQueryDefinition): PercolateQueryBuilder = {
+    val builder = q.ref match {
+      case Some(DocumentRef(docIndex, docType, docId)) =>
+        new PercolateQueryBuilder(q.field, q.`type`, docIndex, docType, docId, null, null, null)
+      case _ =>
+        q.source.fold(sys.error("Must specify id or source")) { src =>
+          new PercolateQueryBuilder(q.field, q.`type`, new BytesArray(src.getBytes))
+        }
+    }
+    builder
   }
 }
 
