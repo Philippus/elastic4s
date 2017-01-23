@@ -4,39 +4,30 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.index.{CreateIndexDefinition, CreateIndexDsl, DeleteIndexDefinition, DeleteIndexDsl}
+import com.sksamuel.elastic4s.index.{DeleteIndexDefinition, DeleteIndexDsl}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
-import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.queries._
+import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
-import com.sksamuel.elastic4s.task.TaskApi
-import com.sksamuel.elastic4s.termvectors.TermVectorApi
-
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
 
 // the entry point for TCP users. This is the trait that should be mixed in, or use the object
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
   extends ElasticApi
     with AggregationDsl
-    with AnalyzerApi
     with ClusterDsl
-    with CreateIndexDsl
     with DeleteIndexDsl
-    with DynamicTemplateApi
     with FieldStatsDsl
     with ForceMergeDsl
     with IndexAdminDsl
     with IndexRecoveryDsl
     with IndexTemplateDsl
-    with MappingDsl
     with PercolateDsl
     with PipelineAggregationDsl
     with SearchDsl
@@ -46,7 +37,6 @@ trait ElasticDsl
     with SortDsl
     with SnapshotDsl
     with SuggestionDsl
-    with TokenizerApi
     with TokenFilterDsl
     with TcpExecutables
     with BuildableTermsQueryImplicits
@@ -145,18 +135,6 @@ trait ElasticDsl
   }
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
-
-  def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
-  case class ExpectsScript(field: String) {
-    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field, script, None, None)
-  }
-
-  def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
-  def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
-
-  implicit class RichFuture[T](future: Future[T]) {
-    def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
-  }
 
   case object add {
     @deprecated("Use full method syntax, eg addAlias()", "5.0.0")

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 
 trait TypesApi {
 
@@ -49,6 +50,12 @@ trait TypesApi {
   def shortField(name: String) = field(name, ShortType)
   def textField(name: String): TextFieldDefinition = field(name, TextType)
   def tokenCountField(name: String) = field(name, TokenCountType)
+
+  def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
+  def scriptField(n: String): ExpectsScript = ExpectsScript(field = n)
+  case class ExpectsScript(field: String) {
+    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(field, script, None, None)
+  }
 
   @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
   def stringField(name: String): StringFieldDefinition = field(name, StringType)

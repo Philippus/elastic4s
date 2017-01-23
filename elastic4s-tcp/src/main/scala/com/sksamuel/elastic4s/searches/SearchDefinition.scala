@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import java.util
 
-import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, ScriptType}
+import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import com.sksamuel.elastic4s.searches.queries._
@@ -15,7 +15,7 @@ import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
-import org.elasticsearch.script.Script
+import org.elasticsearch.script.{Script, ScriptType}
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
@@ -109,10 +109,10 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes) {
   def scriptfields(defs: ScriptFieldDefinition*): this.type = scriptfields(defs)
   def scriptfields(defs: Iterable[ScriptFieldDefinition]): this.type = {
     defs.foreach {
-      case ScriptFieldDefinition(name, script, None, None, _, ScriptType.Inline) =>
+      case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
         _builder.addScriptField(name, new Script(script))
       case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
-        _builder.addScriptField(name, new Script(org.elasticsearch.script.ScriptType.valueOf(scriptType.toUpperCase), lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
+        _builder.addScriptField(name, new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
                                                  options.map(_.asJava).getOrElse(new util.HashMap()),
                                                  params.map(_.asJava).getOrElse(new util.HashMap())))
     }

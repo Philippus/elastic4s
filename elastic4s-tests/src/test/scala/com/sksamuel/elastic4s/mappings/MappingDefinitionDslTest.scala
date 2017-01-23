@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
+import com.sksamuel.elastic4s.indexes.CreateIndexContentBuilder
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{Matchers, WordSpec}
 
@@ -63,45 +64,45 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
       output should include("""numeric_detection":false""")
     }
     "include dynamic templates" in {
-      val req = create.index("docsAndTags").mappings(
-        mapping name "my_type" templates(
+      val req = createIndex("docsAndTags").mappings(
+        mapping("my_type") templates(
           dynamicTemplate("es", field typed StringType analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
           dynamicTemplate("en", field typed StringType analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
           )
       )
-      req._source.string should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
+      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
     }
     "include timestamp path field" in {
-      val req = create.index("docsAndTags").mappings(
-        mapping name "foo" timestamp {
+      val req = createIndex("docsAndTags").mappings(
+        mapping ("foo") timestamp {
           timestamp enabled true path "mypath" store true
         }
       )
-      req._source.string should matchJsonResource("/json/mappings/timestamp_path.json")
+      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_path.json")
     }
     "include timestamp store field" in {
-      val req = create.index("docsAndTags").mappings(
-        mapping name "foo" timestamp {
-          timestamp enabled true path "mypath" store true
+      val req = createIndex("docsAndTags").mappings(
+        mapping("foo") timestamp {
+          timestamp(true) path "mypath" store true
         }
       )
-      req._source.string should matchJsonResource("/json/mappings/timestamp_store.json")
+      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_store.json")
     }
     "include timestamp format field" in {
-      val req = create.index("docsAndTags").mappings(
-        mapping name "foo" timestamp {
-          timestamp enabled true format "qwerty"
+      val req = createIndex("docsAndTags").mappings(
+        mapping("foo") timestamp {
+          timestamp(true) format "qwerty"
         }
       )
-      req._source.string should matchJsonResource("/json/mappings/timestamp_format.json")
+      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_format.json")
     }
     "include honor disabled timestamp" in {
-      val req = create.index("docsAndTags").mappings(
-        mapping name "foo" timestamp {
+      val req = createIndex("docsAndTags").mappings(
+        mapping("foo") timestamp {
           timestamp(false)
         }
       )
-      req._source.string should matchJsonResource("/json/mappings/timestamp_disabled.json")
+      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_disabled.json")
     }
   }
 }

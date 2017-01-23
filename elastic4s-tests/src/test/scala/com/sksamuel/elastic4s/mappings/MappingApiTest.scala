@@ -6,7 +6,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
 
 /** @author Stephen Samuel */
-class MappingDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class MappingApiTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {

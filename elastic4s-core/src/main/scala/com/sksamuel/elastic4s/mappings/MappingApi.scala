@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.{Indexes, IndexesAndType, IndexesAndTypes}
 
 import scala.language.implicitConversions
 
-trait MappingDsl {
+trait MappingApi {
 
   val NotAnalyzed: String = "not_analyzed"
   def id: FieldDefinition = FieldDefinition("_id")

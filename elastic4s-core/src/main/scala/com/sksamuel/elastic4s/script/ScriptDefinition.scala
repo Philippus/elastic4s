@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.script
 
+import org.elasticsearch.script.ScriptType
+
 import scala.language.implicitConversions
 
 case class ScriptDefinition(script: String,
                             lang: Option[String] = None,
-                            scriptType: String = ScriptType.Inline,
+                            scriptType: ScriptType = ScriptType.INLINE,
                             params: Map[String, Any] = Map.empty,
                             options: Map[String, String] = Map.empty) {
 
@@ -14,7 +16,8 @@ case class ScriptDefinition(script: String,
   def params(seq: Seq[(String, Any)]): ScriptDefinition = params(seq.toMap)
   def params(map: Map[String, Any]): ScriptDefinition = copy(params = params ++ map)
 
-  def scriptType(scriptType: String): ScriptDefinition = copy(scriptType = scriptType)
+  def scriptType(tpe: String): ScriptDefinition = copy(scriptType = ScriptType.valueOf(tpe))
+  def scriptType(scriptType: ScriptType): ScriptDefinition = copy(scriptType = scriptType)
 }
 
 object ScriptDefinition {

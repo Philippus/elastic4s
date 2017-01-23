@@ -10,6 +10,7 @@ import scala.io.Source
 import scala.util.control.NonFatal
 
 trait HttpClient extends Logging {
+
   // returns the underlying java rest client
   def rest: RestClient
 
@@ -70,7 +71,6 @@ object HttpClient extends Logging {
 
 
 /**
-  *
   * @tparam T the type of the request object handled by this builder
   */
 trait HttpExecutable[T, U] extends Logging {

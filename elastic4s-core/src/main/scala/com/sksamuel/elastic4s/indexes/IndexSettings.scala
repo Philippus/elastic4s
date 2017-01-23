@@ -16,4 +16,9 @@ class IndexSettings {
 
   def refreshInterval: Option[String] = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
   def refreshInterval_=(i: String): Unit = settings += RefreshIntervalKey -> i
+
+  def add(name: String, value: Any): IndexSettings = {
+    settings + (name -> value)
+    this
+  }
 }
