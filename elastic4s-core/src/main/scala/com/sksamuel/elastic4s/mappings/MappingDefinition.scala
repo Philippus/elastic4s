@@ -141,7 +141,7 @@ case class MappingDefinition(`type`: String,
   def numericDetection(numericDetection: Boolean): MappingDefinition = copy(numericDetection = numericDetection.some)
 
   def fields(fields: Iterable[TypedFieldDefinition]): MappingDefinition = as(fields)
-  def fields(fields: TypedFieldDefinition*): MappingDefinition = as(fields: _*)
+  def fields(fields: TypedFieldDefinition*): MappingDefinition = as(fields)
 
   def as(fields: TypedFieldDefinition*): MappingDefinition = as(fields.toIterable)
   def as(iterable: Iterable[TypedFieldDefinition]): MappingDefinition = copy(fields = fields ++ iterable)

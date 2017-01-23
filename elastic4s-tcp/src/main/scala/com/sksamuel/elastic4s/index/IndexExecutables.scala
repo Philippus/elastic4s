@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.{Executable, Show, XContentFieldValueWriter}
-import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.XContentFactory
@@ -31,7 +30,7 @@ trait IndexExecutables {
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
       t.timestamp.foreach(builder.setTimestamp)
-      t.timestamp.foreach(builder.setSource)
+      t.source.foreach(builder.setSource)
       t.opType.foreach(builder.setOpType)
       builder
     }

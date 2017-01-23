@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
+
 import scala.collection.JavaConverters._
 
 class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
@@ -17,22 +19,15 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     )
   }.await
 
-  def albumIndexRequest(id: Long, name: String, year: Int, revision: Long) =
-    indexInto("coldplay/albums")
-      .fields("name" -> name, "year" -> year)
-      .id(id)
-      .version(revision)
-
   client.execute(
     bulk(
-      albumIndexRequest(1, "parachutes", 2000, 5),
-      albumIndexRequest(3, "x&y", 2005, 4),
-      albumIndexRequest(5, "mylo xyloto", 2011, 2),
-      albumIndexRequest(7, "ghost stories", 2005, 1)
-    )
+      indexInto("coldplay" / "albums") id 1 fields("name" -> "parachutes", "year" -> 2000),
+      indexInto("coldplay" / "albums") id 3 fields("name" -> "x&y", "year" -> 2005) ,
+      indexInto("coldplay" / "albums") id 5 fields("name" -> "mylo xyloto", "year" -> 2011)  ,
+      indexInto("coldplay" / "albums") id 7 fields("name" -> "ghost stories", "year" -> 2015)
+    ).refresh(RefreshPolicy.IMMEDIATE)
   ).await
 
-  refresh("coldplay")
   blockUntilCount(4, "coldplay")
 
   "a multiget request" should "retrieve documents by id" in {
@@ -96,20 +91,5 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
     assert(2 === resp.items.size)
     assert(resp.items.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
     assert(resp.items.last.original.getResponse.getSource.asScala.keySet === Set("name"))
-  }
-
-  it should "retrieve documents by id and version" in {
-
-    val resp = client.execute(
-      multiget(
-        get(3) from "coldplay/albums" version 1,
-        get(3) from "coldplay/albums" version 4
-      )
-    ).await
-
-    resp.size shouldBe 2
-    resp.items.head.failed shouldBe true
-    resp.items.last.exists shouldBe true
-    resp.items.last.response.version shouldBe 4
   }
 }

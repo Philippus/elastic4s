@@ -12,7 +12,7 @@ class BulkTest extends FlatSpec with ElasticSugar with Eventually with ElasticMa
   implicit val duration: Duration = 10.seconds
 
   client.execute {
-    index into "transport/air" fields "company" -> "delta" id 99
+    indexInto("transport/air") fields "company" -> "delta" id 99
   }.await
 
   refresh("transport")
@@ -22,10 +22,10 @@ class BulkTest extends FlatSpec with ElasticSugar with Eventually with ElasticMa
 
     client.execute(
       bulk(
-        index into "transport/air" id 1 fields "company" -> "ba",
-        index into "transport/air" id 2 fields "company" -> "aeroflot",
-        index into "transport/air" id 3 fields "company" -> "american air",
-        index into "transport/air" id 4 fields "company" -> "egypt air"
+        indexInto("transport/air") id 1 fields "company" -> "ba",
+        indexInto("transport/air") id 2 fields "company" -> "aeroflot",
+        indexInto("transport/air") id 3 fields "company" -> "american air",
+        indexInto("transport/air") id 4 fields "company" -> "egypt air"
       )
     ).await
 
