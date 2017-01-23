@@ -10,11 +10,15 @@ case class CreateIndexDefinition(name: String,
                                  analysis: Option[AnalysisDefinition] = None,
                                  mappings: Seq[MappingDefinition] = Nil,
                                  rawSource: Option[String] = None,
+                                 waitForActiveShards: Option[Int] = None,
                                  settings: IndexSettings = new IndexSettings) {
+
   require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
   def singleShard() = shards(1)
   def singleReplica() = replicas(1)
+
+  def waitForActiveShards(shards: Int): CreateIndexDefinition = copy(waitForActiveShards = shards.some)
 
   def shards(shds: Int): CreateIndexDefinition = copy(settings = settings.shards = shds)
   def replicas(repls: Int): CreateIndexDefinition = copy(settings = settings.replicas = repls)

@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source
@@ -16,6 +17,7 @@ trait HttpClient extends Logging {
 
   def execute[T, U](request: T)(implicit executable: HttpExecutable[T, U], format: JsonFormat[U]): Future[U] = {
     logger.debug(s"Executing $request")
+
     try {
       val fn = executable.execute(rest, request)
       val p = Promise[U]()
@@ -69,9 +71,9 @@ object HttpClient extends Logging {
   }
 }
 
-
 /**
-  * @tparam T the type of the request object handled by this builder
+  * @tparam T the type of the request object handled by this handler
+  * @tparam U the type of the response object returned by this handler
   */
 trait HttpExecutable[T, U] extends Logging {
   def execute(client: RestClient, request: T): ResponseListener => Any

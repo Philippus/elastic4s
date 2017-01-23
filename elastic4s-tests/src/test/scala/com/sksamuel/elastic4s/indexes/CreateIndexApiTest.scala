@@ -245,7 +245,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
         textField("title") index "analyzed" copyTo("meta_data", "article_info"),
         textField("meta_data") index "analyzed",
         textField("article_info") index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost" dynamic DynamicMapping.Strict
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Strict
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
@@ -257,7 +257,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
           textField("raw") index "not_analyzed"),
         textField("meta_data") index "analyzed",
         textField("article_info") index "analyzed"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_fields.json")
   }
@@ -268,7 +268,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
         stringField("name") index "analyzed",
         field("ac") typed CompletionType analyzer "simple" searchAnalyzer "simple"
           payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost"
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")
   }
@@ -284,8 +284,8 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-        field("name") typed GeoPointType latLon true geohash true,
-        field("content") typed DateType nullValue "no content"
+        geopointField("name") latLon true geohash true,
+        dateField("content") nullValue "no content"
       ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp true
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_1.json")
@@ -295,9 +295,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-        field("name") typed GeoPointType latLon true geohash true,
-        field("content") typed DateType nullValue "no content"
-      ) source false size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp(true, path = Some(
+        geopointField("name") latLon true geohash true,
+        dateField("content") nullValue "no content"
+      ) source false size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, path = Some(
         "post_date"), format = Some("YYYY-MM-dd"))
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_2.json")
@@ -307,9 +307,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
         id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-        field("name") typed GeoPointType latLon true geohash true,
-        field("content") typed DateType nullValue "no content"
-      ) size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp(true, default = Some(null))
+        geopointField("name") latLon true geohash true,
+        dateField("content") nullValue "no content"
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, default = Some(null))
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_3.json")
   }

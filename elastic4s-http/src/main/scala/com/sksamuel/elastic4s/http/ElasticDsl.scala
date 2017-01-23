@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.http.get.GetHttpExecutables
-import com.sksamuel.elastic4s.http.index.IndexHttpExecutables
+import com.sksamuel.elastic4s.http.index.{CreateIndexExecutables, IndexHttpExecutables}
 import com.sksamuel.exts.Logging
 
-trait HttpDsl
+trait ElasticDsl
   extends Logging
     with IndexHttpExecutables
+    with CreateIndexExecutables
     with GetHttpExecutables
 
-object HttpDsl extends HttpDsl
+object ElasticDsl extends ElasticDsl
