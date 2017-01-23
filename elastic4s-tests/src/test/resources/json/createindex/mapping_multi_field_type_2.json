@@ -18,7 +18,7 @@
                   "index": "analyzed"
                 },
                 "any_name": {
-                  "type": "string",
+                  "type": "text",
                   "index": "analyzed"
                 }
               }
@@ -28,11 +28,11 @@
           "path": "just_name",
           "fields": {
             "last_name": {
-              "type": "string",
+              "type": "text",
               "index": "analyzed"
             },
             "any_name": {
-              "type": "string",
+              "type": "text",
               "index": "analyzed"
             }
           }

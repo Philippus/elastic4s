@@ -65,7 +65,7 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def boostNullValue(boostNullValue: Double): PutMappingDefinition = copy(boostNullValue = boostNullValue.some)
   def parent(parent: String): PutMappingDefinition = copy(parent = parent.some)
   def dynamic(dynamic: DynamicMapping): PutMappingDefinition = copy(dynamic = dynamic.some)
-  def meta(map: Map[String, Any]): PutMappingDefinition = copy(meta = meta)
+  def meta(map: Map[String, Any]): PutMappingDefinition = copy(meta = map)
   def dateDetection(dateDetection: Boolean): PutMappingDefinition = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): PutMappingDefinition = copy(numericDetection = numericDetection.some)
 
@@ -84,10 +84,10 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def timestamp(t: TimestampDefinition): PutMappingDefinition = copy(timestamp = t.some)
 
   def dynamicDateFormats(dynamic_date_formats: String*): PutMappingDefinition =
-    copy(dynamicDateFormats = dynamicDateFormats)
+    copy(dynamicDateFormats = dynamic_date_formats.toSeq)
 
   def dynamicDateFormats(dynamic_date_formats: Iterable[String]): PutMappingDefinition =
-    copy(dynamicDateFormats = dynamicDateFormats)
+    copy(dynamicDateFormats = dynamic_date_formats.toSeq)
 
   def routing(required: Boolean, path: Option[String] = None): PutMappingDefinition =
     copy(routing = Some(RoutingDefinition(required, path)))
@@ -136,7 +136,7 @@ case class MappingDefinition(`type`: String,
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)
   def parent(parent: String): MappingDefinition = copy(parent = parent.some)
   def dynamic(dynamic: DynamicMapping): MappingDefinition = copy(dynamic = dynamic.some)
-  def meta(map: Map[String, Any]): MappingDefinition = copy(meta = meta)
+  def meta(map: Map[String, Any]): MappingDefinition = copy(meta = map)
   def dateDetection(dateDetection: Boolean): MappingDefinition = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): MappingDefinition = copy(numericDetection = numericDetection.some)
 
@@ -155,10 +155,10 @@ case class MappingDefinition(`type`: String,
   def timestamp(t: TimestampDefinition): MappingDefinition = copy(timestamp = t.some)
 
   def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition =
-    copy(dynamicDateFormats = dynamicDateFormats)
+    copy(dynamicDateFormats = dynamic_date_formats.toSeq)
 
   def dynamicDateFormats(dynamic_date_formats: Iterable[String]): MappingDefinition =
-    copy(dynamicDateFormats = dynamicDateFormats)
+    copy(dynamicDateFormats = dynamic_date_formats.toSeq)
 
   def routing(required: Boolean, path: Option[String] = None): MappingDefinition =
     copy(routing = Some(RoutingDefinition(required, path)))
