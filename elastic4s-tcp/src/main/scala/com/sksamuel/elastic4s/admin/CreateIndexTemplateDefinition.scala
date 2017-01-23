@@ -32,7 +32,7 @@ case class CreateIndexTemplateDefinition(name: String,
     aliases.foreach(builder.addAlias)
 
     mappings.foreach { mapping =>
-      builder.addMapping(mapping.`type`, MappingContentBuilder.build(mapping))
+      builder.addMapping(mapping.`type`, MappingContentBuilder.buildWithName(mapping, mapping.`type`))
     }
 
     if (!settings.isEmpty || analysis.nonEmpty) {
