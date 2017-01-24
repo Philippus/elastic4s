@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{AbstractElasticSugar, ClassloaderLocalNodeProvider}
 import org.scalatest.{Matchers, WordSpec}
 
-class CreateIndexHttpTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
+class CreateIndexHttpTest extends WordSpec with Matchers with AbstractElasticSugar with ClassloaderLocalNodeProvider with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
