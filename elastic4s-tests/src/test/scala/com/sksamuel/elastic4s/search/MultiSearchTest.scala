@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{FlatSpec, Matchers}
@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class MultiSearchTest
     extends FlatSpec
-    with ElasticSugar
+    with SharedElasticSugar
     with Matchers
     with ScalaFutures {
 

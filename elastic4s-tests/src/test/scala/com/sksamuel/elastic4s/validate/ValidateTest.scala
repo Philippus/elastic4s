@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.validate
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class ValidateTest extends WordSpec with ElasticSugar with Matchers {
+class ValidateTest extends WordSpec with SharedElasticSugar with Matchers {
 
   implicit val duration: Duration = 10.seconds
 

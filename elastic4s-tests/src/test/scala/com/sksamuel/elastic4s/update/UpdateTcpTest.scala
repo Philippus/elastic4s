@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration._
 
-class UpdateTcpTest extends FlatSpec with MockitoSugar with ElasticSugar with Eventually with Matchers {
+class UpdateTcpTest extends FlatSpec with MockitoSugar with SharedElasticSugar with Eventually with Matchers {
 
   implicit val duration: Duration = 10.seconds
 

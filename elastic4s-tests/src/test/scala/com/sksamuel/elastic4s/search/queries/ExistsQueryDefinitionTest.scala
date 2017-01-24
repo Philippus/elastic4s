@@ -1,18 +1,17 @@
-package com.sksamuel.elastic4s.filters
+package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class ExistsQueryDefinitionTest extends WordSpec with ElasticSugar with Matchers {
+class ExistsQueryDefinitionTest extends WordSpec with SharedElasticSugar with Matchers {
 
   client.execute(
     bulk(
-      index into "person" / "interest" fields (
+      indexInto("person" / "interest") fields(
         "name" -> "reese",
         "weapon" -> "revolver"
       ),
-      index into "person" / "interest" fields (
+      indexInto("person" / "interest") fields(
         "name" -> "finch",
         "weapon" -> "computer"
       )
@@ -25,14 +24,14 @@ class ExistsQueryDefinitionTest extends WordSpec with ElasticSugar with Matchers
   "exists query" should {
     "match non-null fields" in {
       client.execute {
-        search in "person" / "interest" postFilter {
+        search("person" / "interest") postFilter {
           existsQuery("name")
         }
       }.await.totalHits shouldBe 2
     }
     "not match null fields" in {
       client.execute {
-        search in "person" / "interest" postFilter {
+        search("person" / "interest") postFilter {
           existsQuery("place")
         }
       }.await.totalHits shouldBe 0
