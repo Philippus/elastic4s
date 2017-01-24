@@ -12,7 +12,10 @@ trait GetHttpExecutables {
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
     override def execute(client: RestClient, request: GetDefinition): ResponseListener => Any = {
+
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
+      logger.debug(s"Endpoint=$endpoint")
+
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>
         if (!context.enabled) params.put("_source", "false")
@@ -27,7 +30,7 @@ trait GetHttpExecutables {
       request.realtime.map(_.toString).foreach(params.put("realtime", _))
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.foreach(params.put("versionType", _))
-      logger.debug(s"Endpoint=$endpoint")
+
       client.performRequestAsync("GET", endpoint, params.asJava, _: ResponseListener)
     }
   }
