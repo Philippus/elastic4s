@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.admin.IndexAdminApi
 import com.sksamuel.elastic4s.alias.AliasesApi
 import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, TokenizerApi}
 import com.sksamuel.elastic4s.bulk.BulkApi
@@ -31,6 +32,7 @@ trait ElasticApi
     with GetApi
     with HighlightApi
     with IndexApi
+    with IndexAdminApi
     with MappingApi
     with ReindexApi
     with ScriptApi

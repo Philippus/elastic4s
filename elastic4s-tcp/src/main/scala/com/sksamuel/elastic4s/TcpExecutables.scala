@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.admin.IndexAdminExecutables
 import com.sksamuel.elastic4s.alias.AliasExecutables
 import com.sksamuel.elastic4s.bulk.BulkExecutables
 import com.sksamuel.elastic4s.delete.DeleteExecutables
@@ -21,6 +22,7 @@ trait TcpExecutables
     with DeleteExecutables
     with ExplainExecutables
     with GetExecutables
+    with IndexAdminExecutables
     with IndexExecutables
     with MappingExecutables
     with ReindexExecutables

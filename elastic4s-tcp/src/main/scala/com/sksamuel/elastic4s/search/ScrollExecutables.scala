@@ -8,6 +8,7 @@ import org.elasticsearch.client.Client
 import scala.concurrent.Future
 
 trait ScrollExecutables {
+
   implicit object ScrollExecutable extends Executable[SearchScrollDefinition, SearchResponse, RichSearchResponse] {
     override def apply(client: Client, s: SearchScrollDefinition): Future[RichSearchResponse] = {
       val request = client.prepareSearchScroll(s.id)

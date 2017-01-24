@@ -8,12 +8,16 @@ import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
 
-trait ElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeProvider with BeforeAndAfterAll {
+trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with BeforeAndAfterAll {
   this: Suite with LocalNodeProvider =>
 
   override def afterAll(): Unit = {
     node.stop(true)
   }
+}
+
+trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeProvider {
+  this: Suite with LocalNodeProvider =>
 }
 
 /**

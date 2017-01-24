@@ -25,7 +25,7 @@ trait ElasticDsl
     with DeleteIndexDsl
     with FieldStatsDsl
     with ForceMergeDsl
-    with IndexAdminDsl
+    with IndexAdminApi
     with IndexRecoveryDsl
     with IndexTemplateDsl
     with PercolateDsl

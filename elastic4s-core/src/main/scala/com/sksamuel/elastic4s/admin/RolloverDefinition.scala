@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
+import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.admin.indices.rollover.RolloverRequestBuilder
 import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.common.unit.TimeValue
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -18,17 +16,6 @@ case class RolloverDefinition(sourceAlias: String,
                               waitForActiveShards: Option[Int] = None,
                               masterNodeTimeout: Option[FiniteDuration] = None
                              ) {
-
-  def populate(builder: RolloverRequestBuilder): Unit = {
-    maxIndexAgeCondition.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.addMaxIndexAgeCondition)
-    maxIndexDocsCondition.foreach(builder.addMaxIndexDocsCondition)
-    dryRun.foreach(builder.dryRun)
-    mappings.foreach { mapping => builder.mapping(mapping.`type`, MappingContentBuilder.buildWithName(mapping, mapping.`type`).string) }
-    newIndexName.foreach(builder.setNewIndexName)
-    settings.foreach(builder.settings)
-    waitForActiveShards.foreach(builder.waitForActiveShards)
-    masterNodeTimeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setMasterNodeTimeout)
-  }
 
   def waitForActiveShards(waitForActiveShards: Int): RolloverDefinition =
     copy(waitForActiveShards = waitForActiveShards.some)
