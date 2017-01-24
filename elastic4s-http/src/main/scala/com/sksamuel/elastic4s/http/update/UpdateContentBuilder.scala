@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.update.UpdateDefinition
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
-object UpdateEntityBuilder {
+object UpdateContentBuilder {
   def apply(request: UpdateDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

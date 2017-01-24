@@ -36,7 +36,7 @@ trait UpdateExecutables {
       request.versionType.foreach(params.put("versionType", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateEntityBuilder(request)
+      val body = UpdateContentBuilder(request)
       val entity = new StringEntity(body.string)
       logger.debug(s"Update Entity: ${body.string}")
 
