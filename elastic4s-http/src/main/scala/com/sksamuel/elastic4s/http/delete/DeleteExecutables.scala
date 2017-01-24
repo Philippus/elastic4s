@@ -1,14 +1,10 @@
 package com.sksamuel.elastic4s.http.delete
 
 import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
+import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
 import scala.collection.JavaConverters._
-
-case class Shards(total: Int,
-                  failed: Int,
-                  successful: Int)
 
 case class DeleteResponse(_shards: Shards,
                           found: Boolean,

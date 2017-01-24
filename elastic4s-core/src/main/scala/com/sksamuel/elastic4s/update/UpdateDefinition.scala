@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -14,7 +15,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
                             fetchSource: Option[FetchSource] = None,
                             parent: Option[String] = None,
                             retryOnConflict: Option[Int] = None,
-                            refresh: Option[String] = None,
+                            refresh: Option[RefreshPolicy] = None,
                             routing: Option[String] = None,
                             script: Option[ScriptDefinition] = None,
                             scriptedUpsert: Option[Boolean] = None,
@@ -34,7 +35,8 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def detectNoop(detectNoop: Boolean): UpdateDefinition = copy(detectNoop = detectNoop.some)
 
   // Sets the object to use for updates when a script is not specified.
-  def doc[T](t: T)(implicit indexable: Indexable[T]) = copy(documentSource = indexable.json(t).some)
+  def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = doc(indexable.json(t))
+  def doc(doc: String): UpdateDefinition = copy(documentSource = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
   def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
@@ -44,8 +46,6 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
 
   // Sets the fields to use for updates when a script is not specified.
   def doc(map: Map[String, Any]): UpdateDefinition = copy(documentFields = map)
-
-  def doc(doc: String): UpdateDefinition = copy(documentSource = doc.some)
 
   // Sets the field to use for updates when a script is not specified.
   //def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
@@ -80,7 +80,10 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def parent(parent: String): UpdateDefinition = copy(parent = parent.some)
 
   def routing(routing: String): UpdateDefinition = copy(routing = routing.some)
-  def refresh(refresh: String): UpdateDefinition = copy(refresh = refresh.some)
+
+  def refresh(refresh: String): UpdateDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
+  def refresh(refresh: RefreshPolicy): UpdateDefinition = copy(refresh = refresh.some)
+
   def retryOnConflict(retryOnConflict: Int): UpdateDefinition = copy(retryOnConflict = retryOnConflict.some)
 
   // executes this script as the update operation
@@ -105,6 +108,9 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
   def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = upsert(iterable.toMap)
+
+  def upsert[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = upsert(indexable.json(t))
+  def upsert(doc: String): UpdateDefinition = copy(upsertSource = doc.some)
 
   def versionType(versionType: String): UpdateDefinition = copy(versionType = versionType.some)
   def version(version: Long): UpdateDefinition = copy(version = version.some)

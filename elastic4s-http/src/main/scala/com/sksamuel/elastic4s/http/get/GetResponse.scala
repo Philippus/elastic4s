@@ -19,6 +19,7 @@ case class GetResponse(private val _id: String,
   def ref = DocumentRef(index, `type`, id)
   def exists = found
   def source = sourceAsMap
+
   def storedField(fieldName: String): HitField = new HitField {
     override def values: Seq[AnyRef] = fields(fieldName) match {
       case values: Seq[AnyRef] => values
@@ -29,6 +30,7 @@ case class GetResponse(private val _id: String,
     override def name: String = fieldName
     override def isMetadataField: Boolean = ???
   }
+
   def storedFieldsAsMap = Option(fields).getOrElse(Map.empty)
   def sourceAsMap = Option(_source).getOrElse(Map.empty)
 }

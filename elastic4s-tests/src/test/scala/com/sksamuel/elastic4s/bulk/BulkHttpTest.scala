@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.get
+package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedElasticSugar with ElasticDsl {
+class BulkHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedElasticSugar with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 

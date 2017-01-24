@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.http.delete.DeleteExecutables
 import com.sksamuel.elastic4s.http.get.GetHttpExecutables
 import com.sksamuel.elastic4s.http.index.{IndexAdminExecutables, IndexHttpExecutables, RefreshIndexExecutables}
+import com.sksamuel.elastic4s.http.update.UpdateExecutables
 import com.sksamuel.exts.Logging
 
 trait ElasticDsl
@@ -14,5 +15,6 @@ trait ElasticDsl
     with GetHttpExecutables
     with IndexHttpExecutables
     with RefreshIndexExecutables
+    with UpdateExecutables
 
 object ElasticDsl extends ElasticDsl
