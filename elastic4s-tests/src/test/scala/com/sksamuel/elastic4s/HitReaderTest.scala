@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 
-class HitReaderTest extends FlatSpec with MockitoSugar with ElasticSugar with Matchers {
+class HitReaderTest extends FlatSpec with MockitoSugar with SharedElasticSugar with Matchers {
 
   private val IndexName = "football"
 

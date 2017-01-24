@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
-import com.sksamuel.elastic4s.indexes.{CreateIndexApi, IndexApi}
+import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi}
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
@@ -22,11 +22,13 @@ import scala.concurrent.duration._
 
 // contains all the syntactic definitions
 trait ElasticApi
-  extends AliasesApi
+  extends ElasticImplicits
+    with AliasesApi
     with AnalyzerApi
     with BulkApi
     with CreateIndexApi
     with DeleteApi
+    with DeleteIndexApi
     with DynamicTemplateApi
     with ExplainApi
     with GetApi
@@ -49,3 +51,5 @@ trait ElasticApi
 
   def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 }
+
+object ElasticApi extends ElasticApi

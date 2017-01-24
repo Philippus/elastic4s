@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
@@ -8,7 +8,7 @@ import org.scalatest.mockito.MockitoSugar
 
 import scala.collection.JavaConverters._
 
-class MultiGetTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
 
   client.execute {
     createIndex("coldplay").shards(2).mappings(

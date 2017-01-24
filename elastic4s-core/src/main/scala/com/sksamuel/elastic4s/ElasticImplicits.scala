@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import scala.language.implicitConversions
+
 trait ElasticImplicits {
 
   @deprecated("use index / type not index -> type")

@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.bulk.BulkExecutables
 import com.sksamuel.elastic4s.delete.DeleteExecutables
 import com.sksamuel.elastic4s.explain.ExplainExecutables
 import com.sksamuel.elastic4s.get.GetExecutables
-import com.sksamuel.elastic4s.index.{CreateIndexExecutables, IndexExecutables}
+import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables}
 import com.sksamuel.elastic4s.mappings.MappingExecutables
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
 import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchExecutables}
@@ -20,6 +20,7 @@ trait TcpExecutables
     with BulkExecutables
     with CreateIndexExecutables
     with DeleteExecutables
+    with DeleteIndexExecutables
     with ExplainExecutables
     with GetExecutables
     with IndexAdminExecutables

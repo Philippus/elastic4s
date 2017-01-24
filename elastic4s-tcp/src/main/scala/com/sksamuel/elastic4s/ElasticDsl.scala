@@ -4,8 +4,7 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.index.{DeleteIndexDefinition, DeleteIndexDsl}
-import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.indexes.{DeleteIndexApi, _}
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches._
@@ -22,10 +21,8 @@ trait ElasticDsl
   extends ElasticApi
     with AggregationDsl
     with ClusterDsl
-    with DeleteIndexDsl
     with FieldStatsDsl
     with ForceMergeDsl
-    with IndexAdminApi
     with IndexRecoveryDsl
     with IndexTemplateDsl
     with PercolateDsl
@@ -179,7 +176,7 @@ trait ElasticDsl
   @deprecated("use putMapping(index)", "5.0.0")
   case object put {
     @deprecated("use putMapping(index)", "5.0.0")
-    def mapping(indexAndType: IndexAndType): PutMappingDefinition = new PutMappingDefinition(indexAndType)
+    def mapping(indexAndType: IndexAndType): PutMappingDefinition = PutMappingDefinition(indexAndType)
   }
 
   @deprecated("use phraseSuggestion(name)", "5.0.0")

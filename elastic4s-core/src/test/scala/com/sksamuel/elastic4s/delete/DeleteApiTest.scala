@@ -1,19 +1,20 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.index.VersionType
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.{FlatSpec, Matchers}
 
-class DeleteApiTest extends FlatSpec with Matchers with ElasticSugar with TypeCheckedTripleEquals {
+class DeleteApiTest extends FlatSpec with Matchers with TypeCheckedTripleEquals {
+
+  import com.sksamuel.elastic4s.ElasticApi._
 
   "a delete by id request" should "accept tuple for from" in {
-    delete id 141212 from "places" -> "cities"
+    delete(141212) from "places" -> "cities"
   }
 
   it should "parse slash indextype" in {
-    delete id 141212 from "index/type"
+    delete(141212) from "index/type"
   }
 
   it should "accept index and type in dot syntax" in {
@@ -31,7 +32,7 @@ class DeleteApiTest extends FlatSpec with Matchers with ElasticSugar with TypeCh
   }
 
   it should "accept version and version type" in {
-    delete id 141212 from "places" / "type1" version 53423l versionType VersionType.EXTERNAL
+    delete(141212) from "places" / "type1" version 53423l versionType VersionType.EXTERNAL
   }
 
   it should "accept refresh" in {
@@ -39,6 +40,6 @@ class DeleteApiTest extends FlatSpec with Matchers with ElasticSugar with TypeCh
   }
 
   "a delete by query request" should "support the dsl syntax" in {
-    deleteIn("places").by("query")
+  //  deleteIn("places").by("query")
   }
 }
