@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
-import com.sksamuel.elastic4s.http.{HttpClient, ElasticDsl}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.testkit.{AbstractElasticSugar, ClassloaderLocalNodeProvider, ElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.JavaConverters._
 
-class IndexHttpTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers with ElasticDsl {
+class IndexHttpTest extends WordSpec with MockitoSugar with AbstractElasticSugar with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
