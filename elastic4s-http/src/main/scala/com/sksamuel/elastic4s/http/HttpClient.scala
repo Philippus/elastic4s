@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source

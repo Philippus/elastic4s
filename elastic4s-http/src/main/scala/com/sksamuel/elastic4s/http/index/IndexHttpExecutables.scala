@@ -5,7 +5,8 @@ import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.XContentFactory
+import org.elasticsearch.common.bytes.BytesArray
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
 
@@ -28,17 +29,24 @@ trait IndexHttpExecutables {
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
 
-      val entity = request.source match {
-        case Some(json) => new StringEntity(json)
-        case None =>
-          val source = XContentFactory.jsonBuilder().startObject()
-          request.fields.foreach(XContentFieldValueWriter(source, _))
-          source.endObject()
-          new StringEntity(source.string())
-      }
+      val body = IndexContentBuilder(request)
+      val entity = new StringEntity(body.string)
 
       logger.debug(s"Endpoint=$endpoint")
       client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
+    }
+  }
+}
+
+object IndexContentBuilder {
+  def apply(request: IndexDefinition): XContentBuilder = {
+    request.source match {
+      case Some(json) => XContentFactory.jsonBuilder().rawValue(new BytesArray(json))
+      case None =>
+        val source = XContentFactory.jsonBuilder().startObject()
+        request.fields.foreach(XContentFieldValueWriter(source, _))
+        source.endObject()
+        source
     }
   }
 }
