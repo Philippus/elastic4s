@@ -2,14 +2,10 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.action.search._
 
 import scala.language.implicitConversions
 
-trait SearchDsl
-  extends QueryDsl
-    with HighlightApi {
-
+trait SearchApi {
   def search(index: String): SearchDefinition = search(IndexesAndTypes(index))
   def search(first: String, rest: String*): SearchDefinition = search(first +: rest)
   def search(indexes: Iterable[String]): SearchDefinition = search(Indexes(indexes.toSeq))
@@ -21,8 +17,4 @@ trait SearchDsl
 
   def multi(searches: Iterable[SearchDefinition]): MultiSearchDefinition = MultiSearchDefinition(searches)
   def multi(searches: SearchDefinition*): MultiSearchDefinition = MultiSearchDefinition(searches)
-
-//  def templateSearch(search: SearchDefinition) = SearchTemplateDefinition(search)
-
-  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 }

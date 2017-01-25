@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.searches
+package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition
 import org.elasticsearch.common.geo.GeoPoint

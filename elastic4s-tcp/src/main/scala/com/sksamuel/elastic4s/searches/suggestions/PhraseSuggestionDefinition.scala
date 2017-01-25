@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
+import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.xcontent.{XContentFactory, XContentType}
 import org.elasticsearch.script.Script

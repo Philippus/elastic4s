@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.searches.aggs.pipeline
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
 import org.elasticsearch.search.aggregations.pipeline.serialdiff.SerialDiffPipelineAggregationBuilder
+
 import scala.collection.JavaConverters._
 import com.sksamuel.exts.OptionImplicits._
 

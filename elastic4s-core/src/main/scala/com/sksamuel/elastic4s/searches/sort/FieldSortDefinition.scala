@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.sort
 
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.sort.{FieldSortBuilder, SortBuilders, SortMode, SortOrder}
 

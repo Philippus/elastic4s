@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.indexes.{DeleteIndexApi, _}
+import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, DeleteIndexDefinition, IndexDefinition}
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches._
@@ -14,6 +14,9 @@ import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
+import org.elasticsearch.action.search.SearchResponse
+
+import scala.language.implicitConversions
 
 // the entry point for TCP users. This is the trait that should be mixed in, or use the object
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
@@ -27,7 +30,7 @@ trait ElasticDsl
     with IndexTemplateDsl
     with PercolateDsl
     with PipelineAggregationDsl
-    with SearchDsl
+    with QueryDsl
     with SettingsDsl
     with ScoreDsl
     with ScrollDsl
@@ -38,6 +41,8 @@ trait ElasticDsl
     with TcpExecutables
     with BuildableTermsQueryImplicits
     with ElasticImplicits {
+
+  implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
   @deprecated("Use xxxAggregation(...) methods", "5.0.0")
   def agg = aggregation

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.sort
 
 import com.sksamuel.elastic4s.GeoDistance
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.unit.DistanceUnit

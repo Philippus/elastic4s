@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search
 
+import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.{Executable, Show}
-import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, RichMultiSearchResponse, RichSearchResponse, SearchDefinition}
 import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
 import org.elasticsearch.client.Client
 
@@ -12,7 +12,8 @@ trait SearchExecutables {
   implicit object SearchDefinitionExecutable
     extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[RichSearchResponse] = {
-      injectFutureAndMap(c.search(t.build, _))(RichSearchResponse.apply)
+      val builder = SearchBuilderFn(c, t)
+      injectFutureAndMap(builder.execute)(RichSearchResponse.apply)
     }
   }
 
@@ -28,12 +29,13 @@ trait SearchExecutables {
   implicit object MultiSearchDefinitionExecutable
     extends Executable[MultiSearchDefinition, MultiSearchResponse, RichMultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[RichMultiSearchResponse] = {
-      injectFutureAndMap(c.multiSearch(t.build, _))(RichMultiSearchResponse.apply)
+      val builder = MultiSearchBuilderFn(c, t)
+      injectFutureAndMap(builder.execute)(RichMultiSearchResponse.apply)
     }
   }
 
   implicit object SearchDefinitionShow extends Show[SearchDefinition] {
-    override def show(f: SearchDefinition): String = f._builder.toString
+    override def show(f: SearchDefinition): String = f.toString
   }
 
   implicit class SearchDefinitionShowOps(f: SearchDefinition) {

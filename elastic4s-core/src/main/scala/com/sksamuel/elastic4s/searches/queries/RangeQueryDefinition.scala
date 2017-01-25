@@ -26,3 +26,5 @@ case class RangeQueryDefinition(field: String,
   def timeZone(timeZone: String): RangeQueryDefinition = copy(timeZone = timeZone.some)
   def queryName(queryName: String): RangeQueryDefinition = copy(queryName = queryName.some)
 }
+
+case class RawQueryDefinition(json: String) extends QueryDefinition

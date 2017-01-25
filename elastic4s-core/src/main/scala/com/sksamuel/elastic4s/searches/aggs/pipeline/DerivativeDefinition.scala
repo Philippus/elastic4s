@@ -4,6 +4,7 @@ import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInter
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
 import org.elasticsearch.search.aggregations.pipeline.derivative.DerivativePipelineAggregationBuilder
+
 import scala.collection.JavaConverters._
 
 case class DerivativeDefinition(name: String,

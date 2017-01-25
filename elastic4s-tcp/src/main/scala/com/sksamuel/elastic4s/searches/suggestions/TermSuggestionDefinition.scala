@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
+import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import org.elasticsearch.search.suggest.{SortBy, SuggestBuilders}
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}

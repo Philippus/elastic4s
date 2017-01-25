@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.searches.sort
 
-import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
 import org.elasticsearch.search.sort.{ScriptSortBuilder, SortBuilders, SortMode, SortOrder}
