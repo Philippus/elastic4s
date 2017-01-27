@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.searches.queries.RegexpFlag
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.common.geo.GeoPoint
+import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.mapper.DynamicTemplate.MatchType
 import org.elasticsearch.index.query.{MultiMatchQueryBuilder, SimpleQueryStringFlag}

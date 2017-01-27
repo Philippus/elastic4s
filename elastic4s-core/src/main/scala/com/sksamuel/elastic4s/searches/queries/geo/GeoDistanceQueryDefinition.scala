@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
-import com.sksamuel.elastic4s.GeoDistance
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.common.geo.GeoDistance
 import org.elasticsearch.common.unit.DistanceUnit
 
 case class GeoDistanceQueryDefinition(field: String,

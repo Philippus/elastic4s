@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ScriptBuilder
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.{ScriptDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.metrics.tophits.TopHitsAggregationBuilder
@@ -32,17 +32,17 @@ case class TopHitsAggregationDefinition(name: String) extends AggregationDefinit
   }
 
   @deprecated("use sortBy", "5.0.0")
-  def sort(first: SortDefinition[_], rest: SortDefinition[_]*): this.type = sortBy(first +: rest)
+  def sort(first: SortDefinition, rest: SortDefinition*): this.type = sortBy(first +: rest)
 
   @deprecated("use sortBy", "5.0.0")
-  def sort(sorts: Iterable[SortDefinition[_]]): this.type = {
-    sorts.map(_.builder).foreach(builder.sort)
+  def sort(sorts: Iterable[SortDefinition]): this.type = {
+    sorts.map(SortBuilderFn.apply).foreach(builder.sort)
     this
   }
 
-  def sortBy(first: SortDefinition[_], rest: SortDefinition[_]*): this.type = sortBy(first +: rest)
-  def sortBy(sorts: Iterable[SortDefinition[_]]): this.type = {
-    sorts.map(_.builder).foreach(builder.sort)
+  def sortBy(first: SortDefinition, rest: SortDefinition*): this.type = sortBy(first +: rest)
+  def sortBy(sorts: Iterable[SortDefinition]): this.type = {
+    sorts.map(SortBuilderFn.apply).foreach(builder.sort)
     this
   }
 

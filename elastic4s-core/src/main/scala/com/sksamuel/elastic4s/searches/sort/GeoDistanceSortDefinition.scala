@@ -1,62 +1,38 @@
 package com.sksamuel.elastic4s.searches.sort
 
-import com.sksamuel.elastic4s.GeoDistance
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.GeoPoint
+import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query.GeoValidationMethod
-import org.elasticsearch.search.sort.{GeoDistanceSortBuilder, SortBuilders, SortMode, SortOrder}
+import org.elasticsearch.search.sort.{SortMode, SortOrder}
 
-class GeoDistanceSortDefinition(field: String,
-                                geohashes: Seq[String] = Nil,
-                                points: Seq[GeoPoint] = Nil) extends SortDefinition[GeoDistanceSortBuilder] {
+case class GeoDistanceSortDefinition(field: String,
+                                     geohashes: Seq[String] = Nil,
+                                     points: Seq[GeoPoint] = Nil,
+                                     nestedFilter: Option[QueryDefinition] = None,
+                                     nestedPath: Option[String] = None,
+                                     sortMode: Option[SortMode] = None,
+                                     order: Option[SortOrder] = None,
+                                     unit: Option[DistanceUnit] = None,
+                                     validation: Option[GeoValidationMethod] = None,
+                                     geoDistance: Option[GeoDistance] = None) extends SortDefinition {
 
-  val builder: GeoDistanceSortBuilder = if (geohashes.nonEmpty) {
-    SortBuilders.geoDistanceSort(field, geohashes: _*).points(points: _*)
-  } else {
-    SortBuilders.geoDistanceSort(field, points: _*)
-  }
+  @deprecated("use sortMode", "5.2.0")
+  def mode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
 
-  def nested(nestedPath: String): this.type = {
-    builder.setNestedPath(nestedPath)
-    this
-  }
+  @deprecated("use sortMode", "5.2.0")
+  def mode(mode: SortMode): GeoDistanceSortDefinition = copy(sortMode = mode.some)
 
-  @deprecated("use sortMode", "5.0.0")
-  def mode(mode: SortMode): this.type = sortMode(mode)
-  def sortMode(mode: SortMode): this.type = {
-    builder.sortMode(mode)
-    this
-  }
+  def sortMode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: SortMode): GeoDistanceSortDefinition = copy(sortMode = mode.some)
 
+  def nestedPath(path: String): GeoDistanceSortDefinition = copy(nestedPath = path.some)
+  def nestedFilter(query: QueryDefinition): GeoDistanceSortDefinition = copy(nestedFilter = query.some)
 
-  def order(order: SortOrder): this.type = {
-    builder.order(order)
-    this
-  }
+  def order(order: SortOrder): GeoDistanceSortDefinition = copy(order = order.some)
+  def validation(validation: GeoValidationMethod): GeoDistanceSortDefinition = copy(validation = validation.some)
 
-  def validation(validation: GeoValidationMethod): this.type = {
-    builder.validation(validation)
-    this
-  }
-
-  def unit(unit: DistanceUnit): this.type = {
-    builder.unit(unit)
-    this
-  }
-
-  def nestedPath(nestedPath: String): this.type = {
-    builder.setNestedPath(nestedPath)
-    this
-  }
-
-  def nestedFilter(filter: QueryDefinition): this.type = {
-    builder.setNestedFilter(QueryBuilderFn(filter))
-    this
-  }
-
-  def geoDistance(geoDistance: GeoDistance): this.type = {
-    builder.geoDistance(org.elasticsearch.common.geo.GeoDistance.valueOf(geoDistance.name))
-    this
-  }
+  def unit(unit: DistanceUnit): GeoDistanceSortDefinition = copy(unit = unit.some)
+  def geoDistance(distance: GeoDistance): GeoDistanceSortDefinition = copy(geoDistance = distance.some)
 }

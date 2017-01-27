@@ -1,40 +1,32 @@
 package com.sksamuel.elastic4s.searches.sort
 
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.search.sort.{FieldSortBuilder, SortBuilders, SortMode, SortOrder}
+import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.search.sort.{SortMode, SortOrder}
 
-case class FieldSortDefinition(field: String) extends SortDefinition[FieldSortBuilder] {
+case class FieldSortDefinition(field: String,
+                               missing: Option[Any] = None,
+                               unmappedType: Option[String] = None,
+                               nestedFilter: Option[QueryDefinition] = None,
+                               nestedPath: Option[String] = None,
+                               sortMode: Option[SortMode] = None,
+                               order: Option[SortOrder] = None
+                              ) extends SortDefinition {
 
-  val builder = SortBuilders.fieldSort(field)
+  def missing(missing: AnyRef): FieldSortDefinition = copy(missing = missing.some)
+  def unmappedType(`type`: String): FieldSortDefinition = copy(unmappedType = `type`.some)
 
-  def missing(missing: AnyRef) = {
-    builder.missing(missing)
-    this
-  }
+  @deprecated("use sortMode", "5.2.0")
+  def mode(mode: String): FieldSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
 
-  def unmappedType(`type`: String) = {
-    builder.unmappedType(`type`)
-    this
-  }
+  @deprecated("use sortMode", "5.2.0")
+  def mode(mode: SortMode): FieldSortDefinition = copy(sortMode = mode.some)
 
-  def nestedFilter(query: QueryDefinition) = {
-    builder.setNestedFilter(QueryBuilderFn(query))
-    this
-  }
+  def sortMode(mode: String): FieldSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: SortMode): FieldSortDefinition = copy(sortMode = mode.some)
 
-  def nestedPath(nestedPath: String) = {
-    builder.setNestedPath(nestedPath)
-    this
-  }
+  def nestedPath(path: String): FieldSortDefinition = copy(nestedPath = path.some)
+  def nestedFilter(query: QueryDefinition): FieldSortDefinition = copy(nestedFilter = query.some)
 
-  def mode(m: String): FieldSortDefinition = mode(SortMode.valueOf(m.toUpperCase))
-  def mode(mode: SortMode): FieldSortDefinition = {
-    builder.sortMode(mode)
-    this
-  }
-
-  def order(order: SortOrder) = {
-    builder.order(order)
-    this
-  }
+  def order(order: SortOrder): FieldSortDefinition = copy(order = order.some)
 }

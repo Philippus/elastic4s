@@ -2,32 +2,22 @@ package com.sksamuel.elastic4s.searches.sort
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.{ScriptSortBuilder, SortBuilders, SortMode, SortOrder}
+import org.elasticsearch.search.sort.{SortMode, SortOrder}
 
 case class ScriptSortDefinition(script: ScriptDefinition,
-                                scriptSortType: ScriptSortType) extends SortDefinition[ScriptSortBuilder] {
+                                scriptSortType: ScriptSortType,
+                                sortMode: Option[SortMode] = None,
+                                nestedPath: Option[String] = None,
+                                order: Option[SortOrder] = None,
+                                nestedFilter: Option[QueryDefinition] = None) extends SortDefinition {
 
-  val builder = SortBuilders.scriptSort(ScriptBuilder(script), scriptSortType)
+  def sortMode(mode: String): ScriptSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: SortMode): ScriptSortDefinition = copy(sortMode = mode.some)
 
-  def sortMode(mode: String): this.type = sortMode(SortMode.valueOf(mode.toUpperCase))
-  def sortMode(mode: SortMode): this.type = {
-    builder.sortMode(mode)
-    this
-  }
+  def nestedPath(path: String): ScriptSortDefinition = copy(nestedPath = path.some)
+  def nestedFilter(query: QueryDefinition): ScriptSortDefinition = copy(nestedFilter = query.some)
 
-  def nestedPath(nestedPath: String): this.type = {
-    builder.setNestedPath(nestedPath)
-    this
-  }
-
-  def nestedFilter(nestedFilter: QueryDefinition): this.type = {
-    builder.setNestedFilter(QueryBuilderFn(nestedFilter))
-    this
-  }
-
-  def order(order: SortOrder): this.type = {
-    builder.order(order)
-    this
-  }
+  def order(order: SortOrder): ScriptSortDefinition = copy(order = order.some)
 }

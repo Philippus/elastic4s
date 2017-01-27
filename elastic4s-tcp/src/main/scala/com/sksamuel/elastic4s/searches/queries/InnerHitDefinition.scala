@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.script.SortBuilderFn
 import com.sksamuel.elastic4s.searches.{HighlightFieldDefinition, HighlightOptionsDefinition}
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
@@ -17,7 +18,7 @@ case class InnerHitDefinition(name: String,
                               explain: Option[Boolean] = None,
                               storedFieldNames: Seq[String] = Nil,
                               docValueFields: Seq[String] = Nil,
-                              sorts: Seq[SortDefinition[_]] = Nil,
+                              sorts: Seq[SortDefinition] = Nil,
                               from: Option[Int] = None,
                               highlights: Seq[HighlightFieldDefinition] = Nil) {
 
@@ -30,7 +31,7 @@ case class InnerHitDefinition(name: String,
     version.foreach(builder.setVersion)
     size.foreach(builder.setSize)
     docValueFields.foreach(builder.addDocValueField)
-    sorts.map(_.builder).foreach(builder.addSort)
+    sorts.map(SortBuilderFn.apply).foreach(builder.addSort)
     if (storedFieldNames.nonEmpty)
       builder.setStoredFieldNames(storedFieldNames.asJava)
     if (highlights.nonEmpty) {
@@ -40,8 +41,8 @@ case class InnerHitDefinition(name: String,
     builder
   }
 
-  def sortBy(sorts: SortDefinition[_]*): InnerHitDefinition = sortBy(sorts)
-  def sortBy(sorts: Iterable[SortDefinition[_]]): InnerHitDefinition = copy(sorts = sorts.toSeq)
+  def sortBy(sorts: SortDefinition*): InnerHitDefinition = sortBy(sorts)
+  def sortBy(sorts: Iterable[SortDefinition]): InnerHitDefinition = copy(sorts = sorts.toSeq)
 
   def highlighting(highlights: HighlightFieldDefinition*): InnerHitDefinition = highlighting(highlights)
   def highlighting(highlights: Iterable[HighlightFieldDefinition]): InnerHitDefinition =

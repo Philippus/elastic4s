@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.script.ScriptFieldDefinition
+import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
@@ -30,7 +30,7 @@ object SearchBuilderFn {
     search.trackScores.foreach(builder.setTrackScores)
     search.terminateAfter.foreach(builder.setTerminateAfter)
     search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
-    search.scroll.foreach(builder.setScroll)
+    search.keepAlive.foreach(builder.setScroll)
     search.indexBoosts.foreach { case (index, boost) => builder.addIndexBoost(index, boost.toFloat) }
     search.searchType.foreach(builder.setSearchType)
     search.indicesOptions.foreach(builder.setIndicesOptions)
@@ -43,7 +43,7 @@ object SearchBuilderFn {
 
     if (search.sorts.nonEmpty)
       search.sorts.foreach { sort =>
-        builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, sort.builder)
+        builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
       }
 
     if (search.scriptFields.nonEmpty)

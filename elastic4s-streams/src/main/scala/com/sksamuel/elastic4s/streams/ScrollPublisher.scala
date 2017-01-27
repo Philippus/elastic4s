@@ -24,8 +24,7 @@ class ScrollPublisher private[streams](client: ElasticClient,
                                        search: SearchDefinition,
                                        elements: Long)
                                       (implicit actorRefFactory: ActorRefFactory) extends Publisher[RichSearchHit] {
-
-  require(search.build.scroll() != null, "Search Definition must have a scroll to be used as Publisher")
+  require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
   override def subscribe(s: Subscriber[_ >: RichSearchHit]): Unit = {
     // Rule 1.9 subscriber cannot be null
@@ -81,7 +80,7 @@ class PublishActor(client: ElasticClient,
   private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
 
   // Parse the keep alive setting out of the original query.
-  private val keepAlive = Option(query.build.scroll).map(s => s.keepAlive).map(t => t.toString).getOrElse("1m")
+  private val keepAlive = Option(query.keepAlive).map(t => t.toString).getOrElse("1m")
 
   // rule 1.03 the subscription should not send any results until the onSubscribe call has returned
   // even tho the user might call request in the onSubscribe, we can't start sending the results yet.

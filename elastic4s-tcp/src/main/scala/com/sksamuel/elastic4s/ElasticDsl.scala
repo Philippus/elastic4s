@@ -12,9 +12,10 @@ import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreDsl
-import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortDsl}
+import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition, SortApi}
 import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.search.sort.SortOrder
 
 import scala.language.implicitConversions
 
@@ -34,7 +35,6 @@ trait ElasticDsl
     with SettingsDsl
     with ScoreDsl
     with ScrollDsl
-    with SortDsl
     with SnapshotDsl
     with SuggestionDsl
     with TokenFilterDsl
@@ -175,7 +175,9 @@ trait ElasticDsl
 
   case object score {
     @deprecated("use scoreSort()", "5.0.0")
-    def sort: ScoreSortDefinition = ScoreSortDefinition()
+    def sort = new {
+      def order(order: SortOrder): ScoreSortDefinition = ScoreSortDefinition(order)
+    }
   }
 
   @deprecated("use putMapping(index)", "5.0.0")

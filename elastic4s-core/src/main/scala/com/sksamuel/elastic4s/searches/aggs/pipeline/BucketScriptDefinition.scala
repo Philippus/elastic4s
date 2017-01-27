@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
-import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
-import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
 import org.elasticsearch.search.aggregations.pipeline.bucketscript.BucketScriptPipelineAggregationBuilder
 
 case class BucketScriptDefinition(name: String,
@@ -15,12 +13,12 @@ case class BucketScriptDefinition(name: String,
 
   type T = BucketScriptPipelineAggregationBuilder
 
-  def builder: T = {
-    val builder = PipelineAggregatorBuilders.bucketScript(name, ScriptBuilder(script), bucketsPaths: _*)
-    format.foreach(builder.format)
-    gapPolicy.foreach(builder.gapPolicy)
-    builder
-  }
+  def builder: T = ???
+//    val builder = PipelineAggregatorBuilders.bucketScript(name, ScriptBuilder(script), bucketsPaths: _*)
+//    format.foreach(builder.format)
+//    gapPolicy.foreach(builder.gapPolicy)
+//    builder
+//  }
 
   def format(format: String): BucketScriptDefinition = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): BucketScriptDefinition = copy(gapPolicy = Some(gapPolicy))
