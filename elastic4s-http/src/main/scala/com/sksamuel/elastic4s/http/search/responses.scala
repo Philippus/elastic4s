@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.syntax.either._
-import com.sksamuel.elastic4s.{Hit, HitReader}
 import com.sksamuel.elastic4s.http.Shards
+import com.sksamuel.elastic4s.{Hit, HitReader}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 case class SearchHit(private val _id: String,
                      private val _index: String,
@@ -17,8 +18,23 @@ case class SearchHit(private val _id: String,
   override def version: Long = _version
 
   override def sourceAsMap: Map[String, AnyRef] = _source
-  override def sourceAsBytes: Array[Byte] = ???
-  override def sourceAsString: String = ???
+  override def sourceAsBytes: Array[Byte] = sourceAsString.getBytes("UTF8")
+  override def sourceAsString: String = sourceAsXContentBuilder.string
+
+  def sourceAsXContentBuilder: XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    def addMap(map: Map[String, AnyRef]): Unit = {
+      builder.startObject()
+      map.foreach {
+        case (key, value: Map[String, AnyRef]) => addMap(value)
+        case (key, value) => builder.field(key, value)
+      }
+      builder.endObject()
+    }
+    addMap(_source)
+    builder
+  }
+
   override def exists: Boolean = true
 }
 

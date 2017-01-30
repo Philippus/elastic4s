@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.WordSpec
@@ -89,7 +90,7 @@ class SearchHttpTest
         search("chess") query matchAllQuery()
       }.await.totalHits shouldBe 8
     }
-    "support sorting" in {
+    "support sorting in a single type" in {
       http.execute {
         search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
       }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
@@ -105,5 +106,13 @@ class SearchHttpTest
         search("chess").matchAll()
       }.await.size shouldBe 8
     }
+    "support unmarshalling through a HitReader" in {
+      implicit val reader = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
+      http.execute {
+        search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name") size 3
+      }.await.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
+    }
   }
 }
+
+case class Piece(name: String, value: Int, count: Int)
