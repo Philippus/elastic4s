@@ -9,12 +9,14 @@ case class SimpleStringQueryDefinition(query: String,
                                        analyzeWildcard: Option[Boolean] = None,
                                        operator: Option[String] = None,
                                        queryName: Option[String] = None,
+                                       quote_field_suffix: Option[String] = None,
                                        lenient: Option[Boolean] = None,
                                        fields: Seq[(String, Double)] = Nil,
                                        flags: Seq[SimpleQueryStringFlag] = Nil,
                                        minimumShouldMatch: Option[Int] = None
                                       ) extends QueryDefinition {
 
+  def quoteFieldSuffix(suffix: String): SimpleStringQueryDefinition = copy(quote_field_suffix = suffix.some)
   def flags(flags: SimpleQueryStringFlag*): SimpleStringQueryDefinition = copy(flags = flags)
   def analyzer(analyzer: String): SimpleStringQueryDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): SimpleStringQueryDefinition = copy(analyzer = analyzer.name.some)

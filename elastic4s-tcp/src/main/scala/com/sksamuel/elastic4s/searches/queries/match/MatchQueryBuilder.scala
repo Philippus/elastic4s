@@ -15,7 +15,7 @@ object MatchQueryBuilder {
     q.lenient.foreach(builder.lenient)
     q.maxExpansions.foreach(builder.maxExpansions)
     q.minimumShouldMatch.foreach(builder.minimumShouldMatch)
-    q.op.foreach(builder.operator)
+    q.operator.foreach(builder.operator)
     q.prefixLength.foreach(builder.prefixLength)
     q.queryName.foreach(builder.queryName)
     q.slop.foreach(builder.slop)

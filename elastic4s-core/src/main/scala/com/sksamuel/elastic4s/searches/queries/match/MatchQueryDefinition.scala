@@ -16,7 +16,7 @@ case class MatchQueryDefinition(field: String,
                                 lenient: Option[Boolean] = None,
                                 maxExpansions: Option[Int] = None,
                                 minimumShouldMatch: Option[String] = None,
-                                op: Option[Operator] = None,
+                                operator: Option[Operator] = None,
                                 prefixLength: Option[Int] = None,
                                 queryName: Option[String] = None,
                                 slop: Option[Int] = None,
@@ -47,8 +47,8 @@ case class MatchQueryDefinition(field: String,
 
   def withAndOperator() = operator("AND")
   def withOrOperator() = operator("OR")
-  def operator(op: String): MatchQueryDefinition = copy(op = Operator.valueOf(op.toUpperCase).some)
-  def operator(op: Operator): MatchQueryDefinition = copy(op = op.some)
+  def operator(op: String): MatchQueryDefinition = copy(operator = Operator.valueOf(op.toUpperCase).some)
+  def operator(op: Operator): MatchQueryDefinition = copy(operator = op.some)
 
   def queryName(queryName: String): MatchQueryDefinition = copy(queryName = queryName.some)
 

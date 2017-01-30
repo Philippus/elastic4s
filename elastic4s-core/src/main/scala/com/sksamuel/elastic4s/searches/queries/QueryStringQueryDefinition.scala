@@ -13,6 +13,7 @@ case class QueryStringQueryDefinition(query: String,
                                       defaultField: Option[String] = None,
                                       enablePositionIncrements: Option[Boolean] = None,
                                       fields: Seq[(String, Float)] = Nil,
+                                      fuzziness: Option[String] = None,
                                       fuzzyMaxExpansions: Option[Int] = None,
                                       fuzzyPrefixLength: Option[Int] = None,
                                       fuzzyRewrite: Option[String] = None,
@@ -49,6 +50,9 @@ case class QueryStringQueryDefinition(query: String,
 
   def fuzzyMaxExpansions(fuzzyMaxExpansions: Int): QueryStringQueryDefinition =
     copy(fuzzyMaxExpansions = fuzzyMaxExpansions.some)
+
+  def fuzziness(fuzziness: String): QueryStringQueryDefinition =
+    copy(fuzziness = fuzziness.some)
 
   def fuzzyRewrite(fuzzyRewrite: String): QueryStringQueryDefinition =
     copy(fuzzyRewrite = fuzzyRewrite.some)
