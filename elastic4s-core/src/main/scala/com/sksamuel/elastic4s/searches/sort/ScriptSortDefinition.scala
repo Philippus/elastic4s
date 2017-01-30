@@ -13,6 +13,9 @@ case class ScriptSortDefinition(script: ScriptDefinition,
                                 order: Option[SortOrder] = None,
                                 nestedFilter: Option[QueryDefinition] = None) extends SortDefinition {
 
+  def mode(mode: String): ScriptSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def mode(mode: SortMode): ScriptSortDefinition = copy(sortMode = mode.some)
+
   def sortMode(mode: String): ScriptSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): ScriptSortDefinition = copy(sortMode = mode.some)
 
@@ -20,4 +23,5 @@ case class ScriptSortDefinition(script: ScriptDefinition,
   def nestedFilter(query: QueryDefinition): ScriptSortDefinition = copy(nestedFilter = query.some)
 
   def order(order: SortOrder): ScriptSortDefinition = copy(order = order.some)
+  def sortOrder(order: SortOrder): ScriptSortDefinition = copy(order = order.some)
 }

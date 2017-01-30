@@ -39,7 +39,7 @@ object FieldSortBuilderFn {
     d.nestedFilter.map(QueryBuilderFn.apply).foreach(builder.setNestedFilter)
     d.unmappedType.foreach(builder.unmappedType)
     d.missing.foreach(builder.missing)
-    d.order.foreach(builder.order)
+    builder.order(d.order)
     d.nestedPath.foreach(builder.setNestedPath)
     d.sortMode.foreach(builder.sortMode)
     builder

@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.searches
 
-import java.nio.ByteBuffer
-
 import com.sksamuel.elastic4s.Hit
 import com.sksamuel.exts.StringOption
 import org.apache.lucene.search.Explanation

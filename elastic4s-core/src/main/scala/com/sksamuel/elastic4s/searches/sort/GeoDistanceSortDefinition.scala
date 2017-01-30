@@ -18,10 +18,7 @@ case class GeoDistanceSortDefinition(field: String,
                                      validation: Option[GeoValidationMethod] = None,
                                      geoDistance: Option[GeoDistance] = None) extends SortDefinition {
 
-  @deprecated("use sortMode", "5.2.0")
   def mode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
-
-  @deprecated("use sortMode", "5.2.0")
   def mode(mode: SortMode): GeoDistanceSortDefinition = copy(sortMode = mode.some)
 
   def sortMode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
@@ -31,6 +28,8 @@ case class GeoDistanceSortDefinition(field: String,
   def nestedFilter(query: QueryDefinition): GeoDistanceSortDefinition = copy(nestedFilter = query.some)
 
   def order(order: SortOrder): GeoDistanceSortDefinition = copy(order = order.some)
+  def sortOrder(order: SortOrder): GeoDistanceSortDefinition = copy(order = order.some)
+
   def validation(validation: GeoValidationMethod): GeoDistanceSortDefinition = copy(validation = validation.some)
 
   def unit(unit: DistanceUnit): GeoDistanceSortDefinition = copy(unit = unit.some)

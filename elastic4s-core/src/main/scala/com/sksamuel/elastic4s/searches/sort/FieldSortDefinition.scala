@@ -10,16 +10,13 @@ case class FieldSortDefinition(field: String,
                                nestedFilter: Option[QueryDefinition] = None,
                                nestedPath: Option[String] = None,
                                sortMode: Option[SortMode] = None,
-                               order: Option[SortOrder] = None
+                               order: SortOrder = SortOrder.ASC
                               ) extends SortDefinition {
 
   def missing(missing: AnyRef): FieldSortDefinition = copy(missing = missing.some)
   def unmappedType(`type`: String): FieldSortDefinition = copy(unmappedType = `type`.some)
 
-  @deprecated("use sortMode", "5.2.0")
   def mode(mode: String): FieldSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
-
-  @deprecated("use sortMode", "5.2.0")
   def mode(mode: SortMode): FieldSortDefinition = copy(sortMode = mode.some)
 
   def sortMode(mode: String): FieldSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
@@ -28,5 +25,6 @@ case class FieldSortDefinition(field: String,
   def nestedPath(path: String): FieldSortDefinition = copy(nestedPath = path.some)
   def nestedFilter(query: QueryDefinition): FieldSortDefinition = copy(nestedFilter = query.some)
 
-  def order(order: SortOrder): FieldSortDefinition = copy(order = order.some)
+  def order(order: SortOrder): FieldSortDefinition = copy(order = order)
+  def sortOrder(order: SortOrder): FieldSortDefinition = copy(order = order)
 }

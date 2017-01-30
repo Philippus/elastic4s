@@ -17,11 +17,42 @@ class SearchHttpTest
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
+    createIndex("chess").mappings(
+      mapping("pieces").fields(
+        textField("name").fielddata(true)
+      ),
+      mapping("openings").fields(
+        textField("name").fielddata(true)
+      )
+    )
+  }.await
+
+  http.execute {
     bulk(
       indexInto("chess/pieces").fields(
         "name" -> "queen",
         "value" -> 10,
         "count" -> 1
+      ),
+      indexInto("chess/pieces").fields(
+        "name" -> "king",
+        "value" -> 0,
+        "count" -> 1
+      ),
+      indexInto("chess/pieces").fields(
+        "name" -> "bishop",
+        "value" -> 3,
+        "count" -> 2
+      ),
+      indexInto("chess/pieces").fields(
+        "name" -> "knight",
+        "value" -> 3,
+        "count" -> 2
+      ),
+      indexInto("chess/pieces").fields(
+        "name" -> "rook",
+        "value" -> 5,
+        "count" -> 2
       ),
       indexInto("chess/pieces").fields(
         "name" -> "pawn",
@@ -32,7 +63,7 @@ class SearchHttpTest
         "name" -> "queen gambit",
         "rank" -> 0.2
       ),
-      indexInto("chess/pieces").fields(
+      indexInto("chess/openings").fields(
         "name" -> "modern defence",
         "rank" -> -0.1
       )
@@ -53,13 +84,26 @@ class SearchHttpTest
         search("chess" / "pieces") query matchQuery("name", "queen")
       }.await.totalHits shouldBe 1
     }
+    "support match all query" in {
+      http.execute {
+        search("chess") query matchAllQuery()
+      }.await.totalHits shouldBe 8
+    }
+    "support sorting" in {
+      http.execute {
+        search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
+      }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
+      http.execute {
+        search("chess" / "openings") query matchAllQuery() sortBy fieldSort("name")
+      }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("modern defence", "queen gambit")
+    }
     "support limits" in {
       http.execute {
         search("chess").matchAll().limit(2)
       }.await.size shouldBe 2
       http.execute {
         search("chess").matchAll()
-      }.await.size shouldBe 4
+      }.await.size shouldBe 8
     }
   }
 }

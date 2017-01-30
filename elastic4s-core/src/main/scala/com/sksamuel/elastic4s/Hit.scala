@@ -32,7 +32,7 @@ trait Hit {
   def sourceAsBytes: Array[Byte]
   def sourceAsString: String
   def sourceAsByteBuffer: ByteBuffer = ByteBuffer.wrap(sourceAsBytes)
-  def isSourceEmpty: Boolean
+  def isSourceEmpty: Boolean = sourceAsMap.isEmpty
 
   def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)
 
