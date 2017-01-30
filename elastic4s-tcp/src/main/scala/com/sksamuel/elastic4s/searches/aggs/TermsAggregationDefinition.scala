@@ -90,4 +90,20 @@ case class TermsAggregationDefinition(name: String) extends AggregationDefinitio
     builder.includeExclude(new IncludeExclude(inc, exc))
     this
   }
+
+  def includeExclude(include: Iterable[Long], exclude: Iterable[Long]): TermsAggregationDefinition = {
+    // empty array doesn't work, has to be null
+    val inc = if (include.isEmpty) null else include.toArray
+    val exc = if (exclude.isEmpty) null else exclude.toArray
+    builder.includeExclude(new IncludeExclude(inc, exc))
+    this
+  }
+
+  def includeExclude(include: Iterable[Double], exclude: Iterable[Double]): TermsAggregationDefinition = {
+    // empty array doesn't work, has to be null
+    val inc = if (include.isEmpty) null else include.toArray
+    val exc = if (exclude.isEmpty) null else exclude.toArray
+    builder.includeExclude(new IncludeExclude(inc, exc))
+    this
+  }
 }
