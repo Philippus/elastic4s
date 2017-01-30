@@ -46,40 +46,40 @@ trait UpdateExecutables {
 
     def builder(c: Client, t: UpdateDefinition): UpdateRequestBuilder = {
 
-      val _builder = c.prepareUpdate(t.indexAndTypes.index, t.indexAndTypes.types.headOption.orNull, t.id)
+      val builder = c.prepareUpdate(t.indexAndTypes.index, t.indexAndTypes.types.headOption.orNull, t.id)
 
       t.fetchSource.foreach { context =>
-        _builder.setFetchSource(context.enabled)
+        builder.setFetchSource(context.fetchSource)
         if (context.includes.nonEmpty || context.excludes.nonEmpty)
-          _builder.setFetchSource(context.includes.toArray, context.excludes.toArray)
+          builder.setFetchSource(context.includes, context.excludes)
       }
 
-      t.detectNoop.foreach(_builder.setDetectNoop)
-      t.docAsUpsert.foreach(_builder.setDocAsUpsert)
+      t.detectNoop.foreach(builder.setDetectNoop)
+      t.docAsUpsert.foreach(builder.setDocAsUpsert)
 
-      t.upsertSource.foreach(_builder.setUpsert)
-      t.documentSource.foreach(_builder.setDoc)
+      t.upsertSource.foreach(builder.setUpsert)
+      t.documentSource.foreach(builder.setDoc)
 
       if (t.upsertFields.nonEmpty) {
-        _builder.setUpsert(fieldsAsXContent(FieldsMapper.mapFields(t.upsertFields)))
+        builder.setUpsert(fieldsAsXContent(FieldsMapper.mapFields(t.upsertFields)))
       }
 
       if (t.documentFields.nonEmpty) {
-        _builder.setDoc(fieldsAsXContent(FieldsMapper.mapFields(t.documentFields)))
+        builder.setDoc(fieldsAsXContent(FieldsMapper.mapFields(t.documentFields)))
       }
 
-      t.routing.foreach(_builder.setRouting)
-      t.refresh.foreach(_builder.setRefreshPolicy)
-      t.ttl.foreach(_builder.setTtl)
-      t.timeout.map(dur => TimeValue.timeValueMillis(dur.toMillis)).foreach(_builder.setTimeout)
-      t.retryOnConflict.foreach(_builder.setRetryOnConflict)
-      t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
-      t.parent.foreach(_builder.setParent)
-      t.script.map(ScriptBuilder.apply).foreach(_builder.setScript)
-      t.scriptedUpsert.foreach(_builder.setScriptedUpsert)
-      t.version.foreach(_builder.setVersion)
-      t.versionType.map(VersionType.fromString).foreach(_builder.setVersionType)
-      _builder
+      t.routing.foreach(builder.setRouting)
+      t.refresh.foreach(builder.setRefreshPolicy)
+      t.ttl.foreach(builder.setTtl)
+      t.timeout.map(dur => TimeValue.timeValueMillis(dur.toMillis)).foreach(builder.setTimeout)
+      t.retryOnConflict.foreach(builder.setRetryOnConflict)
+      t.waitForActiveShards.foreach(builder.setWaitForActiveShards)
+      t.parent.foreach(builder.setParent)
+      t.script.map(ScriptBuilder.apply).foreach(builder.setScript)
+      t.scriptedUpsert.foreach(builder.setScriptedUpsert)
+      t.version.foreach(builder.setVersion)
+      t.versionType.map(VersionType.fromString).foreach(builder.setVersionType)
+      builder
     }
 
     override def apply(c: Client, t: UpdateDefinition): Future[RichUpdateResponse] = {

@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -12,7 +13,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
                             id: String,
                             detectNoop: Option[Boolean] = None,
                             docAsUpsert: Option[Boolean] = None,
-                            fetchSource: Option[FetchSource] = None,
+                            fetchSource: Option[FetchSourceContext] = None,
                             parent: Option[String] = None,
                             retryOnConflict: Option[Int] = None,
                             refresh: Option[RefreshPolicy] = None,
@@ -71,11 +72,11 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   // should the doc be also used for a new document
   def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = copy(docAsUpsert = shouldUpsertDoc.some)
 
-  def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = FetchSource(fetch, Nil, Nil).some)
+  def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = new FetchSourceContext(fetch).some)
 
   def fetchSource(includes: Iterable[String],
                   excludes: Iterable[String]): UpdateDefinition =
-    copy(fetchSource = FetchSource(true, includes.toSeq, excludes.toSeq).some)
+    copy(fetchSource = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def parent(parent: String): UpdateDefinition = copy(parent = parent.some)
 
