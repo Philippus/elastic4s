@@ -80,7 +80,7 @@ class PublishActor(client: ElasticClient,
   private val queue: mutable.Queue[RichSearchHit] = mutable.Queue.empty
 
   // Parse the keep alive setting out of the original query.
-  private val keepAlive = Option(query.keepAlive).map(t => t.toString).getOrElse("1m")
+  private val keepAlive = query.keepAlive.map(_.toString).getOrElse("1m")
 
   // rule 1.03 the subscription should not send any results until the onSubscribe call has returned
   // even tho the user might call request in the onSubscribe, we can't start sending the results yet.
