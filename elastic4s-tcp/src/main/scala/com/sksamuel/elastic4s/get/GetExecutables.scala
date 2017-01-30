@@ -47,11 +47,11 @@ trait GetExecutables {
 
     def builder(c: Client, t: MultiGetDefinition): MultiGetRequestBuilder = {
 
-      val _builder = c.prepareMultiGet()
+      val builder = c.prepareMultiGet()
 
-      t.preference.foreach(_builder.setPreference)
-      t.realtime.foreach(_builder.setRealtime)
-      t.refresh.foreach(_builder.setRefresh)
+      t.preference.foreach(builder.setPreference)
+      t.realtime.foreach(builder.setRealtime)
+      t.refresh.foreach(builder.setRefresh)
       t.gets foreach { get =>
 
         val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
@@ -68,10 +68,10 @@ trait GetExecutables {
         if (get.storedFields.nonEmpty)
           item.storedFields(get.storedFields: _*)
 
-        _builder.add(item)
+        builder.add(item)
       }
 
-      _builder
+      builder
     }
   }
 }

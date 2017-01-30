@@ -18,7 +18,8 @@ trait GetHttpExecutables {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>
-        if (!context.enabled) params.put("_source", "false")
+        if (!context.fetchSource)
+          params.put("_source", "false")
       }
       if (request.storedFields.nonEmpty) {
         params.put("stored_fields", request.storedFields.mkString(","))

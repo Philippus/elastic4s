@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import org.elasticsearch.common.xcontent.XContentFactory
 
-object BulkEntityBuilder {
+object BulkContentBuilder {
 
   def apply(bulk: BulkDefinition): Seq[String] = {
     val rows = List.newBuilder[String]

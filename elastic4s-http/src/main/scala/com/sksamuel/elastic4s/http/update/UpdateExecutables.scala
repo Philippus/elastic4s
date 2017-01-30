@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.update
 
+import cats.Show
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
@@ -16,6 +17,12 @@ case class UpdateResponse(_index: String,
                           forced_refresh: Boolean,
                           _shards: Shards)
 
+trait UpdateShow {
+  implicit object UpdateShow extends Show[UpdateDefinition] {
+    override def show(f: UpdateDefinition): String = UpdateContentBuilder(f).string()
+  }
+}
+
 trait UpdateExecutables {
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
@@ -26,7 +33,7 @@ trait UpdateExecutables {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
-        if (!context.enabled) params.put("_source", "false")
+        if (!context.fetchSource) params.put("_source", "false")
       }
       request.retryOnConflict.foreach(params.put("retry_on_conflict", _))
       request.parent.foreach(params.put("parent", _))
