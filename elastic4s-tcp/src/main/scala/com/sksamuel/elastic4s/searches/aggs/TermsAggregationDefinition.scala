@@ -91,7 +91,7 @@ case class TermsAggregationDefinition(name: String) extends AggregationDefinitio
     this
   }
 
-  def includeExclude(include: Iterable[Long], exclude: Iterable[Long]): TermsAggregationDefinition = {
+  def includeExcludeLongs(include: Iterable[Long], exclude: Iterable[Long]): TermsAggregationDefinition = {
     // empty array doesn't work, has to be null
     val inc = if (include.isEmpty) null else include.toArray
     val exc = if (exclude.isEmpty) null else exclude.toArray
@@ -99,7 +99,7 @@ case class TermsAggregationDefinition(name: String) extends AggregationDefinitio
     this
   }
 
-  def includeExclude(include: Iterable[Double], exclude: Iterable[Double]): TermsAggregationDefinition = {
+  def includeExcludeDoubles(include: Iterable[Double], exclude: Iterable[Double]): TermsAggregationDefinition = {
     // empty array doesn't work, has to be null
     val inc = if (include.isEmpty) null else include.toArray
     val exc = if (exclude.isEmpty) null else exclude.toArray
