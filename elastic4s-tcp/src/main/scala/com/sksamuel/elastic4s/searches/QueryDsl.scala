@@ -70,7 +70,10 @@ trait QueryDsl {
   def geoHashCell(field: String, value: GeoPoint): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value.geohash)
 
+  @deprecated("use geoPolygonQuery", "5.2.0")
   def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
+
+  def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
     def points(points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
