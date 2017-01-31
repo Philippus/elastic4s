@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.get.GetExecutables
 import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables}
 import com.sksamuel.elastic4s.mappings.MappingExecutables
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
-import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchExecutables}
+import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchImplicits}
 import com.sksamuel.elastic4s.task.TaskExecutables
 import com.sksamuel.elastic4s.termvectors.TermVectorsExecutables
 import com.sksamuel.elastic4s.update.UpdateExecutables
@@ -28,7 +28,7 @@ trait TcpExecutables
     with MappingExecutables
     with ReindexExecutables
     with ScrollExecutables
-    with SearchExecutables
+    with SearchImplicits
     with TaskExecutables
     with TermVectorsExecutables
     with UpdateExecutables

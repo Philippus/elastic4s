@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s.index
 
-import com.sksamuel.elastic4s.indexes.IndexDefinition
-import com.sksamuel.elastic4s.{Executable, Show, XContentFieldValueWriter}
+import com.sksamuel.elastic4s.indexes.{IndexDefinition, IndexShowImplicits}
+import com.sksamuel.elastic4s.{Executable, XContentFieldValueWriter}
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.concurrent.Future
 
-trait IndexExecutables {
+trait IndexExecutables extends IndexShowImplicits {
 
   implicit object IndexDefinitionExecutable
     extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
@@ -42,12 +42,7 @@ trait IndexExecutables {
     }
   }
 
-  implicit object IndexDefinitionShow
-    extends Show[IndexDefinition] {
-    override def show(f: IndexDefinition): String = f.toString
-  }
-
   implicit class IndexDefinitionShowOps(f: IndexDefinition) {
-    def show: String = IndexDefinitionShow.show(f)
+    def show: String = IndexShow.show(f)
   }
 }

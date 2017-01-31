@@ -1,16 +1,13 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.XContentFieldValueWriter
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
-import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
 
-trait IndexHttpExecutables {
+trait IndexImplicits extends IndexShowImplicits {
 
   implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
 
@@ -38,15 +35,4 @@ trait IndexHttpExecutables {
   }
 }
 
-object IndexContentBuilder {
-  def apply(request: IndexDefinition): XContentBuilder = {
-    request.source match {
-      case Some(json) => XContentFactory.jsonBuilder().rawValue(new BytesArray(json))
-      case None =>
-        val source = XContentFactory.jsonBuilder().startObject()
-        request.fields.foreach(XContentFieldValueWriter(source, _))
-        source.endObject()
-        source
-    }
-  }
-}
+

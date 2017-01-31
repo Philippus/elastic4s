@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.search
 
+import cats.Show
+import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.searches._
-import com.sksamuel.elastic4s.{Executable, Show}
 import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
 
-trait SearchExecutables {
+trait SearchImplicits {
 
   implicit object SearchDefinitionExecutable
     extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
@@ -43,9 +44,7 @@ trait SearchExecutables {
   }
 
   implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
-
     import compat.Platform.EOL
-
     override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
   }
 

@@ -17,13 +17,13 @@ case class UpdateResponse(_index: String,
                           forced_refresh: Boolean,
                           _shards: Shards)
 
-trait UpdateShow {
+object UpdateImplicits extends UpdateImplicits
+
+trait UpdateImplicits {
+
   implicit object UpdateShow extends Show[UpdateDefinition] {
     override def show(f: UpdateDefinition): String = UpdateContentBuilder(f).string()
   }
-}
-
-trait UpdateExecutables {
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
     override def execute(client: RestClient, request: UpdateDefinition): (ResponseListener) => Any = {

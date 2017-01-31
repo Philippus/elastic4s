@@ -14,7 +14,7 @@ case class DeleteResponse(_shards: Shards,
                           _version: Long,
                           result: String)
 
-trait DeleteExecutables {
+trait DeleteImplicits {
 
   implicit object DeleteExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
 

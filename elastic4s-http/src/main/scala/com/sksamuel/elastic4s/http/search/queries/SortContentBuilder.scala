@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.search
+package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 import org.elasticsearch.common.bytes.BytesArray

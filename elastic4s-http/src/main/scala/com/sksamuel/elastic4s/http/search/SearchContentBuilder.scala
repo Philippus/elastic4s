@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}

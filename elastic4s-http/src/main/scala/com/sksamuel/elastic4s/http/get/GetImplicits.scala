@@ -7,7 +7,9 @@ import org.elasticsearch.client.{ResponseListener, RestClient}
 
 import scala.collection.JavaConverters._
 
-trait GetHttpExecutables {
+object GetImplicits extends GetImplicits
+
+trait GetImplicits {
 
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 

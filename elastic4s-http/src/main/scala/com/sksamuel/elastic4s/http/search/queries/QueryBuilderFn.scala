@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s.http.search
+package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.http.search._
 import com.sksamuel.elastic4s.searches.queries.`match`.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.{QueryDefinition, QueryStringQueryDefinition, SimpleStringQueryDefinition}

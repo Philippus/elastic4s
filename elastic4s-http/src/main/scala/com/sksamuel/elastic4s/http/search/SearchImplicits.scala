@@ -1,14 +1,22 @@
 package com.sksamuel.elastic4s.http.search
 
+import cats.Show
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.collection.JavaConverters._
 
-trait SearchExecutables {
+trait SearchImplicits {
+
+  implicit object SearchShow extends Show[SearchDefinition] {
+    override def show(req: SearchDefinition): String = SearchContentBuilder(req).string()
+  }
+
+  implicit object MultiSearchShow extends Show[MultiSearchDefinition] {
+    override def show(req: MultiSearchDefinition): String = MultiSearchContentBuilder(req)
+  }
 
   implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
 
@@ -17,23 +25,7 @@ trait SearchExecutables {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
 
-      val body = request.searches.flatMap { search =>
-
-        val header = XContentFactory.jsonBuilder()
-        header.startObject()
-        header.field("index", search.indexesTypes.indexes.mkString(","))
-        if (search.indexesTypes.types.nonEmpty)
-          header.field("type", search.indexesTypes.types.mkString(","))
-        search.routing.foreach(header.field("routing", _))
-        search.pref.foreach(header.field("preference", _))
-        search.searchType.map(_.toString).foreach(header.field("search_type", _))
-        header.endObject()
-
-        val body = SearchContentBuilder(search)
-
-        Seq(header.string(), body.string())
-      }.mkString("\n") + "\n"
-
+      val body = MultiSearchContentBuilder(request)
       logger.debug("Executing msearch: " + body)
       val entity = new StringEntity(body)
 

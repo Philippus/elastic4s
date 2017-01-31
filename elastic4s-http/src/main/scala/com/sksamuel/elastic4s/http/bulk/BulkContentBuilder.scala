@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.http.bulk
 
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
-import com.sksamuel.elastic4s.http.index.IndexContentBuilder
 import com.sksamuel.elastic4s.http.update.UpdateContentBuilder
-import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import org.elasticsearch.common.xcontent.XContentFactory
 
