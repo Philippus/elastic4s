@@ -224,6 +224,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def limit(i: Int): SearchDefinition = size(i)
   def size(i: Int): SearchDefinition = copy(size = i.some)
 
+  @deprecated("Use the elasticsearch enum rather than the elastic4s one", "5.2.0")
   def preference(pref: com.sksamuel.elastic4s.Preference): SearchDefinition = preference(pref.value)
   def preference(pref: Preference): SearchDefinition = preference(pref.`type`)
   def preference(pref: String): SearchDefinition = copy(pref = pref.some)
