@@ -14,7 +14,6 @@ object ElasticJackson {
     implicit val mapper = JacksonSupport.mapper
 
     implicit def format[T: Manifest](implicit mapper: ObjectMapper): JsonFormat[T] = new JsonFormat[T] {
-      override def toJson(t: T): String = mapper.writeValueAsString(t)
       override def fromJson(json: String): T = {
         val t = manifest.runtimeClass.asInstanceOf[Class[T]]
         logger.debug(s"Deserializing $json to $t")
