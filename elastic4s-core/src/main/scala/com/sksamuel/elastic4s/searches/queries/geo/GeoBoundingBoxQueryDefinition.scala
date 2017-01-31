@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
-import com.sksamuel.elastic4s.GeoPoint
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query.{GeoExecType, GeoValidationMethod}
 
 case class GeoBoundingBoxQueryDefinition(field: String,
@@ -17,7 +17,7 @@ case class GeoBoundingBoxQueryDefinition(field: String,
   def withGeohash(geohash: String): GeoBoundingBoxQueryDefinition = copy(geohash = Some(geohash))
 
   def withCorners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition =
-    copy(corners = Some(topLeft.lat, topLeft.long, bottomRight.lat, bottomRight.long))
+    copy(corners = Some(topLeft.lat, topLeft.getLon, bottomRight.lat, bottomRight.getLon))
 
   def withCorners(top: Double, left: Double, bottom: Double, right: Double): GeoBoundingBoxQueryDefinition =
     copy(corners = Some(top, left, bottom, right))

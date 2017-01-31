@@ -11,7 +11,7 @@ object HasChildQueryBuilder {
       q.scoreMode
     )
     q.boost.map(_.toFloat).foreach(builder.boost)
-    q.innerHit.map(_.builder).foreach(builder.innerHit)
+    q.innerHit.map(InnerHitBuilder.apply).foreach(builder.innerHit)
     q.ignoreUnmapped.foreach(builder.ignoreUnmapped)
     q.minMaxChildren.foreach { case (min, max) => builder.minMaxChildren(min, max) }
     q.queryName.foreach(builder.queryName)

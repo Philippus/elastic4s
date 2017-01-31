@@ -11,8 +11,10 @@ import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi}
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
+import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
+import com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery
 import com.sksamuel.elastic4s.searches.sort.SortApi
-import com.sksamuel.elastic4s.searches.{HighlightApi, SearchApi}
+import com.sksamuel.elastic4s.searches.{HighlightApi, QueryApi, SearchApi}
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.update.UpdateApi
@@ -37,8 +39,10 @@ trait ElasticApi
     with IndexApi
     with IndexAdminApi
     with MappingApi
+    with QueryApi
     with ReindexApi
     with ScriptApi
+    with ScoreApi
     with SearchApi
     with SortApi
     with TaskApi

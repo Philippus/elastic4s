@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.index.query.functionscore._
 
-trait ScoreDsl {
+trait ScoreApi {
 
   implicit class RichScorer(scorer: ScoreFunctionDefinition) {
     def filter(query: QueryDefinition) = filterFunction(scorer).filter(query)
@@ -26,9 +25,4 @@ trait ScoreDsl {
   def fieldFactorScore(field: String) = FieldValueFactorDefinition(field)
 
   def weightScore(boost: Double) = WeightScoreDefinition(boost)
-}
-
-trait ScoreFunctionDefinition {
-  type B <: ScoreFunctionBuilder[_]
-  def builder: B
 }

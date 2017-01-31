@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.`match`.MatchAllQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
@@ -14,9 +15,6 @@ import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
-
-case class Highlight(options: HighlightOptionsDefinition,
-                     fields: Iterable[HighlightFieldDefinition])
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             query: Option[QueryDefinition] = None,
@@ -44,6 +42,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             timeout: Option[Duration] = None,
                             keepAlive: Option[String] = None,
                             fetchContext: Option[FetchSourceContext] = None,
+                            inners: Seq[InnerHitDefinition] = Nil,
                             indexBoosts: Seq[(String, Double)] = Nil
                            ) {
 
@@ -69,13 +68,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     */
   def matchAll(): SearchDefinition = query(new MatchAllQueryDefinition)
 
-  // todo restore inner
-  //  def inner(inners: InnerHitDefinition*): SearchDefinition =  inner(inners)
-  //  def inner(inners: Iterable[InnerHitDefinition]): SearchDefinition =  {
-  //    for ( inner <- inners )
-  //      _builder.addInnerHit(inner.name, inner.inner)
-  //    this
-  //  }
+  def inner(first: InnerHitDefinition, rest: InnerHitDefinition*): SearchDefinition = inner(first +: rest)
+  def inner(inners: Iterable[InnerHitDefinition]): SearchDefinition = copy(inners = inners.toSeq)
 
   def postFilter(block: => QueryDefinition): SearchDefinition = copy(postFilter = block.some)
 

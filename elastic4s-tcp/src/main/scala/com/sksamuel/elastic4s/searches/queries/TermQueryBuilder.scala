@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import org.elasticsearch.index.query.{QueryBuilders, TermQueryBuilder}
 
 object TermQueryBuilder {

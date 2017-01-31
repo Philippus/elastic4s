@@ -1,14 +1,9 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.script.SortBuilderFn
-import com.sksamuel.elastic4s.searches.{HighlightFieldDefinition, HighlightOptionsDefinition}
-import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
+import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
-import org.elasticsearch.index.query.InnerHitBuilder
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 import com.sksamuel.exts.OptionImplicits._
-
-import scala.collection.JavaConverters._
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class InnerHitDefinition(name: String,
                               size: Option[Int] = None,
@@ -21,25 +16,6 @@ case class InnerHitDefinition(name: String,
                               sorts: Seq[SortDefinition] = Nil,
                               from: Option[Int] = None,
                               highlights: Seq[HighlightFieldDefinition] = Nil) {
-
-  def builder = {
-    val builder = new InnerHitBuilder().setName(name)
-    from.foreach(builder.setFrom)
-    explain.foreach(builder.setExplain)
-    fetchSource.foreach(builder.setFetchSourceContext)
-    trackScores.foreach(builder.setTrackScores)
-    version.foreach(builder.setVersion)
-    size.foreach(builder.setSize)
-    docValueFields.foreach(builder.addDocValueField)
-    sorts.map(SortBuilderFn.apply).foreach(builder.addSort)
-    if (storedFieldNames.nonEmpty)
-      builder.setStoredFieldNames(storedFieldNames.asJava)
-    if (highlights.nonEmpty) {
-      val h = HighlightBuilderFn(HighlightOptionsDefinition(), highlights)
-      builder.setHighlightBuilder(h)
-    }
-    builder
-  }
 
   def sortBy(sorts: SortDefinition*): InnerHitDefinition = sortBy(sorts)
   def sortBy(sorts: Iterable[SortDefinition]): InnerHitDefinition = copy(sorts = sorts.toSeq)

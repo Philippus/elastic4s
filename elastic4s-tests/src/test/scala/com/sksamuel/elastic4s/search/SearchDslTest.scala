@@ -559,9 +559,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       geoPolygonQuery(
         "distance",
-        com.sksamuel.elastic4s.GeoPoint(10, 10),
-        com.sksamuel.elastic4s.GeoPoint(20, 20),
-        com.sksamuel.elastic4s.GeoPoint(30, 30)
+        new GeoPoint(10, 10),
+        new GeoPoint(20, 20),
+        new GeoPoint(30, 30)
       )
     }
     req.show should matchJsonResource("/json/search/search_filter_geo_polygon.json")

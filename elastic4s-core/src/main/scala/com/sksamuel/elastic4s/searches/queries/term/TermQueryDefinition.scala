@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s.searches.queries
+package com.sksamuel.elastic4s.searches.queries.term
 
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class TermQueryDefinition(field: String,

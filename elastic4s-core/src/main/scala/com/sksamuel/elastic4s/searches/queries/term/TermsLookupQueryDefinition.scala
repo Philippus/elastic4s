@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s.searches.queries
+package com.sksamuel.elastic4s.searches.queries.term
 
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.indices.TermsLookup
 

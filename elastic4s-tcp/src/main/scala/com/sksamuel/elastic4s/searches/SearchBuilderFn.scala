@@ -15,7 +15,9 @@ object SearchBuilderFn {
 
   def apply(client: Client, search: SearchDefinition): SearchRequestBuilder = {
 
-    val builder = client.prepareSearch(search.indexesTypes.indexes: _*).setTypes(search.indexesTypes.types: _*)
+    val builder = client.prepareSearch(search.indexesTypes.indexes: _*)
+      .setTypes(search.indexesTypes.types: _*)
+
     search.query.map(QueryBuilderFn.apply).foreach(builder.setQuery)
     search.minScore.map(_.toFloat).foreach(builder.setMinScore)
     search.version.foreach(builder.setVersion)
@@ -40,6 +42,12 @@ object SearchBuilderFn {
 
     if (search.aggs.nonEmpty)
       search.aggs.map(_.builder).foreach(builder.addAggregation)
+
+    if (search.inners.nonEmpty) {
+      for (inner <- search.inners)
+        sys.error("todo")
+      // builder.(inner.name, inner.inner)
+    }
 
     if (search.sorts.nonEmpty)
       search.sorts.foreach { sort =>

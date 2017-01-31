@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
-import org.elasticsearch.index.query.functionscore.{GaussDecayFunctionBuilder, ScoreFunctionBuilders}
-import org.elasticsearch.search.MultiValueMode
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.search.MultiValueMode
 
 case class GaussianDecayScoreDefinition(field: String,
                                         origin: String,
@@ -11,19 +10,6 @@ case class GaussianDecayScoreDefinition(field: String,
                                         decay: Option[Double] = None,
                                         weight: Option[Double] = None,
                                         multiValueMode: Option[MultiValueMode] = None) extends ScoreFunctionDefinition {
-
-  override type B = GaussDecayFunctionBuilder
-
-  def builder = {
-    val builder = (offset, decay) match {
-      case (Some(o), Some(d)) => ScoreFunctionBuilders.gaussDecayFunction(field, origin, scale, o, d)
-      case (Some(o), None) => ScoreFunctionBuilders.gaussDecayFunction(field, origin, scale, o)
-      case _ => ScoreFunctionBuilders.gaussDecayFunction(field, origin, scale)
-    }
-    weight.map(_.toFloat).foreach(builder.setWeight)
-    multiValueMode.foreach(builder.setMultiValueMode)
-    builder
-  }
 
   def multiValueMode(multiValueMode: MultiValueMode): GaussianDecayScoreDefinition =
     copy(multiValueMode = multiValueMode.some)

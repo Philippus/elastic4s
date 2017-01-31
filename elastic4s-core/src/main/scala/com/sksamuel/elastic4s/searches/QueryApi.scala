@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.searches.queries.`match`._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
+import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.{DocumentRef, Indexable}
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
@@ -14,7 +15,7 @@ import org.elasticsearch.index.query._
 
 import scala.language.{implicitConversions, reflectiveCalls}
 
-trait QueryDsl {
+trait QueryApi {
 
   implicit def string2query(string: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(string)
   implicit def tuple2query(kv: (String, String)): TermQueryDefinition = TermQueryDefinition(kv._1, kv._2)
@@ -37,16 +38,19 @@ trait QueryDsl {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
-  def fieldNamesQuery(first: String, rest: String*): TermsQueryDefinition[String] = fieldNamesQuery(first +: rest)
-  def fieldNamesQuery(names: Iterable[String]): TermsQueryDefinition[String] =
-    termsQuery("_field_names", names)(new BuildableTermsQueryImplicits {}.StringBuildableTermsQuery)
+  def fieldNamesQuery(first: String, rest: String*)
+                     (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
+    fieldNamesQuery(first +: rest)
+
+  def fieldNamesQuery(names: Iterable[String])
+                     (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
+    termsQuery("_field_names", names)
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().filter(queries)
 
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
-
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
   def geoBoxQuery(field: String, geohash: String) = GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
@@ -62,7 +66,7 @@ trait QueryDsl {
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = gdef.distance(distance, unit)
   }
 
-  def geoDistanceRangeQuery(field: String, geoPoint: com.sksamuel.elastic4s.GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
+  def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
 
   def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field, value)
@@ -75,15 +79,15 @@ trait QueryDsl {
 
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
-    def points(first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
-    def points(points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
+    def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)
+    def points(points: Iterable[GeoPoint]): GeoPolygonQueryDefinition = geoPolygonQuery(field, points)
   }
 
-  def geoPolygonQuery(field: String, first: com.sksamuel.elastic4s.GeoPoint, rest: com.sksamuel.elastic4s.GeoPoint*): GeoPolygonQueryDefinition =
+  def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition =
     geoPolygonQuery(field, first +: rest)
 
   def geoPolygonQuery(field: String,
-                      points: Iterable[com.sksamuel.elastic4s.GeoPoint]): GeoPolygonQueryDefinition =
+                      points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
   def geoShapeQuery(field: String,

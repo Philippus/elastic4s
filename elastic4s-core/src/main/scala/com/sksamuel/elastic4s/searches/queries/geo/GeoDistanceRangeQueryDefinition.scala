@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
-import com.sksamuel.elastic4s.GeoPoint
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.GeoDistance
-import org.elasticsearch.index.query.{GeoDistanceRangeQueryBuilder, GeoValidationMethod, QueryBuilders}
+import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
+import org.elasticsearch.index.query.GeoValidationMethod
 
 case class GeoDistanceRangeQueryDefinition(field: String,
                                            geopoint: GeoPoint,
@@ -16,27 +15,6 @@ case class GeoDistanceRangeQueryDefinition(field: String,
                                            boost: Option[Float] = None,
                                            includeLower: Option[Boolean] = None,
                                            includeUpper: Option[Boolean] = None) extends QueryDefinition {
-
-  def builder: GeoDistanceRangeQueryBuilder = {
-    val builder = QueryBuilders.geoDistanceRangeQuery(field, new org.elasticsearch.common.geo.GeoPoint(geopoint.lat, geopoint.long))
-    geoDistance.foreach(builder.geoDistance)
-    includeLower.foreach(builder.includeLower)
-    includeUpper.foreach(builder.includeUpper)
-    from.foreach {
-      case number: Number => builder.from(number)
-      case str: String => builder.from(str)
-    }
-    to.foreach {
-      case number: Number => builder.to(number)
-      case str: String => builder.to(str)
-    }
-    boost.foreach(builder.boost)
-    queryName.foreach(builder.queryName)
-    validationMethod.foreach(builder.setValidationMethod)
-    ignoreUnmapped.foreach(builder.ignoreUnmapped)
-    queryName.foreach(builder.to)
-    builder
-  }
 
   def geoDistance(geoDistance: GeoDistance): GeoDistanceRangeQueryDefinition = copy(geoDistance = Some(geoDistance))
 
