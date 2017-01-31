@@ -8,7 +8,7 @@ case class GetResponse(private val _id: String,
                        private val _type: String,
                        private val _version: Long,
                        found: Boolean,
-                       private val fields: Map[String, Any],
+                       fields: Map[String, Any],
                        private val _source: Map[String, Any]
                       ) {
 

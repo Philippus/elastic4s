@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.get
 import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
-import scala.collection.JavaConverters._
 
 case class GetDefinition(indexAndType: IndexAndType,
                          id: String,

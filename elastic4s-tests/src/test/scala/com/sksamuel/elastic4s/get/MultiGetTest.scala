@@ -1,16 +1,20 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
+import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 
-import scala.collection.JavaConverters._
+class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar with ElasticDsl {
 
-class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  client.execute {
+  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+
+  http.execute {
     createIndex("coldplay").shards(2).mappings(
       mapping("albums").fields(
         textField("name").stored(true),
@@ -19,7 +23,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
     )
   }.await
 
-  client.execute(
+  http.execute(
     bulk(
       indexInto("coldplay" / "albums") id 1 fields("name" -> "parachutes", "year" -> 2000),
       indexInto("coldplay" / "albums") id 3 fields("name" -> "x&y", "year" -> 2005) ,
@@ -32,7 +36,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
 
   "a multiget request" should "retrieve documents by id" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get(3).from("coldplay/albums"),
         get(5) from "coldplay/albums",
@@ -54,7 +58,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
 
   it should "set exists=false for missing documents" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get(3).from("coldplay/albums"),
         get(711111) from "coldplay/albums"
@@ -68,7 +72,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
 
   it should "retrieve documents by id with selected fields" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get(3) from "coldplay/albums" storedFields("name", "year"),
         get(5) from "coldplay/albums" storedFields "name"
@@ -76,20 +80,20 @@ class MultiGetTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
     ).await
 
     resp.size shouldBe 2
-    resp.items.head.response.fields.keySet shouldBe Set("name", "year")
-    resp.items.last.response.fields.keySet shouldBe Set("name")
+    resp.items.head.fields shouldBe Map("year" -> List(2005), "name" -> List("x&y"))
+    resp.items.last.fields shouldBe Map("name" -> List("mylo xyloto"))
   }
 
   it should "retrieve documents by id with fetchSourceContext" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get(3) from "coldplay/albums" fetchSourceContext Seq("name", "year"),
-        get(5) from "coldplay/albums" storedFields "name" fetchSourceContext Seq("name")
+        get(5) from "coldplay/albums" fetchSourceContext Seq("name")
       )
     ).await
-    assert(2 === resp.items.size)
-    assert(resp.items.head.original.getResponse.getSource.asScala.keySet === Set("name", "year"))
-    assert(resp.items.last.original.getResponse.getSource.asScala.keySet === Set("name"))
+    resp.size shouldBe 2
+    resp.items.head.source shouldBe Map("year" -> 2005, "name" -> "x&y")
+    resp.items.last.source shouldBe Map("name" -> "mylo xyloto")
   }
 }
