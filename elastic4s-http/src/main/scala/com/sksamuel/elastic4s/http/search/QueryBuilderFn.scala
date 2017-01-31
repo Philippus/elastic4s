@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.sksamuel.elastic4s.searches.queries.`match`.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.{QueryDefinition, QueryStringQueryDefinition, SimpleStringQueryDefinition}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.XContentBuilder
 
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {

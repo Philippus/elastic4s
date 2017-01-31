@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
-import com.sksamuel.elastic4s.indexes.AnalysisDefinition
+import com.sksamuel.elastic4s.indexes.{AnalysisContentBuilder, AnalysisDefinition}
 import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder
@@ -38,7 +38,7 @@ case class CreateIndexTemplateDefinition(name: String,
     if (!settings.isEmpty || analysis.nonEmpty) {
       val source = XContentFactory.jsonBuilder().startObject()
       settings.getAsMap.asScala.foreach { p => source.field(p._1, p._2) }
-      analysis.foreach(_.build(source))
+      analysis.foreach(AnalysisContentBuilder.build(_, source))
       source.endObject()
       builder.setSettings(source.string())
     }

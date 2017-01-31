@@ -22,7 +22,7 @@ object CreateIndexContentBuilder {
         source.endObject()
       }
 
-      d.analysis.foreach(_.build(source))
+      d.analysis.foreach(AnalysisContentBuilder.build(_, source))
 
       source.endObject() // end settings
     }
