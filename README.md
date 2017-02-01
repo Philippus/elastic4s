@@ -25,18 +25,23 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
 * Provides embedded node and testkit subprojects, ideal for your tests
 
+## Introduction
+
+Elasticsearch (on the JVM) has two interfaces. One is the regular HTTP interface available on port 9200 (by default) and the other is a TCP interface on port 9300 (by default). Historically the Java API provided by Elasticsearch has always been TCP based with the rationale that it saves marshalling requests into JSON and is cluster aware and so can route requests to the correct node. Therefore elastic4s was also TCP based since it delegates requests to the underlying Java client.
+
+Starting with 5.1.x, Elastic.co have made a REST client available for Java users (in addition to the REST based clients that were available as community projects). However at the time of writing this doesn't build the JSON for the queries, but focuses solely on managing connections and error handling.
+
+In elastic4s 5.2.x a new [HTTP client](https://github.com/sksamuel/elastic4s/tree/master/elastic4s-http) has been added which relies on the Java REST client for connection management, but still uses the familiar elastic4s DSL to build the queries so you don't have to. This client should be considered __experimental__ in this release, and the coverage of requests is not as comprehensive as the TCP client.
+
 #### Release
 
 The latest release is 5.2.0 which is compatible with Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
-Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
-I do not know the reasoning behind this, as they are needed for the Java client to work.
-The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
+Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively. I do not know the reasoning behind this, as they are needed for the client to work. The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
 
-The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions.
-Therefore if you bring in elastic4s (or even just the Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
+The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s (or even just the Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present, until Spark and Play update to the latest version, other than switching to the experimental HTTP client.
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
@@ -58,209 +63,7 @@ Therefore if you bring in elastic4s (or even just the Java transport client) you
 |1.0.3.0|1.0.x|
 |0.90.13.2|0.90.x|
 
-##### Changelog
-
-###### 5.2.0
-
-* Supports Elasticsearch 5.2.x
-* Added experimental HTTP client
-
-###### 5.1.5
-
-* Fixed filter in add alias
-
-######
-
-* Added com.vividsolutions.jts.geom to build to avoid "stub issues"
-
-###### 5.1.3
-
-* Added explicit search scroll close in reactive streams #695
-* Added phrase suggestion collate query
-
-###### 5.1.1
-
-* Upgrade to elasticsearch 5.1.1
-
-###### 5.0.4
-
-* elastic4s-xpack-security module.
-* Added missing geoShapeQuery for indexed shape
-
-###### 5.0.3
-
-* Fixed issue with search scroll id using a scala Duration
-
-###### 5.0.2
-
-* Elastic4s now brings in the required netty and lucene dependencies that the `elasticsearch-transport` module needs, but doesn't bring in transitively.
-* Added strongly typed listener to `elastic4s-streams`.
-
-###### 5.0.1
-
-* Released `elastic4s-play-json` for Elasticsearch 5.
-
-###### 5.0.0
-
-Elasticsearch 5.0 is a huge release from the people at Elastic. There have been some queries and actions removed completely, and plenty of methods have been renamed or changed. The full breaking changes log in Elasticsearch itself is here:
-https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
-
-These are the majority of changes in the scala client. As part of upgrading, there will certainly be some tweaking required.
-
-* TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
-* Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.
-* Infix notation has (mostly) been deprecated
-* New typeclass `HitReader` for reading data from searches. This typeclass handles errors (it returns `Either[Throwable, T]`) and now works for search, get, multisearch and multiget.
-* PercolatorQuery has been added (Elasticsearch have removed the previous percolator actions)
-* Scala specific re-index has been removed and the elasticsearch re-index action has been added #556
-* Update by query is now a plugin in Elasticsearch and so has been added to the client #616
-* Delete by query is now a plugin in Elasticsearch and so has been added to the client #616
-* Rollover has been added #658
-* Suggestions action has been removed in Elasticsearch, suggestions are now available on the search action
-* Search API has methods for getting the correct suggestion result back, eg `resp.termSuggestion("mysugg1")`
-* Multimatchquery now supports boosting individual fields #545
-* Existing bool syntax has been deprecated in favour of a more explicit syntax #580
-* Terms lookup query has been added #631
-* Terms query now supports Iterables #597 #599
-* New module added for embedded nodes
-* `successFn` has been added to elastic-streams. This is only invoked if there are no errors. #615
-* Cluster health supports parameters #600
-* Added indices options to GetSettings
-* Removed most of the methods deprecated prior to 2.0
-* Create template now supports alias #652
-* Fixed bug in docAsUpsert #651 #592
-* Support predefined Analyzers / Filters #602
-* Support for predefined language-specific stopwords #596
-* Support geo_shape queries #639
-* More like this request has been removed, use more like this query
-* Added better name for update in index into #535
-* Allow querying mappings for all types in an index #619
-* Add shutdown listener to close local node on JVM exit #655
-
-
-###### 2.1.1
-
-* #484 Fixed bug in es-streams throwing ClassCastException
-* #483 Added overloaded doc method to update to accept indexables
-
-###### 2.1.0
-
-* Optimize was renamed to ForceMerge. The existing optimize method are deprecated and `forceMerge(indexes*)` has been added in its place.
-* #395 Added pipeline aggregation definitions
-* #458 Added parameters to clear cache operation
-* #475 Fixed breaking change in terms query
-* `rewrite` was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
-* Added [GeoCentroid](https://www.elastic.co/guide/en/elasticsearch/reference/2.1/search-aggregations-metrics-geocentroid-aggregation.html) aggregation
-* Added `terminateAfter` to search definition
-* SearchType.SCAN is now deprecated in Elasticsearch
-* `count` is deprecated in Elasticsearch and should be replaced with a search with size 0
-
-###### 2.0.1
-
-* #473 Added missing "filter" clause from bool query
-* #475 Fixed breaking change in terms query
-* #474 Added "item" likes to more like this query
-
-###### 2.0.0
-
-Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a PR if I've missed any breaking changes._
-
-* In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
-* Some options that existed only on filters like cache and cache key are now removed.
-* Fuzzy like this query has been removed (this was removed in elasticsearch itself)
-* Script dsl has changed. To create a script to pass into a method, you use `script(script)` or `script(name, script)` with further parameters set using the builder pattern.
-* DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
-* Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
-* MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
-* `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
-* Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
-* The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
-* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for and's and `should` clauses for or's.
-* Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
-* Delete mapping has been removed (this is removed in elasticsearch itself)
-* IndexStatus api has been removed (this was removed in elasticsearch itself)
-* Template has been renamed dynamic template (to better match the terminology in elasticsesarch)
-* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)` or `stringField()`, `longField`, etc
-* In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
-* Multiget now returns a rich scala wrapper in the form of `MultiGetResult`. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
-* GetSegments returns a scala wrapper in the form of `GetSegmentsResult`
-* IndexStats returns a scala wrapper in the form `IndexStatsResult`
-
-###### 1.7.0
-
-* Works with Elasticsearch 1.7.x
-* Removed sync client (deprecated since 1.3.0)
-
-###### 1.6.6
-
-* Fix for race condition in elastic-streams subscriber
-
-###### 1.6.5
-* Added sourceAsUpsert to allow `Indexable` as upsert in update queries
-* Added geohash aggregation
-* Added geohash cell filter
-* Added cluster state api
-* Added support for unmapped_type property
-* Added block until index/type exists testkit helpers
-* Added raw query to count dsl
-* Added `show` typeclass for count
-* Added `InFilter` and `IndicesFilter`
-* Added shorter syntax for field types, eg `stringField(name)` vs `field name <name> typed StringType`
-
-###### 1.6.4
-* Added reactive streams implementation for elastic4s.
-* Support explicit field types in the update dsl
-* Added missing options to restore snapshot dsl
-* Added `show` typeclass for percolate register
-
-###### 1.5.17
-* Added clear scroll api
-* Added missing options to restore snapshot dsl
-
-###### 1.6.3
-* Added clear scroll api
-* Added `show` typeclass for multisearch
-* Allow update dsl to use explicit field values
-
-###### 1.5.16
-* Added `HitAs` as a replacement for the `Reader` typeclass
-* Added indices option to mapping, count and search dsl
-* Added docValuesFormat to timestamp mapping
-
-###### 1.6.2
-* Added new methods to testkit
-* Introduced simplier syntax for sorts
-* Added `HitAs` as a replacement for the `Reader` typeclass
-* Fixed validate query for block queries
-* Added `show` typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.
-
-###### 1.5.15
-* Added `matched_fields` and highlight filter to highlighter
-
-###### 1.6.1
-* Added IterableSearch for iterating over a scroll
-* Enhanced multiget dsl to include `routing`, `version` and `field` options
-* Added rich result for GetAliasResponse
-* Added context queries to suggestions
-* Breaking change: Changed syntax of suggestions to be clearer and allow for type safe results
-* Allow setting analyzer by name on matchphraseprefix
-* Added singleMethodSyntax variant, eg `indexInto(index)` rather than `index into index`
-* Added re-write to validate
-* Added filter support to alias (previously only the java client filters were supported)
-* Added cluster settings api
-* Added field stats api
-* Addd `docValuesFormat` to timestamp mapping
-* Added `matched_fields` and highlight filter to highlighter
-* Supported `stopwords_list` in filter
-* Reworked testkit to allow more configuration over the creating of the test clients
-
-## Introduction
-
-Elasticsearch (on the JVM) has two interfaces. One is the regular HTTP interface available on port 9200 (by default) and the other is a TCP interface on port 9300 (by default). Historically the Java API provided by Elasticsearch has always been TCP based with the rationale that it saves marshalling requests into JSON and is cluster aware and so can route requests to the correct node. Therefore elastic4s was also TCP based since it delegates requests to the underlying Java client.
-
-Starting with 5.1.x, Elastic.co have made a REST client available for Java users (in addition to the REST based clients that were available as community projects). However at the time of writing this doesn't build the JSON for the queries, but focuses solely on managing connections and error handling.
-
-In elastic4s 5.2.x a new [HTTP client](https://github.com/sksamuel/elastic4s/tree/master/elastic4s-http) has been added which relies on the Java REST client for connection management, but still uses the familiar elastic4s DSL to build the queries so you don't have to. This client should be considered __experimental__ in this release, and the coverage of requests is not as comprehensive as the TCP client.
+See full [changelog](#changelog).
 
 ## Quick Start
 
@@ -273,6 +76,14 @@ To create an instance of the HTTP client, use the `HttpClient` companion object 
 Requests, such as inserting a document, searching, creating an index, and so on, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: `search("index" / "type") query "findthistext"`
 
 The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is identical whether you use the HTTP or TCP client, you must import the appropriate trait (`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which client you are using.
+
+One final import is required if you are using the HTTP client. The API needs a way to marshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client simply expects an implicit `JsonFormat` implementation. 
+
+Elastic4s provides several out of the box (or you can roll your own). The provided implemenations are elastic4s-circe, elastic4s-jackson, elastic4s-json4, and elastic4s-play-json. For example, to use the jackson implementation, add the module to your build and then add this line:
+
+```scala
+import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+```
 
 An example is worth 1000 characters so here is a quick example of how to connect to a node with a client and index a one field document. Then we will search for that document using a simple text query.
 
@@ -892,6 +703,202 @@ sbt test
 
 Integration tests run on a local elastic that is created and torn down as part of the tests inside your standard temp
 folder. There is no need to configure anything externally.
+
+## Changelog
+
+###### 5.2.0
+
+* Supports Elasticsearch 5.2.x
+* Added experimental HTTP client
+
+###### 5.1.5
+
+* Fixed filter in add alias
+
+######
+
+* Added com.vividsolutions.jts.geom to build to avoid "stub issues"
+
+###### 5.1.3
+
+* Added explicit search scroll close in reactive streams #695
+* Added phrase suggestion collate query
+
+###### 5.1.1
+
+* Upgrade to elasticsearch 5.1.1
+
+###### 5.0.4
+
+* elastic4s-xpack-security module.
+* Added missing geoShapeQuery for indexed shape
+
+###### 5.0.3
+
+* Fixed issue with search scroll id using a scala Duration
+
+###### 5.0.2
+
+* Elastic4s now brings in the required netty and lucene dependencies that the `elasticsearch-transport` module needs, but doesn't bring in transitively.
+* Added strongly typed listener to `elastic4s-streams`.
+
+###### 5.0.1
+
+* Released `elastic4s-play-json` for Elasticsearch 5.
+
+###### 5.0.0
+
+Elasticsearch 5.0 is a huge release from the people at Elastic. There have been some queries and actions removed completely, and plenty of methods have been renamed or changed. The full breaking changes log in Elasticsearch itself is here:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html
+
+These are the majority of changes in the scala client. As part of upgrading, there will certainly be some tweaking required.
+
+* TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.
+* Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.
+* Infix notation has (mostly) been deprecated
+* New typeclass `HitReader` for reading data from searches. This typeclass handles errors (it returns `Either[Throwable, T]`) and now works for search, get, multisearch and multiget.
+* PercolatorQuery has been added (Elasticsearch have removed the previous percolator actions)
+* Scala specific re-index has been removed and the elasticsearch re-index action has been added #556
+* Update by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Delete by query is now a plugin in Elasticsearch and so has been added to the client #616
+* Rollover has been added #658
+* Suggestions action has been removed in Elasticsearch, suggestions are now available on the search action
+* Search API has methods for getting the correct suggestion result back, eg `resp.termSuggestion("mysugg1")`
+* Multimatchquery now supports boosting individual fields #545
+* Existing bool syntax has been deprecated in favour of a more explicit syntax #580
+* Terms lookup query has been added #631
+* Terms query now supports Iterables #597 #599
+* New module added for embedded nodes
+* `successFn` has been added to elastic-streams. This is only invoked if there are no errors. #615
+* Cluster health supports parameters #600
+* Added indices options to GetSettings
+* Removed most of the methods deprecated prior to 2.0
+* Create template now supports alias #652
+* Fixed bug in docAsUpsert #651 #592
+* Support predefined Analyzers / Filters #602
+* Support for predefined language-specific stopwords #596
+* Support geo_shape queries #639
+* More like this request has been removed, use more like this query
+* Added better name for update in index into #535
+* Allow querying mappings for all types in an index #619
+* Add shutdown listener to close local node on JVM exit #655
+
+
+###### 2.1.1
+
+* #484 Fixed bug in es-streams throwing ClassCastException
+* #483 Added overloaded doc method to update to accept indexables
+
+###### 2.1.0
+
+* Optimize was renamed to ForceMerge. The existing optimize method are deprecated and `forceMerge(indexes*)` has been added in its place.
+* #395 Added pipeline aggregation definitions
+* #458 Added parameters to clear cache operation
+* #475 Fixed breaking change in terms query
+* `rewrite` was removed from Elasticsearch's matchXXX queries so has been removed in the dsl
+* Added [GeoCentroid](https://www.elastic.co/guide/en/elasticsearch/reference/2.1/search-aggregations-metrics-geocentroid-aggregation.html) aggregation
+* Added `terminateAfter` to search definition
+* SearchType.SCAN is now deprecated in Elasticsearch
+* `count` is deprecated in Elasticsearch and should be replaced with a search with size 0
+
+###### 2.0.1
+
+* #473 Added missing "filter" clause from bool query
+* #475 Fixed breaking change in terms query
+* #474 Added "item" likes to more like this query
+
+###### 2.0.0
+
+Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a PR if I've missed any breaking changes._
+
+* In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods `xxxFilter` are now `xxxQuery`, eg `hasChildrenFilter` is now `hasChildrenQuery`.
+* Some options that existed only on filters like cache and cache key are now removed.
+* Fuzzy like this query has been removed (this was removed in elasticsearch itself)
+* Script dsl has changed. To create a script to pass into a method, you use `script(script)` or `script(name, script)` with further parameters set using the builder pattern.
+* DynamicTemplate dsl `template name <name>` has been removed. Now you supply the full field definition in the dsl method, as such `template(field("price_*", DoubleType))`
+* Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer
+* MoreLikeThis was removed from elasticsearch in favour of a `moreLikeThisQuery` on a search request.
+* `moreLikeThisQuery` has changed camel case (capital L), also now requires the 'like' text as the 2nd method, eg `moreLikeThisQuery("field").text("a")` (both can take varargs as well).
+* Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* The sorting DSL has changed in that the previous infix style methods are deprecated. So `field sort x` becomes `fieldSort(x)` etc.
+* Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with `must` clauses for and's and `should` clauses for or's.
+* Highlight dsl has changed slightly, `highlight field x` is now deprecated in favour of `highlight(x)`
+* Delete mapping has been removed (this is removed in elasticsearch itself)
+* IndexStatus api has been removed (this was removed in elasticsearch itself)
+* Template has been renamed dynamic template (to better match the terminology in elasticsesarch)
+* Field and mapping syntax has changed slightly. The implicit `"fieldname" as StringType ...` has been deprecated in favour of `field("fieldname", StringType)` or `stringField()`, `longField`, etc
+* In es-streams the ResponseListener has changed to accept a `BulkItemResult` instead of a `BulkItemResponse`
+* Multiget now returns a rich scala wrapper in the form of `MultiGetResult`. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.
+* GetSegments returns a scala wrapper in the form of `GetSegmentsResult`
+* IndexStats returns a scala wrapper in the form `IndexStatsResult`
+
+###### 1.7.0
+
+* Works with Elasticsearch 1.7.x
+* Removed sync client (deprecated since 1.3.0)
+
+###### 1.6.6
+
+* Fix for race condition in elastic-streams subscriber
+
+###### 1.6.5
+* Added sourceAsUpsert to allow `Indexable` as upsert in update queries
+* Added geohash aggregation
+* Added geohash cell filter
+* Added cluster state api
+* Added support for unmapped_type property
+* Added block until index/type exists testkit helpers
+* Added raw query to count dsl
+* Added `show` typeclass for count
+* Added `InFilter` and `IndicesFilter`
+* Added shorter syntax for field types, eg `stringField(name)` vs `field name <name> typed StringType`
+
+###### 1.6.4
+* Added reactive streams implementation for elastic4s.
+* Support explicit field types in the update dsl
+* Added missing options to restore snapshot dsl
+* Added `show` typeclass for percolate register
+
+###### 1.5.17
+* Added clear scroll api
+* Added missing options to restore snapshot dsl
+
+###### 1.6.3
+* Added clear scroll api
+* Added `show` typeclass for multisearch
+* Allow update dsl to use explicit field values
+
+###### 1.5.16
+* Added `HitAs` as a replacement for the `Reader` typeclass
+* Added indices option to mapping, count and search dsl
+* Added docValuesFormat to timestamp mapping
+
+###### 1.6.2
+* Added new methods to testkit
+* Introduced simplier syntax for sorts
+* Added `HitAs` as a replacement for the `Reader` typeclass
+* Fixed validate query for block queries
+* Added `show` typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.
+
+###### 1.5.15
+* Added `matched_fields` and highlight filter to highlighter
+
+###### 1.6.1
+* Added IterableSearch for iterating over a scroll
+* Enhanced multiget dsl to include `routing`, `version` and `field` options
+* Added rich result for GetAliasResponse
+* Added context queries to suggestions
+* Breaking change: Changed syntax of suggestions to be clearer and allow for type safe results
+* Allow setting analyzer by name on matchphraseprefix
+* Added singleMethodSyntax variant, eg `indexInto(index)` rather than `index into index`
+* Added re-write to validate
+* Added filter support to alias (previously only the java client filters were supported)
+* Added cluster settings api
+* Added field stats api
+* Addd `docValuesFormat` to timestamp mapping
+* Added `matched_fields` and highlight filter to highlighter
+* Supported `stopwords_list` in filter
+* Reworked testkit to allow more configuration over the creating of the test clients
 
 ## Used By
 * Barclays Bank

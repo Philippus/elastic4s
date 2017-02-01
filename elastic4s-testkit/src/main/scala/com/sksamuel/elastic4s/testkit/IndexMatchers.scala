@@ -1,19 +1,20 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.TcpClient$
+import com.sksamuel.elastic4s.TcpClient
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait IndexMatchers extends Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
+
   import scala.concurrent.duration._
 
   def haveCount(expectedCount: Int)
                (implicit client: TcpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
-    def apply(left: String) = {
+    def apply(left: String): MatchResult = {
       val count = client.execute(search(left).size(0)).await(timeout).totalHits
       MatchResult(
         count == expectedCount,
