@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ScriptBuilder
-import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
-import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder, TermsAggregator}
+import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder}
 import org.elasticsearch.search.aggregations.support.ValueType
 import org.elasticsearch.search.aggregations.{AggregationBuilders, Aggregator}
 
@@ -60,11 +60,6 @@ case class TermsAggregationDefinition(name: String) extends AggregationDefinitio
 
   def collectMode(collectMode: Aggregator.SubAggCollectionMode): this.type = {
     builder.collectMode(collectMode)
-    this
-  }
-
-  def bucketCountThresholds(bucketCountThresholds: TermsAggregator.BucketCountThresholds): this.type = {
-    builder.bucketCountThresholds(bucketCountThresholds)
     this
   }
 
