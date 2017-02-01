@@ -240,8 +240,8 @@ trait QueryApi {
 
   def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
 
-  def idsQuery(ids: Iterable[String]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-  def idsQuery(id: String, rest: String*): IdQueryDefinition = IdQueryDefinition(id +: rest)
+  def idsQuery(ids: Iterable[Any]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
+  def idsQuery(id: Any, rest: Any*): IdQueryDefinition = IdQueryDefinition(id +: rest)
 
   // -- bool query dsl ---
   @deprecated("this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)", "5.0.0")

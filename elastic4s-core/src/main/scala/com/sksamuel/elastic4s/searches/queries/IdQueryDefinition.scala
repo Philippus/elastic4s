@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-case class IdQueryDefinition(ids: Seq[String],
+case class IdQueryDefinition(ids: Seq[Any],
                              types: Seq[String] = Nil,
                              boost: Option[Double] = None,
                              queryName: Option[String] = None) extends QueryDefinition {

@@ -4,7 +4,7 @@ import org.elasticsearch.index.query.{IdsQueryBuilder, QueryBuilders}
 
 object IdQueryBuilder {
   def apply(q: IdQueryDefinition): IdsQueryBuilder = {
-    val builder = QueryBuilders.idsQuery(q.types: _*).addIds(q.ids: _*)
+    val builder = QueryBuilders.idsQuery(q.types: _*).addIds(q.ids.map(_.toString): _*)
     q.boost.foreach(b => builder.boost(b.toFloat))
     q.queryName.foreach(builder.queryName)
     builder
