@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient$
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, RichBulkItemResponse, RichBulkResponse}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
@@ -24,7 +24,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
  *
  * @tparam T the type of element provided by the publisher this subscriber will subscribe with
  */
-class BulkIndexingSubscriber[T] private[streams](client: ElasticClient,
+class BulkIndexingSubscriber[T] private[streams](client: TcpClient,
                                                  builder: RequestBuilder[T],
                                                  config: TypedSubscriberConfig[T])
                                                 (implicit actorRefFactory: ActorRefFactory) extends Subscriber[T] {
@@ -80,7 +80,7 @@ object BulkActor {
 
 }
 
-class BulkActor[T](client: ElasticClient,
+class BulkActor[T](client: TcpClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
                    typedConfig: TypedSubscriberConfig[T]) extends Actor {

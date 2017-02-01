@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient$
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
@@ -12,12 +12,12 @@ trait SearchMatchers extends Matchers {
 
   @deprecated("use containId(id)", "5.0.0")
   def containResult(expectedId: Any)
-                   (implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = {
+                   (implicit client: TcpClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = {
     containId(expectedId)
   }
 
   def containId(expectedId: Any)
-               (implicit client: ElasticClient,
+               (implicit client: TcpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition): MatchResult = {
       val resp = client.execute(left).await(timeout)
@@ -31,7 +31,7 @@ trait SearchMatchers extends Matchers {
   }
 
   def haveFieldValue(value: String)
-                    (implicit client: ElasticClient,
+                    (implicit client: TcpClient,
                      timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new
       Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
@@ -46,7 +46,7 @@ trait SearchMatchers extends Matchers {
   }
 
   def haveSourceField(value: String)
-                     (implicit client: ElasticClient,
+                     (implicit client: TcpClient,
                       timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
@@ -60,7 +60,7 @@ trait SearchMatchers extends Matchers {
   }
 
   def haveSourceFieldValue(field: String, value: String)
-                          (implicit client: ElasticClient,
+                          (implicit client: TcpClient,
                            timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new
       Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
@@ -75,7 +75,7 @@ trait SearchMatchers extends Matchers {
   }
 
   def haveTotalHits(expectedCount: Int)
-                   (implicit client: ElasticClient,
+                   (implicit client: TcpClient,
                     timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
@@ -89,7 +89,7 @@ trait SearchMatchers extends Matchers {
   }
 
   def haveHits(expectedCount: Int)
-              (implicit client: ElasticClient,
+              (implicit client: TcpClient,
                timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)
@@ -102,7 +102,7 @@ trait SearchMatchers extends Matchers {
     }
   }
 
-  def haveNoHits(implicit client: ElasticClient,
+  def haveNoHits(implicit client: TcpClient,
                  timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition) = {
       val resp = client.execute(left).await(timeout)

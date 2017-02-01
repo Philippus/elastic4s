@@ -13,7 +13,7 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient
 
 import scala.concurrent.Future
 
-trait ElasticClient {
+trait TcpClient {
 
   def close(): Unit
 
@@ -29,9 +29,12 @@ trait ElasticClient {
   }
 }
 
-object ElasticClient extends Logging {
+@deprecated("ElasticClient is now TcpClient", "5.2.0")
+trait ElasticClient extends TcpClient
 
-  /**
+trait TcpClientConstructors extends Logging {
+
+    /**
     * Creates an ElasticClient which wraps an existing Client.
     *
     * @param client the client to wrap
@@ -101,3 +104,8 @@ object ElasticClient extends Logging {
     fromClient(client)
   }
 }
+
+object TcpClient extends TcpClientConstructors
+
+@deprecated("use the equivalent methods on TcpClient", "5.2.0")
+object ElasticClient extends TcpClientConstructors

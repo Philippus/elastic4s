@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient$
 import com.sksamuel.elastic4s.searches.{RichSearchHit, RichSearchResponse, SearchDefinition}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import org.elasticsearch.ElasticsearchException
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  * @param elements the maximum number of elements to return
  * @param actorRefFactory an Actor reference factory required by the publisher
  */
-class ScrollPublisher private[streams](client: ElasticClient,
+class ScrollPublisher private[streams](client: TcpClient,
                                        search: SearchDefinition,
                                        elements: Long)
                                       (implicit actorRefFactory: ActorRefFactory) extends Publisher[RichSearchHit] {
@@ -38,7 +38,7 @@ class ScrollPublisher private[streams](client: ElasticClient,
   }
 }
 
-class ScrollSubscription(client: ElasticClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
+class ScrollSubscription(client: TcpClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
                         (implicit actorRefFactory: ActorRefFactory) extends Subscription {
 
   val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
@@ -67,7 +67,7 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: ElasticClient,
+class PublishActor(client: TcpClient,
                    query: SearchDefinition,
                    s: Subscriber[_ >: RichSearchHit],
                    max: Long) extends Actor with Stash {

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient$
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
@@ -10,7 +10,7 @@ trait IndexMatchers extends Matchers {
   import scala.concurrent.duration._
 
   def haveCount(expectedCount: Int)
-               (implicit client: ElasticClient,
+               (implicit client: TcpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     def apply(left: String) = {
@@ -24,7 +24,7 @@ trait IndexMatchers extends Matchers {
   }
 
   def containDoc(expectedId: Any)
-                (implicit client: ElasticClient,
+                (implicit client: TcpClient,
                  timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
@@ -37,7 +37,7 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beCreated(implicit client: ElasticClient,
+  def beCreated(implicit client: TcpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
@@ -50,7 +50,7 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beEmpty(implicit client: ElasticClient,
+  def beEmpty(implicit client: TcpClient,
               timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {

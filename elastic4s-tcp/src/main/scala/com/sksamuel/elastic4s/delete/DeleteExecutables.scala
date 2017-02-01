@@ -35,7 +35,7 @@ trait DeleteExecutables {
   implicit object DeleteByQueryDefinitionExecutable
     extends Executable[DeleteByQueryDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
 
-    def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition) = {
+    def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition): Unit = {
       builder.source(d.sourceIndexes.values: _*)
       builder.filter(QueryBuilderFn(d.query))
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)

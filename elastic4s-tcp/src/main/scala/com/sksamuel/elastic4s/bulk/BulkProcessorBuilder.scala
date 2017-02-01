@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient$
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.bulk.BulkProcessor.Listener
 import org.elasticsearch.action.bulk.{BackoffPolicy, BulkRequest, BulkResponse}
@@ -19,7 +19,7 @@ case class BulkProcessorBuilder(name: Option[String] = None,
                                 flushInterval: Option[FiniteDuration] = None,
                                 size: Option[ByteSizeValue] = None) {
 
-  def build(client: ElasticClient): BulkProcessor = {
+  def build(client: TcpClient): BulkProcessor = {
     val builder = org.elasticsearch.action.bulk.BulkProcessor.builder(client.java, new Listener {
 
       override def beforeBulk(executionId: Long, request: BulkRequest): Unit = ()

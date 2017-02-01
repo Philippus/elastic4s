@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.admin.RefreshIndexDefinition
+import com.sksamuel.elastic4s.admin.{IndexExistsDefinition, RefreshIndexDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
-import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, IndexShowImplicits, DeleteIndexDefinition}
+import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -10,8 +10,16 @@ import scala.collection.JavaConverters._
 
 case class DeleteIndexResponse()
 case class RefreshIndexResponse()
+case class IndexExistsResponse()
 
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, Boolean] {
+    override def execute(client: RestClient, request: IndexExistsDefinition): (ResponseListener) => Any = {
+      val code = client.performRequest("HEAD", request.index).getStatusLine.getStatusCode
+      resp => code == 200
+    }
+  }
 
   implicit object RefreshIndexExecutable extends HttpExecutable[RefreshIndexDefinition, RefreshIndexResponse] {
     override def execute(client: RestClient, request: RefreshIndexDefinition): (ResponseListener) => Any = {

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.xpack.security
 
 import java.net.InetSocketAddress
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticsearchClientUri}
+import com.sksamuel.elastic4s.{TcpClient$, ElasticsearchClientUri}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.plugins.Plugin
@@ -12,7 +12,7 @@ object XPackElasticClient {
 
   def apply(settings: Settings,
             uri: ElasticsearchClientUri,
-            plugins: Class[_ <: Plugin]*): ElasticClient = {
+            plugins: Class[_ <: Plugin]*): TcpClient = {
 
     val combinedSettings = uri.options.foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
       if (builder.get(kv._1) == null)
@@ -24,6 +24,6 @@ object XPackElasticClient {
     for ( (host, port) <- uri.hosts ) {
       client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
     }
-    ElasticClient.fromClient(client)
+    TcpClient.fromClient(client)
   }
 }
