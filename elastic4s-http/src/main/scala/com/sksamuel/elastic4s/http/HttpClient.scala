@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http
 
+import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
@@ -13,6 +14,8 @@ trait HttpClient extends Logging {
 
   // returns the underlying java rest client
   def rest: RestClient
+
+  def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
   def execute[T, U](request: T)(implicit executable: HttpExecutable[T, U], format: JsonFormat[U]): Future[U] = {
     logger.debug(s"Executing $request")

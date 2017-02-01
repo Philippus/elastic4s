@@ -2,13 +2,18 @@ package com.sksamuel.elastic4s.http.index
 
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.get.HitField
+import com.sksamuel.elastic4s.http.Shards
 
 case class IndexResponse(private val _id: String,
                          private val _index: String,
                          private val _type: String,
                          private val _version: Long,
+                         result: String,
+                         private val forced_refresh: Boolean,
                          found: Boolean,
                          totalHits: Long,
+                         shards: Shards,
+                         created: Boolean,
                          private val fields: Map[String, Any],
                          private val _source: Map[String, Any]
                         ) {
@@ -19,6 +24,7 @@ case class IndexResponse(private val _id: String,
   def version = _version
   def ref = DocumentRef(index, `type`, id)
   def exists = found
+  def forceRefresh: Boolean = forced_refresh
   def source = sourceAsMap
   def storedField(fieldName: String): HitField = new HitField {
     override def values: Seq[AnyRef] = fields(fieldName) match {
