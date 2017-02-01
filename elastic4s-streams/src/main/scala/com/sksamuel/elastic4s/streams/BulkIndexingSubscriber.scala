@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.TcpClient$
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, RichBulkItemResponse, RichBulkResponse}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
@@ -9,7 +10,6 @@ import org.reactivestreams.{Subscriber, Subscription}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
-import com.sksamuel.elastic4s.ElasticDsl._
 
 /**
  * An implementation of the reactive API Subscriber.
@@ -86,7 +86,7 @@ class BulkActor[T](client: TcpClient,
                    typedConfig: TypedSubscriberConfig[T]) extends Actor {
 
   import context.{dispatcher, system}
-  import typedConfig.{ baseConfig => config }
+  import typedConfig.{baseConfig => config}
 
   private val buffer = new ArrayBuffer[T]()
   buffer.sizeHint(config.batchSize)

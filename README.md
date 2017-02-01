@@ -9,9 +9,9 @@ elastic4s - Elasticsearch Scala Client
 
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java's nature. Scala lets us do better.
 
-Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in an SQL-like way, while staying true to the Java API or Rest API.
+Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying true to the Java API or Rest API.
 
-Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index documents directly without having to extract and set fields manually - eg from a case class, a JSON document, or a Map (or a custom source). Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
+Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index case classes and maps directly without having to extract and set fields manually. Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
 #### Key points
 
@@ -20,26 +20,28 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 * Uses Scala collections library over Java collections
 * Returns `Option` where the java methods would return null
 * Uses Scala `Duration`s instead of strings/longs for time values
-* Uses typeclasses for marshalling and unmarshalling of classes to/from elasticsearch documents, backed by Jackson, Circe, Json4s and PlayJson implementations
+* Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s and PlayJson implementations
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
 * Provides embedded node and testkit subprojects, ideal for your tests
 
 #### Release
 
-The latest release is 5.0.4 which is compatible with Elasticsearch 5.0.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
+The latest release is 5.2.0 which is compatible with Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
-Starting from version 5.0.0, the underlying Elasticsearch Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
+Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.
 I do not know the reasoning behind this, as they are needed for the Java client to work.
 The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
 
 The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions.
-Therefore if you bring in elastic4s (or even just the raw Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
+Therefore if you bring in elastic4s (or even just the Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present.
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
+|5.2.x|5.2.x|
+|5.1.x|5.1.x|
 |5.0.x|5.0.x|
 |2.4.x|2.4.X|
 |2.3.x|2.3.X|
@@ -57,6 +59,11 @@ Therefore if you bring in elastic4s (or even just the raw Java transport client)
 |0.90.13.2|0.90.x|
 
 ##### Changelog
+
+###### 5.2.0
+
+* Supports Elasticsearch 5.2.x
+* Added experimental HTTP client
 
 ###### 5.1.5
 
@@ -249,96 +256,106 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 
 ## Introduction
 
-The basic usage of the Scala driver is that you create an instance of `ElasticClient` and then invoke the various `execute` methods with the requests you want to perform. The execute methods are asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a search request will return a response of type `SearchResponse` which contains the results of the search.
+Elasticsearch (on the JVM) has two interfaces. One is the regular HTTP interface available on port 9200 (by default) and the other is a TCP interface on port 9300 (by default). Historically the Java API provided by Elasticsearch has always been TCP based with the rationale that it saves marshalling requests into JSON and is cluster aware and so can route requests to the correct node. Therefore elastic4s was also TCP based since it delegates requests to the underlying Java client.
 
-Requests, such as inserting a document, searching, creating an index, etc, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: `search in "index/type" query "findthistext"`
+Starting with 5.1.x, Elastic.co have made a REST client available for Java users (in addition to the REST based clients that were available as community projects). However at the time of writing this doesn't build the JSON for the queries, but focuses solely on managing connections and error handling.
 
-The response objects are, for the most part, the exact same type the Java API returns.
-This is because there is mostly no reason to wrap these as they are fairly easy to use in Scala.
+In elastic4s 5.2.x a new [HTTP client](https://github.com/sksamuel/elastic4s/tree/master/elastic4s-http) has been added which relies on the Java REST client for connection management, but still uses the familiar elastic4s DSL to build the queries so you don't have to. This client should be considered __experimental__ in this release, and the coverage of requests is not as comprehensive as the TCP client.
 
-All the DSL keywords are located in the `ElasticDsl` trait which needs to be imported or extended.
+## Quick Start
 
-An example is worth 1000 characters so here is a quick example of how to create a local node with a client
- and index a one field document. Then we will search for that document using a simple text query.
+To get started you will need to add a dependency to either [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http) or [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) depending on which client you intend you use (or both!)
+
+The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse` which contains the results of the search.
+
+To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the TCP client, use the `TcpClient` companion object methods. Requests are the same for either client, but response classes may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java client classes.
+
+Requests, such as inserting a document, searching, creating an index, and so on, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: `search("index" / "type") query "findthistext"`
+
+The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is identical whether you use the HTTP or TCP client, you must import the appropriate trait (`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which client you are using.
+
+An example is worth 1000 characters so here is a quick example of how to connect to a node with a client and index a one field document. Then we will search for that document using a simple text query.
 
 ```scala
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.ElasticDsl._
 
 object Test extends App {
 
-  val client = ElasticClient.transport(ElasticsearchClientUri(host, port))
+  // Here we create an instance of the TCP client
+  val client = TcpClient.transport(ElasticsearchClientUri(host, port))
 
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
-  client.execute { index into "bands" / "artists" fields "name"->"coldplay" }.await
+  client.execute { 
+  	indexInto("bands" / "artists") fields ("name" -> "coldplay") refresh(RefreshPolicy.IMMEDIATE)
+  }.await
 
-  // we need to wait until the index operation has been flushed by the server.
-  // this is an important point - when the index future completes, that doesn't mean that the doc
-  // is necessarily searchable. It simply means the server has processed your request and the doc is
-  // queued to be flushed to the indexes. Elasticsearch is eventually consistent.
-  // For this demo, we'll simply wait for 2 seconds (default refresh interval is 1 second).
-  Thread.sleep(2000)
-
-  // now we can search for the document we indexed earlier
-  val resp = client.execute { search in "bands" / "artists" query "coldplay" }.await
+  // now we can search for the document we just indexed
+  val resp = client.execute { 
+    search("bands" / "artists") query "coldplay" 
+  }.await
+  
   println(resp)
-
 }
 ```
+
+### Eventual Consistency
+
+Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced for bulk inserts (or increased). Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
 
 For more in depth examples keep reading.
 
 ## Syntax
 
-Here is a list of the common requests and the syntax used to create them. For more details on each request click
-through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation as
-the DSL closely mirrors the standard Java API / REST API.
+Here is a list of the common requests and the syntax used to create them and whether they are supported by the TCP or HTTP client. If the HTTP client does not support them, you will need to fall back to the TCP, or use the Java client and build the JSON yourself. Or even better, raise a PR with the addition. For more details on each request click
+through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation asthe DSL closely mirrors the standard Java API / REST API.
 
-| Operation                                 | Syntax |
-|-------------------------------------------|----------------|
-| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)` |
-| Cancel Tasks                              | `cancelTasks(<nodeIds>)` |
-| Clear index cache                         | `clearCache(<index>)` |
-| Close index                               | `closeIndex(<name>)` |
-| Cluster health                            | `clusterHealth()` |
-| Cluster stats                             | `clusterStats()` |
-| [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`|
-| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)` |
-| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)` |
-| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|
-| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)` |
-| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`
-| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)` |
-| Delete Template                           | `deleteTemplate(<name>)` |
-| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`
-| Field stats                               | `fieldStats(<indexes>)` |
-| Flush Index                               | `flushIndex(<index>)` |
-| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` |
-| Get Alias                                 | `getAlias(<name>).on(<index>)` |
-| Get Mapping                               | `getMapping(<index> / <type>)` |
-| Get Segments                              | `getSegments(<indexes>)` |
-| Get Snapshot                              | `getSnapshot <name> from <repo>` |
-| Get Template                              | `getTemplate(<name>)` |
-| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` |
-| Index exists                              | `indexExists(<name>)` |
-| Index Status                              | `indexStatus(<index>)` |
-| List Tasks                                | `listTasks(nodeIds)` |
-| [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |
-| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`|
-| Open index                                | `openIndex(<name>)` |
-| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |
-| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |
-| Recover Index                             | `recoverIndex(<name>)` |
-| Refresh index                             | `refreshIndex(<name>)` |
-| Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |
-| [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |
-| [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |
-| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` |
-| Search scroll                             | `searchScroll(<scrollId>)` |
-| Type Exists                               | `typesExists(<types>) in <index>` |
-| [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` |
-| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` |
+| Operation                                 | Syntax | HTTP | TCP |
+|-------------------------------------------|--------|------|-----|
+| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)` |   | yes |
+| Bulk										| `bulk(query1, query2, query3...)` | yes | yes |
+| Cancel Tasks                              | `cancelTasks(<nodeIds>)` |   | yes |   | yes |
+| Clear index cache                         | `clearCache(<index>)` |   | yes |
+| Close index                               | `closeIndex(<name>)` |   | yes |
+| Cluster health                            | `clusterHealth()` |   | yes |
+| Cluster stats                             | `clusterStats()` |   | yes |
+| [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
+| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)` |   | yes |
+| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)` |   | yes |
+| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
+| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)` | yes  | yes |
+| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]` |  | yes |
+| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)` |   | yes |
+| Delete Template                           | `deleteTemplate(<name>)` |   | yes |
+| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
+| Field stats                               | `fieldStats(<indexes>)` |   | yes |
+| Flush Index                               | `flushIndex(<index>)` |   | yes |
+| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` |  yes | yes |
+| Get Alias                                 | `getAlias(<name>).on(<index>)` |   | yes |
+| Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
+| Get Segments                              | `getSegments(<indexes>)` |   | yes |
+| Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
+| Get Template                              | `getTemplate(<name>)` |   | yes |
+| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes  | yes |
+| Index exists                              | `indexExists(<name>)` |   | yes |
+| Index Status                              | `indexStatus(<index>)` |   | yes |
+| List Tasks                                | `listTasks(nodeIds)` |   | yes |
+| [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
+| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`| yes  | yes |
+| Open index                                | `openIndex(<name>)` |   | yes |
+| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |   | yes |
+| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |   | yes |
+| Recover Index                             | `recoverIndex(<name>)` |   | yes |
+| Refresh index                             | `refreshIndex(<name>)` | yes  | yes |
+| Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
+| [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
+| [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
+| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes  | yes |
+| Search scroll                             | `searchScroll(<scrollId>)` |   | yes |
+| Type Exists                               | `typesExists(<types>) in <index>` |   | yes |
+| [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
+| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` |   | yes |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 
@@ -373,18 +390,15 @@ val client = ElasticClient.fromNode(node)
 
 ## X-Pack-Security
 
-Elastic4s also supports the xpack-security add on. To use this, add the `elastic-xpack-security` dependency to your build
-and create a client using the `XPackElasticClient` object instead of the `ElasticClient` object. Eg,
+Elastic4s also supports the xpack-security add on (TCP client only). To use this, add the `elastic-xpack-security` dependency to your build and create a client using the `XPackElasticClient` object instead of the `ElasticClient` object. Eg,
 
-```scala
+```
 val client = XPackElasticClient(settings, uri, <plugins>...)
 ```
 
 ## Embedded Node
 
-A locally configured node and client can be created be including the elatic4s-embedded module. Then a local node
-can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return
-a handle to the client by invoking the `elastic4sclient` function.
+A locally configured node and client can be created be including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -717,29 +731,24 @@ See more information on the [bulk page](guide/bulk.md).
 
 ## Json Output
 
-It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser.
-It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.
+It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser. It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.
 
-Elastic4s makes it easy to get this json where possible. Simply call `.show` on a request to get back a json string. Eg:
+Elastic4s makes it easy to get this json where possible. Simply invoke the `show` method on the client with a request to get back a json string. Eg:
 
 ```scala
-val req = search in "music" / "bands" query "coldplay" ...
-println(req.show) // would output json
-client.execute { req } // now executes that request
+val json = client.show {
+  search("music" / "bands") query "coldplay"
+}
+println(json)
 ```
 
-Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output.
-And some requests don't convert to json in the Java client so aren't yet supported by the `show` typeclass.
-Also, for clarity, it should be pointed out that the client doesn't send JSON to the server, it uses a binary protocol. So the provided json
-format should be treated as a debugging tool only.
+Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output. And some requests aren't supported by the show method - you will get an implicit not found error during compliation if that is the case
 
-The requests that support `.show` are `search`, `multi`, `createIndex`, `index into`, `validate`, `percolate`, `count`.
+Also, as a reminder, the TCP client does not send JSON to the nodes, it uses a binary protocol, so the provided JSON should be used as a debugging tool only. For the HTTP client the output is exactly what is sent.
 
 ## Synchronous Operations
 
-All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots
-or when creating the initial index. You can call `.await` on any operation to block until the result is ready.
-This is especially useful when testing.
+All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots or when creating the initial index. You can call `.await` on any operation to block until the result is ready. This is especially useful when testing.
 
 ```scala
 val resp = client.execute {
@@ -749,13 +758,10 @@ val resp = client.execute {
 
 ## DSL Completeness
 
-As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query,
-search, validate, percolate, update, explain, get, and bulk operations.
-There is good support for the various settings for each of these -
-more so than the Java client provides in the sense that more settings are provided in a type safe manner.
+As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations.
+There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner.
 
-However there are settings and operations (mostly admin / cluster related) that the DSL does not yet
-cover (pull requests welcome!).
+However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!).
 In these cases it is necessary to drop back to the Java API.
 This can be done by calling .java on the client object to get the underlying java elastic client,
 

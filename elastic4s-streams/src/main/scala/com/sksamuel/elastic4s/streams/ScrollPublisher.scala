@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.TcpClient$
+import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.searches.{RichSearchHit, RichSearchResponse, SearchDefinition}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import org.elasticsearch.ElasticsearchException
@@ -41,7 +41,7 @@ class ScrollPublisher private[streams](client: TcpClient,
 class ScrollSubscription(client: TcpClient, query: SearchDefinition, s: Subscriber[_ >: RichSearchHit], max: Long)
                         (implicit actorRefFactory: ActorRefFactory) extends Subscription {
 
-  val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
+  private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
 
   private[streams] def ready(): Unit = {
     actor ! PublishActor.Ready
@@ -85,7 +85,7 @@ class PublishActor(client: TcpClient,
   // rule 1.03 the subscription should not send any results until the onSubscribe call has returned
   // even tho the user might call request in the onSubscribe, we can't start sending the results yet.
   // this ready method signals to the actor that its ok to start sending data. In the meantime we just stash requests.
-  override def receive = {
+  override def receive: PartialFunction[Any, Unit] = {
     case Ready =>
       context become ready
       unstashAll()
