@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.reindex.{BulkIndexByScrollResponse, DeleteByQueryAction, DeleteByQueryRequestBuilder}
@@ -36,11 +37,13 @@ trait DeleteExecutables {
     extends Executable[DeleteByQueryDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
 
     def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition): Unit = {
-      builder.source(d.sourceIndexes.values: _*)
+      builder.source(d.indexesAndTypes.indexes: _*)
       builder.filter(QueryBuilderFn(d.query))
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
+      d.size.foreach(builder.size)
       d.maxRetries.foreach(builder.setMaxRetries)
-      d.refresh.foreach(builder.refresh)
+      if (d.refresh.contains(RefreshPolicy.IMMEDIATE))
+        builder.refresh(true)
       d.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       d.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
       d.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)

@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import com.sksamuel.elastic4s.{IndexAndType, Indexes}
+import com.sksamuel.elastic4s.{IndexAndType, IndexesAndTypes}
 
 import scala.language.implicitConversions
 
 trait DeleteApi {
 
-  def deleteIn(indexes: Indexes) = new DeleteByQueryExpectsQuery(indexes)
-  class DeleteByQueryExpectsQuery(indexes: Indexes) {
-    def by(query: QueryDefinition): DeleteByQueryDefinition = DeleteByQueryDefinition(indexes, query)
+  def deleteIn(indexesAndTypes: IndexesAndTypes) = new DeleteByQueryExpectsQuery(indexesAndTypes)
+  class DeleteByQueryExpectsQuery(indexesAndTypes: IndexesAndTypes) {
+    def by(query: QueryDefinition): DeleteByQueryDefinition = DeleteByQueryDefinition(indexesAndTypes, query)
   }
 
   def delete(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)

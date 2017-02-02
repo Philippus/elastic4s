@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
+import org.elasticsearch.index.reindex.ReindexPlugin
 import org.elasticsearch.node.Node
 import org.elasticsearch.node.internal.InternalSettingsPreparer
 import org.elasticsearch.percolator.PercolatorPlugin
@@ -101,7 +102,7 @@ object LocalNode {
     require(settings.getAsMap.containsKey("path.data"))
     require(settings.getAsMap.containsKey("path.repo"))
 
-    val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin])
+    val plugins = List(classOf[Netty3Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
 
     val mergedSettings = Settings.builder().put(settings)
       .put("transport.type", "local")
