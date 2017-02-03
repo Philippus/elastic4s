@@ -14,27 +14,8 @@ object QueryBuilderFn {
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
     case q: MatchPhraseDefinition => MatchPhraseQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
+    case q: RegexQueryDefinition => RegexBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case t: TermQueryDefinition => TermQueryBodyFn(t)
-  }
-}
-
-object IdQueryBodyFn {
-
-  import scala.collection.JavaConverters._
-
-  def apply(q: IdQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.startObject("ids")
-    if (q.types.nonEmpty) {
-      builder.field("type", q.types.asJava)
-    }
-    builder.field("values", q.ids.asJava)
-    q.boost.foreach(builder.field("boost", _))
-    q.queryName.foreach(builder.field("_name", _))
-    builder.endObject()
-    builder.endObject()
-    builder
   }
 }
