@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.queries
 import com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
-object RegexBodyFn {
+object RegexQueryBodyFn {
   def apply(q: RegexQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
