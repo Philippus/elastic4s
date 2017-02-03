@@ -19,5 +19,6 @@ object QueryBuilderFn {
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case t: TermQueryDefinition => TermQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
+    case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
   }
 }
