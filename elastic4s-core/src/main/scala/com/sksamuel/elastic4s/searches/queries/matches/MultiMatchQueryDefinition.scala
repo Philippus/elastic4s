@@ -10,11 +10,11 @@ case class MultiMatchQueryDefinition(text: String,
                                      analyzer: Option[String] = None,
                                      cutoffFrequency: Option[Double] = None,
                                      fields: Seq[(String, Float)] = Nil,
-                                     fuzziness: Option[Any] = None,
+                                     fuzziness: Option[String] = None,
                                      fuzzyRewrite: Option[String] = None,
                                      lenient: Option[Boolean] = None,
-                                     minimumShouldMatch: Option[String] = None,
                                      maxExpansions: Option[Int] = None,
+                                     minimumShouldMatch: Option[String] = None,
                                      operator: Option[Operator] = None,
                                      prefixLength: Option[Int] = None,
                                      queryName: Option[String] = None,
@@ -26,7 +26,7 @@ case class MultiMatchQueryDefinition(text: String,
   extends QueryDefinition {
 
   def fuzzyRewrite(f: String): MultiMatchQueryDefinition = copy(fuzzyRewrite = f.some)
-  def fuzziness(f: Any): MultiMatchQueryDefinition = copy(fuzziness = f.some)
+  def fuzziness(f: Any): MultiMatchQueryDefinition = copy(fuzziness = f.toString.some)
   def cutoffFrequency(freq: Double): MultiMatchQueryDefinition = copy(cutoffFrequency = freq.some)
   def prefixLength(len: Int): MultiMatchQueryDefinition = copy(prefixLength = len.some)
 
@@ -36,7 +36,7 @@ case class MultiMatchQueryDefinition(text: String,
   def boost(boost: Double): MultiMatchQueryDefinition = copy(boost = boost.some)
 
   def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
-  def fields(_fields: Iterable[String]) = copy(fields = _fields.map(f => (f, -1F)).toSeq)
+  def fields(_fields: Iterable[String]): MultiMatchQueryDefinition = copy(fields = _fields.map(f => (f, -1F)).toSeq)
   def field(name: String, boost: Float): MultiMatchQueryDefinition = copy(fields = fields :+ (name, boost))
   def fields(fields: Map[String, Float]): MultiMatchQueryDefinition = copy(fields = fields.toSeq)
 
