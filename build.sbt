@@ -23,7 +23,7 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
       "com.vividsolutions"                    % "jts"                       % "1.13",
-      "io.netty"                              % "netty-all"                 % "4.1.6.Final",
+      "io.netty"                              % "netty-all"                 % "4.1.7.Final",
       "org.apache.logging.log4j"              % "log4j-api"                 % "2.7",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
       "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
