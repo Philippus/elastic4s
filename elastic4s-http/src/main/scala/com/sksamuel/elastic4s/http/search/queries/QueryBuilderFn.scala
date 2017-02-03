@@ -17,5 +17,6 @@ object QueryBuilderFn {
     case q: RegexQueryDefinition => RegexBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case t: TermQueryDefinition => TermQueryBodyFn(t)
+    case q: TypeQueryDefinition => TypeQueryBodyFn(q)
   }
 }
