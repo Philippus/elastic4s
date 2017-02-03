@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.searches.queries.`match`.MatchPhraseDefinition
+import com.sksamuel.elastic4s.searches.queries.matches.MatchPhraseDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MatchPhraseQueryBodyFn {

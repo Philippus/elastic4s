@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.searches.queries.`match`
+package com.sksamuel.elastic4s.searches.queries.matches
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition

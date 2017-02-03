@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.queries.`match`._
+import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
@@ -53,12 +53,14 @@ trait QueryApi {
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
-  def geoBoxQuery(field: String, geohash: String) = GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
+  def geoBoxQuery(field: String, geohash: String): GeoBoundingBoxQueryDefinition =
+    GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
 
   def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
   class GeoDistanceExpectsPoint(field: String) {
-    def geohash(geohash: String) = GeoDistanceQueryDefinition(field).geohash(geohash)
-    def point(lat: Double, long: Double) = GeoDistanceQueryDefinition(field).point(lat, long)
+    def geohash(geohash: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field).geohash(geohash)
+    def point(lat: Double, long: Double): GeoDistanceQueryDefinition =
+      GeoDistanceQueryDefinition(field).point(lat, long)
   }
 
   class GeoDistanceExpectsDistance(gdef: GeoDistanceQueryDefinition) {
@@ -121,13 +123,12 @@ trait QueryApi {
   class HasParentQueryExpectsQuery(`type`: String) {
     def query(q: QueryDefinition) = new ExpectsScoreMode(q)
     class ExpectsScoreMode(q: QueryDefinition) {
-      def scoreMode(scoreMode: Boolean) = hasParentQuery(`type`, q, scoreMode)
+      def scoreMode(scoreMode: Boolean): HasParentQueryDefinition = hasParentQuery(`type`, q, scoreMode)
     }
   }
 
   def innerHits(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
-  def matchQuery(tuple: (String, Any)): MatchQueryDefinition = matchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQueryDefinition = MatchQueryDefinition(field, value)
 
   def matchPhraseQuery(field: String, value: Any): MatchPhraseDefinition = MatchPhraseDefinition(field, value)

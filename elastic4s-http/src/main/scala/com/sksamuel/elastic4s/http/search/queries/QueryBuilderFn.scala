@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
-import com.sksamuel.elastic4s.searches.queries.`match`.{MatchAllQueryDefinition, MatchPhraseDefinition, MatchQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchPhraseDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 

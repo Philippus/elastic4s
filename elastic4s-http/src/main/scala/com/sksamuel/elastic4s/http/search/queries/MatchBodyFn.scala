@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.searches.queries.`match`.MatchQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MatchBodyFn {

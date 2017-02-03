@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.queries.`match`._
+import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreBuilderFn, FunctionScoreQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
