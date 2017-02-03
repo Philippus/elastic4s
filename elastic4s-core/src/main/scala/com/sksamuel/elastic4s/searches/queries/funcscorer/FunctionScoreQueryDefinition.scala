@@ -17,7 +17,7 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
   def maxBoost(boost: Double): FunctionScoreQueryDefinition = copy(boost = Option(boost))
 
   def scoreMode(mode: String): FunctionScoreQueryDefinition = scoreMode(ScoreMode.valueOf(mode.toUpperCase))
-  def scoreMode(mode: ScoreMode): FunctionScoreQueryDefinition = copy(scoreMode = Some(mode))
+  def scoreMode(mode: FiltersFunctionScoreQuery.ScoreMode): FunctionScoreQueryDefinition = copy(scoreMode = Some(mode))
 
   def boostMode(mode: String): FunctionScoreQueryDefinition = boostMode(CombineFunction.valueOf(mode.toUpperCase))
   def boostMode(mode: CombineFunction): FunctionScoreQueryDefinition = copy(boostMode = Some(mode))

@@ -3,7 +3,7 @@ before_script:
 - ulimit -u 30000
 scala:
 - 2.11.8
-- 2.12.0
+- 2.12.1
 script:
 - sbt clean test
 jdk:
