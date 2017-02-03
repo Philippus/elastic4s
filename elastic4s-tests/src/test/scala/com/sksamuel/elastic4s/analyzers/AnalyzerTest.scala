@@ -133,10 +133,10 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "custom NGramTokenizer" - {
     "should index specified combinations" in {
       client.execute {
-        search("analyzer/test") query matchQuery("custom_ngram" -> "dy")
+        search("analyzer/test") query matchQuery("custom_ngram" , "dy")
       }.await.totalHits shouldBe 1
       client.execute {
-        search("analyzer" / "test") query matchQuery("custom_ngram" -> "dc50")
+        search("analyzer" / "test") query matchQuery("custom_ngram" , "dc50")
       }.await.totalHits shouldBe 1
     }
   }
@@ -144,19 +144,19 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
   "custom EdgeNGram Tokenizer" - {
     "should support side option" in {
       client.execute {
-        search("analyzer/test") query matchQuery("edgengram" -> "es")
+        search("analyzer/test") query matchQuery("edgengram" , "es")
       }.await.totalHits shouldBe 1
       client.execute {
-        search("analyzer/test") query matchQuery("edgengram" -> "nes")
+        search("analyzer/test") query matchQuery("edgengram" , "nes")
       }.await.totalHits shouldBe 1
       client.execute {
-        search("analyzer/test") query matchQuery("edgengram" -> "ones")
+        search("analyzer/test") query matchQuery("edgengram" , "ones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search("analyzer/test") query matchQuery("edgengram" -> "rones")
+        search("analyzer/test") query matchQuery("edgengram" , "rones")
       }.await.totalHits shouldBe 1
       client.execute {
-        search("analyzer/test") query matchQuery("edgengram" -> "hrones")
+        search("analyzer/test") query matchQuery("edgengram" , "hrones")
       }.await.totalHits shouldBe 1
       client.execute {
         search("analyzer/test") query matchQuery("edgengram" -> "thrones")

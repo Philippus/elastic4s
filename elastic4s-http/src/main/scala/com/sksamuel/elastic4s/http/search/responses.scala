@@ -22,16 +22,42 @@ case class SearchHit(private val _id: String,
   override def sourceAsString: String = sourceAsXContentBuilder.string
 
   def sourceAsXContentBuilder: XContentBuilder = {
+
     val builder = XContentFactory.jsonBuilder()
+
     def addMap(map: Map[String, AnyRef]): Unit = {
-      builder.startObject()
       map.foreach {
-        case (key, value: Map[String, AnyRef]) => addMap(value)
-        case (key, value) => builder.field(key, value)
+        case (key, value: Map[String, AnyRef]) =>
+          builder.startObject(key)
+          addMap(value)
+          builder.endObject()
+        case (key, values: Seq[Any]) =>
+          builder.startArray(key)
+          addSeq(values)
+          builder.endArray()
+        case (key, value) =>
+          builder.field(key, value)
       }
-      builder.endObject()
     }
+
+    def addSeq(values: Seq[Any]): Unit = {
+      values.foreach {
+        case map: Map[String, AnyRef] =>
+          builder.startObject()
+          addMap(map)
+          builder.endObject()
+        case seq: Seq[Any] =>
+          builder.startArray()
+          addSeq(values)
+          builder.endArray()
+        case other =>
+          builder.value(other)
+      }
+    }
+
+    builder.startObject()
     addMap(_source)
+    builder.endObject()
     builder
   }
 
@@ -69,5 +95,5 @@ case class SearchResponse(took: Int,
 }
 
 case class MultiSearchResponse(responses: Seq[SearchResponse]) {
-  def size = responses.size
+  def size: Int = responses.size
 }

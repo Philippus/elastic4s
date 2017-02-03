@@ -124,20 +124,21 @@ through to the readme page. For options that are not yet documented, refer to th
 
 | Operation                                 | Syntax | HTTP | TCP |
 |-------------------------------------------|--------|------|-----|
-| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)` |   | yes |
-| Bulk										| `bulk(query1, query2, query3...)` | yes | yes |
-| Cancel Tasks                              | `cancelTasks(<nodeIds>)` |   | yes |   | yes |
-| Clear index cache                         | `clearCache(<index>)` |   | yes |
-| Close index                               | `closeIndex(<name>)` |   | yes |
-| Cluster health                            | `clusterHealth()` |   | yes |
-| Cluster stats                             | `clusterStats()` |   | yes |
+| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |       | yes |
+| Bulk										| `bulk(query1, query2, query3...)`         | yes   | yes |
+| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |       | yes |
+| Clear index cache                         | `clearCache(<index>)`                     |       | yes |
+| Close index                               | `closeIndex(<name>)`                      |   | yes |
+| Cluster health                            | `clusterHealth()`                         |   | yes |
+| Cluster stats                             | `clusterStats()`                          |   | yes |
 | [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
-| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)` |   | yes |
-| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)` |   | yes |
+| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)`   |   | yes |
+| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)`       |   | yes |
 | Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
-| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)` | yes  | yes |
-| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]` |  | yes |
-| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)` |   | yes |
+| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)`     | yes  | yes |
+| Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes  | yes |
+| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         |  | yes |
+| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |   | yes |
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
 | [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |

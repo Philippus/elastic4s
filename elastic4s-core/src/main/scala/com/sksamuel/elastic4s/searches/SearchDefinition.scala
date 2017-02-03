@@ -63,9 +63,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def bool(block: => BoolQueryDefinition): SearchDefinition = query(block)
 
-  /**
-    * Adds a match all query to this search definition
-    */
+  @deprecated("Use matchAllQuery()", "5.2.0")
   def matchAll(): SearchDefinition = query(new MatchAllQueryDefinition)
 
   def inner(first: InnerHitDefinition, rest: InnerHitDefinition*): SearchDefinition = inner(first +: rest)
@@ -121,22 +119,14 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def suggestion(sugg: SuggestionDefinition): SearchDefinition = suggestions(Seq(sugg))
 
 
-  /** Adds a single prefix query to this search
-    *
-    * @param tuple - the field and prefix value
-    * @return this
-    */
-  def prefix(tuple: (String, Any)) = query(PrefixQueryDefinition(tuple._1, tuple._2))
+  // Adds a single prefix query to this search
+  def prefix(name: String, value: Any): SearchDefinition = query(PrefixQueryDefinition(name, value))
 
-  /** Adds a single regex query to this search
-    *
-    * @param tuple - the field and regex value
-    * @return this
-    */
   @deprecated("use regexQuery(...)", "5.0.0")
   def regex(tuple: (String, String)) = regexQuery(tuple)
-
   def regexQuery(tuple: (String, String)): SearchDefinition = regexQuery(tuple._1, tuple._2)
+
+  // Adds a single regex query to this search
   def regexQuery(field: String, value: String): SearchDefinition = query(RegexQueryDefinition(field, value))
 
   @deprecated("use termQuery()", "5.0.0")
@@ -150,8 +140,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     query(q)
     this
   }
-
-  def range(field: String) = query(RangeQueryDefinition(field))
+  def matchAllQuery(): SearchDefinition = query(MatchAllQueryDefinition())
 
   /** Expects a query in json format and sets the query of the search request.
     * i.e. underneath a "query" field if referencing HTTP API
@@ -236,7 +225,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def scroll(keepAlive: String): SearchDefinition = copy(keepAlive = keepAlive.some)
 
-  def searchType(searchType: SearchType) = copy(searchType = searchType.some)
+  def searchType(searchType: SearchType): SearchDefinition = copy(searchType = searchType.some)
 
   def version(version: Boolean): SearchDefinition = copy(version = version.some)
 
