@@ -42,7 +42,7 @@ case class SearchHits(total: Int,
                       private val max_score: Double,
                       hits: Array[SearchHit]) {
   def maxScore: Double = max_score
-  def size = hits.length
+  def size: Int = hits.length
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 }
@@ -54,7 +54,7 @@ case class SearchResponse(took: Int,
                           hits: SearchHits) {
 
   def totalHits: Int = hits.total
-  def size = hits.size
+  def size: Int = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
   def maxScore: Double = hits.maxScore
 

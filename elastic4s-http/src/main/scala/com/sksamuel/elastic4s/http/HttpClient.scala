@@ -66,7 +66,7 @@ object HttpClient extends Logging {
   }
 
   def apply(uri: ElasticsearchClientUri): HttpClient = {
-    val hosts = uri.hosts.map { case (host, port) => new HttpHost("localhost", 9200, "http") }
+    val hosts = uri.hosts.map { case (host, port) => new HttpHost(host, port, "http") }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
     val client = RestClient.builder(hosts: _*).build()
     HttpClient.fromRestClient(client)
