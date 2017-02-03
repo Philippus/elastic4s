@@ -10,7 +10,7 @@ case class MatchQueryDefinition(field: String,
                                 analyzer: Option[String] = None,
                                 boost: Option[Double] = None,
                                 cutoffFrequency: Option[Double] = None,
-                                fuzziness: Option[Double] = None,
+                                fuzziness: Option[String] = None,
                                 fuzzyRewrite: Option[String] = None,
                                 fuzzyTranspositions: Option[Boolean] = None,
                                 lenient: Option[Boolean] = None,
@@ -31,7 +31,7 @@ case class MatchQueryDefinition(field: String,
   def boost(boost: Double): MatchQueryDefinition = copy(boost = boost.some)
   def cutoffFrequency(f: Double): MatchQueryDefinition = copy(cutoffFrequency = f.some)
   def lenient(lenient: Boolean): MatchQueryDefinition = copy(lenient = lenient.some)
-  def fuzziness(fuzziness: Double): MatchQueryDefinition = copy(fuzziness = fuzziness.some)
+  def fuzziness(fuzziness: String): MatchQueryDefinition = copy(fuzziness = fuzziness.some)
   def fuzzyRewrite(fuzzyRewrite: String): MatchQueryDefinition = copy(fuzzyRewrite = fuzzyRewrite.some)
   def prefixLength(prefixLength: Int): MatchQueryDefinition = copy(prefixLength = prefixLength.some)
 
@@ -45,8 +45,8 @@ case class MatchQueryDefinition(field: String,
 
   def minimumShouldMatch(min: String): MatchQueryDefinition = copy(minimumShouldMatch = min.some)
 
-  def withAndOperator() = operator("AND")
-  def withOrOperator() = operator("OR")
+  def withAndOperator(): MatchQueryDefinition = operator("AND")
+  def withOrOperator(): MatchQueryDefinition = operator("OR")
   def operator(op: String): MatchQueryDefinition = copy(operator = Operator.valueOf(op.toUpperCase).some)
   def operator(op: Operator): MatchQueryDefinition = copy(operator = op.some)
 
