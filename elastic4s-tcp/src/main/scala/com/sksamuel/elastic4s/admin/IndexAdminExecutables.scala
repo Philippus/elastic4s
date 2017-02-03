@@ -29,14 +29,14 @@ trait IndexAdminExecutables {
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
     override def apply(c: Client, t: OpenIndexDefinition): Future[OpenIndexResponse] = {
-      injectFuture(c.admin.indices.prepareOpen(t.index).execute)
+      injectFuture(c.admin.indices.prepareOpen(t.indexes.values: _*).execute)
     }
   }
 
   implicit object CloseIndexDefinitionExecutable
     extends Executable[CloseIndexDefinition, CloseIndexResponse, CloseIndexResponse] {
     override def apply(c: Client, t: CloseIndexDefinition): Future[CloseIndexResponse] = {
-      injectFuture(c.admin.indices.prepareClose(t.index).execute)
+      injectFuture(c.admin.indices.prepareClose(t.indexes.values: _*).execute)
     }
   }
 

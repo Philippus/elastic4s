@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.admin.{IndexExistsDefinition, RefreshIndexDefinition}
+import com.sksamuel.elastic4s.admin.{CloseIndexDefinition, IndexExistsDefinition, OpenIndexDefinition, RefreshIndexDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.StringEntity
@@ -11,8 +11,24 @@ import scala.collection.JavaConverters._
 case class DeleteIndexResponse()
 case class RefreshIndexResponse()
 case class IndexExistsResponse()
+case class OpenIndexResponse(acknowledged: Boolean)
+case class CloseIndexResponse(acknowledged: Boolean)
 
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object OpenIndexExecutable extends HttpExecutable[OpenIndexDefinition, OpenIndexResponse] {
+    override def execute(client: RestClient, request: OpenIndexDefinition): (ResponseListener) => Any = {
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
+      client.performRequestAsync("POST", endpoint, _)
+    }
+  }
+
+  implicit object CloseIndexExecutable extends HttpExecutable[CloseIndexDefinition, CloseIndexResponse] {
+    override def execute(client: RestClient, request: CloseIndexDefinition): (ResponseListener) => Any = {
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
+      client.performRequestAsync("POST", endpoint, _)
+    }
+  }
 
   implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, Boolean] {
     override def execute(client: RestClient, request: IndexExistsDefinition): (ResponseListener) => Any = {

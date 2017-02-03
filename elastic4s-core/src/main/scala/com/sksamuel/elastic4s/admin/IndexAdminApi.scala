@@ -17,8 +17,8 @@ trait IndexAdminApi {
     def in(indexes: String*): TypesExistsDefinition = TypesExistsDefinition(indexes, types.toSeq)
   }
 
-  def closeIndex(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
-  def openIndex(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
+  def closeIndex(first: String, rest: String*): CloseIndexDefinition = CloseIndexDefinition(first +: rest)
+  def openIndex(first: String, rest: String*): OpenIndexDefinition = OpenIndexDefinition(first +: rest)
 
   def getSegments(indexes: Indexes): GetSegmentsDefinition = GetSegmentsDefinition(indexes)
   def getSegments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)

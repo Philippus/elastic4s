@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import org.elasticsearch.action.support.IndicesOptions
 
-case class OpenIndexDefinition(index: String)
-case class CloseIndexDefinition(index: String)
+case class OpenIndexDefinition(indexes: Indexes)
+case class CloseIndexDefinition(indexes: Indexes)
 case class GetSegmentsDefinition(indexes: Indexes)
 case class IndexExistsDefinition(index: String)
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
