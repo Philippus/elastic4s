@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.get
 
 import cats.Show
-import com.sksamuel.elastic4s.JsonFormat
+import cats.syntax.either._
+import com.sksamuel.elastic4s.{HitReader, JsonFormat}
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.exts.Logging
@@ -14,6 +15,9 @@ import scala.concurrent.Future
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
   def size: Int = docs.size
+
+  def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
+  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
 trait GetImplicits {

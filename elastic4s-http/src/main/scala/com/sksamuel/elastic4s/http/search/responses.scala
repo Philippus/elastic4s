@@ -52,6 +52,4 @@ case class SearchResponse(took: Int,
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 
-case class MultiSearchResponse(responses: Seq[SearchResponse]) {
-  def size: Int = responses.size
-}
+

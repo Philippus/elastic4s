@@ -9,8 +9,8 @@ case class GetResponse(private val _id: String,
                        private val _type: String,
                        private val _version: Long,
                        found: Boolean,
-                       fields: Map[String, Any],
-                       private val _source: Map[String, Any]
+                       fields: Map[String, AnyRef],
+                       private val _source: Map[String, AnyRef]
                       ) extends Hit {
 
   def index: String = _index
@@ -31,8 +31,8 @@ case class GetResponse(private val _id: String,
     override def isMetadataField: Boolean = ???
   }
 
-  def storedFieldsAsMap: Map[String, Any] = Option(fields).getOrElse(Map.empty)
-  override def sourceAsMap: Map[String, Any] = Option(_source).getOrElse(Map.empty)
+  def storedFieldsAsMap: Map[String, AnyRef] = Option(fields).getOrElse(Map.empty)
+  override def sourceAsMap: Map[String, AnyRef] = Option(_source).getOrElse(Map.empty)
   override def sourceAsString: String = SourceAsContentBuilder(_source).string()
 
 }
