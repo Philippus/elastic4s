@@ -112,6 +112,16 @@ class SearchHttpTest
         search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name") size 3
       }.await.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
     }
+    "support source includes" in {
+      http.execute {
+        search("chess" / "pieces") query matchAllQuery() sourceInclude "count"
+      }.await.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
+    }
+    "support source excludes" in {
+      http.execute {
+        search("chess" / "pieces") query matchAllQuery() sourceExclude "count"
+      }.await.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
+    }
   }
 }
 

@@ -62,11 +62,13 @@ object HttpClient extends Logging {
   * @tparam U the type of the response object returned by this handler
   */
 trait HttpExecutable[T, U] extends Logging {
+
   def execute(client: RestClient, request: T, format: JsonFormat[U]): Future[U]
 
   // convience method that registers a listener with the function and the response json
   // is then marshalled into the type U
-  protected def executeAsyncAndMapResponse(listener: ResponseListener => Any, format: JsonFormat[U]): Future[U] = {
+  protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
+                                           format: JsonFormat[U]): Future[U] = {
     val p = Promise[U]()
     listener(new ResponseListener {
       override def onSuccess(r: Response): Unit = {

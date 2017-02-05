@@ -58,7 +58,7 @@ trait SearchImplicits {
       request.pref.foreach(params.put("preference", _))
       request.size.map(_.toString).foreach(params.put("size", _))
       request.searchType.map(_.toString).foreach(params.put("search_type", _))
-      request.requestCache.map(_.toString).foreach(params.put("search_type", _))
+      request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.version.map(_.toString).foreach(params.put("version", _))
 

@@ -229,6 +229,13 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def version(version: Boolean): SearchDefinition = copy(version = version.some)
 
+  /**
+    * The maximum number of documents to collect for each shard,
+    * upon reaching which the query execution will terminate early.
+    * If set, the response will have a boolean field terminated_early
+    * to indicate whether the query execution has actually terminated
+    * early. Defaults to no.
+    */
   def terminateAfter(terminateAfter: Int): SearchDefinition = copy(terminateAfter = terminateAfter.some)
 
   def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)

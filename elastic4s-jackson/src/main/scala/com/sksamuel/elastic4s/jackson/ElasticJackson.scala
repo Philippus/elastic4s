@@ -11,9 +11,10 @@ object ElasticJackson {
 
   object Implicits extends Logging {
 
-    implicit val mapper = JacksonSupport.mapper
+    implicit val mapper: ObjectMapper = JacksonSupport.mapper
 
-    implicit def format[T: Manifest](implicit mapper: ObjectMapper): JsonFormat[T] = new JsonFormat[T] {
+    implicit def format[T](implicit mapper: ObjectMapper,
+                           manifest: Manifest[T]): JsonFormat[T] = new JsonFormat[T] {
       override def fromJson(json: String): T = {
         val t = manifest.runtimeClass.asInstanceOf[Class[T]]
         logger.debug(s"Deserializing $json to $t")
@@ -25,7 +26,8 @@ object ElasticJackson {
       override def json(t: T): String = mapper.writeValueAsString(t)
     }
 
-    implicit def JacksonJsonHitReader[T: Manifest](implicit mapper: ObjectMapper): HitReader[T] = new HitReader[T] {
+    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper,
+                                         manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
       override def read(hit: Hit): Either[Throwable, T] = {
         try {
           val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]

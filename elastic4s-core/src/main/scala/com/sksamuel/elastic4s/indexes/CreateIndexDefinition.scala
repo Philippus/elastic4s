@@ -15,8 +15,8 @@ case class CreateIndexDefinition(name: String,
 
   require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
-  def singleShard() = shards(1)
-  def singleReplica() = replicas(1)
+  def singleShard(): CreateIndexDefinition = shards(1)
+  def singleReplica(): CreateIndexDefinition = replicas(1)
 
   def waitForActiveShards(shards: Int): CreateIndexDefinition = copy(waitForActiveShards = shards.some)
 

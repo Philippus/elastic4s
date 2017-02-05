@@ -5,6 +5,6 @@ package com.sksamuel.elastic4s
   *
   * @tparam U the type of the class supported
   */
-trait JsonFormat[+U] {
+trait JsonFormat[U] {
   def fromJson(string: String): U
 }
