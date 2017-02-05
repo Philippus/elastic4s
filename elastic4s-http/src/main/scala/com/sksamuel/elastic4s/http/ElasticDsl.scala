@@ -17,6 +17,7 @@ trait ElasticDsl
     with GetImplicits
     with IndexAdminImplicits
     with IndexImplicits
+    with LocksImplicits
     with SearchImplicits
     with UpdateImplicits
 

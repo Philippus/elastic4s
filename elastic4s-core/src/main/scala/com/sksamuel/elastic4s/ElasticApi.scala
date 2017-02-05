@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
 import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi}
+import com.sksamuel.elastic4s.locks.LocksApi
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
@@ -38,6 +39,7 @@ trait ElasticApi
     with HighlightApi
     with IndexApi
     with IndexAdminApi
+    with LocksApi
     with MappingApi
     with QueryApi
     with ReindexApi
