@@ -8,44 +8,28 @@ import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source
-import scala.util.control.NonFatal
+import scala.util.Try
 
 trait HttpClient extends Logging {
 
   // returns the underlying java rest client
   def rest: RestClient
 
+  // returns a String containing the Json of the request
   def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
-  def execute[T, U](request: T)(implicit executable: HttpExecutable[T, U], format: JsonFormat[U]): Future[U] = {
-    logger.debug(s"Executing $request")
-
-    try {
-      val fn = executable.execute(rest, request)
-      val p = Promise[U]()
-      fn(new ResponseListener {
-        override def onSuccess(r: Response): Unit = {
-          logger.debug(s"onSuccess $r")
-          try {
-            val u = format.fromJson(Source.fromInputStream(r.getEntity.getContent).mkString)
-            p.trySuccess(u)
-          } catch {
-            case e: Throwable =>
-              p.tryFailure(e)
-          }
-        }
-        override def onFailure(e: Exception): Unit = {
-          logger.debug(s"onFailure $e")
-          p.tryFailure(e)
-        }
-      }
-      )
-      p.future
-    }
-    catch {
-      case NonFatal(e) => Future.failed(e)
-    }
-  }
+  /**
+    * Executes the given request type T, and returns a Future of the response type U.
+    *
+    * In order to use this method an implicit `JsonFormat[U]` must be in scope. The easist
+    * way is to include one of the json modules, eg `elastic4s-jackson` or `elastic4s-circe` and
+    * then import the implicit. Eg,
+    *
+    * `import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._`
+    */
+  def execute[T, U](request: T)
+                   (implicit exec: HttpExecutable[T, U],
+                    format: JsonFormat[U]): Future[U] = exec.execute(rest, request, format)
 
   def close(): Unit
 }
@@ -78,5 +62,25 @@ object HttpClient extends Logging {
   * @tparam U the type of the response object returned by this handler
   */
 trait HttpExecutable[T, U] extends Logging {
-  def execute(client: RestClient, request: T): ResponseListener => Any
+  def execute(client: RestClient, request: T, format: JsonFormat[U]): Future[U]
+
+  // convience method that registers a listener with the function and the response json
+  // is then marshalled into the type U
+  protected def executeAsyncAndMapResponse(listener: ResponseListener => Any, format: JsonFormat[U]): Future[U] = {
+    val p = Promise[U]()
+    listener(new ResponseListener {
+      override def onSuccess(r: Response): Unit = {
+        logger.debug(s"onSuccess $r")
+        val result = Try {
+          format.fromJson(Source.fromInputStream(r.getEntity.getContent).mkString)
+        }
+        p.tryComplete(result)
+      }
+      override def onFailure(e: Exception): Unit = {
+        logger.debug(s"onFailure $e")
+        p.tryFailure(e)
+      }
+    })
+    p.future
+  }
 }

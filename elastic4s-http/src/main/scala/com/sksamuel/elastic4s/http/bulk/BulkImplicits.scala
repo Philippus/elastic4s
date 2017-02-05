@@ -1,13 +1,15 @@
 package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
+import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.StringEntity
-import org.elasticsearch.client.{ResponseListener, RestClient}
+import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 case class Index(_index: String, _type: String, _id: String, version: Long, result: String, forced_result: Boolean, _shards: Shards)
 
@@ -22,7 +24,10 @@ trait BulkImplicits {
   }
 
   implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
-    override def execute(client: RestClient, bulk: BulkDefinition): (ResponseListener) => Any = {
+
+    override def execute(client: RestClient,
+                         bulk: BulkDefinition,
+                         format: JsonFormat[BulkResponse]): Future[BulkResponse] = {
 
       val endpoint = "/_bulk"
 
@@ -35,7 +40,7 @@ trait BulkImplicits {
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.performRequestAsync("POST", endpoint, params.asJava, entity, _)
+      executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
     }
   }
 }

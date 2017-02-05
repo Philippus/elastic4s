@@ -124,21 +124,21 @@ through to the readme page. For options that are not yet documented, refer to th
 
 | Operation                                 | Syntax | HTTP | TCP |
 |-------------------------------------------|--------|------|-----|
-| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |       | yes |
-| Bulk										| `bulk(query1, query2, query3...)`         | yes   | yes |
-| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |       | yes |
-| Clear index cache                         | `clearCache(<index>)`                     |       | yes |
-| Close index                               | `closeIndex(<name>)`                      |   | yes |
+| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |     | yes |
+| Bulk										| `bulk(query1, query2, query3...)`         | yes | yes |
+| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |     | yes |
+| Clear index cache                         | `clearCache(<index>)`                     |     | yes |
+| Close index                               | `closeIndex(<name>)`                      | yes   yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
 | Cluster stats                             | `clusterStats()`                          |   | yes |
 | [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
 | [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)`   |   | yes |
 | [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)`       |   | yes |
 | Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
-| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)`     | yes  | yes |
-| Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes  | yes |
-| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         |  | yes |
-| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |   | yes |
+| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)`     | yes | yes |
+| Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes | yes |
+| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         |     | yes |
+| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
 | [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
@@ -150,16 +150,16 @@ through to the readme page. For options that are not yet documented, refer to th
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
 | Get Template                              | `getTemplate(<name>)` |   | yes |
 | [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes  | yes |
-| Index exists                              | `indexExists(<name>)` |   | yes |
+| Index exists                              | `indexExists(<name>)`                     | yes  | yes |
 | Index Status                              | `indexStatus(<index>)` |   | yes |
 | List Tasks                                | `listTasks(nodeIds)` |   | yes |
 | [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
-| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`| yes  | yes |
-| Open index                                | `openIndex(<name>)` |   | yes |
+| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`       | yes  | yes |
+| Open index                                | `openIndex(<name>)`                       | yes  | yes |
 | [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |   | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |   | yes |
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
-| Refresh index                             | `refreshIndex(<name>)` | yes  | yes |
+| Refresh index                             | `refreshIndex(<name>)`                    | yes  | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
 | [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
 | [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |

@@ -1,51 +1,19 @@
 package com.sksamuel.elastic4s.http.get
 
 import cats.Show
+import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.StringEntity
-import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
-  def items = docs
-  def size = docs.size
-}
-
-object MultiGetBodyBuilder {
-  def apply(request: MultiGetDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.startArray("docs")
-    request.gets.foreach { get =>
-      builder.startObject()
-      builder.field("_index", get.indexAndType.index)
-      builder.field("_type", get.indexAndType.`type`)
-      builder.field("_id", get.id)
-      get.fetchSource.foreach { context =>
-        if (context.includes.nonEmpty || context.excludes.nonEmpty) {
-          builder.startObject("_source")
-          if (context.includes.nonEmpty)
-            builder.field("include", context.includes)
-          if (context.excludes.nonEmpty)
-            builder.field("exclude", context.excludes)
-          builder.endObject()
-        } else {
-          builder.field("_source", false)
-        }
-      }
-      if (get.storedFields.nonEmpty) {
-        builder.field("stored_fields", get.storedFields.toArray)
-      }
-      builder.endObject()
-    }
-    builder.endArray()
-    builder.endObject()
-    builder
-  }
+  def items: Seq[GetResponse] = docs
+  def size: Int = docs.size
 }
 
 trait GetImplicits {
@@ -55,7 +23,9 @@ trait GetImplicits {
   }
 
   implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetDefinition, MultiGetResponse] with Logging {
-    override def execute(client: RestClient, request: MultiGetDefinition): (ResponseListener) => Any = {
+    override def execute(client: RestClient,
+                         request: MultiGetDefinition,
+                         format: JsonFormat[MultiGetResponse]): Future[MultiGetResponse] = {
 
       val body = MultiGetBodyBuilder(request).string()
       logger.debug(s"Executing multiget $body")
@@ -63,13 +33,15 @@ trait GetImplicits {
 
       val params = scala.collection.mutable.Map.empty[String, String]
 
-      client.performRequestAsync("POST", "/_mget", params.asJava, entity, _)
+      executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_mget", params.asJava, entity, _), format)
     }
   }
 
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
-    override def execute(client: RestClient, request: GetDefinition): ResponseListener => Any = {
+    override def execute(client: RestClient,
+                         request: GetDefinition,
+                         format: JsonFormat[GetResponse]): Future[GetResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
 
@@ -89,7 +61,7 @@ trait GetImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.foreach(params.put("versionType", _))
 
-      client.performRequestAsync("GET", endpoint, params.asJava, _: ResponseListener)
+      executeAsyncAndMapResponse(client.performRequestAsync("GET", endpoint, params.asJava, _), format)
     }
   }
 }

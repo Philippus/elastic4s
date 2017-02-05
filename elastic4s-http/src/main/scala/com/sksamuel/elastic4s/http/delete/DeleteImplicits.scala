@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s.http.delete
 
 import cats.Show
-import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.{DocumentRef, JsonFormat}
 import org.apache.http.entity.StringEntity
-import org.elasticsearch.client.{ResponseListener, RestClient}
+import org.elasticsearch.client.RestClient
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 case class DeleteByQueryResponse(
                                   took: Long,
@@ -56,7 +57,10 @@ trait DeleteImplicits {
   }
 
   implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
-    override def execute(client: RestClient, request: DeleteByQueryDefinition): (ResponseListener) => Any = {
+
+    override def execute(client: RestClient,
+                         request: DeleteByQueryDefinition,
+                         format: JsonFormat[DeleteByQueryResponse]): Future[DeleteByQueryResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
         s"/${request.indexesAndTypes.indexes.mkString(",")}/_delete_by_query"
@@ -76,13 +80,16 @@ trait DeleteImplicits {
       logger.debug(s"Delete by query ${body.string}")
       val entity = new StringEntity(body.string)
 
-      client.performRequestAsync("POST", endpoint, params.asJava, entity, _)
+      executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
     }
   }
 
   implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
 
-    override def execute(client: RestClient, request: DeleteByIdDefinition): (ResponseListener) => Any = {
+    override def execute(client: RestClient,
+                         request: DeleteByIdDefinition,
+                         format: JsonFormat[DeleteResponse]): Future[DeleteResponse] = {
+
       val method = "DELETE"
       val url = s"/${request.indexType.index}/${request.indexType.`type`}/${request.id}"
 
@@ -94,7 +101,7 @@ trait DeleteImplicits {
       request.versionType.map(_.name).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
-      client.performRequestAsync(method, url, params.asJava, _)
+      executeAsyncAndMapResponse(client.performRequestAsync(method, url, params.asJava, _), format)
     }
   }
 }
