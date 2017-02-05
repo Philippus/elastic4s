@@ -35,13 +35,13 @@ In elastic4s 5.2.x a new [HTTP client](https://github.com/sksamuel/elastic4s/tre
 
 #### Release
 
-The latest release is 5.2.0 which is compatible with Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
+The latest releases are for Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
 For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
-Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively. I do not know the reasoning behind this, as they are needed for the client to work. The elastic4s client brings in the dependencies for you, but in case anything is missed, add it to your build yourself.
+Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.The elastic4s client brings in the dependencies for you, but in case anything is missed, you would need to add it to your build yourself.
 
-The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s (or even just the Java transport client) you will get NoSuchMethodExceptions if you try to use it with Play or Spark. I am unable of a workaround at present, until Spark and Play update to the latest version, other than switching to the experimental HTTP client.
+The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s (or even just the elasticsearch provided Java TCP client) you will get `NoSuchMethodException`s if you try to use it with Play or Spark. I am unaware of a workaround at present, until Spark and Play update to the latest version, other than switching to the experimental HTTP client.
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
@@ -67,7 +67,7 @@ See full [changelog](#changelog).
 
 ## Quick Start
 
-To get started you will need to add a dependency to either [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http) or [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) depending on which client you intend you use (or both!)
+To get started you will need to add a dependency to either [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http) or [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) depending on which client you intend you use (or both)
 
 The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse` which contains the results of the search.
 
@@ -77,9 +77,9 @@ Requests, such as inserting a document, searching, creating an index, and so on,
 
 The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is identical whether you use the HTTP or TCP client, you must import the appropriate trait (`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which client you are using.
 
-One final import is required if you are using the HTTP client. The API needs a way to marshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client simply expects an implicit `JsonFormat` implementation. 
+One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit `JsonFormat` implementation. 
 
-Elastic4s provides several out of the box (or you can roll your own). The provided implemenations are elastic4s-circe, elastic4s-jackson, elastic4s-json4, and elastic4s-play-json. For example, to use the jackson implementation, add the module to your build and then add this line:
+Elastic4s provides several out of the box (or you can roll your own). The provided implemenations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
 
 ```scala
 import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
