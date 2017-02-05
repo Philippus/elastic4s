@@ -8,6 +8,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 case class TermSuggestionDefinition(name: String,
                                     fieldname: String,
+                                    text: String,
                                     accuracy: Option[Double] = None,
                                     maxEdits: Option[Int] = None,
                                     maxInspections: Option[Int] = None,
@@ -20,8 +21,7 @@ case class TermSuggestionDefinition(name: String,
                                     suggestMode: Option[SuggestMode] = None,
                                     analyzer: Option[String] = None,
                                     size: Option[Int] = None,
-                                    shardSize: Option[Int] = None,
-                                    text: Option[String] = None) extends SuggestionDefinition {
+                                    shardSize: Option[Int] = None) extends SuggestionDefinition {
 
   override type B = TermSuggestionBuilder
 
@@ -61,7 +61,7 @@ case class TermSuggestionDefinition(name: String,
   def mode(suggestMode: SuggestMode): TermSuggestionDefinition = copy(suggestMode = suggestMode.some)
 
   override def analyzer(analyzer: String): TermSuggestionDefinition = copy(analyzer = analyzer.some)
-  override def text(text: String): TermSuggestionDefinition = copy(text = text.some)
+  override def text(text: String): TermSuggestionDefinition = copy(text = text)
   override def size(size: Int): TermSuggestionDefinition = copy(size = size.some)
   override def shardSize(shardSize: Int): TermSuggestionDefinition = copy(shardSize = shardSize.some)
 }

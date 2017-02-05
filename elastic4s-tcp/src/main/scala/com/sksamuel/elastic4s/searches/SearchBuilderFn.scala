@@ -63,6 +63,7 @@ object SearchBuilderFn {
             options.map(_.asJava).getOrElse(new java.util.HashMap()),
             params.map(_.asJava).getOrElse(new java.util.HashMap())))
       }
+
     if (search.suggs.nonEmpty) {
       val suggest = new SuggestBuilder()
       search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, sugg.builder) }

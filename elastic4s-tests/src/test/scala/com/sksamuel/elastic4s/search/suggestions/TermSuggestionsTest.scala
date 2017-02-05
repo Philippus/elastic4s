@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
 import org.scalatest.{Matchers, WordSpec}
 
-class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
+class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
@@ -59,7 +59,7 @@ class SuggestionsTest extends WordSpec with Matchers with ElasticSugar {
 
       val resp = client.execute {
         search(indexType).suggestions {
-          termSuggestion("a") on "artist" text "Quoon" mode SuggestMode.POPULAR
+          termSuggestion("a", "artist", "Quoon") mode SuggestMode.POPULAR
         }
       }.await
       resp.termSuggestion("a").entry("quoon").optionsText shouldBe Array("queen")

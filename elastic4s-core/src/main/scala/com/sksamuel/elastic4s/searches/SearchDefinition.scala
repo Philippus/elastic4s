@@ -123,7 +123,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def prefix(name: String, value: Any): SearchDefinition = query(PrefixQueryDefinition(name, value))
 
   @deprecated("use regexQuery(...)", "5.0.0")
-  def regex(tuple: (String, String)) = regexQuery(tuple)
+  def regex(tuple: (String, String)): SearchDefinition = regexQuery(tuple)
   def regexQuery(tuple: (String, String)): SearchDefinition = regexQuery(tuple._1, tuple._2)
 
   // Adds a single regex query to this search
