@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.get
 
-import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.Hit
 import com.sksamuel.elastic4s.get.HitField
+import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 
 case class GetResponse(private val _id: String,
                        private val _index: String,
@@ -10,15 +11,14 @@ case class GetResponse(private val _id: String,
                        found: Boolean,
                        fields: Map[String, Any],
                        private val _source: Map[String, Any]
-                      ) {
+                      ) extends Hit {
 
-  def index = _index
-  def `type` = _type
-  def id = _id
-  def version = _version
-  def ref = DocumentRef(index, `type`, id)
-  def exists = found
-  def source = sourceAsMap
+  def index: String = _index
+  def `type`: String = _type
+  def id: String = _id
+  def version: Long = _version
+  def exists: Boolean = found
+  def source: Map[String, Any] = sourceAsMap
 
   def storedField(fieldName: String): HitField = new HitField {
     override def values: Seq[AnyRef] = fields(fieldName) match {
@@ -31,6 +31,8 @@ case class GetResponse(private val _id: String,
     override def isMetadataField: Boolean = ???
   }
 
-  def storedFieldsAsMap = Option(fields).getOrElse(Map.empty)
-  def sourceAsMap = Option(_source).getOrElse(Map.empty)
+  def storedFieldsAsMap: Map[String, Any] = Option(fields).getOrElse(Map.empty)
+  override def sourceAsMap: Map[String, Any] = Option(_source).getOrElse(Map.empty)
+  override def sourceAsString: String = SourceAsContentBuilder(_source).string()
+
 }

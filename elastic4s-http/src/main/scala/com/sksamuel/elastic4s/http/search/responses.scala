@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.syntax.either._
-import com.sksamuel.elastic4s.http.Shards
+import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{Hit, HitReader}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 case class SearchHit(private val _id: String,
                      private val _index: String,
@@ -18,48 +17,7 @@ case class SearchHit(private val _id: String,
   override def version: Long = _version
 
   override def sourceAsMap: Map[String, AnyRef] = _source
-  override def sourceAsBytes: Array[Byte] = sourceAsString.getBytes("UTF8")
-  override def sourceAsString: String = sourceAsXContentBuilder.string
-
-  def sourceAsXContentBuilder: XContentBuilder = {
-
-    val builder = XContentFactory.jsonBuilder()
-
-    def addMap(map: Map[String, AnyRef]): Unit = {
-      map.foreach {
-        case (key, value: Map[String, AnyRef]) =>
-          builder.startObject(key)
-          addMap(value)
-          builder.endObject()
-        case (key, values: Seq[Any]) =>
-          builder.startArray(key)
-          addSeq(values)
-          builder.endArray()
-        case (key, value) =>
-          builder.field(key, value)
-      }
-    }
-
-    def addSeq(values: Seq[Any]): Unit = {
-      values.foreach {
-        case map: Map[String, AnyRef] =>
-          builder.startObject()
-          addMap(map)
-          builder.endObject()
-        case seq: Seq[Any] =>
-          builder.startArray()
-          addSeq(values)
-          builder.endArray()
-        case other =>
-          builder.value(other)
-      }
-    }
-
-    builder.startObject()
-    addMap(_source)
-    builder.endObject()
-    builder
-  }
+  override def sourceAsString: String = SourceAsContentBuilder(_source).string()
 
   override def exists: Boolean = true
 }

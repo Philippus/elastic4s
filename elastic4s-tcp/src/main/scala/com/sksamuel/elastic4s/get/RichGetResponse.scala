@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.get
 
+import java.util
+
 import com.sksamuel.elastic4s.Hit
 import org.elasticsearch.action.get.GetResponse
-import org.elasticsearch.common.bytes.BytesReference
 import org.elasticsearch.index.get.GetField
 
 import scala.collection.JavaConverters._
@@ -14,7 +15,7 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   def getField(name: String): GetField = original.getField(name)
 
   @deprecated("use sourceAsMap", "5.0.0")
-  def getFields = original.getFields
+  def getFields: util.Map[String, GetField] = original.getFields
 
   @deprecated("use .java", "5.0.0")
   def getId: String = id
@@ -55,12 +56,10 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   }
 
   @deprecated("use .sourceAsMap", "5.0.0")
-  def source = sourceAsMap
+  def source: Map[String, AnyRef] = sourceAsMap
 
   override def sourceAsMap: Map[String, AnyRef] = Option(original.getSource).map(_.asScala.toMap).getOrElse(Map.empty)
-  override def sourceAsBytes: Array[Byte] = original.getSourceAsBytes
   override def sourceAsString: String = original.getSourceAsString
-  override def isSourceEmpty: Boolean = original.isSourceEmpty
 
   override def exists: Boolean = original.isExists
 

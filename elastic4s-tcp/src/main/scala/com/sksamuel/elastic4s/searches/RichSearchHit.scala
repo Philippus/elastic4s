@@ -21,10 +21,8 @@ case class RichSearchHit(java: SearchHit) extends Hit {
 
   override def exists = true
 
-  override def sourceAsBytes: Array[Byte] = Option(java.source).getOrElse(Array.empty)
   override def sourceAsString: String = StringOption(java.sourceAsString).getOrElse("")
   override def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
-  override def isSourceEmpty: Boolean = !java.hasSource
 
   def explanation: Option[Explanation] = Option(java.explanation)
 

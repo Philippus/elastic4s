@@ -25,16 +25,16 @@ trait Hit {
   final def toOpt[T: HitReader]: Option[T] = if (exists) to[T].some else None
   final def safeToOpt[T: HitReader]: Option[Either[Throwable, T]] = if (exists) safeTo[T].some else None
 
-  def sourceField(name: String): AnyRef = sourceAsMap(name)
-  def sourceFieldOpt(name: String): Option[AnyRef] = sourceAsMap.get(name)
+  final def sourceField(name: String): AnyRef = sourceAsMap(name)
+  final def sourceFieldOpt(name: String): Option[AnyRef] = sourceAsMap.get(name)
+  final def sourceAsBytes: Array[Byte] = sourceAsString.getBytes("UTF8")
 
-  def sourceAsMap: Map[String, AnyRef]
-  def sourceAsBytes: Array[Byte]
   def sourceAsString: String
-  def sourceAsByteBuffer: ByteBuffer = ByteBuffer.wrap(sourceAsBytes)
-  def isSourceEmpty: Boolean = sourceAsMap.isEmpty
+  def sourceAsMap: Map[String, AnyRef]
 
-  def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)
+  final def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)
+  final def sourceAsByteBuffer: ByteBuffer = ByteBuffer.wrap(sourceAsBytes)
+  final def isSourceEmpty: Boolean = sourceAsMap.isEmpty
 
   def exists: Boolean
 }
