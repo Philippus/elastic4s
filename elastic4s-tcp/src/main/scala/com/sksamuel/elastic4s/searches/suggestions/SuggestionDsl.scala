@@ -13,13 +13,13 @@ trait SuggestionDsl {
   }
 
   def termSuggestion(): TermSuggExpectsField = termSuggestion(UUID.randomUUID.toString)
-  def termSuggestion(name: String, field: String, text: String) = TermSuggestionDefinition(name, field, text)
+  def termSuggestion(name: String, field: String, text: String) = TermSuggestionDefinition(name, field, Some(text))
 
   def termSuggestion(name: String): TermSuggExpectsField = new TermSuggExpectsField(name)
   class TermSuggExpectsField(name: String) {
     @deprecated("use on(field)", "5.0.0")
     def field(field: String): TermSuggestionDefinition = on(field)
-    def on(field: String) = TermSuggestionDefinition(name, field, "")
+    def on(field: String) = TermSuggestionDefinition(name, field, Some(""))
   }
 
   def phraseSuggestion(): PhraseSuggExpectsField = phraseSuggestion(UUID.randomUUID.toString)

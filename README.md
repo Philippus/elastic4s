@@ -153,6 +153,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Index exists                              | `indexExists(<name>)`                     | yes  | yes |
 | Index Status                              | `indexStatus(<index>)` |   | yes |
 | List Tasks                                | `listTasks(nodeIds)` |   | yes |
+| Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
+| Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
 | [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`       | yes  | yes |
 | Open index                                | `openIndex(<name>)`                       | yes  | yes |
