@@ -52,7 +52,7 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar w
       blockUntilCount(Ship.ships.length, indexName)
     }
 
-    "index all receveid data and ignore failures" in {
+    "index all received data and ignore failures" in {
 
       client.execute {
         createIndex(strictIndex).mappings(
