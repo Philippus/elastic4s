@@ -122,6 +122,37 @@ class SearchHttpTest
         search("chess" / "pieces") query matchAllQuery() sourceExclude "count"
       }.await.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
     }
+    "support constantScoreQuery" should {
+      "work with termQuery" in {
+        http.execute {
+          search("chess" / "pieces") query {
+            constantScoreQuery {
+              termQuery("name", "pawn")
+            }
+          }
+        }.await.totalHits shouldBe 1
+      }
+      "work with termsQuery" in {
+        http.execute {
+          search("chess" / "pieces") query {
+            constantScoreQuery {
+              termsQuery("name", List("pawn", "king"))
+            }
+          }
+        }.await.totalHits shouldBe 2
+      }
+      "support boost and queryName" in {
+        val resp = http.execute {
+          search("chess" / "pieces") query {
+            constantScoreQuery {
+              termQuery("name", "pawn")
+            } boost 14.5 queryName "namey"
+          }
+        }.await
+        resp.totalHits shouldBe 1
+        resp.maxScore shouldBe 14.5
+      }
+    }
   }
 }
 
