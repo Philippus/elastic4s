@@ -9,6 +9,7 @@ object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {
     case b: BoolQueryDefinition => BoolQueryBuilderFn(b)
     case q: CommonTermsQueryDefinition => CommonTermsQueryBodyFn(q)
+    case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchQueryDefinition => MatchBodyFn(q)
