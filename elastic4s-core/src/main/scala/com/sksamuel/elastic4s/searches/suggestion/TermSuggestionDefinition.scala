@@ -9,6 +9,7 @@ case class TermSuggestionDefinition(name: String,
                                     fieldname: String,
                                     text: Option[String] = None,
                                     accuracy: Option[Double] = None,
+                                    lowercaseTerms: Option[Boolean] = None,
                                     maxEdits: Option[Int] = None,
                                     maxInspections: Option[Int] = None,
                                     maxTermFreq: Option[Double] = None,
@@ -48,6 +49,7 @@ case class TermSuggestionDefinition(name: String,
   def maxInspections(maxInspections: Int): TermSuggestionDefinition = copy(maxInspections = maxInspections.some)
   def maxTermFreq(maxTermFreq: Double): TermSuggestionDefinition = copy(maxTermFreq = maxTermFreq.some)
   def minDocFreq(minDocFreq: Double): TermSuggestionDefinition = copy(minDocFreq = minDocFreq.some)
+  def lowercaseTerms(lowercaseTerms: Boolean): TermSuggestionDefinition = copy(lowercaseTerms = lowercaseTerms.some)
   def minWordLength(minWordLength: Int): TermSuggestionDefinition = copy(minWordLength = minWordLength.some)
   def prefixLength(prefixLength: Int): TermSuggestionDefinition = copy(prefixLength = prefixLength.some)
   def sort(sort: SortBy): TermSuggestionDefinition = copy(sort = sort.some)
