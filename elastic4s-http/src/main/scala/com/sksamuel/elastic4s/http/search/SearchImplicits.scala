@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import cats.Show
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.RestClient
@@ -11,6 +12,10 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 trait SearchImplicits {
+
+  implicit def BuildableTermsNoOp[T] = new BuildableTermsQuery[T] {
+    override def build(q: TermsQueryDefinition[T]): Any = null // not used by the http builders
+  }
 
   implicit object SearchShow extends Show[SearchDefinition] {
     override def show(req: SearchDefinition): String = SearchContentBuilder(req).string()
