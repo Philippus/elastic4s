@@ -17,33 +17,34 @@ import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
+                            aggs: Seq[AggregationDefinition] = Nil,
+                            explain: Option[Boolean] = None,
+                            fetchContext: Option[FetchSourceContext] = None,
+                            from: Option[Int] = None,
+                            indicesOptions: Option[IndicesOptions] = None,
+                            inners: Seq[InnerHitDefinition] = Nil,
+                            indexBoosts: Seq[(String, Double)] = Nil,
+                            keepAlive: Option[String] = None,
+                            highlight: Option[Highlight] = None,
+                            minScore: Option[Double] = None,
+                            pref: Option[String] = None,
                             query: Option[QueryDefinition] = None,
                             postFilter: Option[QueryDefinition] = None,
-                            minScore: Option[Double] = None,
                             requestCache: Option[Boolean] = None,
-                            storedFields: Seq[String] = Nil,
-                            aggs: Seq[AggregationDefinition] = Nil,
-                            sorts: Seq[SortDefinition] = Nil,
+                            rescorers: Seq[RescoreDefinition] = Nil,
                             scriptFields: Seq[ScriptFieldDefinition] = Nil,
+                            sorts: Seq[SortDefinition] = Nil,
+                            storedFields: Seq[String] = Nil,
                             suggs: Seq[SuggestionDefinition] = Nil,
-                            highlight: Option[Highlight] = None,
-                            explain: Option[Boolean] = None,
-                            from: Option[Int] = None,
                             size: Option[Int] = None,
-                            pref: Option[String] = None,
                             routing: Option[String] = None,
-                            indicesOptions: Option[IndicesOptions] = None,
-                            version: Option[Boolean] = None,
                             stats: Seq[String] = Nil,
+                            searchType: Option[SearchType] = None,
+                            searchAfter: Seq[Any] = Nil,
                             trackScores: Option[Boolean] = None,
                             terminateAfter: Option[Int] = None,
-                            rescorers: Seq[RescoreDefinition] = Nil,
-                            searchType: Option[SearchType] = None,
                             timeout: Option[Duration] = None,
-                            keepAlive: Option[String] = None,
-                            fetchContext: Option[FetchSourceContext] = None,
-                            inners: Seq[InnerHitDefinition] = Nil,
-                            indexBoosts: Seq[(String, Double)] = Nil
+                            version: Option[Boolean] = None
                            ) {
 
   /** Adds a single string query to this search
@@ -68,6 +69,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def inner(first: InnerHitDefinition, rest: InnerHitDefinition*): SearchDefinition = inner(first +: rest)
   def inner(inners: Iterable[InnerHitDefinition]): SearchDefinition = copy(inners = inners.toSeq)
+
+  def searchAfter(values: Seq[Any]): SearchDefinition = copy(searchAfter = values)
 
   def postFilter(block: => QueryDefinition): SearchDefinition = copy(postFilter = block.some)
 

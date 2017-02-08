@@ -15,6 +15,7 @@ import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery
 import com.sksamuel.elastic4s.searches.sort.SortApi
+import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
 import com.sksamuel.elastic4s.searches.{HighlightApi, QueryApi, SearchApi}
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
@@ -47,6 +48,7 @@ trait ElasticApi
     with ScoreApi
     with SearchApi
     with SortApi
+    with SuggestionApi
     with TaskApi
     with TermVectorApi
     with TokenizerApi

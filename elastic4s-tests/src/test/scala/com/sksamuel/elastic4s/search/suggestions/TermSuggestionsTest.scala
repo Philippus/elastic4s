@@ -1,20 +1,26 @@
 package com.sksamuel.elastic4s.search.suggestions
 
-import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
 import org.scalatest.{Matchers, WordSpec}
 
-class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
+class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
   }
 
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+
+  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+
   private val Index = "termsuggest"
   private val indexType = Index / "music"
 
-  client.execute(
+  http.execute(
     bulk(
       indexInto(indexType) doc Song("style", "taylor swift"),
       indexInto(indexType) doc Song("shake it off", "Taylor Swift"),
@@ -27,63 +33,62 @@ class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
       indexInto(indexType) doc Song("Down with the trumpets", "Rizzle Kicks"),
       indexInto(indexType) doc Song("Down with the trombones", "Razzle Kacks"),
       indexInto(indexType) doc Song("lover of the light", "Mumford and sons"),
-      indexInto(indexType) doc Song("Monster", "Mumford and sons")
-    )
+      indexInto(indexType) doc Song("Monster", "Mumford and sons"),
+      indexInto(indexType) doc Song("Goodbye the yellow brick road", "Elton John"),
+      indexInto(indexType) doc Song("Your song", "Elton John")
+    ).refresh(RefreshPolicy.IMMEDIATE)
   ).await
-
-  blockUntilCount(12, Index)
 
   "suggestions" should {
     "support results lookup by name" in {
 
-      val resp = client.execute {
+      val resp = http.execute {
         search(indexType).suggestions {
           termSuggestion("a").on("artist").text("taylor swuft")
         }
       }.await
 
-      resp.suggestion("a").entry("taylor").options.isEmpty shouldBe true
-      resp.termSuggestion("a").entry("swuft").optionsText shouldBe Seq("swift")
+      resp.termSuggestion("a")("taylor").options.isEmpty shouldBe true
+      resp.termSuggestion("a")("swuft").optionsText shouldBe Seq("swift")
     }
     "bring back suggestions for matching terms when mode is always" in {
 
       val suggestionA = termSuggestion("a").on("artist") text "Razzle Kacks" mode SuggestMode.ALWAYS
-      val resp = client.execute {
+      val resp = http.execute {
         search(indexType).suggestions(suggestionA)
       }.await
 
-      resp.suggestion("a").entry("razzle").optionsText shouldBe Array("rizzle")
-      resp.suggestion("a").entry("kacks").optionsText shouldBe Array("kicks")
+      resp.termSuggestion("a")("razzle").optionsText shouldBe Seq("rizzle")
+      resp.termSuggestion("a")("kacks").optionsText shouldBe Seq("kicks")
     }
     "bring back suggestions that are more popular when popular mode is set" in {
 
-      val resp = client.execute {
+      val resp = http.execute {
         search(indexType).suggestions {
           termSuggestion("a", "artist", "Quoon") mode SuggestMode.POPULAR
         }
       }.await
-      resp.termSuggestion("a").entry("quoon").optionsText shouldBe Array("queen")
+      resp.termSuggestion("a")("quoon").optionsText shouldBe Seq("queen")
 
     }
     "allow us to set the max edits to be counted as a suitable suggestion" in {
 
-      val resp = client.execute {
+      val resp = http.execute {
         search(indexType).suggestions {
           termSuggestion("a") on "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
       }.await
-      resp.termSuggestion("a").entry("quean").optionsText shouldBe Array("queen")
+      resp.termSuggestion("a")("quean").optionsText shouldBe Seq("queen")
     }
-    //    "allow us to set min word length to be suggested for" in {
-    //      val resp = client.execute {
-    //        search in indexType suggestions {
-    //          suggest as "a" field "artist" on "Mamford ind sans"  minWordLength 2
-    //        }
-    //      }.await
-    //      resp.suggestion("a").get.entryTerms shouldBe Array("mamford", "sans")
-    //      resp.suggestion("a").get.entry("mamford").optionsText shouldBe Array("mumford")
-    //      resp.suggestion("a").get.entry("sons").optionsText shouldBe Array("sans")
-    //    }
+    "allow us to set min word length to be suggested for" in {
+      val resp = http.execute {
+        search(indexType).suggestions {
+          termSuggestion("a", "artist", "joan") minWordLength 5
+        }
+      }.await
+      // we set min word to 5 so the only possible suggestion of John should not be included
+      resp.termSuggestion("a")("joan").options.size shouldBe 0
+    }
   }
 }
 

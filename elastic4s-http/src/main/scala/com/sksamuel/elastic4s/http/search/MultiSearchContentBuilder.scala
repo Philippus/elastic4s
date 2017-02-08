@@ -17,7 +17,7 @@ object MultiSearchContentBuilder {
       search.searchType.map(_.toString).foreach(header.field("search_type", _))
       header.endObject()
 
-      val body = SearchContentBuilder(search)
+      val body = SearchBodyBuilderFn(search)
 
       Seq(header.string(), body.string())
     }.mkString("\n") + "\n"

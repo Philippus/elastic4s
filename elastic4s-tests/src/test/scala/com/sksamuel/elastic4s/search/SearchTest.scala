@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{ElasticMatchers, SharedElasticSugar}
 import org.scalatest.WordSpec
-import org.scalatest.concurrent.Eventually
 
 class SearchTest
   extends WordSpec
-    with ElasticSugar
-    with Eventually
-    with ElasticMatchers {
+    with SharedElasticSugar
+    with ElasticMatchers
+    with ElasticDsl {
 
   client.execute {
     bulk(
@@ -36,7 +36,7 @@ class SearchTest
 
   "a search query" should {
     "find an indexed document that matches a string query" in {
-      search in "musicians" -> "bands" query "anderson" should haveTotalHits(1)
+      search("musicians" -> "bands") query "anderson" should haveTotalHits(1)
     }
     "find an indexed document in the given type only" in {
       search("musicians" -> "bands") query "kate" should haveNoHits
@@ -46,22 +46,22 @@ class SearchTest
       search("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")
     }
     "support source includes" in {
-      val s = search in "musicians/bands" query "jethro" sourceInclude("keyboards", "guit*")
+      val s = search("musicians/bands") query "jethro" sourceInclude("keyboards", "guit*")
       s should haveSourceField("keyboards")
       s should haveSourceField("guitar")
       s should not(haveSourceField("singer"))
       s should not(haveSourceField("name"))
     }
     "support source excludes" in {
-      val s = search in "musicians/bands" query "jethro" sourceExclude("na*", "guit*")
+      val s = search("musicians/bands") query "jethro" sourceExclude("na*", "guit*")
       s should haveSourceField("keyboards")
       s should not(haveSourceField("guitar"))
       s should haveSourceField("singer")
       s should not(haveSourceField("name"))
     }
     "support limits" in {
-      search("musicians").matchAll().limit(2) should haveHits(2)
-      search("musicians").matchAll().limit(2) should haveTotalHits(3)
+      search("musicians").matchAllQuery().limit(2) should haveHits(2)
+      search("musicians").matchAllQuery().limit(2) should haveTotalHits(3)
     }
   }
 }

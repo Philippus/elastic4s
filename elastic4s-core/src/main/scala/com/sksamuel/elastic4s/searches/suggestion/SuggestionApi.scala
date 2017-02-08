@@ -1,8 +1,8 @@
-package com.sksamuel.elastic4s.searches.suggestions
+package com.sksamuel.elastic4s.searches.suggestion
 
 import java.util.UUID
 
-trait SuggestionDsl {
+trait SuggestionApi {
 
   def completionSuggestion(): CompletionSuggExpectsField = completionSuggestion(UUID.randomUUID.toString)
   def completionSuggestion(name: String): CompletionSuggExpectsField = new CompletionSuggExpectsField(name)

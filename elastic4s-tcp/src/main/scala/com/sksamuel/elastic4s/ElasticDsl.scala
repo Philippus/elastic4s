@@ -12,7 +12,6 @@ import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition}
-import com.sksamuel.elastic4s.searches.suggestions.SuggestionDsl
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.sort.SortOrder
 
@@ -33,7 +32,6 @@ trait ElasticDsl
     with SettingsDsl
     with ScrollDsl
     with SnapshotDsl
-    with SuggestionDsl
     with TokenFilterDsl
     with TcpExecutables
     with BuildableTermsQueryImplicits

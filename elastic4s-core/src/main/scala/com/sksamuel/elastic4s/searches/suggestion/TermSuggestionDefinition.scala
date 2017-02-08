@@ -1,10 +1,9 @@
-package com.sksamuel.elastic4s.searches.suggestions
+package com.sksamuel.elastic4s.searches.suggestion
 
-import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
-import org.elasticsearch.search.suggest.{SortBy, SuggestBuilders}
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}
-import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.search.suggest.{SortBy, SuggestBuilders}
 
 case class TermSuggestionDefinition(name: String,
                                     fieldname: String,

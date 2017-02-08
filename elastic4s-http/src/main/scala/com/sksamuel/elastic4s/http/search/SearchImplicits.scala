@@ -18,7 +18,7 @@ trait SearchImplicits {
   }
 
   implicit object SearchShow extends Show[SearchDefinition] {
-    override def show(req: SearchDefinition): String = SearchContentBuilder(req).string()
+    override def show(req: SearchDefinition): String = SearchBodyBuilderFn(req).string()
   }
 
   implicit object MultiSearchShow extends Show[MultiSearchDefinition] {
@@ -58,16 +58,17 @@ trait SearchImplicits {
         "/" + request.indexesTypes.indexes.mkString(",") + "/" + request.indexesTypes.types.mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.routing.foreach(params.put("routing", _))
-      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
+      request.from.map(_.toString).foreach(params.put("from", _))
       request.pref.foreach(params.put("preference", _))
+      request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
+      request.routing.foreach(params.put("routing", _))
       request.size.map(_.toString).foreach(params.put("size", _))
       request.searchType.map(_.toString).foreach(params.put("search_type", _))
-      request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
+      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.version.map(_.toString).foreach(params.put("version", _))
 
-      val builder = SearchContentBuilder(request)
+      val builder = SearchBodyBuilderFn(request)
       logger.debug("Executing search request: " + builder.string)
 
       val body = builder.string()

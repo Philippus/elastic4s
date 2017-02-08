@@ -1,6 +1,5 @@
-package com.sksamuel.elastic4s.searches.suggestions
+package com.sksamuel.elastic4s.searches.suggestion
 
-import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilders
@@ -19,7 +18,7 @@ case class CompletionSuggestionDefinition(name: String,
 
   override type B = CompletionSuggestionBuilder
 
-  override def builder = {
+  override def builder: CompletionSuggestionBuilder = {
     val builder = SuggestBuilders.completionSuggestion(fieldname)
     super.populate(builder)
 

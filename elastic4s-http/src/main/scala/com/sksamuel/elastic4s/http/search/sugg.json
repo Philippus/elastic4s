@@ -1,0 +1,48 @@
+{
+    "took": 39,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 0,
+        "max_score": 0.0,
+        "hits": []
+    },
+    "suggest": {
+        "a": [
+            {
+                "text": "some",
+                "offset": 0,
+                "length": 4,
+                "options": [
+                    {
+                        "text": "sons",
+                        "score": 0.5,
+                        "freq": 2
+                    }
+                ]
+            },
+            {
+                "text": "taylor",
+                "offset": 5,
+                "length": 6,
+                "options": []
+            },
+            {
+                "text": "swuft",
+                "offset": 12,
+                "length": 5,
+                "options": [
+                    {
+                        "text": "swift",
+                        "score": 0.8,
+                        "freq": 3
+                    }
+                ]
+            }
+        ]
+    }
+}
