@@ -62,7 +62,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          format: JsonFormat[CreateIndexResponse]): Future[CreateIndexResponse] = {
 
       val method = "PUT"
-      val endpoint = request.name
+      val endpoint = "/" + request.name
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
@@ -77,7 +77,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: DeleteIndexDefinition,
                          format: JsonFormat[DeleteIndexResponse]): Future[DeleteIndexResponse] = {
       val method = "DELETE"
-      val url = request.indexes.mkString(",")
+      val url = "/" + request.indexes.mkString(",")
       executeAsyncAndMapResponse(client.performRequestAsync(method, url, _), format)
     }
   }
