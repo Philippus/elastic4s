@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.net.InetSocketAddress
 
+import cats.Show
 import com.sksamuel.exts.Logging
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 import org.elasticsearch.client.Client
@@ -18,6 +19,9 @@ trait TcpClient {
   def close(): Unit
 
   def java: Client
+
+  // returns a String containing the Json of the request
+  def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
   def execute[T, R, Q](request: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
     try {
