@@ -6,7 +6,6 @@ import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.script.{Script, ScriptType}
-import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
 import scala.collection.JavaConverters._
@@ -36,6 +35,13 @@ object SearchBuilderFn {
     search.keepAlive.foreach(builder.setScroll)
     search.version.foreach(builder.setVersion)
 
+    search.fetchContext.foreach { context =>
+      builder.setFetchSource(context.fetchSource)
+      if (context.fetchSource) {
+        builder.setFetchSource(context.includes(), context.excludes())
+      }
+    }
+
     if (search.storedFields.nonEmpty)
       builder.storedFields(search.storedFields: _*)
 
@@ -50,7 +56,8 @@ object SearchBuilderFn {
 
     if (search.sorts.nonEmpty)
       search.sorts.foreach { sort =>
-        builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
+        builder.addSort(SortBuilderFn.apply(sort))
+        //builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, )
       }
 
     if (search.scriptFields.nonEmpty)
