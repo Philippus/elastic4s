@@ -62,6 +62,10 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
+    if (request.storedFields.nonEmpty) {
+      builder.field("stored_fields", request.storedFields.asJava)
+    }
+
     if (request.indexBoosts.nonEmpty) {
       builder.startArray("indices_boost")
       request.indexBoosts.foreach { case (name, double) =>

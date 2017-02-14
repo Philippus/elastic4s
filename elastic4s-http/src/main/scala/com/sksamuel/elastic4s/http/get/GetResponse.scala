@@ -20,15 +20,17 @@ case class GetResponse(private val _id: String,
   def exists: Boolean = found
   def source: Map[String, Any] = sourceAsMap
 
-  def storedField(fieldName: String): HitField = new HitField {
-    override def values: Seq[AnyRef] = fields(fieldName) match {
-      case values: Seq[AnyRef] => values
-      case values: Array[AnyRef] => values
-      case value: AnyRef => Seq(value)
+  def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get
+  def storedFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
+    new HitField {
+      override def values: Seq[AnyRef] = v match {
+        case values: Seq[AnyRef] => values
+        case value: AnyRef => Seq(value)
+      }
+      override def value: AnyRef = values.head
+      override def name: String = fieldName
+      override def isMetadataField: Boolean = ???
     }
-    override def value: AnyRef = values.head
-    override def name: String = fieldName
-    override def isMetadataField: Boolean = ???
   }
 
   def storedFieldsAsMap: Map[String, AnyRef] = Option(fields).getOrElse(Map.empty)

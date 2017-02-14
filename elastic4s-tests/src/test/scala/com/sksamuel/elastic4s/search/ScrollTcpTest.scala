@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
+
 import scala.concurrent.duration._
 
-class ScrollTest extends WordSpec with Matchers with ElasticSugar {
+class ScrollTcpTest extends WordSpec with Matchers with ElasticSugar {
 
   client.execute {
     createIndex("katebush").mappings(
@@ -80,9 +81,10 @@ class ScrollTest extends WordSpec with Matchers with ElasticSugar {
       }.await
 
       val resp2 = client.execute {
-        searchScroll(resp1.scrollId).keepAlive(1 minute)
+        searchScroll(resp1.scrollId).keepAlive(1.minute)
       }.await
       resp2.hits.map(_.fieldValue("name")).toList shouldBe List("dream of sheep", "hello earth")
     }
   }
 }
+

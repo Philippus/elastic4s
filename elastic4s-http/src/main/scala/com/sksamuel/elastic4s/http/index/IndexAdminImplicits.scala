@@ -67,8 +67,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = CreateIndexContentBuilder(request)
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, new StringEntity(body.string()), _), format)
+      val body = CreateIndexContentBuilder(request).string()
+      logger.debug(s"Executing create index $body")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, new StringEntity(body), _), format)
     }
   }
 

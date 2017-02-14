@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.syntax.either._
+import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
@@ -9,12 +10,26 @@ case class SearchHit(private val _id: String,
                      private val _type: String,
                      private val _score: Double,
                      private val _source: Map[String, AnyRef],
+                     fields: Map[String, AnyRef],
                      private val _version: Long) extends Hit {
 
   override def index: String = _index
   override def id: String = _id
   override def `type`: String = _type
   override def version: Long = _version
+
+  def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get
+  def storedFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
+    new HitField {
+      override def values: Seq[AnyRef] = v match {
+        case values: Seq[AnyRef] => values
+        case value: AnyRef => Seq(value)
+      }
+      override def value: AnyRef = values.head
+      override def name: String = fieldName
+      override def isMetadataField: Boolean = ???
+    }
+  }
 
   override def sourceAsMap: Map[String, AnyRef] = _source
   override def sourceAsString: String = SourceAsContentBuilder(_source).string()
@@ -64,13 +79,17 @@ case class SearchResponse(took: Int,
                           private val timed_out: Boolean,
                           private val terminated_early: Boolean,
                           private val suggest: Map[String, Seq[SuggestionResult]],
-                          _shards: Shards,
+                          private val _shards: Shards,
+                          private val _scroll_id: String,
                           hits: SearchHits) {
 
   def totalHits: Int = hits.total
   def size: Int = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
   def maxScore: Double = hits.maxScore
+  def scrollId: Option[String] = Option(_scroll_id)
+
+  def shards: Shards = _shards
 
   def isTimedOut: Boolean = timed_out
   def isTerminatedEarly: Boolean = terminated_early

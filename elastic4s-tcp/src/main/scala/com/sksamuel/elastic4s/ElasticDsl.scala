@@ -30,7 +30,6 @@ trait ElasticDsl
     with PercolateDsl
     with PipelineAggregationDsl
     with SettingsDsl
-    with ScrollDsl
     with SnapshotDsl
     with TokenFilterDsl
     with TcpExecutables

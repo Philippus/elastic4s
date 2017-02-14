@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.search.ClearScrollResponse
 
 import scala.concurrent.duration.FiniteDuration
 
-trait ScrollDsl {
+trait ScrollApi {
 
   def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
@@ -21,8 +20,3 @@ case class SearchScrollDefinition(id: String,
 }
 
 case class ClearScrollDefinition(ids: Seq[String])
-
-case class ClearScrollResult(response: ClearScrollResponse) {
-  def number = response.getNumFreed
-  def success = response.isSucceeded
-}
