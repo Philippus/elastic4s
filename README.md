@@ -128,7 +128,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Bulk										| `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |     | yes |
 | Clear index cache                         | `clearCache(<index>)`                     |     | yes |
-| Close index                               | `closeIndex(<name>)`                      | yes   yes |
+| Close index                               | `closeIndex(<name>)`                      | yes | yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
 | Cluster stats                             | `clusterStats()`                          |   | yes |
 | [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
@@ -166,7 +166,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
 | [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
 | [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes  | yes |
-| Search scroll                             | `searchScroll(<scrollId>)` |   | yes |
+| Search scroll                             | `searchScroll(<scrollId>)` | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>` |   | yes |
 | [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
 | [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` |   | yes |

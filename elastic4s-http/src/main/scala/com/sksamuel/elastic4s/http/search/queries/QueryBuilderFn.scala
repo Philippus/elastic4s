@@ -14,6 +14,8 @@ object QueryBuilderFn {
     case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBodyFn(q)
+    case q: HasChildQueryDefinition => HasChildBodyFn(q)
+    case q: HasParentQueryDefinition => HasParentBodyFn(q)
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchQueryDefinition => MatchBodyFn(q)
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
