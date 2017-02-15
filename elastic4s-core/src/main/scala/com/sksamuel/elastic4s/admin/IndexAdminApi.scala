@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.Indexes
+import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
 
 trait IndexAdminApi {
 
@@ -11,6 +11,7 @@ trait IndexAdminApi {
   def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
   def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
 
+  def typesExist(indexesAndTypes: IndexesAndTypes) = TypesExistsDefinition(indexesAndTypes.indexes, indexesAndTypes.types)
   def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)
   def typesExist(types: Iterable[String]): TypesExistExpectsIn = new TypesExistExpectsIn(types)
   class TypesExistExpectsIn(types: Iterable[String]) {

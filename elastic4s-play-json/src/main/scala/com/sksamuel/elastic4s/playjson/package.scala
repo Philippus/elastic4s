@@ -8,8 +8,8 @@ import scala.util.control.NonFatal
 
 package object playjson {
 
+  @implicitNotFound("No Reads for type ${T} found. Bring an implicit Reads[T] instance in scope")
   implicit def format[T](implicit r: Reads[T],
-                         w: Writes[T],
                          mf: Manifest[T]): JsonFormat[T] = new JsonFormat[T] {
     override def fromJson(json: String): T = Json.parse(json).as[T]
   }

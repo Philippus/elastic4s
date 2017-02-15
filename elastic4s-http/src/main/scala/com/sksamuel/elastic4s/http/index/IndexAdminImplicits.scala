@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.index
 
 import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.admin.{CloseIndexDefinition, IndexExistsDefinition, OpenIndexDefinition, RefreshIndexDefinition}
+import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.StringEntity
@@ -12,11 +12,41 @@ import scala.concurrent.Future
 
 case class DeleteIndexResponse()
 case class RefreshIndexResponse()
-case class IndexExistsResponse()
 case class OpenIndexResponse(acknowledged: Boolean)
 case class CloseIndexResponse(acknowledged: Boolean)
 
+case class TypeExistsResponse(exists: Boolean) {
+  def isExists: Boolean = exists
+}
+
+case class IndexExistsResponse(exists: Boolean) {
+  def isExists: Boolean = exists
+}
+
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
+    override def execute(client: RestClient,
+                         request: IndexExistsDefinition,
+                         format: JsonFormat[IndexExistsResponse]): Future[IndexExistsResponse] = {
+
+      val endpoint = request.index
+      logger.debug(s"Connecting to $endpoint for indexes exists check")
+      val resp = client.performRequest("HEAD", endpoint)
+      Future.successful(IndexExistsResponse(resp.getStatusLine.getStatusCode == 200))
+    }
+  }
+
+  implicit object TypeExistsExecutable extends HttpExecutable[TypesExistsDefinition, TypeExistsResponse] {
+    override def execute(client: RestClient,
+                         request: TypesExistsDefinition,
+                         format: JsonFormat[TypeExistsResponse]): Future[TypeExistsResponse] = {
+      val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
+      logger.debug(s"Connecting to $endpoint for type exists check")
+      val resp = client.performRequest("HEAD", endpoint)
+      Future.successful(TypeExistsResponse(resp.getStatusLine.getStatusCode == 200))
+    }
+  }
 
   implicit object OpenIndexExecutable extends HttpExecutable[OpenIndexDefinition, OpenIndexResponse] {
     override def execute(client: RestClient,
@@ -33,15 +63,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          format: JsonFormat[CloseIndexResponse]): Future[CloseIndexResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
       executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, _), format)
-    }
-  }
-
-  implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, Boolean] {
-    override def execute(client: RestClient,
-                         request: IndexExistsDefinition,
-                         format: JsonFormat[Boolean]): Future[Boolean] = {
-      val code = client.performRequest("HEAD", request.index).getStatusLine.getStatusCode
-      Future.successful(code == 200)
     }
   }
 

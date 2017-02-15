@@ -143,31 +143,31 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
 | Flush Index                               | `flushIndex(<index>)` |   | yes |
-| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` |  yes | yes |
+| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)` |   | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
 | Get Segments                              | `getSegments(<indexes>)` |   | yes |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
 | Get Template                              | `getTemplate(<name>)` |   | yes |
-| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes  | yes |
-| Index exists                              | `indexExists(<name>)`                     | yes  | yes |
+| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes | yes |
+| Index exists                              | `indexExists(<name>)`                     | yes | yes |
 | Index Status                              | `indexStatus(<index>)` |   | yes |
 | List Tasks                                | `listTasks(nodeIds)` |   | yes |
 | Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
-| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`       | yes  | yes |
-| Open index                                | `openIndex(<name>)`                       | yes  | yes |
+| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`       | yes | yes |
+| Open index                                | `openIndex(<name>)`                       | yes | yes |
 | [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |   | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |   | yes |
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
-| Refresh index                             | `refreshIndex(<name>)`                    | yes  | yes |
+| Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
 | [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
 | [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
-| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes  | yes |
+| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)` | yes | yes |
-| Type Exists                               | `typesExists(<types>) in <index>` |   | yes |
+| Type Exists                               | `typesExists(<types>) in <index>` | yes | yes |
 | [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
 | [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` | yes | yes |
 
