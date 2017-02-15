@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.index
 
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.StringEntity
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{ResponseListener, RestClient}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
@@ -23,7 +23,28 @@ case class IndexExistsResponse(exists: Boolean) {
   def isExists: Boolean = exists
 }
 
+case class ClearCacheResponse(_shards: Shards) {
+  def shards: Shards = _shards
+}
+
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object ClearCacheExecutable extends HttpExecutable[ClearCacheDefinition, ClearCacheResponse] {
+    override def execute(client: RestClient,
+                         request: ClearCacheDefinition,
+                         format: JsonFormat[ClearCacheResponse]): Future[ClearCacheResponse] = {
+
+      val endpoint = s"/${request.indexes.mkString(",")}/_cache/clear"
+
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.fieldDataCache.map(_.toString).foreach(params.put("fielddata", _))
+      request.queryCache.map(_.toString).foreach(params.put("query", _))
+      request.requestCache.map(_.toString).foreach(params.put("request", _))
+
+      val fn = client.performRequestAsync("POST", endpoint, params.asJava, _: ResponseListener)
+      executeAsyncAndMapResponse(fn, format)
+    }
+  }
 
   implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
     override def execute(client: RestClient,

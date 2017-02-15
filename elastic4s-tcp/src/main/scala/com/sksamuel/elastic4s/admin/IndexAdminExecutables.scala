@@ -76,7 +76,7 @@ trait IndexAdminExecutables {
     }
   }
 
-  implicit object ClearIndicesCacheResponseExecutable
+  implicit object ClearIndicesCacheExecutable
     extends Executable[ClearCacheDefinition, ClearIndicesCacheResponse, ClearIndicesCacheResponse] {
 
     override def apply(c: Client, req: ClearCacheDefinition): Future[ClearIndicesCacheResponse] = {

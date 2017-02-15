@@ -127,7 +127,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |     | yes |
 | Bulk										| `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |     | yes |
-| Clear index cache                         | `clearCache(<index>)`                     |     | yes |
+| Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
 | Cluster stats                             | `clusterStats()`                          |   | yes |
