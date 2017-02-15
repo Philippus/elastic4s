@@ -30,7 +30,11 @@ object SourceAsContentBuilder {
           builder.endObject()
         case seq: Seq[Any] =>
           builder.startArray()
-          addSeq(values)
+          addSeq(seq)
+          builder.endArray()
+        case product: Product =>
+          builder.startArray()
+          addSeq(product.productIterator.toSeq)
           builder.endArray()
         case other =>
           builder.value(other)
