@@ -10,7 +10,7 @@ import org.elasticsearch.client.{ResponseListener, RestClient}
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-case class DeleteIndexResponse()
+case class DeleteIndexResponse(acknowledged: Boolean)
 case class RefreshIndexResponse()
 case class OpenIndexResponse(acknowledged: Boolean)
 case class CloseIndexResponse(acknowledged: Boolean)
@@ -120,8 +120,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: DeleteIndexDefinition,
                          format: JsonFormat[DeleteIndexResponse]): Future[DeleteIndexResponse] = {
       val method = "DELETE"
-      val url = "/" + request.indexes.mkString(",")
-      executeAsyncAndMapResponse(client.performRequestAsync(method, url, _), format)
+      val endpoint = "/" + request.indexes.mkString(",")
+      logger.debug(s"Executing delete index $endpoint")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, _), format)
     }
   }
 }

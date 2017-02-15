@@ -137,7 +137,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
 | [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)`     | yes | yes |
 | Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes | yes |
-| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         |     | yes |
+| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         | yes | yes |
 | [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
 | [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |

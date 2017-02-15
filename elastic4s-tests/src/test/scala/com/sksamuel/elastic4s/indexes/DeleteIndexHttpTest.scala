@@ -23,16 +23,25 @@ class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
       }.await
 
       http.execute {
+        indexExists("languages")
+      }.await.exists shouldBe true
+
+      http.execute {
         ElasticDsl.deleteIndex("languages")
-      }.await
+      }.await.acknowledged shouldBe true
+
+      http.execute {
+        indexExists("languages")
+      }.await.exists shouldBe false
     }
+
     "support multiple indexes" in {
       http.execute {
         createIndex("languages1").mappings(
           mapping("dialects").fields(
             textField("type")
           )
-        ).shards(1).waitForActiveShards(1)
+        )
       }.await
 
       http.execute {
@@ -40,12 +49,28 @@ class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
           mapping("dialects").fields(
             textField("type")
           )
-        ).shards(1).waitForActiveShards(1)
+        )
       }.await
 
       http.execute {
+        indexExists("languages1")
+      }.await.exists shouldBe true
+
+      http.execute {
+        indexExists("languages2")
+      }.await.exists shouldBe true
+
+      http.execute {
         ElasticDsl.deleteIndex("languages1", "languages2")
-      }.await
+      }.await.acknowledged shouldBe true
+
+      http.execute {
+        indexExists("languages1")
+      }.await.exists shouldBe false
+
+      http.execute {
+        indexExists("languages2")
+      }.await.exists shouldBe false
     }
   }
 }
