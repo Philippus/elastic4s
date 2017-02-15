@@ -9,7 +9,7 @@
                 "analyzer": "whitespace",
                 "cutoff_frequency": 14.4,
                 "minimum_should_match": {
-                    "low_freq": "3",
+                    "low_freq": "3<80%",
                     "high_freq": "2"
                 },
                 "boost": 12.3
