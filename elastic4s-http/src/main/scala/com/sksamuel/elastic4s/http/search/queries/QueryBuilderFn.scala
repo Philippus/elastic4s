@@ -8,6 +8,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {
     case b: BoolQueryDefinition => BoolQueryBuilderFn(b)
+    case b: BoostingQueryDefinition => BoostingQueryBodyFn(b)
     case q: CommonTermsQueryDefinition => CommonTermsQueryBodyFn(q)
     case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)

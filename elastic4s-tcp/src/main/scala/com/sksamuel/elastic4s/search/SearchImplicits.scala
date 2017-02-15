@@ -44,7 +44,9 @@ trait SearchImplicits {
 
   implicit object SearchDefinitionShow extends Show[SearchDefinition] {
     override def show(search: SearchDefinition): String = {
+
       import scala.collection.JavaConverters._
+
       val builder = new SearchSourceBuilder()
       search.query.map(QueryBuilderFn.apply).foreach(builder.query)
       search.minScore.map(_.toFloat).foreach(builder.minScore)
