@@ -33,8 +33,8 @@ trait QueryApi {
 
   def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition = ConstantScoreDefinition(query)
 
-  def dismax(first: QueryDefinition, rest: QueryDefinition*): DisMaxDefinition = dismax(first +: rest)
-  def dismax(queries: Iterable[QueryDefinition]): DisMaxDefinition = DisMaxDefinition(queries.toSeq)
+  def dismax(first: QueryDefinition, rest: QueryDefinition*): DisMaxQueryDefinition = dismax(first +: rest)
+  def dismax(queries: Iterable[QueryDefinition]): DisMaxQueryDefinition = DisMaxQueryDefinition(queries.toSeq)
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 

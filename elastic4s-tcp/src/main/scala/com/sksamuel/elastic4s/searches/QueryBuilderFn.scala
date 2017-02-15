@@ -14,7 +14,7 @@ object QueryBuilderFn {
     case q: BoostingQueryDefinition => BoostingQueryBuilder(q)
     case q: ConstantScoreDefinition => ConstantScoreBuilder(q)
     case q: CommonTermsQueryDefinition => CommonTermsQueryBuilder(q)
-    case q: DisMaxDefinition => DisMaxBuilder(q)
+    case q: DisMaxQueryDefinition => DisMaxBuilder(q)
     case q: ExistsQueryDefinition => ExistsQueryBuilder(q)
     case q: FunctionScoreQueryDefinition => FunctionScoreBuilderFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBuilder(q)

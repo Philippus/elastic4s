@@ -11,6 +11,7 @@ object QueryBuilderFn {
     case b: BoostingQueryDefinition => BoostingQueryBodyFn(b)
     case q: CommonTermsQueryDefinition => CommonTermsQueryBodyFn(q)
     case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
+    case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchQueryDefinition => MatchBodyFn(q)
