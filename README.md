@@ -142,7 +142,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
 | [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
-| Flush Index                               | `flushIndex(<index>)` |   | yes |
+| Flush Index                               | `flushIndex(<index>)` | yes | yes |
 | [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)` |   | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |

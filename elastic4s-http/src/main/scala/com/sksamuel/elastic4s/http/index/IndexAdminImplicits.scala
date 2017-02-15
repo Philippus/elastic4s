@@ -15,6 +15,10 @@ case class RefreshIndexResponse()
 case class OpenIndexResponse(acknowledged: Boolean)
 case class CloseIndexResponse(acknowledged: Boolean)
 
+case class FlushIndexResponse(_shards: Shards) {
+  def shards: Shards = _shards
+}
+
 case class TypeExistsResponse(exists: Boolean) {
   def isExists: Boolean = exists
 }
@@ -28,6 +32,22 @@ case class ClearCacheResponse(_shards: Shards) {
 }
 
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object FlushIndexExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
+    override def execute(client: RestClient,
+                         request: FlushIndexDefinition,
+                         format: JsonFormat[FlushIndexResponse]): Future[FlushIndexResponse] = {
+
+      val endpoint = s"/${request.indexes.mkString(",")}/_flush"
+
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.waitIfOngoing.map(_.toString).foreach(params.put("wait_if_ongoing", _))
+      request.force.map(_.toString).foreach(params.put("force.map", _))
+
+      val fn = client.performRequestAsync("POST", endpoint, params.asJava, _: ResponseListener)
+      executeAsyncAndMapResponse(fn, format)
+    }
+  }
 
   implicit object ClearCacheExecutable extends HttpExecutable[ClearCacheDefinition, ClearCacheResponse] {
     override def execute(client: RestClient,

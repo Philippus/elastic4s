@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s._
 import org.elasticsearch.action.support.IndicesOptions
+import com.sksamuel.exts.OptionImplicits._
 
 case class OpenIndexDefinition(indexes: Indexes)
 case class CloseIndexDefinition(indexes: Indexes)
@@ -17,5 +18,11 @@ case class ClearCacheDefinition(indexes: Seq[String],
                                 queryCache: Option[Boolean] = None,
                                 fields: Seq[String] = Nil)
 
-case class FlushIndexDefinition(indexes: Seq[String])
+case class FlushIndexDefinition(indexes: Seq[String],
+                                waitIfOngoing: Option[Boolean] = None,
+                                force: Option[Boolean] = None) {
+  def force(force: Boolean): FlushIndexDefinition = copy(force = force.some)
+  def waitIfOngoing(waitIfOngoing: Boolean): FlushIndexDefinition = copy(waitIfOngoing = waitIfOngoing.some)
+}
+
 case class RefreshIndexDefinition(indexes: Seq[String])
