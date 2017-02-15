@@ -169,7 +169,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Search scroll                             | `searchScroll(<scrollId>)` | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>` |   | yes |
 | [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
-| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` |   | yes |
+| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` | yes | yes |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
 

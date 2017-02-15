@@ -9,6 +9,7 @@ case class ValidateDefinition(indexesAndTypes: IndexesAndTypes,
                               rewrite: Option[Boolean] = None,
                               explain: Option[Boolean] = None) {
   require(indexesAndTypes != null, "value must not be null or empty")
+
   def rewrite(rewrite: Boolean): ValidateDefinition = copy(rewrite = rewrite.some)
   def explain(explain: Boolean): ValidateDefinition = copy(explain = explain.some)
 }
