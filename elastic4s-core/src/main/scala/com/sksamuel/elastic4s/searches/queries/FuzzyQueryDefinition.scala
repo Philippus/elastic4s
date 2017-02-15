@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
 
-@deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
 case class FuzzyQueryDefinition(field: String,
                                 termValue: Any,
                                 fuzziness: Option[String] = None,
@@ -12,14 +11,13 @@ case class FuzzyQueryDefinition(field: String,
                                 prefixLength: Option[Int] = None,
                                 queryName: Option[String] = None,
                                 rewrite: Option[String] = None
-                               )
-  extends MultiTermQueryDefinition {
+                               ) extends MultiTermQueryDefinition {
 
-  def boost(boost: Double): FuzzyQueryDefinition = copy(boost = boost.some)
-  def prefixLength(prefixLength: Int): FuzzyQueryDefinition = copy(prefixLength = prefixLength.some)
-  def rewrite(rewrite: String): FuzzyQueryDefinition = copy(rewrite = rewrite.some)
-  def queryName(queryName: String): FuzzyQueryDefinition = copy(queryName = queryName.some)
   def fuzziness(fuzziness: String): FuzzyQueryDefinition = copy(fuzziness = fuzziness.some)
+  def boost(boost: Double): FuzzyQueryDefinition = copy(boost = boost.some)
   def transpositions(transpositions: Boolean): FuzzyQueryDefinition = copy(transpositions = transpositions.some)
   def maxExpansions(maxExpansions: Int): FuzzyQueryDefinition = copy(maxExpansions = maxExpansions.some)
+  def prefixLength(prefixLength: Int): FuzzyQueryDefinition = copy(prefixLength = prefixLength.some)
+  def queryName(queryName: String): FuzzyQueryDefinition = copy(queryName = queryName.some)
+  def rewrite(rewrite: String): FuzzyQueryDefinition = copy(rewrite = rewrite.some)
 }

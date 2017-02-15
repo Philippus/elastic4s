@@ -13,6 +13,7 @@ object QueryBuilderFn {
     case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
     case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
+    case q: FuzzyQueryDefinition => FuzzyQueryBodyFn(q)
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchQueryDefinition => MatchBodyFn(q)
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
