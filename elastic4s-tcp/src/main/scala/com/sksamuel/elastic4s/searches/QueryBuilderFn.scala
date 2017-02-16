@@ -36,6 +36,7 @@ object QueryBuilderFn {
     case q: QueryStringQueryDefinition => QueryStringBuilder.builder(q)
     case q: PercolateQueryDefinition => PercolateQueryBuilder(q)
     case q: PrefixQueryDefinition => PrefixQueryBuilderFn(q)
+    case q: RawQueryDefinition => RawQueryBuilderFn(q)
     case q: RegexQueryDefinition => RegexQueryBuilder(q)
     case q: RangeQueryDefinition => RangeQueryBuilder(q)
     case q: ScriptQueryDefinition => ScriptQueryBuilder(q)
