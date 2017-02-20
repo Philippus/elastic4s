@@ -29,5 +29,6 @@ object QueryBuilderFn {
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
+    case r: RangeQueryDefinition => RangeQueryBodyFn(r)
   }
 }
