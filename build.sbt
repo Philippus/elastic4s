@@ -18,13 +18,18 @@ lazy val root = Project("elastic4s", file("."))
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
+  .settings(libraryDependencies ++= Seq(
+    "org.locationtech.spatial4j" % "spatial4j"     % "0.6",
+    "com.vividsolutions"         % "jts"           % "1.13",
+    "org.apache.logging.log4j"   % "log4j-api"     % Log4jVersion,
+    "org.apache.logging.log4j"   % "log4j-core"    % Log4jVersion,
+    "org.apache.logging.log4j"   % "log4j-1.2-api" % Log4jVersion
+  ))
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
-      "com.vividsolutions"                    % "jts"                       % "1.13",
       "io.netty"                              % "netty-all"                 % "4.1.7.Final",
-      "org.apache.logging.log4j"              % "log4j-api"                 % "2.7",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
       "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
       "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
@@ -41,8 +46,7 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
       "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
-      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
-      "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6"
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion
     ))
   .dependsOn(core)
 
@@ -64,10 +68,7 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
     libraryDependencies ++= Seq(
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % JacksonVersion,
-      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion,
-      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion
     )
   )
   .dependsOn(tcp)
@@ -89,9 +90,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
       "org.mockito"                   % "mockito-all"             % MockitoVersion        % "test",
       "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
       "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
-      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j"      % "log4j-api"               % "2.7"                 % "test",
-      "org.apache.logging.log4j"      % "log4j-slf4j-impl"        % "2.7"                 % "test"
+      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
     )
   )
   .dependsOn(tcp, http, jackson, testkit % "test")
