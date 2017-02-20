@@ -54,7 +54,7 @@ object ReactiveElastic {
                   elements: Long = Long.MaxValue,
                   keepAlive: String = "1m")
                  (implicit actorRefFactory: ActorRefFactory): ScrollPublisher = {
-      publisher(search(indexesTypes) query "*:*" scroll keepAlive)
+      publisher((search(indexesTypes) query "*:*" scroll keepAlive), elements)
     }
 
     def publisher(q: SearchDefinition)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher = publisher(q, Long.MaxValue)
