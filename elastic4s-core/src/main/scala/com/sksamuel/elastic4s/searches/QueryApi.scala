@@ -5,13 +5,14 @@ import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.{DocumentRef, Indexable}
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.common.geo.builders.ShapeBuilder
 import org.elasticsearch.common.unit.DistanceUnit
 import org.elasticsearch.index.query._
+import org.elasticsearch.indices.TermsLookup
 
 import scala.language.{implicitConversions, reflectiveCalls}
 
@@ -237,6 +238,9 @@ trait QueryApi {
 
   def termsQuery[T](field: String, values: Iterable[T])
                    (implicit buildable: BuildableTermsQuery[T]) = TermsQueryDefinition(field, values)
+
+  def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
+    TermsLookupQueryDefinition(field, new TermsLookup(ref.index, ref.`type`, ref.id, path))
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)
