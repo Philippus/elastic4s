@@ -6,8 +6,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreBuilderF
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
-import org.elasticsearch.common.xcontent.XContentBuilder
-import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders, TermsQueryBuilder}
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
