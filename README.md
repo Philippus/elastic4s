@@ -328,18 +328,16 @@ client.execute {
 
 Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
 it done automagically. For those people, elastic4s provides extensions for the well known Scala Json libraries that
-can be used to generate JSon generically.
+can be used to generate Json generically.
 
 Simply add the import for your chosen library below and then with those implicits in scope, you can now pass any type
  you like to `doc` and an Indexable will be derived automatically.
 
 | Library | Elastic4s Module | Import |
 |---------|------------------|--------|
-|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search|ga|1|elastic4s-jackson)|import ElasticJackson.Implicits._|
-|[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search|ga|1|elastic4s-json4s)|import ElasticJson4s.Implicits._|
-|[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search|ga|1|elastic4s-circe)|import io.circe.generic.auto._
-
-                                                                                                                         import com.sksamuel.elastic4s.circe._|
+|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)|import ElasticJackson.Implicits._|
+|[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4s)|import ElasticJson4s.Implicits._|
+|[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
 
 ## Searching
 
