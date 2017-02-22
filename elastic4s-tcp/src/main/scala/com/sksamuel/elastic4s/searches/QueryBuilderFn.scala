@@ -5,8 +5,9 @@ import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreBuilderFn, FunctionScoreQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
-import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
+import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
+import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders, TermsQueryBuilder}
 
 object QueryBuilderFn {
   def apply(query: QueryDefinition): QueryBuilder = query match {
@@ -48,6 +49,7 @@ object QueryBuilderFn {
     case q: SpanOrQueryDefinition => SpanOrQueryBuilder(q)
     case q: TermQueryDefinition => TermQueryBuilder(q)
     case q: TermsQueryDefinition[_] => TermsQueryBuilder(q)
+    case q: TermsLookupQueryDefinition => TermsLookupQueryBuilder(q)
     case q: TypeQueryDefinition => QueryBuilders.typeQuery(q.`type`)
     case q: WildcardQueryDefinition => WildcardQueryBuilder(q)
   }

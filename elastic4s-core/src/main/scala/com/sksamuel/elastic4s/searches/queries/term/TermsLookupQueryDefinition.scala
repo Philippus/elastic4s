@@ -1,17 +1,11 @@
 package com.sksamuel.elastic4s.searches.queries.term
 
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.indices.TermsLookup
+import com.sksamuel.exts.OptionImplicits._
 
-case class TermsLookupQueryDefinition(field: String, termsLookup: TermsLookup)
-  extends QueryDefinition {
-
-  val builder = QueryBuilders.termsLookupQuery(field, termsLookup)
-  val _builder = builder
-
-  def queryName(name: String): this.type = {
-    builder.queryName(name)
-    this
-  }
+case class TermsLookupQueryDefinition(field: String,
+                                      termsLookup: TermsLookup,
+                                      queryName: Option[String] = None) extends QueryDefinition {
+  def queryName(name: String): TermsLookupQueryDefinition = copy(queryName = name.some)
 }
