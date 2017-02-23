@@ -707,6 +707,32 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 5.2.8
+
+* Highlight support added to Http Client
+* Fix for raw query
+* Range query and Terms query added to http client
+* Elements arg fix in reactive streams
+* VersionType added to index requests
+* Optional deps fixed for http client
+
+###### 5.2.7
+
+* Fixed bug in hit reader and tuples
+* Added flush index, delete index, clear cache to http client
+* Added index exists and type exists requests to http client
+* Added validate support to http client
+* Supporting has_child, has_parent, dismax, fuzzy and boosting query types in http client
+* Search scroll added to http client
+* Added keyed filters aggregation to TCP client
+
+###### 5.2.6
+
+* Fixed bug with source excludes since 5.2.0
+* Fixed HTTPS bug in http client
+* Added client.show to TCP client
+* Added constant score query suppor to http client
+
 ###### 5.2.0
 
 * Supports Elasticsearch 5.2.x

@@ -11,7 +11,10 @@ case class SearchHit(private val _id: String,
                      private val _score: Double,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
+                     highlight: Map[String, Seq[String]],
                      private val _version: Long) extends Hit {
+
+  def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
 
   override def index: String = _index
   override def id: String = _id

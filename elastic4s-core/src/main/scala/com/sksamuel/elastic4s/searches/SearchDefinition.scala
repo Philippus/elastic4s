@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
@@ -141,8 +141,13 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def termQuery(field: String, value: Any): SearchDefinition = {
     val q = TermQueryDefinition(field, value)
     query(q)
-    this
   }
+
+  def matchQuery(field: String, value: Any): SearchDefinition = {
+    val q = MatchQueryDefinition(field, value)
+    query(q)
+  }
+
   def matchAllQuery(): SearchDefinition = query(MatchAllQueryDefinition())
 
   /** Expects a query in json format and sets the query of the search request.

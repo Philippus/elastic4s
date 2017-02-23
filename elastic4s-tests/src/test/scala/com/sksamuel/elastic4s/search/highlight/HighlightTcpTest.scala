@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.highlight
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class HighlightTest extends WordSpec with ElasticSugar with Matchers {
+class HighlightTcpTest extends WordSpec with SharedElasticSugar with Matchers {
 
   client.execute {
     createIndex("intros").mappings(
