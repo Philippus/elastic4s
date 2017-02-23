@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreBuilderFn, FunctionScoreQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo._
+import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
 import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}

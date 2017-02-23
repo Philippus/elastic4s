@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.elasticsearch.index.VersionType
 
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
@@ -16,6 +17,7 @@ case class IndexDefinition(indexAndType: IndexAndType,
                            timestamp: Option[String] = None,
                            timeout: Option[String] = None,
                            version: Option[Long] = None,
+                           versionType: Option[VersionType] = None,
                            fields: Seq[FieldValue] = Nil,
                            source: Option[String] = None) extends BulkCompatibleDefinition {
   require(indexAndType != null, "index must not be null or empty")
@@ -38,8 +40,11 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def refresh(refresh: RefreshPolicy): IndexDefinition = copy(refresh = refresh.some)
   def timestamp(timestamp: String): IndexDefinition = copy(timestamp = timestamp.some)
   def routing(routing: String): IndexDefinition = copy(routing = routing.some)
+
   def version(version: Long): IndexDefinition = copy(version = version.some)
-  def version(timeout: String): IndexDefinition = copy(timeout = timeout.some)
+  def versionType(versionType: VersionType): IndexDefinition = copy(versionType = versionType.some)
+
+  def timeout(timeout: String): IndexDefinition = copy(timeout = timeout.some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexDefinition = if (createOnly) opType(OpType.CREATE) else opType(OpType.INDEX)

@@ -27,6 +27,7 @@ trait IndexExecutables extends IndexShowImplicits {
       t.parent.foreach(builder.setParent)
       t.refresh.foreach(builder.setRefreshPolicy)
       t.version.foreach(builder.setVersion)
+      t.versionType.foreach(builder.setVersionType)
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
       t.timestamp.foreach(builder.setTimestamp)
