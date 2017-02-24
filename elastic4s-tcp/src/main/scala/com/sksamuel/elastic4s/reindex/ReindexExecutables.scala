@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.reindex
 
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
-import com.sksamuel.elastic4s.{Executable, ProxyClients}
+import com.sksamuel.elastic4s.{Executable, ScriptBuilder}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -25,6 +25,7 @@ trait ReindexExecutables {
       r.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
       r.shouldStoreResult.foreach(builder.setShouldStoreResult)
       r.size.foreach(builder.size)
+      r.script.map(ScriptBuilder.apply).foreach(builder.script)
     }
 
     override def apply(c: Client, r: ReindexDefinition): Future[BulkIndexByScrollResponse] = {

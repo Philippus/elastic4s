@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.reindex
 
 import com.sksamuel.elastic4s.Indexes
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
@@ -17,7 +18,8 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              timeout: Option[FiniteDuration] = None,
                              retryBackoffInitialTime: Option[FiniteDuration] = None,
                              shouldStoreResult: Option[Boolean] = None,
-                             size: Option[Int] = None) {
+                             size: Option[Int] = None,
+                             script: Option[ScriptDefinition] = None) {
 
   def timeout(timeout: FiniteDuration): ReindexDefinition = copy(timeout = timeout.some)
 
@@ -40,4 +42,6 @@ case class ReindexDefinition(sourceIndexes: Indexes,
 
   def shouldStoreResult(shouldStoreResult: Boolean): ReindexDefinition =
     copy(shouldStoreResult = shouldStoreResult.some)
+
+  def script(script: ScriptDefinition): ReindexDefinition = copy(script = script.some)
 }
