@@ -27,6 +27,14 @@ case class GetDefinition(indexAndType: IndexAndType,
 
   def fetchSourceContext(context: FetchSourceContext): GetDefinition = copy(fetchSource = context.some)
 
+  def fetchSourceInclude(include: String): GetDefinition = fetchSourceContext(List(include), Nil)
+  def fetchSourceInclude(includes: Iterable[String]): GetDefinition = fetchSourceContext(includes, Nil)
+  def fetchSourceInclude(includes: String*): GetDefinition = fetchSourceContext(includes, Nil)
+
+  def fetchSourceExclude(exclude: String): GetDefinition = fetchSourceContext(Nil, List(exclude))
+  def fetchSourceExclude(excludes: Iterable[String]): GetDefinition = fetchSourceContext(Nil, excludes)
+  def fetchSourceExclude(excludes: String*): GetDefinition = fetchSourceContext(Nil, excludes)
+
   @deprecated("use storedFields", "5.0.0")
   def fields(fs: String*): GetDefinition = storedFields(fs)
 

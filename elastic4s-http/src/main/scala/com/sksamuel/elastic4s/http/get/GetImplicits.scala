@@ -53,6 +53,14 @@ trait GetImplicits {
       request.fetchSource.foreach { context =>
         if (!context.fetchSource)
           params.put("_source", "false")
+        else {
+          if (context.includes().nonEmpty) {
+            params.put("_source_include", context.includes.mkString(","))
+          }
+          if (context.excludes.nonEmpty) {
+            params.put("_source_exclude", context.excludes.mkString(","))
+          }
+        }
       }
       if (request.storedFields.nonEmpty) {
         params.put("stored_fields", request.storedFields.mkString(","))
