@@ -34,3 +34,9 @@ case class DerivativeDefinition(name: String,
   def gapPolicy(gapPolicy: GapPolicy): DerivativeDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): DerivativeDefinition = copy(metadata = metadata)
 }
+
+object DerivativeBuilder {
+  def apply(): Unit = {
+
+  }
+}

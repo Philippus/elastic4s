@@ -12,6 +12,7 @@ import com.sksamuel.elastic4s.locks.LocksApi
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
+import com.sksamuel.elastic4s.searches.aggs.AggregationApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
@@ -28,6 +29,7 @@ import scala.concurrent.duration._
 trait ElasticApi
   extends ElasticImplicits
     with AliasesApi
+    with AggregationApi
     with AnalyzerApi
     with BulkApi
     with CreateIndexApi

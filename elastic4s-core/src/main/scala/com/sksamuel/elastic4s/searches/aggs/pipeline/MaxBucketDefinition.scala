@@ -26,3 +26,9 @@ case class MaxBucketDefinition(name: String,
   def gapPolicy(gapPolicy: GapPolicy): MaxBucketDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): MaxBucketDefinition = copy(metadata = metadata)
 }
+
+object MaxBucketBuilder {
+  def apply(): Unit = {
+
+  }
+}

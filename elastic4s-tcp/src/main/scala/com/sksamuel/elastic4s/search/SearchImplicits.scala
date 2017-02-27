@@ -4,6 +4,7 @@ import cats.Show
 import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches._
+import com.sksamuel.elastic4s.searches.aggs.AggregationBuilder
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
 import org.elasticsearch.client.Client
@@ -64,7 +65,7 @@ trait SearchImplicits {
         builder.storedFields(search.storedFields.asJava)
 
       if (search.aggs.nonEmpty)
-        search.aggs.map(_.builder).foreach(builder.aggregation)
+        search.aggs.map(AggregationBuilder.apply).foreach(builder.aggregation)
 
       if (search.inners.nonEmpty) {
         for (inner <- search.inners)

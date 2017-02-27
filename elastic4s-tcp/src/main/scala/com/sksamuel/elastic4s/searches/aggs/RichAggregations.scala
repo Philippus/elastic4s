@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import java.util
+
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 import org.elasticsearch.search.aggregations.bucket.missing.InternalMissing
 import org.elasticsearch.search.aggregations.bucket.terms.{StringTerms, Terms}
@@ -16,7 +18,7 @@ import scala.collection.JavaConverters._
 case class RichAggregations(aggregations: Aggregations) {
 
   @deprecated("use map", "5.0.0")
-  def getAsMap = aggregations.getAsMap
+  def getAsMap: util.Map[String, Aggregation] = aggregations.getAsMap
 
   def map: Map[String, Aggregation] = aggregations.getAsMap.asScala.toMap
 

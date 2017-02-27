@@ -128,6 +128,12 @@ object SearchBodyBuilderFn {
       }
     }
 
+    // aggregations
+    if (request.aggs.nonEmpty) {
+      builder.startObject("aggs")
+      builder.endObject()
+    }
+
     builder.endObject()
     builder
   }

@@ -20,10 +20,7 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .settings(libraryDependencies ++= Seq(
     "org.locationtech.spatial4j" % "spatial4j"     % "0.6",
-    "com.vividsolutions"         % "jts"           % "1.13",
-    "org.apache.logging.log4j"   % "log4j-api"     % Log4jVersion,
-    "org.apache.logging.log4j"   % "log4j-core"    % Log4jVersion,
-    "org.apache.logging.log4j"   % "log4j-1.2-api" % Log4jVersion
+    "com.vividsolutions"         % "jts"           % "1.13"
   ))
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
@@ -46,7 +43,10 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
       "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
-      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion
     ))
   .dependsOn(core)
 

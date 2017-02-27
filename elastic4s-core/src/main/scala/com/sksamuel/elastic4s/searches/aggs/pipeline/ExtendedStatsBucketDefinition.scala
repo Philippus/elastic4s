@@ -26,3 +26,9 @@ case class ExtendedStatsBucketDefinition(name: String,
   def gapPolicy(gapPolicy: GapPolicy): ExtendedStatsBucketDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): ExtendedStatsBucketDefinition = copy(metadata = metadata)
 }
+
+object ExtendedStatsBucketBuilder {
+  def apply(): Unit = {
+
+  }
+}

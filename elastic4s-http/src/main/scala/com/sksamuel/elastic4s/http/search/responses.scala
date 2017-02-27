@@ -86,6 +86,7 @@ case class SearchResponse(took: Int,
                           private val _scroll_id: String,
                           hits: SearchHits) {
 
+
   def totalHits: Int = hits.total
   def size: Int = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
@@ -103,12 +104,21 @@ case class SearchResponse(took: Int,
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-
   def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
+  def termsAgg(s: String): TermsAggregationResult = TermsAggregationResult()
+
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
+}
+
+case class TermsAggregationResult() {
+  def getBucketByKey(s: String) = new {
+    def getDocCount = 0
+  }
+  def getBuckets: Seq[String] = Nil
+
 }
 
 

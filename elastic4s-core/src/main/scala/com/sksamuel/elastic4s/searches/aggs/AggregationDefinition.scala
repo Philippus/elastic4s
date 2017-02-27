@@ -1,46 +1,18 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
-import org.elasticsearch.search.aggregations._
 
 trait AggregationDefinition {
 
-  type B <: AggregationBuilder
-  val builder: B
+  type T <: AggregationDefinition
 
-  def pipeline(pipeline: PipelineAggregationDefinition): this.type = {
-    builder.subAggregation(pipeline.builder)
-    this
-  }
+  def pipeline(pipeline: PipelineAggregationDefinition): T = pipelines(pipeline)
+  def pipelines(first: PipelineAggregationDefinition, rest: PipelineAggregationDefinition*): T = pipelines(first +: rest)
+  def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T
 
-  def pipelines(first: PipelineAggregationDefinition,
-                rest: PipelineAggregationDefinition*): this.type = pipelines(first +: rest)
+  def subAggregation(agg: AggregationDefinition): T = subAggregation(agg)
+  def subAggregations(first: AggregationDefinition, rest: AggregationDefinition*): T = subAggregations(first +: rest)
+  def subAggregations(aggs: Iterable[AggregationDefinition]): T
 
-  def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): this.type = {
-    pipelines.foreach(pipeline)
-    this
-  }
-
-  def subAggregation(agg: AggregationDefinition): this.type = {
-    builder.subAggregation(agg.builder)
-    this
-  }
-
-  def subAggregations(first: AggregationDefinition, rest: AggregationDefinition*): this.type =
-    subAggregations(first +: rest)
-
-  def subAggregations(aggs: Iterable[AggregationDefinition]): this.type = {
-    aggs.foreach(subAggregation)
-    this
-  }
-
-  @deprecated("use subAggregations", "5.0.0")
-  def aggs(first: AggregationDefinition, rest: AggregationDefinition*): this.type =
-    subAggregations(first +: rest)
-
-  @deprecated("use subAggregations", "5.0.0")
-  def aggs(aggs: Iterable[AggregationDefinition]): this.type = {
-    aggs.foreach(subAggregation)
-    this
-  }
+  def metadata(map: Map[String, AnyRef]): T
 }

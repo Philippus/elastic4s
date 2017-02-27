@@ -21,7 +21,6 @@ import scala.language.implicitConversions
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
   extends ElasticApi
-    with AggregationDsl
     with ClusterDsl
     with FieldStatsDsl
     with ForceMergeDsl

@@ -42,3 +42,9 @@ case class MovAvgDefinition(name: String,
   def gapPolicy(gapPolicy: GapPolicy): MovAvgDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): MovAvgDefinition = copy(metadata = metadata)
 }
+
+object MovAvgBuilder {
+  def apply(): Unit = {
+
+  }
+}

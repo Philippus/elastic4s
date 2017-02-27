@@ -672,7 +672,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for sub aggregation" in {
     val req = search("music") types "bands" aggs {
-      aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY aggs(
+      aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }
@@ -681,7 +681,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for min aggregation" in {
     val req = search("school") types "student" aggs {
-      aggregation min "grades_min" field "grade" script {
+      minAggregation("grades_min") field "grade" script {
         script("doc['grade'].value").lang("lua").param("apple", "bad")
       }
     }
@@ -690,7 +690,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for max aggregation" in {
     val req = search("school") types "student" aggs {
-      aggregation max "grades_max" field "grade" script {
+      maxAggregation("grades_max") field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
     }
@@ -758,14 +758,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for cardinality aggregation" in {
     val req = search("school") aggs {
-      aggregation cardinality "grades_cardinality" field "grade" rehash true precisionThreshold 40000
+      aggregation cardinality "grades_cardinality" field "grade" precisionThreshold 40000
     }
     req.show should matchJsonResource("/json/search/search_aggregations_cardinality.json")
   }
 
   it should "generate correct json for nested aggregation" in {
     val req = search("music") aggs {
-      aggregation nested "nested_agg" path "nested_obj" aggs {
+      aggregation nested "nested_agg" path "nested_obj" subAggregations {
         aggregation terms "my_nested_terms_agg" field "keyword"
       }
     }
