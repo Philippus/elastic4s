@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import org.elasticsearch.search.aggregations.PipelineAggregationBuilder
 
-trait PipelineAggregationDsl {
+trait PipelineAggregationApi {
 
   def avgBucketAggregation(name: String,
                            bucketsPath: String): AvgBucketDefinition = AvgBucketDefinition(name, bucketsPath)
@@ -43,8 +42,6 @@ trait PipelineAggregationDsl {
     SumBucketDefinition(name, bucketsPath)
 }
 
-abstract class PipelineAggregationDefinition {
-  type T <: PipelineAggregationBuilder
-  def builder: T
+trait PipelineAggregationDefinition {
   def metadata: Map[String, AnyRef]
 }

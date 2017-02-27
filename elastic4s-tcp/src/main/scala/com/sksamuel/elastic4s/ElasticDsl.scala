@@ -9,7 +9,6 @@ import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDsl
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition}
 import org.elasticsearch.action.search.SearchResponse
@@ -27,7 +26,6 @@ trait ElasticDsl
     with IndexRecoveryDsl
     with IndexTemplateDsl
     with PercolateDsl
-    with PipelineAggregationDsl
     with SettingsDsl
     with SnapshotDsl
     with TokenFilterDsl

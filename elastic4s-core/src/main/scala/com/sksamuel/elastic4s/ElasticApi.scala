@@ -13,6 +13,7 @@ import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, Timestam
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
+import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
@@ -44,6 +45,7 @@ trait ElasticApi
     with LocksApi
     with MappingApi
     with QueryApi
+    with PipelineAggregationApi
     with ReindexApi
     with ScriptApi
     with ScoreApi

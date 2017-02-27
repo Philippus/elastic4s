@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import org.elasticsearch.search.aggregations.AggregationBuilder
+import com.sksamuel.elastic4s.searches.aggs.pipeline._
+import org.elasticsearch.search.aggregations.{AggregationBuilder, PipelineAggregationBuilder}
 
 object AggregationBuilder {
   def apply(agg: AggregationDefinition): AggregationBuilder = agg match {
