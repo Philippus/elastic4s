@@ -78,14 +78,25 @@ case class TermSuggestionResult(text: String,
   def optionsText: Seq[String] = options.map(_.text)
 }
 
+case class Aggregation(doc_count_error_upper_bound: Int,
+                       sum_other_doc_count: Int,
+                       buckets: Seq[Bucket])
+
+case class Bucket(key: String,
+                  private val doc_count: Int) {
+  def docCount: Int = doc_count
+  @deprecated("use getDocCount", "5.2.9")
+  def getDocCount: Int = docCount
+}
+
 case class SearchResponse(took: Int,
                           private val timed_out: Boolean,
                           private val terminated_early: Boolean,
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           private val _shards: Shards,
                           private val _scroll_id: String,
+                          aggregations: Map[String, Aggregation],
                           hits: SearchHits) {
-
 
   def totalHits: Int = hits.total
   def size: Int = hits.size
@@ -107,18 +118,28 @@ case class SearchResponse(took: Int,
   def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
-  def termsAgg(s: String): TermsAggregationResult = TermsAggregationResult()
+  def termsAgg(name: String): TermsAggregationResult = {
+    val agg = aggregations(name)
+    TermsAggregationResult(name, agg.buckets, agg.doc_count_error_upper_bound, agg.sum_other_doc_count)
+  }
 
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 
-case class TermsAggregationResult() {
-  def getBucketByKey(s: String) = new {
-    def getDocCount = 0
-  }
-  def getBuckets: Seq[String] = Nil
+case class TermsAggregationResult(name: String,
+                                  buckets: Seq[Bucket],
+                                  docCountErrorUpperBound: Int,
+                                  otherDocCount: Int) {
 
+  @deprecated("use buckets", "5.2.9")
+  def getBuckets: Seq[Bucket] = buckets
+
+  @deprecated("use bucket", "5.2.9")
+  def getBucketByKey(key: String): Bucket = bucket(key)
+
+  def bucket(key: String): Bucket = bucketOpt(key).get
+  def bucketOpt(key: String): Option[Bucket] = buckets.find(_.key == key)
 }
 
 

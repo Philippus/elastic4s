@@ -6,6 +6,8 @@ trait AggregationDefinition {
 
   type T <: AggregationDefinition
 
+  def name: String
+
   def pipeline(pipeline: PipelineAggregationDefinition): T = pipelines(pipeline)
   def pipelines(first: PipelineAggregationDefinition, rest: PipelineAggregationDefinition*): T = pipelines(first +: rest)
   def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T
