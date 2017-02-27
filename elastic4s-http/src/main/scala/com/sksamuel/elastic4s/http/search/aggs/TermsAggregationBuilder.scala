@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.search
+package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition

@@ -71,7 +71,9 @@ trait AggregationApi {
 
   def sigTermsAggregation(name: String): SigTermsAggregationDefinition = SigTermsAggregationDefinition(name)
   def statsAggregation(name: String): StatsAggregationDefinition = StatsAggregationDefinition(name)
+
   def sumAggregation(name: String): SumAggregationDefinition = SumAggregationDefinition(name)
+  def sumAgg(name: String, field: String): SumAggregationDefinition = SumAggregationDefinition(name).field(field)
 
   def termsAggregation(name: String): TermsAggregationDefinition = TermsAggregationDefinition(name)
   def termsAgg(name: String, field: String): TermsAggregationDefinition = TermsAggregationDefinition(name).field(field)

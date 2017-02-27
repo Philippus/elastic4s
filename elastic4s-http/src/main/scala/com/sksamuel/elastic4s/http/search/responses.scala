@@ -80,6 +80,7 @@ case class TermSuggestionResult(text: String,
 
 case class Aggregation(doc_count_error_upper_bound: Int,
                        sum_other_doc_count: Int,
+                       value: Double,
                        buckets: Seq[Bucket])
 
 case class Bucket(key: String,
@@ -123,9 +124,13 @@ case class SearchResponse(took: Int,
     TermsAggregationResult(name, agg.buckets, agg.doc_count_error_upper_bound, agg.sum_other_doc_count)
   }
 
+  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, aggregations(name).value)
+
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
+
+case class SumAggregationResult(name: String, value: Double)
 
 case class TermsAggregationResult(name: String,
                                   buckets: Seq[Bucket],
