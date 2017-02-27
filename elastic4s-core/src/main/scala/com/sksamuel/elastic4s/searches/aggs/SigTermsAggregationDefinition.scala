@@ -26,6 +26,11 @@ case class SigTermsAggregationDefinition(name: String,
   def size(size: Int): SigTermsAggregationDefinition = copy(size = size.some)
   def includeExclude(include: String, exclude: String): SigTermsAggregationDefinition =
     copy(includeExclude = new IncludeExclude(include, exclude).some)
+  def includeExclude(include: Iterable[String], exclude: Iterable[String]): SigTermsAggregationDefinition = {
+    val inc = if (include.isEmpty) null else include.toArray
+    val exc = if (exclude.isEmpty) null else exclude.toArray
+    copy(includeExclude = new IncludeExclude(inc, exc).some)
+  }
 
   def field(field: String): SigTermsAggregationDefinition = copy(field = field.some)
   def shardMinDocCount(min: Long): SigTermsAggregationDefinition = copy(shardMinDocCount = min.some)
