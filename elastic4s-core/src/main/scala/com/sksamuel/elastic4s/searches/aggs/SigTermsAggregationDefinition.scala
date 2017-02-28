@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.searches.aggs
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.search.aggregations.bucket.significant.heuristics.SignificanceHeuristic
 import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
 
 case class SigTermsAggregationDefinition(name: String,
@@ -16,7 +17,8 @@ case class SigTermsAggregationDefinition(name: String,
                                          backgroundFilter: Option[QueryDefinition] = None,
                                          pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                          subaggs: Seq[AggregationDefinition] = Nil,
-                                         metadata: Map[String, AnyRef] = Map.empty)
+                                         metadata: Map[String, AnyRef] = Map.empty,
+                                         heuristic: Option[SignificanceHeuristic] = None)
   extends AggregationDefinition {
 
   type T = SigTermsAggregationDefinition
@@ -31,6 +33,8 @@ case class SigTermsAggregationDefinition(name: String,
     val exc = if (exclude.isEmpty) null else exclude.toArray
     copy(includeExclude = new IncludeExclude(inc, exc).some)
   }
+  def significanceHeuristic(heuristic: SignificanceHeuristic): SigTermsAggregationDefinition =
+    copy(heuristic = heuristic.some)
 
   def field(field: String): SigTermsAggregationDefinition = copy(field = field.some)
   def shardMinDocCount(min: Long): SigTermsAggregationDefinition = copy(shardMinDocCount = min.some)

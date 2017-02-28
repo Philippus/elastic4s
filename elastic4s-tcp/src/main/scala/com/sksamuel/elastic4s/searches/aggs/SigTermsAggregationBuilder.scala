@@ -22,6 +22,7 @@ object SigTermsAggregationBuilder {
     agg.subaggs.map(AggregationBuilder.apply).foreach(builder.subAggregation)
     agg.pipelines.map(PipelineAggregationBuilderFn.apply).foreach(builder.subAggregation)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)
+    agg.heuristic.foreach(builder.significanceHeuristic)
     builder
   }
 }
