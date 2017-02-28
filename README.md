@@ -9,7 +9,7 @@ elastic4s - Elasticsearch Scala Client
 
 Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java's nature. Scala lets us do better.
 
-Elastic4s's DSL allows you to to construct your requests programatically, with syntatic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying true to the Java API or Rest API.
+Elastic4s's DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying true to the Java API or Rest API.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index case classes and maps directly without having to extract and set fields manually. Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
@@ -79,7 +79,7 @@ The DSL methods are located in the `ElasticDsl` trait which needs to be imported
 
 One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit `JsonFormat` implementation. 
 
-Elastic4s provides several out of the box (or you can roll your own). The provided implemenations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
+Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided implemenations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
 
 ```scala
 import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
@@ -113,7 +113,7 @@ object Test extends App {
 
 ### Eventual Consistency
 
-Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced for bulk inserts (or increased). Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
+Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
 
 For more in depth examples keep reading.
 
