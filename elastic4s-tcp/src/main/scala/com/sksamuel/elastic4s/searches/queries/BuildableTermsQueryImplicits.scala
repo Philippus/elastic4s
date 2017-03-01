@@ -1,9 +1,16 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import java.util.UUID
+
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import org.elasticsearch.index.query.{QueryBuilders, TermsQueryBuilder}
 
 trait BuildableTermsQueryImplicits {
+
+  implicit object UUIDBuildableTermsQuery extends BuildableTermsQuery[UUID] {
+    override def build(q: TermsQueryDefinition[UUID]): TermsQueryBuilder =
+      QueryBuilders.termsQuery(q.field, q.values.map(_.toString).toSeq: _*)
+  }
 
   implicit object IntBuildableTermsQuery extends BuildableTermsQuery[Int] {
     override def build(q: TermsQueryDefinition[Int]): TermsQueryBuilder =
