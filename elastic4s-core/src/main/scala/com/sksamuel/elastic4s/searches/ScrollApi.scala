@@ -6,6 +6,7 @@ import scala.concurrent.duration.FiniteDuration
 
 trait ScrollApi {
 
+  def searchScroll(id: String, keepAlive: String): SearchScrollDefinition = SearchScrollDefinition(id).keepAlive(keepAlive)
   def searchScroll(id: String): SearchScrollDefinition = SearchScrollDefinition(id)
 
   def clearScroll(first: String, rest: String*): ClearScrollDefinition = clearScroll(first +: rest)

@@ -231,6 +231,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def rescore(first: RescoreDefinition, rest: RescoreDefinition*): SearchDefinition = rescore(first +: rest)
   def rescore(rescorers: Iterable[RescoreDefinition]): SearchDefinition = copy(rescorers = rescorers.toSeq)
 
+  // alias for scroll
+  def keepAlive(keepAlive: String): SearchDefinition = scroll(keepAlive)
   def scroll(keepAlive: String): SearchDefinition = copy(keepAlive = keepAlive.some)
 
   def searchType(searchType: SearchType): SearchDefinition = copy(searchType = searchType.some)
