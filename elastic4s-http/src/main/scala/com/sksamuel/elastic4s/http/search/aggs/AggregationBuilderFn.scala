@@ -9,5 +9,6 @@ object AggregationBuilderFn {
     case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
     case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
     case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
+    case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
   }
 }

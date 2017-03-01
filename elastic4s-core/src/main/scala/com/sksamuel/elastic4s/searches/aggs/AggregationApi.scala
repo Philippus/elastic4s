@@ -5,6 +5,7 @@ import org.elasticsearch.common.geo.GeoPoint
 
 trait AggregationApi {
 
+  def avgAgg(name: String, field:String): AvgAggregationDefinition = AvgAggregationDefinition(name).field(field)
   def avgAggregation(name: String): AvgAggregationDefinition = AvgAggregationDefinition(name)
 
   def cardinalityAggregation(name: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name)
