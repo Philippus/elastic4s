@@ -47,7 +47,10 @@ trait AggregationApi {
   def histogramAggregation(name: String): HistogramAggregation = HistogramAggregation(name)
   def ipRangeAggregation(name: String): IpRangeAggregationDefinition = IpRangeAggregationDefinition(name)
 
+  def maxAgg(name: String, field: String): MaxAggregationDefinition = MaxAggregationDefinition(name).field(field)
   def maxAggregation(name: String): MaxAggregationDefinition = MaxAggregationDefinition(name)
+
+  def minAgg(name: String, field: String): MinAggregationDefinition = MinAggregationDefinition(name).field(field)
   def minAggregation(name: String): MinAggregationDefinition = MinAggregationDefinition(name)
 
   def missingAggregation(name: String): MissingAggregationDefinition = MissingAggregationDefinition(name)

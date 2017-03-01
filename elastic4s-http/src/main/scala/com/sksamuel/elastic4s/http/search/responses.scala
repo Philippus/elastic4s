@@ -125,12 +125,16 @@ case class SearchResponse(took: Int,
   }
 
   def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, aggregations(name).value)
+  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, aggregations(name).value)
+  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, aggregations(name).value)
 
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 
 case class SumAggregationResult(name: String, value: Double)
+case class MinAggregationResult(name: String, value: Double)
+case class MaxAggregationResult(name: String, value: Double)
 
 case class TermsAggregationResult(name: String,
                                   buckets: Seq[Bucket],
