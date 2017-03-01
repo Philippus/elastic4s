@@ -78,7 +78,7 @@ trait SearchImplicits {
           builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
         }
 
-      if (search.scriptFields.nonEmpty)
+      if (search.scriptFields.nonEmpty) {
         search.scriptFields.foreach {
           case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
             builder.scriptField(name, new Script(script))
@@ -87,6 +87,8 @@ trait SearchImplicits {
               options.map(_.asJava).getOrElse(new java.util.HashMap()),
               params.map(_.asJava).getOrElse(new java.util.HashMap())))
         }
+      }
+
       if (search.suggs.nonEmpty) {
         val suggest = new SuggestBuilder()
         search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, sugg.builder) }
