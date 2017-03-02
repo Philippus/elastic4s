@@ -7,7 +7,6 @@ import scala.language.implicitConversions
 trait MappingApi {
 
   val NotAnalyzed: String = "not_analyzed"
-  def id: FieldDefinition = FieldDefinition("_id")
 
   def getMapping(str: String): GetMappingDefinition =
     if (str.contains("/")) getMapping(IndexesAndTypes(str)) else getMapping(Indexes(str))

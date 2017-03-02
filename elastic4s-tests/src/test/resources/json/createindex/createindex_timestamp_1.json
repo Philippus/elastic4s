@@ -16,12 +16,6 @@
                 "enabled": true
             },
             "properties": {
-                "_id": {
-                    "type": "string",
-                    "analyzer": "keyword",
-                    "include_in_all": true,
-                    "store": "yes"
-                },
                 "name": {
                     "type": "geo_point",
                     "lat_lon": true,

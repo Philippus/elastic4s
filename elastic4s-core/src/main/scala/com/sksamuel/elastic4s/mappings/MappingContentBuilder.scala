@@ -59,12 +59,6 @@ object MappingContentBuilder {
       builder.endObject() // end properties
     }
 
-    for (id <- d.id) {
-      builder.startObject("_id")
-      builder.field("index", id.index)
-      builder.endObject()
-    }
-
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
       for (meta <- d.meta) {

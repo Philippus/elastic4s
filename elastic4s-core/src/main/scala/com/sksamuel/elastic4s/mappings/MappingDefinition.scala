@@ -21,7 +21,6 @@ trait MappingDefinitionLike {
   def routing: Option[RoutingDefinition]
   def timestamp: Option[TimestampDefinition]
   def templates: Seq[DynamicTemplateDefinition]
-  def id: Option[IdField]
 }
 
 case class PutMappingDefinition(indexesAndType: IndexesAndType,
@@ -117,8 +116,7 @@ case class MappingDefinition(`type`: String,
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[RoutingDefinition] = None,
                              timestamp: Option[TimestampDefinition] = None,
-                             templates: Seq[DynamicTemplateDefinition] = Nil,
-                             id: Option[IdField] = None
+                             templates: Seq[DynamicTemplateDefinition] = Nil
                             ) extends MappingDefinitionLike {
 
   import com.sksamuel.exts.OptionImplicits._
@@ -127,7 +125,6 @@ case class MappingDefinition(`type`: String,
   def source(source: Boolean): MappingDefinition = copy(source = source.some)
   def sourceExcludes(sourceExcludes: String*): MappingDefinition = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): MappingDefinition = copy(sourceExcludes = sourceExcludes.toSeq)
-  def id(id: IdField): MappingDefinition = copy(id = id.some)
   def analyzer(analyzer: String): MappingDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): MappingDefinition = copy(analyzer = analyzer.name.some)
   @deprecated("use boostName", "5.2")

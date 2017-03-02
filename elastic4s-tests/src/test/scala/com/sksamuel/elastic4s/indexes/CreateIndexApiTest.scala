@@ -16,7 +16,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   "the index dsl" should "generate json to include mapping properties" in {
     val req = createIndex("users").mappings(
       mapping("tweets") as(
-        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         field("name", GeoPointType) latLon true geohash true,
         field("content", DateType) nullValue "no content"
       ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
@@ -283,7 +282,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         geopointField("name") latLon true geohash true,
         dateField("content") nullValue "no content"
       ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp true
@@ -294,7 +292,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp with path and format" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         geopointField("name") latLon true geohash true,
         dateField("content") nullValue "no content"
       ) source false size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, path = Some(
@@ -306,7 +303,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp with path and format and default null" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
         geopointField("name") latLon true geohash true,
         dateField("content") nullValue "no content"
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, default = Some(null))

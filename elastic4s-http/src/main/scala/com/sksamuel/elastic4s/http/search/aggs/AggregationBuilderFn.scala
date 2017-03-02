@@ -9,8 +9,8 @@ object AggregationBuilderFn {
     case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)
     case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
     case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
-    case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
     case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
     case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
+    case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
   }
 }
