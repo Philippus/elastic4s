@@ -199,32 +199,16 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     //    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_inner_object_disabled.json")
   }
 
-  it should "support multi field type" in {
+  it should "support nested multi fields" in {
     val req = createIndex("tweets").mappings(
-      mapping("tweet") as (
-        multiField("name") as(
-          stringField("name") index "analyzed",
-          stringField("untouched") index "not_analyzed"
+      mapping("tweet").fields(
+        textField("name").fields(
+          keywordField("username"),
+          keywordField("principal")
         )
-       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.False
+      )
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
-  }
-
-  it should "support multi field type with path" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
-        field("first_name", ObjectType) as(
-          field("first_name") typed TokenCountType index "analyzed",
-          textField("any_name") index "analyzed"
-        ),
-        field("last_name", MultiFieldType) path "just_name" as(
-          textField("last_name") index "analyzed",
-          textField("any_name") index "analyzed"
-        )
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
-    )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_field_type_2.json")
   }
 
   it should "support copy to a single field" in {

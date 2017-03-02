@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
@@ -10,6 +11,17 @@ class CreateIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+
+  http.execute {
+    createIndex("foo").mappings(
+      mapping("bar").fields(
+        textField("baz").fields(
+          textField("inner1") analyzer PatternAnalyzer,
+          textField("inner2") index NotAnalyzed
+        )
+      )
+    )
+  }
 
   "CreateIndex Http Request" should {
     "return ack" in {

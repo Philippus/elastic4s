@@ -29,7 +29,6 @@ trait TypeableFields {
   def withType(ft: IntegerType.type) = new IntegerFieldDefinition(name)
   def withType(ft: IpType.type) = new IpFieldDefinition(name)
   def withType(ft: LongType.type) = new LongFieldDefinition(name)
-  def withType(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def withType(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def withType(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def withType(ft: ShortType.type) = new ShortFieldDefinition(name)
@@ -55,7 +54,6 @@ trait TypeableFields {
   def typed(ft: IpType.type) = new IpFieldDefinition(name)
   def typed(ft: KeywordType.type) = new KeywordFieldDefinition(name)
   def typed(ft: LongType.type) = new LongFieldDefinition(name)
-  def typed(ft: MultiFieldType.type) = new MultiFieldDefinition(name)
   def typed(ft: NestedType.type): NestedFieldDefinition = new NestedFieldDefinition(name)
   def typed(ft: ObjectType.type): ObjectFieldDefinition = new ObjectFieldDefinition(name)
   def typed(ft: ShortType.type) = new ShortFieldDefinition(name)
@@ -66,9 +64,8 @@ trait TypeableFields {
   def typed(ft: TextType.type) = new TextFieldDefinition(name)
   def typed(ft: TokenCountType.type) = new TokenCountDefinition(name)
 
-  def nested(fields: TypedFieldDefinition*) = new NestedFieldDefinition(name).as(fields: _*)
-  def inner(fields: TypedFieldDefinition*) = new ObjectFieldDefinition(name).as(fields: _*)
-  def multi(fields: TypedFieldDefinition*) = new MultiFieldDefinition(name).as(fields: _*)
+  def nested(fields: TypedFieldDefinition*): NestedFieldDefinition = new NestedFieldDefinition(name).as(fields: _*)
+  def inner(fields: TypedFieldDefinition*): ObjectFieldDefinition = new ObjectFieldDefinition(name).as(fields: _*)
 }
 
 case class FieldDefinition(name: String) extends AttributeAnalyzer with TypeableFields
@@ -591,36 +588,6 @@ with AttributeStore {
     super[AttributeAnalyzer].insert(source)
     super[AttributeIndex].insert(source)
     super[AttributeSearchAnalyzer].insert(source)
-
-    if (startObject)
-      source.endObject()
-  }
-}
-
-final class MultiFieldDefinition(name: String)
-  extends TypedFieldDefinition(MultiFieldType, name)
-    with AttributePath {
-
-  var _fields: Seq[TypedFieldDefinition] = Nil
-
-  def as(fields: TypedFieldDefinition*) = {
-    _fields = fields
-    this
-  }
-
-  def build(source: XContentBuilder, startObject: Boolean = true): Unit = {
-    if (startObject)
-      source.startObject(name)
-
-    insertType(source)
-    super[AttributePath].insert(source)
-    if (_fields.nonEmpty) {
-      source.startObject("fields")
-      for ( field <- _fields ) {
-        field.build(source)
-      }
-      source.endObject()
-    }
 
     if (startObject)
       source.endObject()

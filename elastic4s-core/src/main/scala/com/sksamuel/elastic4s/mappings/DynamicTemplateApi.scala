@@ -15,7 +15,7 @@ trait DynamicTemplateApi {
     DynamicTemplateDefinition(nameOfTemplate, mapping)
   }
 
-  def dynamicTemplateMapping(fieldType: FieldType) = fieldType match {
+  def dynamicTemplateMapping(fieldType: FieldType): TypedFieldDefinition = fieldType match {
     case AttachmentType => attachmentField("")
     case BinaryType => binaryField("")
     case BooleanType => booleanField("")
@@ -29,7 +29,6 @@ trait DynamicTemplateApi {
     case GeoPointType => geopointField("")
     case GeoShapeType => geoshapeField("")
     case LongType => longField("")
-    case MultiFieldType => multiField("")
     case NestedType => nestedField("")
     case ObjectType => objectField("")
     case ShortType => shortField("")
