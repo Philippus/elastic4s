@@ -8,6 +8,7 @@ trait AggregationApi {
   def avgAgg(name: String, field:String): AvgAggregationDefinition = AvgAggregationDefinition(name).field(field)
   def avgAggregation(name: String): AvgAggregationDefinition = AvgAggregationDefinition(name)
 
+  def cardinalityAgg(name: String, field: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name).field(field)
   def cardinalityAggregation(name: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name)
 
   def childrenAggregation(name: String, childType: String): ChildrenAggregationDefinition =
@@ -84,5 +85,6 @@ trait AggregationApi {
 
   def topHitsAggregation(name: String): TopHitsAggregationDefinition = TopHitsAggregationDefinition(name)
 
+  def valueCountAgg(name: String, field: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name).field(field)
   def valueCountAggregation(name: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name)
 }

@@ -6,6 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 case class CardinalityAggregationDefinition(name: String,
                                             field: Option[String] = None,
+                                            missing: Option[String] = None,
                                             script: Option[ScriptDefinition] = None,
                                             precisionThreshold: Option[Long] = None,
                                             pipelines: Seq[PipelineAggregationDefinition] = Nil,
@@ -16,6 +17,7 @@ case class CardinalityAggregationDefinition(name: String,
   type T = CardinalityAggregationDefinition
 
   def field(field: String): T = copy(field = field.some)
+  def missing(missing: String): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
   def precisionThreshold(threshold: Long): T = copy(precisionThreshold = threshold.some)
 

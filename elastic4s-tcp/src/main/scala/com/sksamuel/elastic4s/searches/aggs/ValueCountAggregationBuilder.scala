@@ -11,8 +11,6 @@ object ValueCountAggregationBuilder {
   def apply(agg: ValueCountAggregationDefinition): ValueCountAggregationBuilder = {
     val builder = AggregationBuilders.count(agg.name)
     agg.field.foreach(builder.field)
-    agg.format.foreach(builder.format)
-    agg.missing.foreach(builder.missing)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.subaggs.map(AggregationBuilder.apply).foreach(builder.subAggregation)

@@ -11,6 +11,7 @@ object CardinalityAggregationBuilder {
   def apply(agg: CardinalityAggregationDefinition): CardinalityAggregationBuilder = {
     val builder = AggregationBuilders.cardinality(agg.name)
     agg.field.foreach(builder.field)
+    agg.missing.foreach(builder.missing)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.precisionThreshold.foreach(builder.precisionThreshold)
     agg.subaggs.map(AggregationBuilder.apply).foreach(builder.subAggregation)
