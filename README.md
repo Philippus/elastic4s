@@ -126,7 +126,7 @@ through to the readme page. For options that are not yet documented, refer to th
 |-------------------------------------------|--------|------|-----|
 | [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |     | yes |
 | Bulk										| `bulk(query1, query2, query3...)`         | yes | yes |
-| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  |     | yes |
+| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
@@ -152,7 +152,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
 | Index Status                              | `indexStatus(<index>)` |   | yes |
-| List Tasks                                | `listTasks(nodeIds)` |   | yes |
+| List Tasks                                | `listTasks(nodeIds)` | yes | yes |
 | Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |

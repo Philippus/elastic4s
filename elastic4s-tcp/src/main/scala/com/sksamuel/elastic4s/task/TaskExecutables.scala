@@ -16,6 +16,8 @@ trait TaskExecutables {
       val builder = client.admin().cluster().prepareListTasks(d.nodeIds: _*)
       d.waitForCompletion.foreach(builder.setWaitForCompletion)
       d.detailed.foreach(builder.setDetailed)
+      if (d.actions.nonEmpty)
+        builder.setActions(d.actions: _*)
       injectFuture(builder.execute)
     }
   }
