@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
@@ -53,7 +53,7 @@ trait ValidateImplicits {
 
       val body = ValidateBodyFn(request).string()
       logger.debug(s"Executing validate query $body")
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
       executeAsyncAndMapResponse(fn, format)

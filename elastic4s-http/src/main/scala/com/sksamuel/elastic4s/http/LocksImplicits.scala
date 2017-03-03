@@ -4,7 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLockDefinition, ReleaseGlobalLockDefinition}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseException, RestClient}
 
 import scala.concurrent.Future
@@ -15,7 +15,7 @@ trait LocksImplicits {
 
     val endpoint = "/fs/lock/global/_create"
     val emptyParams = new util.HashMap[String, String]()
-    val emptyEntity = new StringEntity("{}")
+    val emptyEntity = new StringEntity("{}", ContentType.APPLICATION_JSON)
 
     override def execute(client: RestClient,
                          request: AcquireGlobalLockDefinition,

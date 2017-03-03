@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinit
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.{DocumentRef, JsonFormat}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
@@ -78,7 +78,7 @@ trait DeleteImplicits {
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")
-      val entity = new StringEntity(body.string)
+      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
     }

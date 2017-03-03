@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
 import scala.collection.JavaConverters._
@@ -131,7 +131,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
       val body = CreateIndexContentBuilder(request).string()
       logger.debug(s"Executing create index $body")
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, new StringEntity(body), _), format)
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }
 
