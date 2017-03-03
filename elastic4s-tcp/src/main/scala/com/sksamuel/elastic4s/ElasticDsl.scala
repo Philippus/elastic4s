@@ -369,7 +369,7 @@ trait ElasticDsl
 
   case object completion {
     @deprecated("use completionSuggestion(name)", "5.0.0")
-    def suggestion(name: String) = completionSuggestion(name)
+    def suggestion(name: String): CompletionSuggExpectsField = completionSuggestion(name)
   }
 
   case object explain {

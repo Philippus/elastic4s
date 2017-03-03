@@ -140,19 +140,19 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         | yes | yes |
 | [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
-| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`  |  | yes |
+| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`          | yes | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
-| Flush Index                               | `flushIndex(<index>)` | yes | yes |
-| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)` | yes | yes |
-| Get Alias                                 | `getAlias(<name>).on(<index>)` |   | yes |
+| Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
+| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)`        | yes | yes |
+| Get Alias                                 | `getAlias(<name>).on(<index>)` |          | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
 | Get Segments                              | `getSegments(<indexes>)` |   | yes |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
 | Get Template                              | `getTemplate(<name>)` |   | yes |
-| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)` | yes | yes |
+| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
-| Index Status                              | `indexStatus(<index>)` |   | yes |
-| List Tasks                                | `listTasks(nodeIds)` | yes | yes |
+| Index Status                              | `indexStatus(<index>)`                    |   | yes |
+| List Tasks                                | `listTasks(nodeIds)`                      | yes | yes |
 | Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
@@ -166,7 +166,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
 | [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
 | [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes | yes |
-| Search scroll                             | `searchScroll(<scrollId>)` | yes | yes |
+| Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>` | yes | yes |
 | [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
 | [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` | yes | yes |

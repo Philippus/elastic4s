@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.http.bulk.BulkImplicits
 import com.sksamuel.elastic4s.http.delete.DeleteImplicits
+import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
 import com.sksamuel.elastic4s.http.index.{IndexAdminImplicits, IndexImplicits}
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}
@@ -16,6 +17,7 @@ trait ElasticDsl
     with Logging
     with BulkImplicits
     with DeleteImplicits
+    with ExplainImplicits
     with GetImplicits
     with IndexAdminImplicits
     with IndexImplicits
