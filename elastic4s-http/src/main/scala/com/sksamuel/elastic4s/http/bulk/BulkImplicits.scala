@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
@@ -34,7 +34,7 @@ trait BulkImplicits {
       val rows = BulkContentBuilder(bulk)
       logger.info(s"Bulk entity: ${rows.mkString("\n")}")
       // es seems to require a trailing new line as well
-      val entity = new StringEntity(rows.mkString("\n") + "\n")
+      val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
 
       val params = scala.collection.mutable.Map.empty[String, String]
       bulk.timeout.foreach(params.put("timeout", _))

@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
@@ -36,7 +36,7 @@ trait SearchImplicits {
 
       val body = MultiSearchContentBuilder(request)
       logger.debug("Executing msearch: " + body)
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_msearch", params.asJava, entity, _), format)
     }
@@ -73,7 +73,7 @@ trait SearchImplicits {
       logger.debug("Executing search request: " + builder.string)
 
       val body = builder.string()
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
     }

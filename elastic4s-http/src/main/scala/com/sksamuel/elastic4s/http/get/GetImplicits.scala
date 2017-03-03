@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.{HitReader, JsonFormat}
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
@@ -33,7 +33,7 @@ trait GetImplicits {
 
       val body = MultiGetBodyBuilder(request).string()
       logger.debug(s"Executing multiget $body")
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       val params = scala.collection.mutable.Map.empty[String, String]
 

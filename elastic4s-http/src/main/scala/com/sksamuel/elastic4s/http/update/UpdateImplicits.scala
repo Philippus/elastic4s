@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
@@ -49,7 +49,7 @@ trait UpdateImplicits {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = UpdateContentBuilder(request)
-      val entity = new StringEntity(body.string)
+      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
       logger.debug(s"Update Entity: ${body.string}")
 
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _), format)

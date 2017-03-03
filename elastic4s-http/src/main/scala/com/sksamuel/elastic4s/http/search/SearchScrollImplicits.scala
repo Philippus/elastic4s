@@ -6,7 +6,7 @@ import cats.Show
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.searches.SearchScrollDefinition
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
@@ -29,7 +29,7 @@ trait SearchScrollImplicits {
 
       val body = SearchScrollContentFn(req).string()
       logger.debug("Executing search scroll: " + body)
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, new util.HashMap[String, String], entity, _), format)
     }

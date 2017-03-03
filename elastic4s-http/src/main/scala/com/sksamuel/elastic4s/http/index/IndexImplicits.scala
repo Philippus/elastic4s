@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.collection.JavaConverters._
@@ -32,7 +32,7 @@ trait IndexImplicits extends IndexShowImplicits {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body = IndexContentBuilder(request)
-      val entity = new StringEntity(body.string)
+      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       logger.debug(s"Endpoint=$endpoint")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.asJava, entity, _), format)
