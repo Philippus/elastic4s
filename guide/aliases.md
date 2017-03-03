@@ -4,7 +4,7 @@ The add alias request allows us to alias an existing index to another name:
 
 ```scala
 val resp = client.execute {
-  add alias "places" on "locations"
+  addAlias("places") on "locations"
 }
 ```
 
@@ -12,7 +12,7 @@ Aliases can include filters to assist with partitioning data (such as limiting r
 
 ```scala
 val resp = client.execute {
-  add alias "uk-locations" on "locations" filter termFilter("country", "uk")
+  addAlias("uk-locations") on "locations" filter termFilter("country", "uk")
 }
 ```
 
@@ -20,7 +20,7 @@ Existing aliases can be removed using a similar request:
 
 ```scala
 val resp = client.execute {
-  remove alias "places" on "locations"
+  removeAlias("places") on "locations"
 }
 ```
 
@@ -29,8 +29,8 @@ Multiple operations on aliases can be executed atomically:
 ```scala
 val resp = client.execute {
   aliases(
-    remove alias "places" on "old_locations",
-    add alias "places" on "new_locations"
+    removeAlias("places") on "old_locations",
+    addAlias("places") on "new_locations"
   )
 }
 ```
