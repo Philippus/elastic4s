@@ -56,6 +56,7 @@ trait AggregationApi {
   def minAgg(name: String, field: String): MinAggregationDefinition = MinAggregationDefinition(name).field(field)
   def minAggregation(name: String): MinAggregationDefinition = MinAggregationDefinition(name)
 
+  def missingAgg(name: String, field: String): MissingAggregationDefinition = MissingAggregationDefinition(name).field(field)
   def missingAggregation(name: String): MissingAggregationDefinition = MissingAggregationDefinition(name)
 
   def nestedAggregation(name: String, path: String): NestedAggregationDefinition =

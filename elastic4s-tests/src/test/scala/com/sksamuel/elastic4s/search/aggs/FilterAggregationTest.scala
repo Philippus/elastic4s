@@ -30,8 +30,8 @@ class FilterAggregationTest extends FreeSpec with SharedElasticSugar with Matche
     ).refresh(RefreshPolicy.IMMEDIATE)
   ).await
 
-  "avg agg" - {
-    "should return the avg for the context" in {
+  "filter ag" - {
+    "should create a bucket matching the query" in {
 
       val resp = http.execute {
         search("filteragg").matchAllQuery().aggs {
