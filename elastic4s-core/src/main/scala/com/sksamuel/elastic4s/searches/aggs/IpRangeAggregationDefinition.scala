@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 case class IpRangeAggregationDefinition(name: String,
                                         field: Option[String] = None,
                                         format: Option[String] = None,
-                                        missing: Option[String] = None,
+                                        missing: Option[AnyRef] = None,
                                         script: Option[ScriptDefinition] = None,
                                         ranges: Seq[(Option[String], String, String)] = Nil,
                                         maskRanges: Seq[(Option[String], String)] = Nil,
@@ -33,7 +33,7 @@ case class IpRangeAggregationDefinition(name: String,
 
   def field(field: String): T = copy(field = field.some)
   def format(format: String): T = copy(format = format.some)
-  def missing(missing: String): T = copy(missing = missing.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)

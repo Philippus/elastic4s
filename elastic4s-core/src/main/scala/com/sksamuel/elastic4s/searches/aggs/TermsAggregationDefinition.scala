@@ -11,7 +11,7 @@ import org.elasticsearch.search.aggregations.support.ValueType
 case class TermsAggregationDefinition(name: String,
                                       field: Option[String] = None,
                                       script: Option[ScriptDefinition] = None,
-                                      missing: Option[String] = None,
+                                      missing: Option[AnyRef] = None,
                                       size: Option[Int] = None,
                                       minDocCount: Option[Long] = None,
                                       showTermDocCountError: Option[Boolean] = None,
@@ -31,7 +31,7 @@ case class TermsAggregationDefinition(name: String,
 
   def field(field: String): TermsAggregationDefinition = copy(field = field.some)
   def script(script: ScriptDefinition): TermsAggregationDefinition = copy(script = script.some)
-  def missing(missing: String): TermsAggregationDefinition = copy(missing = missing.some)
+  def missing(missing: AnyRef): TermsAggregationDefinition = copy(missing = missing.some)
   def size(size: Int): TermsAggregationDefinition = copy(size = size.some)
   def minDocCount(min: Long): TermsAggregationDefinition = copy(minDocCount = min.some)
   def showTermDocCountError(showError: Boolean): TermsAggregationDefinition = copy(showTermDocCountError = showError.some)

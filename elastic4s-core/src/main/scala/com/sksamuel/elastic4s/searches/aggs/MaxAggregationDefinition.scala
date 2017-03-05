@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 case class MaxAggregationDefinition(name: String,
                                     field: Option[String] = None,
                                     format: Option[String] = None,
-                                    missing: Option[String] = None,
+                                    missing: Option[AnyRef] = None,
                                     script: Option[ScriptDefinition] = None,
                                     pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                     subaggs: Seq[AggregationDefinition] = Nil,
@@ -16,10 +16,10 @@ case class MaxAggregationDefinition(name: String,
 
   type T = MaxAggregationDefinition
 
-  def field(field: String): MaxAggregationDefinition = copy(field = field.some)
-  def format(format: String): MaxAggregationDefinition = copy(format = format.some)
-  def missing(missing: String): MaxAggregationDefinition = copy(missing = missing.some)
-  def script(script: ScriptDefinition): MaxAggregationDefinition = copy(script = script.some)
+  def field(field: String): T = copy(field = field.some)
+  def format(format: String): T = copy(format = format.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
+  def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
   override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)

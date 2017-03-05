@@ -6,7 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 case class PercentilesAggregationDefinition(name: String,
                                             field: Option[String] = None,
-                                            missing: Option[String] = None,
+                                            missing: Option[AnyRef] = None,
                                             format: Option[String] = None,
                                             script: Option[ScriptDefinition] = None,
                                             percents: Seq[Double] = Nil,
@@ -25,7 +25,7 @@ case class PercentilesAggregationDefinition(name: String,
 
   def format(format: String): T = copy(format = format.some)
   def field(field: String): T = copy(field = field.some)
-  def missing(missing: String): T = copy(missing = missing.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)

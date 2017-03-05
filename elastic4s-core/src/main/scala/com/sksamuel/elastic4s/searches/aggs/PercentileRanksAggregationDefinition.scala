@@ -8,7 +8,7 @@ import org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMeth
 case class PercentileRanksAggregationDefinition(name: String,
                                                 field: Option[String] = None,
                                                 format: Option[String] = None,
-                                                missing: Option[String] = None,
+                                                missing: Option[AnyRef] = None,
                                                 values: Seq[Double] = Nil,
                                                 method: Option[PercentilesMethod] = None,
                                                 keyed: Option[Boolean] = None,
@@ -23,7 +23,7 @@ case class PercentileRanksAggregationDefinition(name: String,
 
   def field(field: String): T = copy(field = field.some)
   def format(format: String): T = copy(format = format.some)
-  def missing(missing: String): T = copy(missing = missing.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
   def numberOfSignificantValueDigits(digits: Int): T = copy(numberOfSignificantValueDigits = digits.some)

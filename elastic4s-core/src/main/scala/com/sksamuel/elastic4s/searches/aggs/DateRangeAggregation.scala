@@ -8,7 +8,7 @@ import org.joda.time.DateTimeZone
 case class DateRangeAggregation(name: String,
                                 field: Option[String] = None,
                                 script: Option[ScriptDefinition] = None,
-                                missing: Option[String] = None,
+                                missing: Option[AnyRef] = None,
                                 format: Option[String] = None,
                                 timeZone: Option[DateTimeZone] = None,
                                 keyed: Option[Boolean] = None,
@@ -26,7 +26,7 @@ case class DateRangeAggregation(name: String,
   def keyed(keyed: Boolean): DateRangeAggregation = copy(keyed = keyed.some)
   def field(field: String): DateRangeAggregation = copy(field = field.some)
   def script(script: ScriptDefinition): DateRangeAggregation = copy(script = script.some)
-  def missing(missing: String): DateRangeAggregation = copy(missing = missing.some)
+  def missing(missing: AnyRef): DateRangeAggregation = copy(missing = missing.some)
 
   def range(from: String, to: String): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))
   def range(key: String, from: String, to: String): DateRangeAggregation = copy(ranges = ranges :+ (key.some, from, to))

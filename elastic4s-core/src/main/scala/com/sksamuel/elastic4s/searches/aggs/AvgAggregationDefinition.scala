@@ -5,8 +5,8 @@ import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefiniti
 import com.sksamuel.exts.OptionImplicits._
 
 case class AvgAggregationDefinition(name: String,
-                                    missing: Option[String] = None,
                                     field: Option[String] = None,
+                                    missing: Option[AnyRef] = None,
                                     script: Option[ScriptDefinition] = None,
                                     pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                     subaggs: Seq[AggregationDefinition] = Nil,
@@ -15,9 +15,9 @@ case class AvgAggregationDefinition(name: String,
 
   type T = AvgAggregationDefinition
 
-  def field(field: String): AvgAggregationDefinition = copy(field = field.some)
-  def missing(missing: String): AvgAggregationDefinition = copy(missing = missing.some)
-  def script(script: ScriptDefinition): AvgAggregationDefinition = copy(script = script.some)
+  def field(field: String): T = copy(field = field.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
+  def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
   override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)

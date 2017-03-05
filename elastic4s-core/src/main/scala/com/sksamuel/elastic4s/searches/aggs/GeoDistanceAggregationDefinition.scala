@@ -10,7 +10,7 @@ case class GeoDistanceAggregationDefinition(name: String,
                                             origin: GeoPoint,
                                             field: Option[String] = None,
                                             format: Option[String] = None,
-                                            missing: Option[String] = None,
+                                            missing: Option[AnyRef] = None,
                                             keyed: Option[Boolean] = None,
                                             distanceType: Option[GeoDistance] = None,
                                             unit: Option[DistanceUnit] = None,
@@ -43,7 +43,7 @@ case class GeoDistanceAggregationDefinition(name: String,
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
   def field(field: String): T = copy(field = field.some)
   def format(format: String): T = copy(format = format.some)
-  def missing(missing: String): T = copy(missing = missing.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)

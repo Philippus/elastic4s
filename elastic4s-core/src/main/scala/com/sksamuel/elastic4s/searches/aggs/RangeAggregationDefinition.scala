@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 case class RangeAggregationDefinition(name: String,
                                       field: Option[String] = None,
                                       format: Option[String] = None,
-                                      missing: Option[String] = None,
+                                      missing: Option[AnyRef] = None,
                                       keyed: Option[Boolean] = None,
                                       script: Option[ScriptDefinition] = None,
                                       ranges: Seq[(Option[String], Double, Double)] = Nil,
@@ -32,7 +32,7 @@ case class RangeAggregationDefinition(name: String,
 
   def field(field: String): T = copy(field = field.some)
   def format(format: String): T = copy(format = format.some)
-  def missing(missing: String): T = copy(missing = missing.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
 

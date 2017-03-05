@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 case class ExtendedStatsAggregationDefinition(name: String,
                                               field: Option[String] = None,
                                               script: Option[ScriptDefinition] = None,
-                                              missing: Option[String] = None,
+                                              missing: Option[AnyRef] = None,
                                               pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                               subaggs: Seq[AggregationDefinition] = Nil,
                                               metadata: Map[String, AnyRef] = Map.empty)
@@ -17,7 +17,7 @@ case class ExtendedStatsAggregationDefinition(name: String,
 
   def field(field: String): ExtendedStatsAggregationDefinition = copy(field = field.some)
   def script(script: ScriptDefinition): ExtendedStatsAggregationDefinition = copy(script = script.some)
-  def missing(missing: String): ExtendedStatsAggregationDefinition = copy(missing = missing.some)
+  def missing(missing: AnyRef): ExtendedStatsAggregationDefinition = copy(missing = missing.some)
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
   override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
