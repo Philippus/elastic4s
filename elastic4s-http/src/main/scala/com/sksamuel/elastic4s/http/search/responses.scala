@@ -78,16 +78,31 @@ case class TermSuggestionResult(text: String,
   def optionsText: Seq[String] = options.map(_.text)
 }
 
-case class Aggregation(doc_count_error_upper_bound: Int,
-                       sum_other_doc_count: Int,
-                       value: Double,
-                       buckets: Seq[Bucket])
-
 case class Bucket(key: String,
                   private val doc_count: Int) {
   def docCount: Int = doc_count
   @deprecated("use getDocCount", "5.2.9")
   def getDocCount: Int = docCount
+}
+
+trait AggregationResponse {
+
+  protected def aggdata: Map[String, AnyRef]
+  protected def agg(name: String): Map[String, AnyRef] = aggdata(name).asInstanceOf[Map[String, AnyRef]]
+
+  def termsAgg(name: String): TermsAggregationResult = {
+    TermsAggregationResult(
+      name,
+      Nil, //aggregations("buckets").toString.toInt,
+      aggdata("doc_count_error_upper_bound").toString.toInt,
+      aggdata("sum_other_doc_count").toString.toInt
+    )
+  }
+
+  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
+  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
+  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
+  def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
 }
 
 case class SearchResponse(took: Int,
@@ -96,8 +111,10 @@ case class SearchResponse(took: Int,
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           private val _shards: Shards,
                           private val _scroll_id: String,
-                          aggregations: Map[String, Aggregation],
-                          hits: SearchHits) {
+                          aggregations: Map[String, AnyRef],
+                          hits: SearchHits) extends AggregationResponse {
+
+  protected def aggdata: Map[String, AnyRef] = aggregations
 
   def totalHits: Int = hits.total
   def size: Int = hits.size
@@ -119,15 +136,6 @@ case class SearchResponse(took: Int,
   def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
-  def termsAgg(name: String): TermsAggregationResult = {
-    val agg = aggregations(name)
-    TermsAggregationResult(name, agg.buckets, agg.doc_count_error_upper_bound, agg.sum_other_doc_count)
-  }
-
-  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, aggregations(name).value)
-  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, aggregations(name).value)
-  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, aggregations(name).value)
-
   def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
@@ -135,6 +143,11 @@ case class SearchResponse(took: Int,
 case class SumAggregationResult(name: String, value: Double)
 case class MinAggregationResult(name: String, value: Double)
 case class MaxAggregationResult(name: String, value: Double)
+
+case class FilterAggregationResult(name: String,
+                                   docCount: Int,
+                                   aggdata: Map[String, AnyRef]) extends AggregationResponse
+
 
 case class TermsAggregationResult(name: String,
                                   buckets: Seq[Bucket],

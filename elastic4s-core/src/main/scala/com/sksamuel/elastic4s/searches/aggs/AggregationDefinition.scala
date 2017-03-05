@@ -7,6 +7,8 @@ trait AggregationDefinition {
   type T <: AggregationDefinition
 
   def name: String
+  def subaggs: Seq[AggregationDefinition]
+  def metadata: Map[String, AnyRef]
 
   def pipeline(pipeline: PipelineAggregationDefinition): T = pipelines(pipeline)
   def pipelines(first: PipelineAggregationDefinition, rest: PipelineAggregationDefinition*): T = pipelines(first +: rest)
