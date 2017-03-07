@@ -21,6 +21,14 @@ trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeP
   this: Suite with LocalNodeProvider =>
 }
 
+trait SharedDualElasticSugar extends AbstractDualElasticSugar with AlwaysNewLocalNodeProvider with BeforeAndAfterAll {
+  this: Suite with LocalNodeProvider =>
+
+  override def afterAll(): Unit = {
+    node.stop(true)
+  }
+}
+
 /**
 * Provides helper methods for things like refreshing an index, and blocking until an
 * index has a certain count of documents. These methods are very useful when writing
@@ -130,6 +138,156 @@ trait AbstractElasticSugar extends ElasticDsl {
   /**
    * Will block until the given index and optional types have at least the given number of documents.
    */
+  def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        search(index / types).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
+    }
+  }
+
+  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      expected == client.execute {
+        search(index / types).size(0)
+      }.await.totalHits
+    }
+  }
+
+  def blockUntilEmpty(index: String): Unit = {
+    blockUntil(s"Expected empty index $index") { () =>
+      client.execute {
+        search(Indexes(index)).size(0)
+      }.await.totalHits == 0
+    }
+  }
+  def blockUntilIndexExists(index: String): Unit = {
+    blockUntil(s"Expected exists index $index") { () ⇒
+      doesIndexExists(index)
+    }
+  }
+
+  def blockUntilIndexNotExists(index: String): Unit = {
+    blockUntil(s"Expected not exists index $index") { () ⇒
+      !doesIndexExists(index)
+    }
+  }
+
+  def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit = {
+    blockUntil(s"Expected document $id to have version $version") { () =>
+      client.execute {
+        get(id).from(index / `type`)
+      }.await.version == version
+    }
+  }
+}
+
+// This copy/paste is temporary and just here so I don't have to go changing more files for this quick prototype.
+trait AbstractDualElasticSugar extends ElasticDsl {
+  this: Suite with LocalNodeProvider =>
+
+  def node: LocalNode
+  def client = node.elastic4sclient(false)
+  private val logger = LoggerFactory.getLogger(getClass)
+
+  // refresh all indexes
+  def refreshAll(): RefreshResponse = refresh(Indexes.All)
+
+  // refreshes all specified indexes
+  def refresh(indexes: Indexes): RefreshResponse = {
+    client.execute {
+      refreshIndex(indexes)
+    }.await
+  }
+
+  def blockUntilGreen(): Unit = {
+    blockUntil("Expected cluster to have green status") { () =>
+      client.execute {
+        clusterHealth()
+      }.await.getStatus == ClusterHealthStatus.GREEN
+    }
+  }
+
+  def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
+
+    var backoff = 0
+    var done = false
+
+    while (backoff <= 16 && !done) {
+      if (backoff > 0) Thread.sleep(200 * backoff)
+      backoff = backoff + 1
+      try {
+        done = predicate()
+      } catch {
+        case e: Throwable =>
+          logger.warn("problem while testing predicate", e)
+      }
+    }
+
+    require(done, s"Failed waiting on: $explain")
+  }
+
+  def ensureIndexExists(index: String): Unit = {
+    try {
+      client.execute {
+        createIndex(index)
+      }.await
+    } catch {
+      case _: ResourceAlreadyExistsException => // Ok, ignore.
+      case _: RemoteTransportException => // Ok, ignore.
+    }
+  }
+
+  def doesIndexExists(name: String): Boolean = {
+    client.execute {
+      indexExists(name)
+    }.await.isExists
+  }
+
+  def deleteIndex(name: String): Unit = {
+    if (doesIndexExists(name)) {
+      client.execute {
+        ElasticDsl.deleteIndex(name)
+      }.await
+    }
+  }
+
+  def truncateIndex(index: String): Unit = {
+    deleteIndex(index)
+    ensureIndexExists(index)
+    blockUntilEmpty(index)
+  }
+
+  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
+    blockUntil(s"Expected to find document $id") { () =>
+      client.execute {
+        get(id).from(index / `type`)
+      }.await.exists
+    }
+  }
+
+  def blockUntilCount(expected: Long, index: String): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        search(index).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
+    }
+  }
+
+  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = client.execute {
+        search(indexAndTypes).matchAll().size(0)
+      }.await
+      expected <= result.totalHits
+    }
+  }
+
+  /**
+    * Will block until the given index and optional types have at least the given number of documents.
+    */
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
