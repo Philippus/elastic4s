@@ -29,6 +29,8 @@ trait IndexAdminApi {
 
   def indexExists(index: String): IndexExistsDefinition = IndexExistsDefinition(index)
 
+  def aliasExists(alias: String): AliasExistsDefinition = AliasExistsDefinition(alias)
+
   def clearCache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
   def clearCache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
 

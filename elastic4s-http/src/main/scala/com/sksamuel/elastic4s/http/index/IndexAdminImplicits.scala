@@ -27,6 +27,10 @@ case class IndexExistsResponse(exists: Boolean) {
   def isExists: Boolean = exists
 }
 
+case class AliasExistsResponse(exists: Boolean) {
+  def isExists: Boolean = exists
+}
+
 case class ClearCacheResponse(_shards: Shards) {
   def shards: Shards = _shards
 }
@@ -86,6 +90,17 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       logger.debug(s"Connecting to $endpoint for type exists check")
       val resp = client.performRequest("HEAD", endpoint)
       Future.successful(TypeExistsResponse(resp.getStatusLine.getStatusCode == 200))
+    }
+  }
+
+  implicit object AliasExistsExecutable extends HttpExecutable[AliasExistsDefinition, AliasExistsResponse] {
+    override def execute(client: RestClient,
+                         request: AliasExistsDefinition,
+                         format: JsonFormat[AliasExistsResponse]): Future[AliasExistsResponse] = {
+      val endpoint = s"/_alias/${request.alias}"
+      logger.debug(s"Connecting to $endpoint for alias exists check")
+      val resp = client.performRequest("HEAD", endpoint)
+      Future.successful(AliasExistsResponse(resp.getStatusLine.getStatusCode == 200))
     }
   }
 
