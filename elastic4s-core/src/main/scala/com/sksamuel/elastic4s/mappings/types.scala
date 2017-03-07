@@ -148,6 +148,7 @@ final class KeywordFieldDefinition(name: String)
     with AttributeIncludeInAll
     with AttributeIndex
     with AttributeIndexOptions
+    with AttributeNormalizer
     with AttributeNorms
     with AttributeNullValue[String]
     with AttributeStore
@@ -168,6 +169,7 @@ final class KeywordFieldDefinition(name: String)
     super[AttributeIndex].insert(source)
     super[AttributeIndexOptions].insert(source)
     super[AttributeNullValue].insert(source)
+    super[AttributeNormalizer].insert(source)
     super[AttributeNorms].insert(source)
     super[AttributeNullValue].insert(source)
     super[AttributeStore].insert(source)

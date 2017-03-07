@@ -13,10 +13,13 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
     createIndex("q").mappings {
       mapping("r") as Seq(
         field("a", TextType) stored true analyzer WhitespaceAnalyzer,
-        field("b", TextType)
+        field("b", TextType),
+        field("kw", KeywordType) normalizer "my_normalizer"
       )
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
+    } normalizers {
+      CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
     }
   }.await
 
@@ -44,6 +47,10 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
 
       val b = map.get("properties").asInstanceOf[util.Map[String, Any]].get("b").asInstanceOf[util.Map[String, Any]]
       b.get("type") shouldBe "text"
+
+      val kw = map.get("properties").asInstanceOf[util.Map[String, Any]].get("kw").asInstanceOf[util.Map[String, Any]]
+      kw.get("type") shouldBe "keyword"
+      kw.get("normalizer") shouldBe "my_normalizer"
     }
     "support getting all mappings" in {
       client.execute {

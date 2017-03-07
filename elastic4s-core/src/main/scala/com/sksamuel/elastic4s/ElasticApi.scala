@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin.IndexAdminApi
 import com.sksamuel.elastic4s.alias.AliasesApi
-import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, TokenizerApi}
+import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, NormalizerApi, TokenizerApi}
 import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
@@ -44,6 +44,7 @@ trait ElasticApi
     with IndexAdminApi
     with LocksApi
     with MappingApi
+    with NormalizerApi
     with QueryApi
     with PipelineAggregationApi
     with ReindexApi

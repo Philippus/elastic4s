@@ -93,7 +93,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_stop_path.json")
   }
 
-  it should "support custom analyzers, tokenizers and filters" in {
+  it should "support custom analyzers, normalizers, tokenizers and filters" in {
     val req = createIndex("users").analysis(
       PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
       SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
@@ -132,6 +132,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       CustomAnalyzerDefinition(
         "myAnalyzer5",
         NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
+    ).normalizers(
+      CustomNormalizerDefinition("myNormalizer1", LowercaseTokenFilter),
+      CustomNormalizerDefinition("myNormalizer2", UppercaseTokenFilter, MappingCharFilter("mapping_charfilter2", "x" -> "y"))
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_analyis2.json")
   }

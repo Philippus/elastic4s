@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.analyzers.{Analyzer, Normalizer}
 import org.elasticsearch.common.xcontent.XContentBuilder
 
 object attributes {
@@ -245,6 +245,25 @@ object attributes {
 
     protected override def insert(source: XContentBuilder): Unit = {
       _analyzer.foreach(source.field("analyzer", _))
+    }
+  }
+
+  trait AttributeNormalizer extends Attribute { self: KeywordFieldDefinition =>
+
+    private[this] var _normalizer: Option[String] = None
+
+    def normalizer(normalizer: String): this.type = {
+      _normalizer = Some(normalizer)
+      this
+    }
+
+    def normalizer(normalizer: Normalizer): this.type = {
+      _normalizer = Some(normalizer.name)
+      this
+    }
+
+    protected override def insert(source: XContentBuilder): Unit = {
+      _normalizer.foreach(source.field("normalizer", _))
     }
   }
 
