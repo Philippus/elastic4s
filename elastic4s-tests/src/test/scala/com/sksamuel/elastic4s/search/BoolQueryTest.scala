@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.CommonResponseImplicits._
-import com.sksamuel.elastic4s.testkit.DualClient
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
-class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClient {
+class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
@@ -36,7 +36,7 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClie
     }.await
 
     resp.totalHits shouldBe 1
-    resp.hits.head.sourceField("style") shouldBe "sans"
+    resp.hits.hits.head.sourceField("style") shouldBe "sans"
   }
 
   it should "support multiple must queries" in {
@@ -47,7 +47,7 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClie
     }.await
 
     resp.totalHits shouldBe 1
-    resp.hits.head.sourceField("name") shouldBe "times new roman"
+    resp.hits.hits.head.sourceField("name") shouldBe "times new roman"
   }
 
   it should "support not" in {
@@ -58,7 +58,7 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClie
     }.await
 
     resp.totalHits shouldBe 5
-    resp.hits.map(_.sourceField("style")).toSet shouldBe Set("comic", "serif")
+    resp.hits.hits.map(_.sourceField("style")).toSet shouldBe Set("comic", "serif")
   }
 
   it should "support must" in {
@@ -69,7 +69,7 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClie
     }.await
 
     resp.totalHits shouldBe 2
-    resp.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "roman comic")
+    resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "roman comic")
   }
 
   it should "support or using should" in {
@@ -83,6 +83,6 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualClie
     }.await
 
     resp.totalHits shouldBe 2
-    resp.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "comic sans")
+    resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "comic sans")
   }
 }

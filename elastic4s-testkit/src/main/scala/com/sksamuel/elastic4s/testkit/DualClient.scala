@@ -2,21 +2,21 @@ package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.embedded.LocalNode
 import com.sksamuel.elastic4s.http.{HttpClient, HttpExecutable}
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Executable, JsonFormat}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Executable, JsonFormat, TcpClient}
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
-import org.scalatest.{Args, Suite, SuiteMixin}
+import org.scalatest._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait DualClient extends SuiteMixin with SharedDualElasticSugar {
-  this: Suite =>
+trait DualClient extends SuiteMixin {
+  this: Suite with DualElasticSugar =>
+
+  var node: LocalNode = getNode
+  var client: TcpClient = node.elastic4sclient(false)
 
   private val logger = LoggerFactory.getLogger(getClass)
-
-  var currentNode: LocalNode = getNode
-  def node: LocalNode = currentNode
 
   // Runs twice (once for HTTP and once for TCP)
   protected def beforeRunTests(): Unit = {
@@ -26,14 +26,13 @@ trait DualClient extends SuiteMixin with SharedDualElasticSugar {
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
-  def execute[T, R, Q1, Q2, C](request: T)(implicit tcpExec: Executable[T, R, Q1],
+  def execute[T, R, Q1, Q2](request: T)(implicit tcpExec: Executable[T, R, Q1],
                                            httpExec: HttpExecutable[T, Q2],
                                            format: JsonFormat[Q2],
-                                           tcpConv: CommonResponse[Q1, C],
-                                           httpConv: CommonResponse[Q2, C]): Future[C] = {
+                                           tcpConv: ResponseConverter[Q1, Q2]): Future[Q2] = {
     if (useHttpClient) {
       logger.debug("Using HTTP client...")
-      httpExec.execute(http.rest, request, format).map(httpConv.convert)
+      httpExec.execute(http.rest, request, format)
     } else {
       try {
         logger.debug("Using TCP client...")
@@ -45,16 +44,25 @@ trait DualClient extends SuiteMixin with SharedDualElasticSugar {
     }
   }
 
-  override abstract def runTests(testName: Option[String], args: Args) = {
-    beforeRunTests()
-    super.runTests(testName, args)
+  override abstract def runTests(testName: Option[String], args: Args): Status = {
+    val tcpStatus = runTestsOnce(testName, args)
 
-    // Get a new node for running the HTTP tests
-    currentNode = getNode
-
+    // Get a new node for running the TCP tests
+    node = getNode
+    client = node.elastic4sclient(false)
     useHttpClient = !useHttpClient
 
-    beforeRunTests()
-    super.runTests(testName, args)
+    val httpStatus = runTestsOnce(testName, args)
+
+    new CompositeStatus(Set(tcpStatus, httpStatus))
+  }
+
+  private def runTestsOnce(testName: Option[String], args: Args): Status = {
+    try {
+      beforeRunTests()
+      super.runTests(testName, args)
+    } finally {
+      node.stop(true)
+    }
   }
 }

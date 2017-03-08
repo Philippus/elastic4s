@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.CommonResponseImplicits._
-import com.sksamuel.elastic4s.testkit.DualClient
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.FlatSpec
-import org.scalatest.mockito.MockitoSugar
 
-class CountTest extends FlatSpec with MockitoSugar with ElasticDsl with DualClient {
+class CountTest extends FlatSpec with ElasticDsl with DualElasticSugar with DualClient {
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   override protected def beforeRunTests() = {
