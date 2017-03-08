@@ -40,4 +40,8 @@ trait IndexAdminApi {
   def rollover(alias: String): RolloverDefinition = RolloverDefinition(alias)
 
   def shrink(source: String, target: String): ShrinkDefinition = ShrinkDefinition(source, target)
+
+  def updateIndexLevelSettings(first: String, rest: String*): UpdateIndexLevelSettingsDefinition = updateIndexLevelSettings(first +: rest)
+  def updateIndexLevelSettings(indexes: Iterable[String]): UpdateIndexLevelSettingsDefinition = updateIndexLevelSettings(Indexes(indexes))
+  def updateIndexLevelSettings(indexes: Indexes): UpdateIndexLevelSettingsDefinition = UpdateIndexLevelSettingsDefinition(indexes.values)
 }
