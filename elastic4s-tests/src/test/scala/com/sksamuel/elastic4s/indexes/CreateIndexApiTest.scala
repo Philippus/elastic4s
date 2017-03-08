@@ -18,7 +18,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       mapping("tweets") as(
         field("name", GeoPointType),
         dateField("content") nullValue "no content"
-      ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
+      ) all false size true numericDetection true boostNullValue 1.2 boostName "myboost" meta Map("class" -> "com.sksamuel.User"),
       mapping("users").as(
         field("name", IpType) nullValue "127.0.0.1" boost 1.0,
         field("location", IntegerType) nullValue 0,
@@ -39,7 +39,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   }
 
   it should "support refresh interval" in {
-    create index "test" refreshInterval 4.seconds
+    createIndex("test").refreshInterval(4.seconds)
   }
 
   it should "support the stopwords_path filter" in {
@@ -138,26 +138,26 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_analyis2.json")
   }
 
-  it should "supported nested fields" ignore {
-    //    val req = createIndex("users").mappings(
-    //      mapping("tweets") as(
-    //        id typed StringType analyzer KeywordAnalyzer,
-    //        stringField("name") analyzer KeywordAnalyzer,
-    //        field("locations") typed GeoPointType validate true normalize true,
-    //        dateField("date") precisionStep 5,
-    //        longField("size"),
-    //        booleanField("read"),
-    //        stringField("content"),
-    //        "user" nested(
-    //          "name" typed StringType,
-    //          "email" typed StringType,
-    //          "last" nested {
-    //            "lastLogin" typed DateType
-    //          }
-    //          ) includeInRoot(true) includeInParent(true)
-    //        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
-    //    )
-    //    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_nested.json")
+  it should "supported nested fields" in {
+    val req = createIndex("users").mappings(
+      mapping("tweets") as(
+        stringField("_id") analyzer KeywordAnalyzer,
+        stringField("name") analyzer KeywordAnalyzer,
+        geopointField("locations") validate true normalize true,
+        dateField("date") precisionStep 5,
+        longField("size"),
+        booleanField("read"),
+        stringField("content"),
+        nestedField("user").as(
+          stringField("name"),
+          stringField("email"),
+          nestedField("last").as(
+            dateField("lastLogin")
+          )
+        ) includeInRoot true includeInParent true
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+    )
+    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_nested.json")
   }
 
   it should "generate json to set index settings" in {
@@ -170,35 +170,35 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 
-  it should "support inner objects" ignore {
-    //    val req = createIndex("tweets").mappings(
-    //      "tweet" as(
-    //        "person" inner(
-    //          "name" inner(
-    //            "first_name" typed StringType analyzer KeywordAnalyzer,
-    //            "last_name" typed StringType analyzer KeywordAnalyzer,
-    //            "byte" typed ByteType,
-    //            "short" typed ShortType
-    //            ),
-    //          "sid" typed StringType index "not_analyzed"
-    //          ),
-    //        "message" typed StringType
-    //        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
-    //    )
-    //    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_inner_object.json")
+  it should "support inner objects" in {
+    val req = createIndex("tweets").mappings(
+      mapping("tweet") as(
+        objectField("person") inner(
+          objectField("name") inner(
+            stringField("first_name") analyzer KeywordAnalyzer,
+            stringField("last_name") analyzer KeywordAnalyzer,
+            byteField("byte"),
+            shortField("short")
+          ),
+          stringField("sid") index "not_analyzed"
+        ),
+        stringField("message")
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+    )
+    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_inner_object.json")
   }
 
-  it should "support disabled inner objects" ignore {
-    //    val req = createIndex("tweets").mappings(
-    //      "tweet" as(
-    //        "person" inner(
-    //          "name" typed ObjectType enabled false,
-    //          field("sid", StringType) index "not_analyzed"
-    //          ),
-    //        field("message", StringType)
-    //        ) size true numericDetection true boostNullValue 1.2 boost "myboost"
-    //    )
-    //    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_inner_object_disabled.json")
+  it should "support disabled inner objects" in {
+    val req = createIndex("tweets").mappings(
+      mapping("tweet") as(
+        objectField("person") inner(
+          objectField("name").enabled(false),
+          stringField("sid") index "not_analyzed"
+        ),
+        stringField("message")
+      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+    )
+    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_inner_object_disabled.json")
   }
 
   it should "support nested multi fields" in {
@@ -270,7 +270,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       mapping("tweet") as(
         geopointField("name"),
         dateField("content") nullValue "no content"
-      ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp true
+      ) all true size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp true
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_1.json")
   }
