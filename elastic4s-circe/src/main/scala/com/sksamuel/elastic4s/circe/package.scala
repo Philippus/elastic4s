@@ -33,7 +33,7 @@ package object circe {
   @implicitNotFound(
     "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance ")
   implicit def jsonFormatWithCirce[T](implicit decoder: Decoder[T]): JsonFormat[T] = new JsonFormat[T] {
-    override def fromJson(json: String): T = decode[T](json).right.get
+    override def fromJson(json: String): T = decode[T](json).fold(throw _, identity)
   }
 
   @implicitNotFound(
@@ -44,7 +44,7 @@ package object circe {
 
   @implicitNotFound(
     "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance ")
-  implicit def indexableWithCirce[T](implicit encoder: Encoder[T]): Indexable[T] = new Indexable[T] {
-    override def json(t: T): String = encoder(t).noSpaces
+  implicit def indexableWithCirce[T](implicit encoder: Encoder[T], printer: Json => String = Printer.noSpaces.pretty): Indexable[T] = new Indexable[T] {
+    override def json(t: T): String = printer(encoder(t))
   }
 }
