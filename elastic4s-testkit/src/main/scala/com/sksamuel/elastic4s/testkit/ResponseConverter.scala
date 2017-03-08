@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
+import java.util
+
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.http.Shards
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, Index}
@@ -10,6 +12,8 @@ import com.sksamuel.elastic4s.searches.RichSearchResponse
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
 import com.sksamuel.elastic4s.http.index.CreateIndexResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
+
+import scala.collection.JavaConverters._
 
 trait ResponseConverter[T, R] {
   def convert(response: T): R
@@ -34,14 +38,10 @@ object ResponseConverterImplicits {
         response.index,
         response.`type`,
         response.version,
-        response.result.toString,
+        response.original.getResult.getLowercase,
         response.original.forcedRefresh(),
-        true, // TODO
-        0, // TODO: Where is `totalHits` in the response?
         Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful),
-        response.created,
-        Map.empty, // TODO
-        Map.empty // TODO
+        response.created
       )
     }
   }
@@ -88,11 +88,24 @@ object ResponseConverterImplicits {
           x.index,
           x.`type`,
           x.score,
-          x.sourceAsMap,
+          x.sourceAsMap.asScalaNested,
           x.fields,
           Map.empty, // TODO
           x.version
         ))
       ))
   }
+
+  implicit class RichSourceMap(val self: Map[String, AnyRef]) extends AnyVal {
+    def asScalaNested: Map[String, AnyRef] = {
+      def toScala(a: AnyRef): AnyRef = a match {
+        case i: java.lang.Iterable[AnyRef] => i.asScala.map(toScala)
+        case m: util.Map[AnyRef, AnyRef] => m.asScala.map { case (k, v) => (toScala(k), toScala(v)) }
+        case other => other
+      }
+
+      self.mapValues(toScala)
+    }
+  }
+
 }
