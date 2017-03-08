@@ -4,7 +4,7 @@ import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
-import org.elasticsearch.client.{Response, ResponseListener, RestClient}
+import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source
@@ -78,9 +78,18 @@ trait HttpExecutable[T, U] extends Logging {
         }
         p.tryComplete(result)
       }
+
       override def onFailure(e: Exception): Unit = {
         logger.debug(s"onFailure $e")
-        p.tryFailure(e)
+
+        e match {
+          case re: ResponseException =>
+            val result = Try {
+              format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent).mkString)
+            }
+            p.tryComplete(result)
+          case _ => p.tryFailure(e)
+        }
       }
     })
     p.future
