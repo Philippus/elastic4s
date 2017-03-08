@@ -65,7 +65,7 @@ trait HttpExecutable[T, U] extends Logging {
 
   def execute(client: RestClient, request: T, format: JsonFormat[U]): Future[U]
 
-  // convience method that registers a listener with the function and the response json
+  // convenience method that registers a listener with the function and the response json
   // is then marshalled into the type U
   protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
                                            format: JsonFormat[U]): Future[U] = {
