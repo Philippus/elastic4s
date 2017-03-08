@@ -75,7 +75,7 @@ trait SearchImplicits {
 
       if (search.sorts.nonEmpty)
         search.sorts.foreach { sort =>
-          builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
+          builder.getClass.getMethod("sort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
         }
 
       if (search.scriptFields.nonEmpty) {
