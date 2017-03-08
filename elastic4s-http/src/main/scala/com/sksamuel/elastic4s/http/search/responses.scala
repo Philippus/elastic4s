@@ -107,7 +107,7 @@ trait AggregationResponse {
 
 case class SearchResponse(took: Int,
                           private val timed_out: Boolean,
-                          private val terminated_early: Boolean,
+                          private val terminated_early: Option[Boolean],
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           private val _shards: Shards,
                           private val _scroll_id: String,
@@ -125,7 +125,7 @@ case class SearchResponse(took: Int,
   def shards: Shards = _shards
 
   def isTimedOut: Boolean = timed_out
-  def isTerminatedEarly: Boolean = terminated_early
+  def isTerminatedEarly: Option[Boolean] = terminated_early
 
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty

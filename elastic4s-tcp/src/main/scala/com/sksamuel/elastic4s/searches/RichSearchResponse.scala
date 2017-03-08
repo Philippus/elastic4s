@@ -45,7 +45,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
   def isTimedOut: Boolean = original.isTimedOut
-  def isTerminatedEarly: Boolean = original.isTerminatedEarly
+  def isTerminatedEarly: Option[Boolean] = Option[java.lang.Boolean](original.isTerminatedEarly).map(_.booleanValue())
 
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
   def getAggregations = original.getAggregations
