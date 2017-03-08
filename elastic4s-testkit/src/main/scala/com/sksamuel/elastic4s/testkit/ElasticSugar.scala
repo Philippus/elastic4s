@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
+import com.sksamuel.elastic4s.embedded.LocalNode
+import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes, TcpClient}
 import org.elasticsearch.ResourceAlreadyExistsException
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
@@ -28,8 +29,8 @@ trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeP
 trait AbstractElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
-  implicit val node = getNode
-  implicit val client = node.elastic4sclient(false)
+  implicit val node: LocalNode = getNode
+  implicit val client: TcpClient = node.elastic4sclient(false)
   private val logger = LoggerFactory.getLogger(getClass)
 
   // refresh all indexes

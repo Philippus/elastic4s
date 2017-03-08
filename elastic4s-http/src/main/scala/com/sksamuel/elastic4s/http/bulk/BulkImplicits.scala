@@ -15,7 +15,9 @@ case class Index(_index: String, _type: String, _id: String, version: Long, resu
 
 case class BulkResponseItem(index: Index)
 
-case class BulkResponse(took: Long, errors: Boolean, items: Seq[BulkResponseItem])
+case class BulkResponse(took: Long,
+                        errors: Boolean,
+                        items: Seq[BulkResponseItem])
 
 trait BulkImplicits {
 

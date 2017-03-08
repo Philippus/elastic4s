@@ -16,15 +16,14 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   "the index dsl" should "generate json to include mapping properties" in {
     val req = createIndex("users").mappings(
       mapping("tweets") as(
-        field("name", GeoPointType) latLon true geohash true,
-        field("content", DateType) nullValue "no content"
+        field("name", GeoPointType),
+        dateField("content") nullValue "no content"
       ) all false size true numericDetection true boostNullValue 1.2 boost "myboost" meta Map("class" -> "com.sksamuel.User"),
       mapping("users").as(
         field("name", IpType) nullValue "127.0.0.1" boost 1.0,
         field("location", IntegerType) nullValue 0,
         field("email", BinaryType),
-        field("picture", AttachmentType),
-        field("age", FloatType) indexName "indexName",
+        field("age", FloatType),
         field("area", GeoShapeType) tree PrefixTree.Quadtree precision "1m"
       ) all true analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
     )
@@ -253,7 +252,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       mapping("tweet") as(
         stringField("name") index "analyzed",
         field("ac") typed CompletionType analyzer "simple" searchAnalyzer "simple"
-          payloads true preserveSeparators false preservePositionIncrements false maxInputLen 10
+          preserveSeparators false preservePositionIncrements false maxInputLength 10
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")
@@ -269,7 +268,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        geopointField("name") latLon true geohash true,
+        geopointField("name"),
         dateField("content") nullValue "no content"
       ) all true size true numericDetection true boostNullValue 1.2 boost "myboost" timestamp true
     )
@@ -279,7 +278,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp with path and format" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        geopointField("name") latLon true geohash true,
+        geopointField("name"),
         dateField("content") nullValue "no content"
       ) source false size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, path = Some(
         "post_date"), format = Some("YYYY-MM-dd"))
@@ -290,7 +289,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "generate json to enable timestamp with path and format and default null" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        geopointField("name") latLon true geohash true,
+        geopointField("name"),
         dateField("content") nullValue "no content"
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, default = Some(null))
     )

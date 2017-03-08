@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
 import com.sksamuel.elastic4s.indexes.CreateIndexContentBuilder
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.{Matchers, WordSpec}
 
 class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
@@ -61,8 +60,8 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     "include dynamic templates" in {
       val req = createIndex("docsAndTags").mappings(
         mapping("my_type") templates(
-          dynamicTemplate("es", field typed StringType analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
-          dynamicTemplate("en", field typed StringType analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
+          dynamicTemplate("es", stringField("") analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
+          dynamicTemplate("en", stringField("") analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
           )
       )
       CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
