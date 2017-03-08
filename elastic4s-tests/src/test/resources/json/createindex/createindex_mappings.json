@@ -14,9 +14,7 @@
             },
             "properties": {
                 "name": {
-                    "type": "geo_point",
-                    "lat_lon": true,
-                    "geohash": true
+                    "type": "geo_point"
                 },
                 "content": {
                     "type": "date",
@@ -52,12 +50,8 @@
                 "email": {
                     "type": "binary"
                 },
-                "picture": {
-                    "type": "attachment"
-                },
                 "age": {
-                    "type": "float",
-                    "index_name": "indexName"
+                    "type": "float"
                 },
                 "area": {
                     "type": "geo_shape",

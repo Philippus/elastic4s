@@ -252,7 +252,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       mapping("tweet") as(
         stringField("name") index "analyzed",
         field("ac") typed CompletionType analyzer "simple" searchAnalyzer "simple"
-          preserveSeparators false preservePositionIncrements false maxInputLength 10
+          preserveSeparators false preservePositionIncrements false maxInputLen 10
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")

@@ -18,7 +18,6 @@
           "type": "completion",
           "analyzer": "simple",
           "search_analyzer": "simple",
-          "payloads": true,
           "preserve_separators": false,
           "preserve_position_increments": false,
           "max_input_len": 10
