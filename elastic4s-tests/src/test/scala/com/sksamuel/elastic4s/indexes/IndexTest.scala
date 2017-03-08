@@ -5,10 +5,9 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexHttpTest extends WordSpec with MockitoSugar with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 

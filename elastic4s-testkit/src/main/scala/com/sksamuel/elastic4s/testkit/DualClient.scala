@@ -45,16 +45,16 @@ trait DualClient extends SuiteMixin {
   }
 
   override abstract def runTests(testName: Option[String], args: Args): Status = {
-    val tcpStatus = runTestsOnce(testName, args)
+    val httpStatus = runTestsOnce(testName, args)
 
     // Get a new node for running the TCP tests
     node = getNode
     client = node.elastic4sclient(false)
     useHttpClient = !useHttpClient
 
-    val httpStatus = runTestsOnce(testName, args)
+    val tcpStatus = runTestsOnce(testName, args)
 
-    new CompositeStatus(Set(tcpStatus, httpStatus))
+    new CompositeStatus(Set(httpStatus, tcpStatus))
   }
 
   private def runTestsOnce(testName: Option[String], args: Args): Status = {

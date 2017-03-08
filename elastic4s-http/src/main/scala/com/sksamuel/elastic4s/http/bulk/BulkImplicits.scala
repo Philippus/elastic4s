@@ -11,7 +11,7 @@ import org.elasticsearch.client.RestClient
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-case class Index(_index: String, _type: String, _id: String, version: Long, result: String, forced_result: Boolean, _shards: Shards)
+case class Index(_index: String, _type: String, _id: String, version: Long, result: String, _shards: Shards)
 
 case class BulkResponseItem(index: Index)
 
