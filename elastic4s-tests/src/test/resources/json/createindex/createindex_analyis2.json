@@ -9,6 +9,10 @@
             "qu=>q"
           ]
         },
+        "mapping_charfilter2": {
+            "mappings": [ "x=>y" ],
+            "type": "mapping"
+        },
         "pattern_replace_charfilter": {
           "type": "pattern_replace",
           "pattern": "sample(.*)",
@@ -65,6 +69,23 @@
           "type": "custom",
           "tokenizer": "myTokenizer5"
         }
+      },
+      "normalizer": {
+          "myNormalizer1": {
+              "filter": [
+                  "lowercase"
+              ],
+              "type": "custom"
+          },
+          "myNormalizer2": {
+              "char_filter": [
+                  "mapping_charfilter2"
+              ],
+              "filter": [
+                  "uppercase"
+              ],
+              "type": "custom"
+          }
       },
       "tokenizer": {
         "myTokenizer1": {

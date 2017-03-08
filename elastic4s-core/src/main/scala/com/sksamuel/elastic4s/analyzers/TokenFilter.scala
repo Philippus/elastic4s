@@ -33,6 +33,10 @@ case object LowercaseTokenFilter extends TokenFilter {
   val name = "lowercase"
 }
 
+case object UppercaseTokenFilter extends TokenFilter {
+  val name = "uppercase"
+}
+
 case object KStemTokenFilter extends TokenFilter {
   val name = "kstem"
 }

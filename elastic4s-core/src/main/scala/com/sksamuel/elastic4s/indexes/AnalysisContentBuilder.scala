@@ -23,6 +23,13 @@ object AnalysisContentBuilder {
     ad.analyzers.foreach(_.buildWithName(source))
     source.endObject()
 
+    val normalizers = ad.normalizers
+    if (normalizers.nonEmpty) {
+      source.startObject("normalizer")
+      normalizers.foreach(_.buildWithName(source))
+      source.endObject()
+    }
+
     val tokenizers = ad.tokenizers
     if (tokenizers.nonEmpty) {
       source.startObject("tokenizer")

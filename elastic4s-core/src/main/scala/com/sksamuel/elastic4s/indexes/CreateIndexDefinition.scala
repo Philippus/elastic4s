@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
+import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.exts.OptionImplicits._
 
@@ -32,7 +32,15 @@ case class CreateIndexDefinition(name: String,
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexDefinition = copy(mappings = this.mappings ++ mappings)
 
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexDefinition = analysis(first +: rest)
-  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexDefinition = copy(analysis = AnalysisDefinition(analyzers).some)
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexDefinition = analysis(analyzers, Nil)
+  def analysis(analyzers: Iterable[AnalyzerDefinition], normalizers: Iterable[NormalizerDefinition]): CreateIndexDefinition =
+    analysis match {
+      case None    => copy(analysis = AnalysisDefinition(analyzers, normalizers).some)
+      case Some(a) => copy(analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
+    }
+
+  def normalizers(first: NormalizerDefinition, rest: NormalizerDefinition*): CreateIndexDefinition = analysis(Nil, first +: rest)
+  def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexDefinition = analysis(Nil, normalizers)
 
   def source(source: String): CreateIndexDefinition = copy(rawSource = source.some)
 }
