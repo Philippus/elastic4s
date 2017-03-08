@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
-import com.sksamuel.elastic4s.indexes.{CreateIndexContentBuilder, CreateIndexDefinition, DeleteIndexDefinition, IndexShowImplicits}
+import com.sksamuel.elastic4s.indexes._
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -33,6 +33,10 @@ case class AliasExistsResponse(exists: Boolean) {
 
 case class ClearCacheResponse(_shards: Shards) {
   def shards: Shards = _shards
+}
+
+case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
+  def success: Boolean = acknowledged
 }
 
 trait IndexAdminImplicits extends IndexShowImplicits {
@@ -158,6 +162,18 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = "/" + request.indexes.mkString(",")
       logger.debug(s"Executing delete index $endpoint")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, _), format)
+    }
+  }
+
+  implicit object UpdateIndexLevelSettingsExecutable extends HttpExecutable[UpdateIndexLevelSettingsDefinition, UpdateIndexLevelSettingsResponse] {
+    override def execute(client: RestClient,
+                         request: UpdateIndexLevelSettingsDefinition,
+                         format: JsonFormat[UpdateIndexLevelSettingsResponse]): Future[UpdateIndexLevelSettingsResponse] = {
+      val method = "PUT"
+      val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
+      val body = UpdateIndexLevelSettingsBuilder(request).string()
+      logger.debug(s"Executing update index level settings $body")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }
 }

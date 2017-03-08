@@ -27,3 +27,16 @@ case class FlushIndexDefinition(indexes: Seq[String],
 }
 
 case class RefreshIndexDefinition(indexes: Seq[String])
+
+case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
+                                              numberOfReplicas: Option[Int] = None,
+                                              autoExpandReplicas: Option[String] = None,
+                                              refreshInterval: Option[String] = None,
+                                              maxResultWindow: Option[Int] = None) {
+
+  def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsDefinition = copy(numberOfReplicas = numberOfReplicas.some)
+  def autoExpandReplicas(autoExpandReplicas: String): UpdateIndexLevelSettingsDefinition = copy(autoExpandReplicas = autoExpandReplicas.some)
+  def refreshInterval(refreshInterval: String): UpdateIndexLevelSettingsDefinition = copy(refreshInterval = refreshInterval.some)
+  def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsDefinition = copy(maxResultWindow = maxResultWindow.some)
+
+}
