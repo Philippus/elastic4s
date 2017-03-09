@@ -24,7 +24,7 @@ case class OsStats(cpu_percent: Int, load_average: Double, mem: MemoryStats, swa
   def cpuPercent: Int = cpu_percent
   def loadAverage: Double = load_average
 }
-case class NodeStats(name: String, transport_address: String, host: String, ip: Seq[String], os: OsStats) {
+case class NodeStats(name: String, transport_address: String, host: String, ip: Seq[String], os: Option[OsStats]) {
   def transportAddress: String = transport_address
 }
 case class NodesStatsResponse(cluster_name: String, nodes: Map[String, NodeStats]) {
