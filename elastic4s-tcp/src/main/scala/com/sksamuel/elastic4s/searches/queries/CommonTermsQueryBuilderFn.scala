@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import org.elasticsearch.index.query.{CommonTermsQueryBuilder, Operator, QueryBuilders}
 
-object CommonTermsQueryBuilder {
+object CommonTermsQueryBuilderFn {
   def apply(q: CommonTermsQueryDefinition): CommonTermsQueryBuilder = {
     val _builder = QueryBuilders.commonTermsQuery(q.name, q.text)
     q.analyzer.foreach(_builder.analyzer)

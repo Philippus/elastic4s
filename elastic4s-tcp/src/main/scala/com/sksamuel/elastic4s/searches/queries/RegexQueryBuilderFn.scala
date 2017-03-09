@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import org.elasticsearch.index.query.{QueryBuilders, RegexpQueryBuilder}
 
-object RegexQueryBuilder {
+object RegexQueryBuilderFn {
   def apply(q: RegexQueryDefinition): RegexpQueryBuilder = {
     val builder = QueryBuilders.regexpQuery(q.field, q.regex)
     if (q.flags.nonEmpty)

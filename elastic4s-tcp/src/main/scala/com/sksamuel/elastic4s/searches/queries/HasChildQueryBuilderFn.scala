@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{HasChildQueryBuilder, QueryBuilders}
 
-object HasChildQueryBuilder {
+object HasChildQueryBuilderFn {
   def apply(q: HasChildQueryDefinition): HasChildQueryBuilder = {
 
     val builder = QueryBuilders.hasChildQuery(

@@ -12,21 +12,17 @@
       "properties": {
         "title": {
           "type": "text",
-          "index": "analyzed",
           "fields": {
             "raw": {
-              "type": "text",
-              "index": "not_analyzed"
+              "type": "text"
             }
           }
         },
         "meta_data": {
-          "type": "text",
-          "index": "analyzed"
+          "type": "text"
         },
         "article_info": {
-          "type": "text",
-          "index": "analyzed"
+          "type": "text"
         }
       }
     }

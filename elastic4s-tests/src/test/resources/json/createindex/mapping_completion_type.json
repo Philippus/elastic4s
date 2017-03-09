@@ -11,16 +11,15 @@
       },
       "properties": {
         "name": {
-          "type": "string",
-          "index": "analyzed"
+          "type": "text"
         },
         "ac": {
           "type": "completion",
           "analyzer": "simple",
           "search_analyzer": "simple",
-          "preserve_separators": false,
           "preserve_position_increments": false,
-          "max_input_len": 10
+          "preserve_separators": false,
+          "max_input_length": 10
         }
       }
     }

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{ConstantScoreQueryBuilder, QueryBuilders}
 
-object ConstantScoreBuilder {
+object ConstantScoreBuilderF {
   def apply(q: ConstantScoreDefinition): ConstantScoreQueryBuilder = {
     val builder = QueryBuilders.constantScoreQuery(QueryBuilderFn(q.query))
     q.queryName.foreach(builder.queryName)

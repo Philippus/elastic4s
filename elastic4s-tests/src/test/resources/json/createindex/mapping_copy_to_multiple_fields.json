@@ -13,19 +13,16 @@
       "properties": {
         "title": {
           "type": "text",
-          "index": "analyzed",
           "copy_to": [
             "meta_data",
             "article_info"
           ]
         },
         "meta_data": {
-          "type": "text",
-          "index": "analyzed"
+          "type": "text"
         },
         "article_info": {
-          "type": "text",
-          "index": "analyzed"
+          "type": "text"
         }
       }
     }

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{BoostingQueryBuilder, QueryBuilders}
 
-object BoostingQueryBuilder {
+object BoostingQueryBuilderFn {
   def apply(q: BoostingQueryDefinition): BoostingQueryBuilder = {
     val builder = QueryBuilders.boostingQuery(QueryBuilderFn(q.positiveQuery), QueryBuilderFn(q.negativeQuery))
     q.boost.map(_.toFloat).foreach(builder.boost)

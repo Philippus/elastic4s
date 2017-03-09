@@ -54,7 +54,7 @@ object MappingContentBuilder {
     if (d.fields.nonEmpty) {
       builder.startObject("properties")
       for (field <- d.fields) {
-        field.build(builder)
+        builder.rawField(field.name, FieldBuilderFn(field).bytes)
       }
       builder.endObject() // end properties
     }

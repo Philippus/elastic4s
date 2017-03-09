@@ -8,7 +8,7 @@
             "match_pattern": "regex",
             "match_mapping_type": "string",
             "mapping": {
-              "type": "string",
+              "type": "text",
               "analyzer": "spanish"
             }
           }
@@ -18,7 +18,7 @@
             "match": "*",
             "match_mapping_type": "string",
             "mapping": {
-              "type": "string",
+              "type": "text",
               "analyzer": "english"
             }
           }

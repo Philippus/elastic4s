@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{NestedQueryBuilder, QueryBuilders}
 
-object NestedQueryBuilder {
+object NestedQueryBuilderFn {
   def apply(q: NestedQueryDefinition): NestedQueryBuilder = {
     val builder = QueryBuilders.nestedQuery(
       q.path,

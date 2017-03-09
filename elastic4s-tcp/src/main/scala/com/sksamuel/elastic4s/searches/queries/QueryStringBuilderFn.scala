@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import org.elasticsearch.index.query.{Operator, QueryBuilders, QueryStringQueryBuilder}
 
-object QueryStringBuilder {
+object QueryStringBuilderFn {
 
   def builder(query: QueryStringQueryDefinition): QueryStringQueryBuilder = {
     val builder = QueryBuilders.queryStringQuery(query.query)

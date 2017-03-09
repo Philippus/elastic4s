@@ -3,7 +3,7 @@
     "match": "*_es",
     "match_mapping_type": "string",
     "mapping": {
-      "type": "string",
+      "type": "text",
       "analyzer": "spanish"
     }
   }

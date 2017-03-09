@@ -386,115 +386,115 @@ trait ElasticDsl
 
     def name(name:String) = new {
       @deprecated("use binaryField(name)", "5.2.11")
-      def withType(ft: BinaryType.type): FieldDefinition = binaryField(name)
+      def withType(ft: BinaryType.type): BasicFieldDefinition = binaryField(name)
 
       @deprecated("use booleanField(name)", "5.2.11")
-      def withType(ft: BooleanType.type): FieldDefinition = booleanField(name)
+      def withType(ft: BooleanType.type): BasicFieldDefinition = booleanField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: ByteType.type): FieldDefinition = byteField(name)
+      def withType(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
       @deprecated("use completionField(name)", "5.2.11")
-      def withType(ft: CompletionType.type): FieldDefinition = completionField(name)
+      def withType(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
 
       @deprecated("use dateField(name)", "5.2.11")
-      def withType(ft: DateType.type): FieldDefinition = dateField(name)
+      def withType(ft: DateType.type): BasicFieldDefinition = dateField(name)
 
       @deprecated("use doubleField(name)", "5.2.11")
-      def withType(ft: DoubleType.type): FieldDefinition = doubleField(name)
+      def withType(ft: DoubleType.type): BasicFieldDefinition = doubleField(name)
 
       @deprecated("use floatField(name)", "5.2.11")
-      def withType(ft: FloatType.type): FieldDefinition = floatField(name)
+      def withType(ft: FloatType.type): BasicFieldDefinition = floatField(name)
 
       @deprecated("use geopointField(name)", "5.2.11")
-      def withType(ft: GeoPointType.type): FieldDefinition = geopointField(name)
+      def withType(ft: GeoPointType.type): BasicFieldDefinition = geopointField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: GeoShapeType.type): FieldDefinition = geoshapeField(name)
+      def withType(ft: GeoShapeType.type): GeoshapeFieldDefinition = geoshapeField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: IntegerType.type): FieldDefinition = intField(name)
+      def withType(ft: IntegerType.type): BasicFieldDefinition = intField(name)
 
       @deprecated("use ipField(name)", "5.2.11")
-      def withType(ft: IpType.type): FieldDefinition = ipField(name)
+      def withType(ft: IpType.type): BasicFieldDefinition = ipField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: LongType.type): FieldDefinition = longField(name)
+      def withType(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: NestedType.type): FieldDefinition = nestedField(name)
+      def withType(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: ObjectType.type): FieldDefinition = objectField(name)
+      def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: ShortType.type): FieldDefinition = shortField(name)
+      def withType(ft: ShortType.type): BasicFieldDefinition = shortField(name)
 
       @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-      def withType(ft: StringType.type): FieldDefinition = stringField(name)
+      def withType(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
       @deprecated("use textField(name)", "5.2.11")
-      def withType(ft: TextType.type): FieldDefinition = textField(name)
+      def withType(ft: TextType.type): BasicFieldDefinition = textField(name)
 
       @deprecated("use tokenCountField(name)", "5.2.11")
-      def withType(ft: TokenCountType.type): FieldDefinition = tokenCountField(name)
+      def withType(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
 
       @deprecated("use binaryField(name)", "5.2.11")
-      def typed(ft: BinaryType.type): FieldDefinition = binaryField(name)
+      def typed(ft: BinaryType.type): BasicFieldDefinition = binaryField(name)
 
       @deprecated("use boolean(name)", "5.2.11")
-      def typed(ft: BooleanType.type): FieldDefinition = booleanField(name)
+      def typed(ft: BooleanType.type): BasicFieldDefinition = booleanField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def typed(ft: ByteType.type): FieldDefinition = byteField(name)
+      def typed(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
       @deprecated("use completionField(name)", "5.2.11")
-      def typed(ft: CompletionType.type): FieldDefinition = completionField(name)
+      def typed(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
 
       @deprecated("use dateField(name)", "5.2.11")
-      def typed(ft: DateType.type): FieldDefinition = dateField(name)
+      def typed(ft: DateType.type): BasicFieldDefinition = dateField(name)
 
       @deprecated("use doubleField(name)", "5.2.11")
-      def typed(ft: DoubleType.type): FieldDefinition = doubleField(name)
+      def typed(ft: DoubleType.type): BasicFieldDefinition = doubleField(name)
 
       @deprecated("use floatField(name)", "5.2.11")
-      def typed(ft: FloatType.type): FieldDefinition = floatField(name)
+      def typed(ft: FloatType.type): BasicFieldDefinition = floatField(name)
 
       @deprecated("use geopointField(name)", "5.2.11")
-      def typed(ft: GeoPointType.type): FieldDefinition = geopointField(name)
+      def typed(ft: GeoPointType.type): BasicFieldDefinition = geopointField(name)
 
       @deprecated("use geoshapeField(name)", "5.2.11")
-      def typed(ft: GeoShapeType.type): FieldDefinition = geoshapeField(name)
+      def typed(ft: GeoShapeType.type): GeoshapeFieldDefinition = geoshapeField(name)
 
       @deprecated("use intField(name)", "5.2.11")
-      def typed(ft: IntegerType.type): FieldDefinition = intField(name)
+      def typed(ft: IntegerType.type): BasicFieldDefinition = intField(name)
 
       @deprecated("use ipField(name)", "5.2.11")
-      def typed(ft: IpType.type): FieldDefinition = ipField(name)
+      def typed(ft: IpType.type): BasicFieldDefinition = ipField(name)
 
       @deprecated("use keywordField(name)", "5.2.11")
-      def typed(ft: KeywordType.type): FieldDefinition = keywordField(name)
+      def typed(ft: KeywordType.type): BasicFieldDefinition = keywordField(name)
 
       @deprecated("use longField(name)", "5.2.11")
-      def typed(ft: LongType.type): FieldDefinition = longField(name)
+      def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use nestedField(name)", "5.2.11")
-      def typed(ft: NestedType.type): FieldDefinition = nestedField(name)
+      def typed(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
 
       @deprecated("use objectField(name)", "5.2.11")
-      def typed(ft: ObjectType.type): FieldDefinition = objectField(name)
+      def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
 
       @deprecated("use shortField(name)", "5.2.11")
-      def typed(ft: ShortType.type): FieldDefinition = shortField(name)
+      def typed(ft: ShortType.type): BasicFieldDefinition = shortField(name)
 
       @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-      def typed(ft: StringType.type): FieldDefinition = stringField(name)
+      def typed(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
       @deprecated("use textField(name)", "5.2.11")
-      def typed(ft: TextType.type): FieldDefinition = textField(name)
+      def typed(ft: TextType.type): BasicFieldDefinition = textField(name)
 
       @deprecated("use tokenCountField(name)", "5.2.11")
-      def typed(ft: TokenCountType.type): FieldDefinition = tokenCountField(name)
+      def typed(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
     }
 
     @deprecated("use fieldSort(field)", "5.0.0")

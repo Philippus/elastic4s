@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import org.elasticsearch.index.query.{QueryBuilders, TermQueryBuilder}
 
-object TermQueryBuilder {
+object TermQueryBuilderFn {
   def apply(q: TermQueryDefinition): TermQueryBuilder = {
     val builder = q.value match {
       case str: String => QueryBuilders.termQuery(q.field, str)
