@@ -18,6 +18,7 @@ class NodesStatsHttpTest extends WordSpec with Matchers with SharedElasticSugar 
       }.await
 
       stats.nodes.size should be(1)
+      stats.clusterName should be("classloader-node")
     }
   }
 }
