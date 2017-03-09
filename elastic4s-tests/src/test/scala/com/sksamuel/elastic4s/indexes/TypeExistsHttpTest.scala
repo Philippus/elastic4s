@@ -1,30 +1,30 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class TypeExistsHttpTest extends WordSpec with SharedElasticSugar with Matchers with ElasticDsl {
+class TypeExistsHttpTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
-  http.execute {
-    createIndex("typeexists").mappings {
-      mapping("flowers") fields textField("name")
-    }
-  }.await
+  override protected def beforeRunTests() = {
+    execute {
+      createIndex("typeexists").mappings {
+        mapping("flowers") fields textField("name")
+      }
+    }.await
+  }
 
   "a type exists request" should {
     "return true for an existing type" in {
-      http.execute {
+      execute {
         typesExist("typeexists" / "flowers")
       }.await.isExists shouldBe true
     }
     "return false for non existing type" in {
-      http.execute {
+      execute {
         typesExist("typeexists" / "qeqweqew")
       }.await.isExists shouldBe false
     }

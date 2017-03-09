@@ -31,7 +31,6 @@ case class DeleteResponse(_shards: Shards,
                           private val _type: String,
                           private val _id: String,
                           private val _version: Long,
-                          created: Boolean,
                           result: String) {
   def index: String = _index
   def `type`: String = _type

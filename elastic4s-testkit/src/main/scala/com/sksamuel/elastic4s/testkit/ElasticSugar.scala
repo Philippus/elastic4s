@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory
 trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with BeforeAndAfterAll {
   this: Suite with LocalNodeProvider =>
 
+  implicit val node = getNode
+  implicit val client = node.elastic4sclient(false)
+
   override def afterAll(): Unit = {
     node.stop(true)
   }
@@ -19,18 +22,25 @@ trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with
 
 trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeProvider {
   this: Suite with LocalNodeProvider =>
+
+  implicit val node = getNode
+  implicit val client = node.elastic4sclient(false)
+}
+
+trait DualElasticSugar extends AbstractElasticSugar with AlwaysNewLocalNodeProvider {
+  this: Suite with LocalNodeProvider =>
 }
 
 /**
-* Provides helper methods for things like refreshing an index, and blocking until an
-* index has a certain count of documents. These methods are very useful when writing
-* tests to allow for blocking, iterative coding
-*/
+  * Provides helper methods for things like refreshing an index, and blocking until an
+  * index has a certain count of documents. These methods are very useful when writing
+  * tests to allow for blocking, iterative coding
+  */
 trait AbstractElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
-  implicit val node: LocalNode = getNode
-  implicit val client: TcpClient = node.elastic4sclient(false)
+  def node: LocalNode
+  def client: TcpClient
   private val logger = LoggerFactory.getLogger(getClass)
 
   // refresh all indexes
@@ -112,7 +122,7 @@ trait AbstractElasticSugar extends ElasticDsl {
   def blockUntilCount(expected: Long, index: String): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
-        search(index).matchAll().size(0)
+        search(index).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
@@ -121,19 +131,19 @@ trait AbstractElasticSugar extends ElasticDsl {
   def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
-        search(indexAndTypes).matchAll().size(0)
+        search(indexAndTypes).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
   }
 
   /**
-   * Will block until the given index and optional types have at least the given number of documents.
-   */
+    * Will block until the given index and optional types have at least the given number of documents.
+    */
   def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
-        search(index / types).matchAll().size(0)
+        search(index / types).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
@@ -154,6 +164,7 @@ trait AbstractElasticSugar extends ElasticDsl {
       }.await.totalHits == 0
     }
   }
+
   def blockUntilIndexExists(index: String): Unit = {
     blockUntil(s"Expected exists index $index") { () ⇒
       doesIndexExists(index)

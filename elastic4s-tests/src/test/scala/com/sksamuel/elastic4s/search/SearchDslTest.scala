@@ -25,7 +25,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  "the search dsl" should "accept wilcards for index and types" in {
+  "the search dsl" should "accept wildcards for index and types" in {
     val req = search("*") types "*" limit 10
     req.show should matchJsonResource("/json/search/search_test1.json")
   }

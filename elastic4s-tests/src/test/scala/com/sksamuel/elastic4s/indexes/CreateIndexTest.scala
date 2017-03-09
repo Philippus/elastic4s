@@ -1,43 +1,44 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CreateIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
-  http.execute {
-    createIndex("foo").mappings(
-      mapping("bar").fields(
-        textField("baz").fields(
-          textField("inner1") analyzer PatternAnalyzer,
-          textField("inner2") index NotAnalyzed
+  override protected def beforeRunTests() = {
+    execute {
+      createIndex("foo").mappings(
+        mapping("bar").fields(
+          textField("baz").fields(
+            textField("inner1") analyzer PatternAnalyzer,
+            textField("inner2")
+          )
         )
       )
-    )
+    }.await
   }
 
   "CreateIndex Http Request" should {
     "return ack" in {
-      val resp = http.execute {
-        createIndex("cusine").mappings(
+      val resp = execute {
+        createIndex("cuisine").mappings(
           mapping("food").fields(
             textField("name"),
             geopointField("location")
           )
         ).shards(1).waitForActiveShards(1)
       }.await
+
       resp.acknowledged shouldBe true
     }
-    "support multiple types" in {
 
-      http.execute {
+    "support multiple types" in {
+      execute {
         createIndex("geography").mappings(
           mapping("shire").fields(
             textField("name")
@@ -56,4 +57,5 @@ class CreateIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
       resp.mappings("geography").keySet shouldBe Set("shire", "mountain")
     }
   }
+
 }

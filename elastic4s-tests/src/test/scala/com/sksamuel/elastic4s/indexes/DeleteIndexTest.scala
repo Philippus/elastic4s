@@ -1,20 +1,18 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "delete index request" should {
     "delete index" in {
 
-      http.execute {
+      execute {
         createIndex("languages").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -22,21 +20,21 @@ class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
         ).shards(1).waitForActiveShards(1)
       }.await
 
-      http.execute {
+      execute {
         indexExists("languages")
       }.await.exists shouldBe true
 
-      http.execute {
+      execute {
         ElasticDsl.deleteIndex("languages")
       }.await.acknowledged shouldBe true
 
-      http.execute {
+      execute {
         indexExists("languages")
       }.await.exists shouldBe false
     }
 
     "support multiple indexes" in {
-      http.execute {
+      execute {
         createIndex("languages1").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -44,7 +42,7 @@ class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
         )
       }.await
 
-      http.execute {
+      execute {
         createIndex("languages2").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -52,23 +50,23 @@ class DeleteIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar
         )
       }.await
 
-      http.execute {
+      execute {
         indexExists("languages1")
       }.await.exists shouldBe true
 
-      http.execute {
+      execute {
         indexExists("languages2")
       }.await.exists shouldBe true
 
-      http.execute {
+      execute {
         ElasticDsl.deleteIndex("languages1", "languages2")
       }.await.acknowledged shouldBe true
 
-      http.execute {
+      execute {
         indexExists("languages1")
       }.await.exists shouldBe false
 
-      http.execute {
+      execute {
         indexExists("languages2")
       }.await.exists shouldBe false
     }

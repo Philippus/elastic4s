@@ -83,7 +83,7 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion
     )
   )
-  .dependsOn(core, embedded)
+  .dependsOn(core, embedded, http)
 
 lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
   .settings(

@@ -1,21 +1,20 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
+
 import scala.concurrent.duration._
 
-class RefreshIndexHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "refresh index request" should {
     "refresh pending docs" in {
 
-      http.execute {
+      execute {
         createIndex("beaches").mappings(
           mapping("dday").fields(
             textField("name")
@@ -23,21 +22,21 @@ class RefreshIndexHttpTest extends WordSpec with Matchers with SharedElasticSuga
         ).shards(1).waitForActiveShards(1).refreshInterval(10.minutes)
       }.await
 
-      http.execute {
+      execute {
         indexInto("beaches" / "dday").fields("name" -> "omaha")
       }.await
 
       // no data will have been refreshed for 10 minutes
-      client.execute {
-        search("beaches" / "dday").matchAll()
+      execute {
+        search("beaches" / "dday").matchAllQuery()
       }.await.totalHits shouldBe 0
 
-      http.execute {
+      execute {
         refreshIndex("beaches")
       }.await
 
-      client.execute {
-        search("beaches" / "dday").matchAll()
+      execute {
+        search("beaches" / "dday").matchAllQuery()
       }.await.totalHits shouldBe 1
     }
   }

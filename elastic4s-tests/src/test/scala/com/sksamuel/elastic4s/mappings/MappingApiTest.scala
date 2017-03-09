@@ -9,17 +9,17 @@ class MappingApiTest extends FlatSpec with MockitoSugar with SharedElasticSugar 
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {
-      put mapping "index" / "type" as Seq(
-        field name "name" withType GeoPointType,
-        field name "content" typed DateType nullValue "no content"
+      putMapping("index" / "type").as(
+        geopointField("name"),
+        dateField("content") nullValue "no content"
       )
     }
   }
 
   it should "accept same fields as mapping api" in {
-    put mapping "index" / "type" as {
-      field name "content" typed DateType nullValue "no content"
-    } dynamic DynamicMapping.False numericDetection true boostNullValue 12.2 boost "boosty"
+    putMapping("index" / "type").as(
+      dateField("content") nullValue "no content"
+    ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2 boostName "boosty"
   }
 
   "the get mapping dsl" should "be accepted by the client" in {
