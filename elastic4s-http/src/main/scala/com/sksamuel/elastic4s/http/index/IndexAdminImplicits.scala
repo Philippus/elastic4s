@@ -2,8 +2,9 @@ package com.sksamuel.elastic4s.http.index
 
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.alias.{IndicesAliasesRequestDefinition, AliasActionDefinition}
+import com.sksamuel.elastic4s.alias.IndicesAliasesRequestDefinition
 import com.sksamuel.elastic4s.http.alias.AliasActionBuilder
+import com.sksamuel.elastic4s.http.index.IndexShardStore.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes._
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -44,6 +45,16 @@ case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
 case class IndicesAliasResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
+
+object IndexShardStore {
+  case class StoreStatusResponse(indices: Map[String, IndexStoreStatus])
+  case class IndexStoreStatus(shards: Map[String, ShardStoreStatus])
+  type StoreStatus = Map[String, AnyRef]
+
+  case class ShardStoreStatus(stores: Seq[StoreStatus])
+}
+
+
 
 trait IndexAdminImplicits extends IndexShowImplicits {
 
@@ -192,6 +203,19 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val body = AliasActionBuilder(request).string()
       logger.debug(s"Executing alias actions $body")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
+    }
+  }
+
+  implicit object IndexShardStoreExecutable extends HttpExecutable[IndexShardStoreDefinition, StoreStatusResponse] {
+    override def execute(client: RestClient,
+                         request: IndexShardStoreDefinition,
+                         format: JsonFormat[StoreStatusResponse]): Future[StoreStatusResponse] = {
+      val method = "GET"
+      val endpoint = "/" + request.indexes.values.mkString(",") + "/_shard_stores"
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.status.foreach(params.put("status", _))
+      logger.debug(s"Accesing endpoint $endpoint")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener), format)
     }
   }
 }

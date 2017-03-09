@@ -40,3 +40,9 @@ case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
   def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsDefinition = copy(maxResultWindow = maxResultWindow.some)
 
 }
+
+case class IndexShardStoreDefinition(indexes: Indexes, status: Option[String] = None) {
+
+  def status(status: String): IndexShardStoreDefinition = copy(status = status.some)
+
+}

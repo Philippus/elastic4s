@@ -44,4 +44,8 @@ trait IndexAdminApi {
   def updateIndexLevelSettings(first: String, rest: String*): UpdateIndexLevelSettingsDefinition = updateIndexLevelSettings(first +: rest)
   def updateIndexLevelSettings(indexes: Iterable[String]): UpdateIndexLevelSettingsDefinition = updateIndexLevelSettings(Indexes(indexes))
   def updateIndexLevelSettings(indexes: Indexes): UpdateIndexLevelSettingsDefinition = UpdateIndexLevelSettingsDefinition(indexes.values)
+
+  def indexShardStores(first: String, rest: String*): IndexShardStoreDefinition = indexShardStores(first +: rest)
+  def indexShardStores(indexes: Iterable[String]): IndexShardStoreDefinition = indexShardStores(Indexes(indexes))
+  def indexShardStores(indexes: Indexes): IndexShardStoreDefinition = IndexShardStoreDefinition(indexes)
 }
