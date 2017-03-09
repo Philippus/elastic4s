@@ -21,7 +21,7 @@ trait HttpClient extends Logging {
   /**
     * Executes the given request type T, and returns a Future of the response type U.
     *
-    * In order to use this method an implicit `JsonFormat[U]` must be in scope. The easist
+    * In order to use this method an implicit `JsonFormat[U]` must be in scope. The easiest
     * way is to include one of the json modules, eg `elastic4s-jackson` or `elastic4s-circe` and
     * then import the implicit. Eg,
     *

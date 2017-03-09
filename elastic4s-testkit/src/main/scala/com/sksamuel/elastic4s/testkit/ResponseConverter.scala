@@ -3,22 +3,24 @@ package com.sksamuel.elastic4s.testkit
 import java.util
 
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
+import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.Shards
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, Index}
 import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
+import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchHits}
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.RichSearchResponse
 import org.elasticsearch.action.DocWriteResponse
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
+import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.{DeleteIndexResponse => TcpDeleteIndexResponse}
-import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
-import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
+import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.index.reindex.{BulkByScrollTask, BulkIndexByScrollResponse}
@@ -174,6 +176,24 @@ object ResponseConverterImplicits {
         status.getThrottledUntil.millis
       )
     }
+  }
+
+  implicit object GetResponseConverter extends ResponseConverter[RichGetResponse, GetResponse] {
+    override def convert(response: RichGetResponse) = GetResponse(
+      response.id,
+      response.index,
+      response.`type`,
+      response.version,
+      response.exists,
+      response.original.getFields.asScala.toMap.mapValues(_.getValues.asScala),
+      response.sourceAsMap.asScalaNested
+    )
+  }
+
+  implicit object MultiGetResponseConverter extends ResponseConverter[RichMultiGetResponse, MultiGetResponse] {
+    override def convert(response: RichMultiGetResponse) = MultiGetResponse(
+      response.successes.map(GetResponseConverter.convert)
+    )
   }
 
   implicit class RichSourceMap(val self: Map[String, AnyRef]) extends AnyVal {
