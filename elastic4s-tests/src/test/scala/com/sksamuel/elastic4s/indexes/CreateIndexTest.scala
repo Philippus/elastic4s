@@ -16,7 +16,7 @@ class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with 
         mapping("bar").fields(
           textField("baz").fields(
             textField("inner1") analyzer PatternAnalyzer,
-            textField("inner2") index NotAnalyzed
+            textField("inner2")
           )
         )
       )
