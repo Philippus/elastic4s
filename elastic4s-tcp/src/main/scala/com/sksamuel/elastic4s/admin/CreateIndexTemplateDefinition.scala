@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.analyzers.AnalyzerDefinition
+import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.indexes.{AnalysisContentBuilder, AnalysisDefinition}
 import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import org.elasticsearch.action.admin.indices.alias.Alias
@@ -48,11 +48,18 @@ case class CreateIndexTemplateDefinition(name: String,
     builder
   }
 
-  def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexTemplateDefinition =
-    analysis(first +: rest)
+  def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexTemplateDefinition = analysis(first +: rest, Nil)
 
-  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexTemplateDefinition =
-    copy(analysis = AnalysisDefinition(analyzers).some)
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexTemplateDefinition = analysis(analyzers, Nil)
+
+  def analysis(analyzers: Iterable[AnalyzerDefinition], normalizers: Iterable[NormalizerDefinition]): CreateIndexTemplateDefinition =
+    analysis match {
+      case None    => copy(analysis = AnalysisDefinition(analyzers, normalizers).some)
+      case Some(a) => copy(analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
+    }
+
+  def normalizers(first: NormalizerDefinition, rest: NormalizerDefinition*): CreateIndexTemplateDefinition = analysis(Nil, first +: rest)
+  def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexTemplateDefinition = analysis(Nil, normalizers)
 
   def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexTemplateDefinition =
     mappings(first +: rest)

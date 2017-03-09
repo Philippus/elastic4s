@@ -1,0 +1,29 @@
+{
+  "mappings": {
+    "my_type": {
+      "dynamic_templates": [
+        {
+          "es": {
+            "match": "*_es",
+            "match_pattern": "regex",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "text",
+              "analyzer": "spanish"
+            }
+          }
+        },
+        {
+          "en": {
+            "match": "*",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "text",
+              "analyzer": "english"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

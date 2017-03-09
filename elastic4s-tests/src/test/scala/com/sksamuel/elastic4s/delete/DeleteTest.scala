@@ -1,35 +1,39 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.FlatSpec
-import org.scalatest.mock.MockitoSugar
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 
-class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class DeleteTest extends FlatSpec with ElasticDsl with DualElasticSugar with DualClient {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  client.execute(
-    bulk(
-      index into "places/cities" id 99 fields(
-        "name" -> "London",
-        "country" -> "UK"
+  override protected def beforeRunTests() = {
+    execute(
+      bulk(
+        indexInto("places/cities") id 99 fields(
+          "name" -> "London",
+          "country" -> "UK"
         ),
-      index into "places/cities" id 44 fields(
-        "name" -> "Philadelphia",
-        "country" -> "USA"
+        indexInto("places/cities") id 44 fields(
+          "name" -> "Philadelphia",
+          "country" -> "USA"
         ),
-      index into "places/cities" id 615 fields(
-        "name" -> "Middlesbrough",
-        "country" -> "UK",
-        "continent" -> "Europe"
+        indexInto("places/cities") id 615 fields(
+          "name" -> "Middlesbrough",
+          "country" -> "UK",
+          "continent" -> "Europe"
         )
-    )
-  ).await
+      )
+    ).await
 
-  refresh("places")
-  blockUntilCount(3, "places")
+    refresh("places")
+    blockUntilCount(3, "places")
+  }
 
   "an index" should "do nothing when deleting a document where the id does not exist using id" in {
-    client.execute {
-      delete id 141212 from "places" -> "cities"
+    execute {
+      delete(141212) from "places" -> "cities"
     }.await
     refresh("places")
     Thread.sleep(1000)
@@ -37,8 +41,8 @@ class DeleteTest extends FlatSpec with MockitoSugar with ElasticSugar {
   }
 
   it should "remove a document when deleting by id" in {
-    client.execute {
-      delete id 99 from "places/cities"
+    execute {
+      delete(99) from "places/cities"
     }.await
     refresh("places")
     blockUntilCount(2, "places")

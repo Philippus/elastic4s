@@ -20,7 +20,10 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .settings(libraryDependencies ++= Seq(
     "org.locationtech.spatial4j" % "spatial4j"     % "0.6",
-    "com.vividsolutions"         % "jts"           % "1.13"
+    "com.vividsolutions"         % "jts"           % "1.13",
+    "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
+    "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
+    "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
   ))
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
@@ -80,7 +83,7 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion
     )
   )
-  .dependsOn(core, embedded)
+  .dependsOn(core, embedded, http)
 
 lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
   .settings(

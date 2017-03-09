@@ -4,7 +4,7 @@ import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
-import org.elasticsearch.client.{Response, ResponseListener, RestClient}
+import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.Source
@@ -21,7 +21,7 @@ trait HttpClient extends Logging {
   /**
     * Executes the given request type T, and returns a Future of the response type U.
     *
-    * In order to use this method an implicit `JsonFormat[U]` must be in scope. The easist
+    * In order to use this method an implicit `JsonFormat[U]` must be in scope. The easiest
     * way is to include one of the json modules, eg `elastic4s-jackson` or `elastic4s-circe` and
     * then import the implicit. Eg,
     *
@@ -65,7 +65,7 @@ trait HttpExecutable[T, U] extends Logging {
 
   def execute(client: RestClient, request: T, format: JsonFormat[U]): Future[U]
 
-  // convience method that registers a listener with the function and the response json
+  // convenience method that registers a listener with the function and the response json
   // is then marshalled into the type U
   protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
                                            format: JsonFormat[U]): Future[U] = {
@@ -78,9 +78,22 @@ trait HttpExecutable[T, U] extends Logging {
         }
         p.tryComplete(result)
       }
+
       override def onFailure(e: Exception): Unit = {
         logger.debug(s"onFailure $e")
-        p.tryFailure(e)
+
+        e match {
+          case re: ResponseException =>
+            val result = Try {
+              // TODO: Failure responses can parse to valid response models, but can also return ElasticsearchException content, such as:
+              // {"error": { "root_cause": [ ... ] "type": "document_missing_exception", ... }, "status": 404 }
+              // This case needs to be handled, because currently `fromJson` can "successfully" map the ElasticsearchException
+              // JSON output to the response object in many cases.
+              format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent).mkString)
+            }
+            p.tryComplete(result)
+          case _ => p.tryFailure(e)
+        }
       }
     })
     p.future

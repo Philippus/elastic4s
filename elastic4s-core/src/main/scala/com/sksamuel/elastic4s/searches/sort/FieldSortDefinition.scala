@@ -27,4 +27,6 @@ case class FieldSortDefinition(field: String,
 
   def order(order: SortOrder): FieldSortDefinition = copy(order = order)
   def sortOrder(order: SortOrder): FieldSortDefinition = copy(order = order)
+  def desc(): FieldSortDefinition = copy(order = SortOrder.DESC)
+  def asc(): FieldSortDefinition = copy(order = SortOrder.ASC)
 }

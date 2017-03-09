@@ -11,7 +11,7 @@ trait MappingDefinitionLike {
   def numericDetection: Option[Boolean]
   def size: Option[Boolean]
   def dynamicDateFormats: Seq[String]
-  def fields: Seq[TypedFieldDefinition]
+  def fields: Seq[FieldDefinition]
   def analyzer: Option[String]
   def boostName: Option[String]
   def boostNullValue: Option[Double]
@@ -31,7 +31,7 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
                                 numericDetection: Option[Boolean] = None,
                                 size: Option[Boolean] = None,
                                 dynamicDateFormats: Seq[String] = Nil,
-                                fields: Seq[TypedFieldDefinition] = Nil,
+                                fields: Seq[FieldDefinition] = Nil,
                                 analyzer: Option[String] = None,
                                 boostName: Option[String] = None,
                                 boostNullValue: Option[Double] = None,
@@ -68,11 +68,11 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def dateDetection(dateDetection: Boolean): PutMappingDefinition = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): PutMappingDefinition = copy(numericDetection = numericDetection.some)
 
-  def fields(fields: Iterable[TypedFieldDefinition]): PutMappingDefinition = as(fields)
-  def fields(fields: TypedFieldDefinition*): PutMappingDefinition = as(fields: _*)
+  def fields(fields: Iterable[FieldDefinition]): PutMappingDefinition = as(fields)
+  def fields(fields: FieldDefinition*): PutMappingDefinition = as(fields: _*)
 
-  def as(fields: TypedFieldDefinition*): PutMappingDefinition = as(fields.toIterable)
-  def as(iterable: Iterable[TypedFieldDefinition]): PutMappingDefinition = copy(fields = fields ++ iterable)
+  def as(fields: FieldDefinition*): PutMappingDefinition = as(fields.toIterable)
+  def as(iterable: Iterable[FieldDefinition]): PutMappingDefinition = copy(fields = fields ++ iterable)
 
   def timestamp(enabled: Boolean,
                 path: Option[String] = None,
@@ -107,7 +107,7 @@ case class MappingDefinition(`type`: String,
                              numericDetection: Option[Boolean] = None,
                              size: Option[Boolean] = None,
                              dynamicDateFormats: Seq[String] = Nil,
-                             fields: Seq[TypedFieldDefinition] = Nil,
+                             fields: Seq[FieldDefinition] = Nil,
                              analyzer: Option[String] = None,
                              boostName: Option[String] = None,
                              boostNullValue: Option[Double] = None,
@@ -127,21 +127,24 @@ case class MappingDefinition(`type`: String,
   def sourceExcludes(sourceExcludes: Iterable[String]): MappingDefinition = copy(sourceExcludes = sourceExcludes.toSeq)
   def analyzer(analyzer: String): MappingDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): MappingDefinition = copy(analyzer = analyzer.name.some)
+
   @deprecated("use boostName", "5.2")
   def boost(boostName: String): MappingDefinition = copy(boostName = boostName.some)
+
   def boostName(boostName: String): MappingDefinition = copy(boostName = boostName.some)
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)
+
   def parent(parent: String): MappingDefinition = copy(parent = parent.some)
   def dynamic(dynamic: DynamicMapping): MappingDefinition = copy(dynamic = dynamic.some)
   def meta(map: Map[String, Any]): MappingDefinition = copy(meta = map)
   def dateDetection(dateDetection: Boolean): MappingDefinition = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): MappingDefinition = copy(numericDetection = numericDetection.some)
 
-  def fields(fields: Iterable[TypedFieldDefinition]): MappingDefinition = as(fields)
-  def fields(fields: TypedFieldDefinition*): MappingDefinition = as(fields)
+  def fields(fields: Iterable[FieldDefinition]): MappingDefinition = as(fields)
+  def fields(fields: FieldDefinition*): MappingDefinition = as(fields)
 
-  def as(fields: TypedFieldDefinition*): MappingDefinition = as(fields.toIterable)
-  def as(iterable: Iterable[TypedFieldDefinition]): MappingDefinition = copy(fields = fields ++ iterable)
+  def as(fields: FieldDefinition*): MappingDefinition = as(fields.toIterable)
+  def as(iterable: Iterable[FieldDefinition]): MappingDefinition = copy(fields = fields ++ iterable)
 
   def timestamp(enabled: Boolean,
                 path: Option[String] = None,

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.mappings.FieldType.{DoubleType, FloatType}
-import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
+import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class DynamicTemplateDefinitionTest extends WordSpec with Matchers with SharedElasticSugar {
@@ -30,7 +30,7 @@ class DynamicTemplateDefinitionTest extends WordSpec with Matchers with SharedEl
     }
     "support unmatch" in {
 
-      val template = DynamicTemplateDefinition("price", field typed DoubleType).matching("*_price").unmatch("my_price")
+      val template = DynamicTemplateDefinition("price", doubleField("")).matching("*_price").unmatch("my_price")
 
       val indexName = "dynamic_template_definition2"
       client.execute {

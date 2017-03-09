@@ -2,19 +2,18 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
-import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import org.scalatest.WordSpec
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 
 class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl {
 
   client.execute {
-    create index "settings_test" mappings {
-      mapping("r") as Seq(
-        field name "a" withType StringType stored true analyzer WhitespaceAnalyzer,
-        field name "b" withType StringType
+    createIndex("settings_test").mappings(
+      mapping("r").as(
+        stringField("a") stored true analyzer WhitespaceAnalyzer,
+        stringField("b")
       )
-    }
+    )
   }.await
 
   "get settings" should {

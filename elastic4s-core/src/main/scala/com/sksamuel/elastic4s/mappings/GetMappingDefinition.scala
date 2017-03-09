@@ -12,5 +12,5 @@ case class GetMappingDefinition(indexesAndTypes: IndexesAndTypes,
     copy(indexesAndTypes = IndexesAndTypes(indexesAndTypes.indexes, types))
   }
 
-  def local(local: Boolean) = copy(local = local.some)
+  def local(local: Boolean): GetMappingDefinition = copy(local = local.some)
 }

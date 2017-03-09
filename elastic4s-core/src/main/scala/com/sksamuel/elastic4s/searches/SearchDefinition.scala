@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
-import com.sksamuel.elastic4s.searches.sort.SortDefinition
+import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.search.SearchType
@@ -88,8 +88,10 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def sort(sorts: SortDefinition*): SearchDefinition = sortBy(sorts)
 
   def sortBy(sorts: SortDefinition*): SearchDefinition = sortBy(sorts)
-
   def sortBy(sorts: Iterable[SortDefinition]): SearchDefinition = copy(sorts = sorts.toSeq)
+
+  def sortByFieldAsc(name: String): SearchDefinition = sortBy(FieldSortDefinition(name))
+  def sortByFieldDesc(name: String): SearchDefinition = sortBy(FieldSortDefinition(name).desc())
 
   /** This method introduces zero or more script field definitions into the search construction
     *

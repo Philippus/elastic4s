@@ -8,7 +8,7 @@ import org.scalatest.matchers.{Matcher, MatchResult}
 
 trait JsonSugar extends Matchers {
 
-  protected val mapper = new ObjectMapper with ScalaObjectMapper
+  private val mapper = new ObjectMapper with ScalaObjectMapper
   mapper.registerModule(DefaultScalaModule)
 
   def matchJsonResource(resourceName: String) = new JsonResourceMatcher(resourceName)
