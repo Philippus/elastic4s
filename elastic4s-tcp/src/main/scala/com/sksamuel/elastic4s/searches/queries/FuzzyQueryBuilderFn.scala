@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.index.query.{FuzzyQueryBuilder, QueryBuilders}
 
-object FuzzyQueryBuilder {
+object FuzzyQueryBuilderFn {
   def apply(q: FuzzyQueryDefinition): FuzzyQueryBuilder = {
     val builder = QueryBuilders.fuzzyQuery(q.field, q.termValue.toString)
     q.maxExpansions.foreach(builder.maxExpansions)

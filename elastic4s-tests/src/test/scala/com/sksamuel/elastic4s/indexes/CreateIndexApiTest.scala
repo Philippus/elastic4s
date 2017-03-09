@@ -216,9 +216,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support copy to a single field" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        textField("first_name") index "analyzed" copyTo "full_name",
-        textField("last_name") index "analyzed" copyTo "full_name",
-        textField("full_name") index "analyzed"
+        textField("first_name") copyTo "full_name",
+        textField("last_name") copyTo "full_name",
+        textField("full_name")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Dynamic
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
@@ -227,9 +227,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support copy to multiple fields" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        textField("title") index "analyzed" copyTo("meta_data", "article_info"),
-        textField("meta_data") index "analyzed",
-        textField("article_info") index "analyzed"
+        textField("title") copyTo("meta_data", "article_info"),
+        textField("meta_data"),
+        textField("article_info")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Strict
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
@@ -238,10 +238,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support multi fields" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        textField("title") index "analyzed" fields (
-          textField("raw") index "not_analyzed"),
-        textField("meta_data") index "analyzed",
-        textField("article_info") index "analyzed"
+        textField("title") fields textField("raw"),
+        textField("meta_data"),
+        textField("article_info")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_fields.json")
@@ -250,7 +249,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   it should "support completion type" in {
     val req = createIndex("tweets").mappings(
       mapping("tweet") as(
-        stringField("name") index "analyzed",
+        textField("name"),
         field("ac") typed CompletionType analyzer "simple" searchAnalyzer "simple"
           preserveSeparators false preservePositionIncrements false maxInputLength 10
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"

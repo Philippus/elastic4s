@@ -6,7 +6,7 @@ import org.elasticsearch.index.query.{GeoPolygonQueryBuilder, GeoValidationMetho
 
 import scala.collection.JavaConverters._
 
-object GeoPolygonQueryBuilder {
+object GeoPolygonQueryBuilderFn {
   def apply(q: GeoPolygonQueryDefinition): GeoPolygonQueryBuilder = {
     val builder = QueryBuilders.geoPolygonQuery(q.field, q.points.map(p => new GeoPoint(p.lat, p.getLon)).asJava)
     q.boost.foreach(builder.boost)

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{BoolQueryBuilder, QueryBuilders}
 
-object BoolQueryBuilder {
+object BoolQueryBuilderFn {
   def apply(q: BoolQueryDefinition): BoolQueryBuilder = {
     val builder = QueryBuilders.boolQuery()
     q.adjustPureNegative.foreach(builder.adjustPureNegative)

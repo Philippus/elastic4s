@@ -13,21 +13,18 @@
       "properties": {
         "first_name": {
           "type": "text",
-          "index": "analyzed",
           "copy_to": [
             "full_name"
           ]
         },
         "last_name": {
           "type": "text",
-          "index": "analyzed",
           "copy_to": [
             "full_name"
           ]
         },
         "full_name": {
-          "type": "text",
-          "index": "analyzed"
+          "type": "text"
         }
       }
     }

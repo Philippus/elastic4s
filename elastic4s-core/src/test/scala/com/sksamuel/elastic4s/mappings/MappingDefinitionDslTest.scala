@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
 import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
 import com.sksamuel.elastic4s.indexes.CreateIndexContentBuilder
 import org.scalatest.{Matchers, WordSpec}
 
-class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
-
-  import com.sksamuel.elastic4s.ElasticDsl._
+class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar with ElasticApi {
 
   "mapping definition" should {
     "insert source exclusion directives when set" in {
@@ -60,8 +58,8 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     "include dynamic templates" in {
       val req = createIndex("docsAndTags").mappings(
         mapping("my_type") templates(
-          dynamicTemplate("es", stringField("") analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
-          dynamicTemplate("en", stringField("") analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
+          dynamicTemplate("es", textField("") analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
+          dynamicTemplate("en", textField("") analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
           )
       )
       CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
@@ -69,7 +67,7 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar {
     "include timestamp path field" in {
       val req = createIndex("docsAndTags").mappings(
         mapping ("foo") timestamp {
-          timestamp enabled true path "mypath" store true
+          timestamp(true) path "mypath" store true
         }
       )
       CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_path.json")

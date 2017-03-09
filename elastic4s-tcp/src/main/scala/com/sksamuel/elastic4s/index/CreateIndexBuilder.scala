@@ -7,7 +7,10 @@ object CreateIndexBuilder {
   def apply(d: CreateIndexDefinition): CreateIndexRequest = {
     d.rawSource match {
       case Some(s) => new CreateIndexRequest(d.name).source(s)
-      case None => new CreateIndexRequest(d.name).source(CreateIndexContentBuilder(d))
+      case None =>
+        val source = CreateIndexContentBuilder(d)
+        println(source.string)
+        new CreateIndexRequest(d.name).source(source)
     }
   }
 }

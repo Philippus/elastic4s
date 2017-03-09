@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-abstract class Analyzer(val name: String)
+class Analyzer(val name: String)
 
 case object WhitespaceAnalyzer extends Analyzer("whitespace")
 case object StandardAnalyzer extends Analyzer("standard")
@@ -14,7 +14,7 @@ case object SnowballAnalyzer extends Analyzer("snowball")
 
 case class CustomAnalyzer(override val name: String) extends Analyzer(name)
 
-abstract class LanguageAnalyzer(name: String) extends Analyzer(name: String)
+class LanguageAnalyzer(name: String) extends Analyzer(name: String)
 
 case object ArabicLanguageAnalyzer extends LanguageAnalyzer("arabic")
 case object ArmenianLanguageAnalyzer extends LanguageAnalyzer("armenian")
@@ -36,13 +36,16 @@ case object GreekLanguageAnalyzer extends LanguageAnalyzer("greek")
 case object HindiLanguageAnalyzer extends LanguageAnalyzer("hindi")
 case object HungarianLanguageAnalyzer extends LanguageAnalyzer("hungarian")
 case object IndonesianLanguageAnalyzer extends LanguageAnalyzer("indonesian")
+case object IrishLanguageAnalyzer extends LanguageAnalyzer("irish")
 case object ItalianLanguageAnalyzer extends LanguageAnalyzer("italian")
 case object LatvianLanguageAnalyzer extends LanguageAnalyzer("latvian")
+case object LithuanianLanguageAnalyzer extends LanguageAnalyzer("lithuanian")
 case object NorwegianLanguageAnalyzer extends LanguageAnalyzer("norwegian")
 case object PersianLanguageAnalyzer extends LanguageAnalyzer("persian")
 case object PortugueseLanguageAnalyzer extends LanguageAnalyzer("portuguese")
 case object RomanianLanguageAnalyzer extends LanguageAnalyzer("romanian")
 case object RussianLanguageAnalyzer extends LanguageAnalyzer("russian")
+case object SoraniLanguageAnalyzer extends LanguageAnalyzer("sorani")
 case object SpanishLanguageAnalyzer extends LanguageAnalyzer("spanish")
 case object SwedishLanguageAnalyzer extends LanguageAnalyzer("swedish")
 case object TurkishLanguageAnalyzer extends LanguageAnalyzer("turkish")

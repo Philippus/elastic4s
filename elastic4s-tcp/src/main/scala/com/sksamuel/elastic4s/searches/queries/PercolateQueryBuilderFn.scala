@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.percolator.PercolateQueryBuilder
 
-object PercolateQueryBuilder {
+object PercolateQueryBuilderFn {
   def apply(q: PercolateQueryDefinition): PercolateQueryBuilder = {
     val builder = q.ref match {
       case Some(DocumentRef(docIndex, docType, docId)) =>

@@ -18,6 +18,6 @@ trait CreateIndexExecutables extends IndexShowImplicits {
   }
 
   implicit class CreateIndexShowOps(f: CreateIndexDefinition) {
-    def show = CreateIndexShow.show(f)
+    def show: String = CreateIndexShow.show(f)
   }
 }

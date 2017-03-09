@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import org.elasticsearch.index.query.{Operator, QueryBuilders, SimpleQueryStringBuilder}
 
-object SimpleStringQueryBuilder {
+object SimpleStringQueryBuilderFn {
   def apply(q: SimpleStringQueryDefinition): SimpleQueryStringBuilder = {
     val builder = QueryBuilders.simpleQueryStringQuery(q.query)
     q.queryName.foreach(builder.queryName)

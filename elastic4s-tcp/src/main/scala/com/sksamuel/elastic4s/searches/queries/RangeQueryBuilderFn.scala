@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import org.elasticsearch.index.query.{QueryBuilders, RangeQueryBuilder}
 
-object RangeQueryBuilder {
+object RangeQueryBuilderFn {
   def apply(q: RangeQueryDefinition): RangeQueryBuilder = {
     val builder = QueryBuilders.rangeQuery(q.field)
     q.queryName.foreach(builder.queryName)
