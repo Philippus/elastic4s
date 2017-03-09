@@ -1,47 +1,47 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedElasticSugar with ElasticDsl {
+class GetTest extends FlatSpec with Matchers with ScalaFutures with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+  override protected def beforeRunTests() = {
+    execute {
+      createIndex("beer").mappings {
+        mapping("lager").fields(
+          textField("name").stored(true),
+          textField("brand").stored(true),
+          textField("ingredients").stored(true)
+        )
+      }
+    }.await
 
-  http.execute {
-    createIndex("get").mappings {
-      mapping("lager").fields(
-        textField("name").stored(true),
-        textField("brand").stored(true),
-        textField("ingredients").stored(true)
-      )
-    }
-  }.await
-
-  client.execute {
-    bulk(
-      indexInto("get/lager") fields(
-        "name" -> "coors light",
-        "brand" -> "coors",
-        "ingredients" -> Seq("hops", "barley", "water", "yeast")
-      ) id 4,
-      indexInto("get/lager") fields(
-        "name" -> "bud lite",
-        "brand" -> "bud",
-        "ingredients" -> Seq("hops", "barley", "water", "yeast")
-      ) id 8
-    ).refresh(RefreshPolicy.IMMEDIATE)
-  }.await
+    execute {
+      bulk(
+        indexInto("beer/lager") fields(
+          "name" -> "coors light",
+          "brand" -> "coors",
+          "ingredients" -> Seq("hops", "barley", "water", "yeast")
+        ) id 4,
+        indexInto("beer/lager") fields(
+          "name" -> "bud lite",
+          "brand" -> "bud",
+          "ingredients" -> Seq("hops", "barley", "water", "yeast")
+        ) id 8
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await
+  }
 
   "A Get request" should "retrieve a document by id" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager"
+    val resp = execute {
+      get(8) from "beer/lager"
     }.await
 
     resp.exists shouldBe true
@@ -50,8 +50,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "retrieve a document by id with source" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager"
+    val resp = execute {
+      get(8) from "beer/lager"
     }.await
 
     resp.exists shouldBe true
@@ -61,8 +61,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "retrieve a document by id without source" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager" fetchSourceContext false
+    val resp = execute {
+      get(8) from "beer/lager" fetchSourceContext false
     }
 
     whenReady(resp) { response =>
@@ -75,8 +75,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "support source includes" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager" fetchSourceInclude "brand"
+    val resp = execute {
+      get(8) from "beer/lager" fetchSourceInclude "brand"
     }.await
 
     resp.exists should be(true)
@@ -86,8 +86,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "support source excludes" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager" fetchSourceExclude "brand"
+    val resp = execute {
+      get(8) from "beer/lager" fetchSourceExclude "brand"
     }.await
 
     resp.exists should be(true)
@@ -97,8 +97,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "support source includes and excludes" in {
 
-    val resp = http.execute {
-      get(8) from "get/lager" fetchSourceContext(List("name"), List("brand"))
+    val resp = execute {
+      get(8) from "beer/lager" fetchSourceContext(List("name"), List("brand"))
     }.await
 
     resp.exists should be(true)
@@ -108,8 +108,8 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
 
   it should "retrieve a document supporting stored fields" in {
 
-    val resp = http.execute {
-      get(4) from "get/lager" storedFields("name", "brand")
+    val resp = execute {
+      get(4) from "beer/lager" storedFields("name", "brand")
     }
 
     whenReady(resp) { response =>
@@ -119,21 +119,21 @@ class GetHttpTest extends FlatSpec with Matchers with ScalaFutures with SharedEl
     }
   }
 
-  //  it should "throw exception for unknown doc" ignore {
-  //
-  //    val resp = http.execute {
-  //      get(131313) from "beer/lager"
-  //    }
-  //
-  //    whenReady(resp) { response =>
-  //      response.exists shouldBe false
-  //    }
-  //  }
+  it should "not retrieve any documents w/ unknown id" in {
+
+    val resp = execute {
+      get(131313) from "beer/lager"
+    }
+
+    whenReady(resp) { result =>
+      result.exists shouldBe false
+    }
+  }
 
   it should "retrieve multi value fields" in {
 
-    val resp = http.execute {
-      get(4) from "get/lager" storedFields "ingredients"
+    val resp = execute {
+      get(4) from "beer/lager" storedFields "ingredients"
     }
 
     whenReady(resp) { response =>
