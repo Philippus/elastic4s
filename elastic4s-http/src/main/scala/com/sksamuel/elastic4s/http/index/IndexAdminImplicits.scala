@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.IndicesAliasesRequestDefinition
 import com.sksamuel.elastic4s.http.alias.AliasActionBuilder
-import com.sksamuel.elastic4s.http.index.IndexShardStore.StoreStatusResponse
+import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes._
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -46,7 +46,7 @@ case class IndicesAliasResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 
-object IndexShardStore {
+object IndexShardStoreResponse {
   case class StoreStatusResponse(indices: Map[String, IndexStoreStatus])
   case class IndexStoreStatus(shards: Map[String, ShardStoreStatus])
   type StoreStatus = Map[String, AnyRef]

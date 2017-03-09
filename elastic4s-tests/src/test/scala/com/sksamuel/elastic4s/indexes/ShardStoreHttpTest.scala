@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.index.IndexShardStore.{ShardStoreStatus, IndexStoreStatus}
+import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.{ShardStoreStatus, IndexStoreStatus}
 import com.sksamuel.elastic4s.http.{HttpClient, ElasticDsl}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
