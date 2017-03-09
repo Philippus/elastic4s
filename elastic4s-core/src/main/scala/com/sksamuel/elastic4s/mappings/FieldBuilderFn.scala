@@ -12,7 +12,6 @@ object CommonFieldBuilder {
 
     field.analyzer.foreach(builder.field("analyzer", _))
     field.boost.foreach(builder.field("boost", _))
-    field.coerce.foreach(builder.field("coerce", _))
 
     if (field.copyTo.nonEmpty)
       builder.field("copy_to", field.copyTo.asJavaCollection)
@@ -27,9 +26,6 @@ object CommonFieldBuilder {
 
     field.docValues.foreach(builder.field("doc_values", _))
     field.enabled.foreach(builder.field("enabled", _))
-    field.fielddata.foreach(builder.field("fielddata", _))
-    field.format.foreach(builder.field("format", _))
-    field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
     field.includeInAll.foreach(builder.field("include_in_all", _))
     field.index.foreach(builder.field("index", _))
     field.normalizer.foreach(builder.field("normalizer", _))
@@ -50,13 +46,23 @@ object FieldBuilderFn {
     val builder = CommonFieldBuilder(field)
     field match {
       case basic: BasicFieldDefinition =>
-        basic.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
-        basic.preservePositionIncrements.foreach(builder.field("preserve_position_increments", _))
-        basic.preserveSeparators.foreach(builder.field("preserve_separators", _))
         basic.ignoreAbove.foreach(builder.field("ignore_above", _))
+        basic.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         basic.indexOptions.foreach(builder.field("index_options", _))
-        basic.maxInputLength.foreach(builder.field("max_input_length", _))
         basic.scalingFactor.foreach(builder.field("scaling_factor", _))
+        basic.coerce.foreach(builder.field("coerce", _))
+        basic.format.foreach(builder.field("format", _))
+
+      case comp: CompletionFieldDefinition =>
+        comp.preservePositionIncrements.foreach(builder.field("preserve_position_increments", _))
+        comp.preserveSeparators.foreach(builder.field("preserve_separators", _))
+        comp.ignoreAbove.foreach(builder.field("ignore_above", _))
+        comp.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+        comp.indexOptions.foreach(builder.field("index_options", _))
+        comp.maxInputLength.foreach(builder.field("max_input_length", _))
+        comp.coerce.foreach(builder.field("coerce", _))
+        comp.format.foreach(builder.field("format", _))
+
       case geo: GeoshapeFieldDefinition =>
         geo.tree.foreach(builder.field("tree", _))
         geo.precision.foreach(builder.field("precision", _))
@@ -65,6 +71,21 @@ object FieldBuilderFn {
         geo.distanceErrorPct.foreach(builder.field("distance_error_pct", _))
         geo.orientation.foreach(builder.field("orientation", _))
         geo.pointsOnly.foreach(builder.field("points_only", _))
+        geo.coerce.foreach(builder.field("coerce", _))
+        geo.format.foreach(builder.field("format", _))
+        geo.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+
+      case text: TextFieldDefinition =>
+        text.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
+        text.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
+        text.fielddata.foreach(builder.field("fielddata", _))
+        text.maxInputLength.foreach(builder.field("max_input_length", _))
+        text.ignoreAbove.foreach(builder.field("ignore_above", _))
+
+      case keyword: KeywordFieldDefinition =>
+        keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
+        keyword.ignoreAbove.foreach(builder.field("ignore_above", _))
+
     }
     builder.endObject()
     builder

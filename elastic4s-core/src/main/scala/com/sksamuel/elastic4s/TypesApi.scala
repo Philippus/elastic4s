@@ -9,7 +9,7 @@ trait TypesApi {
   def binaryField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "binary")
   def booleanField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "boolean")
   def byteField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "byte")
-  def completionField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "completion")
+  def completionField(name: String): CompletionFieldDefinition = CompletionFieldDefinition(name)
   def dateField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "date")
   def doubleField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "double")
   def floatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "float")
@@ -19,7 +19,7 @@ trait TypesApi {
   def geoshapeField(name: String): GeoshapeFieldDefinition = GeoshapeFieldDefinition(name)
   def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
   def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
-  def keywordField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "keyword")
+  def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
   def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
   def nestedField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "nested")
   def objectField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "object")
@@ -32,7 +32,7 @@ trait TypesApi {
   }
 
   def shortField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "short")
-  def textField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "text")
+  def textField(name: String): TextFieldDefinition = TextFieldDefinition(name)
   def tokenCountField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "token_count")
 
   @deprecated("use binaryField(name)", "5.2.11")
@@ -45,7 +45,7 @@ trait TypesApi {
   def field(name: String, ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
   @deprecated("use completionField(name)", "5.2.11")
-  def field(name: String, ft: CompletionType.type): BasicFieldDefinition = completionField(name)
+  def field(name: String, ft: CompletionType.type): CompletionFieldDefinition = completionField(name)
 
   @deprecated("use dateField(name)", "5.2.11")
   def field(name: String, ft: DateType.type): BasicFieldDefinition = dateField(name)
@@ -69,7 +69,7 @@ trait TypesApi {
   def field(name: String, ft: IpType.type): BasicFieldDefinition = ipField(name)
 
   @deprecated("use keywordField(name)", "5.2.11")
-  def field(name: String, ft: KeywordType.type): BasicFieldDefinition = keywordField(name)
+  def field(name: String, ft: KeywordType.type): KeywordFieldDefinition = keywordField(name)
 
   @deprecated("use longField(name)", "5.2.11")
   def field(name: String, ft: LongType.type): BasicFieldDefinition = longField(name)
@@ -87,7 +87,7 @@ trait TypesApi {
   def field(name: String, ft: ShortType.type): BasicFieldDefinition = shortField(name)
 
   @deprecated("use textField(name)", "5.2.11")
-  def field(name: String, ft: TextType.type): BasicFieldDefinition = textField(name)
+  def field(name: String, ft: TextType.type): TextFieldDefinition = textField(name)
 
   @deprecated("use tokenCountField(name)", "5.2.11")
   def field(name: String, ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
@@ -108,7 +108,7 @@ trait TypesApi {
     def withType(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
     @deprecated("use completionField(name)", "5.2.11")
-    def withType(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
+    def withType(ft: CompletionType.type): CompletionFieldDefinition = completionField(name)
 
     @deprecated("use dateField(name)", "5.2.11")
     def withType(ft: DateType.type): BasicFieldDefinition = dateField(name)
@@ -147,7 +147,7 @@ trait TypesApi {
     def withType(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
     @deprecated("use textField(name)", "5.2.11")
-    def withType(ft: TextType.type): BasicFieldDefinition = textField(name)
+    def withType(ft: TextType.type): TextFieldDefinition = textField(name)
 
     @deprecated("use tokenCountField(name)", "5.2.11")
     def withType(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
@@ -162,7 +162,7 @@ trait TypesApi {
     def typed(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
     @deprecated("use completionField(name)", "5.2.11")
-    def typed(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
+    def typed(ft: CompletionType.type): CompletionFieldDefinition = completionField(name)
 
     @deprecated("use dateField(name)", "5.2.11")
     def typed(ft: DateType.type): BasicFieldDefinition = dateField(name)
@@ -186,7 +186,7 @@ trait TypesApi {
     def typed(ft: IpType.type): BasicFieldDefinition = ipField(name)
 
     @deprecated("use keywordField(name)", "5.2.11")
-    def typed(ft: KeywordType.type): BasicFieldDefinition = keywordField(name)
+    def typed(ft: KeywordType.type): KeywordFieldDefinition = keywordField(name)
 
     @deprecated("use longField(name)", "5.2.11")
     def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
@@ -204,7 +204,7 @@ trait TypesApi {
     def typed(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
     @deprecated("use textField(name)", "5.2.11")
-    def typed(ft: TextType.type): BasicFieldDefinition = textField(name)
+    def typed(ft: TextType.type): TextFieldDefinition = textField(name)
 
     @deprecated("use tokenCountField(name)", "5.2.11")
     def typed(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)

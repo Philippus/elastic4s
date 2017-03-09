@@ -38,6 +38,7 @@ class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with 
     }
 
     "support multiple types" in {
+
       execute {
         createIndex("geography").mappings(
           mapping("shire").fields(

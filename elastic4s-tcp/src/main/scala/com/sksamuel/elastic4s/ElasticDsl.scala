@@ -395,7 +395,7 @@ trait ElasticDsl
       def withType(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
       @deprecated("use completionField(name)", "5.2.11")
-      def withType(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
+      def withType(ft: CompletionType.type): CompletionFieldDefinition = completionField(name)
 
       @deprecated("use dateField(name)", "5.2.11")
       def withType(ft: DateType.type): BasicFieldDefinition = dateField(name)
@@ -434,7 +434,7 @@ trait ElasticDsl
       def withType(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
       @deprecated("use textField(name)", "5.2.11")
-      def withType(ft: TextType.type): BasicFieldDefinition = textField(name)
+      def withType(ft: TextType.type): TextFieldDefinition = textField(name)
 
       @deprecated("use tokenCountField(name)", "5.2.11")
       def withType(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
@@ -449,7 +449,7 @@ trait ElasticDsl
       def typed(ft: ByteType.type): BasicFieldDefinition = byteField(name)
 
       @deprecated("use completionField(name)", "5.2.11")
-      def typed(ft: CompletionType.type): BasicFieldDefinition = completionField(name)
+      def typed(ft: CompletionType.type): CompletionFieldDefinition = completionField(name)
 
       @deprecated("use dateField(name)", "5.2.11")
       def typed(ft: DateType.type): BasicFieldDefinition = dateField(name)
@@ -473,7 +473,7 @@ trait ElasticDsl
       def typed(ft: IpType.type): BasicFieldDefinition = ipField(name)
 
       @deprecated("use keywordField(name)", "5.2.11")
-      def typed(ft: KeywordType.type): BasicFieldDefinition = keywordField(name)
+      def typed(ft: KeywordType.type): KeywordFieldDefinition = keywordField(name)
 
       @deprecated("use longField(name)", "5.2.11")
       def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
@@ -491,7 +491,7 @@ trait ElasticDsl
       def typed(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
       @deprecated("use textField(name)", "5.2.11")
-      def typed(ft: TextType.type): BasicFieldDefinition = textField(name)
+      def typed(ft: TextType.type): TextFieldDefinition = textField(name)
 
       @deprecated("use tokenCountField(name)", "5.2.11")
       def typed(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
