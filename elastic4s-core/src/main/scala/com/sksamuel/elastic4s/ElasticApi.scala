@@ -10,6 +10,7 @@ import com.sksamuel.elastic4s.get.GetApi
 import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi}
 import com.sksamuel.elastic4s.locks.LocksApi
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
+import com.sksamuel.elastic4s.nodes.NodesApi
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
@@ -44,6 +45,7 @@ trait ElasticApi
     with IndexAdminApi
     with LocksApi
     with MappingApi
+    with NodesApi
     with NormalizerApi
     with QueryApi
     with PipelineAggregationApi
