@@ -7,9 +7,11 @@ import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.Shards
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, Index}
 import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
+import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchHits}
+import com.sksamuel.elastic4s.http.validate.ValidateResponse
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.RichSearchResponse
 import org.elasticsearch.action.DocWriteResponse
@@ -22,7 +24,9 @@ import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
 import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
+import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
 import org.elasticsearch.index.reindex.{BulkByScrollTask, BulkIndexByScrollResponse}
 
 import scala.collection.JavaConverters._
@@ -94,17 +98,20 @@ object ResponseConverterImplicits {
       SearchHits(
         response.totalHits.toInt,
         response.maxScore,
-        response.hits.map(x => SearchHit(
-          x.id,
-          x.index,
-          x.`type`,
-          x.score,
-          x.sourceAsMap.asScalaNested,
-          x.fields,
-          Map.empty, // TODO
-          x.version
-        ))
-      ))
+        response.hits.map { x =>
+          SearchHit(
+            x.id,
+            x.index,
+            x.`type`,
+            x.score,
+            x.sourceAsMap.asScalaNested,
+            x.fields.mapValues(_.value),
+            x.highlightFields.mapValues(_.fragments.map(_.string)),
+            x.version
+          )
+        }
+      )
+    )
   }
 
   implicit object IndexExistsResponseConverter extends ResponseConverter[IndicesExistsResponse, IndexExistsResponse] {
@@ -193,6 +200,36 @@ object ResponseConverterImplicits {
   implicit object MultiGetResponseConverter extends ResponseConverter[RichMultiGetResponse, MultiGetResponse] {
     override def convert(response: RichMultiGetResponse) = MultiGetResponse(
       response.successes.map(GetResponseConverter.convert)
+    )
+  }
+
+  implicit object ExplainResponseConverter extends ResponseConverter[TcpExplainResponse, ExplainResponse] {
+    import com.sksamuel.elastic4s.http.explain.Explanation
+
+    override def convert(response: TcpExplainResponse) = ExplainResponse(
+      response.getIndex,
+      response.getType,
+      response.getId,
+      response.isMatch,
+      Option(response.getExplanation).map(convertExplanation).orNull
+    )
+
+    private def convertExplanation(e: org.apache.lucene.search.Explanation): Explanation = {
+      Explanation(e.getValue, e.getDescription, e.getDetails.map(convertExplanation))
+    }
+  }
+
+  implicit object ValidateResponseConverter extends ResponseConverter[ValidateQueryResponse, ValidateResponse] {
+    import com.sksamuel.elastic4s.http.validate.Explanation
+
+    override def convert(response: ValidateQueryResponse) = ValidateResponse(
+      response.isValid,
+      Shards(
+        response.getTotalShards,
+        response.getFailedShards,
+        response.getSuccessfulShards
+      ),
+      response.getQueryExplanation.asScala.map(x => Explanation(x.getIndex, x.isValid, x.getError))
     )
   }
 
