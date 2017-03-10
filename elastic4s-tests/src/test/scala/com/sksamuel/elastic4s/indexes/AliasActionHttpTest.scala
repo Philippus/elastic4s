@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.{IndexStoreStatus, ShardStoreStatus}
 import com.sksamuel.elastic4s.http.index.{AliasExistsResponse, IndicesAliasResponse}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
@@ -34,6 +33,11 @@ class AliasActionHttpTest extends WordSpec with Matchers with SharedElasticSugar
       http.execute {
         aliasExists("landscapes")
       }.await should be(AliasExistsResponse(true))
+
+      val r = http.execute {
+        getAlias("landscapes")
+      }.await should be(Map("mountains" -> Map("aliases" -> Map("landscapes" -> Map()))))
+
     }
   }
 
