@@ -42,6 +42,11 @@ trait ClusterImplicits {
 
 object ClusterStateResponse {
   case class Index(state: String, aliases: Seq[String])
-  case class Metadata(cluster_uuid: String, indices: Map[String, Index])
+  case class Metadata(cluster_uuid: String, indices: Map[String, Index]) {
+    def clusterUuid: String = cluster_uuid
+  }
 }
-case class ClusterStateResponse(cluster_name: String, master_node: String, metadata: Option[ClusterStateResponse.Metadata])
+case class ClusterStateResponse(cluster_name: String, master_node: String, metadata: Option[ClusterStateResponse.Metadata]) {
+  def clusterName: String = cluster_name
+  def masterNode: String = master_node
+}
