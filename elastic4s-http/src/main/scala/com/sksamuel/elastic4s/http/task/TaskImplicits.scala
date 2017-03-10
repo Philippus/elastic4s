@@ -1,4 +1,5 @@
 package com.sksamuel.elastic4s.http.task
+
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.task.{CancelTasksDefinition, ListTasksDefinition}
