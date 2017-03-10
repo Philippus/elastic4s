@@ -1,9 +1,25 @@
-package com.sksamuel.elastic4s.admin
+package com.sksamuel.elastic4s.cluster
 
-import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.common.Priority
+import com.sksamuel.exts.OptionImplicits._
+
+trait ClusterApi {
+
+  def clusterState(): ClusterStateDefinition = ClusterStateDefinition()
+
+  def clusterHealth(): ClusterHealthDefinition = clusterHealth("_all")
+  def clusterHealth(first: String, rest: String*): ClusterHealthDefinition = ClusterHealthDefinition(first +: rest)
+  def clusterHealth(indices: Iterable[String]): ClusterHealthDefinition = ClusterHealthDefinition(indices.toIndexedSeq)
+
+}
+
+case class ClusterStateDefinition(metrics: Seq[String] = Seq.empty, indices: Seq[String] = Seq.empty) {
+
+  def metrics(metrics: Seq[String]): ClusterStateDefinition = copy(metrics = metrics)
+  def indices(indices: Seq[String]): ClusterStateDefinition = copy(indices = indices)
+
+}
 
 case class ClusterHealthDefinition(indices: Seq[String],
                                    timeout: Option[String] = None,
@@ -11,15 +27,6 @@ case class ClusterHealthDefinition(indices: Seq[String],
                                    waitForEvents: Option[Priority] = None,
                                    waitForStatus: Option[ClusterHealthStatus] = None,
                                    waitForNodes: Option[String] = None) {
-
-  def build(builder: ClusterHealthRequestBuilder): Unit = {
-    builder.setIndices(indices: _*)
-    timeout.foreach(builder.setTimeout)
-    waitForStatus.foreach(builder.setWaitForStatus)
-    waitForNodes.foreach(builder.setWaitForNodes)
-    waitForActiveShards.foreach(builder.setWaitForActiveShards)
-    waitForEvents.foreach(builder.setWaitForEvents)
-  }
 
   def timeout(value: String): ClusterHealthDefinition = copy(timeout = value.some)
 
