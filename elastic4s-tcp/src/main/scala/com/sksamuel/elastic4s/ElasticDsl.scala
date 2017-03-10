@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
+import com.sksamuel.elastic4s.cluster.ClusterHealthDefinition
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, DeleteIndexDefinition, IndexDefinition}
 import com.sksamuel.elastic4s.mappings.FieldType._
