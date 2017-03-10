@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.cluster.ClusterStateDefinition
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequestBuilder, ClusterUpdateSettingsResponse}
 import org.elasticsearch.action.admin.cluster.state.{ClusterStateRequestBuilder, ClusterStateResponse}
@@ -13,8 +14,6 @@ trait ClusterDsl {
 
   def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
   def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
-
-  def clusterState() = new ClusterStateDefinition
 
   def clusterStats() = new ClusterStatsDefinition
 
@@ -49,16 +48,27 @@ trait ClusterDsl {
   implicit object ClusterStateExecutable
     extends Executable[ClusterStateDefinition, ClusterStateResponse, ClusterStateResponse] {
     override def apply(c: Client, t: ClusterStateDefinition): Future[ClusterStateResponse] = {
-      injectFuture(t.build(c.admin.cluster.prepareState).execute)
+      injectFuture(buildRequest(c, t).execute)
+    }
+
+    private def buildRequest(c: Client, definition: ClusterStateDefinition): ClusterStateRequestBuilder = {
+      val requestBuilder = c.admin().cluster().prepareState().setIndices(definition.indices:_*)
+
+      definition.metrics.foldLeft(requestBuilder)((builder, e) =>
+        e match {
+          case "_all" => builder.all()
+          case "blocks" => builder.setBlocks(true)
+          case "metadata" => builder.setMetaData(true)
+          case "routing_table" => builder.setRoutingTable(true)
+          case "nodes" => builder.setNodes(true)
+          case _ => builder
+        }
+      )
     }
   }
 }
 
 class ClusterStatsDefinition
-
-class ClusterStateDefinition {
-  private[elastic4s] def build(builder: ClusterStateRequestBuilder): ClusterStateRequestBuilder = builder
-}
 
 case class ClusterSettingsDefinition(persistentSettings: Map[String, String],
                                      transientSettings: Map[String, String]) {
