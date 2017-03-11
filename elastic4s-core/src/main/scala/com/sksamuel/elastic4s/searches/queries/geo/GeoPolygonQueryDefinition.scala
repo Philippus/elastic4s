@@ -14,7 +14,7 @@ case class GeoPolygonQueryDefinition(field: String,
 
   def ignoreUnmapped(ignoreUnmapped: Boolean): GeoPolygonQueryDefinition = copy(ignoreUnmapped = ignoreUnmapped.some)
 
-  def validationMethod(method: String): GeoPolygonQueryDefinition = validationMethod(GeoValidationMethod.valueOf(method))
+  def validationMethod(method: String): GeoPolygonQueryDefinition = validationMethod(GeoValidationMethod.fromString(method))
   def validationMethod(method: GeoValidationMethod): GeoPolygonQueryDefinition = copy(validationMethod = method.some)
 
   def boost(boost: Float): GeoPolygonQueryDefinition = copy(boost = Option(boost))
