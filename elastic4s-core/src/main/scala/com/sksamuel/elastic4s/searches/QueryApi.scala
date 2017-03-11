@@ -158,8 +158,17 @@ trait QueryApi {
     def likeItems(items: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
       likeDocs(items.map { item => DocumentRef(item.index, item.`type`, item.id) })
 
+    def likeDocs(first: DocumentRef,
+                 rest: DocumentRef*): MoreLikeThisQueryDefinition = likeDocs(first +: rest)
+
     def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
       MoreLikeThisQueryDefinition(fields).copy(likeDocs = docs.toSeq)
+
+    def artificialDocs(first: ArtificialDocument,
+                       rest: ArtificialDocument*): MoreLikeThisQueryDefinition = artificialDocs(first +: rest)
+
+    def artificialDocs(docs: Iterable[ArtificialDocument]): MoreLikeThisQueryDefinition =
+      MoreLikeThisQueryDefinition(fields).copy(artificialDocs = docs.toSeq)
 
     @deprecated("use likeDocs or likeTexts", "5.0.0")
     def like(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = likeItems(first +: rest)

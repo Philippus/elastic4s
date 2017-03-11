@@ -5,10 +5,13 @@ import com.sksamuel.elastic4s.DocumentRef
 @deprecated("use DocumentRef", "5.0.0")
 case class MoreLikeThisItem(index: String, `type`: String, id: String)
 
+case class ArtificialDocument(index: String, `type`: String, doc: String)
+
 case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        likeTexts: Seq[String] = Nil,
                                        likeDocs: Seq[DocumentRef] = Nil,
                                        analyzer: Option[String] = None,
+                                       artificialDocs: Seq[ArtificialDocument] = Nil,
                                        boost: Option[Double] = None,
                                        boostTerms: Option[Double] = None,
                                        failOnUnsupportedField: Option[Boolean] = None,
@@ -26,6 +29,12 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        queryName: Option[String] = None) extends QueryDefinition {
 
   def analyzer(analyzer: String): MoreLikeThisQueryDefinition = copy(analyzer = Some(analyzer))
+
+  def artificialDocs(first: ArtificialDocument, rest: ArtificialDocument*): MoreLikeThisQueryDefinition =
+    artificialDocs(first +: rest)
+
+  def artificialDocs(docs: Iterable[ArtificialDocument]): MoreLikeThisQueryDefinition =
+    copy(artificialDocs = docs.toSeq)
 
   def unlikeText(first: String, rest: String*): MoreLikeThisQueryDefinition = unlikeText(first +: rest)
   def unlikeText(unlikes: Iterable[String]): MoreLikeThisQueryDefinition = copy(unlikeTexts = unlikeTexts ++ unlikes)
