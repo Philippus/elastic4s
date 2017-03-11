@@ -2,10 +2,12 @@ package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.geo.{GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.span.SpanTermQueryBodyFn
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
+import com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
 import org.elasticsearch.common.xcontent.XContentBuilder
@@ -36,6 +38,7 @@ object QueryBuilderFn {
     case r: RangeQueryDefinition => RangeQueryBodyFn(r)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
+    case s: SpanTermQueryDefinition => SpanTermQueryBodyFn(s)
     case t: TermQueryDefinition => TermQueryBodyFn(t)
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
