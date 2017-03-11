@@ -164,5 +164,3 @@ case class TermsAggregationResult(name: String,
   def bucket(key: String): Bucket = bucketOpt(key).get
   def bucketOpt(key: String): Option[Bucket] = buckets.find(_.key == key)
 }
-
-

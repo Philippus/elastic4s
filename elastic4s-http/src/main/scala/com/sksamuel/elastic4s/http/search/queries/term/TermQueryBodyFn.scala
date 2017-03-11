@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.search.queries
+package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}

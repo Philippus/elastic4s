@@ -8,7 +8,6 @@ import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-import org.elasticsearch.search.aggregations.AggregationBuilder
 
 import scala.collection.JavaConverters._
 

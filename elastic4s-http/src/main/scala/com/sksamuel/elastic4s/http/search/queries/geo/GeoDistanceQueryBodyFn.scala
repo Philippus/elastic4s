@@ -1,0 +1,30 @@
+package com.sksamuel.elastic4s.http.search.queries.geo
+
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+
+object GeoDistanceQueryBodyFn {
+
+  def apply(q: GeoDistanceQueryDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    builder.startObject()
+    builder.startObject("geo_distance")
+    q.distance.foreach {
+      case (value, unit) => builder.field("distance", unit.toMeters(value) + "m")
+    }
+    q.distanceStr.foreach(builder.field("distance", _))
+    q.point.foreach {
+      // lat long is reversed in the builder
+      case (lat, long) => builder.array("pin.location", Array(long, lat))
+    }
+    q.geohash.foreach(builder.field("pin.location", _))
+    q.geoDistance.foreach(builder.field("distance_type", _))
+    q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
+    q.validationMethod.map(_.name).foreach(builder.field("validation_method", _))
+    q.boost.foreach(builder.field("boost", _))
+    q.queryName.foreach(builder.field("_name", _))
+    builder.endObject()
+    builder.endObject()
+    builder
+  }
+}
