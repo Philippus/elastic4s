@@ -32,6 +32,8 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   @deprecated("use .exists", "5.0.0")
   def isExists: Boolean = exists
 
+  override def score: Float = 0
+
   override def id: String = original.getId
   override def index: String = original.getIndex
   override def `type`: String = original.getType

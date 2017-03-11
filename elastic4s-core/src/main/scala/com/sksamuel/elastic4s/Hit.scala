@@ -37,4 +37,5 @@ trait Hit {
   final def isSourceEmpty: Boolean = sourceAsMap.isEmpty
 
   def exists: Boolean
+  def score: Float
 }
