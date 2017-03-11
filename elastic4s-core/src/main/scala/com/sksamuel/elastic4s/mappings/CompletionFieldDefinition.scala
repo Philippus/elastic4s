@@ -11,7 +11,6 @@ case class CompletionFieldDefinition(name: String,
                                      enabled: Option[Boolean] = None,
                                      fields: Seq[FieldDefinition] = Nil,
                                      fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
-                                     format: Option[String] = None,
                                      includeInAll: Option[Boolean] = None,
                                      ignoreAbove: Option[Int] = None,
                                      ignoreMalformed: Option[Boolean] = None,
@@ -45,9 +44,7 @@ case class CompletionFieldDefinition(name: String,
 
   override def enabled(enabled: Boolean): T = copy(enabled = enabled.some)
 
-  def format(format: String): T = copy(format = format.some)
-
-  override def similarity(similarity: String): T = copy(similarity = similarity.some)
+  def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   def ignoreAbove(ignoreAbove: Int): T = copy(ignoreAbove = ignoreAbove.some)
   def ignoreMalformed(ignoreMalformed: Boolean): T = copy(ignoreMalformed = ignoreMalformed.some)

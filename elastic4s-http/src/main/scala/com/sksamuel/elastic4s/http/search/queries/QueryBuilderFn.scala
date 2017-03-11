@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.queries
 import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchPhraseDefinition, MatchQueryDefinition, MultiMatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
-import org.elasticsearch.common.xcontent.XContentBuilder
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {
@@ -21,6 +21,7 @@ object QueryBuilderFn {
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
     case q: MatchPhraseDefinition => MatchPhraseQueryBodyFn(q)
     case q: MultiMatchQueryDefinition => MultiMatchBodyFn(q)
+    case q: NestedQueryDefinition => NestedQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
     case q: PrefixQueryDefinition => PrefixQueryBodyFn(q)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
@@ -30,5 +31,21 @@ object QueryBuilderFn {
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
     case r: RangeQueryDefinition => RangeQueryBodyFn(r)
+  }
+}
+
+object NestedQueryBodyFn {
+  def apply(q: NestedQueryDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    builder.startObject()
+    builder.startObject("nested")
+    builder.field("path", q.path)
+    q.scoreMode.map(_.name.toLowerCase).foreach(builder.field("score_mode", _))
+    builder.rawField("query", QueryBuilderFn(q.query).bytes)
+    q.ignoreUnmapped.foreach(builder.field("boost", _))
+    q.boost.foreach(builder.field("boost", _))
+    q.queryName.foreach(builder.field("_name", _))
+    builder.endObject()
+    builder.endObject()
   }
 }

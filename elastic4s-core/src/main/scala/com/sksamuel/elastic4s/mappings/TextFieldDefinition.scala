@@ -46,7 +46,7 @@ case class TextFieldDefinition(name: String,
 
   def fielddata(fielddata: Boolean): T = copy(fielddata = fielddata.some)
 
-  override def similarity(similarity: String): T = copy(similarity = similarity.some)
+  def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   def ignoreAbove(ignoreAbove: Int): T = copy(ignoreAbove = ignoreAbove.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)

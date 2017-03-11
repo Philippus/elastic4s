@@ -171,15 +171,9 @@ trait QueryApi {
   def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
   class NestedQueryExpectsQuery(path: String) {
     class NestedQueryExpectsScoreMode(query: QueryDefinition)
-    def query(query: QueryDefinition) = new NestedQueryExpectsScoreMode(path) {
-      def scoreMode(mode: String): NestedQueryDefinition = {
-        val m = ScoreMode.values().find(_.name.toLowerCase == mode.toLowerCase)
-          .getOrElse(sys.error(s"Unknown score mode $mode"))
-        scoreMode(m)
-      }
-      def scoreMode(scoreMode: ScoreMode): NestedQueryDefinition = NestedQueryDefinition(path, query, scoreMode)
-    }
+    def query(query: QueryDefinition): NestedQueryDefinition = nestedQuery(path, query)
   }
+  def nestedQuery(path: String, query: QueryDefinition): NestedQueryDefinition = NestedQueryDefinition(path, query)
 
   def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)

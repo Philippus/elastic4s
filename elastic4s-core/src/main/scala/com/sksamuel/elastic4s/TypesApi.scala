@@ -21,7 +21,7 @@ trait TypesApi {
   def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
   def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
   def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
-  def nestedField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "nested")
+  def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
   def objectField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "object")
   def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
 
@@ -75,7 +75,7 @@ trait TypesApi {
   def field(name: String, ft: LongType.type): BasicFieldDefinition = longField(name)
 
   @deprecated("use nestedField(name)", "5.2.11")
-  def field(name: String, ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+  def field(name: String, ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
   @deprecated("use objectField(name)", "5.2.11")
   def field(name: String, ft: ObjectType.type): BasicFieldDefinition = objectField(name)
@@ -135,7 +135,7 @@ trait TypesApi {
     def withType(ft: LongType.type): BasicFieldDefinition = longField(name)
 
     @deprecated("use byteField(name)", "5.2.11")
-    def withType(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+    def withType(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
     @deprecated("use byteField(name)", "5.2.11")
     def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
@@ -192,7 +192,7 @@ trait TypesApi {
     def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
 
     @deprecated("use nestedField(name)", "5.2.11")
-    def typed(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+    def typed(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
     @deprecated("use objectField(name)", "5.2.11")
     def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)

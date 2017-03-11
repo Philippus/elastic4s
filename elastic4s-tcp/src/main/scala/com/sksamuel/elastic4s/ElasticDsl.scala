@@ -423,7 +423,7 @@ trait ElasticDsl
       def withType(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+      def withType(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
       def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
@@ -480,7 +480,7 @@ trait ElasticDsl
       def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use nestedField(name)", "5.2.11")
-      def typed(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+      def typed(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use objectField(name)", "5.2.11")
       def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)

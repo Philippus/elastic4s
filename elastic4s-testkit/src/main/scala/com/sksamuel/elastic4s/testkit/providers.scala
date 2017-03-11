@@ -42,7 +42,7 @@ trait AlwaysNewLocalNodeProvider extends LocalNodeProvider {
   private def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
   private def pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
 
-  override def getNode = {
+  override def getNode: LocalNode = {
     LocalNode(
       "node_" + ClassLocalNodeProvider.counter.getAndIncrement(),
       pathHome.toAbsolutePath.toString
