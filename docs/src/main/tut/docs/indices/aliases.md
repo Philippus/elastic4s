@@ -1,4 +1,10 @@
-## Aliases
+---
+layout: docs
+title:  "Alias API"
+section: "docs"
+---
+
+# Aliases
 
 The add alias request allows us to alias an existing index to another name:
 

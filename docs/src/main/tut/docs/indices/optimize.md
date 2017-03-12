@@ -1,4 +1,10 @@
-## Optimize
+---
+layout: docs
+title:  "Optimize API"
+section: "docs"
+---
+
+# Optimize
 
 The optimize API allows to optimize one or more indexes for faster search by merging the number of
 Lucene segments (which grow over time). Read more on the

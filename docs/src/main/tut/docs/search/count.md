@@ -1,4 +1,10 @@
-## Counting
+---
+layout: docs
+title:  "Count API"
+section: "docs"
+---
+
+# Counting
 
 A count request executes a query and returns a count of the number of matching documents for that query.
 It can be executed across one or more indices and across one or more types. The query can be omitted for a total

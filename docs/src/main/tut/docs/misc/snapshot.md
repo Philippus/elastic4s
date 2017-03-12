@@ -1,5 +1,10 @@
-Snapshot
-========
+---
+layout: docs
+title:  "Snapshot"
+section: "docs"
+---
+
+# Snapshot
 
 Before we can create a snapshot we must register a repository where snapshots will be stored, specifying the type (eg 'fs' for filesystem) and optionally some settings.
 We should specify at least the location of the repository. Full settings can be found [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshots.html).

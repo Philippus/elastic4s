@@ -1,4 +1,10 @@
-## Analyzers
+---
+layout: docs
+title:  "Analyzers"
+section: "docs"
+---
+
+# Analyzers
 
 Analyzers are created from a single Tokenizer, zero or more TokenFilters and zero or more CharFilters and have a name that is used to refer to them.
 
@@ -31,7 +37,7 @@ create.index("people").mappings(
 )
 ```
 
-### Custom Analyzers
+## Custom Analyzers
 
 Sometimes the built in analyzers aren't suitable for your particular use case and you want to be able to specify your own analyzer. Elasticsearch allows you to create a [custom analyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-custom-analyzer.html) which gives you full control over how an analyzer is specified. Also, there are shortcuts that allow you to use one of the built-in analyzers but with your own options (for example, if you wanted to use the "stop analzyer" but with your own list of stop words). Not all built-in analyzers can be modified, eg the WhitespaceAnalyzer has no options.
 

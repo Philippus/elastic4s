@@ -1,4 +1,10 @@
-## Explain
+---
+layout: docs
+title:  "Explain API"
+section: "docs"
+---
+
+# Explain
 
 The explain request allows us to see why a document would or would not be included in a query.
 This is useful to see why queries are not performing as expected.

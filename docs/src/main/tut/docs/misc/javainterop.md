@@ -1,6 +1,12 @@
-## Java interoperability
+---
+layout: docs
+title:  "Java interoperability"
+section: "docs"
+---
 
-### Indexing Arrays
+# Java interoperability
+
+## Indexing Arrays
 
 The DSL does most of the work for you to not have to deal with Java type.
 However a few corner cases remain where you have to take care to use the right
@@ -24,7 +30,7 @@ If you have Scala `Lists` or `Seq` you can turn them into an Array with
 This applies of course to all parts of the API where you can pass multiple
 values and not just the indexing part.
 
-### Dealing with SearchResponse
+## Dealing with SearchResponse
 The result for many `search` (and similarly `get` & `multiget`) queries will bring
 you back into the Java world which means you have to deal with slightly less
 intuitive code.

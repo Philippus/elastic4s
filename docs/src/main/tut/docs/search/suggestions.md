@@ -1,4 +1,10 @@
-## Suggestions
+---
+layout: docs
+title:  "Suggestions API"
+section: "docs"
+---
+
+# Suggestions
 
 The suggestions feature returns similar looking terms (suggestions) for some given text using a suggestor. Suggestions
 can be specified as part of a search query.
@@ -10,7 +16,7 @@ You can have multiple suggestions (for different fields say, or different types)
  needs a name, which is used to refer to it later. Elastic4s also allows you to look up the suggestion response from the original 
  suggestion class, which is the preferred way as it also avoids some casting you would otherwise need to do.
  
-### Term Suggestion
+## Term Suggestion
 
 The term suggestor looks for terms in the index that are closest to the input.
 Let's start by creating an index with some data.
