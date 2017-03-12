@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object GeoDistanceQueryBodyFn {

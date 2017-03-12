@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
-import com.sksamuel.elastic4s.http.search.queries.geo.{GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.span.{SpanFirstQueryBodyFn, SpanMultiTermQueryBodyFn, SpanTermQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
-import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition, GeoShapeDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span.{SpanFirstQueryDefinition, SpanMultiTermQueryDefinition, SpanTermQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
@@ -21,6 +21,7 @@ object QueryBuilderFn {
     case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBodyFn(q)
+    case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBodyFn(q)
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBodyFn(q)
     case q: GeoPolygonQueryDefinition => GeoPolyonQueryBodyFn(q)
     case q: HasChildQueryDefinition => HasChildBodyFn(q)

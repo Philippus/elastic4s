@@ -3,10 +3,13 @@ package com.sksamuel.elastic4s.searches.queries.geo
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import org.elasticsearch.common.geo.GeoPoint
 import org.elasticsearch.index.query.{GeoExecType, GeoValidationMethod}
+import com.sksamuel.exts.OptionImplicits._
+
+case class Corners(top: Double, left: Double, bottom: Double, right: Double)
 
 case class GeoBoundingBoxQueryDefinition(field: String,
-                                         corners: Option[(Double, Double, Double, Double)] = None,
-                                         geohash: Option[String] = None,
+                                         corners: Option[Corners] = None,
+                                         geohash: Option[(String, String)] = None,
                                          cornersOGC: Option[(GeoPoint, GeoPoint)] = None,
                                          queryName: Option[String] = None,
                                          geoExecType: Option[GeoExecType] = None,
@@ -14,13 +17,18 @@ case class GeoBoundingBoxQueryDefinition(field: String,
                                          ignoreUnmapped: Option[Boolean] = None)
   extends QueryDefinition {
 
-  def withGeohash(geohash: String): GeoBoundingBoxQueryDefinition = copy(geohash = Some(geohash))
+  def geohash(topleft: String, bottomright: String): GeoBoundingBoxQueryDefinition = withGeohash(topleft, bottomright)
+  def withGeohash(topleft: String, bottomright: String): GeoBoundingBoxQueryDefinition =
+    copy(geohash = (topleft, bottomright).some)
+
+  def corners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition = corners(topLeft, bottomRight)
+  def corners(corners: Corners): GeoBoundingBoxQueryDefinition = copy(corners = corners.some)
 
   def withCorners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition =
-    copy(corners = Some(topLeft.lat, topLeft.getLon, bottomRight.lat, bottomRight.getLon))
-
+    corners(corners = Corners(topLeft.lat, topLeft.getLon, bottomRight.lat, bottomRight.getLon))
+  def withCorners(corners: Corners): GeoBoundingBoxQueryDefinition = copy(corners = corners.some)
   def withCorners(top: Double, left: Double, bottom: Double, right: Double): GeoBoundingBoxQueryDefinition =
-    copy(corners = Some(top, left, bottom, right))
+    withCorners(Corners(top, left, bottom, right))
 
   //  def withCornersOGC(bottomLeft: String, topRight: String): GeoBoundingBoxQueryDefinition =
   //    withCornersOGC(GeoPoint.fromGeohash(bottomLeft), GeoPoint.fromGeohash(topRight))
@@ -28,14 +36,15 @@ case class GeoBoundingBoxQueryDefinition(field: String,
   def withCornersOGC(bottomLeft: GeoPoint, topRight: GeoPoint): GeoBoundingBoxQueryDefinition =
     copy(cornersOGC = Some(bottomLeft, topRight))
 
-  def withType(geoExecType: GeoExecType): GeoBoundingBoxQueryDefinition = copy(geoExecType = Option(geoExecType))
+  def `type`(geoExecType: GeoExecType): GeoBoundingBoxQueryDefinition = withType(geoExecType)
+  def withType(geoExecType: GeoExecType): GeoBoundingBoxQueryDefinition = copy(geoExecType = geoExecType.some)
 
-  def withIgnoreUnmapped(ignoreUnmapped: Boolean): GeoBoundingBoxQueryDefinition =
-    copy(ignoreUnmapped = Option(ignoreUnmapped))
+  def ignoreUnmapped(ignore: Boolean): GeoBoundingBoxQueryDefinition = withIgnoreUnmapped(ignore)
+  def withIgnoreUnmapped(ignore: Boolean): GeoBoundingBoxQueryDefinition = copy(ignoreUnmapped = ignore.some)
 
-  def withValidationMethod(validationMethod: GeoValidationMethod): GeoBoundingBoxQueryDefinition =
-    copy(validationMethod = Option(validationMethod))
+  def validationMethod(method: GeoValidationMethod): GeoBoundingBoxQueryDefinition = withValidationMethod(method)
+  def withValidationMethod(method: GeoValidationMethod): GeoBoundingBoxQueryDefinition = copy(validationMethod = method.some)
 
-  def withQueryName(queryName: String): GeoBoundingBoxQueryDefinition =
-    copy(queryName = Option(queryName))
+  def queryName(queryName: String): GeoBoundingBoxQueryDefinition = withQueryName(queryName)
+  def withQueryName(queryName: String): GeoBoundingBoxQueryDefinition = copy(queryName = queryName.some)
 }
