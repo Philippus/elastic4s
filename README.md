@@ -715,6 +715,44 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 5.2.12
+
+* Add index template support to the HTTP client
+* Added span, geo, parent id and script queries to http
+
+###### 5.2.11
+
+* Added more like this and nested query  to http
+* Made `score` available in Hit (for use by HitReader)
+* Added addalias, getalias and alias exists for http
+* Added cluster state and cluster health for http client
+* Added node stats to http
+* Added shard store to http
+* Updated field definitions to be immutable case classes, adding missing 5.x properties; removed obsolete 2.x properties
+* Added support for unified http and tcp test suite
+* Added normalizer support
+* Minor circe improvements
+* Update Index Level support to http
+* Added `missing` and `filter` aggregation to http
+* Updated range query with missing fields
+* Set content type to JSON for all http requests
+
+###### 5.2.10
+
+* Added explain requests to http
+* Added tasks api to http
+* Removed old multifield syntax, use only the 5.x compatible syntax
+* Fixed regression in subaggregations in 5.2.9
+* Removed `_id` field as this is no longer customisable
+* Added `minmax`, `cardinality` and `value count` aggregations
+* Added UUID support to buildable terms query
+* Added search iterator for http and restored Iterable Search for tcp
+
+###### 5.2.9
+
+* Initial aggs for http with `terms` and `sum` aggs
+* Fixed source filtering on http get
+
 ###### 5.2.8
 
 * Highlight support added to Http Client
