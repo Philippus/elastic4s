@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
@@ -54,8 +55,8 @@ trait QueryApi {
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
-  def geoBoxQuery(field: String, geohash: String): GeoBoundingBoxQueryDefinition =
-    GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
+  def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQueryDefinition =
+    GeoBoundingBoxQueryDefinition(field).withGeohash(topleft, bottomright)
 
   def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
   class GeoDistanceExpectsPoint(field: String) {
@@ -210,6 +211,7 @@ trait QueryApi {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)
 
+  def scriptQuery(script: ScriptDefinition): ScriptQueryDefinition = ScriptQueryDefinition(script)
   def scriptQuery(script: String): ScriptQueryDefinition = ScriptQueryDefinition(script)
 
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(q)

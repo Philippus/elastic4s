@@ -38,6 +38,7 @@ object QueryBuilderFn {
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
     case r: RangeQueryDefinition => RangeQueryBodyFn(r)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
+    case q: ScriptQueryDefinition => ScriptQueryBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case s: SpanFirstQueryDefinition => SpanFirstQueryBodyFn(s)
     case s: SpanMultiTermQueryDefinition => SpanMultiTermQueryBodyFn(s)
