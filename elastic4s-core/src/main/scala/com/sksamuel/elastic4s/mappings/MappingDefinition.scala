@@ -99,7 +99,7 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def templates(temps: DynamicTemplateDefinition*): PutMappingDefinition = copy(templates = temps.toSeq)
 }
 
-case class MappingDefinition(`type`: String,
+case class MappingDefinition(`type`: String, // the name basically, called a type in es
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,
