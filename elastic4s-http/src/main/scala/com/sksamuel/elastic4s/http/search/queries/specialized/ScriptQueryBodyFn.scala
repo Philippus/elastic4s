@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.search.queries
+package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition

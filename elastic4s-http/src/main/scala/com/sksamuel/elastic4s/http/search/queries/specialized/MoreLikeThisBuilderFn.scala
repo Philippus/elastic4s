@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s.http.search.queries
+package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.searches.queries.MoreLikeThisQueryDefinition
-import org.elasticsearch.common.bytes.{BytesArray, BytesReference}
+import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
