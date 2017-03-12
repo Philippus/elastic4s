@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s.http.search.queries
+package com.sksamuel.elastic4s.http.search.queries.nested
 
+import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.http.search.queries.nested.HasChildBodyFn
 import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition
 import org.apache.lucene.search.join.ScoreMode
