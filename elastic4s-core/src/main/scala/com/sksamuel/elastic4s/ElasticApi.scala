@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.cluster.ClusterApi
 import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
-import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi}
+import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
 import com.sksamuel.elastic4s.locks.LocksApi
 import com.sksamuel.elastic4s.mappings.{DynamicTemplateApi, MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.nodes.NodesApi
@@ -45,6 +45,7 @@ trait ElasticApi
     with HighlightApi
     with IndexApi
     with IndexAdminApi
+    with IndexTemplateApi
     with LocksApi
     with MappingApi
     with NodesApi
