@@ -1,20 +1,25 @@
 package com.sksamuel.elastic4s.testkit
 
 import java.util
+import java.util.Locale
 
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.Shards
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, Index}
+import com.sksamuel.elastic4s.http.cluster.ClusterHealthResponse
 import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
 import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchHits}
+import com.sksamuel.elastic4s.http.update.UpdateResponse
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.RichSearchResponse
+import com.sksamuel.elastic4s.update.RichUpdateResponse
 import org.elasticsearch.action.DocWriteResponse
+import org.elasticsearch.action.admin.cluster.health.{ClusterHealthResponse => TcpClusterHealthResponse}
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
 import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
@@ -230,6 +235,42 @@ object ResponseConverterImplicits {
         response.getSuccessfulShards
       ),
       response.getQueryExplanation.asScala.map(x => Explanation(x.getIndex, x.isValid, x.getError))
+    )
+  }
+
+  implicit object UpdateResponseConverter extends ResponseConverter[RichUpdateResponse, UpdateResponse] {
+    override def convert(response: RichUpdateResponse) = {
+      val shardInfo = response.shardInfo
+
+      UpdateResponse(
+        response.index,
+        response.`type`,
+        response.id,
+        response.version,
+        response.result.getLowercase,
+        response.original.forcedRefresh(),
+        Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful)
+      )
+    }
+  }
+
+  implicit object ClusterHealthResponseConverter extends ResponseConverter[TcpClusterHealthResponse, ClusterHealthResponse] {
+    override def convert(response: TcpClusterHealthResponse) = ClusterHealthResponse(
+      response.getClusterName,
+      response.getStatus.name.toLowerCase(Locale.ENGLISH),
+      response.isTimedOut,
+      response.getNumberOfNodes,
+      response.getNumberOfDataNodes,
+      response.getActivePrimaryShards,
+      response.getActiveShards,
+      response.getRelocatingShards,
+      response.getInitializingShards,
+      response.getUnassignedShards,
+      response.getDelayedUnassignedShards,
+      response.getNumberOfPendingTasks,
+      response.getNumberOfInFlightFetch,
+      response.getTaskMaxWaitingTime.millis.toInt,
+      response.getActiveShardsPercent
     )
   }
 
