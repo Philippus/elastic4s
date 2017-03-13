@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.http.search.RawQueryBodyFn
 import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
@@ -40,6 +41,7 @@ object QueryBuilderFn {
     case q: PrefixQueryDefinition => PrefixQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
     case r: RangeQueryDefinition => RangeQueryBodyFn(r)
+    case q: RawQueryDefinition => RawQueryBodyFn(q)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
     case q: ScriptQueryDefinition => ScriptQueryBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
