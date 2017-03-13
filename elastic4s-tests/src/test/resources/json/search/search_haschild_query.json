@@ -20,6 +20,5 @@
       "ignore_unmapped": false,
       "boost": 1.2
     }
-  },
-  "ext": {}
+  }
 }

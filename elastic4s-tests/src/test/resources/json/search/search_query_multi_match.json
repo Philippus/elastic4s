@@ -22,6 +22,5 @@
       "zero_terms_query": "ALL",
       "boost": 3.4
     }
-  },
-  "ext": {}
+  }
 }
