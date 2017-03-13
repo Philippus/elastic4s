@@ -1,32 +1,29 @@
 package com.sksamuel.elastic4s.cluster
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.cluster.ClusterStateResponse.Index
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.scalatest.{Matchers, WordSpec}
 
-class ClusterHealthHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
   "cluster health request" should {
     "return healthy cluster information" in {
-      http.execute {
+      execute {
         createIndex("mountains")
           .shards(1)
           .replicas(0)
           .waitForActiveShards(1)
       }.await
 
-      val health = http.execute {
+      val health = execute {
         clusterHealth() waitForStatus ClusterHealthStatus.GREEN
       }.await
 
-      health.clusterName should be("classloader-node")
+      health.clusterName should startWith("node_")
       health.status should be("green")
       health.activePrimaryShards should be(1)
       health.activeShards should be(1)
