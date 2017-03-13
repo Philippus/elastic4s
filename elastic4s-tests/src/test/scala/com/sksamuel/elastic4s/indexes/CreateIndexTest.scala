@@ -57,6 +57,31 @@ class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with 
       resp.mappings.keys shouldBe Set("geography")
       resp.mappings("geography").keySet shouldBe Set("shire", "mountain")
     }
+
+    "create from raw source" in {
+      execute {
+        createIndex("landscape").source(s"""
+             {
+              "mappings": {
+                "mountains": {
+                  "properties": {
+                    "name": {
+                      "type": "text"
+                    }
+                  }
+                }
+              }
+             }
+           """).shards(1).waitForActiveShards(1)
+      }.await
+
+      val resp = client.execute {
+        getMapping("landscape").types("mountains")
+      }.await
+
+      resp.mappings.keys shouldBe Set("landscape")
+      resp.mappings("landscape").keySet shouldBe Set("mountains")
+    }
   }
 
 }
