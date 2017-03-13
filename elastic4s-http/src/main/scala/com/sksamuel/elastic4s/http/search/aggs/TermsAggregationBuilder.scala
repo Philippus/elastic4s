@@ -26,6 +26,8 @@ object TermsAggregationBuilder {
     agg.showTermDocCountError.foreach(builder.field("show_term_doc_count_error", _))
     agg.order.foreach(builder.field("order", _))
     builder.endObject()
+
+    SubAggsBuilderFn(agg, builder)
     builder.endObject()
   }
 }
