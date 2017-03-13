@@ -65,4 +65,7 @@ trait DualClient extends SuiteMixin {
       node.stop(true)
     }
   }
+
+  def tcpOnly(block: => Unit): Unit = if (!useHttpClient) block
+  def httpOnly(block: => Unit): Unit = if (useHttpClient) block
 }
