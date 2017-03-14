@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 class DeleteTest extends FlatSpec with ElasticDsl with DualElasticSugar with DualClient {
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute(
       bulk(
         indexInto("places/cities") id 99 fields(

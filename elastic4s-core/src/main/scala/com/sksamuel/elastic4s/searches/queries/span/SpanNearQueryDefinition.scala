@@ -6,15 +6,11 @@ case class SpanNearQueryDefinition(clauses: Seq[SpanQueryDefinition],
                                    inOrder: Option[Boolean] = None,
                                    queryName: Option[String] = None) extends SpanQueryDefinition {
 
-  def boost(boost: Double): SpanNearQueryDefinition =
-    copy(boost = Option(boost))
 
-  def clauses(clauses: Iterable[SpanQueryDefinition]): SpanNearQueryDefinition =
-    copy(clauses = this.clauses ++ clauses)
+  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanNearQueryDefinition = clauses(first +: rest)
+  def clauses(clauses: Iterable[SpanQueryDefinition]): SpanNearQueryDefinition = copy(clauses = this.clauses ++ clauses)
 
-  def clause(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanNearQueryDefinition =
-    clauses(first +: rest)
-
-  def inOrder(inOrder: Boolean): SpanNearQueryDefinition =
-    copy(inOrder = Option(inOrder))
+  def boost(boost: Double): SpanNearQueryDefinition = copy(boost = Option(boost))
+  def queryName(name: String): SpanNearQueryDefinition = copy(queryName = Option(name))
+  def inOrder(inOrder: Boolean): SpanNearQueryDefinition = copy(inOrder = Option(inOrder))
 }

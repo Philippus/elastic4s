@@ -15,7 +15,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   override def `type`: String = java.`type`()
   override def version: Long = java.version()
 
-  def score: Float = java.score
+  override def score: Float = java.score
   def nestedIdentity: SearchHit.NestedIdentity = java.getNestedIdentity
   def shard: SearchShardTarget = java.shard
 

@@ -100,10 +100,10 @@ class SearchHttpTest
     }
     "support limits" in {
       http.execute {
-        search("chess").matchAll().limit(2)
+        search("chess").matchAllQuery().limit(2)
       }.await.size shouldBe 2
       http.execute {
-        search("chess").matchAll()
+        search("chess").matchAllQuery()
       }.await.size shouldBe 8
     }
     "support unmarshalling through a HitReader" in {

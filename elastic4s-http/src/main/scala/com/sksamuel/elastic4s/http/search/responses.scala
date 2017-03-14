@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.{Hit, HitReader}
 case class SearchHit(private val _id: String,
                      private val _index: String,
                      private val _type: String,
-                     private val _score: Double,
+                     private val _score: Float,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],
@@ -38,6 +38,7 @@ case class SearchHit(private val _id: String,
   override def sourceAsString: String = SourceAsContentBuilder(_source).string()
 
   override def exists: Boolean = true
+  override def score: Float = _score
 }
 
 case class SearchHits(total: Int,
@@ -163,5 +164,3 @@ case class TermsAggregationResult(name: String,
   def bucket(key: String): Bucket = bucketOpt(key).get
   def bucketOpt(key: String): Option[Bucket] = buckets.find(_.key == key)
 }
-
-

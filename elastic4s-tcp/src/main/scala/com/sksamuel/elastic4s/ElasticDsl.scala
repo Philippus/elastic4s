@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.alias.GetAliasDefinition
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.cluster.ClusterHealthDefinition
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, DeleteIndexDefinition, IndexDefinition}
+import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.script.ScriptDefinition
@@ -26,7 +26,6 @@ trait ElasticDsl
     with FieldStatsDsl
     with ForceMergeDsl
     with IndexRecoveryDsl
-    with IndexTemplateDsl
     with PercolateDsl
     with SettingsDsl
     with SnapshotDsl
@@ -339,7 +338,7 @@ trait ElasticDsl
     def settings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
 
     @deprecated("use getTemplate(name)", "5.0.0")
-    def template(name: String): GetTemplateDefinition = GetTemplateDefinition(name)
+    def template(name: String): GetIndexTemplateDefinition = GetIndexTemplateDefinition(name)
 
     @deprecated("use getSnapshot(names)", "5.0.0")
     def snapshot(names: Iterable[String]) = getSnapshot(names.toSeq)
@@ -423,7 +422,7 @@ trait ElasticDsl
       def withType(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+      def withType(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
       def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
@@ -480,7 +479,7 @@ trait ElasticDsl
       def typed(ft: LongType.type): BasicFieldDefinition = longField(name)
 
       @deprecated("use nestedField(name)", "5.2.11")
-      def typed(ft: NestedType.type): BasicFieldDefinition = nestedField(name)
+      def typed(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use objectField(name)", "5.2.11")
       def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)

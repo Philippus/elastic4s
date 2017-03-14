@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
@@ -54,8 +55,8 @@ trait QueryApi {
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQueryDefinition(field)
-  def geoBoxQuery(field: String, geohash: String): GeoBoundingBoxQueryDefinition =
-    GeoBoundingBoxQueryDefinition(field).withGeohash(geohash)
+  def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQueryDefinition =
+    GeoBoundingBoxQueryDefinition(field).withGeohash(topleft, bottomright)
 
   def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
   class GeoDistanceExpectsPoint(field: String) {
@@ -158,8 +159,17 @@ trait QueryApi {
     def likeItems(items: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
       likeDocs(items.map { item => DocumentRef(item.index, item.`type`, item.id) })
 
+    def likeDocs(first: DocumentRef,
+                 rest: DocumentRef*): MoreLikeThisQueryDefinition = likeDocs(first +: rest)
+
     def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
       MoreLikeThisQueryDefinition(fields).copy(likeDocs = docs.toSeq)
+
+    def artificialDocs(first: ArtificialDocument,
+                       rest: ArtificialDocument*): MoreLikeThisQueryDefinition = artificialDocs(first +: rest)
+
+    def artificialDocs(docs: Iterable[ArtificialDocument]): MoreLikeThisQueryDefinition =
+      MoreLikeThisQueryDefinition(fields).copy(artificialDocs = docs.toSeq)
 
     @deprecated("use likeDocs or likeTexts", "5.0.0")
     def like(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = likeItems(first +: rest)
@@ -171,15 +181,9 @@ trait QueryApi {
   def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
   class NestedQueryExpectsQuery(path: String) {
     class NestedQueryExpectsScoreMode(query: QueryDefinition)
-    def query(query: QueryDefinition) = new NestedQueryExpectsScoreMode(path) {
-      def scoreMode(mode: String): NestedQueryDefinition = {
-        val m = ScoreMode.values().find(_.name.toLowerCase == mode.toLowerCase)
-          .getOrElse(sys.error(s"Unknown score mode $mode"))
-        scoreMode(m)
-      }
-      def scoreMode(scoreMode: ScoreMode): NestedQueryDefinition = NestedQueryDefinition(path, query, scoreMode)
-    }
+    def query(query: QueryDefinition): NestedQueryDefinition = nestedQuery(path, query)
   }
+  def nestedQuery(path: String, query: QueryDefinition): NestedQueryDefinition = NestedQueryDefinition(path, query)
 
   def query(queryString: String): QueryStringQueryDefinition = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQueryDefinition = QueryStringQueryDefinition(queryString)
@@ -207,6 +211,7 @@ trait QueryApi {
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)
 
+  def scriptQuery(script: ScriptDefinition): ScriptQueryDefinition = ScriptQueryDefinition(script)
   def scriptQuery(script: String): ScriptQueryDefinition = ScriptQueryDefinition(script)
 
   def simpleStringQuery(q: String): SimpleStringQueryDefinition = SimpleStringQueryDefinition(q)

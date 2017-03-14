@@ -13,6 +13,7 @@ object GeoDistanceQueryBuilder {
     q.point.foreach { case (lat, long) => builder.point(lat, long) }
     q.distanceStr.foreach(builder.distance)
     q.distance.foreach { case (distance, unit) => builder.distance(distance, DistanceUnit.valueOf(unit.name)) }
+    q.validationMethod.foreach(builder.setValidationMethod)
     builder
   }
 }

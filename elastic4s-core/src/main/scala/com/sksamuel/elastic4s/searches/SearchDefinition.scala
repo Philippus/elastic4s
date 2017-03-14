@@ -58,7 +58,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def minScore(min: Double): SearchDefinition = copy(minScore = min.some)
 
-  def types(first: String, rest: String*): SearchDefinition = copy(first +: rest)
+  def types(first: String, rest: String*): SearchDefinition = types(first +: rest)
   def types(types: Iterable[String]): SearchDefinition =
     copy(indexesTypes = IndexesAndTypes(indexesTypes.indexes, types.toSeq))
 

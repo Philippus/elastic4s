@@ -20,7 +20,6 @@ trait FieldDefinition {
   def norms: Option[Boolean]
   def normalizer: Option[String]
   def nullValue: Option[Any]
-  def similarity: Option[String]
   def store: Option[Boolean]
   def searchAnalyzer: Option[String]
   def termVector: Option[String]
@@ -50,13 +49,14 @@ trait FieldDefinition {
 
   def store(b: Boolean): T
   final def stored(b: Boolean): T = store(b)
-  def similarity(similarity: String): T
 
   def termVector(t: String): T
 
   final def searchAnalyzer(alyzer: Analyzer): T = searchAnalyzer(alyzer.name)
   def searchAnalyzer(analyzer: String): T
 }
+
+
 
 case class BasicFieldDefinition(name: String,
                                 `type`: String,
@@ -102,7 +102,7 @@ case class BasicFieldDefinition(name: String,
 
   def scalingFactor(scalingFactor: Double): T = copy(scalingFactor = scalingFactor.some)
 
-  override def similarity(similarity: String): T = copy(similarity = similarity.some)
+  def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   def ignoreAbove(ignoreAbove: Int): T = copy(ignoreAbove = ignoreAbove.some)
   def ignoreMalformed(ignoreMalformed: Boolean): T = copy(ignoreMalformed = ignoreMalformed.some)

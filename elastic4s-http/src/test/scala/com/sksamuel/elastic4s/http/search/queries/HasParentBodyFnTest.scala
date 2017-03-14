@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.http.search.queries.nested.HasParentBodyFn
 import com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition
 import org.scalatest.{FunSuite, Matchers}

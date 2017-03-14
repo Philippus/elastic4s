@@ -1,50 +1,77 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar, SharedElasticSugar}
-import org.scalatest.FlatSpec
-import org.scalatest.concurrent.Eventually
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.scalatest.{FlatSpec, Matchers}
 
-import scala.concurrent.duration._
+class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-class BulkTest extends FlatSpec with SharedElasticSugar with Eventually with ElasticMatchers {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override implicit def patienceConfig = PatienceConfig(timeout = 5.seconds)
-  implicit val duration: Duration = 10.seconds
-
-  client.execute {
-    indexInto("transport/air") fields "company" -> "delta" id 99
-  }.await
-
-  refresh("transport")
-  blockUntilCount(1, "transport")
-
-  "a bulk request" should "execute all index queries" in {
-
-    client.execute(
-      bulk(
-        indexInto("transport/air") id 1 fields "company" -> "ba",
-        indexInto("transport/air") id 2 fields "company" -> "aeroflot",
-        indexInto("transport/air") id 3 fields "company" -> "american air",
-        indexInto("transport/air") id 4 fields "company" -> "egypt air"
-      )
-    ).await
-
-    eventually {
-      "transport" should haveCount(5)
-    }
+  override protected def beforeRunTests() = {
+    execute {
+      createIndex("chemistry").mappings {
+        mapping("elements").fields(
+          intField("atomicweight").stored(true),
+          textField("name").stored(true)
+        )
+      }
+    }.await
   }
 
-  "a bulk request" should "execute all delete queries" in {
+  "bulk request" should "handle multiple index operations" in {
 
-    client.execute(
+    execute {
       bulk(
-        delete(4) from "transport/air",
-        delete id 2 from "transport/air"
-      )
-    ).await
+        indexInto("chemistry/elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
+        indexInto("chemistry/elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await.errors shouldBe false
 
-    eventually {
-      "transport" should haveCount(3)
-    }
+    execute {
+      get(2).from("chemistry/elements")
+    }.await.found shouldBe true
+
+    execute {
+      get(4).from("chemistry/elements")
+    }.await.found shouldBe true
+  }
+
+  it should "handle multiple update operations" in {
+
+    execute {
+      bulk(
+        update(2).in("chemistry/elements") doc("atomicweight" -> 6, "name" -> "carbon"),
+        update(4).in("chemistry/elements") doc("atomicweight" -> 8, "name" -> "oxygen")
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await.errors shouldBe false
+
+    execute {
+      get(2).from("chemistry/elements").storedFields("name")
+    }.await.storedField("name").value shouldBe "carbon"
+
+    execute {
+      get(4).from("chemistry/elements").storedFields("name")
+    }.await.storedField("name").value shouldBe "oxygen"
+  }
+
+  it should "handle multiple delete operations" in {
+
+    execute {
+      bulk(
+        delete(2).from("chemistry/elements"),
+        delete(4).from("chemistry/elements")
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await.errors shouldBe false
+
+    execute {
+      get(2).from("chemistry/elements")
+    }.await.found shouldBe false
+
+    execute {
+      get(4).from("chemistry/elements")
+    }.await.found shouldBe false
   }
 }

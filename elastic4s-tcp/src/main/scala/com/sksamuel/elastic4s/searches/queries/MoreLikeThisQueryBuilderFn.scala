@@ -1,15 +1,28 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import org.elasticsearch.common.xcontent.{NamedXContentRegistry, XContentFactory, XContentType}
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 
 object MoreLikeThisQueryBuilderFn {
 
   def apply(q: MoreLikeThisQueryDefinition): MoreLikeThisQueryBuilder = {
 
+    val docs = q.likeDocs.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) } ++
+      q.artificialDocs.map { doc =>
+
+        val parser = XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
+        parser.close()
+        val builder = XContentFactory.jsonBuilder().copyCurrentStructure(parser)
+
+        new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, builder)
+      }
+
+    println(docs)
+
     val builder = QueryBuilders.moreLikeThisQuery(
       q.fields.toArray,
-      q.likeTexts.toArray,
-      q.likeDocs.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) }.toArray
+      if (q.likeTexts.isEmpty) null else q.likeTexts.toArray,
+      if (docs.isEmpty) null else docs.toArray
     )
 
     q.analyzer.foreach(builder.analyzer)

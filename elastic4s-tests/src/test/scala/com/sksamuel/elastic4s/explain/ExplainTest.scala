@@ -1,46 +1,36 @@
 package com.sksamuel.elastic4s.explain
 
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
-import org.scalatest.FlatSpec
-import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.time.SpanSugar._
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.scalatest.{FlatSpec, Matchers}
 
-class ExplainTest
-  extends FlatSpec
-  with ElasticSugar
-  with Eventually
-  with ElasticMatchers
-  with ScalaFutures {
+class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  override implicit def patienceConfig = PatienceConfig(timeout = 10.seconds, interval = 1.seconds)
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  client.execute {
-    index into "queens/england" fields ("name" -> "qe2") id 8
-  }.await
-
-  refresh("queens")
-  blockUntilCount(1, "queens")
-
-  "an explain request" should "explain a matching document" in {
-
-    val f = client.execute {
-      explain("queens", "england", "8") query termQuery("name", "qe2")
-    }
-
-    whenReady(f) { response =>
-      response.getGetResult
-      response.isMatch shouldBe true
-    }
+  override protected def beforeRunTests() = {
+    execute {
+      bulk(
+        indexInto("explain/kings") fields ("name" -> "richard") id 4,
+        indexInto("explain/kings") fields ("name" -> "edward") id 5
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await
   }
 
-  it should "explain a not matching document" in {
+  "an explain request" should "explain a matching document" in {
+    val resp = execute {
+      explain("explain", "kings", "4") query termQuery("name", "richard")
+    }.await
 
-    val f = client.execute {
-      explain("queens", "england", "24") query termQuery("name", "qe2")
-    }
+    resp.isMatch shouldBe true
+    resp.explanation.details.head.description shouldBe "weight(name:richard in 0) [PerFieldSimilarity], result of:"
+  }
 
-    whenReady(f) { response =>
-      response.isMatch shouldBe false
-    }
+  it should "not explain a not found document" in {
+    execute {
+      explain("explain", "kings", "24") query termQuery("name", "edward")
+    }.await.isMatch shouldBe false
   }
 }

@@ -56,7 +56,7 @@ case class GeoshapeFieldDefinition(name: String,
 
   override def searchAnalyzer(analyzer: String): T = copy(searchAnalyzer = analyzer.some)
   override def store(b: Boolean): T = copy(store = b.some)
-  override def similarity(similarity: String): T = copy(similarity = similarity.some)
+   def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 

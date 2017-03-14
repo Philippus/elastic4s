@@ -13,11 +13,13 @@ case class GetResponse(private val _id: String,
                        private val _source: Map[String, AnyRef]
                       ) extends Hit {
 
-  def index: String = _index
-  def `type`: String = _type
-  def id: String = _id
-  def version: Long = _version
-  def exists: Boolean = found
+  override def index: String = _index
+  override def `type`: String = _type
+  override def id: String = _id
+  override def version: Long = _version
+  override def exists: Boolean = found
+  override def score: Float = 0
+
   def source: Map[String, Any] = sourceAsMap
 
   def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get

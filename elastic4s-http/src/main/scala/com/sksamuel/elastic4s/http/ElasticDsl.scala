@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.cluster.ClusterImplicits
 import com.sksamuel.elastic4s.http.delete.DeleteImplicits
 import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
-import com.sksamuel.elastic4s.http.index.{IndexAdminImplicits, IndexImplicits}
+import com.sksamuel.elastic4s.http.index.{IndexAdminImplicits, IndexImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}
 import com.sksamuel.elastic4s.http.task.TaskImplicits
@@ -24,8 +24,9 @@ trait ElasticDsl
     with DeleteImplicits
     with ExplainImplicits
     with GetImplicits
-    with IndexAdminImplicits
     with IndexImplicits
+    with IndexAdminImplicits
+    with IndexTemplateImplicits
     with LocksImplicits
     with NodesImplicits
     with SearchImplicits
