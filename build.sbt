@@ -147,6 +147,7 @@ lazy val docs = project
   .in(file("docs"))
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin)
   .settings(ghpages.settings)
+  .settings(noPublishSettings)
   .settings(
     micrositeName := "Elastic4s",
     micrositeDescription := "Elasticsearch Scala Client",
@@ -176,7 +177,9 @@ lazy val docs = project
     ghpagesNoJekyll := false,
     fork in tut := true,
     fork in (ScalaUnidoc, unidoc) := true,
-    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
+    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
+    // push microsite on release
+    releaseProcess += releaseStepTask(publishMicrosite)
   )
 
 lazy val noPublishSettings = Seq(
