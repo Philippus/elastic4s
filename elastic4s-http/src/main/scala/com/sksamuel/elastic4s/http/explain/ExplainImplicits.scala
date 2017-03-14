@@ -30,7 +30,7 @@ trait ExplainImplicits {
       val entity = new StringEntity(body)
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      executeAsyncAndMapResponse(fn, format, parse404FailureHandler(format))
     }
   }
 }
