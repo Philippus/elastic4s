@@ -9,6 +9,7 @@ object RegexQueryBodyFn {
     builder.startObject()
     builder.startObject("regexp")
     builder.startObject(q.field)
+    builder.field("value", q.regex)
     if (q.flags.nonEmpty) {
       builder.field("flags", q.flags.mkString("|"))
     }
