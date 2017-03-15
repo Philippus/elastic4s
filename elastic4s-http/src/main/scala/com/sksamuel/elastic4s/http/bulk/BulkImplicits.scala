@@ -34,7 +34,7 @@ trait BulkImplicits {
       val endpoint = "/_bulk"
 
       val rows = BulkContentBuilder(bulk)
-      logger.info(s"Bulk entity: ${rows.mkString("\n")}")
+      logger.debug(s"Bulk entity: ${rows.mkString("\n")}")
       // es seems to require a trailing new line as well
       val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
 
