@@ -12,6 +12,5 @@
       "analyze_wildcard": false,
       "boost": 1.0
     }
-  },
-  "ext": {}
+  }
 }

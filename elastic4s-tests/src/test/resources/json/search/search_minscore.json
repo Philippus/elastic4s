@@ -18,6 +18,5 @@
       "boost": 1.0
     }
   },
-  "min_score": 0.5,
-  "ext": {}
+  "min_score": 0.5
 }

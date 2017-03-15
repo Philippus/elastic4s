@@ -17,6 +17,5 @@
       "zero_terms_query": "NONE",
       "boost": 1.0
     }
-  },
-  "ext": {}
+  }
 }

@@ -6,7 +6,7 @@
         "query": "coldplay",
         "operator": "AND",
         "analyzer": "french",
-        "fuzziness": "2.0",
+        "fuzziness": "2",
         "prefix_length": 4,
         "max_expansions": 4,
         "minimum_should_match": "75%",
@@ -17,6 +17,5 @@
         "boost": 1.0
       }
     }
-  },
-  "ext": {}
+  }
 }

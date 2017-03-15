@@ -24,6 +24,5 @@
       "split_on_whitespace": true,
       "boost": 6.5
     }
-  },
-  "ext": {}
+  }
 }
