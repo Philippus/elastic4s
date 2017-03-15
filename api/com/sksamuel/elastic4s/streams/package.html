@@ -1,0 +1,376 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>streams - com.sksamuel.elastic4s.streams</title>
+          <meta name="description" content="streams - com.sksamuel.elastic4s.streams" />
+          <meta name="keywords" content="streams com.sksamuel.elastic4s.streams" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.streams.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a></p>
+        <h1>streams</h1><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">streams</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.streams.BulkActor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkActor[T]extendsActor"></a>
+      <a id="BulkActor[T]:BulkActor[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkActor.html"><span class="name">BulkActor</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@BulkActor[T]extendsActor" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.BulkIndexingSubscriber" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="BulkIndexingSubscriber[T]extendsSubscriber[T]"></a>
+      <a id="BulkIndexingSubscriber[T]:BulkIndexingSubscriber[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkIndexingSubscriber.html"><span class="name">BulkIndexingSubscriber</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="org.reactivestreams.Subscriber">Subscriber</span>[<span class="extype" name="com.sksamuel.elastic4s.streams.BulkIndexingSubscriber.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@BulkIndexingSubscriber[T]extendsSubscriber[T]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An implementation of the reactive API Subscriber.</p><div class="fullcomment"><div class="comment cmt"><p>An implementation of the reactive API Subscriber.
+This subscriber will bulk index received elements. The bulk nature means that the elasticsearch
+index operations are performed as a bulk call, the size of which are controlled by the batchSize param.</p><p>The received elements must be converted into an elastic4s bulk compatible definition, such as index or delete.
+This is done by the RequestBuilder.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of element provided by the publisher this subscriber will subscribe with</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.streams.PublishActor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PublishActorextendsActorwithStash"></a>
+      <a id="PublishActor:PublishActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PublishActor.html"><span class="name">PublishActor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <span class="extype" name="akka.actor.Stash">Stash</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@PublishActorextendsActorwithStash" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.RequestBuilder" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="RequestBuilder[T]extendsAnyRef"></a>
+      <a id="RequestBuilder[T]:RequestBuilder[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RequestBuilder.html"><span class="name">RequestBuilder</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@RequestBuilder[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An implementation of this typeclass must provide a bulk compatible request for the given instance of T.</p><div class="fullcomment"><div class="comment cmt"><p>An implementation of this typeclass must provide a bulk compatible request for the given instance of T.</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of elements this provider supports</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.streams.ResponseListener" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ResponseListenerextendsAnyRef"></a>
+      <a id="ResponseListener:ResponseListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ResponseListener.html"><span class="name">ResponseListener</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@ResponseListenerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Notified on each acknowledgement
+</p>
+    </li><li name="com.sksamuel.elastic4s.streams.ScrollPublisher" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ScrollPublisherextendsPublisher[com.sksamuel.elastic4s.searches.RichSearchHit]"></a>
+      <a id="ScrollPublisher:ScrollPublisher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ScrollPublisher.html"><span class="name">ScrollPublisher</span></a><span class="result"> extends <span class="extype" name="org.reactivestreams.Publisher">Publisher</span>[<a href="../searches/RichSearchHit.html" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@ScrollPublisherextendsPublisher[com.sksamuel.elastic4s.searches.RichSearchHit]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An implementation of the reactive API Publisher, that publishes documents using an elasticsearch
+scroll cursor.</p><div class="fullcomment"><div class="comment cmt"><p>An implementation of the reactive API Publisher, that publishes documents using an elasticsearch
+scroll cursor. The initial query must be provided to the publisher, and there are helpers to create
+a query for all documents in an index (and type).
+</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.streams.ScrollSubscription" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScrollSubscriptionextendsSubscription"></a>
+      <a id="ScrollSubscription:ScrollSubscription"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ScrollSubscription.html"><span class="name">ScrollSubscription</span></a><span class="result"> extends <span class="extype" name="org.reactivestreams.Subscription">Subscription</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@ScrollSubscriptionextendsSubscription" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.SubscriberConfig" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SubscriberConfigextendsProductwithSerializable"></a>
+      <a id="SubscriberConfig:SubscriberConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SubscriberConfig.html"><span class="name">SubscriberConfig</span></a><span class="params">(<span name="batchSize">batchSize: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">100</span></span>, <span name="concurrentRequests">concurrentRequests: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">5</span></span>, <span name="refreshAfterOp">refreshAfterOp: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">false</span></span>, <span name="listener">listener: <a href="ResponseListener.html" class="extype" name="com.sksamuel.elastic4s.streams.ResponseListener">ResponseListener</a> = <span class="symbol"><span class="name"><a href="ResponseListener$.html">ResponseListener.noop</a></span></span></span>, <span name="completionFn">completionFn: () ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a> = <span class="symbol">() =&gt; ()</span></span>, <span name="successFn">successFn: () ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a> = <span class="symbol">() =&gt; ()</span></span>, <span name="errorFn">errorFn: (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a> = <span class="symbol">e =&gt; ()</span></span>, <span name="failureWait">failureWait: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.duration.FiniteDuration" class="extype" target="_top">FiniteDuration</a> = <span class="symbol">2.seconds</span></span>, <span name="maxAttempts">maxAttempts: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">5</span></span>, <span name="flushInterval">flushInterval: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.duration.FiniteDuration" class="extype" target="_top">FiniteDuration</a>] = <span class="symbol">None</span></span>, <span name="flushAfter">flushAfter: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.duration.FiniteDuration" class="extype" target="_top">FiniteDuration</a>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@SubscriberConfigextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">batchSize</dt><dd class="cmt"><p>the number of elements to group together per batch aside from the last batch</p></dd><dt class="param">concurrentRequests</dt><dd class="cmt"><p>the number of concurrent batch operations</p></dd><dt class="param">refreshAfterOp</dt><dd class="cmt"><p>if the index should be refreshed after each bulk operation</p></dd><dt class="param">listener</dt><dd class="cmt"><p>a listener which is notified on each acknowledge batch item</p></dd><dt class="param">completionFn</dt><dd class="cmt"><p>a function which is invoked when all sent requests have been acknowledged and the publisher has completed
+                   Note: this function is executed regardless of whether there was an error or not,
+                   that is, this function is always invoked regardless of the state</p></dd><dt class="param">successFn</dt><dd class="cmt"><p>a function will is only invoked when all operations have completed successfully</p></dd><dt class="param">errorFn</dt><dd class="cmt"><p>a function which is invoked after there is an error</p></dd><dt class="param">failureWait</dt><dd class="cmt"><p>the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
+                   indicating backpressure, so this parameter determines how long to wait between requests.</p></dd><dt class="param">maxAttempts</dt><dd class="cmt"><p>the max number of times to try a request. If it fails too many times it probably isn't back pressure
+                   but an error with the document.</p></dd><dt class="param">flushInterval</dt><dd class="cmt"><p>used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
+                     for a long period of time. It also is used if the publisher will never complete.
+                     This ensures that all elements are indexed, even if the last batch size is lower than batch size.</p></dd><dt class="param">flushAfter</dt><dd class="cmt"><p>used to schedule an index if no document has been received within the given duration.
+                  Once an index is performed (either by this flush value or because docs arrived in time)
+                  the flush after schedule is reset.</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.streams.TypedResponseListener" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TypedResponseListener[-T]extendsAnyRef"></a>
+      <a id="TypedResponseListener[-T]:TypedResponseListener[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedResponseListener.html"><span class="name">TypedResponseListener</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@TypedResponseListener[-T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.TypedSubscriberConfig" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TypedSubscriberConfig[T]extendsProductwithSerializable"></a>
+      <a id="TypedSubscriberConfig[T]:TypedSubscriberConfig[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedSubscriberConfig.html"><span class="name">TypedSubscriberConfig</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="baseConfig">baseConfig: <a href="SubscriberConfig.html" class="extype" name="com.sksamuel.elastic4s.streams.SubscriberConfig">SubscriberConfig</a></span>, <span name="typedListener">typedListener: <a href="TypedResponseListener.html" class="extype" name="com.sksamuel.elastic4s.streams.TypedResponseListener">TypedResponseListener</a>[<span class="extype" name="com.sksamuel.elastic4s.streams.TypedSubscriberConfig.T">T</span>] = <span class="symbol"><span class="name"><a href="TypedResponseListener$.html">TypedResponseListener.noop</a></span></span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@TypedSubscriberConfig[T]extendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.streams.BulkActor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkActor"></a>
+      <a id="BulkActor:BulkActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkActor$.html"><span class="name">BulkActor</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@BulkActor" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.PublishActor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PublishActor"></a>
+      <a id="PublishActor:PublishActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PublishActor$.html"><span class="name">PublishActor</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@PublishActor" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.ReactiveElastic" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReactiveElastic"></a>
+      <a id="ReactiveElastic:ReactiveElastic"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactiveElastic$.html"><span class="name">ReactiveElastic</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@ReactiveElastic" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.ResponseListener" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ResponseListener"></a>
+      <a id="ResponseListener:ResponseListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ResponseListener$.html"><span class="name">ResponseListener</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@ResponseListener" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams.TypedResponseListener" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TypedResponseListener"></a>
+      <a id="TypedResponseListener:TypedResponseListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedResponseListener$.html"><span class="name">TypedResponseListener</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.streams.package@TypedResponseListener" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

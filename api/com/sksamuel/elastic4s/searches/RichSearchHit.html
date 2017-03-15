@@ -1,0 +1,1056 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>RichSearchHit - com.sksamuel.elastic4s.searches.RichSearchHit</title>
+          <meta name="description" content="RichSearchHit - com.sksamuel.elastic4s.searches.RichSearchHit" />
+          <meta name="keywords" content="RichSearchHit com.sksamuel.elastic4s.searches.RichSearchHit" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.searches.RichSearchHit';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches">searches</a></p>
+        <h1>RichSearchHit</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches">package searches</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">RichSearchHit</span><span class="params">(<span name="java">java: <span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span></span>)</span><span class="result"> extends <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.searches.RichSearchHit"><span>RichSearchHit</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.sksamuel.elastic4s.Hit"><span>Hit</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.RichSearchHit#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(java:org.elasticsearch.search.SearchHit):com.sksamuel.elastic4s.searches.RichSearchHit"></a>
+      <a id="&lt;init&gt;:RichSearchHit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">RichSearchHit</span><span class="params">(<span name="java">java: <span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@&lt;init&gt;(java:org.elasticsearch.search.SearchHit):com.sksamuel.elastic4s.searches.RichSearchHit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(other:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="other">other: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@equals(other:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → Equals → AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#exists" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exists:Boolean"></a>
+      <a id="exists:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exists</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@exists:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#explanation" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="explanation:Option[org.apache.lucene.search.Explanation]"></a>
+      <a id="explanation:Option[Explanation]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">explanation</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.apache.lucene.search.Explanation">Explanation</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@explanation:Option[org.apache.lucene.search.Explanation]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#field" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="field(fieldName:String):com.sksamuel.elastic4s.searches.RichSearchHitField"></a>
+      <a id="field(String):RichSearchHitField"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">field</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="RichSearchHitField.html" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHitField">RichSearchHitField</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@field(fieldName:String):com.sksamuel.elastic4s.searches.RichSearchHitField" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#fieldOpt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldOpt(fieldName:String):Option[com.sksamuel.elastic4s.searches.RichSearchHitField]"></a>
+      <a id="fieldOpt(String):Option[RichSearchHitField]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldOpt</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="RichSearchHitField.html" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHitField">RichSearchHitField</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@fieldOpt(fieldName:String):Option[com.sksamuel.elastic4s.searches.RichSearchHitField]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#fieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldValue(fieldName:String):AnyRef"></a>
+      <a id="fieldValue(String):AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldValue</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@fieldValue(fieldName:String):AnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#fieldValueOpt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldValueOpt(fieldName:String):AnyRef"></a>
+      <a id="fieldValueOpt(String):AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldValueOpt</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@fieldValueOpt(fieldName:String):AnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#fields" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fields:Map[String,com.sksamuel.elastic4s.searches.RichSearchHitField]"></a>
+      <a id="fields:Map[String,RichSearchHitField]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fields</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="RichSearchHitField.html" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHitField">RichSearchHitField</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@fields:Map[String,com.sksamuel.elastic4s.searches.RichSearchHitField]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#fieldsSeq" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldsSeq:Seq[com.sksamuel.elastic4s.searches.RichSearchHitField]"></a>
+      <a id="fieldsSeq:Seq[RichSearchHitField]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldsSeq</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="RichSearchHitField.html" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHitField">RichSearchHitField</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@fieldsSeq:Seq[com.sksamuel.elastic4s.searches.RichSearchHitField]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#highlightFields" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="highlightFields:Map[String,org.elasticsearch.search.fetch.subphase.highlight.HighlightField]"></a>
+      <a id="highlightFields:Map[String,HighlightField]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">highlightFields</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="org.elasticsearch.search.fetch.subphase.highlight.HighlightField">HighlightField</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@highlightFields:Map[String,org.elasticsearch.search.fetch.subphase.highlight.HighlightField]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#id" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="id:String"></a>
+      <a id="id:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">id</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@id:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#index" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="index:String"></a>
+      <a id="index:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">index</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@index:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#innerHits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="innerHits:Map[String,org.elasticsearch.search.SearchHits]"></a>
+      <a id="innerHits:Map[String,SearchHits]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">innerHits</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="org.elasticsearch.search.SearchHits">SearchHits</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@innerHits:Map[String,org.elasticsearch.search.SearchHits]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#isSourceEmpty" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isSourceEmpty:Boolean"></a>
+      <a id="isSourceEmpty:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isSourceEmpty</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@isSourceEmpty:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#java" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="java:org.elasticsearch.search.SearchHit"></a>
+      <a id="java:SearchHit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">java</span><span class="result">: <span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@java:org.elasticsearch.search.SearchHit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#matchedQueries" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matchedQueries:IndexedSeq[String]"></a>
+      <a id="matchedQueries:IndexedSeq[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchedQueries</span><span class="result">: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@matchedQueries:IndexedSeq[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#nestedIdentity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nestedIdentity:org.elasticsearch.search.SearchHit.NestedIdentity"></a>
+      <a id="nestedIdentity:NestedIdentity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nestedIdentity</span><span class="result">: <span class="extype" name="org.elasticsearch.search.SearchHit.NestedIdentity">NestedIdentity</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@nestedIdentity:org.elasticsearch.search.SearchHit.NestedIdentity" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#ref" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ref:com.sksamuel.elastic4s.DocumentRef"></a>
+      <a id="ref:DocumentRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ref</span><span class="result">: <a href="../DocumentRef.html" class="extype" name="com.sksamuel.elastic4s.DocumentRef">DocumentRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@ref:com.sksamuel.elastic4s.DocumentRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#safeTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="safeTo[T](implicitreader:com.sksamuel.elastic4s.HitReader[T]):Either[Throwable,T]"></a>
+      <a id="safeTo[T](HitReader[T]):Either[Throwable,T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">safeTo</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="reader">reader: <a href="../HitReader.html" class="extype" name="com.sksamuel.elastic4s.HitReader">HitReader</a>[<span class="extype" name="com.sksamuel.elastic4s.Hit.safeTo.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="com.sksamuel.elastic4s.Hit.safeTo.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@safeTo[T](implicitreader:com.sksamuel.elastic4s.HitReader[T]):Either[Throwable,T]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#safeToOpt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="safeToOpt[T](implicitevidence$3:com.sksamuel.elastic4s.HitReader[T]):Option[Either[Throwable,T]]"></a>
+      <a id="safeToOpt[T](HitReader[T]):Option[Either[Throwable,T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">safeToOpt</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="../HitReader.html" class="extype" name="com.sksamuel.elastic4s.HitReader">HitReader</a>[<span class="extype" name="com.sksamuel.elastic4s.Hit.safeToOpt.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="com.sksamuel.elastic4s.Hit.safeToOpt.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@safeToOpt[T](implicitevidence$3:com.sksamuel.elastic4s.HitReader[T]):Option[Either[Throwable,T]]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#score" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="score:Float"></a>
+      <a id="score:Float"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">score</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Float" class="extype" target="_top">Float</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@score:Float" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#shard" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="shard:org.elasticsearch.search.SearchShardTarget"></a>
+      <a id="shard:SearchShardTarget"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">shard</span><span class="result">: <span class="extype" name="org.elasticsearch.search.SearchShardTarget">SearchShardTarget</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@shard:org.elasticsearch.search.SearchShardTarget" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#sortValues" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sortValues:IndexedSeq[AnyRef]"></a>
+      <a id="sortValues:IndexedSeq[AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sortValues</span><span class="result">: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sortValues:IndexedSeq[AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.Hit#sourceAsByteBuffer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceAsByteBuffer:java.nio.ByteBuffer"></a>
+      <a id="sourceAsByteBuffer:ByteBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceAsByteBuffer</span><span class="result">: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceAsByteBuffer:java.nio.ByteBuffer" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#sourceAsBytes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceAsBytes:Array[Byte]"></a>
+      <a id="sourceAsBytes:Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceAsBytes</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceAsBytes:Array[Byte]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#sourceAsMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceAsMap:Map[String,AnyRef]"></a>
+      <a id="sourceAsMap:Map[String,AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceAsMap</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceAsMap:Map[String,AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#sourceAsMutableMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceAsMutableMap:scala.collection.mutable.Map[String,AnyRef]"></a>
+      <a id="sourceAsMutableMap:Map[String,AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceAsMutableMap</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceAsMutableMap:scala.collection.mutable.Map[String,AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#sourceAsString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceAsString:String"></a>
+      <a id="sourceAsString:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceAsString</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceAsString:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#sourceField" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceField(name:String):AnyRef"></a>
+      <a id="sourceField(String):AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceField</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceField(name:String):AnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#sourceFieldOpt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sourceFieldOpt(name:String):Option[AnyRef]"></a>
+      <a id="sourceFieldOpt(String):Option[AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sourceFieldOpt</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@sourceFieldOpt(name:String):Option[AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#stringValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringValue(fieldName:String):String"></a>
+      <a id="stringValue(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stringValue</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@stringValue(fieldName:String):String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#to" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="to[T](implicitevidence$1:com.sksamuel.elastic4s.HitReader[T]):T"></a>
+      <a id="to[T](HitReader[T]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">to</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="../HitReader.html" class="extype" name="com.sksamuel.elastic4s.HitReader">HitReader</a>[<span class="extype" name="com.sksamuel.elastic4s.Hit.to.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.sksamuel.elastic4s.Hit.to.T">T</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@to[T](implicitevidence$1:com.sksamuel.elastic4s.HitReader[T]):T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.Hit#toOpt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toOpt[T](implicitevidence$2:com.sksamuel.elastic4s.HitReader[T]):Option[T]"></a>
+      <a id="toOpt[T](HitReader[T]):Option[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toOpt</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="../HitReader.html" class="extype" name="com.sksamuel.elastic4s.HitReader">HitReader</a>[<span class="extype" name="com.sksamuel.elastic4s.Hit.toOpt.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.sksamuel.elastic4s.Hit.toOpt.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@toOpt[T](implicitevidence$2:com.sksamuel.elastic4s.HitReader[T]):Option[T]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#type" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="type:String"></a>
+      <a id="type:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">type</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@type:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.RichSearchHit#version" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="version:Long"></a>
+      <a id="version:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">version</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@version:Long" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.RichSearchHit">RichSearchHit</a> → <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.RichSearchHit@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="com.sksamuel.elastic4s.Hit">
+              <h3>Inherited from <a href="../Hit.html" class="extype" name="com.sksamuel.elastic4s.Hit">Hit</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>geo - com.sksamuel.elastic4s.searches.queries.geo</title>
+          <meta name="description" content="geo - com.sksamuel.elastic4s.searches.queries.geo" />
+          <meta name="keywords" content="geo com.sksamuel.elastic4s.searches.queries.geo" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.searches.queries.geo.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="com">com</a>.<a href="../../../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../../../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="../../package.html" class="extype" name="com.sksamuel.elastic4s.searches">searches</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s.searches.queries">queries</a></p>
+        <h1>geo</h1><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geo</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.queries.geo.Corners" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CornersextendsProductwithSerializable"></a>
+      <a id="Corners:Corners"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Corners.html"><span class="name">Corners</span></a><span class="params">(<span name="top">top: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="left">left: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="bottom">bottom: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="right">right: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@CornersextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoBoundingBoxQueryDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoBoundingBoxQueryDefinition:GeoBoundingBoxQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoBoundingBoxQueryDefinition.html"><span class="name">GeoBoundingBoxQueryDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="corners">corners: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Corners.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.Corners">Corners</a>] = <span class="symbol">None</span></span>, <span name="geohash">geohash: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)] = <span class="symbol">None</span></span>, <span name="cornersOGC">cornersOGC: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[(<span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span>, <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span>)] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="geoExecType">geoExecType: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.index.query.GeoExecType">GeoExecType</span>] = <span class="symbol">None</span></span>, <span name="validationMethod">validationMethod: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.index.query.GeoValidationMethod">GeoValidationMethod</span>] = <span class="symbol">None</span></span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoBoundingBoxQueryDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceQueryDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoDistanceQueryDefinition:GeoDistanceQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoDistanceQueryDefinition.html"><span class="name">GeoDistanceQueryDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="geoDistance">geoDistance: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.common.geo.GeoDistance">GeoDistance</span>] = <span class="symbol">None</span></span>, <span name="geohash">geohash: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="distanceStr">distanceStr: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="distance">distance: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[(<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>, <span class="extype" name="org.elasticsearch.common.unit.DistanceUnit">DistanceUnit</span>)] = <span class="symbol">None</span></span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="validationMethod">validationMethod: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.index.query.GeoValidationMethod">GeoValidationMethod</span>] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="point">point: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[(<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>)] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoDistanceQueryDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceRangeQueryDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceRangeQueryDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoDistanceRangeQueryDefinition:GeoDistanceRangeQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoDistanceRangeQueryDefinition.html"><span class="name">GeoDistanceRangeQueryDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="geopoint">geopoint: <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span></span>, <span name="geoDistance">geoDistance: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.common.geo.GeoDistance">GeoDistance</span>] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="from">from: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>] = <span class="symbol">None</span></span>, <span name="to">to: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>] = <span class="symbol">None</span></span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="validationMethod">validationMethod: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.index.query.GeoValidationMethod">GeoValidationMethod</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Float" class="extype" target="_top">Float</a>] = <span class="symbol">None</span></span>, <span name="includeLower">includeLower: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="includeUpper">includeUpper: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoDistanceRangeQueryDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoHashCellQueryDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoHashCellQueryDefinition:GeoHashCellQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoHashCellQueryDefinition.html"><span class="name">GeoHashCellQueryDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="geohash">geohash: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="neighbors">neighbors: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="precisionLevels">precisionLevels: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="precisionString">precisionString: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoHashCellQueryDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoPolygonQueryDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoPolygonQueryDefinition:GeoPolygonQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoPolygonQueryDefinition.html"><span class="name">GeoPolygonQueryDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="points">points: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span>]</span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="validationMethod">validationMethod: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.index.query.GeoValidationMethod">GeoValidationMethod</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Float" class="extype" target="_top">Float</a>] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoPolygonQueryDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoShapeDefinitionextendsQueryDefinitionwithProductwithSerializable"></a>
+      <a id="GeoShapeDefinition:GeoShapeDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoShapeDefinition.html"><span class="name">GeoShapeDefinition</span></a><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="builder">builder: <span class="extype" name="org.elasticsearch.index.query.GeoShapeQueryBuilder">org.elasticsearch.index.query.GeoShapeQueryBuilder</span></span>, <span name="relation">relation: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.common.geo.ShapeRelation">ShapeRelation</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Float" class="extype" target="_top">Float</a>] = <span class="symbol">None</span></span>, <span name="queryName">queryName: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="strategy">strategy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.common.geo.SpatialStrategy">SpatialStrategy</span>] = <span class="symbol">None</span></span>, <span name="indexedShapeIndex">indexedShapeIndex: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="indexedShapePath">indexedShapePath: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="ignoreUnmapped">ignoreUnmapped: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="../QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoShapeDefinitionextendsQueryDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoBoundingBoxQueryBuilder"></a>
+      <a id="GeoBoundingBoxQueryBuilder:GeoBoundingBoxQueryBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoBoundingBoxQueryBuilder$.html"><span class="name">GeoBoundingBoxQueryBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoBoundingBoxQueryBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceQueryBuilder"></a>
+      <a id="GeoDistanceQueryBuilder:GeoDistanceQueryBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoDistanceQueryBuilder$.html"><span class="name">GeoDistanceQueryBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoDistanceQueryBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceRangeQueryBuilderFn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceRangeQueryBuilderFn"></a>
+      <a id="GeoDistanceRangeQueryBuilderFn:GeoDistanceRangeQueryBuilderFn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoDistanceRangeQueryBuilderFn$.html"><span class="name">GeoDistanceRangeQueryBuilderFn</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoDistanceRangeQueryBuilderFn" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryBuilderFn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoHashCellQueryBuilderFn"></a>
+      <a id="GeoHashCellQueryBuilderFn:GeoHashCellQueryBuilderFn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoHashCellQueryBuilderFn$.html"><span class="name">GeoHashCellQueryBuilderFn</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoHashCellQueryBuilderFn" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.queries.geo.GeoShapeQueryBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoShapeQueryBuilder"></a>
+      <a id="GeoShapeQueryBuilder:GeoShapeQueryBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GeoShapeQueryBuilder$.html"><span class="name">GeoShapeQueryBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.queries.geo.package@GeoShapeQueryBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>testkit - com.sksamuel.elastic4s.testkit</title>
+          <meta name="description" content="testkit - com.sksamuel.elastic4s.testkit" />
+          <meta name="keywords" content="testkit com.sksamuel.elastic4s.testkit" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.testkit.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a></p>
+        <h1>testkit</h1><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">testkit</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.testkit.AbstractElasticSugar" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="AbstractElasticSugarextendsElasticDsl"></a>
+      <a id="AbstractElasticSugar:AbstractElasticSugar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractElasticSugar.html"><span class="name">AbstractElasticSugar</span></a><span class="result"> extends <a href="../ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">ElasticDsl</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@AbstractElasticSugarextendsElasticDsl" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Provides helper methods for things like refreshing an index, and blocking until an
+index has a certain count of documents.</p><div class="fullcomment"><div class="comment cmt"><p>Provides helper methods for things like refreshing an index, and blocking until an
+index has a certain count of documents. These methods are very useful when writing
+tests to allow for blocking, iterative coding
+</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.testkit.AlwaysNewLocalNodeProvider" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AlwaysNewLocalNodeProviderextendsLocalNodeProvider"></a>
+      <a id="AlwaysNewLocalNodeProvider:AlwaysNewLocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AlwaysNewLocalNodeProvider.html"><span class="name">AlwaysNewLocalNodeProvider</span></a><span class="result"> extends <a href="LocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.LocalNodeProvider">LocalNodeProvider</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@AlwaysNewLocalNodeProviderextendsLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ClassLocalNodeProvider" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassLocalNodeProviderextendsLocalNodeProvider"></a>
+      <a id="ClassLocalNodeProvider:ClassLocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassLocalNodeProvider.html"><span class="name">ClassLocalNodeProvider</span></a><span class="result"> extends <a href="LocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.LocalNodeProvider">LocalNodeProvider</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ClassLocalNodeProviderextendsLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassloaderLocalNodeProviderextendsLocalNodeProvider"></a>
+      <a id="ClassloaderLocalNodeProvider:ClassloaderLocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassloaderLocalNodeProvider.html"><span class="name">ClassloaderLocalNodeProvider</span></a><span class="result"> extends <a href="LocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.LocalNodeProvider">LocalNodeProvider</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ClassloaderLocalNodeProviderextendsLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.DualClient" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DualClientextendsSuiteMixin"></a>
+      <a id="DualClient:DualClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DualClient.html"><span class="name">DualClient</span></a><span class="result"> extends <span class="extype" name="org.scalatest.SuiteMixin">SuiteMixin</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@DualClientextendsSuiteMixin" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.DualElasticSugar" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DualElasticSugarextendsAbstractElasticSugarwithAlwaysNewLocalNodeProvider"></a>
+      <a id="DualElasticSugar:DualElasticSugar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DualElasticSugar.html"><span class="name">DualElasticSugar</span></a><span class="result"> extends <a href="AbstractElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.AbstractElasticSugar">AbstractElasticSugar</a> with <a href="AlwaysNewLocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.AlwaysNewLocalNodeProvider">AlwaysNewLocalNodeProvider</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@DualElasticSugarextendsAbstractElasticSugarwithAlwaysNewLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ElasticMatchers" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElasticMatchersextendsSearchMatcherswithIndexMatchers"></a>
+      <a id="ElasticMatchers:ElasticMatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticMatchers.html"><span class="name">ElasticMatchers</span></a><span class="result"> extends <a href="SearchMatchers.html" class="extype" name="com.sksamuel.elastic4s.testkit.SearchMatchers">SearchMatchers</a> with <a href="IndexMatchers.html" class="extype" name="com.sksamuel.elastic4s.testkit.IndexMatchers">IndexMatchers</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ElasticMatchersextendsSearchMatcherswithIndexMatchers" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ElasticSugar" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElasticSugarextendsAbstractElasticSugarwithClassLocalNodeProviderwithBeforeAndAfterAll"></a>
+      <a id="ElasticSugar:ElasticSugar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticSugar.html"><span class="name">ElasticSugar</span></a><span class="result"> extends <a href="AbstractElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.AbstractElasticSugar">AbstractElasticSugar</a> with <a href="ClassLocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.ClassLocalNodeProvider">ClassLocalNodeProvider</a> with <span class="extype" name="org.scalatest.BeforeAndAfterAll">BeforeAndAfterAll</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ElasticSugarextendsAbstractElasticSugarwithClassLocalNodeProviderwithBeforeAndAfterAll" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.IndexMatchers" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IndexMatchersextendsMatchers"></a>
+      <a id="IndexMatchers:IndexMatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexMatchers.html"><span class="name">IndexMatchers</span></a><span class="result"> extends <span class="extype" name="org.scalatest.Matchers">Matchers</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@IndexMatchersextendsMatchers" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.LocalNodeProvider" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LocalNodeProviderextendsAnyRef"></a>
+      <a id="LocalNodeProvider:LocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalNodeProvider.html"><span class="name">LocalNodeProvider</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@LocalNodeProviderextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ResponseConverter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ResponseConverter[T,R]extendsAnyRef"></a>
+      <a id="ResponseConverter[T,R]:ResponseConverter[T,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ResponseConverter.html"><span class="name">ResponseConverter</span></a><span class="tparams">[<span name="T">T</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ResponseConverter[T,R]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.SearchMatchers" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SearchMatchersextendsMatchers"></a>
+      <a id="SearchMatchers:SearchMatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SearchMatchers.html"><span class="name">SearchMatchers</span></a><span class="result"> extends <span class="extype" name="org.scalatest.Matchers">Matchers</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@SearchMatchersextendsMatchers" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.SharedElasticSugar" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SharedElasticSugarextendsAbstractElasticSugarwithClassloaderLocalNodeProvider"></a>
+      <a id="SharedElasticSugar:SharedElasticSugar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SharedElasticSugar.html"><span class="name">SharedElasticSugar</span></a><span class="result"> extends <a href="AbstractElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.AbstractElasticSugar">AbstractElasticSugar</a> with <a href="ClassloaderLocalNodeProvider.html" class="extype" name="com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider">ClassloaderLocalNodeProvider</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@SharedElasticSugarextendsAbstractElasticSugarwithClassloaderLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.testkit.ClassLocalNodeProvider" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassLocalNodeProvider"></a>
+      <a id="ClassLocalNodeProvider:ClassLocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassLocalNodeProvider$.html"><span class="name">ClassLocalNodeProvider</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ClassLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassloaderLocalNodeProvider"></a>
+      <a id="ClassloaderLocalNodeProvider:ClassloaderLocalNodeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassloaderLocalNodeProvider$.html"><span class="name">ClassloaderLocalNodeProvider</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ClassloaderLocalNodeProvider" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ElasticMatchers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElasticMatchers"></a>
+      <a id="ElasticMatchers:ElasticMatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticMatchers$.html"><span class="name">ElasticMatchers</span></a><span class="result"> extends <a href="ElasticMatchers.html" class="extype" name="com.sksamuel.elastic4s.testkit.ElasticMatchers">ElasticMatchers</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ElasticMatchers" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit.ResponseConverterImplicits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ResponseConverterImplicits"></a>
+      <a id="ResponseConverterImplicits:ResponseConverterImplicits"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ResponseConverterImplicits$.html"><span class="name">ResponseConverterImplicits</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.testkit.package@ResponseConverterImplicits" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

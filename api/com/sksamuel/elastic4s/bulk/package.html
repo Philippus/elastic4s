@@ -1,0 +1,257 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>bulk - com.sksamuel.elastic4s.bulk</title>
+          <meta name="description" content="bulk - com.sksamuel.elastic4s.bulk" />
+          <meta name="keywords" content="bulk com.sksamuel.elastic4s.bulk" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.bulk.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a></p>
+        <h1>bulk</h1><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bulk</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.bulk.BulkApi" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BulkApiextendsAnyRef"></a>
+      <a id="BulkApi:BulkApi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkApi.html"><span class="name">BulkApi</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkApiextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BulkCompatibleDefinitionextendsAnyRef"></a>
+      <a id="BulkCompatibleDefinition:BulkCompatibleDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkCompatibleDefinition.html"><span class="name">BulkCompatibleDefinition</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkCompatibleDefinitionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.BulkDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkDefinitionextendsProductwithSerializable"></a>
+      <a id="BulkDefinition:BulkDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkDefinition.html"><span class="name">BulkDefinition</span></a><span class="params">(<span name="requests">requests: <span class="extype" name="scala.Seq">Seq</span>[<a href="BulkCompatibleDefinition.html" class="extype" name="com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition">BulkCompatibleDefinition</a>]</span>, <span name="timeout">timeout: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="refresh">refresh: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.action.support.WriteRequest.RefreshPolicy">RefreshPolicy</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkDefinitionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.BulkExecutables" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BulkExecutablesextendsAnyRef"></a>
+      <a id="BulkExecutables:BulkExecutables"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkExecutables.html"><span class="name">BulkExecutables</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkExecutablesextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.BulkProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkProcessorextendsAnyRef"></a>
+      <a id="BulkProcessor:BulkProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkProcessor.html"><span class="name">BulkProcessor</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkProcessorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.BulkProcessorBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkProcessorBuilderextendsProductwithSerializable"></a>
+      <a id="BulkProcessorBuilder:BulkProcessorBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkProcessorBuilder.html"><span class="name">BulkProcessorBuilder</span></a><span class="params">(<span name="name">name: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="count">count: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="backoffPolicy">backoffPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.action.bulk.BackoffPolicy">BackoffPolicy</span>] = <span class="symbol">None</span></span>, <span name="concurrentRequests">concurrentRequests: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="flushInterval">flushInterval: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.duration.FiniteDuration" class="extype" target="_top">FiniteDuration</a>] = <span class="symbol">None</span></span>, <span name="size">size: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.common.unit.ByteSizeValue">ByteSizeValue</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkProcessorBuilderextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.RichBulkItemResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichBulkItemResponseextendsProductwithSerializable"></a>
+      <a id="RichBulkItemResponse:RichBulkItemResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RichBulkItemResponse.html"><span class="name">RichBulkItemResponse</span></a><span class="params">(<span name="original">original: <span class="extype" name="org.elasticsearch.action.bulk.BulkItemResponse">BulkItemResponse</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@RichBulkItemResponseextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk.RichBulkResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichBulkResponseextendsProductwithSerializable"></a>
+      <a id="RichBulkResponse:RichBulkResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RichBulkResponse.html"><span class="name">RichBulkResponse</span></a><span class="params">(<span name="original">original: <span class="extype" name="org.elasticsearch.action.bulk.BulkResponse">BulkResponse</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@RichBulkResponseextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.bulk.BulkProcessorBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BulkProcessorBuilder"></a>
+      <a id="BulkProcessorBuilder:BulkProcessorBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BulkProcessorBuilder$.html"><span class="name">BulkProcessorBuilder</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.bulk.package@BulkProcessorBuilder" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

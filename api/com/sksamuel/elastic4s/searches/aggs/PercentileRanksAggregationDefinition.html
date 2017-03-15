@@ -1,0 +1,1085 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>PercentileRanksAggregationDefinition - com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition</title>
+          <meta name="description" content="PercentileRanksAggregationDefinition - com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" />
+          <meta name="keywords" content="PercentileRanksAggregationDefinition com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s.searches">searches</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs">aggs</a></p>
+        <h1>PercentileRanksAggregationDefinition</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs">package aggs</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">PercentileRanksAggregationDefinition</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="field">field: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="missing">missing: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">None</span></span>, <span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">Nil</span></span>, <span name="method">method: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod">PercentilesMethod</span>] = <span class="symbol">None</span></span>, <span name="keyed">keyed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="numberOfSignificantValueDigits">numberOfSignificantValueDigits: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="compression">compression: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="script">script: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a>] = <span class="symbol">None</span></span>, <span name="pipelines">pipelines: <span class="extype" name="scala.Seq">Seq</span>[<a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="subaggs">subaggs: <span class="extype" name="scala.Seq">Seq</span>[<a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"><span>PercentileRanksAggregationDefinition</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition"><span>AggregationDefinition</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(name:String,field:Option[String],format:Option[String],missing:Option[AnyRef],values:Seq[Double],method:Option[org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod],keyed:Option[Boolean],numberOfSignificantValueDigits:Option[Int],compression:Option[Double],script:Option[com.sksamuel.elastic4s.script.ScriptDefinition],pipelines:Seq[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition],subaggs:Seq[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition],metadata:Map[String,AnyRef]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="&lt;init&gt;:PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">PercentileRanksAggregationDefinition</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="field">field: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="missing">missing: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">None</span></span>, <span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">Nil</span></span>, <span name="method">method: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod">PercentilesMethod</span>] = <span class="symbol">None</span></span>, <span name="keyed">keyed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="numberOfSignificantValueDigits">numberOfSignificantValueDigits: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="compression">compression: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="script">script: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a>] = <span class="symbol">None</span></span>, <span name="pipelines">pipelines: <span class="extype" name="scala.Seq">Seq</span>[<a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="subaggs">subaggs: <span class="extype" name="scala.Seq">Seq</span>[<a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@&lt;init&gt;(name:String,field:Option[String],format:Option[String],missing:Option[AnyRef],values:Seq[Double],method:Option[org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod],keyed:Option[Boolean],numberOfSignificantValueDigits:Option[Int],compression:Option[Double],script:Option[com.sksamuel.elastic4s.script.ScriptDefinition],pipelines:Seq[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition],subaggs:Seq[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition],metadata:Map[String,AnyRef]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="T:T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">T</span><span class="result"> = <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#compression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="compression(compression:Double):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="compression(Double):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compression</span><span class="params">(<span name="compression">compression: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@compression(compression:Double):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#compression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="compression:Option[Double]"></a>
+      <a id="compression:Option[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compression</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@compression:Option[Double]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#field" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="field(field:String):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="field(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">field</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@field(field:String):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#field" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="field:Option[String]"></a>
+      <a id="field:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">field</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@field:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#format" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="format(format:String):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="format(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">format</span><span class="params">(<span name="format">format: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@format(format:String):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#format" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="format:Option[String]"></a>
+      <a id="format:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">format</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@format:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#keyed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="keyed(keyed:Boolean):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="keyed(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">keyed</span><span class="params">(<span name="keyed">keyed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@keyed(keyed:Boolean):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#keyed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="keyed:Option[Boolean]"></a>
+      <a id="keyed:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">keyed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@keyed:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#metadata" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="metadata(map:Map[String,AnyRef]):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="metadata(Map[String,AnyRef]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">metadata</span><span class="params">(<span name="map">map: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@metadata(map:Map[String,AnyRef]):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#metadata" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="metadata:Map[String,AnyRef]"></a>
+      <a id="metadata:Map[String,AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">metadata</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@metadata:Map[String,AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#method" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="method(method:org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="method(PercentilesMethod):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">method</span><span class="params">(<span name="method">method: <span class="extype" name="org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod">PercentilesMethod</span></span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@method(method:org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#method" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="method:Option[org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod]"></a>
+      <a id="method:Option[PercentilesMethod]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">method</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod">PercentilesMethod</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@method:Option[org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#missing" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="missing(missing:AnyRef):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="missing(AnyRef):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">missing</span><span class="params">(<span name="missing">missing: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@missing(missing:AnyRef):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#missing" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="missing:Option[AnyRef]"></a>
+      <a id="missing:Option[AnyRef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">missing</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@missing:Option[AnyRef]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="name:String"></a>
+      <a id="name:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@name:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#numberOfSignificantValueDigits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="numberOfSignificantValueDigits(digits:Int):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="numberOfSignificantValueDigits(Int):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numberOfSignificantValueDigits</span><span class="params">(<span name="digits">digits: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@numberOfSignificantValueDigits(digits:Int):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#numberOfSignificantValueDigits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="numberOfSignificantValueDigits:Option[Int]"></a>
+      <a id="numberOfSignificantValueDigits:Option[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numberOfSignificantValueDigits</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@numberOfSignificantValueDigits:Option[Int]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#pipeline" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pipeline(pipeline:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition):AggregationDefinition.this.T"></a>
+      <a id="pipeline(PipelineAggregationDefinition):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipeline</span><span class="params">(<span name="pipeline">pipeline: <a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@pipeline(pipeline:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#pipelines" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pipelines(pipelines:Iterable[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition]):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="pipelines(Iterable[PipelineAggregationDefinition]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipelines</span><span class="params">(<span name="pipelines">pipelines: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@pipelines(pipelines:Iterable[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition]):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#pipelines" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pipelines(first:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition*):AggregationDefinition.this.T"></a>
+      <a id="pipelines(PipelineAggregationDefinition,PipelineAggregationDefinition*):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipelines</span><span class="params">(<span name="first">first: <a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a></span>, <span name="rest">rest: <a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a>*</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@pipelines(first:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition*):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#pipelines" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pipelines:Seq[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition]"></a>
+      <a id="pipelines:Seq[PipelineAggregationDefinition]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipelines</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="pipeline/PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@pipelines:Seq[com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#script" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="script(script:com.sksamuel.elastic4s.script.ScriptDefinition):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="script(ScriptDefinition):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">script</span><span class="params">(<span name="script">script: <a href="../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@script(script:com.sksamuel.elastic4s.script.ScriptDefinition):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#script" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="script:Option[com.sksamuel.elastic4s.script.ScriptDefinition]"></a>
+      <a id="script:Option[ScriptDefinition]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">script</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@script:Option[com.sksamuel.elastic4s.script.ScriptDefinition]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#subAggregation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subAggregation(agg:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition):AggregationDefinition.this.T"></a>
+      <a id="subAggregation(AggregationDefinition):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subAggregation</span><span class="params">(<span name="agg">agg: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subAggregation(agg:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#subAggregations" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subAggregations(aggs:Iterable[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]):PercentileRanksAggregationDefinition.this.T"></a>
+      <a id="subAggregations(Iterable[AggregationDefinition]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subAggregations</span><span class="params">(<span name="aggs">aggs: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subAggregations(aggs:Iterable[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]):PercentileRanksAggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#subAggregations" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subAggregations(first:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition*):AggregationDefinition.this.T"></a>
+      <a id="subAggregations(AggregationDefinition,AggregationDefinition*):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subAggregations</span><span class="params">(<span name="first">first: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></span>, <span name="rest">rest: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>*</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subAggregations(first:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition*):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#subagg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subagg(agg:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition):AggregationDefinition.this.T"></a>
+      <a id="subagg(AggregationDefinition):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subagg</span><span class="params">(<span name="agg">agg: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subagg(agg:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#subaggs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subaggs(aggs:Iterable[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]):AggregationDefinition.this.T"></a>
+      <a id="subaggs(Iterable[AggregationDefinition]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subaggs</span><span class="params">(<span name="aggs">aggs: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subaggs(aggs:Iterable[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition#subaggs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subaggs(first:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition*):AggregationDefinition.this.T"></a>
+      <a id="subaggs(AggregationDefinition,AggregationDefinition*):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subaggs</span><span class="params">(<span name="first">first: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></span>, <span name="rest">rest: <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>*</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subaggs(first:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition,rest:com.sksamuel.elastic4s.searches.aggs.AggregationDefinition*):AggregationDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#subaggs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="subaggs:Seq[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]"></a>
+      <a id="subaggs:Seq[AggregationDefinition]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">subaggs</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@subaggs:Seq[com.sksamuel.elastic4s.searches.aggs.AggregationDefinition]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a> → <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#values" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="values(values:Iterable[Double]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="values(Iterable[Double]):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">values</span><span class="params">(<span name="values">values: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@values(values:Iterable[Double]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#values" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="values(first:Double,rest:Double*):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="values(Double,Double*):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">values</span><span class="params">(<span name="first">first: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="rest">rest: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>*</span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@values(first:Double,rest:Double*):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#values" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="values:Seq[Double]"></a>
+      <a id="values:Seq[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">values</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@values:Seq[Double]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#percents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="percents(values:Iterable[Double]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="percents(Iterable[Double]):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) use values">percents</span><span class="params">(<span name="values">values: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@percents(values:Iterable[Double]):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> use values</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition#percents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="percents(first:Double,rest:Double*):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="percents(Double,Double*):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) use values">percents</span><span class="params">(<span name="first">first: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="rest">rest: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>*</span>)</span><span class="result">: <a href="" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition@percents(first:Double,rest:Double*):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> use values</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">
+              <h3>Inherited from <a href="AggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationDefinition">AggregationDefinition</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

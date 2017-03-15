@@ -1,0 +1,1382 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>CompletionFieldDefinition - com.sksamuel.elastic4s.mappings.CompletionFieldDefinition</title>
+          <meta name="description" content="CompletionFieldDefinition - com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" />
+          <meta name="keywords" content="CompletionFieldDefinition com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.mappings.CompletionFieldDefinition';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s.mappings">mappings</a></p>
+        <h1>CompletionFieldDefinition</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.sksamuel.elastic4s.mappings">package mappings</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">CompletionFieldDefinition</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="analyzer">analyzer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="coerce">coerce: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="copyTo">copyTo: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="docValues">docValues: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="enabled">enabled: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="fields">fields: <span class="extype" name="scala.Seq">Seq</span>[<a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="fielddataFrequencyFilter">fielddataFrequencyFilter: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="FielddataFrequencyFilter.html" class="extype" name="com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter">FielddataFrequencyFilter</a>] = <span class="symbol">None</span></span>, <span name="includeInAll">includeInAll: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="ignoreAbove">ignoreAbove: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="ignoreMalformed">ignoreMalformed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="index">index: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="indexOptions">indexOptions: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="maxInputLength">maxInputLength: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="norms">norms: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="normalizer">normalizer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="nullable">nullable: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="nullValue">nullValue: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>] = <span class="symbol">None</span></span>, <span name="preserveSeparators">preserveSeparators: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="preservePositionIncrements">preservePositionIncrements: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="searchAnalyzer">searchAnalyzer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="similarity">similarity: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="store">store: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="termVector">termVector: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition"><span>CompletionFieldDefinition</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.sksamuel.elastic4s.mappings.FieldDefinition"><span>FieldDefinition</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(name:String,analyzer:Option[String],boost:Option[Double],coerce:Option[Boolean],copyTo:Seq[String],docValues:Option[Boolean],enabled:Option[Boolean],fields:Seq[com.sksamuel.elastic4s.mappings.FieldDefinition],fielddataFrequencyFilter:Option[com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter],includeInAll:Option[Boolean],ignoreAbove:Option[Int],ignoreMalformed:Option[Boolean],index:Option[String],indexOptions:Option[String],maxInputLength:Option[Int],norms:Option[Boolean],normalizer:Option[String],nullable:Option[Boolean],nullValue:Option[Any],preserveSeparators:Option[Boolean],preservePositionIncrements:Option[Boolean],searchAnalyzer:Option[String],similarity:Option[String],store:Option[Boolean],termVector:Option[String]):com.sksamuel.elastic4s.mappings.CompletionFieldDefinition"></a>
+      <a id="&lt;init&gt;:CompletionFieldDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">CompletionFieldDefinition</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="analyzer">analyzer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">None</span></span>, <span name="coerce">coerce: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="copyTo">copyTo: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="docValues">docValues: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="enabled">enabled: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="fields">fields: <span class="extype" name="scala.Seq">Seq</span>[<a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>] = <span class="symbol">Nil</span></span>, <span name="fielddataFrequencyFilter">fielddataFrequencyFilter: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="FielddataFrequencyFilter.html" class="extype" name="com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter">FielddataFrequencyFilter</a>] = <span class="symbol">None</span></span>, <span name="includeInAll">includeInAll: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="ignoreAbove">ignoreAbove: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="ignoreMalformed">ignoreMalformed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="index">index: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="indexOptions">indexOptions: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="maxInputLength">maxInputLength: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="norms">norms: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="normalizer">normalizer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="nullable">nullable: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="nullValue">nullValue: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>] = <span class="symbol">None</span></span>, <span name="preserveSeparators">preserveSeparators: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="preservePositionIncrements">preservePositionIncrements: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="searchAnalyzer">searchAnalyzer: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="similarity">similarity: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="store">store: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="termVector">termVector: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@&lt;init&gt;(name:String,analyzer:Option[String],boost:Option[Double],coerce:Option[Boolean],copyTo:Seq[String],docValues:Option[Boolean],enabled:Option[Boolean],fields:Seq[com.sksamuel.elastic4s.mappings.FieldDefinition],fielddataFrequencyFilter:Option[com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter],includeInAll:Option[Boolean],ignoreAbove:Option[Int],ignoreMalformed:Option[Boolean],index:Option[String],indexOptions:Option[String],maxInputLength:Option[Int],norms:Option[Boolean],normalizer:Option[String],nullable:Option[Boolean],nullValue:Option[Any],preserveSeparators:Option[Boolean],preservePositionIncrements:Option[Boolean],searchAnalyzer:Option[String],similarity:Option[String],store:Option[Boolean],termVector:Option[String]):com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition"></a>
+      <a id="T:T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">T</span><span class="result"> = <a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#analyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="analyzer(analyzer:String):CompletionFieldDefinition.this.T"></a>
+      <a id="analyzer(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">analyzer</span><span class="params">(<span name="analyzer">analyzer: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@analyzer(analyzer:String):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.FieldDefinition#analyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="analyzer(a:com.sksamuel.elastic4s.analyzers.Analyzer):FieldDefinition.this.T"></a>
+      <a id="analyzer(Analyzer):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">analyzer</span><span class="params">(<span name="a">a: <a href="../analyzers/Analyzer.html" class="extype" name="com.sksamuel.elastic4s.analyzers.Analyzer">Analyzer</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@analyzer(a:com.sksamuel.elastic4s.analyzers.Analyzer):FieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#analyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="analyzer:Option[String]"></a>
+      <a id="analyzer:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">analyzer</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@analyzer:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#boost" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="boost(boost:Double):CompletionFieldDefinition.this.T"></a>
+      <a id="boost(Double):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">boost</span><span class="params">(<span name="boost">boost: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@boost(boost:Double):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#boost" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="boost:Option[Double]"></a>
+      <a id="boost:Option[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">boost</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@boost:Option[Double]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#coerce" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="coerce(coerce:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="coerce(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">coerce</span><span class="params">(<span name="coerce">coerce: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@coerce(coerce:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#coerce" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="coerce:Option[Boolean]"></a>
+      <a id="coerce:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">coerce</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@coerce:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#copyTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copyTo(copyTo:Iterable[String]):CompletionFieldDefinition.this.T"></a>
+      <a id="copyTo(Iterable[String]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copyTo</span><span class="params">(<span name="copyTo">copyTo: <span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@copyTo(copyTo:Iterable[String]):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#copyTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copyTo(first:String,rest:String*):CompletionFieldDefinition.this.T"></a>
+      <a id="copyTo(String,String*):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copyTo</span><span class="params">(<span name="first">first: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rest">rest: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@copyTo(first:String,rest:String*):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#copyTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copyTo:Seq[String]"></a>
+      <a id="copyTo:Seq[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copyTo</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@copyTo:Seq[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#docValues" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="docValues(docValues:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="docValues(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">docValues</span><span class="params">(<span name="docValues">docValues: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@docValues(docValues:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#docValues" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="docValues:Option[Boolean]"></a>
+      <a id="docValues:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">docValues</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@docValues:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#enabled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enabled(enabled:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="enabled(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enabled</span><span class="params">(<span name="enabled">enabled: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@enabled(enabled:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#enabled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enabled:Option[Boolean]"></a>
+      <a id="enabled:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enabled</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@enabled:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#fielddataFrequencyFilter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fielddataFrequencyFilter:Option[com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter]"></a>
+      <a id="fielddataFrequencyFilter:Option[FielddataFrequencyFilter]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fielddataFrequencyFilter</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="FielddataFrequencyFilter.html" class="extype" name="com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter">FielddataFrequencyFilter</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@fielddataFrequencyFilter:Option[com.sksamuel.elastic4s.mappings.FielddataFrequencyFilter]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#fields" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fields(fields:Iterable[com.sksamuel.elastic4s.mappings.FieldDefinition]):CompletionFieldDefinition.this.T"></a>
+      <a id="fields(Iterable[FieldDefinition]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fields</span><span class="params">(<span name="fields">fields: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>]</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@fields(fields:Iterable[com.sksamuel.elastic4s.mappings.FieldDefinition]):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.FieldDefinition#fields" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fields(first:com.sksamuel.elastic4s.mappings.FieldDefinition,rest:com.sksamuel.elastic4s.mappings.FieldDefinition*):FieldDefinition.this.T"></a>
+      <a id="fields(FieldDefinition,FieldDefinition*):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fields</span><span class="params">(<span name="first">first: <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></span>, <span name="rest">rest: <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>*</span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@fields(first:com.sksamuel.elastic4s.mappings.FieldDefinition,rest:com.sksamuel.elastic4s.mappings.FieldDefinition*):FieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#fields" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fields:Seq[com.sksamuel.elastic4s.mappings.FieldDefinition]"></a>
+      <a id="fields:Seq[FieldDefinition]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fields</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@fields:Seq[com.sksamuel.elastic4s.mappings.FieldDefinition]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#ignoreAbove" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ignoreAbove(ignoreAbove:Int):CompletionFieldDefinition.this.T"></a>
+      <a id="ignoreAbove(Int):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ignoreAbove</span><span class="params">(<span name="ignoreAbove">ignoreAbove: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@ignoreAbove(ignoreAbove:Int):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#ignoreAbove" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ignoreAbove:Option[Int]"></a>
+      <a id="ignoreAbove:Option[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ignoreAbove</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@ignoreAbove:Option[Int]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#ignoreMalformed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ignoreMalformed(ignoreMalformed:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="ignoreMalformed(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ignoreMalformed</span><span class="params">(<span name="ignoreMalformed">ignoreMalformed: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@ignoreMalformed(ignoreMalformed:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#ignoreMalformed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ignoreMalformed:Option[Boolean]"></a>
+      <a id="ignoreMalformed:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ignoreMalformed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@ignoreMalformed:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#includeInAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="includeInAll(includeInAll:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="includeInAll(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">includeInAll</span><span class="params">(<span name="includeInAll">includeInAll: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@includeInAll(includeInAll:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#includeInAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="includeInAll:Option[Boolean]"></a>
+      <a id="includeInAll:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">includeInAll</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@includeInAll:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#index" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="index(index:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="index(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">index</span><span class="params">(<span name="index">index: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@index(index:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#index" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="index:Option[String]"></a>
+      <a id="index:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">index</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@index:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#indexOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="indexOptions:Option[String]"></a>
+      <a id="indexOptions:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">indexOptions</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@indexOptions:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#maxInputLength" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="maxInputLength(maxInputLength:Int):CompletionFieldDefinition.this.T"></a>
+      <a id="maxInputLength(Int):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">maxInputLength</span><span class="params">(<span name="maxInputLength">maxInputLength: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@maxInputLength(maxInputLength:Int):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#maxInputLength" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="maxInputLength:Option[Int]"></a>
+      <a id="maxInputLength:Option[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">maxInputLength</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@maxInputLength:Option[Int]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="name:String"></a>
+      <a id="name:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@name:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#normalizer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="normalizer(normalizer:String):CompletionFieldDefinition.this.T"></a>
+      <a id="normalizer(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">normalizer</span><span class="params">(<span name="normalizer">normalizer: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@normalizer(normalizer:String):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#normalizer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="normalizer:Option[String]"></a>
+      <a id="normalizer:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">normalizer</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@normalizer:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#norms" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="norms(norms:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="norms(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">norms</span><span class="params">(<span name="norms">norms: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@norms(norms:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#norms" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="norms:Option[Boolean]"></a>
+      <a id="norms:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">norms</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@norms:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#nullValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nullValue(nullvalue:Any):CompletionFieldDefinition.this.T"></a>
+      <a id="nullValue(Any):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nullValue</span><span class="params">(<span name="nullvalue">nullvalue: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@nullValue(nullvalue:Any):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#nullValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nullValue:Option[Any]"></a>
+      <a id="nullValue:Option[Any]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nullValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@nullValue:Option[Any]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#nullable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nullable(nullable:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="nullable(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nullable</span><span class="params">(<span name="nullable">nullable: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@nullable(nullable:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#nullable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nullable:Option[Boolean]"></a>
+      <a id="nullable:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nullable</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@nullable:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#preservePositionIncrements" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="preservePositionIncrements(preserve:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="preservePositionIncrements(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preservePositionIncrements</span><span class="params">(<span name="preserve">preserve: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@preservePositionIncrements(preserve:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#preservePositionIncrements" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="preservePositionIncrements:Option[Boolean]"></a>
+      <a id="preservePositionIncrements:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preservePositionIncrements</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@preservePositionIncrements:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#preserveSeparators" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="preserveSeparators(preserve:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="preserveSeparators(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preserveSeparators</span><span class="params">(<span name="preserve">preserve: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@preserveSeparators(preserve:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#preserveSeparators" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="preserveSeparators:Option[Boolean]"></a>
+      <a id="preserveSeparators:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preserveSeparators</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@preserveSeparators:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#searchAnalyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="searchAnalyzer(analyzer:String):CompletionFieldDefinition.this.T"></a>
+      <a id="searchAnalyzer(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchAnalyzer</span><span class="params">(<span name="analyzer">analyzer: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@searchAnalyzer(analyzer:String):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.FieldDefinition#searchAnalyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="searchAnalyzer(alyzer:com.sksamuel.elastic4s.analyzers.Analyzer):FieldDefinition.this.T"></a>
+      <a id="searchAnalyzer(Analyzer):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchAnalyzer</span><span class="params">(<span name="alyzer">alyzer: <a href="../analyzers/Analyzer.html" class="extype" name="com.sksamuel.elastic4s.analyzers.Analyzer">Analyzer</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@searchAnalyzer(alyzer:com.sksamuel.elastic4s.analyzers.Analyzer):FieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#searchAnalyzer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="searchAnalyzer:Option[String]"></a>
+      <a id="searchAnalyzer:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchAnalyzer</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@searchAnalyzer:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#similarity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="similarity(similarity:String):CompletionFieldDefinition.this.T"></a>
+      <a id="similarity(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">similarity</span><span class="params">(<span name="similarity">similarity: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@similarity(similarity:String):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#similarity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="similarity:Option[String]"></a>
+      <a id="similarity:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">similarity</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@similarity:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#store" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="store(b:Boolean):CompletionFieldDefinition.this.T"></a>
+      <a id="store(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">store</span><span class="params">(<span name="b">b: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@store(b:Boolean):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#store" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="store:Option[Boolean]"></a>
+      <a id="store:Option[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">store</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@store:Option[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.FieldDefinition#stored" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stored(b:Boolean):FieldDefinition.this.T"></a>
+      <a id="stored(Boolean):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stored</span><span class="params">(<span name="b">b: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@stored(b:Boolean):FieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#termVector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="termVector(t:String):CompletionFieldDefinition.this.T"></a>
+      <a id="termVector(String):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termVector</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="#T=com.sksamuel.elastic4s.mappings.CompletionFieldDefinition" class="extmbr" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition.T">T</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@termVector(t:String):CompletionFieldDefinition.this.T" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#termVector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="termVector:Option[String]"></a>
+      <a id="termVector:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termVector</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@termVector:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition#type" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="type:String"></a>
+      <a id="type:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">type</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@type:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.sksamuel.elastic4s.mappings.CompletionFieldDefinition">CompletionFieldDefinition</a> → <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.mappings.CompletionFieldDefinition@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="com.sksamuel.elastic4s.mappings.FieldDefinition">
+              <h3>Inherited from <a href="FieldDefinition.html" class="extype" name="com.sksamuel.elastic4s.mappings.FieldDefinition">FieldDefinition</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

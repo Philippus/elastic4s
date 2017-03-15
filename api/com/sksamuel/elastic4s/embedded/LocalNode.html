@@ -1,0 +1,957 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>LocalNode - com.sksamuel.elastic4s.embedded.LocalNode</title>
+          <meta name="description" content="LocalNode - com.sksamuel.elastic4s.embedded.LocalNode" />
+          <meta name="keywords" content="LocalNode com.sksamuel.elastic4s.embedded.LocalNode" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.embedded.LocalNode';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <a href="LocalNode$.html" title="See companion object"><img alt="Class/Object" src="../../../../lib/class_to_object_big.png" /></a>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s.embedded">embedded</a></p>
+        <h1><a href="LocalNode$.html" title="See companion object">LocalNode</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="LocalNode$.html" title="See companion object">object LocalNode</a>
+            | <a href="package.html" class="extype" name="com.sksamuel.elastic4s.embedded">package embedded</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">LocalNode</span><span class="result"> extends <span class="extype" name="org.elasticsearch.node.Node">Node</span> with <span class="extype" name="com.sksamuel.exts.Logging">Logging</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="com.sksamuel.exts.Logging">Logging</span>, <span class="extype" name="org.elasticsearch.node.Node">Node</span>, <span class="extype" name="java.io.Closeable">Closeable</span>, <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.embedded.LocalNode"><span>LocalNode</span></li><li class="in" name="com.sksamuel.exts.Logging"><span>Logging</span></li><li class="in" name="org.elasticsearch.node.Node"><span>Node</span></li><li class="in" name="java.io.Closeable"><span>Closeable</span></li><li class="in" name="java.lang.AutoCloseable"><span>AutoCloseable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.sksamuel.elastic4s.embedded.LocalNode#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(settings:org.elasticsearch.common.settings.Settings,plugins:List[Class[_&lt;:org.elasticsearch.plugins.Plugin]]):com.sksamuel.elastic4s.embedded.LocalNode"></a>
+      <a id="&lt;init&gt;:LocalNode"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">LocalNode</span><span class="params">(<span name="settings">settings: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>, <span name="plugins">plugins: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Class">Class</span>[_ &lt;: <span class="extype" name="org.elasticsearch.plugins.Plugin">Plugin</span>]]</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@&lt;init&gt;(settings:org.elasticsearch.common.settings.Settings,plugins:List[Class[_&lt;:org.elasticsearch.plugins.Plugin]]):com.sksamuel.elastic4s.embedded.LocalNode" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#client" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="client():org.elasticsearch.client.Client"></a>
+      <a id="client():Client"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">client</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.client.Client">Client</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@client():org.elasticsearch.client.Client" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#close" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="close():Unit"></a>
+      <a id="close():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@close():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node → Closeable → AutoCloseable</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.io.IOException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#elastic4sclient" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="elastic4sclient(shutdownNodeOnClose:Boolean):com.sksamuel.elastic4s.TcpClient"></a>
+      <a id="elastic4sclient(Boolean):TcpClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">elastic4sclient</span><span class="params">(<span name="shutdownNodeOnClose">shutdownNodeOnClose: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result">: <a href="../TcpClient.html" class="extype" name="com.sksamuel.elastic4s.TcpClient">TcpClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@elastic4sclient(shutdownNodeOnClose:Boolean):com.sksamuel.elastic4s.TcpClient" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Returns a new ElasticClient connected to this node.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new ElasticClient connected to this node.</p><p>If shutdownNodeOnClose is true, then the local node will be shutdown once this
+client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
+</p></div></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#getEnvironment" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getEnvironment():org.elasticsearch.env.Environment"></a>
+      <a id="getEnvironment():Environment"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getEnvironment</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.env.Environment">Environment</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@getEnvironment():org.elasticsearch.env.Environment" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#getNodeEnvironment" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getNodeEnvironment():org.elasticsearch.env.NodeEnvironment"></a>
+      <a id="getNodeEnvironment():NodeEnvironment"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getNodeEnvironment</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.env.NodeEnvironment">NodeEnvironment</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@getNodeEnvironment():org.elasticsearch.env.NodeEnvironment" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#getPluginsService" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getPluginsService():org.elasticsearch.plugins.PluginsService"></a>
+      <a id="getPluginsService():PluginsService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPluginsService</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.plugins.PluginsService">PluginsService</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@getPluginsService():org.elasticsearch.plugins.PluginsService" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#injector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="injector():org.elasticsearch.common.inject.Injector"></a>
+      <a id="injector():Injector"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">injector</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.common.inject.Injector">Injector</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@injector():org.elasticsearch.common.inject.Injector" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#ip" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ip:Int"></a>
+      <a id="ip:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ip</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@ip:Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#ipAndPort" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ipAndPort:String"></a>
+      <a id="ipAndPort:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ipAndPort</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@ipAndPort:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.elasticsearch.node.Node#isClosed" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isClosed():Boolean"></a>
+      <a id="isClosed():Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isClosed</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@isClosed():Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.exts.Logging#logger" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="logger:org.slf4j.Logger"></a>
+      <a id="logger:Logger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">logger</span><span class="result">: <span class="extype" name="org.slf4j.Logger">Logger</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@logger:org.slf4j.Logger" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Logging</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#newClusterInfoService" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="newClusterInfoService(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.cluster.service.ClusterService,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.client.node.NodeClient):org.elasticsearch.cluster.ClusterInfoService"></a>
+      <a id="newClusterInfoService(Settings,ClusterService,ThreadPool,NodeClient):ClusterInfoService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newClusterInfoService</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>, <span name="arg1">arg1: <span class="extype" name="org.elasticsearch.cluster.service.ClusterService">ClusterService</span></span>, <span name="arg2">arg2: <span class="extype" name="org.elasticsearch.threadpool.ThreadPool">ThreadPool</span></span>, <span name="arg3">arg3: <span class="extype" name="org.elasticsearch.client.node.NodeClient">NodeClient</span></span>)</span><span class="result">: <span class="extype" name="org.elasticsearch.cluster.ClusterInfoService">ClusterInfoService</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@newClusterInfoService(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.cluster.service.ClusterService,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.client.node.NodeClient):org.elasticsearch.cluster.ClusterInfoService" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#newSearchService" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="newSearchService(x$1:org.elasticsearch.cluster.service.ClusterService,x$2:org.elasticsearch.indices.IndicesService,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.script.ScriptService,x$5:org.elasticsearch.common.util.BigArrays,x$6:org.elasticsearch.search.fetch.FetchPhase):org.elasticsearch.search.SearchService"></a>
+      <a id="newSearchService(ClusterService,IndicesService,ThreadPool,ScriptService,BigArrays,FetchPhase):SearchService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newSearchService</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.cluster.service.ClusterService">ClusterService</span></span>, <span name="arg1">arg1: <span class="extype" name="org.elasticsearch.indices.IndicesService">IndicesService</span></span>, <span name="arg2">arg2: <span class="extype" name="org.elasticsearch.threadpool.ThreadPool">ThreadPool</span></span>, <span name="arg3">arg3: <span class="extype" name="org.elasticsearch.script.ScriptService">ScriptService</span></span>, <span name="arg4">arg4: <span class="extype" name="org.elasticsearch.common.util.BigArrays">BigArrays</span></span>, <span name="arg5">arg5: <span class="extype" name="org.elasticsearch.search.fetch.FetchPhase">FetchPhase</span></span>)</span><span class="result">: <span class="extype" name="org.elasticsearch.search.SearchService">SearchService</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@newSearchService(x$1:org.elasticsearch.cluster.service.ClusterService,x$2:org.elasticsearch.indices.IndicesService,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.script.ScriptService,x$5:org.elasticsearch.common.util.BigArrays,x$6:org.elasticsearch.search.fetch.FetchPhase):org.elasticsearch.search.SearchService" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#newTransportService" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="newTransportService(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.transport.Transport,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.transport.TransportInterceptor,x$5:org.elasticsearch.common.settings.ClusterSettings):org.elasticsearch.transport.TransportService"></a>
+      <a id="newTransportService(Settings,Transport,ThreadPool,TransportInterceptor,ClusterSettings):TransportService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newTransportService</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>, <span name="arg1">arg1: <span class="extype" name="org.elasticsearch.transport.Transport">Transport</span></span>, <span name="arg2">arg2: <span class="extype" name="org.elasticsearch.threadpool.ThreadPool">ThreadPool</span></span>, <span name="arg3">arg3: <span class="extype" name="org.elasticsearch.transport.TransportInterceptor">TransportInterceptor</span></span>, <span name="arg4">arg4: <span class="extype" name="org.elasticsearch.common.settings.ClusterSettings">ClusterSettings</span></span>)</span><span class="result">: <span class="extype" name="org.elasticsearch.transport.TransportService">TransportService</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@newTransportService(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.transport.Transport,x$3:org.elasticsearch.threadpool.ThreadPool,x$4:org.elasticsearch.transport.TransportInterceptor,x$5:org.elasticsearch.common.settings.ClusterSettings):org.elasticsearch.transport.TransportService" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#newTribeClientNode" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="newTribeClientNode(x$1:org.elasticsearch.common.settings.Settings,x$2:java.util.Collection[Class[_&lt;:org.elasticsearch.plugins.Plugin]]):org.elasticsearch.node.Node"></a>
+      <a id="newTribeClientNode(Settings,Collection[Class[_&lt;:Plugin]]):Node"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newTribeClientNode</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>, <span name="arg1">arg1: <span class="extype" name="java.util.Collection">Collection</span>[<span class="extype" name="java.lang.Class">Class</span>[_ &lt;: <span class="extype" name="org.elasticsearch.plugins.Plugin">Plugin</span>]]</span>)</span><span class="result">: <span class="extype" name="org.elasticsearch.node.Node">Node</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@newTribeClientNode(x$1:org.elasticsearch.common.settings.Settings,x$2:java.util.Collection[Class[_&lt;:org.elasticsearch.plugins.Plugin]]):org.elasticsearch.node.Node" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#nodeId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nodeId:String"></a>
+      <a id="nodeId:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nodeId</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@nodeId:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#pathConfig" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pathConfig:java.nio.file.Path"></a>
+      <a id="pathConfig:Path"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pathConfig</span><span class="result">: <span class="extype" name="java.nio.file.Path">Path</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@pathConfig:java.nio.file.Path" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#pathData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pathData:java.nio.file.Path"></a>
+      <a id="pathData:Path"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pathData</span><span class="result">: <span class="extype" name="java.nio.file.Path">Path</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@pathData:java.nio.file.Path" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#pathHome" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pathHome:java.nio.file.Path"></a>
+      <a id="pathHome:Path"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pathHome</span><span class="result">: <span class="extype" name="java.nio.file.Path">Path</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@pathHome:java.nio.file.Path" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#pathRepo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pathRepo:java.nio.file.Path"></a>
+      <a id="pathRepo:Path"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pathRepo</span><span class="result">: <span class="extype" name="java.nio.file.Path">Path</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@pathRepo:java.nio.file.Path" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="org.elasticsearch.node.Node#processRecoverySettings" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="processRecoverySettings(x$1:org.elasticsearch.common.settings.ClusterSettings,x$2:org.elasticsearch.indices.recovery.RecoverySettings):Unit"></a>
+      <a id="processRecoverySettings(ClusterSettings,RecoverySettings):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">processRecoverySettings</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.common.settings.ClusterSettings">ClusterSettings</span></span>, <span name="arg1">arg1: <span class="extype" name="org.elasticsearch.indices.recovery.RecoverySettings">RecoverySettings</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@processRecoverySettings(x$1:org.elasticsearch.common.settings.ClusterSettings,x$2:org.elasticsearch.indices.recovery.RecoverySettings):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#settings" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="settings():org.elasticsearch.common.settings.Settings"></a>
+      <a id="settings():Settings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">settings</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@settings():org.elasticsearch.common.settings.Settings" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#start" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="start():org.elasticsearch.node.Node"></a>
+      <a id="start():Node"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">start</span><span class="params">()</span><span class="result">: <span class="extype" name="org.elasticsearch.node.Node">Node</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@start():org.elasticsearch.node.Node" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Node</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.elasticsearch.node.NodeValidationException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.embedded.LocalNode#stop" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stop(removeData:Boolean):Any"></a>
+      <a id="stop(Boolean):Any"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stop</span><span class="params">(<span name="removeData">removeData: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@stop(removeData:Boolean):Any" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@toString():String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.elasticsearch.node.Node#validateNodeBeforeAcceptingRequests" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validateNodeBeforeAcceptingRequests(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.common.transport.BoundTransportAddress,x$3:java.util.List[org.elasticsearch.bootstrap.BootstrapCheck]):Unit"></a>
+      <a id="validateNodeBeforeAcceptingRequests(Settings,BoundTransportAddress,List[BootstrapCheck]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validateNodeBeforeAcceptingRequests</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="org.elasticsearch.common.settings.Settings">Settings</span></span>, <span name="arg1">arg1: <span class="extype" name="org.elasticsearch.common.transport.BoundTransportAddress">BoundTransportAddress</span></span>, <span name="arg2">arg2: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="org.elasticsearch.bootstrap.BootstrapCheck">BootstrapCheck</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@validateNodeBeforeAcceptingRequests(x$1:org.elasticsearch.common.settings.Settings,x$2:org.elasticsearch.common.transport.BoundTransportAddress,x$3:java.util.List[org.elasticsearch.bootstrap.BootstrapCheck]):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../org$elasticsearch$node.html" class="extype" name="org.elasticsearch.node">org.elasticsearch.node</a>] </dd><dt>Definition Classes</dt><dd>Node</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[org.elasticsearch.node.NodeValidationException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.embedded.LocalNode@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="com.sksamuel.exts.Logging">
+              <h3>Inherited from <span class="extype" name="com.sksamuel.exts.Logging">Logging</span></h3>
+            </div><div class="parent" name="org.elasticsearch.node.Node">
+              <h3>Inherited from <span class="extype" name="org.elasticsearch.node.Node">Node</span></h3>
+            </div><div class="parent" name="java.io.Closeable">
+              <h3>Inherited from <span class="extype" name="java.io.Closeable">Closeable</span></h3>
+            </div><div class="parent" name="java.lang.AutoCloseable">
+              <h3>Inherited from <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

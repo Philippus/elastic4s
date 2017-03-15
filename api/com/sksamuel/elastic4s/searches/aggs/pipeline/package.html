@@ -1,0 +1,563 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>pipeline - com.sksamuel.elastic4s.searches.aggs.pipeline</title>
+          <meta name="description" content="pipeline - com.sksamuel.elastic4s.searches.aggs.pipeline" />
+          <meta name="keywords" content="pipeline com.sksamuel.elastic4s.searches.aggs.pipeline" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.searches.aggs.pipeline.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="com">com</a>.<a href="../../../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../../../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="../../package.html" class="extype" name="com.sksamuel.elastic4s.searches">searches</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs">aggs</a></p>
+        <h1>pipeline</h1><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipeline</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.AvgBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AvgBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="AvgBucketDefinition:AvgBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AvgBucketDefinition.html"><span class="name">AvgBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@AvgBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.BucketScriptDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BucketScriptDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="BucketScriptDefinition:BucketScriptDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BucketScriptDefinition.html"><span class="name">BucketScriptDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="script">script: <a href="../../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a></span>, <span name="bucketsPaths">bucketsPaths: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@BucketScriptDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.BucketSelectorDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BucketSelectorDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="BucketSelectorDefinition:BucketSelectorDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BucketSelectorDefinition.html"><span class="name">BucketSelectorDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="script">script: <a href="../../../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a></span>, <span name="bucketsPaths">bucketsPaths: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@BucketSelectorDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.CumulativeSumDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CumulativeSumDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="CumulativeSumDefinition:CumulativeSumDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CumulativeSumDefinition.html"><span class="name">CumulativeSumDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@CumulativeSumDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.DerivativeDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DerivativeDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="DerivativeDefinition:DerivativeDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DerivativeDefinition.html"><span class="name">DerivativeDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="unit">unit: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval">DateHistogramInterval</span>] = <span class="symbol">None</span></span>, <span name="unitString">unitString: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@DerivativeDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.DiffDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DiffDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="DiffDefinition:DiffDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DiffDefinition.html"><span class="name">DiffDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="lag">lag: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@DiffDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.ExtendedStatsBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExtendedStatsBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="ExtendedStatsBucketDefinition:ExtendedStatsBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtendedStatsBucketDefinition.html"><span class="name">ExtendedStatsBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@ExtendedStatsBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaxBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="MaxBucketDefinition:MaxBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MaxBucketDefinition.html"><span class="name">MaxBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MaxBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MinBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MinBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="MinBucketDefinition:MinBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MinBucketDefinition.html"><span class="name">MinBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MinBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MovAvgDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MovAvgDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="MovAvgDefinition:MovAvgDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MovAvgDefinition.html"><span class="name">MovAvgDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="minimise">minimise: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>] = <span class="symbol">None</span></span>, <span name="modelBuilder">modelBuilder: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.movavg.models.MovAvgModelBuilder">MovAvgModelBuilder</span>] = <span class="symbol">None</span></span>, <span name="numPredictions">numPredictions: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.lang.Integer">Integer</span>] = <span class="symbol">None</span></span>, <span name="settings">settings: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>, <span name="window">window: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.lang.Integer">Integer</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MovAvgDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.PercentilesBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PercentilesBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="PercentilesBucketDefinition:PercentilesBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PercentilesBucketDefinition.html"><span class="name">PercentilesBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="percents">percents: <span class="extype" name="scala.Seq">Seq</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a>] = <span class="symbol">Nil</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@PercentilesBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PipelineAggregationApiextendsAnyRef"></a>
+      <a id="PipelineAggregationApi:PipelineAggregationApi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineAggregationApi.html"><span class="name">PipelineAggregationApi</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@PipelineAggregationApiextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PipelineAggregationDefinitionextendsAnyRef"></a>
+      <a id="PipelineAggregationDefinition:PipelineAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineAggregationDefinition.html"><span class="name">PipelineAggregationDefinition</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@PipelineAggregationDefinitionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.StatsBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StatsBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="StatsBucketDefinition:StatsBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="StatsBucketDefinition.html"><span class="name">StatsBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@StatsBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.SumBucketDefinition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SumBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable"></a>
+      <a id="SumBucketDefinition:SumBucketDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SumBucketDefinition.html"><span class="name">SumBucketDefinition</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bucketsPath">bucketsPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="format">format: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="gapPolicy">gapPolicy: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy">GapPolicy</span>] = <span class="symbol">None</span></span>, <span name="metadata">metadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="PipelineAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition">PipelineAggregationDefinition</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@SumBucketDefinitionextendsPipelineAggregationDefinitionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.AvgBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AvgBucketPipelineBuilder"></a>
+      <a id="AvgBucketPipelineBuilder:AvgBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AvgBucketPipelineBuilder$.html"><span class="name">AvgBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@AvgBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.CumulativeSumPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CumulativeSumPipelineBuilder"></a>
+      <a id="CumulativeSumPipelineBuilder:CumulativeSumPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CumulativeSumPipelineBuilder$.html"><span class="name">CumulativeSumPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@CumulativeSumPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.DerivativePipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DerivativePipelineBuilder"></a>
+      <a id="DerivativePipelineBuilder:DerivativePipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DerivativePipelineBuilder$.html"><span class="name">DerivativePipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@DerivativePipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.ExtendedStatsBucketBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExtendedStatsBucketBuilder"></a>
+      <a id="ExtendedStatsBucketBuilder:ExtendedStatsBucketBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtendedStatsBucketBuilder$.html"><span class="name">ExtendedStatsBucketBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@ExtendedStatsBucketBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaxBucketPipelineBuilder"></a>
+      <a id="MaxBucketPipelineBuilder:MaxBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MaxBucketPipelineBuilder$.html"><span class="name">MaxBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MaxBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MinBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MinBucketPipelineBuilder"></a>
+      <a id="MinBucketPipelineBuilder:MinBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MinBucketPipelineBuilder$.html"><span class="name">MinBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MinBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.MovAvgPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MovAvgPipelineBuilder"></a>
+      <a id="MovAvgPipelineBuilder:MovAvgPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MovAvgPipelineBuilder$.html"><span class="name">MovAvgPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@MovAvgPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.PercentilesBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PercentilesBucketPipelineBuilder"></a>
+      <a id="PercentilesBucketPipelineBuilder:PercentilesBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PercentilesBucketPipelineBuilder$.html"><span class="name">PercentilesBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@PercentilesBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationBuilderFn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineAggregationBuilderFn"></a>
+      <a id="PipelineAggregationBuilderFn:PipelineAggregationBuilderFn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineAggregationBuilderFn$.html"><span class="name">PipelineAggregationBuilderFn</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@PipelineAggregationBuilderFn" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.SerialDiffPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SerialDiffPipelineBuilder"></a>
+      <a id="SerialDiffPipelineBuilder:SerialDiffPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SerialDiffPipelineBuilder$.html"><span class="name">SerialDiffPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@SerialDiffPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.StatsBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StatsBucketPipelineBuilder"></a>
+      <a id="StatsBucketPipelineBuilder:StatsBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="StatsBucketPipelineBuilder$.html"><span class="name">StatsBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@StatsBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.aggs.pipeline.SumBucketPipelineBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SumBucketPipelineBuilder"></a>
+      <a id="SumBucketPipelineBuilder:SumBucketPipelineBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SumBucketPipelineBuilder$.html"><span class="name">SumBucketPipelineBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.sksamuel.elastic4s.searches.aggs.pipeline.package@SumBucketPipelineBuilder" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

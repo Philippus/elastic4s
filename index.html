@@ -1,0 +1,1427 @@
+<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Elastic4s</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Elasticsearch Scala Client" /><meta name="author" content="Stephen Samuel" /><meta name="og:image" content="/elastic4s/img/poster.png" /><meta name="og:title" content="Elastic4s" /><meta name="og:site_name" content="Elastic4s" /><meta name="og:url" content="https://sksamuel.github.io/elastic4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Elasticsearch Scala Client" /><meta name="twitter:image" content="/elastic4s/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/elastic4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/elastic4s/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/elastic4s/css/style.css" /><link rel="stylesheet" href="/elastic4s/css/palette.css" /><link rel="stylesheet" href="/elastic4s/css/override.css" /></head><body><header id="site-header"><div class="navbar-wrapper"><div class="container"><div class="row"><div class="col-xs-6"><a href="/elastic4s/" class="brand"><div class="icon-wrapper"><span>Elastic4s</span></div></a></div><div class="col-xs-6"><nav class="text-right"><ul class=""><li><a href="https://github.com/sksamuel/elastic4s"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li><li><a href="docs"><i class="fa fa-file-text"></i><span class="hidden-xs">Documentation</span></a></li></ul></nav></div></div></div></div><div class="jumbotron"><div class="container"><h1 class="text-center">Elasticsearch Scala Client</h1><h2></h2><p class="text-center"><a href="https://github.com/sksamuel/elastic4s" class="btn btn-outline-inverse">View on GitHub</a></p></div></div><div><ul class="horizontalNav">                                              </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h1 id="elastic4s---elasticsearch-scala-client">elastic4s - Elasticsearch Scala Client</h1>
+
+<p><a href="https://gitter.im/sksamuel/elastic4s?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/sksamuel/elastic4s" /></a>
+<a href="https://travis-ci.org/sksamuel/elastic4s"><img src="https://travis-ci.org/sksamuel/elastic4s.png?branch=master" alt="Build Status" /></a>
+<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22"><img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10*.svg?label=latest%20release%20for%202.10" /></a>
+<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22"><img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11*.svg?label=latest%20release%20for%202.11" /></a>
+<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22"><img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12*.svg?label=latest%20release%20for%202.12" /></a></p>
+
+<p>Elastic4s is mostly a wrapper around the standard Elasticsearch Java client with the intention of creating a concise, idiomatic, reactive, type safe DSL for applications in Scala that use Elasticsearch. The Java client, which can of course be used directly in Scala, is more verbose due to Java’s nature. Scala lets us do better.</p>
+
+<p>Elastic4s’s DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into your existing asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying true to the Java API or Rest API.</p>
+
+<p>Elastic4s supports Scala collections so you don’t have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index case classes and maps directly without having to extract and set fields manually. Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.</p>
+
+<h4 id="key-points">Key points</h4>
+
+<ul>
+  <li>Type safe concise DSL</li>
+  <li>Integrates with standard Scala futures</li>
+  <li>Uses Scala collections library over Java collections</li>
+  <li>Returns <code class="highlighter-rouge">Option</code> where the java methods would return null</li>
+  <li>Uses Scala <code class="highlighter-rouge">Duration</code>s instead of strings/longs for time values</li>
+  <li>Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s and PlayJson implementations</li>
+  <li>Leverages the built-in Java client</li>
+  <li>Provides <a href="#elastic-reactive-streams">reactive-streams</a> implementation</li>
+  <li>Provides embedded node and testkit subprojects, ideal for your tests</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Elasticsearch (on the JVM) has two interfaces. One is the regular HTTP interface available on port 9200 (by default) and the other is a TCP interface on port 9300 (by default). Historically the Java API provided by Elasticsearch has always been TCP based with the rationale that it saves marshalling requests into JSON and is cluster aware and so can route requests to the correct node. Therefore elastic4s was also TCP based since it delegates requests to the underlying Java client.</p>
+
+<p>Starting with 5.1.x, Elastic.co have made a REST client available for Java users (in addition to the REST based clients that were available as community projects). However at the time of writing this doesn’t build the JSON for the queries, but focuses solely on managing connections and error handling.</p>
+
+<p>In elastic4s 5.2.x a new <a href="https://github.com/sksamuel/elastic4s/tree/master/elastic4s-http">HTTP client</a> has been added which relies on the Java REST client for connection management, but still uses the familiar elastic4s DSL to build the queries so you don’t have to. This client should be considered <strong>experimental</strong> in this release, and the coverage of requests is not as comprehensive as the TCP client.</p>
+
+<h4 id="release">Release</h4>
+
+<p>The latest releases are for Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
+<a href="http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22">search maven central</a>.
+For more information read <a href="#using-elastic4s-in-your-project">Using Elastic4s in your project</a>.</p>
+
+<p>Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has dependencies on Netty, Lucene and others that it does not bring in transitively.The elastic4s client brings in the dependencies for you, but in case anything is missed, you would need to add it to your build yourself.</p>
+
+<p>The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s (or even just the elasticsearch provided Java TCP client) you will get <code class="highlighter-rouge">NoSuchMethodException</code>s if you try to use it with Play or Spark. I am unaware of a workaround at present, until Spark and Play update to the latest version, other than switching to the experimental HTTP client.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Elastic4s Release</th>
+      <th>Target Elasticsearch version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>5.2.x</td>
+      <td>5.2.x</td>
+    </tr>
+    <tr>
+      <td>5.1.x</td>
+      <td>5.1.x</td>
+    </tr>
+    <tr>
+      <td>5.0.x</td>
+      <td>5.0.x</td>
+    </tr>
+    <tr>
+      <td>2.4.x</td>
+      <td>2.4.X</td>
+    </tr>
+    <tr>
+      <td>2.3.x</td>
+      <td>2.3.X</td>
+    </tr>
+    <tr>
+      <td>2.2.1</td>
+      <td>2.2.X</td>
+    </tr>
+    <tr>
+      <td>2.1.2</td>
+      <td>2.1.X</td>
+    </tr>
+    <tr>
+      <td>2.0.1</td>
+      <td>2.0.X</td>
+    </tr>
+    <tr>
+      <td>1.7.5</td>
+      <td>1.7.X</td>
+    </tr>
+    <tr>
+      <td>1.6.6</td>
+      <td>1.6.X</td>
+    </tr>
+    <tr>
+      <td>1.5.17</td>
+      <td>1.5.X</td>
+    </tr>
+    <tr>
+      <td>1.4.14</td>
+      <td>1.4.x</td>
+    </tr>
+    <tr>
+      <td>1.3.3</td>
+      <td>1.3.x</td>
+    </tr>
+    <tr>
+      <td>1.2.3.0</td>
+      <td>1.2.x</td>
+    </tr>
+    <tr>
+      <td>1.1.2.0</td>
+      <td>1.1.x</td>
+    </tr>
+    <tr>
+      <td>1.0.3.0</td>
+      <td>1.0.x</td>
+    </tr>
+    <tr>
+      <td>0.90.13.2</td>
+      <td>0.90.x</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>See full <a href="#changelog">changelog</a>.</p>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>To get started you will need to add a dependency to either <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http">elastic4s-http</a> or <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp">elastic4s-tcp</a> depending on which client you intend you use (or both)</p>
+
+<p>The basic usage is that you create an instance of a client and then invoke the <code class="highlighter-rouge">execute</code> method with the requests you want to perform. The execute method is asynchronous and will return a standard Scala <code class="highlighter-rouge">Future[T]</code> where T is the response type appropriate for your request type. For example a <em>search</em> request will return a response of type <code class="highlighter-rouge">SearchResponse</code> which contains the results of the search.</p>
+
+<p>To create an instance of the HTTP client, use the <code class="highlighter-rouge">HttpClient</code> companion object methods. To create an instance of the TCP client, use the <code class="highlighter-rouge">TcpClient</code> companion object methods. Requests are the same for either client, but response classes may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java client classes.</p>
+
+<p>Requests, such as inserting a document, searching, creating an index, and so on, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: <code class="highlighter-rouge">search("index" / "type") query "findthistext"</code></p>
+
+<p>The DSL methods are located in the <code class="highlighter-rouge">ElasticDsl</code> trait which needs to be imported or extended. Although the syntax is identical whether you use the HTTP or TCP client, you must import the appropriate trait (<code class="highlighter-rouge">com.sksamuel.elastic4s.ElasticDSL</code> for TCP or <code class="highlighter-rouge">com.sksamuel.elastic4s.http.ElasticDSL</code> for HTTP) depending on which client you are using.</p>
+
+<p>One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit <code class="highlighter-rouge">JsonFormat</code> implementation.</p>
+
+<p>Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided implemenations are <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe">elastic4s-circe</a>, <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson">elastic4s-jackson</a>, <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4">elastic4s-json4</a>, and <a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json">elastic4s-play-json</a>. For example, to use the jackson implementation, add the module to your build and then add this import:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._</span>
+</code></pre>
+</div>
+
+<p>An example is worth 1000 characters so here is a quick example of how to connect to a node with a client and index a one field document. Then we will search for that document using a simple text query.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.TcpClient</span>
+<span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.ElasticDsl._</span>
+
+<span class="k">object</span> <span class="nc">Test</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+
+  <span class="c1">// Here we create an instance of the TCP client
+</span>  <span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="nc">TcpClient</span><span class="o">.</span><span class="n">transport</span><span class="o">(</span><span class="nc">ElasticsearchClientUri</span><span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">port</span><span class="o">))</span>
+
+  <span class="c1">// await is a helper method to make this operation synchronous instead of async
+</span>  <span class="c1">// You would normally avoid doing this in a real program as it will block your thread
+</span>  <span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span> 
+  	<span class="n">indexInto</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"artists"</span><span class="o">)</span> <span class="n">fields</span> <span class="o">(</span><span class="s">"name"</span> <span class="o">-&gt;</span> <span class="s">"coldplay"</span><span class="o">)</span> <span class="n">refresh</span><span class="o">(</span><span class="nc">RefreshPolicy</span><span class="o">.</span><span class="nc">IMMEDIATE</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">await</span>
+
+  <span class="c1">// now we can search for the document we just indexed
+</span>  <span class="k">val</span> <span class="n">resp</span> <span class="k">=</span> <span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span> 
+    <span class="n">search</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"artists"</span><span class="o">)</span> <span class="n">query</span> <span class="s">"coldplay"</span> 
+  <span class="o">}.</span><span class="n">await</span>
+  
+  <span class="n">println</span><span class="o">(</span><span class="n">resp</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="eventual-consistency">Eventual Consistency</h3>
+
+<p>Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. Another option, which you saw in the quick start guide, was to set the refresh policy to <code class="highlighter-rouge">IMMEDIATE</code> which will force a flush straight away.</p>
+
+<p>For more in depth examples keep reading.</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<p>Here is a list of the common requests and the syntax used to create them and whether they are supported by the TCP or HTTP client. If the HTTP client does not support them, you will need to fall back to the TCP, or use the Java client and build the JSON yourself. Or even better, raise a PR with the addition. For more details on each request click
+through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation asthe DSL closely mirrors the standard Java API / REST API.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Syntax</th>
+      <th>HTTP</th>
+      <th>TCP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="guide/aliases.md">Add Alias</a></td>
+      <td><code class="highlighter-rouge">addAlias(&lt;alias&gt;).on(&lt;index&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Bulk</td>
+      <td><code class="highlighter-rouge">bulk(query1, query2, query3...)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Cancel Tasks</td>
+      <td><code class="highlighter-rouge">cancelTasks(&lt;nodeIds&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Clear index cache</td>
+      <td><code class="highlighter-rouge">clearCache(&lt;index&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Close index</td>
+      <td><code class="highlighter-rouge">closeIndex(&lt;name&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Cluster health</td>
+      <td><code class="highlighter-rouge">clusterHealth()</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Cluster stats</td>
+      <td><code class="highlighter-rouge">clusterStats()</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/createindex.md">Create Index</a></td>
+      <td><code class="highlighter-rouge">createIndex(&lt;name&gt;).mappings( mapping(&lt;name&gt;).as( ... fields ... ) )</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/snapshot.md">Create Repository</a></td>
+      <td><code class="highlighter-rouge">createRepository(&lt;repo&gt;).type(&lt;type&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/snapshot.md">Create Snapshot</a></td>
+      <td><code class="highlighter-rouge">createSnapshot(&lt;name&gt;).in(&lt;repo&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Create Template</td>
+      <td><code class="highlighter-rouge">createTemplate(&lt;name&gt;).pattern(&lt;pattern&gt;).mappings {...}</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/delete.md">Delete by id</a></td>
+      <td><code class="highlighter-rouge">delete(&lt;id&gt;).from(&lt;index&gt; / &lt;type&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Delete by query</td>
+      <td><code class="highlighter-rouge">deleteIn(&lt;index&gt;).by(&lt;query&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/delete.md">Delete index</a></td>
+      <td><code class="highlighter-rouge">deleteIndex(&lt;index&gt;) [settings]</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/snapshot.md">Delete Snapshot</a></td>
+      <td><code class="highlighter-rouge">deleteSnapshot(&lt;name&gt;).in(&lt;repo&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Delete Template</td>
+      <td><code class="highlighter-rouge">deleteTemplate(&lt;name&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/explain.md">Explain</a></td>
+      <td><code class="highlighter-rouge">explain(&lt;index&gt;, &lt;type&gt;, &lt;id&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Field stats</td>
+      <td><code class="highlighter-rouge">fieldStats(&lt;indexes&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Flush Index</td>
+      <td><code class="highlighter-rouge">flushIndex(&lt;index&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/get.md">Get</a></td>
+      <td><code class="highlighter-rouge">get(&lt;id&gt;).from(&lt;index&gt; / &lt;type&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Get Alias</td>
+      <td><code class="highlighter-rouge">getAlias(&lt;name&gt;).on(&lt;index&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Get Mapping</td>
+      <td><code class="highlighter-rouge">getMapping(&lt;index&gt; / &lt;type&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Get Segments</td>
+      <td><code class="highlighter-rouge">getSegments(&lt;indexes&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Get Snapshot</td>
+      <td><code class="highlighter-rouge">getSnapshot &lt;name&gt; from &lt;repo&gt;</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Get Template</td>
+      <td><code class="highlighter-rouge">getTemplate(&lt;name&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/index.md">Index</a></td>
+      <td><code class="highlighter-rouge">indexInto(&lt;index&gt; / &lt;type&gt;).doc(&lt;doc&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Index exists</td>
+      <td><code class="highlighter-rouge">indexExists(&lt;name&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Index Status</td>
+      <td><code class="highlighter-rouge">indexStatus(&lt;index&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>List Tasks</td>
+      <td><code class="highlighter-rouge">listTasks(nodeIds)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Lock Acquire</td>
+      <td><code class="highlighter-rouge">acquireGlobalLock()</code></td>
+      <td>yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Lock Release</td>
+      <td><code class="highlighter-rouge">releaseGlobalLock()</code></td>
+      <td>yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="guide/multiget.md">Multiget</a></td>
+      <td><code class="highlighter-rouge">multiget( get(1).from(&lt;index&gt; / &lt;type&gt;), get(2).from(&lt;index&gt; / &lt;type&gt;) )</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/multisearch.md">Multisearch</a></td>
+      <td><code class="highlighter-rouge">multi( search(...), search(...) )</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Open index</td>
+      <td><code class="highlighter-rouge">openIndex(&lt;name&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/optimize.md">Force Merge</a></td>
+      <td><code class="highlighter-rouge">forceMerge(&lt;indexes&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Put mapping</td>
+      <td><code class="highlighter-rouge">putMapping(&lt;index&gt; / &lt;type&gt;) as { mappings block }</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Recover Index</td>
+      <td><code class="highlighter-rouge">recoverIndex(&lt;name&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Refresh index</td>
+      <td><code class="highlighter-rouge">refreshIndex(&lt;name&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Register Query</td>
+      <td><code class="highlighter-rouge">register(&lt;query&gt;).into(&lt;index&gt; / &lt;type&gt;, &lt;field&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/aliases.md">Remove Alias</a></td>
+      <td><code class="highlighter-rouge">removeAlias(&lt;alias&gt;).on(&lt;index&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/snapshot.md">Restore Snapshot</a></td>
+      <td><code class="highlighter-rouge">restoreSnapshot(&lt;name&gt;).from(&lt;repo&gt;)</code></td>
+      <td> </td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/search.md">Search</a></td>
+      <td><code class="highlighter-rouge">search(&lt;index&gt; / &lt;type&gt;).query(&lt;query&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Search scroll</td>
+      <td><code class="highlighter-rouge">searchScroll(&lt;scrollId&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Type Exists</td>
+      <td><code class="highlighter-rouge">typesExists(&lt;types&gt;) in &lt;index&gt;</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/update.md">Update</a></td>
+      <td><code class="highlighter-rouge">update(&lt;id&gt;).in(&lt;index&gt; / &lt;type&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><a href="guide/validate.md">Validate</a></td>
+      <td><code class="highlighter-rouge">validateIn(&lt;index/type&gt;).query(&lt;query&gt;)</code></td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Please also note <a href="guide/javainterop.md">some java interoperability notes</a>.</p>
+
+<h2 id="connecting-to-a-cluster">Connecting to a Cluster</h2>
+
+<p>To connect to a stand alone elasticsearch cluster then you need to use the <code class="highlighter-rouge">transport</code> method on the <code class="highlighter-rouge">ElasticClient</code> object  specifying the uri of the cluster. The uri is an instance of <code class="highlighter-rouge">ElasticsearchClientUri</code> which can be created from a host and port or from a string. Please note that the uri uses the port of the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="nc">ElasticClient</span><span class="o">.</span><span class="n">transport</span><span class="o">(</span><span class="nc">ElasticsearchClientUri</span><span class="o">(</span><span class="s">"host1"</span><span class="o">,</span> <span class="mi">9300</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>For multiple nodes it’s better to use the elasticsearch client uri connection string. This is in the format <code class="highlighter-rouge">"elasticsearch://host1:port2,host2:port2,...?param=value&amp;param2=value2"</code>. For example:
+<code class="highlighter-rouge">scala
+val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=mycluster")
+val client = ElasticClient.transport(uri)
+</code></p>
+
+<p>If you need to pass settings to the client, then you need to invoke <code class="highlighter-rouge">transport</code> with a settings object.
+For example to specify the cluster name (if you changed the default then you must specify the cluster name).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.elasticsearch.common.settings.Settings</span>
+<span class="k">val</span> <span class="n">settings</span> <span class="k">=</span> <span class="nc">Settings</span><span class="o">.</span><span class="n">builder</span><span class="o">().</span><span class="n">put</span><span class="o">(</span><span class="s">"cluster.name"</span><span class="o">,</span> <span class="s">"myClusterName"</span><span class="o">).</span><span class="n">build</span><span class="o">()</span>
+<span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="nc">ElasticClient</span><span class="o">.</span><span class="n">transport</span><span class="o">(</span><span class="n">settings</span><span class="o">,</span> <span class="nc">ElasticsearchClientUri</span><span class="o">(</span><span class="s">"elasticsearch://somehost:9300"</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>If you already have a handle to a Node in the Java API then you can create a client from it easily:
+<code class="highlighter-rouge">scala
+val node = ... // node from the java API somewhere
+val client = ElasticClient.fromNode(node)
+</code></p>
+
+<h2 id="x-pack-security">X-Pack-Security</h2>
+
+<p>Elastic4s also supports the xpack-security add on (TCP client only). To use this, add the <code class="highlighter-rouge">elastic-xpack-security</code> dependency to your build and create a client using the <code class="highlighter-rouge">XPackElasticClient</code> object instead of the <code class="highlighter-rouge">ElasticClient</code> object. Eg,</p>
+
+<p>scala
+<code class="highlighter-rouge">
+val client = XPackElasticClient(settings, uri, &lt;plugins&gt;...)
+</code></p>
+
+<p>If you are using SBT then you might need to add a resolver to the elasticsearch repo.</p>
+
+<p>scala
+<code class="highlighter-rouge">
+resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven
+</code></p>
+
+<h2 id="embedded-node">Embedded Node</h2>
+
+<p>A locally configured node and client can be created be including the elastic4s-embedded module. Then a local node can be started by invoking <code class="highlighter-rouge">LocalNode()</code> with the cluster name and data path. From the local node we can return a handle to the client by invoking the <code class="highlighter-rouge">elastic4sclient</code> function.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.ElasticClient</span>
+<span class="k">val</span> <span class="n">node</span> <span class="k">=</span> <span class="nc">LocalNode</span><span class="o">(</span><span class="n">clusterName</span><span class="o">,</span> <span class="n">pathHome</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="n">node</span><span class="o">.</span><span class="n">elastic4sclient</span><span class="o">()</span>
+</code></pre>
+</div>
+
+<p>To specify settings for the local node you can pass in a settings object like this:
+<code class="highlighter-rouge">scala
+val settings = Settings.builder()
+      .put("cluster.name", "elasticsearch")
+      .put("path.home", "mypath")
+      .put("http.enabled", false)
+      .build()
+val node = LocalNode(settings)
+val client = node.elastic4sclient(&lt;shutdownNodeOnClose&gt;)
+</code></p>
+
+<p>If <code class="highlighter-rouge">shutdownNodeOnClose</code> is true, then once close is called on the client, the local node will be stopped. Otherwise you will manage the lifecycle of the local node yourself (stopping it before exiting the process).</p>
+
+<h2 id="create-index">Create Index</h2>
+
+<p>All documents in Elasticsearch are stored in an index. We do not need to tell Elasticsearch in advance what an index
+will look like (eg what fields it will contain) as Elasticsearch will adapt the index dynamically as more documents are added, but we must at least create the index first.</p>
+
+<p>To create an index called “places” that is fully dynamic we can simply use:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span> <span class="n">createIndex</span><span class="o">(</span><span class="s">"places"</span><span class="o">)</span> <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>We can optionally set the number of shards and / or replicas</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span> <span class="n">createIndex</span><span class="o">(</span><span class="s">"places"</span><span class="o">)</span> <span class="n">shards</span> <span class="mi">3</span> <span class="n">replicas</span> <span class="mi">2</span> <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Sometimes we want to specify the properties of the fields in the index in advance.
+This allows us to manually set the type of the field (where Elasticsearch might infer something else) or set the analyzer used,
+or multiple other options</p>
+
+<p>To do this we add mappings:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.mappings.FieldType._</span>
+<span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.StopAnalyzer</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+    <span class="n">createIndex</span><span class="o">(</span><span class="s">"places"</span><span class="o">)</span> <span class="n">mappings</span> <span class="o">(</span>
+        <span class="n">mapping</span><span class="o">(</span><span class="s">"cities"</span><span class="o">)</span> <span class="n">as</span> <span class="o">(</span>
+            <span class="n">keywordField</span><span class="o">(</span><span class="s">"id"</span><span class="o">),</span>
+            <span class="n">textField</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">boost</span> <span class="mi">4</span><span class="o">,</span>
+            <span class="n">textField</span><span class="o">(</span><span class="s">"content"</span><span class="o">)</span> <span class="n">analyzer</span> <span class="nc">StopAnalyzer</span>
+        <span class="o">)</span>
+    <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Then Elasticsearch is configured with those mappings for those fields only.
+It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will have their type preset.</p>
+
+<p>More examples on the create index syntax can be <a href="guide/createindex.md">found here</a>.</p>
+
+<h2 id="analyzers">Analyzers</h2>
+
+<p>Analyzers control how Elasticsearch parses the fields for indexing. For example, you might decide that you want
+whitespace to be important, so that “band of brothers” is indexed as a single “word” rather than the default which is
+to split on whitespace. There are many advanced options available in analayzers. Elasticsearch also allows us to create
+custom analyzers. For more details <a href="guide/analyzers.md">read about the DSL support for analyzers</a>.</p>
+
+<h2 id="indexing">Indexing</h2>
+
+<p>To index a document we need to specify the index and type and optionally we can set an id.
+If we don’t include an id then elasticsearch will generate one for us.
+We must also include at least one field. Fields are specified as standard tuples.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">indexInto</span><span class="o">(</span><span class="s">"places"</span> <span class="o">/</span> <span class="s">"cities"</span><span class="o">)</span> <span class="n">id</span> <span class="s">"uk"</span> <span class="n">fields</span> <span class="o">(</span>
+    <span class="s">"name"</span> <span class="o">-&gt;</span> <span class="s">"London"</span><span class="o">,</span>
+    <span class="s">"country"</span> <span class="o">-&gt;</span> <span class="s">"United Kingdom"</span><span class="o">,</span>
+    <span class="s">"continent"</span> <span class="o">-&gt;</span> <span class="s">"Europe"</span><span class="o">,</span>
+    <span class="s">"status"</span> <span class="o">-&gt;</span> <span class="s">"Awesome"</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>There are many additional options we can set such as routing, version, parent, timestamp and op type.
+See <a href="http://www.elasticsearch.org/guide/reference/api/index_/">official documentation</a> for additional options, all of
+which exist in the DSL as keywords that reflect their name in the official API.</p>
+
+<h2 id="indexing-typeclass">Indexing Typeclass</h2>
+
+<p>Sometimes it is useful to index directly from your domain model, and not have to create maps of fields inline. For this
+elastic4s provides the <code class="highlighter-rouge">Indexable</code> typeclass. Simply provide an implicit instance of <code class="highlighter-rouge">Indexable[T]</code> in scope for any
+class T that you wish to index, and then you can use <code class="highlighter-rouge">doc(t)</code> on the index request. For example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">// a simple example of a domain model
+</span><span class="k">case</span> <span class="k">class</span> <span class="nc">Character</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">location</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="c1">// how you turn the type into json is up to you
+</span><span class="k">implicit</span> <span class="k">object</span> <span class="nc">CharacterIndexable</span> <span class="k">extends</span> <span class="nc">Indexable</span><span class="o">[</span><span class="kt">Character</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">json</span><span class="o">(</span><span class="n">t</span><span class="k">:</span> <span class="kt">Character</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">s</span><span class="s">""" { "name" : "${t.name}", "location" : "${t.location}" } """</span>
+<span class="o">}</span>
+
+<span class="c1">// now the index request reads much cleaner
+</span><span class="k">val</span> <span class="n">jonsnow</span> <span class="k">=</span> <span class="nc">Character</span><span class="o">(</span><span class="s">"jon snow"</span><span class="o">,</span> <span class="s">"the wall"</span><span class="o">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">indexInto</span><span class="o">(</span><span class="s">"gameofthrones"</span> <span class="o">/</span> <span class="s">"characters"</span><span class="o">).</span><span class="n">doc</span><span class="o">(</span><span class="n">jonsnow</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
+it done automagically. For those people, elastic4s provides extensions for the well known Scala Json libraries that
+can be used to generate Json generically.</p>
+
+<p>Simply add the import for your chosen library below and then with those implicits in scope, you can now pass any type
+ you like to <code class="highlighter-rouge">doc</code> and an Indexable will be derived automatically.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library</th>
+      <th>Elastic4s Module</th>
+      <th>Import</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://github.com/FasterXML/jackson-module-scala">Jackson</a></td>
+      <td><a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson">elastic4s-jackson</a></td>
+      <td>import ElasticJackson.Implicits._</td>
+    </tr>
+    <tr>
+      <td><a href="http://json4s.org/">Json4s</a></td>
+      <td><a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4s">elastic4s-json4s</a></td>
+      <td>import ElasticJson4s.Implicits._</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/travisbrown/circe">Circe</a></td>
+      <td><a href="http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe">elastic4s-circe</a></td>
+      <td>import io.circe.generic.auto._ <br />import com.sksamuel.elastic4s.circe._</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="searching">Searching</h2>
+
+<p>Searching is naturally the most involved operation.
+There are many ways to do <a href="http://www.elasticsearch.org/guide/reference/api/search/">searching in elastic search</a> and that is reflected
+in the higher complexity of the query DSL.</p>
+
+<p>To do a simple text search, where the query is parsed from a single string
+<code class="highlighter-rouge">scala
+search("places" / "cities").query("London")
+</code></p>
+
+<p>That is actually an example of a SimpleStringQueryDefinition. The string is implicitly converted to that type of query.
+It is the same as specifying the query type directly:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">search</span><span class="o">(</span><span class="s">"places"</span> <span class="o">/</span> <span class="s">"cities"</span><span class="o">),</span><span class="n">query</span><span class="o">(</span><span class="n">simpleStringQuery</span><span class="o">(</span><span class="s">"London"</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>The simple string example is the only time we don’t need to specify the query type.
+We can search for everything by not specifying a query at all.
+<code class="highlighter-rouge">scala
+search("places" / "cities")
+</code></p>
+
+<p>We might want to limit the number of results and / or set the offset.
+<code class="highlighter-rouge">scala
+search("places" / "cities") query "paris" start 5 limit 10
+</code></p>
+
+<p>We can search against certain fields only:
+<code class="highlighter-rouge">scala
+search("places" / "cities") query termQuery("country", "France")
+</code></p>
+
+<p>Or by a prefix:
+<code class="highlighter-rouge">scala
+search("places" / "cities") query prefixQuery("country", "France")
+</code></p>
+
+<p>Or by a regular expression (slow, but handy sometimes!):
+<code class="highlighter-rouge">scala
+search("places" / "cities") query regexQuery("country", "France")
+</code></p>
+
+<p>There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.</p>
+
+<p>Read more about search syntax <a href="guide/search.md">here</a>.
+Read about <a href="guide/multisearch.md">multisearch here</a>.
+Read about <a href="guide/suggestions.md">suggestions here</a>.</p>
+
+<h2 id="hitreader-typeclass">HitReader Typeclass</h2>
+
+<p>By default Elasticsearch search responses contain an array of <code class="highlighter-rouge">SearchHit</code> instances which contain things like the id,
+index, type, version, etc as well as the document source as a string or map. Elastic4s provides a means to convert these
+back to meaningful domain types quite easily using the <code class="highlighter-rouge">HitReader[T]</code> typeclass.</p>
+
+<p>Provide an implementation of this typeclass, as an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call <code class="highlighter-rouge">to[T]</code> or <code class="highlighter-rouge">safeTo[T]</code> on the response.
+The difference between to and safeTo is that to will drop any errors and just return successful conversions, whereas safeTo returns
+a sequence of <code class="highlighter-rouge">Either[Throwable, T]</code>.</p>
+
+<p>A full example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Character</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">location</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">implicit</span> <span class="k">object</span> <span class="nc">CharacterHitReader</span> <span class="k">extends</span> <span class="nc">HitReader</span><span class="o">[</span><span class="kt">Character</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">read</span><span class="o">(</span><span class="n">hit</span><span class="k">:</span> <span class="kt">Hit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">Throwable</span>, <span class="kt">Character</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nc">Character</span><span class="o">(</span><span class="n">hit</span><span class="o">.</span><span class="n">sourceAsMap</span><span class="o">(</span><span class="s">"name"</span><span class="o">).</span><span class="n">toString</span><span class="o">,</span> <span class="n">hit</span><span class="o">.</span><span class="n">sourceAsMap</span><span class="o">(</span><span class="s">"location"</span><span class="o">).</span><span class="n">toString</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">resp</span> <span class="k">=</span> <span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">search</span><span class="o">(</span><span class="s">"gameofthrones"</span> <span class="o">/</span> <span class="s">"characters"</span><span class="o">).</span><span class="n">query</span><span class="o">(</span><span class="s">"kings landing"</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">await</span> <span class="c1">// don't block in real code
+</span>
+<span class="c1">// .as[Character] will look for an implicit HitAs[Character] in scope
+// and then convert all the hits into Characters for us.
+</span><span class="k">val</span> <span class="n">characters</span> <span class="k">:</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">Character</span><span class="o">]</span> <span class="k">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">as</span><span class="o">[</span><span class="kt">Character</span><span class="o">]</span>
+
+</code></pre>
+</div>
+
+<p>This is basically the inverse of the <code class="highlighter-rouge">Indexable</code> typeclass. And just like Indexable, the json modules provide implementations
+out of the box for any types. The imports are the same as for the Indexable typeclasses.</p>
+
+<p>As a bonus feature of the Jackson implementation, if your domain object has fields called <code class="highlighter-rouge">_timestamp</code>, <code class="highlighter-rouge">_id</code>, <code class="highlighter-rouge">_type</code>, <code class="highlighter-rouge">_index</code>, or
+<code class="highlighter-rouge">_version</code> then those special fields will be automatically populated as well.</p>
+
+<h2 id="highlighting">Highlighting</h2>
+
+<p>Elasticsearch can annotate results to show which part of the results matched the queries by using highlighting.
+Just think when you’re in google and you see the snippets underneath your results - that’s what highlighting does.</p>
+
+<p>We can use this very easily, just add a highlighting definition to your search request, where you set the field or fields to be highlighted. Viz:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">search</span> <span class="n">in</span> <span class="s">"music"</span> <span class="o">/</span> <span class="s">"bios"</span> <span class="n">query</span> <span class="s">"kate bush"</span> <span class="n">highlighting</span> <span class="o">(</span>
+  <span class="n">highlight</span> <span class="n">field</span> <span class="s">"body"</span> <span class="n">fragmentSize</span> <span class="mi">20</span>
+<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>All very straightforward. There are many options you can use to tweak the results. In the example above I have
+simply set the snippets to be taken from the field called “body” and to have max length 20. You can set the number of fragments to return, seperate queries to generate them and other things. See the elasticsearch page on <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html">highlighting</a> for more info.</p>
+
+<h2 id="get">Get</h2>
+
+<p>Sometimes we don’t want to search and want to retrieve a document directly from the index by id.
+In this example we are retrieving the document with id ‘coldplay’ from the bands/rock index and type.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+ <span class="n">get</span><span class="o">(</span><span class="s">"coldplay"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"rock"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>We can get multiple documents at once too. Notice the following multiget wrapping block.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">multiget</span><span class="o">(</span>
+    <span class="n">get</span><span class="o">(</span><span class="s">"coldplay"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"rock"</span><span class="o">),</span>
+    <span class="n">get</span><span class="o">(</span><span class="s">"keane"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"rock"</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>See more <a href="guide/get.md">get examples</a> and usage of multiget <a href="guide/multiget.md">here</a></p>
+
+<h2 id="deleting">Deleting</h2>
+
+<p>In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn’t want to remove Chris Martin and boys so we’re going to remove U2 instead.
+We think they’re a little past their best (controversial). This operation assumes the id of the document is “u2”.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">delete</span><span class="o">(</span><span class="s">"u2"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="s">"bands/rock"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>We can take this a step further by deleting by a query rather than id.
+In this example we’re deleting all bands where their type is pop.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">deleteIn</span><span class="o">(</span><span class="s">"bands"</span><span class="o">).</span><span class="n">by</span><span class="o">(</span><span class="n">termQuery</span><span class="o">(</span><span class="s">"type"</span><span class="o">,</span> <span class="s">"pop"</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>See more about delete on the <a href="guide/delete.md">delete page</a></p>
+
+<h2 id="updates">Updates</h2>
+
+<p>We can update existing documents without having to do a full index, by updating a partial set of fields.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">update</span><span class="o">(</span><span class="mi">25</span><span class="o">).</span><span class="n">in</span><span class="o">(</span><span class="s">"scifi"</span> <span class="o">/</span> <span class="s">"starwars"</span><span class="o">).</span> <span class="n">docAsUpsert</span> <span class="o">(</span>
+    <span class="s">"character"</span> <span class="o">-&gt;</span> <span class="s">"chewie"</span><span class="o">,</span>
+    <span class="s">"race"</span> <span class="o">-&gt;</span> <span class="s">"wookie"</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Read more about updates and see <a href="guide/update.md">more examples</a>.</p>
+
+<h2 id="more-like-this">More like this</h2>
+
+<p>If you want to return documents that are “similar” to  a current document we can do that very easily with the more like this query.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">search</span><span class="o">(</span><span class="s">"drinks"</span> <span class="o">/</span> <span class="s">"beer"</span><span class="o">)</span> <span class="n">query</span> <span class="o">{</span>
+    <span class="n">moreLikeThisQuery</span><span class="o">(</span><span class="s">"name"</span><span class="o">).</span><span class="n">likeTexts</span><span class="o">(</span><span class="s">"coors"</span><span class="o">,</span> <span class="s">"beer"</span><span class="o">,</span> <span class="s">"molson"</span><span class="o">)</span> <span class="n">minTermFreq</span> <span class="mi">1</span> <span class="n">minDocFreq</span> <span class="mi">1</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>For all the options see <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/">here</a>.</p>
+
+<h2 id="bulk-operations">Bulk Operations</h2>
+
+<p>Elasticsearch is fast. Roundtrips are not. Sometimes we want to wrestle every last inch of performance and a useful way
+to do this is to batch up requests. Elastic has guessed our wishes and created the bulk API. To do this we simply
+wrap index, delete and update requests using the <code class="highlighter-rouge">bulk</code> keyword and pass to the <code class="highlighter-rouge">execute</code> method in the client.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">bulk</span> <span class="o">(</span>
+    <span class="n">index</span> <span class="n">into</span> <span class="s">"bands/rock"</span> <span class="n">fields</span> <span class="s">"name"</span><span class="o">-&gt;</span><span class="s">"coldplay"</span><span class="o">,</span>
+    <span class="n">index</span> <span class="n">into</span> <span class="s">"bands/rock"</span> <span class="n">fields</span> <span class="s">"name"</span><span class="o">-&gt;</span><span class="s">"kings of leon"</span><span class="o">,</span>
+    <span class="n">index</span> <span class="n">into</span> <span class="s">"bands/pop"</span> <span class="n">fields</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="o">-&gt;</span> <span class="s">"elton john"</span><span class="o">,</span>
+      <span class="s">"best_album"</span> <span class="o">-&gt;</span> <span class="s">"tumbleweed connection"</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+<p>A single HTTP or TCP request is now needed for 4 operations. In addition Elasticsearch can now optimize the requests,
+by combinging inserts or using aggressive caching.</p>
+
+<p>The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
+See more information on the <a href="guide/bulk.md">bulk page</a>.</p>
+
+<h2 id="json-output">Json Output</h2>
+
+<p>It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser. It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.</p>
+
+<p>Elastic4s makes it easy to get this json where possible. Simply invoke the <code class="highlighter-rouge">show</code> method on the client with a request to get back a json string. Eg:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">json</span> <span class="k">=</span> <span class="n">client</span><span class="o">.</span><span class="n">show</span> <span class="o">{</span>
+  <span class="n">search</span><span class="o">(</span><span class="s">"music"</span> <span class="o">/</span> <span class="s">"bands"</span><span class="o">)</span> <span class="n">query</span> <span class="s">"coldplay"</span>
+<span class="o">}</span>
+<span class="n">println</span><span class="o">(</span><span class="n">json</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Not all requests have a json body. For example <em>get-by-id</em> is modelled purely by http query parameters, there is no json body to output. And some requests aren’t supported by the show method - you will get an implicit not found error during compliation if that is the case</p>
+
+<p>Also, as a reminder, the TCP client does not send JSON to the nodes, it uses a binary protocol, so the provided JSON should be used as a debugging tool only. For the HTTP client the output is exactly what is sent.</p>
+
+<h2 id="synchronous-operations">Synchronous Operations</h2>
+
+<p>All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots or when creating the initial index. You can call <code class="highlighter-rouge">.await</code> on any operation to block until the result is ready. This is especially useful when testing.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">resp</span> <span class="k">=</span> <span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">index</span><span class="o">(</span><span class="s">"bands"</span> <span class="o">/</span> <span class="s">"rock"</span><span class="o">)</span> <span class="n">fields</span> <span class="o">(</span><span class="s">"name"</span><span class="o">-&gt;</span><span class="s">"coldplay"</span><span class="o">,</span> <span class="s">"debut"</span><span class="o">-&gt;</span><span class="s">"parachutes"</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">await</span>
+</code></pre>
+</div>
+
+<h2 id="dsl-completeness">DSL Completeness</h2>
+
+<p>As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations.
+There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner.</p>
+
+<p>However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!).
+In these cases it is necessary to drop back to the Java API.
+This can be done by calling .java on the client object to get the underlying java elastic client,</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">java</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">prepareHealth</span><span class="o">.</span><span class="n">setWaitForEvents</span><span class="o">(</span><span class="nc">Priority</span><span class="o">.</span><span class="nc">LANGUID</span><span class="o">).</span><span class="n">setWaitForGreenStatus</span><span class="o">().</span><span class="n">execute</span><span class="o">().</span><span class="n">actionGet</span>
+</code></pre>
+</div>
+
+<p>This way you can still access everything the normal Java client covers in the cases
+where the Scala DSL is missing a construct, or where there is no need to provide a DSL.</p>
+
+<h2 id="elastic-reactive-streams">Elastic Reactive Streams</h2>
+
+<p>Elastic4s has an implementation of the <a href="http://www.reactive-streams.org">reactive streams</a> api for both publishing and subscribing that is built
+using Akka. To use this, you need to add a dependency on the elastic4s-streams module.</p>
+
+<p>There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
+stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.</p>
+
+<h3 id="integrate">Integrate</h3>
+
+<p>First you have to add an additional dependeny to your <code class="highlighter-rouge">build.sbt</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.sksamuel.elastic4s"</span> <span class="o">%%</span> <span class="s">"elastic4s-streams"</span> <span class="o">%</span> <span class="s">"x.x.x"</span>
+</code></pre>
+</div>
+
+<p>Import the new API with</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.streams.ReactiveElastic._</span>
+</code></pre>
+</div>
+
+<h3 id="publisher">Publisher</h3>
+
+<p>An elastic publisher can be created for any arbitrary query you wish, and then using the efficient search scroll API, the entire dataset that matches your query is streamed out to subscribers.</p>
+
+<p>And make sure you have an Akka Actor System in implicit scope</p>
+
+<p><code class="highlighter-rouge">implicit val system = ActorSystem()</code></p>
+
+<p>Then create a publisher from the client using any query you want. You must specify the scroll parameter, as the publisher
+uses the scroll API.</p>
+
+<p><code class="highlighter-rouge">val publisher = client.publisher(search in "myindex" query "sometext" scroll "1m")</code></p>
+
+<p>Now you can add subscribers to this publisher. They can of course be any type that adheres to the reactive-streams api,
+so you could stream out to a mongo database, or a filesystem, or whatever custom type you want.</p>
+
+<p><code class="highlighter-rouge">publisher.subscribe(someSubscriber)</code></p>
+
+<p>If you just want to stream out an entire index then you can use the overloaded form:</p>
+
+<p><code class="highlighter-rouge">val publisher = client.publisher("index1", keepAlive = "1m")</code></p>
+
+<h3 id="subscription">Subscription</h3>
+
+<p>An elastic subcriber can be created that will stream a request to elasticsearch for each item produced by a publisher.
+The subscriber can create index, update, or delete requests, so is a good way to synchronize datasets.</p>
+
+<p><code class="highlighter-rouge">import ReactiveElastic._</code></p>
+
+<p>And make sure you have an Akka Actor System in implicit scope.</p>
+
+<p><code class="highlighter-rouge">implicit val system = ActorSystem()</code></p>
+
+<p>Then create a subscriber, specifying the following parameters:</p>
+
+<ul>
+  <li>A type parameter that is the type of object that the publisher will provide</li>
+  <li>How many documents should be included per index batch (10-100 is usually good)</li>
+  <li>How many concurrent batches should be in flight (usually around the number of cores)</li>
+  <li>An optional <code class="highlighter-rouge">ResponseListener</code> that will be notified for each item that was successfully acknowledged by the es cluster</li>
+  <li>An optional function that will be called once the subscriber has received all data. Defaults to a no-op</li>
+  <li>An optional function to call if the subscriber encouters an error. Defaults to a no-op.</li>
+</ul>
+
+<p>In addition there should be a further implicit in scope of type <code class="highlighter-rouge">RequestBuilder[T]</code> that will accept objects of T (the type produced by your publisher) and build an index, update, or delete request suitable for dispatchin to elasticsearch.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">val</span> <span class="n">builder</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">RequestBuilder</span><span class="o">[</span><span class="kt">SomeType</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">ElasticDsl._</span>
+  <span class="c1">// the request returned doesn't have to be an index - it can be anything supported by the bulk api
+</span>  <span class="k">def</span> <span class="n">request</span><span class="o">(</span><span class="n">t</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span><span class="k">:</span> <span class="kt">BulkCompatibleDefinition</span> <span class="o">=</span>  <span class="n">index</span> <span class="n">into</span> <span class="s">"index"</span> <span class="o">/</span> <span class="s">"type"</span> <span class="n">fields</span> <span class="o">....</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+<p>Then the subscriber can be created, and attached to a publisher:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">val</span> <span class="n">subscriber</span> <span class="k">=</span> <span class="n">client</span><span class="o">.</span><span class="n">subscriber</span><span class="o">[</span><span class="kt">SomeType</span><span class="o">](</span><span class="n">batchSize</span><span class="o">,</span> <span class="n">concurrentBatches</span><span class="o">,</span> <span class="o">()</span> <span class="k">=&gt;</span> <span class="n">println</span> <span class="s">"all done"</span><span class="o">)</span>
+<span class="n">publisher</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<h2 id="using-elastic4s-in-your-project">Using Elastic4s in your project</h2>
+
+<p>For gradle users, add (replace 2.12 with 2.11 for Scala 2.11):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">compile</span> <span class="s1">'com.sksamuel.elastic4s:elastic4s-core_2.12:x.x.x'</span>
+</code></pre>
+</div>
+
+<p>For SBT users simply add:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.sksamuel.elastic4s"</span> <span class="o">%%</span> <span class="s">"elastic4s-core"</span> <span class="o">%</span> <span class="s">"x.x.x"</span>
+</code></pre>
+</div>
+
+<p>For Maven users simply add (replace 2.12 with 2.11 for Scala 2.11):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.sksamuel.elastic4s<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>elastic4s-core_2.12<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>x.x.x<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Check for the latest released versions on [maven central](http://search.maven.org/#search</td>
+      <td>ga</td>
+      <td>1</td>
+      <td>g%3A%22com.sksamuel.elastic4s%22)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="building-and-testing">Building and Testing</h2>
+
+<p>This project is built with SBT. So to build
+<code class="highlighter-rouge">
+sbt compile
+</code></p>
+
+<p>And to test
+<code class="highlighter-rouge">
+sbt test
+</code></p>
+
+<p>Integration tests run on a local elastic that is created and torn down as part of the tests inside your standard temp
+folder. There is no need to configure anything externally.</p>
+
+<h2 id="changelog">Changelog</h2>
+
+<h6 id="section">5.2.12</h6>
+
+<ul>
+  <li>Add index template support to the HTTP client</li>
+  <li>Added span, geo, parent id and script queries to http</li>
+  <li>Fixed regression on object field definitions</li>
+  <li>Fixed NPE when local node is started with http false</li>
+  <li>Fixed error on get alias when index does not exist</li>
+</ul>
+
+<h6 id="section-1">5.2.11</h6>
+
+<ul>
+  <li>Added more like this and nested query  to http</li>
+  <li>Made <code class="highlighter-rouge">score</code> available in Hit (for use by HitReader)</li>
+  <li>Added addalias, getalias and alias exists for http</li>
+  <li>Added cluster state and cluster health for http client</li>
+  <li>Added node stats to http</li>
+  <li>Added shard store to http</li>
+  <li>Updated field definitions to be immutable case classes, adding missing 5.x properties; removed obsolete 2.x properties</li>
+  <li>Added support for unified http and tcp test suite</li>
+  <li>Added normalizer support</li>
+  <li>Minor circe improvements</li>
+  <li>Update Index Level support to http</li>
+  <li>Added <code class="highlighter-rouge">missing</code> and <code class="highlighter-rouge">filter</code> aggregation to http</li>
+  <li>Updated range query with missing fields</li>
+  <li>Set content type to JSON for all http requests</li>
+</ul>
+
+<h6 id="section-2">5.2.10</h6>
+
+<ul>
+  <li>Added explain requests to http</li>
+  <li>Added tasks api to http</li>
+  <li>Removed old multifield syntax, use only the 5.x compatible syntax</li>
+  <li>Fixed regression in subaggregations in 5.2.9</li>
+  <li>Removed <code class="highlighter-rouge">_id</code> field as this is no longer customisable</li>
+  <li>Added <code class="highlighter-rouge">minmax</code>, <code class="highlighter-rouge">cardinality</code> and <code class="highlighter-rouge">value count</code> aggregations</li>
+  <li>Added UUID support to buildable terms query</li>
+  <li>Added search iterator for http and restored Iterable Search for tcp</li>
+</ul>
+
+<h6 id="section-3">5.2.9</h6>
+
+<ul>
+  <li>Initial aggs for http with <code class="highlighter-rouge">terms</code> and <code class="highlighter-rouge">sum</code> aggs</li>
+  <li>Fixed source filtering on http get</li>
+</ul>
+
+<h6 id="section-4">5.2.8</h6>
+
+<ul>
+  <li>Highlight support added to Http Client</li>
+  <li>Fix for raw query</li>
+  <li>Range query and Terms query added to http client</li>
+  <li>Elements arg fix in reactive streams</li>
+  <li>VersionType added to index requests</li>
+  <li>Optional deps fixed for http client</li>
+</ul>
+
+<h6 id="section-5">5.2.7</h6>
+
+<ul>
+  <li>Fixed bug in hit reader and tuples</li>
+  <li>Added flush index, delete index, clear cache to http client</li>
+  <li>Added index exists and type exists requests to http client</li>
+  <li>Added validate support to http client</li>
+  <li>Supporting has_child, has_parent, dismax, fuzzy and boosting query types in http client</li>
+  <li>Search scroll added to http client</li>
+  <li>Added keyed filters aggregation to TCP client</li>
+</ul>
+
+<h6 id="section-6">5.2.6</h6>
+
+<ul>
+  <li>Fixed bug with source excludes since 5.2.0</li>
+  <li>Fixed HTTPS bug in http client</li>
+  <li>Added client.show to TCP client</li>
+  <li>Added constant score query suppor to http client</li>
+</ul>
+
+<h6 id="section-7">5.2.0</h6>
+
+<ul>
+  <li>Supports Elasticsearch 5.2.x</li>
+  <li>Added experimental HTTP client</li>
+</ul>
+
+<h6 id="section-8">5.1.5</h6>
+
+<ul>
+  <li>Fixed filter in add alias</li>
+</ul>
+
+<h5 id="section-9">#</h5>
+
+<ul>
+  <li>Added com.vividsolutions.jts.geom to build to avoid “stub issues”</li>
+</ul>
+
+<h6 id="section-10">5.1.3</h6>
+
+<ul>
+  <li>Added explicit search scroll close in reactive streams #695</li>
+  <li>Added phrase suggestion collate query</li>
+</ul>
+
+<h6 id="section-11">5.1.1</h6>
+
+<ul>
+  <li>Upgrade to elasticsearch 5.1.1</li>
+</ul>
+
+<h6 id="section-12">5.0.4</h6>
+
+<ul>
+  <li>elastic4s-xpack-security module.</li>
+  <li>Added missing geoShapeQuery for indexed shape</li>
+</ul>
+
+<h6 id="section-13">5.0.3</h6>
+
+<ul>
+  <li>Fixed issue with search scroll id using a scala Duration</li>
+</ul>
+
+<h6 id="section-14">5.0.2</h6>
+
+<ul>
+  <li>Elastic4s now brings in the required netty and lucene dependencies that the <code class="highlighter-rouge">elasticsearch-transport</code> module needs, but doesn’t bring in transitively.</li>
+  <li>Added strongly typed listener to <code class="highlighter-rouge">elastic4s-streams</code>.</li>
+</ul>
+
+<h6 id="section-15">5.0.1</h6>
+
+<ul>
+  <li>Released <code class="highlighter-rouge">elastic4s-play-json</code> for Elasticsearch 5.</li>
+</ul>
+
+<h6 id="section-16">5.0.0</h6>
+
+<p>Elasticsearch 5.0 is a huge release from the people at Elastic. There have been some queries and actions removed completely, and plenty of methods have been renamed or changed. The full breaking changes log in Elasticsearch itself is here:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking-changes-5.0.html</p>
+
+<p>These are the majority of changes in the scala client. As part of upgrading, there will certainly be some tweaking required.</p>
+
+<ul>
+  <li>TTL has been removed. As a replacement, you should use time based indexes or cron a delete-by-query with a range query on a timestamp field.</li>
+  <li>Scala specific enums have (mostly) been removed in favour of using the Java Enums provided by the Java client.</li>
+  <li>Infix notation has (mostly) been deprecated</li>
+  <li>New typeclass <code class="highlighter-rouge">HitReader</code> for reading data from searches. This typeclass handles errors (it returns <code class="highlighter-rouge">Either[Throwable, T]</code>) and now works for search, get, multisearch and multiget.</li>
+  <li>PercolatorQuery has been added (Elasticsearch have removed the previous percolator actions)</li>
+  <li>Scala specific re-index has been removed and the elasticsearch re-index action has been added #556</li>
+  <li>Update by query is now a plugin in Elasticsearch and so has been added to the client #616</li>
+  <li>Delete by query is now a plugin in Elasticsearch and so has been added to the client #616</li>
+  <li>Rollover has been added #658</li>
+  <li>Suggestions action has been removed in Elasticsearch, suggestions are now available on the search action</li>
+  <li>Search API has methods for getting the correct suggestion result back, eg <code class="highlighter-rouge">resp.termSuggestion("mysugg1")</code></li>
+  <li>Multimatchquery now supports boosting individual fields #545</li>
+  <li>Existing bool syntax has been deprecated in favour of a more explicit syntax #580</li>
+  <li>Terms lookup query has been added #631</li>
+  <li>Terms query now supports Iterables #597 #599</li>
+  <li>New module added for embedded nodes</li>
+  <li><code class="highlighter-rouge">successFn</code> has been added to elastic-streams. This is only invoked if there are no errors. #615</li>
+  <li>Cluster health supports parameters #600</li>
+  <li>Added indices options to GetSettings</li>
+  <li>Removed most of the methods deprecated prior to 2.0</li>
+  <li>Create template now supports alias #652</li>
+  <li>Fixed bug in docAsUpsert #651 #592</li>
+  <li>Support predefined Analyzers / Filters #602</li>
+  <li>Support for predefined language-specific stopwords #596</li>
+  <li>Support geo_shape queries #639</li>
+  <li>More like this request has been removed, use more like this query</li>
+  <li>Added better name for update in index into #535</li>
+  <li>Allow querying mappings for all types in an index #619</li>
+  <li>Add shutdown listener to close local node on JVM exit #655</li>
+</ul>
+
+<h6 id="section-17">2.1.1</h6>
+
+<ul>
+  <li>#484 Fixed bug in es-streams throwing ClassCastException</li>
+  <li>#483 Added overloaded doc method to update to accept indexables</li>
+</ul>
+
+<h6 id="section-18">2.1.0</h6>
+
+<ul>
+  <li>Optimize was renamed to ForceMerge. The existing optimize method are deprecated and <code class="highlighter-rouge">forceMerge(indexes*)</code> has been added in its place.</li>
+  <li>#395 Added pipeline aggregation definitions</li>
+  <li>#458 Added parameters to clear cache operation</li>
+  <li>#475 Fixed breaking change in terms query</li>
+  <li><code class="highlighter-rouge">rewrite</code> was removed from Elasticsearch’s matchXXX queries so has been removed in the dsl</li>
+  <li>Added <a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.1/search-aggregations-metrics-geocentroid-aggregation.html">GeoCentroid</a> aggregation</li>
+  <li>Added <code class="highlighter-rouge">terminateAfter</code> to search definition</li>
+  <li>SearchType.SCAN is now deprecated in Elasticsearch</li>
+  <li><code class="highlighter-rouge">count</code> is deprecated in Elasticsearch and should be replaced with a search with size 0</li>
+</ul>
+
+<h6 id="section-19">2.0.1</h6>
+
+<ul>
+  <li>#473 Added missing “filter” clause from bool query</li>
+  <li>#475 Fixed breaking change in terms query</li>
+  <li>#474 Added “item” likes to more like this query</li>
+</ul>
+
+<h6 id="section-20">2.0.0</h6>
+
+<p>Major upgrade to Elasticsearch 2.0.0 including breaking changes. <em>Please raise a PR if I’ve missed any breaking changes.</em></p>
+
+<ul>
+  <li>In elasticsearch 2.0.0 one of the major changes has been filters have become queries. So in elastic4s this means all methods <code class="highlighter-rouge">xxxFilter</code> are now <code class="highlighter-rouge">xxxQuery</code>, eg <code class="highlighter-rouge">hasChildrenFilter</code> is now <code class="highlighter-rouge">hasChildrenQuery</code>.</li>
+  <li>Some options that existed only on filters like cache and cache key are now removed.</li>
+  <li>Fuzzy like this query has been removed (this was removed in elasticsearch itself)</li>
+  <li>Script dsl has changed. To create a script to pass into a method, you use <code class="highlighter-rouge">script(script)</code> or <code class="highlighter-rouge">script(name, script)</code> with further parameters set using the builder pattern.</li>
+  <li>DynamicTemplate dsl <code class="highlighter-rouge">template name &lt;name&gt;</code> has been removed. Now you supply the full field definition in the dsl method, as such <code class="highlighter-rouge">template(field("price_*", DoubleType))</code></li>
+  <li>Index_analyzer has been removed in elasticsearch. Use analyzer and then override the analyzer for search with search_analyzer</li>
+  <li>MoreLikeThis was removed from elasticsearch in favour of a <code class="highlighter-rouge">moreLikeThisQuery</code> on a search request.</li>
+  <li><code class="highlighter-rouge">moreLikeThisQuery</code> has changed camel case (capital L), also now requires the ‘like’ text as the 2nd method, eg <code class="highlighter-rouge">moreLikeThisQuery("field").text("a")</code> (both can take varargs as well).</li>
+  <li>Search requests now return a richer response type. Previously it returned the java type. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.</li>
+  <li>The sorting DSL has changed in that the previous infix style methods are deprecated. So <code class="highlighter-rouge">field sort x</code> becomes <code class="highlighter-rouge">fieldSort(x)</code> etc.</li>
+  <li>Or and And filters have been removed completely (not changed into queries like other filters). Use a bool query with <code class="highlighter-rouge">must</code> clauses for and’s and <code class="highlighter-rouge">should</code> clauses for or’s.</li>
+  <li>Highlight dsl has changed slightly, <code class="highlighter-rouge">highlight field x</code> is now deprecated in favour of <code class="highlighter-rouge">highlight(x)</code></li>
+  <li>Delete mapping has been removed (this is removed in elasticsearch itself)</li>
+  <li>IndexStatus api has been removed (this was removed in elasticsearch itself)</li>
+  <li>Template has been renamed dynamic template (to better match the terminology in elasticsesarch)</li>
+  <li>Field and mapping syntax has changed slightly. The implicit <code class="highlighter-rouge">"fieldname" as StringType ...</code> has been deprecated in favour of <code class="highlighter-rouge">field("fieldname", StringType)</code> or <code class="highlighter-rouge">stringField()</code>, <code class="highlighter-rouge">longField</code>, etc</li>
+  <li>In es-streams the ResponseListener has changed to accept a <code class="highlighter-rouge">BulkItemResult</code> instead of a <code class="highlighter-rouge">BulkItemResponse</code></li>
+  <li>Multiget now returns a rich scala wrapper in the form of <code class="highlighter-rouge">MultiGetResult</code>. The richer type has java style methods so your code will continue to compile, but with deprecation warnings.</li>
+  <li>GetSegments returns a scala wrapper in the form of <code class="highlighter-rouge">GetSegmentsResult</code></li>
+  <li>IndexStats returns a scala wrapper in the form <code class="highlighter-rouge">IndexStatsResult</code></li>
+</ul>
+
+<h6 id="section-21">1.7.0</h6>
+
+<ul>
+  <li>Works with Elasticsearch 1.7.x</li>
+  <li>Removed sync client (deprecated since 1.3.0)</li>
+</ul>
+
+<h6 id="section-22">1.6.6</h6>
+
+<ul>
+  <li>Fix for race condition in elastic-streams subscriber</li>
+</ul>
+
+<h6 id="section-23">1.6.5</h6>
+<ul>
+  <li>Added sourceAsUpsert to allow <code class="highlighter-rouge">Indexable</code> as upsert in update queries</li>
+  <li>Added geohash aggregation</li>
+  <li>Added geohash cell filter</li>
+  <li>Added cluster state api</li>
+  <li>Added support for unmapped_type property</li>
+  <li>Added block until index/type exists testkit helpers</li>
+  <li>Added raw query to count dsl</li>
+  <li>Added <code class="highlighter-rouge">show</code> typeclass for count</li>
+  <li>Added <code class="highlighter-rouge">InFilter</code> and <code class="highlighter-rouge">IndicesFilter</code></li>
+  <li>Added shorter syntax for field types, eg <code class="highlighter-rouge">stringField(name)</code> vs <code class="highlighter-rouge">field name &lt;name&gt; typed StringType</code></li>
+</ul>
+
+<h6 id="section-24">1.6.4</h6>
+<ul>
+  <li>Added reactive streams implementation for elastic4s.</li>
+  <li>Support explicit field types in the update dsl</li>
+  <li>Added missing options to restore snapshot dsl</li>
+  <li>Added <code class="highlighter-rouge">show</code> typeclass for percolate register</li>
+</ul>
+
+<h6 id="section-25">1.5.17</h6>
+<ul>
+  <li>Added clear scroll api</li>
+  <li>Added missing options to restore snapshot dsl</li>
+</ul>
+
+<h6 id="section-26">1.6.3</h6>
+<ul>
+  <li>Added clear scroll api</li>
+  <li>Added <code class="highlighter-rouge">show</code> typeclass for multisearch</li>
+  <li>Allow update dsl to use explicit field values</li>
+</ul>
+
+<h6 id="section-27">1.5.16</h6>
+<ul>
+  <li>Added <code class="highlighter-rouge">HitAs</code> as a replacement for the <code class="highlighter-rouge">Reader</code> typeclass</li>
+  <li>Added indices option to mapping, count and search dsl</li>
+  <li>Added docValuesFormat to timestamp mapping</li>
+</ul>
+
+<h6 id="section-28">1.6.2</h6>
+<ul>
+  <li>Added new methods to testkit</li>
+  <li>Introduced simplier syntax for sorts</li>
+  <li>Added <code class="highlighter-rouge">HitAs</code> as a replacement for the <code class="highlighter-rouge">Reader</code> typeclass</li>
+  <li>Fixed validate query for block queries</li>
+  <li>Added <code class="highlighter-rouge">show</code> typeclasses for search, create index, into into, validate, count, and percolate to allow easy debugging of the json of requests.</li>
+</ul>
+
+<h6 id="section-29">1.5.15</h6>
+<ul>
+  <li>Added <code class="highlighter-rouge">matched_fields</code> and highlight filter to highlighter</li>
+</ul>
+
+<h6 id="section-30">1.6.1</h6>
+<ul>
+  <li>Added IterableSearch for iterating over a scroll</li>
+  <li>Enhanced multiget dsl to include <code class="highlighter-rouge">routing</code>, <code class="highlighter-rouge">version</code> and <code class="highlighter-rouge">field</code> options</li>
+  <li>Added rich result for GetAliasResponse</li>
+  <li>Added context queries to suggestions</li>
+  <li>Breaking change: Changed syntax of suggestions to be clearer and allow for type safe results</li>
+  <li>Allow setting analyzer by name on matchphraseprefix</li>
+  <li>Added singleMethodSyntax variant, eg <code class="highlighter-rouge">indexInto(index)</code> rather than <code class="highlighter-rouge">index into index</code></li>
+  <li>Added re-write to validate</li>
+  <li>Added filter support to alias (previously only the java client filters were supported)</li>
+  <li>Added cluster settings api</li>
+  <li>Added field stats api</li>
+  <li>Addd <code class="highlighter-rouge">docValuesFormat</code> to timestamp mapping</li>
+  <li>Added <code class="highlighter-rouge">matched_fields</code> and highlight filter to highlighter</li>
+  <li>Supported <code class="highlighter-rouge">stopwords_list</code> in filter</li>
+  <li>Reworked testkit to allow more configuration over the creating of the test clients</li>
+</ul>
+
+<h2 id="used-by">Used By</h2>
+<ul>
+  <li>Barclays Bank</li>
+  <li>HSBC</li>
+  <li>Shazaam</li>
+  <li>Graphflow</li>
+  <li>Hotel Urbano</li>
+  <li>Immobilien Scout</li>
+  <li>Deutsche Bank</li>
+  <li>Goldman Sachs</li>
+  <li>HMRC</li>
+  <li>Canal+</li>
+  <li>AOE</li>
+</ul>
+
+<p><em>Raise a PR to add your company here</em></p>
+
+<p><img src="https://www.yourkit.com/images/yklogo.png" alt="youkit logo" /> YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
+and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
+innovative and intelligent tools for profiling Java and .NET applications.</p>
+
+<h2 id="contributions">Contributions</h2>
+<p>Contributions to elastic4s are always welcome. Good ways to contribute include:</p>
+
+<ul>
+  <li>Raising bugs and feature requests</li>
+  <li>Fixing bugs and enhancing the DSL</li>
+  <li>Improving the performance of elastic4s</li>
+  <li>Adding to the documentation</li>
+</ul>
+
+<h2 id="license">License</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>This software is licensed under the Apache 2 license, quoted below.
+
+Copyright 2013-2016 Stephen Samuel
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+</code></pre>
+</div>
+
+</div></div></section><section class="technologies"><div class="container"><div class="row"></div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Elastic4s is designed and developed by <a href="https://sksamuel.github.io/elastic4s" target="_blank">Stephen Samuel</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/sksamuel/elastic4s"><span class="fa fa-github"></span>View on Github</a></p></div></div></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/elastic4s/highlight/highlight.pack.js"></script><script>hljs.configure({
+languages:['scala','java','bash']
+});
+hljs.initHighlighting();
+             </script></body></html>

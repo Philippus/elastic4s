@@ -1,0 +1,1477 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>elastic4s - com.sksamuel.elastic4s</title>
+          <meta name="description" content="elastic4s - com.sksamuel.elastic4s" />
+          <meta name="keywords" content="elastic4s com.sksamuel.elastic4s" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.sksamuel">sksamuel</a></p>
+        <h1>elastic4s</h1><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">elastic4s</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.ArrayFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ArrayFieldValueextendsFieldValuewithProductwithSerializable"></a>
+      <a id="ArrayFieldValue:ArrayFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ArrayFieldValue.html"><span class="name">ArrayFieldValue</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a>]</span>)</span><span class="result"> extends <a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ArrayFieldValueextendsFieldValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.DocumentRef" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DocumentRefextendsProductwithSerializable"></a>
+      <a id="DocumentRef:DocumentRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DocumentRef.html"><span class="name">DocumentRef</span></a><span class="params">(<span name="index">index: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@DocumentRefextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticApi" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElasticApiextendsElasticImplicitswithAliasesApiwithAggregationApiwithAnalyzerApiwithBulkApiwithCreateIndexApiwithClusterApiwithDeleteApiwithDeleteIndexApiwithDynamicTemplateApiwithExplainApiwithGetApiwithHighlightApiwithIndexApiwithIndexAdminApiwithIndexTemplateApiwithLocksApiwithMappingApiwithNodesApiwithNormalizerApiwithQueryApiwithPipelineAggregationApiwithReindexApiwithScriptApiwithScoreApiwithScrollApiwithSearchApiwithSortApiwithSuggestionApiwithTaskApiwithTermVectorApiwithTokenizerApiwithTypesApiwithUpdateApiwithValidateApi"></a>
+      <a id="ElasticApi:ElasticApi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticApi.html"><span class="name">ElasticApi</span></a><span class="result"> extends <a href="ElasticImplicits.html" class="extype" name="com.sksamuel.elastic4s.ElasticImplicits">ElasticImplicits</a> with <a href="alias/AliasesApi.html" class="extype" name="com.sksamuel.elastic4s.alias.AliasesApi">AliasesApi</a> with <a href="searches/aggs/AggregationApi.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AggregationApi">AggregationApi</a> with <a href="analyzers/AnalyzerApi.html" class="extype" name="com.sksamuel.elastic4s.analyzers.AnalyzerApi">AnalyzerApi</a> with <a href="bulk/BulkApi.html" class="extype" name="com.sksamuel.elastic4s.bulk.BulkApi">BulkApi</a> with <a href="indexes/CreateIndexApi.html" class="extype" name="com.sksamuel.elastic4s.indexes.CreateIndexApi">CreateIndexApi</a> with <a href="cluster/ClusterApi.html" class="extype" name="com.sksamuel.elastic4s.cluster.ClusterApi">ClusterApi</a> with <a href="delete/DeleteApi.html" class="extype" name="com.sksamuel.elastic4s.delete.DeleteApi">DeleteApi</a> with <a href="indexes/DeleteIndexApi.html" class="extype" name="com.sksamuel.elastic4s.indexes.DeleteIndexApi">DeleteIndexApi</a> with <a href="mappings/DynamicTemplateApi.html" class="extype" name="com.sksamuel.elastic4s.mappings.DynamicTemplateApi">DynamicTemplateApi</a> with <a href="explain/ExplainApi.html" class="extype" name="com.sksamuel.elastic4s.explain.ExplainApi">ExplainApi</a> with <a href="get/GetApi.html" class="extype" name="com.sksamuel.elastic4s.get.GetApi">GetApi</a> with <a href="searches/HighlightApi.html" class="extype" name="com.sksamuel.elastic4s.searches.HighlightApi">HighlightApi</a> with <a href="indexes/IndexApi.html" class="extype" name="com.sksamuel.elastic4s.indexes.IndexApi">IndexApi</a> with <a href="admin/IndexAdminApi.html" class="extype" name="com.sksamuel.elastic4s.admin.IndexAdminApi">IndexAdminApi</a> with <a href="indexes/IndexTemplateApi.html" class="extype" name="com.sksamuel.elastic4s.indexes.IndexTemplateApi">IndexTemplateApi</a> with <a href="locks/LocksApi.html" class="extype" name="com.sksamuel.elastic4s.locks.LocksApi">LocksApi</a> with <a href="mappings/MappingApi.html" class="extype" name="com.sksamuel.elastic4s.mappings.MappingApi">MappingApi</a> with <a href="nodes/NodesApi.html" class="extype" name="com.sksamuel.elastic4s.nodes.NodesApi">NodesApi</a> with <a href="analyzers/NormalizerApi.html" class="extype" name="com.sksamuel.elastic4s.analyzers.NormalizerApi">NormalizerApi</a> with <a href="searches/QueryApi.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi">QueryApi</a> with <a href="searches/aggs/pipeline/PipelineAggregationApi.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi">PipelineAggregationApi</a> with <a href="reindex/ReindexApi.html" class="extype" name="com.sksamuel.elastic4s.reindex.ReindexApi">ReindexApi</a> with <a href="script/ScriptApi.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptApi">ScriptApi</a> with <a href="searches/queries/funcscorer/ScoreApi.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi">ScoreApi</a> with <a href="searches/ScrollApi.html" class="extype" name="com.sksamuel.elastic4s.searches.ScrollApi">ScrollApi</a> with <a href="searches/SearchApi.html" class="extype" name="com.sksamuel.elastic4s.searches.SearchApi">SearchApi</a> with <a href="searches/sort/SortApi.html" class="extype" name="com.sksamuel.elastic4s.searches.sort.SortApi">SortApi</a> with <a href="searches/suggestion/SuggestionApi.html" class="extype" name="com.sksamuel.elastic4s.searches.suggestion.SuggestionApi">SuggestionApi</a> with <a href="task/TaskApi.html" class="extype" name="com.sksamuel.elastic4s.task.TaskApi">TaskApi</a> with <a href="termvectors/TermVectorApi.html" class="extype" name="com.sksamuel.elastic4s.termvectors.TermVectorApi">TermVectorApi</a> with <a href="analyzers/TokenizerApi.html" class="extype" name="com.sksamuel.elastic4s.analyzers.TokenizerApi">TokenizerApi</a> with <a href="TypesApi.html" class="extype" name="com.sksamuel.elastic4s.TypesApi">TypesApi</a> with <a href="update/UpdateApi.html" class="extype" name="com.sksamuel.elastic4s.update.UpdateApi">UpdateApi</a> with <a href="validate/ValidateApi.html" class="extype" name="com.sksamuel.elastic4s.validate.ValidateApi">ValidateApi</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticApiextendsElasticImplicitswithAliasesApiwithAggregationApiwithAnalyzerApiwithBulkApiwithCreateIndexApiwithClusterApiwithDeleteApiwithDeleteIndexApiwithDynamicTemplateApiwithExplainApiwithGetApiwithHighlightApiwithIndexApiwithIndexAdminApiwithIndexTemplateApiwithLocksApiwithMappingApiwithNodesApiwithNormalizerApiwithQueryApiwithPipelineAggregationApiwithReindexApiwithScriptApiwithScoreApiwithScrollApiwithSearchApiwithSortApiwithSuggestionApiwithTaskApiwithTermVectorApiwithTokenizerApiwithTypesApiwithUpdateApiwithValidateApi" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElasticDslextendsElasticApiwithClusterDslwithFieldStatsDslwithForceMergeDslwithIndexRecoveryDslwithPercolateDslwithSettingsDslwithSnapshotDslwithTokenFilterDslwithTcpExecutableswithBuildableTermsQueryImplicitswithElasticImplicits"></a>
+      <a id="ElasticDsl:ElasticDsl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticDsl.html"><span class="name">ElasticDsl</span></a><span class="result"> extends <a href="ElasticApi.html" class="extype" name="com.sksamuel.elastic4s.ElasticApi">ElasticApi</a> with <a href="admin/ClusterDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.ClusterDsl">ClusterDsl</a> with <a href="admin/FieldStatsDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.FieldStatsDsl">FieldStatsDsl</a> with <a href="admin/ForceMergeDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.ForceMergeDsl">ForceMergeDsl</a> with <a href="admin/IndexRecoveryDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.IndexRecoveryDsl">IndexRecoveryDsl</a> with <a href="PercolateDsl.html" class="extype" name="com.sksamuel.elastic4s.PercolateDsl">PercolateDsl</a> with <a href="admin/SettingsDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.SettingsDsl">SettingsDsl</a> with <a href="admin/SnapshotDsl.html" class="extype" name="com.sksamuel.elastic4s.admin.SnapshotDsl">SnapshotDsl</a> with <a href="analyzers/TokenFilterDsl.html" class="extype" name="com.sksamuel.elastic4s.analyzers.TokenFilterDsl">TokenFilterDsl</a> with <a href="TcpExecutables.html" class="extype" name="com.sksamuel.elastic4s.TcpExecutables">TcpExecutables</a> with <a href="searches/queries/BuildableTermsQueryImplicits.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BuildableTermsQueryImplicits">BuildableTermsQueryImplicits</a> with <a href="ElasticImplicits.html" class="extype" name="com.sksamuel.elastic4s.ElasticImplicits">ElasticImplicits</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticDslextendsElasticApiwithClusterDslwithFieldStatsDslwithForceMergeDslwithIndexRecoveryDslwithPercolateDslwithSettingsDslwithSnapshotDslwithTokenFilterDslwithTcpExecutableswithBuildableTermsQueryImplicitswithElasticImplicits" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticImplicits" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ElasticImplicitsextendsAnyRef"></a>
+      <a id="ElasticImplicits:ElasticImplicits"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticImplicits.html"><span class="name">ElasticImplicits</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticImplicitsextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticsearchClientUri" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ElasticsearchClientUriextendsProductwithSerializable"></a>
+      <a id="ElasticsearchClientUri:ElasticsearchClientUri"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticsearchClientUri.html"><span class="name">ElasticsearchClientUri</span></a><span class="params">(<span name="uri">uri: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="hosts">hosts: <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a>)]</span>, <span name="options">options: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Map.empty</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticsearchClientUriextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Uri used to connect to an Elasticsearch cluster.</p><div class="fullcomment"><div class="comment cmt"><p>Uri used to connect to an Elasticsearch cluster. The general format is</p><p>elasticsearch://host:port,host:port?querystring</p><p>Multiple host:port combinations can be specified, seperated by commas.
+Options can be specified using standard uri query string syntax, eg cluster.name=superman</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.Executable" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Executable[T,R,Q]extendsAnyRef"></a>
+      <a id="Executable[T,R,Q]:Executable[T,R,Q]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Executable.html"><span class="name">Executable</span></a><span class="tparams">[<span name="T">T</span>, <span name="R">R</span>, <span name="Q">Q</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@Executable[T,R,Q]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Typeclass to execute a search for a given type of Elasticsearch request.</p><div class="fullcomment"><div class="comment cmt"><p>Typeclass to execute a search for a given type of Elasticsearch request.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>is the elastic4s request definition type</p></dd><dt class="tparam">R</dt><dd class="cmt"><p>is the type returned by the Elasticsearch java client for this type.</p></dd><dt class="tparam">Q</dt><dd class="cmt"><p>is the type returned by Elastic4s to the user for this request type.
+          If the particular implementation of this typeclass doesn't return a pimped/scala/rich response type,
+          then R and Q will be the same.</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.FieldValue" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FieldValueextendsAnyRef"></a>
+      <a id="FieldValue:FieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="FieldValue.html"><span class="name">FieldValue</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@FieldValueextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.FieldValueWriter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FieldValueWriter[T&lt;:com.sksamuel.elastic4s.FieldValue]extendsAnyRef"></a>
+      <a id="FieldValueWriter[T&lt;:FieldValue]:FieldValueWriter[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="FieldValueWriter.html"><span class="name">FieldValueWriter</span></a><span class="tparams">[<span name="T">T &lt;: <a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a></span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@FieldValueWriter[T&lt;:com.sksamuel.elastic4s.FieldValue]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.Hit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HitextendsAnyRef"></a>
+      <a id="Hit:Hit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Hit.html"><span class="name">Hit</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@HitextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A common trait for Get, MultiGet, Search and MultiSearch API results so that
+the HitReader typeclass can unmarshall results from any of those.</p>
+    </li><li name="com.sksamuel.elastic4s.HitReader" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HitReader[T]extendsAnyRef"></a>
+      <a id="HitReader[T]:HitReader[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HitReader.html"><span class="name">HitReader</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@HitReader[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IndexAndType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexAndTypeextendsProductwithSerializable"></a>
+      <a id="IndexAndType:IndexAndType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexAndType.html"><span class="name">IndexAndType</span></a><span class="params">(<span name="index">index: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexAndTypeextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Models exactly one index associated with exactly one type.</p>
+    </li><li name="com.sksamuel.elastic4s.IndexAndTypes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="IndexAndTypesextendsProductwithSerializable"></a>
+      <a id="IndexAndTypes:IndexAndTypes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexAndTypes.html"><span class="name">IndexAndTypes</span></a><span class="params">(<span name="index">index: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="types">types: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexAndTypesextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Models one index associated with one or more types.</p><div class="fullcomment"><div class="comment cmt"><p>Models one index associated with one or more types.</p><p>So for example,
+- index1/type1
+- index1/type1,type2
+</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.Indexable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Indexable[T]extendsAnyRef"></a>
+      <a id="Indexable[T]:Indexable[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Indexable.html"><span class="name">Indexable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@Indexable[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Typeclass that is used by index requests to convert a type into a document for use by Elasticsearch
+</p>
+    </li><li name="com.sksamuel.elastic4s.Indexes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexesextendsProductwithSerializable"></a>
+      <a id="Indexes:Indexes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Indexes.html"><span class="name">Indexes</span></a><span class="params">(<span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexesextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Models one or more indexes, eg
+- &quot;index1&quot;
+- &quot;index1,index2&quot;
+- &quot;_all&quot;</p>
+    </li><li name="com.sksamuel.elastic4s.IndexesAndType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexesAndTypeextendsProductwithSerializable"></a>
+      <a id="IndexesAndType:IndexesAndType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexesAndType.html"><span class="name">IndexesAndType</span></a><span class="params">(<span name="indexes">indexes: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexesAndTypeextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IndexesAndTypes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="IndexesAndTypesextendsProductwithSerializable"></a>
+      <a id="IndexesAndTypes:IndexesAndTypes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexesAndTypes.html"><span class="name">IndexesAndTypes</span></a><span class="params">(<span name="indexes">indexes: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="types">types: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexesAndTypesextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Models one or more indexes associated with zero or more types.</p><div class="fullcomment"><div class="comment cmt"><p>Models one or more indexes associated with zero or more types.</p><p>So for example,
+- index1
+- index1/index2
+- index1/type1
+- index1/type1,type2
+- index1,index2/type1
+- index1,index2/type1,type2
+</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.IndicesStatsResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndicesStatsResultextendsProductwithSerializable"></a>
+      <a id="IndicesStatsResult:IndicesStatsResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IndicesStatsResult.html"><span class="name">IndicesStatsResult</span></a><span class="params">(<span name="original">original: <span class="extype" name="org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse">IndicesStatsResponse</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndicesStatsResultextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IterableSearch" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="IterableSearchextendsAnyRef"></a>
+      <a id="IterableSearch:IterableSearch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IterableSearch.html"><span class="name">IterableSearch</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IterableSearchextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Represents something which can iterate the results from a query.</p><div class="fullcomment"><div class="comment cmt"><p>Represents something which can iterate the results from a query.</p><p>In practice this means concatenating several requests into a single iterable, so that the next request is only
+made when required when the iterable is advanced.</p></div></div>
+    </li><li name="com.sksamuel.elastic4s.JsonFormat" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="JsonFormat[U]extendsAnyRef"></a>
+      <a id="JsonFormat[U]:JsonFormat[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonFormat.html"><span class="name">JsonFormat</span></a><span class="tparams">[<span name="U">U</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@JsonFormat[U]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Typeclass to be implemented by the various json modules for use in the http client.</p><div class="fullcomment"><div class="comment cmt"><p>Typeclass to be implemented by the various json modules for use in the http client.
+</p></div><dl class="paramcmts block"><dt class="tparam">U</dt><dd class="cmt"><p>the type of the class supported</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.NestedFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NestedFieldValueextendsFieldValuewithProductwithSerializable"></a>
+      <a id="NestedFieldValue:NestedFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NestedFieldValue.html"><span class="name">NestedFieldValue</span></a><span class="params">(<span name="name">name: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a>]</span>)</span><span class="result"> extends <a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@NestedFieldValueextendsFieldValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.NullFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullFieldValueextendsFieldValuewithProductwithSerializable"></a>
+      <a id="NullFieldValue:NullFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NullFieldValue.html"><span class="name">NullFieldValue</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@NullFieldValueextendsFieldValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.PercolateDsl" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PercolateDslextendsAnyRef"></a>
+      <a id="PercolateDsl:PercolateDsl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PercolateDsl.html"><span class="name">PercolateDsl</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@PercolateDslextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.Preference" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PreferenceextendsAnyRef"></a>
+      <a id="Preference:Preference"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Preference.html"><span class="name">Preference</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@PreferenceextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.SimpleFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SimpleFieldValueextendsFieldValuewithProductwithSerializable"></a>
+      <a id="SimpleFieldValue:SimpleFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SimpleFieldValue.html"><span class="name">SimpleFieldValue</span></a><span class="params">(<span name="name">name: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result"> extends <a href="FieldValue.html" class="extype" name="com.sksamuel.elastic4s.FieldValue">FieldValue</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@SimpleFieldValueextendsFieldValuewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.TcpClient" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TcpClientextendsAnyRef"></a>
+      <a id="TcpClient:TcpClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TcpClient.html"><span class="name">TcpClient</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@TcpClientextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.TcpClientConstructors" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TcpClientConstructorsextendsLogging"></a>
+      <a id="TcpClientConstructors:TcpClientConstructors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TcpClientConstructors.html"><span class="name">TcpClientConstructors</span></a><span class="result"> extends <span class="extype" name="com.sksamuel.exts.Logging">Logging</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@TcpClientConstructorsextendsLogging" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.TcpExecutables" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TcpExecutablesextendsAliasExecutableswithBulkExecutableswithCreateIndexExecutableswithDeleteExecutableswithDeleteIndexExecutableswithExplainExecutableswithGetExecutableswithIndexAdminExecutableswithIndexExecutableswithIndexTemplateExecutableswithMappingExecutableswithReindexExecutableswithScrollExecutableswithSearchImplicitswithTaskExecutableswithTermVectorsExecutableswithUpdateExecutableswithValidateExecutables"></a>
+      <a id="TcpExecutables:TcpExecutables"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TcpExecutables.html"><span class="name">TcpExecutables</span></a><span class="result"> extends <a href="alias/AliasExecutables.html" class="extype" name="com.sksamuel.elastic4s.alias.AliasExecutables">AliasExecutables</a> with <a href="bulk/BulkExecutables.html" class="extype" name="com.sksamuel.elastic4s.bulk.BulkExecutables">BulkExecutables</a> with <a href="index/CreateIndexExecutables.html" class="extype" name="com.sksamuel.elastic4s.index.CreateIndexExecutables">CreateIndexExecutables</a> with <a href="delete/DeleteExecutables.html" class="extype" name="com.sksamuel.elastic4s.delete.DeleteExecutables">DeleteExecutables</a> with <a href="index/DeleteIndexExecutables.html" class="extype" name="com.sksamuel.elastic4s.index.DeleteIndexExecutables">DeleteIndexExecutables</a> with <a href="explain/ExplainExecutables.html" class="extype" name="com.sksamuel.elastic4s.explain.ExplainExecutables">ExplainExecutables</a> with <a href="get/GetExecutables.html" class="extype" name="com.sksamuel.elastic4s.get.GetExecutables">GetExecutables</a> with <a href="admin/IndexAdminExecutables.html" class="extype" name="com.sksamuel.elastic4s.admin.IndexAdminExecutables">IndexAdminExecutables</a> with <a href="index/IndexExecutables.html" class="extype" name="com.sksamuel.elastic4s.index.IndexExecutables">IndexExecutables</a> with <a href="index/IndexTemplateExecutables.html" class="extype" name="com.sksamuel.elastic4s.index.IndexTemplateExecutables">IndexTemplateExecutables</a> with <a href="mappings/MappingExecutables.html" class="extype" name="com.sksamuel.elastic4s.mappings.MappingExecutables">MappingExecutables</a> with <a href="reindex/ReindexExecutables.html" class="extype" name="com.sksamuel.elastic4s.reindex.ReindexExecutables">ReindexExecutables</a> with <a href="search/ScrollExecutables.html" class="extype" name="com.sksamuel.elastic4s.search.ScrollExecutables">ScrollExecutables</a> with <a href="search/SearchImplicits.html" class="extype" name="com.sksamuel.elastic4s.search.SearchImplicits">SearchImplicits</a> with <a href="task/TaskExecutables.html" class="extype" name="com.sksamuel.elastic4s.task.TaskExecutables">TaskExecutables</a> with <a href="termvectors/TermVectorsExecutables.html" class="extype" name="com.sksamuel.elastic4s.termvectors.TermVectorsExecutables">TermVectorsExecutables</a> with <a href="update/UpdateExecutables.html" class="extype" name="com.sksamuel.elastic4s.update.UpdateExecutables">UpdateExecutables</a> with <a href="validate/ValidateExecutables.html" class="extype" name="com.sksamuel.elastic4s.validate.ValidateExecutables">ValidateExecutables</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@TcpExecutablesextendsAliasExecutableswithBulkExecutableswithCreateIndexExecutableswithDeleteExecutableswithDeleteIndexExecutableswithExplainExecutableswithGetExecutableswithIndexAdminExecutableswithIndexExecutableswithIndexTemplateExecutableswithMappingExecutableswithReindexExecutableswithScrollExecutableswithSearchImplicitswithTaskExecutableswithTermVectorsExecutableswithUpdateExecutableswithValidateExecutables" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.TypesApi" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TypesApiextendsAnyRef"></a>
+      <a id="TypesApi:TypesApi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypesApi.html"><span class="name">TypesApi</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@TypesApiextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticClient" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ElasticClientextendsTcpClient"></a>
+      <a id="ElasticClient:ElasticClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticClient.html"><span class="name deprecated" title="Deprecated: (Since version 5.2.0) ElasticClient is now TcpClient">ElasticClient</span></a><span class="result"> extends <a href="TcpClient.html" class="extype" name="com.sksamuel.elastic4s.TcpClient">TcpClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticClientextendsTcpClient" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.2.0)</i> ElasticClient is now TcpClient</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.DefinitionAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DefinitionAttributes"></a>
+      <a id="DefinitionAttributes:DefinitionAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DefinitionAttributes$.html"><span class="name">DefinitionAttributes</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@DefinitionAttributes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticApi" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElasticApi"></a>
+      <a id="ElasticApi:ElasticApi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticApi$.html"><span class="name">ElasticApi</span></a><span class="result"> extends <a href="ElasticApi.html" class="extype" name="com.sksamuel.elastic4s.ElasticApi">ElasticApi</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticApi" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElasticDsl"></a>
+      <a id="ElasticDsl:ElasticDsl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticDsl$.html"><span class="name">ElasticDsl</span></a><span class="result"> extends <a href="ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">ElasticDsl</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticDsl" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticImplicits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElasticImplicits"></a>
+      <a id="ElasticImplicits:ElasticImplicits"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticImplicits$.html"><span class="name">ElasticImplicits</span></a><span class="result"> extends <a href="ElasticImplicits.html" class="extype" name="com.sksamuel.elastic4s.ElasticImplicits">ElasticImplicits</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticImplicits" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ElasticsearchClientUri" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ElasticsearchClientUri"></a>
+      <a id="ElasticsearchClientUri:ElasticsearchClientUri"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticsearchClientUri$.html"><span class="name">ElasticsearchClientUri</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticsearchClientUri" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.FieldsMapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FieldsMapper"></a>
+      <a id="FieldsMapper:FieldsMapper"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FieldsMapper$.html"><span class="name">FieldsMapper</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@FieldsMapper" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Converts between scala types and types that Elasticsearch understands.</p>
+    </li><li name="com.sksamuel.elastic4s.IndexAndType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexAndType"></a>
+      <a id="IndexAndType:IndexAndType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexAndType$.html"><span class="name">IndexAndType</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexAndType" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IndexAndTypes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexAndTypes"></a>
+      <a id="IndexAndTypes:IndexAndTypes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexAndTypes$.html"><span class="name">IndexAndTypes</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexAndTypes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.Indexes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Indexes"></a>
+      <a id="Indexes:Indexes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Indexes$.html"><span class="name">Indexes</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@Indexes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IndexesAndType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexesAndType"></a>
+      <a id="IndexesAndType:IndexesAndType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexesAndType$.html"><span class="name">IndexesAndType</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexesAndType" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IndexesAndTypes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IndexesAndTypes"></a>
+      <a id="IndexesAndTypes:IndexesAndTypes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IndexesAndTypes$.html"><span class="name">IndexesAndTypes</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IndexesAndTypes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.IterableSearch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IterableSearch"></a>
+      <a id="IterableSearch:IterableSearch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IterableSearch$.html"><span class="name">IterableSearch</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@IterableSearch" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.NestedFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NestedFieldValue"></a>
+      <a id="NestedFieldValue:NestedFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NestedFieldValue$.html"><span class="name">NestedFieldValue</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@NestedFieldValue" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.Preference" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Preference"></a>
+      <a id="Preference:Preference"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Preference$.html"><span class="name">Preference</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@Preference" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ProxyClients" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ProxyClients"></a>
+      <a id="ProxyClients:ProxyClients"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ProxyClients$.html"><span class="name">ProxyClients</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ProxyClients" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.ScriptBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScriptBuilder"></a>
+      <a id="ScriptBuilder:ScriptBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ScriptBuilder$.html"><span class="name">ScriptBuilder</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ScriptBuilder" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.SimpleFieldValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SimpleFieldValue"></a>
+      <a id="SimpleFieldValue:SimpleFieldValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SimpleFieldValue$.html"><span class="name">SimpleFieldValue</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@SimpleFieldValue" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.TcpClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TcpClient"></a>
+      <a id="TcpClient:TcpClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TcpClient$.html"><span class="name">TcpClient</span></a><span class="result"> extends <a href="TcpClientConstructors.html" class="extype" name="com.sksamuel.elastic4s.TcpClientConstructors">TcpClientConstructors</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@TcpClient" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.XContentFieldValueWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="XContentFieldValueWriter"></a>
+      <a id="XContentFieldValueWriter:XContentFieldValueWriter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="XContentFieldValueWriter$.html"><span class="name">XContentFieldValueWriter</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@XContentFieldValueWriter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.admin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="admin"></a>
+      <a id="admin:admin"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="admin/package.html"><span class="name">admin</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@admin" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.alias" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="alias"></a>
+      <a id="alias:alias"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="alias/package.html"><span class="name">alias</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@alias" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.analyzers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="analyzers"></a>
+      <a id="analyzers:analyzers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="analyzers/package.html"><span class="name">analyzers</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@analyzers" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.bulk" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bulk"></a>
+      <a id="bulk:bulk"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="bulk/package.html"><span class="name">bulk</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@bulk" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.cluster" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cluster"></a>
+      <a id="cluster:cluster"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="cluster/package.html"><span class="name">cluster</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@cluster" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.definitions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="definitions"></a>
+      <a id="definitions:definitions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="definitions/package.html"><span class="name">definitions</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@definitions" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="delete"></a>
+      <a id="delete:delete"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="delete/package.html"><span class="name">delete</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@delete" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.embedded" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="embedded"></a>
+      <a id="embedded:embedded"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="embedded/package.html"><span class="name">embedded</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@embedded" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.explain" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="explain"></a>
+      <a id="explain:explain"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="explain/package.html"><span class="name">explain</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@explain" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="get"></a>
+      <a id="get:get"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="get/package.html"><span class="name">get</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@get" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.http" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="http"></a>
+      <a id="http:http"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="http/package.html"><span class="name">http</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@http" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.index" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="index"></a>
+      <a id="index:index"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="index/package.html"><span class="name">index</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@index" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.indexes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="indexes"></a>
+      <a id="indexes:indexes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="indexes/package.html"><span class="name">indexes</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@indexes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.jackson" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="jackson"></a>
+      <a id="jackson:jackson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="jackson/package.html"><span class="name">jackson</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@jackson" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.json4s" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="json4s"></a>
+      <a id="json4s:json4s"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="json4s/package.html"><span class="name">json4s</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@json4s" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.locks" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="locks"></a>
+      <a id="locks:locks"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="locks/package.html"><span class="name">locks</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@locks" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.mappings" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="mappings"></a>
+      <a id="mappings:mappings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="mappings/package.html"><span class="name">mappings</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@mappings" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.nodes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nodes"></a>
+      <a id="nodes:nodes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="nodes/package.html"><span class="name">nodes</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@nodes" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.reindex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reindex"></a>
+      <a id="reindex:reindex"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="reindex/package.html"><span class="name">reindex</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@reindex" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.script" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="script"></a>
+      <a id="script:script"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="script/package.html"><span class="name">script</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@script" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.search" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="search"></a>
+      <a id="search:search"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="search/package.html"><span class="name">search</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@search" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="searches"></a>
+      <a id="searches:searches"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="searches/package.html"><span class="name">searches</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@searches" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.streams" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="streams"></a>
+      <a id="streams:streams"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="streams/package.html"><span class="name">streams</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@streams" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.task" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="task"></a>
+      <a id="task:task"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="task/package.html"><span class="name">task</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@task" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.termvectors" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termvectors"></a>
+      <a id="termvectors:termvectors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="termvectors/package.html"><span class="name">termvectors</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@termvectors" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.testkit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="testkit"></a>
+      <a id="testkit:testkit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="testkit/package.html"><span class="name">testkit</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@testkit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.update" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="update"></a>
+      <a id="update:update"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="update/package.html"><span class="name">update</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@update" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.validate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="validate"></a>
+      <a id="validate:validate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="validate/package.html"><span class="name">validate</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@validate" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.xpack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="xpack"></a>
+      <a id="xpack:xpack"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="xpack/package.html"><span class="name">xpack</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@xpack" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.ElasticClient" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ElasticClient"></a>
+      <a id="ElasticClient:ElasticClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ElasticClient$.html"><span class="name deprecated" title="Deprecated: (Since version 5.2.0) use the equivalent methods on TcpClient">ElasticClient</span></a><span class="result"> extends <a href="TcpClientConstructors.html" class="extype" name="com.sksamuel.elastic4s.TcpClientConstructors">TcpClientConstructors</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.package@ElasticClient" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.2.0)</i> use the equivalent methods on TcpClient</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

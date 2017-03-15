@@ -1,0 +1,192 @@
+<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Elastic4s</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Elasticsearch Scala Client" /><meta name="author" content="Stephen Samuel" /><meta name="og:image" content="/elastic4s/img/poster.png" /><meta name="og:title" content="Elastic4s" /><meta name="og:site_name" content="Elastic4s" /><meta name="og:url" content="https://sksamuel.github.io/elastic4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Elasticsearch Scala Client" /><meta name="twitter:image" content="/elastic4s/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/elastic4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/elastic4s/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/elastic4s/css/style.css" /><link rel="stylesheet" href="/elastic4s/css/palette.css" /><link rel="stylesheet" href="/elastic4s/css/override.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/elastic4s/" class="brand"><div class="brand-wrapper" style="background:url('/elastic4s/img/sidebar_brand.png') no-repeat"><span>Elastic4s</span></div></a></li> <li><a href="/elastic4s/docs/index.html" class="">Getting Started</a></li> <li><a href="/elastic4s/docs/document/index.html" class="">Document API</a> <ul class="sub_section"> <li><a href="/elastic4s/docs/document/index.html" class="">Index</a></li> <li><a href="/elastic4s/docs/document/get.html" class="">Get</a></li> <li><a href="/elastic4s/docs/document/multiget.html" class="">Multi Get</a></li> <li><a href="/elastic4s/docs/document/delete.html" class="">Delete</a></li> <li><a href="/elastic4s/docs/document/update.html" class="">Update</a></li> <li><a href="/elastic4s/docs/document/bulk.html" class="">Bulk</a></li></ul></li> <li><a href="/elastic4s/docs/search/search.html" class="">Search API</a> <ul class="sub_section"> <li><a href="/elastic4s/docs/search/multisearch.html" class="">Multi Search</a></li> <li><a href="/elastic4s/docs/search/explain.html" class="">Explain</a></li> <li><a href="/elastic4s/docs/search/suggestions.html" class="">Suggestions</a></li> <li><a href="/elastic4s/docs/search/validate.html" class="">Validate</a></li> <li><a href="/elastic4s/docs/search/count.html" class="">Count</a></li></ul></li> <li><a href="/elastic4s/docs/indices/createindex.html" class="">Indices API</a> <ul class="sub_section"> <li><a href="/elastic4s/docs/indices/createindex.html" class="">Create Index</a></li> <li><a href="/elastic4s/docs/indices/aliases.html" class="">Aliases</a></li> <li><a href="/elastic4s/docs/indices/optimize.html" class="">Optimize</a></li></ul></li> <li><a href="/elastic4s/docs/misc/analyzers.html" class="">Analyzers</a></li> <li><a href="/elastic4s/docs/misc/snapshot.html" class="">Snapshot</a></li> <li><a href="/elastic4s/docs/misc/javainterop.html" class="">Java Interop</a></li> <li><a href="/elastic4s/api/index.html" class="">Scaladoc</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/sksamuel/elastic4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/sksamuel/elastic4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Elastic4s Elasticsearch Scala Client');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Elastic4s Elasticsearch Scala Client');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="sksamuel" data-github-repo="elastic4s"><div class="content-wrapper"><section><h1 id="creating-indexes">Creating Indexes</h1>
+
+<p>By default Elasticsearch does not require us to define indexes or their fields before we use them. Indexes and types are created when they are first accessed, then updated with extra fields as more data is indexed.</p>
+
+<p>Elasticsearch does a good job of guessing what we want but sometimes we need to override the defaults to better match our requirements (providing default values for fields or changing the way fields are analyzed). This is achieved by providing Elasticsearch with a <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html">mapping</a> before we start indexing data.</p>
+
+<p>Note that creating a mapping does not stop Elasticsearch from dynamically creating or updating types - anything that is not found in the mapping will still be dynamically updated.</p>
+
+<h2 id="building-a-basic-mapping">Building a Basic Mapping</h2>
+
+<p>Lets start by defining an index called <code class="highlighter-rouge">places</code> that has a single type (<code class="highlighter-rouge">city</code>) which has a single field (<code class="highlighter-rouge">year_founded</code>):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">// imports - will be omitted for other examples
+</span><span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.ElasticDsl._</span>
+<span class="k">import</span> <span class="nn">com.sksamuel.elastic4s.mappings.FieldType._</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"city"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"year_founded"</span> <span class="n">typed</span> <span class="nc">IntegerType</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Lets enhance this by adding a <code class="highlighter-rouge">location</code> field of type <code class="highlighter-rouge">GeoPointType</code>. This field type allows us to perform queries based on geographic locations
+(e.g. find places within x miles of London):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"city"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"year_founded"</span> <span class="n">typed</span> <span class="nc">IntegerType</span><span class="o">,</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoPointType</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p><strong>Sidenote:</strong> You might wonder why the DSL keyword is called <code class="highlighter-rouge">typed</code>. This is because <code class="highlighter-rouge">type</code> is a keyword in Scala and <code class="highlighter-rouge">"location" typed GeoPointType</code> looks better than <code class="highlighter-rouge">"location" `type` GeoPointType</code>.</p>
+
+<p>Now some places have names that include common stop words such as <em>“The Congo”</em> or <em>“Bay of Biscay”</em>, if we let Elasticsearch use its defaults these stop words would be removed when searching. This is not what we want so we’ll use a <code class="highlighter-rouge">SimpleAnalyzer</code> which only lowercases the text and splits on non-letters.</p>
+
+<p>In this next example we’ll add a new type, called country, and we’ll change the analyzer as mentioned:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"city"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"year_founded"</span> <span class="n">typed</span> <span class="nc">IntegerType</span><span class="o">,</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoPointType</span>
+    <span class="o">),</span> <span class="c1">// note trailing comma as this is a var-args invocation
+</span>    <span class="s">"country"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="nc">SimpleAnalyzer</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Elasticsearch is a clever beast. One small example is that it can detect dates automatically in fields instead of us setting the <code class="highlighter-rouge">DateType</code> in mappings. This is useful when you don’t know all the fields in advance. To set the formats that Elasticsearch will recognize, we can use <code class="highlighter-rouge">date_detection</code> at the mapping level. Going back to our places example we’ll let Elasticsearch detect our dates from two different formats (you can set as many as you need):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"city"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"year_founded"</span> <span class="n">typed</span> <span class="nc">IntegerType</span><span class="o">,</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoPointType</span>
+    <span class="o">),</span>
+    <span class="s">"country"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="nc">SimpleAnalyzer</span>
+    <span class="o">)</span> <span class="n">dateDetection</span> <span class="kc">true</span> <span class="n">dynamicDateFormats</span><span class="o">(</span><span class="s">"dd/MM/yyyy"</span><span class="o">,</span> <span class="s">"dd-MM-yyyy"</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Wrapping up our introduction, we finally want to add a field called <a href="http://en.wikipedia.org/wiki/Demonym">demonym</a> to the city. If there is no demonym (ie, the field is empty / null when indexing) we’ll tell Elasticsearch to use a default of “citizen”. We definitely don’t want any stemming on these words. If you’re from Brussels, you are a Bruxellois. We don’t want the <code class="highlighter-rouge">s</code> to be removed. Therefore we’ll also tell Elasticsearch to index the whole word as a single token.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"city"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"year_founded"</span> <span class="n">typed</span> <span class="nc">IntegerType</span><span class="o">,</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoPointType</span><span class="o">,</span>
+      <span class="s">"demonym"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">nullValue</span> <span class="s">"citizen"</span> <span class="n">analyzer</span> <span class="nc">KeywordAnalyzer</span>
+    <span class="o">),</span>
+    <span class="s">"country"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="nc">SimpleAnalyzer</span>
+    <span class="o">)</span> <span class="n">dateDetection</span> <span class="kc">true</span> <span class="n">dynamicDateFormats</span><span class="o">(</span><span class="s">"dd/MM/yyyy"</span><span class="o">,</span> <span class="s">"dd-MM-yyyy"</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>There are many options that can be specified a field or type. The <a href="#create_index_reference">reference</a> section below describes how many of these features can be used. For a full list, see the methods in the DSL or see the official documentation on <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html">mapping</a> (the DSL keywords will be the same or very close to the name of the optional in the REST API).</p>
+
+<h2 id="create-geo-shape-index">Create Geo Shape Index</h2>
+
+<p>In the first example we created a <code class="highlighter-rouge">type</code> of <code class="highlighter-rouge">GeoPointType</code>. Elasticsearch also offers a <code class="highlighter-rouge">GeoShapeType</code> type, which allows you to
+store <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html#_input_structure_2">different geojson formats</a> like <em>LineString</em>, <em>Polygon</em> or <em>Point</em>. Create a mapping for a <code class="highlighter-rouge">GeoShapeType</code> like this</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"areas"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"parks"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoShapeType</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Sometimes you want to be more precise about the settings for your <code class="highlighter-rouge">GeoShapeType</code>. Elasticsearch provides <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html#_example_4">different tree and precision settings</a> for geo shapes. In order to add these we extend the example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"areas"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"parks"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"location"</span> <span class="n">typed</span> <span class="nc">GeoShapeType</span> <span class="n">tree</span> <span class="nc">PrefixTree</span><span class="o">.</span><span class="nc">Quadtree</span> <span class="n">precision</span> <span class="s">"1m"</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h2 id="create-index-reference">Create Index Reference</h2>
+
+<h3 id="index-settings">Index Settings</h3>
+
+<p>Basic index settings including shard count, replica count and refresh interval can be specified during index creation:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">shards</span> <span class="mi">3</span> <span class="n">replicas</span> <span class="mi">2</span> <span class="n">refreshInterval</span> <span class="s">"10s"</span> <span class="n">mappings</span> <span class="o">(</span><span class="cm">/* mappings... */</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Other index settings can be specified using <code class="highlighter-rouge">indexSetting</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">indexSetting</span><span class="o">(</span><span class="s">"compound_on_flush"</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span> <span class="n">mappings</span> <span class="o">(</span><span class="cm">/* mappings... */</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>For further documentation on index settings see the <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-create-index.html#create-index-settings">official documentation</a>.</p>
+
+<h3 id="analyzers">Analyzers</h3>
+
+<p>Analyzers can be specified on a per-field basis:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"country"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="nc">SimpleAnalyzer</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>The available built-in analyzers are:</p>
+
+<ul>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-whitespace-analyzer.html">WhitespaceAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-standard-analyzer.html">StandardAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-simple-analyzer.html">SimpleAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-stop-analyzer.html">StopAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-keyword-analyzer.html">KeywordAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-pattern-analyzer.html">PatternAnalyzer</a></li>
+  <li><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-snowball-analyzer.html">SnowballAnalyzer</a></li>
+</ul>
+
+<p>In addition you can define your own analyzers (they are really just combinations of filters and tokenizers). These can be
+used by referencing them by name:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="n">execute</span> <span class="o">{</span>
+  <span class="o">(</span><span class="n">create</span> <span class="n">index</span> <span class="s">"places"</span> <span class="n">mappings</span> <span class="o">(</span>
+    <span class="s">"country"</span> <span class="n">as</span> <span class="o">(</span>
+      <span class="s">"name"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="nc">SimpleAnalyzer</span><span class="o">,</span>
+      <span class="s">"country_code"</span> <span class="n">typed</span> <span class="nc">StringType</span> <span class="n">analyzer</span> <span class="s">"country_code_analyzer"</span>
+    <span class="o">)</span>
+  <span class="o">)</span> <span class="n">analysis</span> <span class="o">(</span>
+     <span class="nc">PatternAnalyzerDefinition</span><span class="o">(</span><span class="s">"country_code_analyzer"</span><span class="o">,</span> <span class="n">regex</span> <span class="k">=</span> <span class="s">","</span><span class="o">)</span>
+  <span class="o">))</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>More information on custom analyzers can be found in the <a href="../misc/analyzers.md">Analyzers guide</a>.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/elastic4s/highlight/highlight.pack.js"></script><script>hljs.configure({
+languages:['scala','java','bash']
+});
+hljs.initHighlighting();
+             </script><script src="/elastic4s/js/main.js"></script></body></html>

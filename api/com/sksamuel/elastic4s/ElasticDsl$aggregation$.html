@@ -1,0 +1,1019 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>aggregation - com.sksamuel.elastic4s.ElasticDsl.aggregation</title>
+          <meta name="description" content="aggregation - com.sksamuel.elastic4s.ElasticDsl.aggregation" />
+          <meta name="keywords" content="aggregation com.sksamuel.elastic4s.ElasticDsl.aggregation" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.ElasticDsl$aggregation$';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Object" src="../../../lib/object_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">ElasticDsl</a></p>
+        <h1>aggregation</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">package ElasticDsl</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use xxxAggregation(...) methods">aggregation</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use xxxAggregation(...) methods</p></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.ElasticDsl.aggregation"><span>aggregation</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#avg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="avg(name:String):com.sksamuel.elastic4s.searches.aggs.AvgAggregationDefinition"></a>
+      <a id="avg(String):AvgAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">avg</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/AvgAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.AvgAggregationDefinition">AvgAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@avg(name:String):com.sksamuel.elastic4s.searches.aggs.AvgAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#cardinality" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="cardinality(name:String):com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition"></a>
+      <a id="cardinality(String):CardinalityAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use cardinalityAggregation(...)">cardinality</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/CardinalityAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition">CardinalityAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@cardinality(name:String):com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use cardinalityAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#count" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="count(name:String):com.sksamuel.elastic4s.searches.aggs.ValueCountAggregationDefinition"></a>
+      <a id="count(String):ValueCountAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use valueCountAggregation(...)">count</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/ValueCountAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.ValueCountAggregationDefinition">ValueCountAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@count(name:String):com.sksamuel.elastic4s.searches.aggs.ValueCountAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use valueCountAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#datehistogram" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="datehistogram(name:String):com.sksamuel.elastic4s.searches.aggs.DateHistogramAggregation"></a>
+      <a id="datehistogram(String):DateHistogramAggregation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use dateHistogramAggregation(...)">datehistogram</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/DateHistogramAggregation.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.DateHistogramAggregation">DateHistogramAggregation</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@datehistogram(name:String):com.sksamuel.elastic4s.searches.aggs.DateHistogramAggregation" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use dateHistogramAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#daterange" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="daterange(name:String):com.sksamuel.elastic4s.searches.aggs.DateRangeAggregation"></a>
+      <a id="daterange(String):DateRangeAggregation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use dateRangeAggregation(...)">daterange</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/DateRangeAggregation.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.DateRangeAggregation">DateRangeAggregation</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@daterange(name:String):com.sksamuel.elastic4s.searches.aggs.DateRangeAggregation" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use dateRangeAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#extendedstats" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="extendedstats(name:String):com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregationDefinition"></a>
+      <a id="extendedstats(String):ExtendedStatsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use extendedStatsAggregation(...)">extendedstats</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/ExtendedStatsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregationDefinition">ExtendedStatsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@extendedstats(name:String):com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use extendedStatsAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#filter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="filter(name:String):ElasticDsl.this.FilterAggregationExpectsQuery"></a>
+      <a id="filter(String):ElasticDsl.FilterAggregationExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use filterAggregation(...)">filter</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="ElasticDsl.html#FilterAggregationExpectsQueryextendsAnyRef" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.AggregationApi.FilterAggregationExpectsQuery">ElasticDsl.FilterAggregationExpectsQuery</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@filter(name:String):ElasticDsl.this.FilterAggregationExpectsQuery" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use filterAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#filters" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="filters(name:String):ElasticDsl.this.FiltersAggregationExpectsQueries"></a>
+      <a id="filters(String):ElasticDsl.FiltersAggregationExpectsQueries"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use filtersAggregation(...)">filters</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="ElasticDsl.html#FiltersAggregationExpectsQueriesextendsAnyRef" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.AggregationApi.FiltersAggregationExpectsQueries">ElasticDsl.FiltersAggregationExpectsQueries</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@filters(name:String):ElasticDsl.this.FiltersAggregationExpectsQueries" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use filtersAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#geobounds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="geobounds(name:String):com.sksamuel.elastic4s.searches.aggs.GeoBoundsAggregationDefinition"></a>
+      <a id="geobounds(String):GeoBoundsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use geoBoundsAggregation(...)">geobounds</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/GeoBoundsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.GeoBoundsAggregationDefinition">GeoBoundsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@geobounds(name:String):com.sksamuel.elastic4s.searches.aggs.GeoBoundsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use geoBoundsAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#geodistance" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="geodistance(name:String):ElasticDsl.this.GeoDistanceAggregationExpectsOrigin"></a>
+      <a id="geodistance(String):ElasticDsl.GeoDistanceAggregationExpectsOrigin"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use geoDistanceAggregation(...)">geodistance</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="ElasticDsl.html#GeoDistanceAggregationExpectsOriginextendsAnyRef" class="extmbr" name="com.sksamuel.elastic4s.searches.aggs.AggregationApi.GeoDistanceAggregationExpectsOrigin">ElasticDsl.GeoDistanceAggregationExpectsOrigin</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@geodistance(name:String):ElasticDsl.this.GeoDistanceAggregationExpectsOrigin" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use geoDistanceAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#geohash" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="geohash(name:String):com.sksamuel.elastic4s.searches.aggs.GeoHashGridAggregationDefinition"></a>
+      <a id="geohash(String):GeoHashGridAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use geoHashGridAggregation(...)">geohash</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/GeoHashGridAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.GeoHashGridAggregationDefinition">GeoHashGridAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@geohash(name:String):com.sksamuel.elastic4s.searches.aggs.GeoHashGridAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use geoHashGridAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#global" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="global(name:String):com.sksamuel.elastic4s.searches.aggs.GlobalAggregationDefinition"></a>
+      <a id="global(String):GlobalAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use globalAggregation(...)">global</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/GlobalAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.GlobalAggregationDefinition">GlobalAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@global(name:String):com.sksamuel.elastic4s.searches.aggs.GlobalAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use globalAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#histogram" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="histogram(name:String):com.sksamuel.elastic4s.searches.aggs.HistogramAggregation"></a>
+      <a id="histogram(String):HistogramAggregation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use histogramAggregation(...)">histogram</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/HistogramAggregation.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.HistogramAggregation">HistogramAggregation</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@histogram(name:String):com.sksamuel.elastic4s.searches.aggs.HistogramAggregation" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use histogramAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#ipRange" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ipRange(name:String):com.sksamuel.elastic4s.searches.aggs.IpRangeAggregationDefinition"></a>
+      <a id="ipRange(String):IpRangeAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use ipRangeAggregation(...)">ipRange</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/IpRangeAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.IpRangeAggregationDefinition">IpRangeAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@ipRange(name:String):com.sksamuel.elastic4s.searches.aggs.IpRangeAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use ipRangeAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#max" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="max(name:String):com.sksamuel.elastic4s.searches.aggs.MaxAggregationDefinition"></a>
+      <a id="max(String):MaxAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use maxAggregation(...)">max</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/MaxAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.MaxAggregationDefinition">MaxAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@max(name:String):com.sksamuel.elastic4s.searches.aggs.MaxAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use maxAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#min" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="min(name:String):com.sksamuel.elastic4s.searches.aggs.MinAggregationDefinition"></a>
+      <a id="min(String):MinAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use minAggregation(...)">min</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/MinAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.MinAggregationDefinition">MinAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@min(name:String):com.sksamuel.elastic4s.searches.aggs.MinAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use minAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#missing" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="missing(name:String):com.sksamuel.elastic4s.searches.aggs.MissingAggregationDefinition"></a>
+      <a id="missing(String):MissingAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use missingAggregation(...)">missing</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/MissingAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.MissingAggregationDefinition">MissingAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@missing(name:String):com.sksamuel.elastic4s.searches.aggs.MissingAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use missingAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#nested" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nested(name:String):AnyRef{defpath(path:String):com.sksamuel.elastic4s.searches.aggs.NestedAggregationDefinition}"></a>
+      <a id="nested(String):AnyRef{defpath(path:String):com.sksamuel.elastic4s.searches.aggs.NestedAggregationDefinition}"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use nestedAggregation(...)">nested</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a> { def path(path: String): com.sksamuel.elastic4s.searches.aggs.NestedAggregationDefinition }</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@nested(name:String):AnyRef{defpath(path:String):com.sksamuel.elastic4s.searches.aggs.NestedAggregationDefinition}" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use nestedAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#percentileranks" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="percentileranks(name:String):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition"></a>
+      <a id="percentileranks(String):PercentileRanksAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use percentileRanksAggregation(...)">percentileranks</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/PercentileRanksAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition">PercentileRanksAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@percentileranks(name:String):com.sksamuel.elastic4s.searches.aggs.PercentileRanksAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use percentileRanksAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#percentiles" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="percentiles(name:String):com.sksamuel.elastic4s.searches.aggs.PercentilesAggregationDefinition"></a>
+      <a id="percentiles(String):PercentilesAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use percentilesAggregation(...)">percentiles</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/PercentilesAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.PercentilesAggregationDefinition">PercentilesAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@percentiles(name:String):com.sksamuel.elastic4s.searches.aggs.PercentilesAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use percentilesAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#range" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="range(name:String):com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition"></a>
+      <a id="range(String):RangeAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use rangeAggregation(...)">range</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/RangeAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition">RangeAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@range(name:String):com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use rangeAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#reverseNested" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reverseNested(name:String):com.sksamuel.elastic4s.searches.aggs.ReverseNestedAggregationDefinition"></a>
+      <a id="reverseNested(String):ReverseNestedAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use reverseNestedAggregation(...)">reverseNested</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/ReverseNestedAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.ReverseNestedAggregationDefinition">ReverseNestedAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@reverseNested(name:String):com.sksamuel.elastic4s.searches.aggs.ReverseNestedAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use reverseNestedAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#scriptedMetric" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scriptedMetric(name:String):com.sksamuel.elastic4s.searches.aggs.ScriptedMetricAggregationDefinition"></a>
+      <a id="scriptedMetric(String):ScriptedMetricAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use scriptedMetricAggregation(...)">scriptedMetric</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/ScriptedMetricAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.ScriptedMetricAggregationDefinition">ScriptedMetricAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@scriptedMetric(name:String):com.sksamuel.elastic4s.searches.aggs.ScriptedMetricAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use scriptedMetricAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#sigTerms" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sigTerms(name:String):com.sksamuel.elastic4s.searches.aggs.SigTermsAggregationDefinition"></a>
+      <a id="sigTerms(String):SigTermsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use sigTermsAggregation(...)">sigTerms</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/SigTermsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.SigTermsAggregationDefinition">SigTermsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@sigTerms(name:String):com.sksamuel.elastic4s.searches.aggs.SigTermsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use sigTermsAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#stats" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stats(name:String):com.sksamuel.elastic4s.searches.aggs.StatsAggregationDefinition"></a>
+      <a id="stats(String):StatsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use statsAggregation(...)">stats</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/StatsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.StatsAggregationDefinition">StatsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@stats(name:String):com.sksamuel.elastic4s.searches.aggs.StatsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use statsAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#sum" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sum(name:String):com.sksamuel.elastic4s.searches.aggs.SumAggregationDefinition"></a>
+      <a id="sum(String):SumAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use sumAggregation(...)">sum</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/SumAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.SumAggregationDefinition">SumAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@sum(name:String):com.sksamuel.elastic4s.searches.aggs.SumAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use sumAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#terms" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="terms(name:String):com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition"></a>
+      <a id="terms(String):TermsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use termsAggregation(...)">terms</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/TermsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition">TermsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@terms(name:String):com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use termsAggregation(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.ElasticDsl.aggregation#topHits" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="topHits(name:String):com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition"></a>
+      <a id="topHits(String):TopHitsAggregationDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) Use topHitsAggregation(...)">topHits</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="searches/aggs/TopHitsAggregationDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition">TopHitsAggregationDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.sksamuel.elastic4s.ElasticDsl$aggregation$@topHits(name:String):com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> Use topHitsAggregation(...)</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

@@ -1,0 +1,2030 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>QueryApi - com.sksamuel.elastic4s.searches.QueryApi</title>
+          <meta name="description" content="QueryApi - com.sksamuel.elastic4s.searches.QueryApi" />
+          <meta name="keywords" content="QueryApi com.sksamuel.elastic4s.searches.QueryApi" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.sksamuel.elastic4s.searches.QueryApi';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Trait" src="../../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.sksamuel">sksamuel</a>.<a href="../package.html" class="extype" name="com.sksamuel.elastic4s">elastic4s</a>.<a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches">searches</a></p>
+        <h1>QueryApi</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.sksamuel.elastic4s.searches">package searches</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">QueryApi</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="../testkit/AbstractElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.AbstractElasticSugar">AbstractElasticSugar</a>, <a href="../testkit/DualElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.DualElasticSugar">DualElasticSugar</a>, <a href="../ElasticApi$.html" class="extype" name="com.sksamuel.elastic4s.ElasticApi">ElasticApi</a>, <a href="../ElasticApi.html" class="extype" name="com.sksamuel.elastic4s.ElasticApi">ElasticApi</a>, <a href="../http/ElasticDsl$.html" class="extype" name="com.sksamuel.elastic4s.http.ElasticDsl">ElasticDsl</a>, <a href="../ElasticDsl$.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">ElasticDsl</a>, <a href="../http/ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.http.ElasticDsl">ElasticDsl</a>, <a href="../ElasticDsl.html" class="extype" name="com.sksamuel.elastic4s.ElasticDsl">ElasticDsl</a>, <a href="../testkit/ElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.ElasticSugar">ElasticSugar</a>, <a href="../testkit/SharedElasticSugar.html" class="extype" name="com.sksamuel.elastic4s.testkit.SharedElasticSugar">SharedElasticSugar</a></div>
+          </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.sksamuel.elastic4s.searches.QueryApi"><span>QueryApi</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.QueryApi.CommonQueryExpectsText" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CommonQueryExpectsTextextendsAnyRef"></a>
+      <a id="CommonQueryExpectsText:CommonQueryExpectsText"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$CommonQueryExpectsText.html"><span class="name">CommonQueryExpectsText</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@CommonQueryExpectsTextextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.GeoDistanceExpectsDistance" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceExpectsDistanceextendsAnyRef"></a>
+      <a id="GeoDistanceExpectsDistance:GeoDistanceExpectsDistance"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$GeoDistanceExpectsDistance.html"><span class="name">GeoDistanceExpectsDistance</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@GeoDistanceExpectsDistanceextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.GeoDistanceExpectsPoint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoDistanceExpectsPointextendsAnyRef"></a>
+      <a id="GeoDistanceExpectsPoint:GeoDistanceExpectsPoint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$GeoDistanceExpectsPoint.html"><span class="name">GeoDistanceExpectsPoint</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@GeoDistanceExpectsPointextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.GeoPolygonExpectsPoints" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeoPolygonExpectsPointsextendsAnyRef"></a>
+      <a id="GeoPolygonExpectsPoints:GeoPolygonExpectsPoints"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$GeoPolygonExpectsPoints.html"><span class="name">GeoPolygonExpectsPoints</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@GeoPolygonExpectsPointsextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.HasChildQueryExpectsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HasChildQueryExpectsQueryextendsAnyRef"></a>
+      <a id="HasChildQueryExpectsQuery:HasChildQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$HasChildQueryExpectsQuery.html"><span class="name">HasChildQueryExpectsQuery</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@HasChildQueryExpectsQueryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.HasParentQueryExpectsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HasParentQueryExpectsQueryextendsAnyRef"></a>
+      <a id="HasParentQueryExpectsQuery:HasParentQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$HasParentQueryExpectsQuery.html"><span class="name">HasParentQueryExpectsQuery</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@HasParentQueryExpectsQueryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.MoreLikeThisExpectsLikes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MoreLikeThisExpectsLikesextendsAnyRef"></a>
+      <a id="MoreLikeThisExpectsLikes:MoreLikeThisExpectsLikes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$MoreLikeThisExpectsLikes.html"><span class="name">MoreLikeThisExpectsLikes</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@MoreLikeThisExpectsLikesextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.NestedQueryExpectsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NestedQueryExpectsQueryextendsAnyRef"></a>
+      <a id="NestedQueryExpectsQuery:NestedQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$NestedQueryExpectsQuery.html"><span class="name">NestedQueryExpectsQuery</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@NestedQueryExpectsQueryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.PercolateExpectsUsing" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PercolateExpectsUsingextendsAnyRef"></a>
+      <a id="PercolateExpectsUsing:PercolateExpectsUsing"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$PercolateExpectsUsing.html"><span class="name">PercolateExpectsUsing</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@PercolateExpectsUsingextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi.SpanFirstExpectsEnd" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SpanFirstExpectsEndextendsAnyRef"></a>
+      <a id="SpanFirstExpectsEnd:SpanFirstExpectsEnd"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueryApi$SpanFirstExpectsEnd.html"><span class="name">SpanFirstExpectsEnd</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@SpanFirstExpectsEndextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#bool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bool(mustQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition],shouldQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition],notQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="bool(Seq[QueryDefinition],Seq[QueryDefinition],Seq[QueryDefinition]):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bool</span><span class="params">(<span name="mustQueries">mustQueries: <span class="extype" name="scala.Seq">Seq</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>, <span name="shouldQueries">shouldQueries: <span class="extype" name="scala.Seq">Seq</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>, <span name="notQueries">notQueries: <span class="extype" name="scala.Seq">Seq</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@bool(mustQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition],shouldQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition],notQueries:Seq[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#boolQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="boolQuery():com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="boolQuery():BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">boolQuery</span><span class="params">()</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@boolQuery():com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#boostingQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="boostingQuery(positiveQuery:com.sksamuel.elastic4s.searches.queries.QueryDefinition,negativeQuery:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.BoostingQueryDefinition"></a>
+      <a id="boostingQuery(QueryDefinition,QueryDefinition):BoostingQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">boostingQuery</span><span class="params">(<span name="positiveQuery">positiveQuery: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="negativeQuery">negativeQuery: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>)</span><span class="result">: <a href="queries/BoostingQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoostingQueryDefinition">BoostingQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@boostingQuery(positiveQuery:com.sksamuel.elastic4s.searches.queries.QueryDefinition,negativeQuery:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.BoostingQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#commonQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="commonQuery(field:String,text:String):com.sksamuel.elastic4s.searches.queries.CommonTermsQueryDefinition"></a>
+      <a id="commonQuery(String,String):CommonTermsQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">commonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/CommonTermsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.CommonTermsQueryDefinition">CommonTermsQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@commonQuery(field:String,text:String):com.sksamuel.elastic4s.searches.queries.CommonTermsQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#commonQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="commonQuery(field:String):QueryApi.this.CommonQueryExpectsText"></a>
+      <a id="commonQuery(String):CommonQueryExpectsText"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">commonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$CommonQueryExpectsText.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.CommonQueryExpectsText">CommonQueryExpectsText</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@commonQuery(field:String):QueryApi.this.CommonQueryExpectsText" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#constantScoreQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="constantScoreQuery(query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.ConstantScoreDefinition"></a>
+      <a id="constantScoreQuery(QueryDefinition):ConstantScoreDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">constantScoreQuery</span><span class="params">(<span name="query">query: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>)</span><span class="result">: <a href="queries/ConstantScoreDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.ConstantScoreDefinition">ConstantScoreDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@constantScoreQuery(query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.ConstantScoreDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#dismax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dismax(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition"></a>
+      <a id="dismax(Iterable[QueryDefinition]):DisMaxQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dismax</span><span class="params">(<span name="queries">queries: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/DisMaxQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition">DisMaxQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@dismax(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#dismax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dismax(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition"></a>
+      <a id="dismax(QueryDefinition,QueryDefinition*):DisMaxQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dismax</span><span class="params">(<span name="first">first: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="rest">rest: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/DisMaxQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition">DisMaxQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@dismax(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#existsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="existsQuery(field:String):com.sksamuel.elastic4s.searches.queries.ExistsQueryDefinition"></a>
+      <a id="existsQuery(String):ExistsQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">existsQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/ExistsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.ExistsQueryDefinition">ExistsQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@existsQuery(field:String):com.sksamuel.elastic4s.searches.queries.ExistsQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#fieldNamesQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldNamesQuery(names:Iterable[String])(implicitbuilder:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[String]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[String]"></a>
+      <a id="fieldNamesQuery(Iterable[String])(BuildableTermsQuery[String]):TermsQueryDefinition[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldNamesQuery</span><span class="params">(<span name="names">names: <span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="builder">builder: <a href="queries/term/BuildableTermsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery">BuildableTermsQuery</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="queries/term/TermsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition">TermsQueryDefinition</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@fieldNamesQuery(names:Iterable[String])(implicitbuilder:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[String]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#fieldNamesQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fieldNamesQuery(first:String,rest:String*)(implicitbuilder:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[String]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[String]"></a>
+      <a id="fieldNamesQuery(String,String*)(BuildableTermsQuery[String]):TermsQueryDefinition[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldNamesQuery</span><span class="params">(<span name="first">first: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rest">rest: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="builder">builder: <a href="queries/term/BuildableTermsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery">BuildableTermsQuery</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="queries/term/TermsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition">TermsQueryDefinition</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@fieldNamesQuery(first:String,rest:String*)(implicitbuilder:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[String]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#filter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="filter(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="filter(Iterable[QueryDefinition]):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filter</span><span class="params">(<span name="queries">queries: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@filter(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#filter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="filter(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="filter(QueryDefinition,QueryDefinition*):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filter</span><span class="params">(<span name="first">first: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="rest">rest: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@filter(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#functionScoreQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="functionScoreQuery(query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition"></a>
+      <a id="functionScoreQuery(QueryDefinition):FunctionScoreQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">functionScoreQuery</span><span class="params">(<span name="query">query: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>)</span><span class="result">: <a href="queries/funcscorer/FunctionScoreQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition">FunctionScoreQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@functionScoreQuery(query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#functionScoreQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="functionScoreQuery():com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition"></a>
+      <a id="functionScoreQuery():FunctionScoreQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">functionScoreQuery</span><span class="params">()</span><span class="result">: <a href="queries/funcscorer/FunctionScoreQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition">FunctionScoreQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@functionScoreQuery():com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoBoxQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoBoxQuery(field:String,topleft:String,bottomright:String):com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition"></a>
+      <a id="geoBoxQuery(String,String,String):GeoBoundingBoxQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoBoxQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="topleft">topleft: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bottomright">bottomright: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/geo/GeoBoundingBoxQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition">GeoBoundingBoxQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoBoxQuery(field:String,topleft:String,bottomright:String):com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoBoxQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoBoxQuery(field:String):com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition"></a>
+      <a id="geoBoxQuery(String):GeoBoundingBoxQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoBoxQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/geo/GeoBoundingBoxQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition">GeoBoundingBoxQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoBoxQuery(field:String):com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoDistanceQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoDistanceQuery(field:String):QueryApi.this.GeoDistanceExpectsPoint"></a>
+      <a id="geoDistanceQuery(String):GeoDistanceExpectsPoint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoDistanceQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$GeoDistanceExpectsPoint.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.GeoDistanceExpectsPoint">GeoDistanceExpectsPoint</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoDistanceQuery(field:String):QueryApi.this.GeoDistanceExpectsPoint" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoDistanceRangeQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoDistanceRangeQuery(field:String,geoPoint:org.elasticsearch.common.geo.GeoPoint):com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceRangeQueryDefinition"></a>
+      <a id="geoDistanceRangeQuery(String,GeoPoint):GeoDistanceRangeQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoDistanceRangeQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="geoPoint">geoPoint: <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span></span>)</span><span class="result">: <a href="queries/geo/GeoDistanceRangeQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceRangeQueryDefinition">GeoDistanceRangeQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoDistanceRangeQuery(field:String,geoPoint:org.elasticsearch.common.geo.GeoPoint):com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceRangeQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoHashCell" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoHashCell(field:String,value:org.elasticsearch.common.geo.GeoPoint):com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition"></a>
+      <a id="geoHashCell(String,GeoPoint):GeoHashCellQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoHashCell</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span></span>)</span><span class="result">: <a href="queries/geo/GeoHashCellQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition">GeoHashCellQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoHashCell(field:String,value:org.elasticsearch.common.geo.GeoPoint):com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoHashCell" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoHashCell(field:String,value:String):com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition"></a>
+      <a id="geoHashCell(String,String):GeoHashCellQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoHashCell</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/geo/GeoHashCellQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition">GeoHashCellQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoHashCell(field:String,value:String):com.sksamuel.elastic4s.searches.queries.geo.GeoHashCellQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoPolygonQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoPolygonQuery(field:String,points:Iterable[org.elasticsearch.common.geo.GeoPoint]):com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition"></a>
+      <a id="geoPolygonQuery(String,Iterable[GeoPoint]):GeoPolygonQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoPolygonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="points">points: <span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span>]</span>)</span><span class="result">: <a href="queries/geo/GeoPolygonQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition">GeoPolygonQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoPolygonQuery(field:String,points:Iterable[org.elasticsearch.common.geo.GeoPoint]):com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoPolygonQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoPolygonQuery(field:String,first:org.elasticsearch.common.geo.GeoPoint,rest:org.elasticsearch.common.geo.GeoPoint*):com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition"></a>
+      <a id="geoPolygonQuery(String,GeoPoint,GeoPoint*):GeoPolygonQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoPolygonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="first">first: <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span></span>, <span name="rest">rest: <span class="extype" name="org.elasticsearch.common.geo.GeoPoint">GeoPoint</span>*</span>)</span><span class="result">: <a href="queries/geo/GeoPolygonQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition">GeoPolygonQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoPolygonQuery(field:String,first:org.elasticsearch.common.geo.GeoPoint,rest:org.elasticsearch.common.geo.GeoPoint*):com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoPolygonQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoPolygonQuery(field:String):QueryApi.this.GeoPolygonExpectsPoints"></a>
+      <a id="geoPolygonQuery(String):GeoPolygonExpectsPoints"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoPolygonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$GeoPolygonExpectsPoints.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.GeoPolygonExpectsPoints">GeoPolygonExpectsPoints</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoPolygonQuery(field:String):QueryApi.this.GeoPolygonExpectsPoints" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoShapeQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoShapeQuery(field:String,indexedShapeId:String,indexedShapeType:String):com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition"></a>
+      <a id="geoShapeQuery(String,String,String):GeoShapeDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoShapeQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="indexedShapeId">indexedShapeId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="indexedShapeType">indexedShapeType: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/geo/GeoShapeDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition">GeoShapeDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoShapeQuery(field:String,indexedShapeId:String,indexedShapeType:String):com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoShapeQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="geoShapeQuery(field:String,shape:org.elasticsearch.common.geo.builders.ShapeBuilder):com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition"></a>
+      <a id="geoShapeQuery(String,ShapeBuilder):GeoShapeDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">geoShapeQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="shape">shape: <span class="extype" name="org.elasticsearch.common.geo.builders.ShapeBuilder">ShapeBuilder</span></span>)</span><span class="result">: <a href="queries/geo/GeoShapeDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition">GeoShapeDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoShapeQuery(field:String,shape:org.elasticsearch.common.geo.builders.ShapeBuilder):com.sksamuel.elastic4s.searches.queries.geo.GeoShapeDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#hasChildQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="hasChildQuery(type:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition,scoreMode:org.apache.lucene.search.join.ScoreMode):com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition"></a>
+      <a id="hasChildQuery(String,QueryDefinition,ScoreMode):HasChildQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasChildQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="query">query: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="scoreMode">scoreMode: <span class="extype" name="org.apache.lucene.search.join.ScoreMode">ScoreMode</span></span>)</span><span class="result">: <a href="queries/HasChildQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition">HasChildQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@hasChildQuery(type:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition,scoreMode:org.apache.lucene.search.join.ScoreMode):com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#hasChildQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="hasChildQuery(type:String):QueryApi.this.HasChildQueryExpectsQuery"></a>
+      <a id="hasChildQuery(String):HasChildQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasChildQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$HasChildQueryExpectsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.HasChildQueryExpectsQuery">HasChildQueryExpectsQuery</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@hasChildQuery(type:String):QueryApi.this.HasChildQueryExpectsQuery" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#hasParentQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="hasParentQuery(type:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition,score:Boolean):com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition"></a>
+      <a id="hasParentQuery(String,QueryDefinition,Boolean):HasParentQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasParentQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="query">query: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="score">score: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="queries/HasParentQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition">HasParentQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@hasParentQuery(type:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition,score:Boolean):com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#hasParentQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="hasParentQuery(type:String):QueryApi.this.HasParentQueryExpectsQuery"></a>
+      <a id="hasParentQuery(String):HasParentQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasParentQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$HasParentQueryExpectsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.HasParentQueryExpectsQuery">HasParentQueryExpectsQuery</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@hasParentQuery(type:String):QueryApi.this.HasParentQueryExpectsQuery" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#idsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="idsQuery(id:Any,rest:Any*):com.sksamuel.elastic4s.searches.queries.IdQueryDefinition"></a>
+      <a id="idsQuery(Any,Any*):IdQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">idsQuery</span><span class="params">(<span name="id">id: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>, <span name="rest">rest: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>*</span>)</span><span class="result">: <a href="queries/IdQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.IdQueryDefinition">IdQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@idsQuery(id:Any,rest:Any*):com.sksamuel.elastic4s.searches.queries.IdQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#idsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="idsQuery(ids:Iterable[Any]):com.sksamuel.elastic4s.searches.queries.IdQueryDefinition"></a>
+      <a id="idsQuery(Iterable[Any]):IdQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">idsQuery</span><span class="params">(<span name="ids">ids: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>]</span>)</span><span class="result">: <a href="queries/IdQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.IdQueryDefinition">IdQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@idsQuery(ids:Iterable[Any]):com.sksamuel.elastic4s.searches.queries.IdQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#innerHits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="innerHits(name:String):com.sksamuel.elastic4s.searches.queries.InnerHitDefinition"></a>
+      <a id="innerHits(String):InnerHitDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">innerHits</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/InnerHitDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.InnerHitDefinition">InnerHitDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@innerHits(name:String):com.sksamuel.elastic4s.searches.queries.InnerHitDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#matchAllQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matchAllQuery():com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition"></a>
+      <a id="matchAllQuery():MatchAllQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchAllQuery</span><span class="params">()</span><span class="result">: <a href="queries/matches/MatchAllQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition">MatchAllQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@matchAllQuery():com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#matchPhrasePrefixQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matchPhrasePrefixQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchPhrasePrefixDefinition"></a>
+      <a id="matchPhrasePrefixQuery(String,Any):MatchPhrasePrefixDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchPhrasePrefixQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/matches/MatchPhrasePrefixDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MatchPhrasePrefixDefinition">MatchPhrasePrefixDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@matchPhrasePrefixQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchPhrasePrefixDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#matchPhraseQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matchPhraseQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchPhraseDefinition"></a>
+      <a id="matchPhraseQuery(String,Any):MatchPhraseDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchPhraseQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/matches/MatchPhraseDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MatchPhraseDefinition">MatchPhraseDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@matchPhraseQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchPhraseDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#matchQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="matchQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition"></a>
+      <a id="matchQuery(String,Any):MatchQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">matchQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/matches/MatchQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition">MatchQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@matchQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#moreLikeThisQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="moreLikeThisQuery(fields:Iterable[String]):QueryApi.this.MoreLikeThisExpectsLikes"></a>
+      <a id="moreLikeThisQuery(Iterable[String]):MoreLikeThisExpectsLikes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">moreLikeThisQuery</span><span class="params">(<span name="fields">fields: <span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="QueryApi$MoreLikeThisExpectsLikes.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.MoreLikeThisExpectsLikes">MoreLikeThisExpectsLikes</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@moreLikeThisQuery(fields:Iterable[String]):QueryApi.this.MoreLikeThisExpectsLikes" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#moreLikeThisQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="moreLikeThisQuery(first:String,rest:String*):QueryApi.this.MoreLikeThisExpectsLikes"></a>
+      <a id="moreLikeThisQuery(String,String*):MoreLikeThisExpectsLikes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">moreLikeThisQuery</span><span class="params">(<span name="first">first: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rest">rest: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="QueryApi$MoreLikeThisExpectsLikes.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.MoreLikeThisExpectsLikes">MoreLikeThisExpectsLikes</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@moreLikeThisQuery(first:String,rest:String*):QueryApi.this.MoreLikeThisExpectsLikes" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#multiMatchQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="multiMatchQuery(text:String):com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition"></a>
+      <a id="multiMatchQuery(String):MultiMatchQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">multiMatchQuery</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/matches/MultiMatchQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition">MultiMatchQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@multiMatchQuery(text:String):com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#must" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="must(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="must(Iterable[QueryDefinition]):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">must</span><span class="params">(<span name="queries">queries: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@must(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#must" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="must(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="must(QueryDefinition,QueryDefinition*):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">must</span><span class="params">(<span name="first">first: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>, <span name="rest">rest: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@must(first:com.sksamuel.elastic4s.searches.queries.QueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#nestedQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nestedQuery(path:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.NestedQueryDefinition"></a>
+      <a id="nestedQuery(String,QueryDefinition):NestedQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nestedQuery</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="query">query: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a></span>)</span><span class="result">: <a href="queries/NestedQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.NestedQueryDefinition">NestedQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@nestedQuery(path:String,query:com.sksamuel.elastic4s.searches.queries.QueryDefinition):com.sksamuel.elastic4s.searches.queries.NestedQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#nestedQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nestedQuery(path:String):QueryApi.this.NestedQueryExpectsQuery"></a>
+      <a id="nestedQuery(String):NestedQueryExpectsQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nestedQuery</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$NestedQueryExpectsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.NestedQueryExpectsQuery">NestedQueryExpectsQuery</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@nestedQuery(path:String):QueryApi.this.NestedQueryExpectsQuery" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#not" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="not(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="not(Iterable[QueryDefinition]):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">not</span><span class="params">(<span name="queries">queries: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@not(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#not" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="not(queries:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="not(QueryDefinition*):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">not</span><span class="params">(<span name="queries">queries: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@not(queries:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#percolateQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="percolateQuery(type:String,field:String):QueryApi.this.PercolateExpectsUsing"></a>
+      <a id="percolateQuery(String,String):PercolateExpectsUsing"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">percolateQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="field">field: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;query&quot;</span></span>)</span><span class="result">: <a href="QueryApi$PercolateExpectsUsing.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.PercolateExpectsUsing">PercolateExpectsUsing</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@percolateQuery(type:String,field:String):QueryApi.this.PercolateExpectsUsing" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#prefixQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="prefixQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition"></a>
+      <a id="prefixQuery(String,Any):PrefixQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">prefixQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/PrefixQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition">PrefixQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@prefixQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#prefixQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="prefixQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition"></a>
+      <a id="prefixQuery((String,Any)):PrefixQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">prefixQuery</span><span class="params">(<span name="tuple">tuple: (<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>)</span>)</span><span class="result">: <a href="queries/PrefixQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition">PrefixQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@prefixQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="query(queryString:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition"></a>
+      <a id="query(String):QueryStringQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="params">(<span name="queryString">queryString: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/QueryStringQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition">QueryStringQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@query(queryString:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#queryStringQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="queryStringQuery(queryString:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition"></a>
+      <a id="queryStringQuery(String):QueryStringQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryStringQuery</span><span class="params">(<span name="queryString">queryString: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/QueryStringQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition">QueryStringQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@queryStringQuery(queryString:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#rangeQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rangeQuery(field:String):com.sksamuel.elastic4s.searches.queries.RangeQueryDefinition"></a>
+      <a id="rangeQuery(String):RangeQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rangeQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/RangeQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.RangeQueryDefinition">RangeQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@rangeQuery(field:String):com.sksamuel.elastic4s.searches.queries.RangeQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#regexQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="regexQuery(field:String,value:String):com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition"></a>
+      <a id="regexQuery(String,String):RegexQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">regexQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/RegexQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition">RegexQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@regexQuery(field:String,value:String):com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#regexQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="regexQuery(tuple:(String,String)):com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition"></a>
+      <a id="regexQuery((String,String)):RegexQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">regexQuery</span><span class="params">(<span name="tuple">tuple: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)</span>)</span><span class="result">: <a href="queries/RegexQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition">RegexQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@regexQuery(tuple:(String,String)):com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#scriptQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="scriptQuery(script:String):com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition"></a>
+      <a id="scriptQuery(String):ScriptQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scriptQuery</span><span class="params">(<span name="script">script: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/ScriptQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition">ScriptQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@scriptQuery(script:String):com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#scriptQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="scriptQuery(script:com.sksamuel.elastic4s.script.ScriptDefinition):com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition"></a>
+      <a id="scriptQuery(ScriptDefinition):ScriptQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scriptQuery</span><span class="params">(<span name="script">script: <a href="../script/ScriptDefinition.html" class="extype" name="com.sksamuel.elastic4s.script.ScriptDefinition">ScriptDefinition</a></span>)</span><span class="result">: <a href="queries/ScriptQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition">ScriptQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@scriptQuery(script:com.sksamuel.elastic4s.script.ScriptDefinition):com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#should" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="should(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="should(Iterable[QueryDefinition]):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">should</span><span class="params">(<span name="queries">queries: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@should(queries:Iterable[com.sksamuel.elastic4s.searches.queries.QueryDefinition]):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#should" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="should(queries:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="should(QueryDefinition*):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">should</span><span class="params">(<span name="queries">queries: <a href="queries/QueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryDefinition">QueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@should(queries:com.sksamuel.elastic4s.searches.queries.QueryDefinition*):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#simpleStringQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="simpleStringQuery(q:String):com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition"></a>
+      <a id="simpleStringQuery(String):SimpleStringQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">simpleStringQuery</span><span class="params">(<span name="q">q: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/SimpleStringQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition">SimpleStringQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@simpleStringQuery(q:String):com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanFirstQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanFirstQuery(query:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition):QueryApi.this.SpanFirstExpectsEnd"></a>
+      <a id="spanFirstQuery(SpanQueryDefinition):SpanFirstExpectsEnd"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanFirstQuery</span><span class="params">(<span name="query">query: <a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a></span>)</span><span class="result">: <a href="QueryApi$SpanFirstExpectsEnd.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.SpanFirstExpectsEnd">SpanFirstExpectsEnd</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanFirstQuery(query:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition):QueryApi.this.SpanFirstExpectsEnd" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanMultiTermQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanMultiTermQuery(query:com.sksamuel.elastic4s.searches.queries.MultiTermQueryDefinition):com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQueryDefinition"></a>
+      <a id="spanMultiTermQuery(MultiTermQueryDefinition):SpanMultiTermQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanMultiTermQuery</span><span class="params">(<span name="query">query: <a href="queries/MultiTermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.MultiTermQueryDefinition">MultiTermQueryDefinition</a></span>)</span><span class="result">: <a href="queries/span/SpanMultiTermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQueryDefinition">SpanMultiTermQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanMultiTermQuery(query:com.sksamuel.elastic4s.searches.queries.MultiTermQueryDefinition):com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanNearQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanNearQuery(defs:Iterable[com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition],slop:Int):com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition"></a>
+      <a id="spanNearQuery(Iterable[SpanQueryDefinition],Int):SpanNearQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanNearQuery</span><span class="params">(<span name="defs">defs: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a>]</span>, <span name="slop">slop: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="queries/span/SpanNearQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition">SpanNearQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanNearQuery(defs:Iterable[com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition],slop:Int):com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanNotQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanNotQuery(include:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition,exclude:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition):com.sksamuel.elastic4s.searches.queries.span.SpanNotQueryDefinition"></a>
+      <a id="spanNotQuery(SpanQueryDefinition,SpanQueryDefinition):SpanNotQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanNotQuery</span><span class="params">(<span name="include">include: <a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a></span>, <span name="exclude">exclude: <a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a></span>)</span><span class="result">: <a href="queries/span/SpanNotQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanNotQueryDefinition">SpanNotQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanNotQuery(include:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition,exclude:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition):com.sksamuel.elastic4s.searches.queries.span.SpanNotQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanOrQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanOrQuery(first:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition*):com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition"></a>
+      <a id="spanOrQuery(SpanQueryDefinition,SpanQueryDefinition*):SpanOrQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanOrQuery</span><span class="params">(<span name="first">first: <a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a></span>, <span name="rest">rest: <a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a>*</span>)</span><span class="result">: <a href="queries/span/SpanOrQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition">SpanOrQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanOrQuery(first:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition,rest:com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition*):com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanOrQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanOrQuery(iterable:Iterable[com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition]):com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition"></a>
+      <a id="spanOrQuery(Iterable[SpanQueryDefinition]):SpanOrQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanOrQuery</span><span class="params">(<span name="iterable">iterable: <span class="extype" name="scala.Iterable">Iterable</span>[<a href="queries/span/SpanQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition">SpanQueryDefinition</a>]</span>)</span><span class="result">: <a href="queries/span/SpanOrQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition">SpanOrQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanOrQuery(iterable:Iterable[com.sksamuel.elastic4s.searches.queries.span.SpanQueryDefinition]):com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#spanTermQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spanTermQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition"></a>
+      <a id="spanTermQuery(String,Any):SpanTermQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spanTermQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/span/SpanTermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition">SpanTermQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@spanTermQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#string2query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="string2query(string:String):com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition"></a>
+      <a id="string2query(String):SimpleStringQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">string2query</span><span class="params">(<span name="string">string: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/SimpleStringQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition">SimpleStringQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@string2query(string:String):com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#stringQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringQuery(q:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition"></a>
+      <a id="stringQuery(String):QueryStringQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stringQuery</span><span class="params">(<span name="q">q: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/QueryStringQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition">QueryStringQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@stringQuery(q:String):com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#termQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition"></a>
+      <a id="termQuery(String,Any):TermQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/term/TermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition">TermQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@termQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#termQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition"></a>
+      <a id="termQuery((String,Any)):TermQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termQuery</span><span class="params">(<span name="tuple">tuple: (<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>)</span>)</span><span class="result">: <a href="queries/term/TermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition">TermQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@termQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#termsLookupQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termsLookupQuery(field:String,path:String,ref:com.sksamuel.elastic4s.DocumentRef):com.sksamuel.elastic4s.searches.queries.term.TermsLookupQueryDefinition"></a>
+      <a id="termsLookupQuery(String,String,DocumentRef):TermsLookupQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termsLookupQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ref">ref: <a href="../DocumentRef.html" class="extype" name="com.sksamuel.elastic4s.DocumentRef">DocumentRef</a></span>)</span><span class="result">: <a href="queries/term/TermsLookupQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermsLookupQueryDefinition">TermsLookupQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@termsLookupQuery(field:String,path:String,ref:com.sksamuel.elastic4s.DocumentRef):com.sksamuel.elastic4s.searches.queries.term.TermsLookupQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#termsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termsQuery[T](field:String,values:Iterable[T])(implicitbuildable:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[T]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[T]"></a>
+      <a id="termsQuery[T](String,Iterable[T])(BuildableTermsQuery[T]):TermsQueryDefinition[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termsQuery</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="buildable">buildable: <a href="queries/term/BuildableTermsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery">BuildableTermsQuery</a>[<span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>]</span>)</span><span class="result">: <a href="queries/term/TermsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition">TermsQueryDefinition</a>[<span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@termsQuery[T](field:String,values:Iterable[T])(implicitbuildable:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[T]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[T]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#termsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="termsQuery[T](field:String,first:T,rest:T*)(implicitevidence$1:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[T]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[T]"></a>
+      <a id="termsQuery[T](String,T,T*)(BuildableTermsQuery[T]):TermsQueryDefinition[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">termsQuery</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="first">first: <span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span></span>, <span name="rest">rest: <span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="queries/term/BuildableTermsQuery.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery">BuildableTermsQuery</a>[<span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>]</span>)</span><span class="result">: <a href="queries/term/TermsQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition">TermsQueryDefinition</a>[<span class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.termsQuery.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@termsQuery[T](field:String,first:T,rest:T*)(implicitevidence$1:com.sksamuel.elastic4s.searches.queries.term.BuildableTermsQuery[T]):com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition[T]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@toString():String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#tuple2query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tuple2query(kv:(String,String)):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition"></a>
+      <a id="tuple2query((String,String)):TermQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tuple2query</span><span class="params">(<span name="kv">kv: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)</span>)</span><span class="result">: <a href="queries/term/TermQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition">TermQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@tuple2query(kv:(String,String)):com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#typeQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="typeQuery(type:String):com.sksamuel.elastic4s.searches.queries.TypeQueryDefinition"></a>
+      <a id="typeQuery(String):TypeQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">typeQuery</span><span class="params">(<span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="queries/TypeQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.TypeQueryDefinition">TypeQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@typeQuery(type:String):com.sksamuel.elastic4s.searches.queries.TypeQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#wildcardQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="wildcardQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition"></a>
+      <a id="wildcardQuery(String,Any):WildcardQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wildcardQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="queries/WildcardQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition">WildcardQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@wildcardQuery(field:String,value:Any):com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#wildcardQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="wildcardQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition"></a>
+      <a id="wildcardQuery((String,Any)):WildcardQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wildcardQuery</span><span class="params">(<span name="tuple">tuple: (<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>)</span>)</span><span class="result">: <a href="queries/WildcardQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition">WildcardQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@wildcardQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.sksamuel.elastic4s.searches.QueryApi#bool" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bool(block:=&gt;com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition"></a>
+      <a id="bool(⇒BoolQueryDefinition):BoolQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.0.0) this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)">bool</span><span class="params">(<span name="block">block: ⇒ <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>)</span><span class="result">: <a href="queries/BoolQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition">BoolQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@bool(block:=&gt;com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition):com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.0.0)</i> this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#geoPolyonQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="geoPolyonQuery(field:String):QueryApi.this.GeoPolygonExpectsPoints"></a>
+      <a id="geoPolyonQuery(String):GeoPolygonExpectsPoints"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.2.0) use geoPolygonQuery">geoPolyonQuery</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="QueryApi$GeoPolygonExpectsPoints.html" class="extype" name="com.sksamuel.elastic4s.searches.QueryApi.GeoPolygonExpectsPoints">GeoPolygonExpectsPoints</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@geoPolyonQuery(field:String):QueryApi.this.GeoPolygonExpectsPoints" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.2.0)</i> use geoPolygonQuery</p></dd></dl></div>
+    </li><li name="com.sksamuel.elastic4s.searches.QueryApi#matchQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="matchQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition"></a>
+      <a id="matchQuery((String,Any)):MatchQueryDefinition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 5.2.0) use matchQuery(field, value) instead of the tupled version">matchQuery</span><span class="params">(<span name="tuple">tuple: (<span class="extype" name="scala.Predef.String">String</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a>)</span>)</span><span class="result">: <a href="queries/matches/MatchQueryDefinition.html" class="extype" name="com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition">MatchQueryDefinition</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.sksamuel.elastic4s.searches.QueryApi@matchQuery(tuple:(String,Any)):com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.2.0)</i> use matchQuery(field, value) instead of the tupled version</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
