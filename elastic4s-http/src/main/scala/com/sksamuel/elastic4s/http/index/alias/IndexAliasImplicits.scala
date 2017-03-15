@@ -1,14 +1,17 @@
-package com.sksamuel.elastic4s.http.alias
+package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.alias.GetAliasDefinition
+import com.sksamuel.elastic4s.alias.{GetAliasDefinition, IndicesAliasesRequestDefinition}
 import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.index.IndicesAliasResponse
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseException, RestClient}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Try}
+import scala.collection.JavaConverters._
 
-trait AliasImplicits {
+trait IndexAliasImplicits {
 
   type GetAliasResponse = Map[String, Map[String, Map[String, AnyRef]]]
 
@@ -27,4 +30,18 @@ trait AliasImplicits {
     }
   }
 
+  implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, IndicesAliasResponse] {
+    override def execute(client: RestClient,
+                         request: IndicesAliasesRequestDefinition,
+                         format: JsonFormat[IndicesAliasResponse]): Future[IndicesAliasResponse] = {
+      val method = "POST"
+      val endpoint = "/_aliases"
+
+      val body = AliasActionBuilder(request).string()
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+
+      logger.debug(s"Executing alias actions $body")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, entity, _), format)
+    }
+  }
 }

@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.alias
+package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.alias.{RemoveAliasActionDefinition, AddAliasActionDefinition, IndicesAliasesRequestDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition

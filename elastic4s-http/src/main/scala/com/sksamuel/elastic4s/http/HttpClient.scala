@@ -77,6 +77,7 @@ trait HttpExecutable[T, U] extends Logging {
                                            failureHandler: Exception => Try[U]): Future[U] = {
     val p = Promise[U]()
     listener(new ResponseListener {
+
       override def onSuccess(r: Response): Unit = {
         logger.debug(s"onSuccess $r")
         val result = Try {

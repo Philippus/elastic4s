@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.indexes
+package com.sksamuel.elastic4s.indexes.alias
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.index.{AliasExistsResponse, IndicesAliasResponse}
@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class AliasActionHttpTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
+class AliasesHttpTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
@@ -21,7 +21,7 @@ class AliasActionHttpTest extends WordSpec with Matchers with ElasticSugar with 
         aliases(
           addAlias("landscapes").on("beaches")
         )
-      }.await should be(IndicesAliasResponse(true))
+      }.await shouldBe IndicesAliasResponse(true)
 
       http.execute {
         aliases(
@@ -36,7 +36,7 @@ class AliasActionHttpTest extends WordSpec with Matchers with ElasticSugar with 
 
       http.execute {
         getAlias("landscapes")
-      }.await should be(Map("mountains" -> Map("aliases" -> Map("landscapes" -> Map()))))
+      }.await shouldBe Map("mountains" -> Map("aliases" -> Map("landscapes" -> Map())))
 
     }
 

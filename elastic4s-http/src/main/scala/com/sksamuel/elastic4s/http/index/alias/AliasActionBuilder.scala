@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.alias
+package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
@@ -8,9 +8,7 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 object AliasActionBuilder {
 
   def apply(r: IndicesAliasesRequestDefinition): XContentBuilder = {
-    val source = XContentFactory.jsonBuilder()
-      .startObject()
-      .startArray("actions")
+    val source = XContentFactory.jsonBuilder().startObject().startArray("actions")
 
     val actionsArray = r.actions.map {
       case addAction: AddAliasActionDefinition => buildAddAction(addAction).string()
@@ -20,7 +18,6 @@ object AliasActionBuilder {
     source.rawValue(new BytesArray(actionsArray))
 
     source.endArray().endObject()
-    source
   }
 
   private def buildAddAction(addAction: AddAliasActionDefinition): XContentBuilder = {
