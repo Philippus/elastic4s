@@ -3,20 +3,20 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.index.{AliasExistsResponse, IndicesAliasResponse}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class AliasActionHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class AliasActionHttpTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
+  addIndex("beaches")
+  addIndex("mountains")
+
   "alias actions" should {
     "executed" in {
-      addIndex("beaches")
-      addIndex("mountains")
-
       http.execute {
         aliases(
           addAlias("landscapes").on("beaches")
@@ -34,10 +34,16 @@ class AliasActionHttpTest extends WordSpec with Matchers with SharedElasticSugar
         aliasExists("landscapes")
       }.await should be(AliasExistsResponse(true))
 
-      val r = http.execute {
+      http.execute {
         getAlias("landscapes")
       }.await should be(Map("mountains" -> Map("aliases" -> Map("landscapes" -> Map()))))
 
+    }
+
+    "return empty response when not found" in {
+      http.execute {
+        getAlias("does_not_exist")
+      }.await shouldBe Map()
     }
   }
 

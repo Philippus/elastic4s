@@ -100,7 +100,7 @@ trait DeleteImplicits {
       request.versionType.map(_.name).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
-      executeAsyncAndMapResponse(client.performRequestAsync(method, url, params.asJava, _), format)
+      executeAsyncAndMapResponse(client.performRequestAsync(method, url, params.asJava, _), format, parse404FailureHandler(format))
     }
   }
 }

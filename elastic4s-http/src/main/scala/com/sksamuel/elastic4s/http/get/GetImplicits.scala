@@ -37,7 +37,7 @@ trait GetImplicits {
 
       val params = scala.collection.mutable.Map.empty[String, String]
 
-      executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_mget", params.asJava, entity, _), format)
+      executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_mget", params.asJava, entity, _), format, parse404FailureHandler(format))
     }
   }
 
@@ -73,7 +73,7 @@ trait GetImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.foreach(params.put("versionType", _))
 
-      executeAsyncAndMapResponse(client.performRequestAsync("GET", endpoint, params.asJava, _), format)
+      executeAsyncAndMapResponse(client.performRequestAsync("GET", endpoint, params.asJava, _), format, parse404FailureHandler(format))
     }
   }
 }

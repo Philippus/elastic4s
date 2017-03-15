@@ -94,18 +94,13 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
   }
 
   it should "not insert doc when doc doesn't exist" in {
-    // TODO: HTTP implementation doesn't currently throw an exception in this situation.
-    tcpOnly {
-      val e = intercept[RuntimeException] {
-        println {
-          execute {
-            update(234234).in("hans/albums").doc(
-              "name" -> "gladiator"
-            )
-          }.await
-        }
-      }
-      assert(e != null)
+    val e = intercept[Exception] {
+      execute {
+        update(234234).in("hans/albums").doc(
+          "name" -> "gladiator"
+        )
+      }.await
     }
+    assert(e != null)
   }
 }
