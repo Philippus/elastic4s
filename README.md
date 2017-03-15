@@ -13,6 +13,8 @@ Elastic4s's DSL allows you to construct your requests programatically, with synt
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index case classes and maps directly without having to extract and set fields manually. Due to its type safe nature, it is easy to see what operations are available for any request type, because your IDE can use type information to show what methods are available.
 
+Read [the full documentation](https://sksamuel.github.io/elastic4s/docs/) to learn more about elastic4s.
+
 #### Key points
 
 * Type safe concise DSL
