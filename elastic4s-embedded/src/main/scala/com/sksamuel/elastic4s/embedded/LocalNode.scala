@@ -30,10 +30,13 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     }
   })
 
+
   val nodeId: String = client().admin().cluster().prepareState().get().getState.getNodes.getLocalNodeId
 
-  val ipAndPort: String = client().admin().cluster().prepareNodesInfo(nodeId).get()
-    .getNodes.iterator().next().getHttp.address().publishAddress().toString
+  private val nodeinfo = client().admin().cluster().prepareNodesInfo(nodeId).get().getNodes.iterator().next()
+
+  // the ip and port might not be available via http if http is disabled, in this case we'll set them to 0
+  val ipAndPort: String = Option(nodeinfo.getHttp).map(_.address.publishAddress.toString).getOrElse("localhost:-1")
   logger.info(s"LocalNode started @ $ipAndPort")
 
   val ip: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt

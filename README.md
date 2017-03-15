@@ -719,6 +719,8 @@ folder. There is no need to configure anything externally.
 
 * Add index template support to the HTTP client
 * Added span, geo, parent id and script queries to http
+* Fixed regression on object field definitions
+* Fixed NPE when local node is started with http false
 
 ###### 5.2.11
 
