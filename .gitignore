@@ -24,3 +24,6 @@ test-output/
 # Sublime Text specific
 *.sublime-project
 *.sublime-workspace
+
+# Generated via microsite
+/docs/src/main/tut/index.md

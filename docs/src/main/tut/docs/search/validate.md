@@ -1,4 +1,10 @@
-## Validate
+---
+layout: docs
+title:  "Validate API"
+section: "docs"
+---
+
+# Validate
 
 The validate API allows us to validate that a query is valid before we execute it. This is an interesting addition
  to elastic4s, because in theory the DSL should not allow you to create invalid queries. 

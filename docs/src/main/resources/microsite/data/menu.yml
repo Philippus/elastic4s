@@ -1,0 +1,89 @@
+options:
+  - title: Getting Started
+    url: docs/index.html
+    menu_type: docs
+    menu_section: introduction
+
+  - title: Document API
+    url: docs/document/index.html
+    menu_type: docs
+    menu_section: document
+
+    nested_options:
+      - title: Index
+        url: docs/document/index.html
+        menu_section: document
+      - title: Get
+        url: docs/document/get.html
+        menu_section: document
+      - title: Multi Get
+        url: docs/document/multiget.html
+        menu_section: document
+      - title: Delete
+        url: docs/document/delete.html
+        menu_section: document
+      - title: Update
+        url: docs/document/update.html
+        menu_section: document
+      - title: Bulk
+        url: docs/document/bulk.html
+        menu_section: document
+
+  - title: Search API
+    url: docs/search/search.html
+    menu_type: docs
+    menu_section: search
+
+    nested_options:
+      - title: Multi Search
+        url: docs/search/multisearch.html
+        menu_section: search
+      - title: Explain
+        url: docs/search/explain.html
+        menu_section: search
+      - title: Suggestions
+        url: docs/search/suggestions.html
+        menu_section: search
+      - title: Validate
+        url: docs/search/validate.html
+        menu_section: search
+      - title: Count
+        url: docs/search/count.html
+        menu_section: search
+
+  - title: Indices API
+    url: docs/indices/createindex.html
+    menu_type: docs
+    menu_section: indices
+
+    nested_options:
+      - title: Create Index
+        url: docs/indices/createindex.html
+        menu_section: indices
+      - title: Aliases
+        url: docs/indices/aliases.html
+        menu_section: indices
+      - title: Optimize
+        url: docs/indices/optimize.html
+        menu_section: indices
+
+  - title: Analyzers
+    url: docs/misc/analyzers.html
+    menu_type: docs
+    menu_section: misc
+
+  - title: Snapshot
+    url: docs/misc/snapshot.html
+    menu_type: docs
+    menu_section: misc
+
+  - title: Java Interop
+    url: docs/misc/javainterop.html
+    menu_type: docs
+    menu_section: misc
+
+
+  - title: Scaladoc
+    url: api/index.html
+    menu_type: docs
+    menu_section: api

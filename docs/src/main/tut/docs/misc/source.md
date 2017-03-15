@@ -1,4 +1,10 @@
-## Document Traits
+---
+layout: docs
+title:  "Document traits"
+section: "docs"
+---
+
+# Document Traits
 
 Sometimes it is useful to seperate the knowledge of the type from the indexing logic. For this we can use the
 `DocumentSource` or `DocumentMap` abstraction to encapsulate the conversion logic.

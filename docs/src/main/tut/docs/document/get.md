@@ -1,4 +1,10 @@
-## Get
+---
+layout: docs
+title:  "Get API"
+section: "docs"
+---
+
+# Get
 
 The get request allows us to retrieve a document from an index by id.
 The format is simple.

@@ -1,3 +1,6 @@
+import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import microsites.ExtraMdFileConfig
+
 lazy val root = Project("elastic4s", file("."))
   .settings(publish := {})
   .settings(publishArtifact := false)
@@ -137,3 +140,50 @@ lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
       name := "elastic4s-play-json",
       libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
     ).dependsOn(core, testkit % "test")
+
+lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
+
+lazy val docs = project
+  .in(file("docs"))
+  .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin)
+  .settings(ghpages.settings)
+  .settings(noPublishSettings)
+  .settings(
+    micrositeName := "Elastic4s",
+    micrositeDescription := "Elasticsearch Scala Client",
+    micrositeAuthor := "Stephen Samuel",
+    micrositeHomepage := "https://sksamuel.github.io/elastic4s",
+    micrositeGithubOwner := "sksamuel",
+    micrositeGithubRepo := "elastic4s",
+    micrositeBaseUrl := "/elastic4s",
+    micrositeDocumentationUrl := "docs",
+    micrositeTwitter := "",
+    micrositeHighlightTheme := "atom-one-light",
+    micrositeExtraMdFiles := Map(file("README.md") -> ExtraMdFileConfig("index.md", "home")),
+    micrositePalette := Map(
+      "brand-primary" -> "#729B79",
+      "brand-secondary" -> "#2E2C2F",
+      "brand-tertiary" -> "#2B2D42",
+      "gray-dark" -> "#646767",
+      "gray" -> "#475B63",
+      "gray-light" -> "#8D99AE",
+      "gray-lighter" -> "#EAF2E6",
+      "white-color" -> "#FFFFFF"
+    ),
+    git.remoteRepo := "git@github.com:sksamuel/elastic4s.git",
+    autoAPIMappings := true,
+    docsMappingsAPIDir := "api",
+    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
+    ghpagesNoJekyll := false,
+    fork in tut := true,
+    fork in (ScalaUnidoc, unidoc) := true,
+    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
+    // push microsite on release
+    releaseProcess += releaseStepTask(publishMicrosite)
+  )
+
+lazy val noPublishSettings = Seq(
+  publish := (),
+  publishLocal := (),
+  publishArtifact := false
+)

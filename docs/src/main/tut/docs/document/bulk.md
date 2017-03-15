@@ -1,4 +1,10 @@
-## Bulk Operations
+---
+layout: docs
+title:  "Bulk API"
+section: "docs"
+---
+
+# Bulk Operations
 
 Elasticsearch allows us to index, delete and update in bulk mode for much faster throughput. When using the bulk API
 you will save at the very least the latency of multiple requests, and usually Elasticsearch can optimize when it

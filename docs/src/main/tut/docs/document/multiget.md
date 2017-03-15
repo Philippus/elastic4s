@@ -1,4 +1,10 @@
-## Multi Get
+---
+layout: docs
+title:  "Multi Get API"
+section: "docs"
+---
+
+# Multi Get
 
 The multiget request allows us to execute multiple get requests in a single request, reducing round trip latency.
 The format is simple, pass a list of get requests into the client method.

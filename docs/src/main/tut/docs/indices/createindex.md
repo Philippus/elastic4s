@@ -1,3 +1,9 @@
+---
+layout: docs
+title:  "Create Index API"
+section: "docs"
+---
+
 # Creating Indexes
 
 By default Elasticsearch does not require us to define indexes or their fields before we use them. Indexes and types are created when they are first accessed, then updated with extra fields as more data is indexed.
@@ -182,4 +188,4 @@ client.execute {
 }
 ```
 
-More information on custom analyzers can be found in the [Analyzers guide](analyzers.md).
+More information on custom analyzers can be found in the [Analyzers guide](../misc/analyzers.md).

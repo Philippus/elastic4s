@@ -1,4 +1,10 @@
-## Searching
+---
+layout: docs
+title:  "Search API"
+section: "docs"
+---
+
+# Searching
 
 Searching is naturally the most involved operation. There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the search DSL.
@@ -60,7 +66,7 @@ search in "places"->"cities" query "europe" sort (
 )
 ```
 
-#### Aggregations
+## Aggregations
 
 [Aggregations](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) are the new [facets](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html). The basic way of doing aggregations in elastic4s is this:
 
@@ -93,7 +99,7 @@ docs](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/sear
 
 Other options provided are highlighting, suggestions, filters, scrolling, index boosts and scripting. See [the query dsl](http://www.elasticsearch.org/guide/reference/api/search/) for more information.
 
-#### Inner Hits
+## Inner Hits
 
 Since version 1.5.0, Elasticsearch has supported [inner hits](http://www.elastic.co/guide/en/elasticsearch/reference/1.5/search-request-inner-hits.html).
 
@@ -116,7 +122,7 @@ search in "index" / "type" query {
 }
 ```
 
-#### Script Fields
+## Script Fields
 
 We can use script fields to evaluate a field for each hit. Script fields can even operate on fields that are not stored. Script fields can include parameters which can be accessed when the script is evaluted.
 
