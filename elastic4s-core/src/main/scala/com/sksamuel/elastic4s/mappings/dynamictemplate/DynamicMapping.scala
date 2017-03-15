@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.mappings
+package com.sksamuel.elastic4s.mappings.dynamictemplate
 
 import scala.language.implicitConversions
 
@@ -9,7 +9,3 @@ object DynamicMapping {
   case object Dynamic extends DynamicMapping
   case object False extends DynamicMapping
 }
-
-case class RoutingDefinition(required: Boolean,
-                             path: Option[String])
-

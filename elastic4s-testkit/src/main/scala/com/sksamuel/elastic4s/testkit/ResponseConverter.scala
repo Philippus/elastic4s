@@ -44,6 +44,8 @@ object ResponseConverterImplicits {
 
   import com.sksamuel.elastic4s.http.search.SearchResponse
 
+  implicit object DynamicTemplateResponseConverter extends ResponseConverter[]
+
   implicit object FlushIndexResponseConverter extends ResponseConverter[FlushResponse, FlushIndexResponse] {
     override def convert(response: FlushResponse) = FlushIndexResponse(
       Shards(response.getTotalShards, response.getFailedShards, response.getSuccessfulShards)
@@ -51,7 +53,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object IndexResponseConverter extends ResponseConverter[RichIndexResponse, IndexResponse] {
-    override def convert(response: RichIndexResponse) = {
+    override def convert(response: RichIndexResponse): IndexResponse = {
       val shardInfo = response.original.getShardInfo
 
       IndexResponse(

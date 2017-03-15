@@ -1,0 +1,10 @@
+{
+    "es": {
+        "match_pattern": "*_es",
+        "match_mapping_type": "string",
+        "mapping": {
+            "type": "text",
+            "analyzer": "spanish"
+        }
+    }
+}

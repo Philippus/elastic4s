@@ -27,9 +27,9 @@ trait DualClient extends SuiteMixin {
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   def execute[T, R, Q1, Q2](request: T)(implicit tcpExec: Executable[T, R, Q1],
-                                           httpExec: HttpExecutable[T, Q2],
-                                           format: JsonFormat[Q2],
-                                           tcpConv: ResponseConverter[Q1, Q2]): Future[Q2] = {
+                                        httpExec: HttpExecutable[T, Q2],
+                                        format: JsonFormat[Q2],
+                                        tcpConv: ResponseConverter[Q1, Q2]): Future[Q2] = {
     if (useHttpClient) {
       logger.debug("Using HTTP client...")
       httpExec.execute(http.rest, request, format)
