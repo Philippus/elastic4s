@@ -20,6 +20,7 @@ object CommonFieldBuilder {
     if (field.fields.nonEmpty) {
       field match {
         case _: NestedFieldDefinition => builder.startObject("properties")
+        case _: ObjectFieldDefinition => builder.startObject("properties")
         case _ => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
@@ -77,6 +78,9 @@ object FieldBuilderFn {
         geo.coerce.foreach(builder.field("coerce", _))
         geo.format.foreach(builder.field("format", _))
         geo.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+
+      case obj: ObjectFieldDefinition =>
+        obj.dynamic.foreach(builder.field("dynamic", _))
 
       case nested: NestedFieldDefinition =>
         nested.dynamic.foreach(builder.field("dynamic", _))

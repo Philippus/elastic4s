@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.exts.OptionImplicits._
 
-case class NestedFieldDefinition(name: String,
+case class ObjectFieldDefinition(name: String,
                                  analyzer: Option[String] = None,
                                  boost: Option[Double] = None,
                                  copyTo: Seq[String] = Nil,
@@ -22,13 +22,12 @@ case class NestedFieldDefinition(name: String,
                                  termVector: Option[String] = None
                                 ) extends FieldDefinition {
 
-  type T = NestedFieldDefinition
-  override def `type` = "nested"
+  type T = ObjectFieldDefinition
+  override def `type` = "object"
 
   override def analyzer(analyzer: String): T = copy(analyzer = analyzer.some)
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
-
   def dynamic(dynamic: String): T = copy(dynamic = dynamic.some)
   def dynamic(dynamic: Boolean): T = copy(dynamic = dynamic.toString.some)
 
