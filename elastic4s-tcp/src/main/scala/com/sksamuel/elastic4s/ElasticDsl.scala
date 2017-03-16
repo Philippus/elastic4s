@@ -224,7 +224,6 @@ trait ElasticDsl
     def field(name: String) = new CommonQueryExpectsText(name)
   }
 
-  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   @deprecated("instead search on the `_index` field", "5.0.0")
