@@ -180,7 +180,7 @@ lazy val docs = project
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
     // push microsite on release
     releaseProcess += releaseStepTask(publishMicrosite)
-  )
+  ).dependsOn(core, embedded, http, circe)
 
 lazy val noPublishSettings = Seq(
   publish := (),

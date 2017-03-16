@@ -81,7 +81,7 @@ The DSL methods are located in the `ElasticDsl` trait which needs to be imported
 
 One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit `JsonFormat` implementation. 
 
-Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided implemenations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
+Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided implementations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
 
 ```scala
 import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
