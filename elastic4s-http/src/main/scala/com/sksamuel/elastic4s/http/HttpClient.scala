@@ -7,7 +7,7 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
-import scala.io.Source
+import scala.io.{Codec, Source}
 import scala.util.{Failure, Try}
 
 trait HttpClient extends Logging {
@@ -74,7 +74,7 @@ trait HttpExecutable[T, U] extends Logging {
   // is then marshalled into the type U
   protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
                                            format: JsonFormat[U],
-                                           failureHandler: Exception => Try[U]): Future[U] = {
+                                           failureHandler: Exception => Try[U])(implicit codec: Codec): Future[U] = {
     val p = Promise[U]()
     listener(new ResponseListener {
 
