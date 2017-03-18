@@ -3,8 +3,12 @@ package com.sksamuel.elastic4s.http
 import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
-import org.apache.http.HttpHost
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
+import org.elasticsearch.client.RestClientBuilder.{RequestConfigCallback, HttpClientConfigCallback}
+
+import org.apache.http.HttpHost
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 
 import scala.concurrent.{Future, Promise}
 import scala.io.{Codec, Source}
@@ -49,10 +53,18 @@ object HttpClient extends Logging {
     override def rest: RestClient = client
   }
 
-  def apply(uri: ElasticsearchClientUri): HttpClient = {
+  def apply(
+    uri: ElasticsearchClientUri,
+    requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+    httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
+  ): HttpClient = {
     val hosts = uri.hosts.map { case (host, port) => new HttpHost(host, port, "http") }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
-    val client = RestClient.builder(hosts: _*).build()
+    val client = RestClient.builder(hosts: _*)
+      .setRequestConfigCallback(requestConfigCallback)
+      .setHttpClientConfigCallback(httpClientConfigCallback)
+      .build()
+
     HttpClient.fromRestClient(client)
   }
 }
@@ -105,5 +117,31 @@ trait HttpExecutable[T, U] extends Logging {
         }
       case _ => Failure(e)
     }
+  }
+}
+
+ /**
+   * RequestConfigCallback that performs a no-op on the given RequestConfig.Builder.
+   *
+   * Used as a default parameter to the HttpClient when no custom request
+   * configuration is needed.
+   *
+   */
+object NoOpRequestConfigCallback extends RequestConfigCallback {
+  override def customizeRequestConfig(requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = {
+      requestConfigBuilder
+  }
+}
+
+ /**
+   * HttpAsyncClientBuilder that performs a no-op on the given HttpAsyncClientBuilder
+   *
+   * Used as a default parameter to the HttpClient when no custom HttpAsync
+   * configuration is needed.
+   *
+   */
+object NoOpHttpClientConfigCallback extends HttpClientConfigCallback {
+  override def customizeHttpClient(httpAsyncClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = {
+    httpAsyncClientBuilder
   }
 }
