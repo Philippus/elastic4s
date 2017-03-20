@@ -724,6 +724,7 @@ folder. There is no need to configure anything externally.
 * Fixed regression on object field definitions
 * Fixed NPE when local node is started with http false
 * Fixed error on get alias when index does not exist
+* Added `RequestConfigCallback` and `HttpClientConfigCallback` support to the HTTP client
 
 ###### 5.2.11
 
