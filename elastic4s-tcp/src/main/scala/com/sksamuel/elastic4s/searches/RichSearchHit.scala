@@ -36,7 +36,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
 
   def fieldValue(fieldName: String): AnyRef = field(fieldName).value
-  def fieldValueOpt(fieldName: String): AnyRef = fieldOpt(fieldName).map(_.value)
+  def fieldValueOpt(fieldName: String): Option[AnyRef] = fieldOpt(fieldName).map(_.value)
 
   def highlightFields: Map[String, HighlightField] =
     Option(java.highlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
