@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.IndicesAliasesRequestDefinition
-import com.sksamuel.elastic4s.http.alias.AliasActionBuilder
+import com.sksamuel.elastic4s.http.index.alias.AliasActionBuilder
 import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes._
@@ -190,18 +190,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
       val body = UpdateIndexLevelSettingsBuilder(request).string()
       logger.debug(s"Executing update index level settings $body")
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
-    }
-  }
-
-  implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, IndicesAliasResponse] {
-    override def execute(client: RestClient,
-                         request: IndicesAliasesRequestDefinition,
-                         format: JsonFormat[IndicesAliasResponse]): Future[IndicesAliasResponse] = {
-      val method = "POST"
-      val endpoint = "/_aliases"
-      val body = AliasActionBuilder(request).string()
-      logger.debug(s"Executing alias actions $body")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }

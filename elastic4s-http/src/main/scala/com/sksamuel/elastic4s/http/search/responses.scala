@@ -94,9 +94,9 @@ trait AggregationResponse {
   def termsAgg(name: String): TermsAggregationResult = {
     TermsAggregationResult(
       name,
-      Nil, //aggregations("buckets").toString.toInt,
-      aggdata("doc_count_error_upper_bound").toString.toInt,
-      aggdata("sum_other_doc_count").toString.toInt
+      agg(name)("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map { map => Bucket(map("key").toString, map("doc_count").toString.toInt) },
+      agg(name)("doc_count_error_upper_bound").toString.toInt,
+      agg(name)("sum_other_doc_count").toString.toInt
     )
   }
 

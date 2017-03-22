@@ -10,7 +10,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
 
-  "create template" should {
+  "create template" ignore {
     "be stored" in {
 
       client.execute {
@@ -32,7 +32,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
       source shouldBe """{"brands":{"properties":{"name":{"type":"text"},"year_founded":{"type":"double"}}}}"""
     }
-    "apply template to new indexes that match the pattern" in {
+    "apply template to new indexes that match the pattern" ignore {
 
       // this should match the earlier template of brew*
       client.execute {

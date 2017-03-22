@@ -3,12 +3,16 @@ package com.sksamuel.elastic4s.http
 import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
-import org.apache.http.HttpHost
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
+import org.elasticsearch.client.RestClientBuilder.{RequestConfigCallback, HttpClientConfigCallback}
+
+import org.apache.http.HttpHost
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 
 import scala.concurrent.{Future, Promise}
-import scala.io.Source
-import scala.util.Try
+import scala.io.{Codec, Source}
+import scala.util.{Failure, Try}
 
 trait HttpClient extends Logging {
 
@@ -49,10 +53,18 @@ object HttpClient extends Logging {
     override def rest: RestClient = client
   }
 
-  def apply(uri: ElasticsearchClientUri): HttpClient = {
+  def apply(
+    uri: ElasticsearchClientUri,
+    requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+    httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
+  ): HttpClient = {
     val hosts = uri.hosts.map { case (host, port) => new HttpHost(host, port, "http") }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
-    val client = RestClient.builder(hosts: _*).build()
+    val client = RestClient.builder(hosts: _*)
+      .setRequestConfigCallback(requestConfigCallback)
+      .setHttpClientConfigCallback(httpClientConfigCallback)
+      .build()
+
     HttpClient.fromRestClient(client)
   }
 }
@@ -65,12 +77,19 @@ trait HttpExecutable[T, U] extends Logging {
 
   def execute(client: RestClient, request: T, format: JsonFormat[U]): Future[U]
 
+  protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
+                                           format: JsonFormat[U]): Future[U] = {
+    executeAsyncAndMapResponse(listener, format, defaultFailureHandler(format))
+  }
+
   // convenience method that registers a listener with the function and the response json
   // is then marshalled into the type U
   protected def executeAsyncAndMapResponse(listener: ResponseListener => Any,
-                                           format: JsonFormat[U]): Future[U] = {
+                                           format: JsonFormat[U],
+                                           failureHandler: Exception => Try[U])(implicit codec: Codec): Future[U] = {
     val p = Promise[U]()
     listener(new ResponseListener {
+
       override def onSuccess(r: Response): Unit = {
         logger.debug(s"onSuccess $r")
         val result = Try {
@@ -79,23 +98,50 @@ trait HttpExecutable[T, U] extends Logging {
         p.tryComplete(result)
       }
 
-      override def onFailure(e: Exception): Unit = {
-        logger.debug(s"onFailure $e")
-
-        e match {
-          case re: ResponseException =>
-            val result = Try {
-              // TODO: Failure responses can parse to valid response models, but can also return ElasticsearchException content, such as:
-              // {"error": { "root_cause": [ ... ] "type": "document_missing_exception", ... }, "status": 404 }
-              // This case needs to be handled, because currently `fromJson` can "successfully" map the ElasticsearchException
-              // JSON output to the response object in many cases.
-              format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent).mkString)
-            }
-            p.tryComplete(result)
-          case _ => p.tryFailure(e)
-        }
-      }
+      override def onFailure(e: Exception): Unit = p.tryComplete(failureHandler(e))
     })
     p.future
+  }
+
+  def defaultFailureHandler(format: JsonFormat[U])(e: Exception): Try[U] = {
+    logger.debug(s"onFailure $e")
+    Failure(e)
+  }
+
+  def parse404FailureHandler(format: JsonFormat[U])(e: Exception): Try[U] = {
+    logger.debug(s"onFailure $e")
+    e match {
+      case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 =>
+        Try {
+          format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent).mkString)
+        }
+      case _ => Failure(e)
+    }
+  }
+}
+
+ /**
+   * RequestConfigCallback that performs a no-op on the given RequestConfig.Builder.
+   *
+   * Used as a default parameter to the HttpClient when no custom request
+   * configuration is needed.
+   *
+   */
+object NoOpRequestConfigCallback extends RequestConfigCallback {
+  override def customizeRequestConfig(requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = {
+      requestConfigBuilder
+  }
+}
+
+ /**
+   * HttpAsyncClientBuilder that performs a no-op on the given HttpAsyncClientBuilder
+   *
+   * Used as a default parameter to the HttpClient when no custom HttpAsync
+   * configuration is needed.
+   *
+   */
+object NoOpHttpClientConfigCallback extends HttpClientConfigCallback {
+  override def customizeHttpClient(httpAsyncClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = {
+    httpAsyncClientBuilder
   }
 }

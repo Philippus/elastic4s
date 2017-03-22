@@ -29,6 +29,9 @@ case class NestedFieldDefinition(name: String,
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
 
+  def dynamic(dynamic: String): T = copy(dynamic = dynamic.some)
+  def dynamic(dynamic: Boolean): T = copy(dynamic = dynamic.toString.some)
+
   override def fields(fields: Iterable[FieldDefinition]): T = copy(fields = fields.toSeq)
 
   override def copyTo(first: String, rest: String*): T = copyTo(first +: rest)

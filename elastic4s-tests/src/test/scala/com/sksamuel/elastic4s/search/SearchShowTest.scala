@@ -9,14 +9,13 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
     "have a show typeclass implementation" in {
 
       val request = {
-        search in "gameofthrones" / "characters" query {
-          bool {
-            should {
+        search("gameofthrones" / "characters") query {
+          boolQuery().
+            should(
               termQuery("name", "snow")
-            }.must {
-              matchQuery("location", "the wall")
-            }
-          }
+            ).must(
+            matchQuery("location", "the wall")
+          )
         }
       }
 
@@ -54,8 +53,7 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
           |      "adjust_pure_negative" : true,
           |      "boost" : 1.0
           |    }
-          |  },
-          |  "ext" : { }
+          |  }
           |}""".stripMargin.trim
     }
   }

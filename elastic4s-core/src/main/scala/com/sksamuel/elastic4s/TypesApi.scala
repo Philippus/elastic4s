@@ -22,7 +22,7 @@ trait TypesApi {
   def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
   def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
   def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
-  def objectField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "object")
+  def objectField(name: String): ObjectFieldDefinition = ObjectFieldDefinition(name)
   def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
 
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script, None, None)
@@ -78,7 +78,7 @@ trait TypesApi {
   def field(name: String, ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
   @deprecated("use objectField(name)", "5.2.11")
-  def field(name: String, ft: ObjectType.type): BasicFieldDefinition = objectField(name)
+  def field(name: String, ft: ObjectType.type): ObjectFieldDefinition = objectField(name)
 
   @deprecated("use percolatorField(name)", "5.2.11")
   def field(name: String, ft: PercolatorType.type): BasicFieldDefinition = percolatorField(name)
@@ -138,7 +138,7 @@ trait TypesApi {
     def withType(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
     @deprecated("use byteField(name)", "5.2.11")
-    def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
+    def withType(ft: ObjectType.type): ObjectFieldDefinition = objectField(name)
 
     @deprecated("use byteField(name)", "5.2.11")
     def withType(ft: ShortType.type): BasicFieldDefinition = shortField(name)
@@ -195,7 +195,7 @@ trait TypesApi {
     def typed(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
     @deprecated("use objectField(name)", "5.2.11")
-    def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
+    def typed(ft: ObjectType.type): ObjectFieldDefinition = objectField(name)
 
     @deprecated("use shortField(name)", "5.2.11")
     def typed(ft: ShortType.type): BasicFieldDefinition = shortField(name)

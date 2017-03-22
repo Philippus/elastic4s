@@ -224,7 +224,6 @@ trait ElasticDsl
     def field(name: String) = new CommonQueryExpectsText(name)
   }
 
-  @deprecated("Fuzzy queries are not useful enough and will be removed in a future version", "5.0.0")
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
   @deprecated("instead search on the `_index` field", "5.0.0")
@@ -425,7 +424,7 @@ trait ElasticDsl
       def withType(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
-      def withType(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
+      def withType(ft: ObjectType.type): ObjectFieldDefinition = objectField(name)
 
       @deprecated("use byteField(name)", "5.2.11")
       def withType(ft: ShortType.type): BasicFieldDefinition = shortField(name)
@@ -482,7 +481,7 @@ trait ElasticDsl
       def typed(ft: NestedType.type): NestedFieldDefinition = nestedField(name)
 
       @deprecated("use objectField(name)", "5.2.11")
-      def typed(ft: ObjectType.type): BasicFieldDefinition = objectField(name)
+      def typed(ft: ObjectType.type): ObjectFieldDefinition = objectField(name)
 
       @deprecated("use shortField(name)", "5.2.11")
       def typed(ft: ShortType.type): BasicFieldDefinition = shortField(name)
