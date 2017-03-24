@@ -131,6 +131,7 @@ For this example we will use the `elastic4s-circe` json serializer.
 ```tut:silent
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, TcpClient}
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.searches.RichSearchResponse
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.common.settings.Settings
 
@@ -142,12 +143,18 @@ case class Artist(name: String)
 
 object ArtistIndex extends App {
 
-  // Here we create an instance of the TCP client
-  val client = TcpClient.transport(
+    // spawn an embedded node
+    val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
+    val client = localNode.elastic4sclient()
+
+  // This creates a TcpClient. We don't actually use it in our little demo,
+  // because elasticsearch 5.x dropped embedded node support and we use the
+  // elastic4s embedded node that don't suppot connecting via tcp
+  def tcpClient(): TcpClient = TcpClient.transport(
     Settings.builder().put("cluster.name", clusterName).build(),
     ElasticsearchClientUri(s"elasticsearch://${localNode.ipAndPort}")
   )
-
+  
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread
   client.execute {
@@ -163,11 +170,20 @@ object ArtistIndex extends App {
   }.await
 
   // now we can search for the document we just indexed
-  val resp = client.execute { 
+  val resp: RichSearchResponse = client.execute { 
     search("bands" / "artists") query "coldplay" 
   }.await
   
-  println(resp)
+  println("---- Search Hit Parsed ----")
+  resp.to[Artist].foreach(println)
+  
+  // pretty print the complete response
+  import io.circe.Json
+  import io.circe.parser._
+  println("---- Response as JSON ----")
+  println(decode[Json](resp.original.toString).right.get.spaces2)
+  
+  localNode.close()
 }
 
 ```
