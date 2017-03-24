@@ -69,49 +69,7 @@ See full [changelog](#changelog).
 
 ## Quick Start
 
-To get started you will need to add a dependency to either [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http) or [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) depending on which client you intend you use (or both)
-
-The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse` which contains the results of the search.
-
-To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the TCP client, use the `TcpClient` companion object methods. Requests are the same for either client, but response classes may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java client classes.
-
-Requests, such as inserting a document, searching, creating an index, and so on, are created using the DSL syntax that is similar in style to SQL queries. For example to create a search request, you would do: `search("index" / "type") query "findthistext"`
-
-The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is identical whether you use the HTTP or TCP client, you must import the appropriate trait (`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which client you are using.
-
-One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit `JsonFormat` implementation. 
-
-Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided implementations are [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe), [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson), [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4), and [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json). For example, to use the jackson implementation, add the module to your build and then add this import:
-
-```scala
-import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-```
-
-An example is worth 1000 characters so here is a quick example of how to connect to a node with a client and index a one field document. Then we will search for that document using a simple text query.
-
-```scala
-import com.sksamuel.elastic4s.TcpClient
-import com.sksamuel.elastic4s.ElasticDsl._
-
-object Test extends App {
-
-  // Here we create an instance of the TCP client
-  val client = TcpClient.transport(ElasticsearchClientUri(host, port))
-
-  // await is a helper method to make this operation synchronous instead of async
-  // You would normally avoid doing this in a real program as it will block your thread
-  client.execute { 
-  	indexInto("bands" / "artists") fields ("name" -> "coldplay") refresh(RefreshPolicy.IMMEDIATE)
-  }.await
-
-  // now we can search for the document we just indexed
-  val resp = client.execute { 
-    search("bands" / "artists") query "coldplay" 
-  }.await
-  
-  println(resp)
-}
-```
+See the [Getting Started Guide](https://sksamuel.github.io/elastic4s/docs/index.html)
 
 ### Eventual Consistency
 
