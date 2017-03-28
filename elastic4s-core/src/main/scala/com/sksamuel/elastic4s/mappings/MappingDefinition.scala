@@ -41,13 +41,15 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
                                 routing: Option[RoutingDefinition] = None,
                                 timestamp: Option[TimestampDefinition] = None,
                                 templates: Seq[DynamicTemplateDefinition] = Nil,
-                                id: Option[IdField] = None
+                                id: Option[IdField] = None,
+                                rawSource: Option[String] = None
                                ) extends MappingDefinitionLike {
 
   import com.sksamuel.exts.OptionImplicits._
 
   def all(all: Boolean): PutMappingDefinition = copy(all = all.some)
   def source(source: Boolean): PutMappingDefinition = copy(source = source.some)
+  def rawSource(rawSource: String): PutMappingDefinition = copy(rawSource = rawSource.some)
 
   def sourceExcludes(sourceExcludes: String*): PutMappingDefinition = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): PutMappingDefinition =

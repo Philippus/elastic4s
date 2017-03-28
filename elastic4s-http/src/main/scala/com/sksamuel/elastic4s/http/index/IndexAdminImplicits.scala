@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.http.index.alias.AliasActionBuilder
 import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -43,6 +44,10 @@ case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
 }
 
 case class IndicesAliasResponse(acknowledged: Boolean) {
+  def success: Boolean = acknowledged
+}
+
+case class PutMappingResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 
@@ -204,6 +209,24 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.status.foreach(params.put("status", _))
       logger.debug(s"Accesing endpoint $endpoint")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener), format)
+    }
+  }
+
+  implicit object PutMappingExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
+    override def execute(client: RestClient,
+                         request: PutMappingDefinition,
+                         format: JsonFormat[PutMappingResponse]): Future[PutMappingResponse] = {
+      val method = "PUT"
+      val endpoint = "/" + request.indexesAndType.indexes.mkString(",") + "/_mapping" + (
+        if (request.indexesAndType.`type`.isEmpty) "" else s"/${request.indexesAndType.`type`}"
+      )
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.all.foreach(params.put("update_all_types", _))
+
+      val body = PutMappingBuilder(request).string()
+      logger.debug(s"Executing Put Mapping request $body")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }
 }
