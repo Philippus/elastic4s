@@ -9,7 +9,6 @@ object CreateIndexBuilder {
       case Some(s) => new CreateIndexRequest(d.name).source(s)
       case None =>
         val source = CreateIndexContentBuilder(d)
-        println(source.string)
         new CreateIndexRequest(d.name).source(source)
     }
   }
