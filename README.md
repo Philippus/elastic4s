@@ -84,54 +84,74 @@ through to the readme page. For options that are not yet documented, refer to th
 
 | Operation                                 | Syntax | HTTP | TCP |
 |-------------------------------------------|--------|------|-----|
-| [Add Alias](guide/aliases.md)             | `addAlias(<alias>).on(<index>)`           |     | yes |
-| Bulk										| `bulk(query1, query2, query3...)`         | yes | yes |
+| [Add Alias]                               | `addAlias(<alias>).on(<index>)`           |     | yes |
+| [Bulk]                                    | `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
 | Cluster stats                             | `clusterStats()`                          |   | yes |
-| [Create Index](guide/createindex.md)      | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
-| [Create Repository](guide/snapshot.md)    | `createRepository(<repo>).type(<type>)`   |   | yes |
-| [Create Snapshot](guide/snapshot.md)      | `createSnapshot(<name>).in(<repo>)`       |   | yes |
+| [Create Index]                            | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
+| [Create Repository]                       | `createRepository(<repo>).type(<type>)`   |   | yes |
+| [Create Snapshot]                         | `createSnapshot(<name>).in(<repo>)`       |   | yes |
 | Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
-| [Delete by id](guide/delete.md)           | `delete(<id>).from(<index> / <type>)`     | yes | yes |
+| [Delete by id]                            | `delete(<id>).from(<index> / <type>)`     | yes | yes |
 | Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes | yes |
-| [Delete index](guide/delete.md)           | `deleteIndex(<index>) [settings]`         | yes | yes |
-| [Delete Snapshot](guide/snapshot.md)      | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
+| [Delete index]                            | `deleteIndex(<index>) [settings]`         | yes | yes |
+| [Delete Snapshot]                         | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
 | Delete Template                           | `deleteTemplate(<name>)` |   | yes |
-| [Explain](guide/explain.md)               | `explain(<index>, <type>, <id>)`          | yes | yes |
+| [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
 | Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
-| [Get](guide/get.md)                       | `get(<id>).from(<index> / <type>)`        | yes | yes |
+| [Get]                                     | `get(<id>).from(<index> / <type>)`        | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)` |          | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
 | Get Segments                              | `getSegments(<indexes>)` |   | yes |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
 | Get Template                              | `getTemplate(<name>)` |   | yes |
-| [Index](guide/index.md)                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
+| [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
 | Index Status                              | `indexStatus(<index>)`                    |   | yes |
 | List Tasks                                | `listTasks(nodeIds)`                      | yes | yes |
 | Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
-| [Multiget](guide/multiget.md)             | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
-| [Multisearch](guide/multisearch.md)       | `multi( search(...), search(...) )`       | yes | yes |
+| [Multiget]                                | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
+| [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
-| [Force Merge](guide/optimize.md)          | `forceMerge(<indexes>)` |   | yes |
+| [Force Merge]                             | `forceMerge(<indexes>)` |   | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |   | yes |
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
-| [Remove Alias](guide/aliases.md)          | `removeAlias(<alias>).on(<index>)` |   | yes |
-| [Restore Snapshot](guide/snapshot.md)     | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
-| [Search](guide/search.md)                 | `search(<index> / <type>).query(<query>)` | yes | yes |
+| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)` |   | yes |
+| [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
+| [Search]                                  | `search(<index> / <type>).query(<query>)` | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>` | yes | yes |
-| [Update](guide/update.md)                 | `update(<id>).in(<index> / <type>)` | yes  | yes |
-| [Validate](guide/validate.md)             | `validateIn(<index/type>).query(<query>)` | yes | yes |
+| [Update]                                  | `update(<id>).in(<index> / <type>)` | yes  | yes |
+| [Validate]                                | `validateIn(<index/type>).query(<query>)` | yes | yes |
 
 Please also note [some java interoperability notes](guide/javainterop.md).
+
+[Add Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
+[Bulk]: https://sksamuel.github.io/elastic4s/docs/document/bulk.html
+[Create Index]: https://sksamuel.github.io/elastic4s/docs/indices/createindex.html
+[Create Repository]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Create Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Delete by id]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[Delete Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Explain]: https://sksamuel.github.io/elastic4s/docs/search/explain.html
+[Get]: https://sksamuel.github.io/elastic4s/docs/document/get.html
+[Index]: https://sksamuel.github.io/elastic4s/docs/document/index.html
+[Multiget]: https://sksamuel.github.io/elastic4s/docs/document/multiget.html
+[Multisearch]: https://sksamuel.github.io/elastic4s/docs/search/multisearch.html
+[Force Merge]: https://sksamuel.github.io/elastic4s/docs/indices/optimize.html
+[Remove Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
+[Restore Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Search]: https://sksamuel.github.io/elastic4s/docs/search/search.html
+[Update]: https://sksamuel.github.io/elastic4s/docs/document/update.html
+[Validate]: https://sksamuel.github.io/elastic4s/docs/search/validate.html
 
 ## Connecting to a Cluster
 
