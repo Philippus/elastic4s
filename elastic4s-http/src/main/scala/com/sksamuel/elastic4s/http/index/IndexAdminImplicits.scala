@@ -217,15 +217,13 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: PutMappingDefinition,
                          format: JsonFormat[PutMappingResponse]): Future[PutMappingResponse] = {
       val method = "PUT"
-      val endpoint = "/" + request.indexesAndType.indexes.mkString(",") + "/_mapping" + (
-        if (request.indexesAndType.`type`.isEmpty) "" else s"/${request.indexesAndType.`type`}"
-      )
+      val endpoint = s"${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.all.foreach(params.put("update_all_types", _))
 
       val body = PutMappingBuilder(request).string()
-      logger.debug(s"Executing Put Mapping request $body")
+      logger.debug(s"Executing Put Mapping request to '${endpoint} $body'")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }

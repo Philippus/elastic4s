@@ -118,7 +118,8 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[RoutingDefinition] = None,
                              timestamp: Option[TimestampDefinition] = None,
-                             templates: Seq[DynamicTemplateDefinition] = Nil
+                             templates: Seq[DynamicTemplateDefinition] = Nil,
+                             rawSource: Option[String] = None
                             ) extends MappingDefinitionLike {
 
   import com.sksamuel.exts.OptionImplicits._
