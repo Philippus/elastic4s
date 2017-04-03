@@ -24,6 +24,7 @@ import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheRespo
 import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.{DeleteIndexResponse => TcpDeleteIndexResponse}
+import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse => TcpPutMappingResponse}
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
@@ -272,6 +273,10 @@ object ResponseConverterImplicits {
       response.getTaskMaxWaitingTime.millis.toInt,
       response.getActiveShardsPercent
     )
+  }
+
+  implicit object PutMappingResponseConverter extends ResponseConverter[TcpPutMappingResponse, PutMappingResponse] {
+    override def convert(response: TcpPutMappingResponse) = PutMappingResponse(response.isAcknowledged)
   }
 
   implicit class RichSourceMap(val self: Map[String, AnyRef]) extends AnyVal {
