@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.admin.UpdateIndexLevelSettingsDefinition
-import com.sksamuel.elastic4s.mappings.{FieldDefinition, MappingContentBuilder, PutMappingDefinition}
+import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, PutMappingDefinition}
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
