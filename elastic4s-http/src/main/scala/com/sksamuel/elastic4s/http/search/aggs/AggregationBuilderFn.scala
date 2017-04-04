@@ -15,6 +15,7 @@ object AggregationBuilderFn {
       case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
+      case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
     }
     builder
   }
