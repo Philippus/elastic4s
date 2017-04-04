@@ -30,4 +30,16 @@ class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with Dual
       dateField("content") nullValue "no content"
     ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2 boostName "boosty"
   }
+
+  it should "accept same several new fields with different types as mapping api" in {
+    putMapping("index" / "type").as(
+      dateField("content") nullValue "no content",
+      textField("description") boost 1.5 maxInputLength 500,
+      doubleField("price") enabled false,
+      nestedField("children") fields(
+        textField("name") nullValue "no name",
+        dateField("date") nullValue "no date"
+      )
+    ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2 boostName "boosty"
+  }
 }
