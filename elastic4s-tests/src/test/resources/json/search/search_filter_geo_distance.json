@@ -5,7 +5,7 @@
         {
           "geo_distance": {
             "distance": 41.147999999999996,
-            "distance_type": "sloppy_arc",
+            "distance_type": "arc",
             "validation_method": "STRICT",
             "ignore_unmapped": false,
             "boost": 1.0
@@ -16,7 +16,7 @@
         {
           "geo_distance": {
             "distance": 193121.28,
-            "distance_type": "factor",
+            "distance_type": "plane",
             "validation_method": "STRICT",
             "ignore_unmapped": false,
             "boost": 1.0

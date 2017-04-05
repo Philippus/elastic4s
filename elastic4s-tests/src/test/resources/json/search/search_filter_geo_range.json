@@ -6,7 +6,7 @@
         267.8919982910156
       ],
       "distance": 0.0,
-      "distance_type": "sloppy_arc",
+      "distance_type": "arc",
       "validation_method": "STRICT",
       "ignore_unmapped": false,
       "boost": 1.0,

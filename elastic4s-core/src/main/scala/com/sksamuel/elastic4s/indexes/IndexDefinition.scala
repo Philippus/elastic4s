@@ -3,13 +3,12 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.index.IndexRequest.OpType
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.index.VersionType
 
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
-                           opType: Option[OpType] = None,
+                           createOnly: Option[Boolean] = None,
                            refresh: Option[RefreshPolicy] = None,
                            parent: Option[String] = None,
                            pipeline: Option[String] = None,
@@ -31,9 +30,6 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def id(id: Any): IndexDefinition = withId(id)
   def withId(id: Any): IndexDefinition = copy(id = id.some)
 
-  def opType(opType: String): IndexDefinition = copy(opType = OpType.fromString(opType).some)
-  def opType(opType: OpType): IndexDefinition = copy(opType = opType.some)
-
   def pipeline(pipeline: String): IndexDefinition = copy(pipeline = pipeline.some)
   def parent(parent: String): IndexDefinition = copy(parent = parent.some)
   def refresh(refresh: String): IndexDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
@@ -47,7 +43,7 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def timeout(timeout: String): IndexDefinition = copy(timeout = timeout.some)
 
   // if set to true then trying to update a document will fail
-  def createOnly(createOnly: Boolean): IndexDefinition = if (createOnly) opType(OpType.CREATE) else opType(OpType.INDEX)
+  def createOnly(createOnly: Boolean): IndexDefinition = copy(createOnly = createOnly.some)
 
   def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toMap)
   def fields(_fields: Iterable[(String, Any)]): IndexDefinition = fields(_fields.toMap)
