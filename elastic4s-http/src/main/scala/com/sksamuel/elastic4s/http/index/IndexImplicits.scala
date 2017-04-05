@@ -23,7 +23,11 @@ trait IndexImplicits extends IndexShowImplicits {
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.opType.foreach(opType => params.put("op_type", opType.lowercase))
+      request.createOnly.foreach(createOnly => 
+        if(createOnly) {
+          params.put("op_type", "create")
+        }
+      )
       request.routing.foreach(params.put("routing", _))
       request.parent.foreach(params.put("parent", _))
       request.timeout.foreach(params.put("timeout", _))

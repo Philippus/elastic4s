@@ -9,7 +9,7 @@
           }
         ],
         "unit": "m",
-        "distance_type": "sloppy_arc",
+        "distance_type": "arc",
         "order": "asc",
         "mode": "max",
         "validation_method": "STRICT"

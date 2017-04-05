@@ -2,12 +2,13 @@ package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.{BulkIndexByScrollResponse, DeleteByQueryAction, DeleteByQueryRequestBuilder}
+import org.elasticsearch.index.reindex.{DeleteByQueryAction, DeleteByQueryRequestBuilder}
 
 import scala.concurrent.Future
 
@@ -34,7 +35,7 @@ trait DeleteExecutables {
   }
 
   implicit object DeleteByQueryDefinitionExecutable
-    extends Executable[DeleteByQueryDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
+    extends Executable[DeleteByQueryDefinition, BulkByScrollResponse, BulkByScrollResponse] {
 
     def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition): Unit = {
       builder.source(d.indexesAndTypes.indexes: _*)
@@ -51,7 +52,7 @@ trait DeleteExecutables {
       d.abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
     }
 
-    override def apply(client: Client, d: DeleteByQueryDefinition): Future[BulkIndexByScrollResponse] = {
+    override def apply(client: Client, d: DeleteByQueryDefinition): Future[BulkByScrollResponse] = {
       val builder = DeleteByQueryAction.INSTANCE.newRequestBuilder(client)
       populate(builder, d)
       injectFuture(builder.execute)

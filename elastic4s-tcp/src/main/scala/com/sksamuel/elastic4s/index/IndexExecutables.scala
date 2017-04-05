@@ -32,7 +32,7 @@ trait IndexExecutables extends IndexShowImplicits {
       t.pipeline.foreach(builder.setPipeline)
       t.timestamp.foreach(builder.setTimestamp)
       t.source.foreach(builder.setSource)
-      t.opType.foreach(builder.setOpType)
+      t.createOnly.foreach(builder.setCreate)
       builder
     }
 

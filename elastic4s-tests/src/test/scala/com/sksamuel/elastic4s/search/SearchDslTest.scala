@@ -188,7 +188,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       hasParentQuery("sometype") query {
         "coldplay"
       } scoreMode true boost 1.2
-    } searchType SearchType.QUERY_AND_FETCH
+    } 
     req.show should matchJsonResource("/json/search/search_hasparent_query.json")
   }
 
@@ -431,7 +431,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geo sort" in {
     val req = search("music") types "bands" sortBy {
-      geoSort("location").points("ABCDEFG").sortMode(SortMode.MAX).geoDistance(GeoDistance.SLOPPY_ARC)
+      geoSort("location").points("ABCDEFG").sortMode(SortMode.MAX).geoDistance(GeoDistance.ARC)
     }
     req.show should matchJsonResource("/json/search/search_sort_geo.json")
   }
@@ -440,7 +440,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val lat = 269.9986267089844
     val lon = 539.9986267089844
     val req = search("music") types "bands" sortBy {
-      geoSort("location").points(List(new GeoPoint(lat, lon))).mode(SortMode.MAX).geoDistance(GeoDistance.SLOPPY_ARC)
+      geoSort("location").points(List(new GeoPoint(lat, lon))).mode(SortMode.MAX).geoDistance(GeoDistance.ARC)
     }
     req.show should matchJsonResource("/json/search/search_sort_geo.json")
   }
@@ -520,7 +520,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       bool(
         should(
-          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.FACTOR geohash "geo1234" distance "120mi"
+          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.PLANE geohash "geo1234" distance "120mi"
         ) not (
           geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.YARD)
           )
