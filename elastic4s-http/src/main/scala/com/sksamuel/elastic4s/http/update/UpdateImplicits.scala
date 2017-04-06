@@ -45,7 +45,7 @@ trait UpdateImplicits {
       request.routing.foreach(params.put("routing", _))
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
-      request.versionType.foreach(params.put("versionType", _))
+      request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = UpdateContentBuilder(request)
