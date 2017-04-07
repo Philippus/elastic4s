@@ -119,7 +119,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
 | [Force Merge]                             | `forceMerge(<indexes>)` |   | yes |
-| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` |   | yes |
+| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
