@@ -32,8 +32,8 @@ import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpen
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
+import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.index.reindex.{BulkByScrollTask, BulkIndexByScrollResponse}
 
 import scala.collection.JavaConverters._
 
@@ -170,9 +170,9 @@ object ResponseConverterImplicits {
     }
   }
 
-  implicit object DeleteByQueryResponseConverter extends ResponseConverter[BulkIndexByScrollResponse, DeleteByQueryResponse] {
-    override def convert(response: BulkIndexByScrollResponse) = {
-      val field = classOf[BulkIndexByScrollResponse].getDeclaredField("status")
+  implicit object DeleteByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, DeleteByQueryResponse] {
+    override def convert(response: BulkByScrollResponse) = {
+      val field = classOf[BulkByScrollResponse].getDeclaredField("status")
       field.setAccessible(true)
       val status = field.get(response).asInstanceOf[BulkByScrollTask.Status]
 

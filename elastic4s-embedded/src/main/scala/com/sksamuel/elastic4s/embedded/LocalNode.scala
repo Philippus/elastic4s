@@ -8,8 +8,8 @@ import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.index.reindex.ReindexPlugin
+import org.elasticsearch.node.InternalSettingsPreparer
 import org.elasticsearch.node.Node
-import org.elasticsearch.node.internal.InternalSettingsPreparer
 import org.elasticsearch.percolator.PercolatorPlugin
 import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.script.mustache.MustachePlugin
