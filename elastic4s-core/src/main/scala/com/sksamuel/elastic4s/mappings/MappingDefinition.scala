@@ -45,7 +45,6 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
                                 routing: Option[RoutingDefinition] = None,
                                 timestamp: Option[TimestampDefinition] = None,
                                 templates: Seq[DynamicTemplateDefinition] = Nil,
-                                id: Option[IdField] = None,
                                 rawSource: Option[String] = None
                                ) extends MappingDefinitionLike {
 
@@ -59,7 +58,6 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def sourceExcludes(sourceExcludes: Iterable[String]): PutMappingDefinition =
     copy(sourceExcludes = sourceExcludes.toSeq)
 
-  def id(id: IdField): PutMappingDefinition = copy(id = id.some)
   def analyzer(analyzer: String): PutMappingDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): PutMappingDefinition = copy(analyzer = analyzer.name.some)
 
@@ -177,5 +175,3 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
   def templates(temps: Iterable[DynamicTemplateDefinition]): MappingDefinition = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateDefinition*): MappingDefinition = copy(templates = temps.toSeq)
 }
-
-case class IdField(index: String)
