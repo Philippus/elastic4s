@@ -131,27 +131,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Update]                                  | `update(<id>).in(<index> / <type>)` | yes  | yes |
 | [Validate]                                | `validateIn(<index/type>).query(<query>)` | yes | yes |
 
-Please also note [some java interoperability notes](guide/javainterop.md).
+Please also note [some java interoperability notes](https://sksamuel.github.io/elastic4s/docs/misc/javainterop.html).
 
-[Add Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
-[Bulk]: https://sksamuel.github.io/elastic4s/docs/document/bulk.html
-[Create Index]: https://sksamuel.github.io/elastic4s/docs/indices/createindex.html
-[Create Repository]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Create Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Delete by id]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[Delete Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Explain]: https://sksamuel.github.io/elastic4s/docs/search/explain.html
-[Get]: https://sksamuel.github.io/elastic4s/docs/document/get.html
-[Index]: https://sksamuel.github.io/elastic4s/docs/document/index.html
-[Multiget]: https://sksamuel.github.io/elastic4s/docs/document/multiget.html
-[Multisearch]: https://sksamuel.github.io/elastic4s/docs/search/multisearch.html
-[Force Merge]: https://sksamuel.github.io/elastic4s/docs/indices/optimize.html
-[Remove Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
-[Restore Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Search]: https://sksamuel.github.io/elastic4s/docs/search/search.html
-[Update]: https://sksamuel.github.io/elastic4s/docs/document/update.html
-[Validate]: https://sksamuel.github.io/elastic4s/docs/search/validate.html
 
 ## Connecting to a Cluster
 
@@ -262,14 +243,14 @@ client.execute {
 Then Elasticsearch is configured with those mappings for those fields only.
 It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will have their type preset.
 
-More examples on the create index syntax can be [found here](guide/createindex.md).
+More examples on the create index syntax can be [found here](https://sksamuel.github.io/elastic4s/docs/indices/createindex.html).
 
 ## Analyzers
 
 Analyzers control how Elasticsearch parses the fields for indexing. For example, you might decide that you want
 whitespace to be important, so that "band of brothers" is indexed as a single "word" rather than the default which is
 to split on whitespace. There are many advanced options available in analayzers. Elasticsearch also allows us to create
-custom analyzers. For more details [read about the DSL support for analyzers](guide/analyzers.md).
+custom analyzers. For more details [read about the DSL support for analyzers](https://sksamuel.github.io/elastic4s/docs/misc/analyzers.html).
 
 ## Indexing
 
@@ -373,9 +354,9 @@ search("places" / "cities") query regexQuery("country", "France")
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
 
-Read more about search syntax [here](guide/search.md).
-Read about [multisearch here](guide/multisearch.md).
-Read about [suggestions here](guide/suggestions.md).
+Read more about search syntax: [Search]
+Read about [Multisearch].
+Read about [Suggestions].
 
 ## HitReader Typeclass
 
@@ -452,7 +433,7 @@ client.execute {
 }
 ```
 
-See more [get examples](guide/get.md) and usage of multiget [here](guide/multiget.md)
+See more [get examples] and usage of [Multiget] here.
 
 ## Deleting
 
@@ -474,7 +455,7 @@ client.execute {
 }
 ```
 
-See more about delete on the [delete page](guide/delete.md)
+See more about delete on the [delete page]
 
 ## Updates
 
@@ -489,7 +470,7 @@ client.execute {
 }
 ```
 
-Read more about updates and see [more examples](guide/update.md).
+For more examples see the [Update] page.
 
 ## More like this
 
@@ -527,7 +508,7 @@ A single HTTP or TCP request is now needed for 4 operations. In addition Elastic
 by combinging inserts or using aggressive caching.
 
 The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
-See more information on the [bulk page](guide/bulk.md).
+See more information on the [Bulk].
 
 ## Json Output
 
@@ -1003,3 +984,27 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 ```
+
+[Add Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
+[Bulk]: https://sksamuel.github.io/elastic4s/docs/document/bulk.html
+[Create Index]: https://sksamuel.github.io/elastic4s/docs/indices/createindex.html
+[Create Repository]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Create Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Delete by id]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[delete page]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
+[Delete Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Explain]: https://sksamuel.github.io/elastic4s/docs/search/explain.html
+[Get]: https://sksamuel.github.io/elastic4s/docs/document/get.html
+[get examples]: https://sksamuel.github.io/elastic4s/docs/document/get.html
+[Index]: https://sksamuel.github.io/elastic4s/docs/document/index.html
+[Multiget]: https://sksamuel.github.io/elastic4s/docs/document/multiget.html
+[Multisearch]: https://sksamuel.github.io/elastic4s/docs/search/multisearch.html
+[Force Merge]: https://sksamuel.github.io/elastic4s/docs/indices/optimize.html
+[Remove Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
+[Restore Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
+[Search]: https://sksamuel.github.io/elastic4s/docs/search/search.html
+[Suggestions]: https://sksamuel.github.io/elastic4s/docs/search/suggestions.html
+[Update]: https://sksamuel.github.io/elastic4s/docs/document/update.html
+[Validate]: https://sksamuel.github.io/elastic4s/docs/search/validate.html
