@@ -184,6 +184,20 @@ class SearchHttpTest
         }.await
         resp.maxScore shouldBe 14.5
       }
+      "not throw npe on empty hits" in {
+        http.execute {
+          search("chess" / "pieces") query {
+            matchQuery("name", "werwerewrewrewr")
+          }
+        }.await.safeTo[Piece].size shouldBe 0
+      }
+      "not throw npe for max score on empty hits" in {
+        http.execute {
+          search("chess" / "pieces") query {
+            matchQuery("name", "werwerewrewrewr")
+          }
+        }.await.maxScore shouldBe 0
+      }
     }
   }
 }
