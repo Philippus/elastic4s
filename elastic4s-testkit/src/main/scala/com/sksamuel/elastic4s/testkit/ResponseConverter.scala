@@ -32,8 +32,7 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.index.reindex.BulkByScrollTask
-
+import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import scala.collection.JavaConverters._
 
 trait ResponseConverter[T, R] {
@@ -43,8 +42,6 @@ trait ResponseConverter[T, R] {
 object ResponseConverterImplicits {
 
   import com.sksamuel.elastic4s.http.search.SearchResponse
-
-  implicit object DynamicTemplateResponseConverter extends ResponseConverter[]
 
   implicit object FlushIndexResponseConverter extends ResponseConverter[FlushResponse, FlushIndexResponse] {
     override def convert(response: FlushResponse) = FlushIndexResponse(
