@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.http.index.alias.AliasActionBuilder
 import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
 import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -43,6 +44,10 @@ case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
 }
 
 case class IndicesAliasResponse(acknowledged: Boolean) {
+  def success: Boolean = acknowledged
+}
+
+case class PutMappingResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 
@@ -204,6 +209,25 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.status.foreach(params.put("status", _))
       logger.debug(s"Accesing endpoint $endpoint")
       executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener), format)
+    }
+  }
+
+  implicit object PutMappingExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
+    override def execute(client: RestClient,
+                         request: PutMappingDefinition,
+                         format: JsonFormat[PutMappingResponse]): Future[PutMappingResponse] = {
+      val method = "PUT"
+      val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.updateAllTypes.foreach(params.put("update_all_types", _))
+      request.ignoreUnavailable.foreach(params.put("ignore_unavailable", _))
+      request.allowNoIndices.foreach(params.put("allow_no_indices", _))
+      request.expandWildcards.foreach(params.put("expand_wildcards", _))
+
+      val body = PutMappingBuilder(request).string()
+      logger.debug(s"Executing Put Mapping request to '${endpoint} $body'")
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, new StringEntity(body, ContentType.APPLICATION_JSON), _), format)
     }
   }
 }
