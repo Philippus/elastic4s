@@ -141,6 +141,7 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)
 
   def parent(parent: String): MappingDefinition = copy(parent = parent.some)
+
   def dynamic(dynamic: DynamicMapping): MappingDefinition = copy(dynamic = dynamic.some)
   def meta(map: Map[String, Any]): MappingDefinition = copy(meta = map)
   def dateDetection(dateDetection: Boolean): MappingDefinition = copy(dateDetection = dateDetection.some)

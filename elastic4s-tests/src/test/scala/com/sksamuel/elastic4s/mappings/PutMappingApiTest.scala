@@ -4,6 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.Matchers
 import org.scalatest.FlatSpec
