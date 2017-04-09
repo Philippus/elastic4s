@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.IndexesAndType
 import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateDefinition}
 
 trait MappingDefinitionLike {
   def all: Option[Boolean]

@@ -12,11 +12,11 @@ import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse
 import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
-import com.sksamuel.elastic4s.http.search.{SearchHit, SearchHits}
+import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
 import com.sksamuel.elastic4s.http.update.UpdateResponse
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
 import com.sksamuel.elastic4s.index.RichIndexResponse
-import com.sksamuel.elastic4s.searches.RichSearchResponse
+import com.sksamuel.elastic4s.searches.{ClearScrollResult, RichSearchResponse}
 import com.sksamuel.elastic4s.update.RichUpdateResponse
 import org.elasticsearch.action.DocWriteResponse
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthResponse => TcpClusterHealthResponse}
@@ -32,9 +32,9 @@ import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpen
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
-import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-
+import org.elasticsearch.action.search.{ClearScrollResponse => TcpClearScrollResponse}
+import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import scala.collection.JavaConverters._
 
 trait ResponseConverter[T, R] {
@@ -52,7 +52,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object IndexResponseConverter extends ResponseConverter[RichIndexResponse, IndexResponse] {
-    override def convert(response: RichIndexResponse) = {
+    override def convert(response: RichIndexResponse): IndexResponse = {
       val shardInfo = response.original.getShardInfo
 
       IndexResponse(
@@ -155,7 +155,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object DeleteResponseConverter extends ResponseConverter[TcpDeleteResponse, DeleteResponse] {
-    override def convert(response: TcpDeleteResponse) = {
+    override def convert(response: TcpDeleteResponse): DeleteResponse = {
       val shardInfo = response.getShardInfo
 
       DeleteResponse(
@@ -240,7 +240,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object UpdateResponseConverter extends ResponseConverter[RichUpdateResponse, UpdateResponse] {
-    override def convert(response: RichUpdateResponse) = {
+    override def convert(response: RichUpdateResponse): UpdateResponse = {
       val shardInfo = response.shardInfo
 
       UpdateResponse(
@@ -275,8 +275,14 @@ object ResponseConverterImplicits {
     )
   }
 
+
   implicit object PutMappingResponseConverter extends ResponseConverter[TcpPutMappingResponse, PutMappingResponse] {
     override def convert(response: TcpPutMappingResponse) = PutMappingResponse(response.isAcknowledged)
+  }
+
+  implicit object ClearScrollResponseConverter extends ResponseConverter[ClearScrollResult, ClearScrollResponse] {
+    override def convert(response: ClearScrollResult): ClearScrollResponse =
+      ClearScrollResponse(response.success, response.number)
   }
 
   implicit class RichSourceMap(val self: Map[String, AnyRef]) extends AnyVal {

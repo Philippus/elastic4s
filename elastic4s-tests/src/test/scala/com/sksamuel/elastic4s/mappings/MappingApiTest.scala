@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.mappings.FieldType.{DateType, GeoPointType}
+import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
