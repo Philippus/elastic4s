@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBu
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -18,8 +18,8 @@ object SearchBodyBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
 
-    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", new BytesArray(x.string)))
-    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string)))
+    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", new BytesArray(x.string), XContentType.JSON))
+    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string), XContentType.JSON))
 
     if (request.explain.contains(true)) {
       builder.field("explain", true)
@@ -33,7 +33,7 @@ object SearchBodyBuilderFn {
     if (request.sorts.nonEmpty) {
       builder.startArray("sort")
       request.sorts.foreach { sort =>
-        builder.rawValue(new BytesArray(SortContentBuilder(sort).string))
+        builder.rawValue(new BytesArray(SortContentBuilder(sort).string), XContentType.JSON)
       }
       builder.endArray()
     }
@@ -49,7 +49,9 @@ object SearchBodyBuilderFn {
           field.forceSource.foreach(builder.field("force_source", _))
           field.fragmentOffset.foreach(builder.field("fragment_offset", _))
           field.fragmentSize.foreach(builder.field("fragment_size", _))
-          field.highlightQuery.map(QueryBuilderFn.apply).map(_.bytes()).foreach(builder.rawField("highlight_query", _))
+          field.highlightQuery.map(QueryBuilderFn.apply).map(_.bytes()).foreach { highlight =>
+            builder.rawField("highlight_query", highlight, XContentType.JSON)
+          }
           field.matchedFields.foreach(builder.field("matched_fields", _))
           field.noMatchSize.foreach(builder.field("no_match_size", _))
           field.numOfFragments.foreach(builder.field("number_of_fragments", _))
@@ -133,7 +135,7 @@ object SearchBodyBuilderFn {
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")
       request.aggs.foreach { agg =>
-        builder.rawField(agg.name, AggregationBuilderFn(agg).bytes)
+        builder.rawField(agg.name, AggregationBuilderFn(agg).bytes, XContentType.JSON)
       }
       builder.endObject()
     }
