@@ -12,7 +12,7 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.concurrent.Future
 
-case class ClearScrollResponse()
+case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 
 trait SearchScrollImplicits {
 
@@ -24,7 +24,14 @@ trait SearchScrollImplicits {
     override def execute(client: RestClient,
                          request: ClearScrollDefinition,
                          format: JsonFormat[ClearScrollResponse]): Future[ClearScrollResponse] = {
-      ???
+
+      val (method, endpoint) = ("DELETE", s"/_search/scroll/")
+
+      val body = ClearScrollContentFn(request).string()
+      logger.debug("Executing clear scroll: " + body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+
+      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, new util.HashMap[String, String], entity, _), format)
     }
   }
 
@@ -52,6 +59,15 @@ object SearchScrollContentFn {
     builder.startObject()
     req.keepAlive.foreach(builder.field("scroll", _))
     builder.field("scroll_id", req.id)
+    builder.endObject()
+  }
+}
+
+object ClearScrollContentFn {
+  def apply(req: ClearScrollDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    builder.startObject()
+    builder.field("scroll_id", req.ids.toArray)
     builder.endObject()
   }
 }

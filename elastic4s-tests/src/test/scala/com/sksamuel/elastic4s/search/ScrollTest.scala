@@ -90,4 +90,31 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualElastic
       resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
     }
   }
+
+  "a clearScroll" should {
+    "clear scrolls" in {
+
+      val searchDefinition = search("katebush" / "songs")
+        .query("1985")
+        .scroll("1m")
+        .size(2)
+        .sortBy(fieldSort("name"))
+        .storedFields("name")
+
+      val resp1 = execute {
+        searchDefinition
+      }.await
+
+      val resp2 = execute {
+        searchDefinition
+      }.await
+
+      val resp = execute {
+        clearScroll(resp1.scrollId.get, resp2.scrollId.get)
+      }.await
+
+      resp.succeeded should be(true)
+      resp.num_freed should be > 0
+    }
+  }
 }
