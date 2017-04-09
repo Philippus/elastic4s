@@ -12,6 +12,6 @@ class TopHitsAggregationBuilderTest extends FunSuite with Matchers {
       .explain(false)
       .sortBy(List(FieldSortDefinition("price")))
     TopHitsAggregationBuilder(q).string() shouldBe
-      """{"top_hits":{"size":5,"sort":[{"price":{"order":"asc"}}],"explain":false,"version":true},"aggs":{}}"""
+      """{"top_hits":{"size":5,"sort":[{"price":{"order":"asc"}}],"explain":false,"version":true}}"""
   }
 }
