@@ -5,6 +5,11 @@ lazy val root = Project("elastic4s", file("."))
   .settings(publish := {})
   .settings(publishArtifact := false)
   .settings(name := "elastic4s")
+  .settings(mappings in(Compile, packageSrc) ++= {
+    val base = (sourceManaged in Compile).value
+    val files = (managedSources in Compile).value
+    files.map { f => (f, f.relativeTo(base).get.getPath) }
+  })
   .aggregate(
     core,
     tcp,
@@ -16,6 +21,7 @@ lazy val root = Project("elastic4s", file("."))
     jackson,
     json4s,
     playjson,
+    sprayjson,
     streams,
     xpacksecurity
   )
@@ -137,10 +143,16 @@ lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
   ).dependsOn(core, testkit % "test")
 
 lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
-    .settings(
-      name := "elastic4s-play-json",
-      libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
-    ).dependsOn(core, testkit % "test")
+  .settings(
+    name := "elastic4s-play-json",
+    libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
+  ).dependsOn(core, testkit % "test")
+
+lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"))
+  .settings(
+    name := "elastic4s-spray-json",
+    libraryDependencies += "io.spray" %% "spray-json" % SprayJsonVersion
+  ).dependsOn(core, testkit % "test")
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 
