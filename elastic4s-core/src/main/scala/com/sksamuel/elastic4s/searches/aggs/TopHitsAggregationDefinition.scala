@@ -4,8 +4,6 @@ import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.metrics.tophits.TopHitsAggregationBuilder
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class TopHitsAggregationDefinition(name: String,
@@ -24,10 +22,8 @@ case class TopHitsAggregationDefinition(name: String,
 
   type T = TopHitsAggregationDefinition
 
-  type B = TopHitsAggregationBuilder
-  val builder: B = AggregationBuilders.topHits(name)
-
   def explain(explain: Boolean): TopHitsAggregationDefinition = copy(explain = explain.some)
+
   def fetchSource(includes: Array[String], excludes: Array[String]): TopHitsAggregationDefinition =
     copy(fetchSource = new FetchSourceContext(true, includes, excludes).some)
 
@@ -49,6 +45,6 @@ case class TopHitsAggregationDefinition(name: String,
   def script(name: String, script: ScriptDefinition): T = copy(scripts = scripts + (name -> script))
 
   override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = sys.error("Top Hits does not support sub aggregations")
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

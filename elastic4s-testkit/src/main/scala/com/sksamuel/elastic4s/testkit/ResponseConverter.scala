@@ -31,10 +31,9 @@ import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpen
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
-import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
 import org.elasticsearch.action.search.{ClearScrollResponse => TcpClearScrollResponse}
-
+import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import scala.collection.JavaConverters._
 
 trait ResponseConverter[T, R] {
@@ -52,7 +51,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object IndexResponseConverter extends ResponseConverter[RichIndexResponse, IndexResponse] {
-    override def convert(response: RichIndexResponse) = {
+    override def convert(response: RichIndexResponse): IndexResponse = {
       val shardInfo = response.original.getShardInfo
 
       IndexResponse(
@@ -155,7 +154,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object DeleteResponseConverter extends ResponseConverter[TcpDeleteResponse, DeleteResponse] {
-    override def convert(response: TcpDeleteResponse) = {
+    override def convert(response: TcpDeleteResponse): DeleteResponse = {
       val shardInfo = response.getShardInfo
 
       DeleteResponse(
@@ -240,7 +239,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object UpdateResponseConverter extends ResponseConverter[RichUpdateResponse, UpdateResponse] {
-    override def convert(response: RichUpdateResponse) = {
+    override def convert(response: RichUpdateResponse): UpdateResponse = {
       val shardInfo = response.shardInfo
 
       UpdateResponse(
