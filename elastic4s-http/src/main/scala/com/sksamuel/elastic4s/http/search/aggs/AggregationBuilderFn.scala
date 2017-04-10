@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.searches.aggs._
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentType}
+import com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -17,17 +18,29 @@ object AggregationBuilderFn {
       case agg: TopHitsAggregationDefinition => TopHitsAggregationBuilder(agg)
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
+
+      // pipeline aggs
+      case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
     }
     builder
   }
 }
 
+object MaxBucketPipelineAggBuilder {
+  def apply(agg: MaxBucketDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject().startObject("max_bucket")
+    builder.field("buckets_path", agg.bucketsPath)
+    builder.endObject().endObject()
+  }
+}
+
 object AggMetaDataFn {
   def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit = {
-    builder.startObject("meta")
-    if (agg.metadata.nonEmpty)
+    if (agg.metadata.nonEmpty) {
+      builder.startObject("meta")
       agg.metadata.foreach { case (key, value) => builder.field(key, value) }
-    builder.endObject()
+      builder.endObject()
+    }
   }
 }
 
