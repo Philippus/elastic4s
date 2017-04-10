@@ -7,7 +7,8 @@ import org.elasticsearch.search.sort.SortOrder
 
 trait SortApi {
 
-  def scoreSort() = new {
+  def scoreSort() = new ScoreSortExpectsOrder
+  class ScoreSortExpectsOrder {
     def order(order: SortOrder): ScoreSortDefinition = ScoreSortDefinition(order)
   }
 
