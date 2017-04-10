@@ -8,6 +8,8 @@ case class SumBucketDefinition(name: String,
                                gapPolicy: Option[GapPolicy] = None,
                                metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = SumBucketDefinition
+
   def format(format: String): SumBucketDefinition = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): SumBucketDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): SumBucketDefinition = copy(metadata = metadata)

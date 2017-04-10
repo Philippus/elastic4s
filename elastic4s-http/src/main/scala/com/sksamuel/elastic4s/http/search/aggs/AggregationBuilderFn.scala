@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.searches.aggs._
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentType}
 
 object AggregationBuilderFn {
-  def apply(agg: AggregationDefinition): XContentBuilder = {
+  def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
       case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)

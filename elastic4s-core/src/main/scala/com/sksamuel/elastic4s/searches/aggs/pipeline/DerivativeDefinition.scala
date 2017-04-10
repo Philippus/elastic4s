@@ -11,6 +11,8 @@ case class DerivativeDefinition(name: String,
                                 unitString: Option[String] = None,
                                 metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = DerivativeDefinition
+
   def unit(unit: DateHistogramInterval): DerivativeDefinition = copy(unit = Some(unit))
   def unit(unit: String): DerivativeDefinition = copy(unitString = Some(unit))
 

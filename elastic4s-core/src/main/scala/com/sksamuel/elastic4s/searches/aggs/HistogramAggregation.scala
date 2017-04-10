@@ -16,8 +16,7 @@ case class HistogramAggregation(name: String,
                                 extendedBounds: Option[(Double, Double)] = None,
                                 order: Option[Histogram.Order] = None,
                                 script: Option[ScriptDefinition] = None,
-                                pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                subaggs: Seq[AggregationDefinition] = Nil,
+                                subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty) extends AggregationDefinition {
 
   type T = HistogramAggregation
@@ -28,8 +27,7 @@ case class HistogramAggregation(name: String,
   def script(script: ScriptDefinition): T = copy(script = script.some)
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 
   def interval(interval: Double): HistogramAggregation = copy(interval = interval.some)

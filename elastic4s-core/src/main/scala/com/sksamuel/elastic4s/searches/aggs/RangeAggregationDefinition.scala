@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class RangeAggregationDefinition(name: String,
@@ -13,8 +12,7 @@ case class RangeAggregationDefinition(name: String,
                                       ranges: Seq[(Option[String], Double, Double)] = Nil,
                                       unboundedFrom: Option[(Option[String], Double)] = None,
                                       unboundedTo: Option[(Option[String], Double)] = None,
-                                      pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                      subaggs: Seq[AggregationDefinition] = Nil,
+                                      subaggs: Seq[AbstractAggregation] = Nil,
                                       metadata: Map[String, AnyRef] = Map.empty) extends AggregationDefinition {
 
   type T = RangeAggregationDefinition
@@ -36,7 +34,6 @@ case class RangeAggregationDefinition(name: String,
   def script(script: ScriptDefinition): T = copy(script = script.some)
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

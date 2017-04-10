@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
@@ -15,8 +14,7 @@ case class TopHitsAggregationDefinition(name: String,
                                         version: Option[Boolean] = None,
                                         scripts: Map[String, ScriptDefinition] = Map.empty,
                                         storedFields: Seq[String] = Nil,
-                                        pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                        subaggs: Seq[AggregationDefinition] = Nil,
+                                        subaggs: Seq[AbstractAggregation] = Nil,
                                         metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
 
@@ -44,7 +42,6 @@ case class TopHitsAggregationDefinition(name: String,
 
   def script(name: String, script: ScriptDefinition): T = copy(scripts = scripts + (name -> script))
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = sys.error("Top Hits does not support sub aggregations")
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = sys.error("Top Hits does not support sub aggregations")
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

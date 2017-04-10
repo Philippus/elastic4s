@@ -19,7 +19,7 @@ trait AggregationApi {
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition = ExtendedStatsAggregationDefinition(
     name)
 
-  def filterAgg(name: String, query: QueryDefinition) = new FilterAggregationDefinition(name, query)
+  def filterAgg(name: String, query: QueryDefinition) = FilterAggregationDefinition(name, query)
   def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
     @deprecated("use query", "5.0.0")

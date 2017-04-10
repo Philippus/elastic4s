@@ -14,6 +14,8 @@ case class MovAvgDefinition(name: String,
                             window: Option[Integer] = None,
                             metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = MovAvgDefinition
+
   def minimise(minimise: Boolean): MovAvgDefinition = copy(minimise = Some(minimise))
   def modelBuilder(modelBuilder: MovAvgModelBuilder): MovAvgDefinition = copy(modelBuilder = Some(modelBuilder))
   def numPredictions(numPredictions: Integer): MovAvgDefinition = copy(numPredictions = Some(numPredictions))

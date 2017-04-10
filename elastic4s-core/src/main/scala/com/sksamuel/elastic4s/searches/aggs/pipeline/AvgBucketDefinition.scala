@@ -8,6 +8,8 @@ case class AvgBucketDefinition(name: String,
                                format: Option[String] = None,
                                metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = AvgBucketDefinition
+
   def format(format: String): AvgBucketDefinition = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): AvgBucketDefinition = copy(gapPolicy = Some(gapPolicy))
 

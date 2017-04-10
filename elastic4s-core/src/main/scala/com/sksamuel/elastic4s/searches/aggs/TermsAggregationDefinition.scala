@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.aggregations.Aggregator
 import org.elasticsearch.search.aggregations.bucket.terms.Terms
@@ -22,8 +21,7 @@ case class TermsAggregationDefinition(name: String,
                                       order: Option[Terms.Order] = None,
                                       shardSize: Option[Int] = None,
                                       includeExclude: Option[IncludeExclude] = None,
-                                      pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                      subaggs: Seq[AggregationDefinition] = Nil,
+                                      subaggs: Seq[AbstractAggregation] = Nil,
                                       metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
 
@@ -66,7 +64,6 @@ case class TermsAggregationDefinition(name: String,
     copy(includeExclude = new IncludeExclude(inc, exc).some)
   }
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }
