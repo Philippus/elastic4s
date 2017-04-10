@@ -1,0 +1,50 @@
+{
+    "took": 53,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 3,
+        "max_score": 1.0,
+        "hits": [
+            {
+                "_index": "minmaxagg",
+                "_type": "buildings",
+                "_id": "AVtZeGYJHv2gN0cDn3f9",
+                "_score": 1.0,
+                "_source": {
+                    "name": "Tower of London",
+                    "height": 169
+                }
+            },
+            {
+                "_index": "minmaxagg",
+                "_type": "buildings",
+                "_id": "AVtZeGYJHv2gN0cDn3f7",
+                "_score": 1.0,
+                "_source": {
+                    "name": "Willis Tower",
+                    "height": 1244
+                }
+            },
+            {
+                "_index": "minmaxagg",
+                "_type": "buildings",
+                "_id": "AVtZeGYJHv2gN0cDn3f8",
+                "_score": 1.0,
+                "_source": {
+                    "name": "Burj Kalifa",
+                    "height": 2456
+                }
+            }
+        ]
+    },
+    "aggregations": {
+        "agg1": {
+            "value": 2456.0
+        }
+    }
+}

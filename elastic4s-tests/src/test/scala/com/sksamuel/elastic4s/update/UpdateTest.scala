@@ -10,7 +10,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("hans").mappings(
         mapping("albums").fields(

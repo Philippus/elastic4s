@@ -3,12 +3,11 @@ package com.sksamuel.elastic4s.http
 import cats.Show
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, JsonFormat}
 import com.sksamuel.exts.Logging
-import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
-import org.elasticsearch.client.RestClientBuilder.{RequestConfigCallback, HttpClientConfigCallback}
-
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
+import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
+import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.{Codec, Source}
