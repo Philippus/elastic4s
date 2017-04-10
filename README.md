@@ -47,6 +47,7 @@ The second issue is that it uses Netty 4.1. However some popular projects such a
 
 | Elastic4s Release | Target Elasticsearch version |
 |-------|---------------------|
+|5.3.x|5.3.x|
 |5.2.x|5.2.x|
 |5.1.x|5.1.x|
 |5.0.x|5.0.x|
