@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.search
 
-import cats.syntax.either._
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{Hit, HitReader}
@@ -137,7 +136,7 @@ case class SearchResponse(took: Int,
   def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
-  def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
+  def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 
