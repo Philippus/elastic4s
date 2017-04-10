@@ -152,38 +152,6 @@ class SearchHttpTest
         resp.totalHits shouldBe 1
         resp.maxScore shouldBe 14.5
       }
-      "support range query using gte" in {
-        val resp = http.execute {
-          search("chess" / "pieces") query {
-            rangeQuery("value").gte("3")
-          }
-        }.await
-        resp.totalHits shouldBe 4
-      }
-      "support range query using lte" in {
-        val resp = http.execute {
-          search("chess" / "pieces") query {
-            rangeQuery("value").lte("3")
-          }
-        }.await
-        resp.totalHits shouldBe 4
-      }
-      "support range query using both lte & gte" in {
-        val resp = http.execute {
-          search("chess" / "pieces") query {
-            rangeQuery("value").gte("5").lte("7")
-          }
-        }.await
-        resp.totalHits shouldBe 1
-      }
-      "support boost in range query" in {
-        val resp = http.execute {
-          search("chess" / "pieces") query {
-            rangeQuery("value").lte("3").boost(14.5)
-          }
-        }.await
-        resp.maxScore shouldBe 14.5
-      }
       "not throw npe on empty hits" in {
         http.execute {
           search("chess" / "pieces") query {
