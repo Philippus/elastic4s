@@ -1,14 +1,14 @@
 {
-  "size": 5,
-  "query": {
-    "range": {
-      "coldplay": {
-        "from": 4,
-        "to": 10,
-        "include_lower": true,
-        "include_upper": true,
-        "boost": 1.2
-      }
+    "size": 5,
+    "query": {
+        "range": {
+            "coldplay": {
+                "from": 4,
+                "to": 10,
+                "include_lower": true,
+                "include_upper": false,
+                "boost": 1.2
+            }
+        }
     }
-  }
 }

@@ -87,7 +87,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for a range query" in {
     val req = search("*") types("users", "tweets") limit 5 query {
-      rangeQuery("coldplay") includeLower true includeUpper true from 4 to 10 boost 1.2
+      rangeQuery("coldplay") gte 4 lt 10 boost 1.2
     }
     req.show should matchJsonResource("/json/search/search_range.json")
   }
@@ -188,7 +188,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       hasParentQuery("sometype") query {
         "coldplay"
       } scoreMode true boost 1.2
-    } 
+    }
     req.show should matchJsonResource("/json/search/search_hasparent_query.json")
   }
 
