@@ -8,6 +8,7 @@ case class PercentilesAggregationDefinition(name: String,
                                             missing: Option[AnyRef] = None,
                                             format: Option[String] = None,
                                             script: Option[ScriptDefinition] = None,
+                                            numberOfSignificantValueDigits: Option[Int] = None,
                                             percents: Seq[Double] = Nil,
                                             compression: Option[Double] = None,
                                             subaggs: Seq[AbstractAggregation] = Nil,
@@ -25,6 +26,8 @@ case class PercentilesAggregationDefinition(name: String,
   def field(field: String): T = copy(field = field.some)
   def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
+  def numberOfSignificantValueDigits(numberOfSignificantValueDigits: Int): T = copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
+  def hdr(numberOfSignificantValueDigits: Int): T = copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): PercentilesAggregationDefinition = copy(metadata = metadata)

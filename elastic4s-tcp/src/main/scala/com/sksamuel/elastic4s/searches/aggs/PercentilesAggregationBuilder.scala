@@ -12,6 +12,7 @@ object PercentilesAggregationBuilder {
     val builder = AggregationBuilders.percentiles(agg.name)
     agg.field.foreach(builder.field)
     agg.missing.foreach(builder.missing)
+    agg.numberOfSignificantValueDigits.foreach(builder.numberOfSignificantValueDigits)
     agg.format.foreach(builder.format)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     SubAggsFn(builder, agg.subaggs)
