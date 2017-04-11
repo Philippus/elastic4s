@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.{ObjectNode, TextNode}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -43,11 +45,13 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSug
     "support custom mapper" in {
 
       implicit val mapper: ObjectMapper = mock[ObjectMapper]
+      Mockito.when(mapper.readTree(org.mockito.Matchers.anyString)).thenReturn(mock[ObjectNode])
+
       val resp = client.execute {
         search("jacksontest" / "characters").query("breaking")
       }.await
-      // nothing should be marshalled as the mock does nothing and the mock should be higher priority
-      resp.to[Character].toList shouldBe Nil
+      // our custom mapper will just return null so that should be returned
+      resp.to[Character].toList shouldBe List(null)
     }
   }
 }
