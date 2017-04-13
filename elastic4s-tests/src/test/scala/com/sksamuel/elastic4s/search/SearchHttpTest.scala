@@ -7,6 +7,8 @@ import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.WordSpec
 
+import scala.util.Try
+
 class SearchHttpTest
   extends WordSpec
     with ElasticSugar
@@ -16,6 +18,12 @@ class SearchHttpTest
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+
+  Try {
+    http.execute {
+      ElasticDsl.deleteIndex("chess")
+    }.await
+  }
 
   http.execute {
     createIndex("chess").mappings(

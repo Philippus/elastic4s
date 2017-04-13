@@ -1,10 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
-import java.util
-
 import cats.Show
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
@@ -22,8 +19,7 @@ trait SearchScrollImplicits {
 
   implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
     override def execute(client: RestClient,
-                         request: ClearScrollDefinition,
-                         format: JsonFormat[ClearScrollResponse]): Future[ClearScrollResponse] = {
+                         request: ClearScrollDefinition): Future[ClearScrollResponse] = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -31,7 +27,7 @@ trait SearchScrollImplicits {
       logger.debug("Executing clear scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, new util.HashMap[String, String], entity, _), format)
+      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -41,14 +37,13 @@ trait SearchScrollImplicits {
     private val method = "POST"
 
     override def execute(client: RestClient,
-                         req: SearchScrollDefinition,
-                         format: JsonFormat[SearchResponse]): Future[SearchResponse] = {
+                         req: SearchScrollDefinition): Future[SearchResponse] = {
 
       val body = SearchScrollContentFn(req).string()
       logger.debug("Executing search scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, new util.HashMap[String, String], entity, _), format)
+      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 }

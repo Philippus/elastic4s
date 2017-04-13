@@ -64,11 +64,16 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .dependsOn(core)
 
 lazy val http = Project("elastic4s-http", file("elastic4s-http"))
-  .settings(name := "elastic4s-http")
-    .settings(libraryDependencies ++= Seq(
-      "org.elasticsearch.client"    % "rest"        % ElasticsearchVersion,
-      "org.apache.logging.log4j"    % "log4j-api"   % Log4jVersion  % "test"
-    ))
+  .settings(
+    name := "elastic4s-http",
+    libraryDependencies ++= Seq(
+      "org.elasticsearch.client"      % "rest"                    % ElasticsearchVersion,
+      "org.apache.logging.log4j"      % "log4j-api"               % Log4jVersion  % "test"
+      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
+      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
+    )
+  )
   .dependsOn(core)
 
 lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
@@ -93,7 +98,7 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
     name := "elastic4s-testkit",
     libraryDependencies ++= Seq(
-      "org.scalatest"                         %% "scalatest"                % ScalatestVersion
+      "org.scalatest" %% "scalatest" % ScalatestVersion
     )
   )
   .dependsOn(core, embedded, http)

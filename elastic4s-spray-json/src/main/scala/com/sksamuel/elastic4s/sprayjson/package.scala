@@ -3,16 +3,9 @@ package com.sksamuel.elastic4s
 import spray.json._
 
 import scala.annotation.implicitNotFound
-import scala.reflect.Manifest
 import scala.util.control.NonFatal
 
 package object sprayjson {
-
-  @implicitNotFound("No RootJsonReader for type ${T} found. Bring an implicit RootJsonReader[T] instance in scope")
-  implicit def format[T](implicit r: RootJsonReader[T],
-                         mf: Manifest[T]): JsonFormat[T] = new JsonFormat[T] {
-    override def fromJson(json: String): T = r.read(json.parseJson)
-  }
 
   @implicitNotFound("No RootJsonWriter for type ${T} found. Bring an implicit RootJsonWriter[T] instance in scope")
   implicit def sprayJsonIndexable[T](implicit w: RootJsonWriter[T]) = new Indexable[T] {

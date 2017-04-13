@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 trait SearchImplicits {
@@ -28,8 +26,7 @@ trait SearchImplicits {
   implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
 
     override def execute(client: RestClient,
-                         request: MultiSearchDefinition,
-                         format: JsonFormat[MultiSearchResponse]): Future[MultiSearchResponse] = {
+                         request: MultiSearchDefinition): Future[MultiSearchResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -37,16 +34,14 @@ trait SearchImplicits {
       val body = MultiSearchContentBuilder(request)
       logger.debug("Executing msearch: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-
-      executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_msearch", params.asJava, entity, _), format)
+      client.future("POST", "/_msearch", params.toMap, entity, ResponseHandler.default)
     }
   }
 
   implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
     override def execute(client: RestClient,
-                         request: SearchDefinition,
-                         format: JsonFormat[SearchResponse]): Future[SearchResponse] = {
+                         request: SearchDefinition): Future[SearchResponse] = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
@@ -74,8 +69,7 @@ trait SearchImplicits {
 
       val body = builder.string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-
-      executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
+      client.future("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

@@ -1,22 +1,20 @@
 package com.sksamuel.elastic4s.http.get
 
 import cats.Show
-import cats.syntax.either._
-import com.sksamuel.elastic4s.{HitReader, JsonFormat}
+import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
   def size: Int = docs.size
 
-  def to[T: HitReader]: IndexedSeq[T] = safeTo.flatMap(_.toOption)
+  def to[T: HitReader]: IndexedSeq[T] = docs.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
@@ -27,25 +25,30 @@ trait GetImplicits {
   }
 
   implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetDefinition, MultiGetResponse] with Logging {
-    override def execute(client: RestClient,
-                         request: MultiGetDefinition,
-                         format: JsonFormat[MultiGetResponse]): Future[MultiGetResponse] = {
+
+    import scala.concurrent.ExecutionContext.Implicits._
+
+    private val endpoint = "/_mget"
+
+    override def execute(client: RestClient, request: MultiGetDefinition): Future[MultiGetResponse] = {
 
       val body = MultiGetBodyBuilder(request).string()
       logger.debug(s"Executing multiget $body")
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      val params = scala.collection.mutable.Map.empty[String, String]
-
-      executeAsyncAndMapResponse(client.performRequestAsync("POST", "/_mget", params.asJava, entity, _), format, parse404FailureHandler(format))
+      client.future("POST", endpoint, Map.empty, entity, ResponseHandler.failure404).map { response =>
+        response.copy(docs = response.docs.map { doc =>
+          doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
+        })
+      }
     }
   }
 
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
-    override def execute(client: RestClient,
-                         request: GetDefinition,
-                         format: JsonFormat[GetResponse]): Future[GetResponse] = {
+    import scala.concurrent.ExecutionContext.Implicits._
+
+    override def execute(client: RestClient, request: GetDefinition): Future[GetResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
 
@@ -73,7 +76,9 @@ trait GetImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.foreach(params.put("versionType", _))
 
-      executeAsyncAndMapResponse(client.performRequestAsync("GET", endpoint, params.asJava, _), format, parse404FailureHandler(format))
+      client.future("GET", endpoint, params.toMap, ResponseHandler.failure404).map { response =>
+        response.copy(fields = Option(response.fields).getOrElse(Map.empty))
+      }
     }
   }
 }

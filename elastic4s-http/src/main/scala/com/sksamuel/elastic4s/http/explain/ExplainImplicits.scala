@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.http.explain
 
-import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import org.apache.http.entity.StringEntity
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -13,8 +12,7 @@ trait ExplainImplicits {
 
   implicit object ExplainHttpExec extends HttpExecutable[ExplainDefinition, ExplainResponse] {
     override def execute(client: RestClient,
-                         request: ExplainDefinition,
-                         format: JsonFormat[ExplainResponse]): Future[ExplainResponse] = {
+                         request: ExplainDefinition): Future[ExplainResponse] = {
 
       val method = "GET"
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
@@ -30,7 +28,7 @@ trait ExplainImplicits {
       val entity = new StringEntity(body)
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format, parse404FailureHandler(format))
+      client.future(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
     }
   }
 }

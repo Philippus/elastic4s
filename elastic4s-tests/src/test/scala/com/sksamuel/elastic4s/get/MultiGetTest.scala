@@ -11,8 +11,6 @@ import org.scalatest.mockito.MockitoSugar
 
 class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   override protected def beforeRunTests() = {
     execute {
       createIndex("coldplay").shards(2).mappings(

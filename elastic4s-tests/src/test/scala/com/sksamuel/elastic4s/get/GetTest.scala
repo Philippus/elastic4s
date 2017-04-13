@@ -8,9 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("beer").mappings {
         mapping("lager").fields(

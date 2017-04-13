@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http
 
 import java.util
 
-import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLockDefinition, ReleaseGlobalLockDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseException, RestClient}
@@ -18,8 +17,7 @@ trait LocksImplicits {
     val emptyEntity = new StringEntity("{}", ContentType.APPLICATION_JSON)
 
     override def execute(client: RestClient,
-                         request: AcquireGlobalLockDefinition,
-                         format: JsonFormat[Boolean]): Future[Boolean] = {
+                         request: AcquireGlobalLockDefinition): Future[Boolean] = {
       try {
         val result = client.performRequest("PUT", endpoint, emptyParams, emptyEntity)
         Future.successful(result.getStatusLine.getStatusCode == 201)
@@ -32,8 +30,7 @@ trait LocksImplicits {
 
   implicit object ReleaseGlobalLockHttpExecutable extends HttpExecutable[ReleaseGlobalLockDefinition, Boolean] {
     override def execute(client: RestClient,
-                         request: ReleaseGlobalLockDefinition,
-                         format: JsonFormat[Boolean]): Future[Boolean] = {
+                         request: ReleaseGlobalLockDefinition): Future[Boolean] = {
       val result = client.performRequest("DELETE", "/fs/lock/global")
       Future.successful(result.getStatusLine.getStatusCode == 200)
     }

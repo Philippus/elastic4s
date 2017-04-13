@@ -8,8 +8,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class AliasesHttpTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   addIndex("beaches")

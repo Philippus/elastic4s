@@ -32,12 +32,6 @@ package object circe {
 
   @implicitNotFound(
     "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance ")
-  implicit def jsonFormatWithCirce[T](implicit decoder: Decoder[T]): JsonFormat[T] = new JsonFormat[T] {
-    override def fromJson(json: String): T = decode[T](json).fold(throw _, identity)
-  }
-
-  @implicitNotFound(
-    "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance ")
   implicit def hitReaderWithCirce[T](implicit decoder: Decoder[T]): HitReader[T] = new HitReader[T] {
     override def read(hit: Hit): Either[Throwable, T] = decode[T](hit.sourceAsString)
   }
