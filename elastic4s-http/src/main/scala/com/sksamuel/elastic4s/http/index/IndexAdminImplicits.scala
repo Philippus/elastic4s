@@ -55,8 +55,6 @@ object IndexShardStoreResponse {
   case class ShardStoreStatus(stores: Seq[StoreStatus])
 }
 
-
-
 trait IndexAdminImplicits extends IndexShowImplicits {
 
   implicit object FlushIndexExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
@@ -147,7 +145,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
   implicit object CreateIndexExecutable extends HttpExecutable[CreateIndexDefinition, CreateIndexResponse] {
 
-
     override def execute(client: RestClient, request: CreateIndexDefinition): Future[CreateIndexResponse] = {
 
       val method = "PUT"
@@ -161,7 +158,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, Map.empty, ResponseHandler.default)
+      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -214,7 +211,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.ignoreUnavailable.foreach(params.put("ignore_unavailable", _))
       request.allowNoIndices.foreach(params.put("allow_no_indices", _))
       request.expandWildcards.foreach(params.put("expand_wildcards", _))
-
 
       val body = PutMappingBuilder(request).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
