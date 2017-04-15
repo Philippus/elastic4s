@@ -36,7 +36,7 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
     "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
     "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
-  ))
+  )).settings(connectInput in Test := true)
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
