@@ -1,0 +1,11 @@
+{
+  "mappings" : {
+    "foo" : {
+      "_timestamp" : {
+        "enabled" : true,
+        "path" : "mypath",
+        "store" : "yes"
+      }
+    }
+  }
+}
