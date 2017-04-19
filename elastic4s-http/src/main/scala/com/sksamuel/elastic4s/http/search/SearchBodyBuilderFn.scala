@@ -52,7 +52,10 @@ object SearchBodyBuilderFn {
           field.highlightQuery.map(QueryBuilderFn.apply).map(_.bytes()).foreach { highlight =>
             builder.rawField("highlight_query", highlight, XContentType.JSON)
           }
-          field.matchedFields.foreach(builder.field("matched_fields", _))
+          if (field.matchedFields.nonEmpty) {
+            builder.field("matched_fields", field.matchedFields.asJava)
+          }
+          field.highlighterType.foreach(builder.field("type", _))
           field.noMatchSize.foreach(builder.field("no_match_size", _))
           field.numOfFragments.foreach(builder.field("number_of_fragments", _))
           field.order.foreach(builder.field("order", _))
