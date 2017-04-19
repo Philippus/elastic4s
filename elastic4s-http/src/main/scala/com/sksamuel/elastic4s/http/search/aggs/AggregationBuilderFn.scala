@@ -19,6 +19,8 @@ object AggregationBuilderFn {
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
 
+      case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
+
       // pipeline aggs
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
     }
@@ -46,10 +48,12 @@ object AggMetaDataFn {
 
 object SubAggsBuilderFn {
   def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit = {
-    builder.startObject("aggs")
-    agg.subaggs.foreach { subagg =>
-      builder.rawField(subagg.name, AggregationBuilderFn(subagg).bytes, XContentType.JSON)
+    if (agg.subaggs.nonEmpty) {
+      builder.startObject("aggs")
+      agg.subaggs.foreach { subagg =>
+        builder.rawField(subagg.name, AggregationBuilderFn(subagg).bytes, XContentType.JSON)
+      }
+      builder.endObject()
     }
-    builder.endObject()
   }
 }
