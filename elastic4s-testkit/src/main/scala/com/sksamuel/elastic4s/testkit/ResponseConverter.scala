@@ -113,6 +113,7 @@ object ResponseConverterImplicits {
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
+            inner_hits = Map.empty,// TODO: Set properly
             x.version
           )
         }
