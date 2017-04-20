@@ -31,11 +31,11 @@ object SearchBodyBuilderFn {
     }
 
     if (request.sorts.nonEmpty) {
-      builder.startArray("sort")
-      request.sorts.foreach { sort =>
-        builder.rawValue(new BytesArray(SortContentBuilder(sort).string), XContentType.JSON)
-      }
-      builder.endArray()
+			builder.startArray("sort")
+			// Workaround for bug where separator is not added with rawValues
+			val arrayBody = new BytesArray(request.sorts.map(s => SortContentBuilder(s).string).mkString(","))
+			builder.rawValue(arrayBody, XContentType.JSON)
+			builder.endArray()
     }
 
     if (request.highlight.nonEmpty) {

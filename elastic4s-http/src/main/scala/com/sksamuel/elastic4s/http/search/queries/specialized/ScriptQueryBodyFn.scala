@@ -15,7 +15,6 @@ object ScriptQueryBodyFn {
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()
     builder.endObject()
-    builder.endObject()
     builder
   }
 }
