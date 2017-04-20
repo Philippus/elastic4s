@@ -65,7 +65,10 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
 
 lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   .settings(name := "elastic4s-http")
-    .settings(libraryDependencies += "org.elasticsearch.client" % "rest" % ElasticsearchVersion)
+    .settings(libraryDependencies ++= Seq(
+      "org.elasticsearch.client"    % "rest"        % ElasticsearchVersion,
+      "org.apache.logging.log4j"    % "log4j-api"   % Log4jVersion  % "test"
+    ))
   .dependsOn(core)
 
 lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
