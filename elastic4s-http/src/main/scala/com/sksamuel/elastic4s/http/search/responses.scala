@@ -11,6 +11,7 @@ case class SearchHit(private val _id: String,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],
+                     private val inner_hits: Map[String, Map[String, Any]],
                      private val _version: Long) extends Hit {
 
   def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
@@ -38,6 +39,23 @@ case class SearchHit(private val _id: String,
 
   override def exists: Boolean = true
   override def score: Float = _score
+
+  def innerHits: Map[String, InnerHits] = Option(inner_hits).getOrElse(Map.empty).mapValues {
+    case hits =>
+      val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
+      InnerHits(
+        total = v("total").asInstanceOf[Int],
+        max_score = v("max_score").asInstanceOf[Double],
+        hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
+          InnerHit(
+            _nested = hits("_nested").asInstanceOf[Map[String, AnyRef]],
+            _score = hits("_score").asInstanceOf[Double],
+            _source = hits("_source").asInstanceOf[Map[String, AnyRef]],
+            highlight = hits("highlight").asInstanceOf[Map[String, Seq[String]]]
+          )
+        }
+      )
+  }
 }
 
 case class SearchHits(total: Int,
@@ -48,6 +66,15 @@ case class SearchHits(total: Int,
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 }
+
+case class InnerHits(total: Int,
+                     max_score: Double,
+                     hits: Seq[InnerHit])
+
+case class InnerHit(_nested: Map[String, AnyRef],
+                    _score: Double,
+                    _source: Map[String, AnyRef],
+                    highlight: Map[String, Seq[String]])
 
 case class SuggestionEntry(term: String) {
   def options: Seq[String] = Nil
