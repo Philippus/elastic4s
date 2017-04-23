@@ -12,7 +12,7 @@ class SearchBodyFnTest extends FunSuite with Matchers {
       .matchedFields("text", "text.ngram", "text.japanese")
     }
     SearchBodyBuilderFn(request).string() shouldBe
-      "{\"highlight\":{\"fields\":{\"text\":{\"matched_fields\":[\"text\",\"text.ngram\",\"text.japanese\"]}}}}"
+      """{"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
   }
   test("highlight with 'highlighterType' generates 'type' field.") {
     val request = search("example" / "1") highlighting {
@@ -20,6 +20,14 @@ class SearchBodyFnTest extends FunSuite with Matchers {
         .highlighterType("fvh")
     }
     SearchBodyBuilderFn(request).string() shouldBe
-      "{\"highlight\":{\"fields\":{\"text\":{\"type\":\"fvh\"}}}}"
+      """{"highlight":{"fields":{"text":{"type":"fvh"}}}}"""
+  }
+  test("highlight with 'boundaryChars' generates 'boundary_chars' field.") {
+    val request = search("example" / "1") highlighting {
+      highlight("text")
+        .boundaryChars("test")
+    }
+    SearchBodyBuilderFn(request).string() shouldBe
+      """{"highlight":{"fields":{"text":{"boundary_chars":"test"}}}}"""
   }
 }
