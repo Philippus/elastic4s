@@ -10,6 +10,8 @@ case class DiffDefinition(name: String,
                           lag: Option[Int] = None,
                           metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = DiffDefinition
+
   def format(format: String): DiffDefinition = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): DiffDefinition = copy(gapPolicy = Some(gapPolicy))
   def lag(lag: Int): DiffDefinition = copy(lag = lag.some)

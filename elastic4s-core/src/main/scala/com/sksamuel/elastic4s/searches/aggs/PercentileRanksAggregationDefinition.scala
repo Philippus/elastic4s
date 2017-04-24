@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod
 
@@ -15,8 +14,7 @@ case class PercentileRanksAggregationDefinition(name: String,
                                                 numberOfSignificantValueDigits: Option[Int] = None,
                                                 compression: Option[Double] = None,
                                                 script: Option[ScriptDefinition] = None,
-                                                pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                                subaggs: Seq[AggregationDefinition] = Nil,
+                                                subaggs: Seq[AbstractAggregation] = Nil,
                                                 metadata: Map[String, AnyRef] = Map.empty) extends AggregationDefinition {
 
   type T = PercentileRanksAggregationDefinition
@@ -28,8 +26,7 @@ case class PercentileRanksAggregationDefinition(name: String,
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
   def numberOfSignificantValueDigits(digits: Int): T = copy(numberOfSignificantValueDigits = digits.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 
   @deprecated("use values", "5.0.0")

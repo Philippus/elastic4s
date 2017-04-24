@@ -1,49 +1,22 @@
 package com.sksamuel.elastic4s.http.delete
 
 import cats.Show
+import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
-import com.sksamuel.elastic4s.{DocumentRef, JsonFormat}
+import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
-
-case class DeleteByQueryResponse(
-                                  took: Long,
-                                  timed_out: Boolean,
-                                  total: Long,
-                                  deleted: Long,
-                                  batches: Long,
-                                  version_conflicts: Long,
-                                  noops: Long,
-                                  throttled_millis: Long,
-                                  requests_per_second: Long,
-                                  throttled_until_millis: Long
-                                )
-
-case class DeleteResponse(_shards: Shards,
-                          found: Boolean,
-                          private val _index: String,
-                          private val _type: String,
-                          private val _id: String,
-                          private val _version: Long,
-                          result: String) {
-  def index: String = _index
-  def `type`: String = _type
-  def id: String = _id
-  def version: Long = _version
-  def ref = DocumentRef(index, `type`, id)
-}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
-    builder.rawField("query", QueryBuilderFn(request.query).bytes())
+    builder.rawField("query", QueryBuilderFn(request.query).bytes, XContentType.JSON)
     builder.endObject()
     builder
   }

@@ -9,6 +9,8 @@ case class PercentilesBucketDefinition(name: String,
                                        percents: Seq[Double] = Nil,
                                        metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = PercentilesBucketDefinition
+
   def format(format: String): PercentilesBucketDefinition = copy(format = Some(format))
   def percents(first: Double, rest: Double*): PercentilesBucketDefinition = percents(first +: rest)
   def percents(percents: Seq[Double]): PercentilesBucketDefinition = copy(percents = percents)

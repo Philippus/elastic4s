@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.joda.time.DateTimeZone
 
@@ -15,8 +14,7 @@ case class DateRangeAggregation(name: String,
                                 ranges: Seq[(Option[String], Any, Any)] = Nil,
                                 unboundedFromRanges: Seq[(Option[String], Any)] = Nil,
                                 unboundedToRanges: Seq[(Option[String], Any)] = Nil,
-                                pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                subaggs: Seq[AggregationDefinition] = Nil,
+                                subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
 
@@ -45,7 +43,6 @@ case class DateRangeAggregation(name: String,
 
   def format(fmt: String): DateRangeAggregation = copy(format = fmt.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

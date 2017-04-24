@@ -2,16 +2,17 @@ package com.sksamuel.elastic4s.reindex
 
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.{Executable, ScriptBuilder}
+import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse;
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.{BulkIndexByScrollResponse, ReindexAction, ReindexRequestBuilder}
+import org.elasticsearch.index.reindex.{ReindexAction, ReindexRequestBuilder}
 
 import scala.concurrent.Future
 
 trait ReindexExecutables {
   implicit object ReindexDefinitionExecutable
-    extends Executable[ReindexDefinition, BulkIndexByScrollResponse, BulkIndexByScrollResponse] {
+    extends Executable[ReindexDefinition, BulkByScrollResponse, BulkByScrollResponse] {
 
     def populate(builder: ReindexRequestBuilder, r: ReindexDefinition): Unit = {
       builder.source(r.sourceIndexes.values: _*)
@@ -28,7 +29,7 @@ trait ReindexExecutables {
       r.script.map(ScriptBuilder.apply).foreach(builder.script)
     }
 
-    override def apply(c: Client, r: ReindexDefinition): Future[BulkIndexByScrollResponse] = {
+    override def apply(c: Client, r: ReindexDefinition): Future[BulkByScrollResponse] = {
       val builder = new ReindexRequestBuilder(c, ReindexAction.INSTANCE)
       populate(builder, r)
       injectFuture(builder.execute)

@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, RichBulkItemResponse}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.mappings.DynamicMapping.Strict
+import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}

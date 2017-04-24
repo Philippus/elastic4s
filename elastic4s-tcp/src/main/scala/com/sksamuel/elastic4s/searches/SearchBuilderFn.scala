@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
-import com.sksamuel.elastic4s.searches.aggs.AggregationBuilder
+import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
@@ -46,8 +46,12 @@ object SearchBuilderFn {
     if (search.storedFields.nonEmpty)
       builder.storedFields(search.storedFields: _*)
 
-    if (search.aggs.nonEmpty)
-      search.aggs.map(AggregationBuilder.apply).foreach(builder.addAggregation)
+    if (search.aggs.nonEmpty) {
+      search.aggs.map(AggregationBuilderFn.apply).foreach {
+        case Left(agg) => builder.addAggregation(agg)
+        case Right(pipe) => builder.addAggregation(pipe)
+      }
+    }
 
     if (search.inners.nonEmpty) {
       for (inner <- search.inners)
@@ -58,7 +62,6 @@ object SearchBuilderFn {
     if (search.sorts.nonEmpty)
       search.sorts.foreach { sort =>
         builder.addSort(SortBuilderFn.apply(sort))
-        //builder.getClass.getMethod("addSort", classOf[SortBuilder[_]]).invoke(builder, )
       }
 
     if (search.scriptFields.nonEmpty)

@@ -8,6 +8,8 @@ case class StatsBucketDefinition(name: String,
                                  gapPolicy: Option[GapPolicy] = None,
                                  metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
+  type T = StatsBucketDefinition
+
   def format(format: String): StatsBucketDefinition = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): StatsBucketDefinition = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): StatsBucketDefinition = copy(metadata = metadata)

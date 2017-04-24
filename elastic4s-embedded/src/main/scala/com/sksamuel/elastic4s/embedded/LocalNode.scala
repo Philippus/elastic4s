@@ -8,8 +8,8 @@ import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.index.reindex.ReindexPlugin
+import org.elasticsearch.node.InternalSettingsPreparer
 import org.elasticsearch.node.Node
-import org.elasticsearch.node.internal.InternalSettingsPreparer
 import org.elasticsearch.percolator.PercolatorPlugin
 import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.script.mustache.MustachePlugin
@@ -39,7 +39,8 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   val ipAndPort: String = Option(nodeinfo.getHttp).map(_.address.publishAddress.toString).getOrElse("localhost:-1")
   logger.info(s"LocalNode started @ $ipAndPort")
 
-  val ip: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
+  val ip: String = ipAndPort.takeWhile(_ != ':')
+  val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
 
   def stop(removeData: Boolean = false): Any = {
     super.close()

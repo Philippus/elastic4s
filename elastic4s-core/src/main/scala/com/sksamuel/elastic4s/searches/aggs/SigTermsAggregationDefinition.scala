@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.search.aggregations.bucket.significant.heuristics.SignificanceHeuristic
@@ -15,8 +14,7 @@ case class SigTermsAggregationDefinition(name: String,
                                          shardMinDocCount: Option[Long] = None,
                                          shardSize: Option[Int] = None,
                                          backgroundFilter: Option[QueryDefinition] = None,
-                                         pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                         subaggs: Seq[AggregationDefinition] = Nil,
+                                         subaggs: Seq[AbstractAggregation] = Nil,
                                          metadata: Map[String, AnyRef] = Map.empty,
                                          heuristic: Option[SignificanceHeuristic] = None)
   extends AggregationDefinition {
@@ -42,7 +40,6 @@ case class SigTermsAggregationDefinition(name: String,
 
   def shardSize(shardSize: Int): SigTermsAggregationDefinition = copy(shardSize = shardSize.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

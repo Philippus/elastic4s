@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class GeoBoundsAggregationDefinition(name: String,
@@ -10,8 +9,7 @@ case class GeoBoundsAggregationDefinition(name: String,
                                           missing: Option[AnyRef] = None,
                                           wrapLongitude: Option[Boolean] = None,
                                           script: Option[ScriptDefinition] = None,
-                                          pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                          subaggs: Seq[AggregationDefinition] = Nil,
+                                          subaggs: Seq[AbstractAggregation] = Nil,
                                           metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
 
@@ -23,7 +21,6 @@ case class GeoBoundsAggregationDefinition(name: String,
   def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }

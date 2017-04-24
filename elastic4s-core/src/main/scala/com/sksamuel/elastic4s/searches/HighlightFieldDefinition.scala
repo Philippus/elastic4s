@@ -23,6 +23,7 @@ case class HighlightFieldDefinition(field: String,
                                     phraseLimit: Option[Int] = None) {
 
   def boundaryChars(chars: Array[Char]): HighlightFieldDefinition = copy(boundaryChars = chars.some)
+  def boundaryChars(chars: String): HighlightFieldDefinition = copy(boundaryChars = chars.toCharArray.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightFieldDefinition = copy(boundaryMaxScan = boundaryMaxScan.some)
 
   def fragmenter(fragmenter: String): HighlightFieldDefinition = copy(fragmenter = fragmenter.some)

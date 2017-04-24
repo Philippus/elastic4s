@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
-import com.sksamuel.elastic4s.searches.aggs.AggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
@@ -17,7 +17,7 @@ import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
-                            aggs: Seq[AggregationDefinition] = Nil,
+                            aggs: Seq[AbstractAggregation] = Nil,
                             explain: Option[Boolean] = None,
                             fetchContext: Option[FetchSourceContext] = None,
                             from: Option[Int] = None,
@@ -76,13 +76,10 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def requestCache(requestCache: Boolean): SearchDefinition = copy(requestCache = requestCache.some)
 
-  def aggregations(aggs: Iterable[AggregationDefinition]): SearchDefinition = copy(aggs = aggs.toSeq)
-
-  def aggregations(first: AggregationDefinition,
-                   rest: AggregationDefinition*): SearchDefinition = aggregations(first +: rest)
-
-  def aggs(first: AggregationDefinition, rest: AggregationDefinition*): SearchDefinition = aggregations(first +: rest)
-  def aggs(iterable: Iterable[AggregationDefinition]): SearchDefinition = aggregations(iterable)
+  def aggs(first: AbstractAggregation, rest: AbstractAggregation*): SearchDefinition = aggs(first +: rest)
+  def aggs(iterable: Iterable[AbstractAggregation]): SearchDefinition = aggregations(iterable)
+  def aggregations(aggs: Iterable[AbstractAggregation]): SearchDefinition = copy(aggs = aggs.toSeq)
+  def aggregations(first: AbstractAggregation, rest: AbstractAggregation*): SearchDefinition = aggregations(first +: rest)
 
   @deprecated("use sortBy", "5.0.0")
   def sort(sorts: SortDefinition*): SearchDefinition = sortBy(sorts)

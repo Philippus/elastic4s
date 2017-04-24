@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
+import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
@@ -75,7 +76,7 @@ object MappingContentBuilder {
 
     if (d.templates.nonEmpty) {
       builder.startArray("dynamic_templates")
-      for (template <- d.templates) template.build(builder)
+      d.templates.foreach(DynamicTemplateBodyFn.build(_, builder))
       builder.endArray()
     }
   }

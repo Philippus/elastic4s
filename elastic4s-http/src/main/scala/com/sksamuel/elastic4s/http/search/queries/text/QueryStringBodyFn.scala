@@ -24,7 +24,7 @@ object QueryStringBodyFn {
     s.boost.map(_.toString).foreach(builder.field("boost", _))
     s.quoteFieldSuffix.map(_.toString).foreach(builder.field("quote_field_suffix", _))
     s.splitOnWhitespace.map(_.toString).foreach(builder.field("split_on_whitespace", _))
-    s.tieBreaker.map(_.toString).foreach(builder.field("allow_leading_wildcard", _))
+    s.tieBreaker.foreach(builder.field("tie_breaker", _))
     s.rewrite.map(_.toString).foreach(builder.field("rewrite", _))
 
     if (s.fields.nonEmpty) {

@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
-import org.elasticsearch.search.aggregations.pipeline.bucketselector.BucketSelectorPipelineAggregationBuilder
 
 case class BucketSelectorDefinition(name: String,
                                     script: ScriptDefinition,
@@ -10,7 +9,7 @@ case class BucketSelectorDefinition(name: String,
                                     gapPolicy: Option[GapPolicy] = None,
                                     metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
-  type T = BucketSelectorPipelineAggregationBuilder
+  type T = BucketSelectorDefinition
 
   def builder: T = ???
 //    val builder = PipelineAggregatorBuilders.bucketSelector(name, ScriptBuilder(script), bucketsPaths: _*)

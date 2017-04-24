@@ -11,9 +11,7 @@ object ElasticJackson {
 
   object Implicits extends Logging {
 
-    implicit val mapper: ObjectMapper = JacksonSupport.mapper
-
-    implicit def format[T](implicit mapper: ObjectMapper,
+    implicit def format[T](implicit mapper: ObjectMapper = JacksonSupport.mapper,
                            manifest: Manifest[T]): JsonFormat[T] = new JsonFormat[T] {
       override def fromJson(json: String): T = {
         val t = manifest.runtimeClass.asInstanceOf[Class[T]]
@@ -22,13 +20,16 @@ object ElasticJackson {
       }
     }
 
-    implicit def JacksonJsonIndexable[T](implicit mapper: ObjectMapper): Indexable[T] = new Indexable[T] {
-      override def json(t: T): String = mapper.writeValueAsString(t)
+    implicit def JacksonJsonIndexable[T](implicit mapper: ObjectMapper = JacksonSupport.mapper): Indexable[T] = {
+      new Indexable[T] {
+        override def json(t: T): String = mapper.writeValueAsString(t)
+      }
     }
 
-    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper,
+    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper = JacksonSupport.mapper,
                                          manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
       override def read(hit: Hit): Either[Throwable, T] = {
+        require(hit.sourceAsString != null)
         try {
           val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
           if (!node.has("_id")) node.put("_id", hit.id)

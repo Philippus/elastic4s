@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.IndexesAndType
 import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateDefinition}
 
 trait MappingDefinitionLike {
   def all: Option[Boolean]
@@ -24,6 +25,10 @@ trait MappingDefinitionLike {
 }
 
 case class PutMappingDefinition(indexesAndType: IndexesAndType,
+                                updateAllTypes: Option[Boolean] = None,
+                                ignoreUnavailable: Option[Boolean] = None,
+                                allowNoIndices: Option[Boolean] = None,
+                                expandWildcards: Option[Boolean] = None,
                                 all: Option[Boolean] = None,
                                 source: Option[Boolean] = None,
                                 sourceExcludes: Seq[String] = Nil,
@@ -41,19 +46,19 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
                                 routing: Option[RoutingDefinition] = None,
                                 timestamp: Option[TimestampDefinition] = None,
                                 templates: Seq[DynamicTemplateDefinition] = Nil,
-                                id: Option[IdField] = None
+                                rawSource: Option[String] = None
                                ) extends MappingDefinitionLike {
 
   import com.sksamuel.exts.OptionImplicits._
 
   def all(all: Boolean): PutMappingDefinition = copy(all = all.some)
   def source(source: Boolean): PutMappingDefinition = copy(source = source.some)
+  def rawSource(rawSource: String): PutMappingDefinition = copy(rawSource = rawSource.some)
 
   def sourceExcludes(sourceExcludes: String*): PutMappingDefinition = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): PutMappingDefinition =
     copy(sourceExcludes = sourceExcludes.toSeq)
 
-  def id(id: IdField): PutMappingDefinition = copy(id = id.some)
   def analyzer(analyzer: String): PutMappingDefinition = copy(analyzer = analyzer.some)
   def analyzer(analyzer: Analyzer): PutMappingDefinition = copy(analyzer = analyzer.name.some)
 
@@ -116,7 +121,8 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[RoutingDefinition] = None,
                              timestamp: Option[TimestampDefinition] = None,
-                             templates: Seq[DynamicTemplateDefinition] = Nil
+                             templates: Seq[DynamicTemplateDefinition] = Nil,
+                             rawSource: Option[String] = None
                             ) extends MappingDefinitionLike {
 
   import com.sksamuel.exts.OptionImplicits._
@@ -135,6 +141,7 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)
 
   def parent(parent: String): MappingDefinition = copy(parent = parent.some)
+
   def dynamic(dynamic: DynamicMapping): MappingDefinition = copy(dynamic = dynamic.some)
   def meta(map: Map[String, Any]): MappingDefinition = copy(meta = map)
   def dateDetection(dateDetection: Boolean): MappingDefinition = copy(dateDetection = dateDetection.some)
@@ -170,5 +177,3 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
   def templates(temps: Iterable[DynamicTemplateDefinition]): MappingDefinition = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateDefinition*): MappingDefinition = copy(templates = temps.toSeq)
 }
-
-case class IdField(index: String)

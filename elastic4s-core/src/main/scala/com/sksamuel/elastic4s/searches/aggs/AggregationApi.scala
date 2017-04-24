@@ -14,12 +14,14 @@ trait AggregationApi {
   def childrenAggregation(name: String, childType: String): ChildrenAggregationDefinition =
     ChildrenAggregationDefinition(name, childType)
 
+  def dateHistogramAgg(name: String, field: String): DateHistogramAggregation = dateHistogramAggregation(name).field(field)
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
+
   def dateRangeAggregation(name: String): DateRangeAggregation = DateRangeAggregation(name)
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition = ExtendedStatsAggregationDefinition(
     name)
 
-  def filterAgg(name: String, query: QueryDefinition) = new FilterAggregationDefinition(name, query)
+  def filterAgg(name: String, query: QueryDefinition) = FilterAggregationDefinition(name, query)
   def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
     @deprecated("use query", "5.0.0")

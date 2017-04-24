@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class GeoHashGridAggregationDefinition(name: String,
@@ -8,8 +7,7 @@ case class GeoHashGridAggregationDefinition(name: String,
                                             shardSize: Option[Int] = None,
                                             size: Option[Int] = None,
                                             precision: Option[Int] = None,
-                                            pipelines: Seq[PipelineAggregationDefinition] = Nil,
-                                            subaggs: Seq[AggregationDefinition] = Nil,
+                                            subaggs: Seq[AbstractAggregation] = Nil,
                                             metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
 
@@ -20,7 +18,6 @@ case class GeoHashGridAggregationDefinition(name: String,
   def shardSize(shardSize: Int): GeoHashGridAggregationDefinition = copy(shardSize = shardSize.some)
   def size(size: Int): GeoHashGridAggregationDefinition = copy(size = size.some)
 
-  override def pipelines(pipelines: Iterable[PipelineAggregationDefinition]): T = copy(pipelines = pipelines.toSeq)
-  override def subAggregations(aggs: Iterable[AggregationDefinition]): T = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }
