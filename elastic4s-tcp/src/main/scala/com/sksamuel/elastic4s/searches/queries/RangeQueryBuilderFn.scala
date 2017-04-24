@@ -11,6 +11,7 @@ object RangeQueryBuilderFn {
     q.lt.foreach(builder.lt)
     q.gte.foreach(builder.gte)
     q.lte.foreach(builder.lte)
+    q.format.foreach(builder.format)
 
 
     q.includeLower.foreach(builder.includeLower)

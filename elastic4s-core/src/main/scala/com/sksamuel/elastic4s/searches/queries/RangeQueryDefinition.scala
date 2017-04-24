@@ -11,6 +11,7 @@ case class RangeQueryDefinition(field: String,
                                 gte: Option[Any] = None,
                                 gt: Option[Any] = None,
                                 lt: Option[Any] = None,
+                                format: Option[String] = None,
                                 queryName: Option[String] = None)
   extends MultiTermQueryDefinition {
 
@@ -33,6 +34,8 @@ case class RangeQueryDefinition(field: String,
 
   def gte(gte: Long): RangeQueryDefinition = copy(gte = gte.some)
   def lte(lte: Long): RangeQueryDefinition = copy(lte = lte.some)
+
+  def format(fmt: String): RangeQueryDefinition = copy(format = fmt.some)
 
   @deprecated("use lte or lt", "5.3.1")
   def includeUpper(includeUpper: Boolean): RangeQueryDefinition = copy(includeUpper = includeUpper.some)
