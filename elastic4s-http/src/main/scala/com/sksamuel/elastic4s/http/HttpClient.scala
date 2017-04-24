@@ -93,7 +93,7 @@ trait HttpExecutable[T, U] extends Logging {
       override def onSuccess(r: Response): Unit = {
         logger.debug(s"onSuccess $r")
         val result = Try {
-          format.fromJson(Source.fromInputStream(r.getEntity.getContent).mkString)
+          format.fromJson(Source.fromInputStream(r.getEntity.getContent, "UTF-8").mkString)
         }
         p.tryComplete(result)
       }
@@ -113,7 +113,7 @@ trait HttpExecutable[T, U] extends Logging {
     e match {
       case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 =>
         Try {
-          format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent).mkString)
+          format.fromJson(Source.fromInputStream(re.getResponse.getEntity.getContent, "UTF-8").mkString)
         }
       case _ => Failure(e)
     }
