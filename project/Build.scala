@@ -14,7 +14,7 @@ object Build extends AutoPlugin {
     val CatsVersion = "0.9.0"
     val CirceVersion = "0.7.1"
     val CommonsIoVersion = "2.4"
-    val ElasticsearchVersion = "5.3.0"
+    val ElasticsearchVersion = "5.3.1"
     val ExtsVersion = "1.40.0"
     val JacksonVersion = "2.8.8"
     val Json4sVersion = "3.5.1"
@@ -35,8 +35,6 @@ object Build extends AutoPlugin {
     organization := org,
     // a 'compileonly' configuation
     ivyConfigurations += config("compileonly").hide,
-    // some compileonly dependency
-    libraryDependencies += "commons-io" % "commons-io" % "2.4" % "compileonly",
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := ScalaVersion,
