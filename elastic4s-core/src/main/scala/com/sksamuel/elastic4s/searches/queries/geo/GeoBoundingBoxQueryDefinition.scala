@@ -21,7 +21,8 @@ case class GeoBoundingBoxQueryDefinition(field: String,
   def withGeohash(topleft: String, bottomright: String): GeoBoundingBoxQueryDefinition =
     copy(geohash = (topleft, bottomright).some)
 
-  def corners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition = corners(topLeft, bottomRight)
+  def corners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition =
+    corners(Corners(topLeft.lat, topLeft.lon, bottomRight.lat, bottomRight.lon))
   def corners(corners: Corners): GeoBoundingBoxQueryDefinition = copy(corners = corners.some)
 
   def withCorners(topLeft: GeoPoint, bottomRight: GeoPoint): GeoBoundingBoxQueryDefinition =
