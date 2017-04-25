@@ -7,7 +7,7 @@ case class RichBulkResponse(original: BulkResponse) {
   import scala.concurrent.duration._
 
   def failureMessage: String = original.buildFailureMessage
-  def failureMessageOpt: Option[String] = Option(failureMessage)
+  def failureMessageOpt: Option[String] = if (hasFailures) Some(failureMessage) else None
 
   def took: FiniteDuration = original.getTook.millis.millis
   def hasFailures: Boolean = original.getItems.exists(_.isFailed)
