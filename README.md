@@ -35,6 +35,8 @@ Starting with 5.1.x, Elastic.co have made a REST client available for Java users
 
 In elastic4s 5.2.x a new [HTTP client](https://github.com/sksamuel/elastic4s/tree/master/elastic4s-http) has been added which relies on the Java REST client for connection management, but still uses the familiar elastic4s DSL to build the queries so you don't have to. This client should be considered __experimental__ in this release, and the coverage of requests is not as comprehensive as the TCP client.
 
+Depending on which client you use, you will need to add either `elastic-http` or `elastic-tcp` dependencies to your build.
+
 #### Release
 
 The latest releases are for Elasticsearch 5.2.x. There are releases for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
