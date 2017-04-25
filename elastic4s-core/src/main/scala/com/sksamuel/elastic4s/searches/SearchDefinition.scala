@@ -36,6 +36,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             sorts: Seq[SortDefinition] = Nil,
                             storedFields: Seq[String] = Nil,
                             suggs: Seq[SuggestionDefinition] = Nil,
+                            globalSuggestionText: Option[String] = None,
                             size: Option[Int] = None,
                             routing: Option[String] = None,
                             stats: Seq[String] = Nil,
@@ -120,6 +121,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def suggestion(sugg: SuggestionDefinition): SearchDefinition = suggestions(Seq(sugg))
 
+  def globalSuggestionText(text: String): SearchDefinition = copy(globalSuggestionText = text.some)
 
   // Adds a single prefix query to this search
   def prefix(name: String, value: Any): SearchDefinition = query(PrefixQueryDefinition(name, value))

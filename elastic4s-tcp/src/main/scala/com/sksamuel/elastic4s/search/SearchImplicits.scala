@@ -94,6 +94,7 @@ trait SearchImplicits {
 
       if (search.suggs.nonEmpty) {
         val suggest = new SuggestBuilder()
+        search.globalSuggestionText.foreach(suggest.setGlobalText)
         search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, sugg.builder) }
         builder.suggest(suggest)
       }
