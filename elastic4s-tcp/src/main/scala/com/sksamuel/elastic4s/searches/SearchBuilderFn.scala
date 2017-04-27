@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
+import com.sksamuel.elastic4s.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
@@ -35,6 +36,7 @@ object SearchBuilderFn {
     search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
     search.keepAlive.foreach(builder.setScroll)
     search.version.foreach(builder.setVersion)
+    search.collapse.foreach(c => builder.setCollapse(CollapseBuilderFn.apply(c)))
 
     search.fetchContext.foreach { context =>
       builder.setFetchSource(context.fetchSource)
