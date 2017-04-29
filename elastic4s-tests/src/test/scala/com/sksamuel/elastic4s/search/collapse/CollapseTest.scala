@@ -9,8 +9,8 @@ class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeA
     client.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(
-          keywordField("name") docValues true,
-          keywordField("board") docValues true
+          keywordField("name"),
+          keywordField("board")
         )
       }
     }.await

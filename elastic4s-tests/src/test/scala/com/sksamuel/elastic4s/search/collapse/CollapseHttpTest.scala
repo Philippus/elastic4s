@@ -17,18 +17,18 @@ class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar wi
     http.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(
-          keywordField("name") docValues true,
-          keywordField("board") docValues true
+          keywordField("name"),
+          keywordField("board")
         )
       }
     }.await
 
     http.execute {
       bulk(
-        indexInto("collapse" / "hotels") id "1" fields("name" -> "Ibiza Playa", "board" -> "AI", "price" -> 150),
-        indexInto("collapse" / "hotels") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB", "price" -> 120),
+        indexInto("collapse" / "hotels") id "1" fields("name" -> "Ibiza Playa", "board" -> "AI"),
+        indexInto("collapse" / "hotels") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB"),
 
-        indexInto("collapse" / "hotels") id "3" fields("name" -> "Best Tenerife", "board" -> "AI", "price" -> 220)
+        indexInto("collapse" / "hotels") id "3" fields("name" -> "Best Tenerife", "board" -> "AI")
       ).refresh(RefreshPolicy.IMMEDIATE)
     }.await
   }
