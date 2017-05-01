@@ -17,6 +17,7 @@ import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi
+import com.sksamuel.elastic4s.searches.collapse.CollapseApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
@@ -38,6 +39,7 @@ trait ElasticApi
     with BulkApi
     with CreateIndexApi
     with ClusterApi
+    with CollapseApi
     with DeleteApi
     with DeleteIndexApi
     with DynamicTemplateApi

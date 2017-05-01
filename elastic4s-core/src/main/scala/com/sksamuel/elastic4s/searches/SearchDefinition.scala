@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AbstractAggregation
+import com.sksamuel.elastic4s.searches.collapse.CollapseDefinition
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
@@ -18,6 +19,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             aggs: Seq[AbstractAggregation] = Nil,
+                            collapse: Option[CollapseDefinition] = None,
                             explain: Option[Boolean] = None,
                             fetchContext: Option[FetchSourceContext] = None,
                             from: Option[Int] = None,
@@ -274,4 +276,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchDefinition =
     copy(fetchContext = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
+
+  def collapse(collapse: CollapseDefinition) = copy(collapse = collapse.some)
 }
