@@ -9,3 +9,8 @@ case class MatchAllQueryDefinition(boost: Option[Float] = None,
   def queryName(queryName: String): MatchAllQueryDefinition = copy(queryName = Option(queryName))
   def withQueryName(queryName: String): MatchAllQueryDefinition = copy(queryName = Option(queryName))
 }
+
+case class MatchNoneQueryDefinition(queryName: Option[String] = None) extends QueryDefinition {
+  def queryName(queryName: String): MatchNoneQueryDefinition = copy(queryName = Option(queryName))
+  def withQueryName(queryName: String): MatchNoneQueryDefinition = copy(queryName = Option(queryName))
+}

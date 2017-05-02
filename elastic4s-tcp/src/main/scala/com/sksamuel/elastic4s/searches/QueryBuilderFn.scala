@@ -27,6 +27,7 @@ object QueryBuilderFn {
     case q: HasParentQueryDefinition => HasParentQueryBuilderFn(q)
     case q: IdQueryDefinition => IdQueryBuilderFn(q)
     case q: MatchAllQueryDefinition => MatchAllQueryBuilder(q)
+    case q: MatchNoneQueryDefinition => MatchNoneQueryBuilder(q)
     case q: MatchQueryDefinition => MatchQueryBuilder(q)
     case q: MatchPhraseDefinition => MatchPhraseBuilder(q)
     case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBuilder(q)

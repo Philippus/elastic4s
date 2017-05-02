@@ -141,7 +141,8 @@ trait QueryApi {
 
   def multiMatchQuery(text: String) = MultiMatchQueryDefinition(text)
 
-  def matchAllQuery() = new MatchAllQueryDefinition
+  def matchNoneQuery() = MatchNoneQueryDefinition()
+  def matchAllQuery() = MatchAllQueryDefinition()
 
   def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(first +: rest)
   def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
