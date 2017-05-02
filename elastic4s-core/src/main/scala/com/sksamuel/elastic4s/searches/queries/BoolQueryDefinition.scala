@@ -29,11 +29,48 @@ case class BoolQueryDefinition(
   def minimumShouldMatch(min: Int): BoolQueryDefinition = copy(minimumShouldMatch = min.toString.some)
   def minimumShouldMatch(min: String): BoolQueryDefinition = copy(minimumShouldMatch = min.some)
 
+  /**
+    * Appends the current 'not' queries with the given queries.
+    */
+  def appendNot(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = appendNot(first +: rest)
+
+  /**
+    * Appends the current 'not' queries with the given queries.
+    */
+  def appendNot(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(not = not ++ queries.toSeq)
+
+  /**
+    * Appends the current 'must' queries with the given queries.
+    */
+  def appendMust(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = appendMust(first +: rest)
+
+  /**
+    * Appends the current 'must' queries with the given queries.
+    */
+  def appendMust(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(must = must ++ queries.toIndexedSeq)
+
   def must(queries: QueryDefinition*): BoolQueryDefinition = must(queries)
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(must = queries.toIndexedSeq)
 
+  /**
+    * Replaces the current 'not' queries with the given queries.
+    */
   def not(queries: QueryDefinition*): BoolQueryDefinition = not(queries)
+
+  /**
+    * Replaces the current 'not' queries with the given queries.
+    */
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(not = queries.toSeq)
+
+  /**
+    * Appends the current 'should' queries with the given queries.
+    */
+  def appendShould(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = appendShould(first +: rest)
+
+  /**
+    * Appends the current 'should' queries with the given queries.
+    */
+  def appendShould(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(should = should ++ queries.toSeq)
 
   def should(queries: QueryDefinition*): BoolQueryDefinition = should(queries)
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(should = queries.toSeq)
