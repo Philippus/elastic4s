@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue}
+import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 trait IndexImplicits extends IndexShowImplicits {
@@ -14,8 +12,7 @@ trait IndexImplicits extends IndexShowImplicits {
   implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
 
     override def execute(client: RestClient,
-                         request: IndexDefinition,
-                         format: JsonFormat[IndexResponse]): Future[IndexResponse] = {
+                         request: IndexDefinition): Future[IndexResponse] = {
 
       val (method, endpoint) = request.id match {
         case Some(id) => "PUT" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}/$id"
@@ -23,7 +20,7 @@ trait IndexImplicits extends IndexShowImplicits {
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.createOnly.foreach(createOnly => 
+      request.createOnly.foreach(createOnly =>
         if(createOnly) {
           params.put("op_type", "create")
         }
@@ -39,7 +36,7 @@ trait IndexImplicits extends IndexShowImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       logger.debug(s"Endpoint=$endpoint")
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.asJava, entity, _), format)
+      client.future(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
     }
   }
 }

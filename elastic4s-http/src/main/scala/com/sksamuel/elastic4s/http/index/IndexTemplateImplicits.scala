@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
 import com.sksamuel.elastic4s.mappings.MappingContentBuilder
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
@@ -20,33 +19,28 @@ trait IndexTemplateImplicits {
 
   implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: CreateIndexTemplateDefinition,
-                         format: JsonFormat[CreateIndexTemplateResponse]): Future[CreateIndexTemplateResponse] = {
+                         request: CreateIndexTemplateDefinition): Future[CreateIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      val fn = client.performRequestAsync("PUT", endpoint, Map.empty[String, String].asJava, entity, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      client.future("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
   implicit object DeleteIndexTemplateHttpExecutable extends HttpExecutable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: DeleteIndexTemplateDefinition,
-                         format: JsonFormat[DeleteIndexTemplateResponse]): Future[DeleteIndexTemplateResponse] = {
+                         request: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
-      val fn = client.performRequestAsync("DELETE", endpoint, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      client.future("DELETE", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
   implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: GetIndexTemplateDefinition,
-                         format: JsonFormat[GetIndexTemplateResponse]): Future[GetIndexTemplateResponse] = {
+                         request: GetIndexTemplateDefinition): Future[GetIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
       val fn = client.performRequestAsync("GET", endpoint, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      client.future("GET", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 }
@@ -71,7 +65,7 @@ object CreateIndexTemplateBodyFn {
     if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       create.mappings.foreach { mapping =>
-        builder rawValue MappingContentBuilder.buildWithName(mapping, mapping.`type`).bytes()
+        builder.rawValue(MappingContentBuilder.buildWithName(mapping, mapping.`type`).bytes, XContentType.JSON)
       }
       builder.endObject()
     }
@@ -82,7 +76,7 @@ object CreateIndexTemplateBodyFn {
         builder.startObject(a.name)
         a.routing.foreach(builder.field("routing", _))
         a.filter.foreach { filter =>
-          builder.rawField("filter", QueryBuilderFn(filter).bytes)
+          builder.rawField("filter", QueryBuilderFn(filter).bytes, XContentType.JSON)
         }
         builder.endObject()
       }

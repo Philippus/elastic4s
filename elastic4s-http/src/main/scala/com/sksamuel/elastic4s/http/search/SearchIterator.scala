@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search
 
-import com.sksamuel.elastic4s.{HitReader, JsonFormat}
+import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.searches.SearchDefinition
 
@@ -21,7 +21,7 @@ object SearchIterator {
     */
   def hits(client: HttpClient,
            searchdef: SearchDefinition)
-          (implicit timeout: Duration, format: JsonFormat[SearchResponse]): Iterator[SearchHit] = new Iterator[SearchHit] {
+          (implicit timeout: Duration): Iterator[SearchHit] = new Iterator[SearchHit] {
     require(searchdef.keepAlive.isDefined, "Search request must define keep alive value")
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
@@ -58,6 +58,6 @@ object SearchIterator {
     */
   def iterate[T](client: HttpClient,
                  search: SearchDefinition)
-                (implicit reader: HitReader[T], timeout: Duration, format: JsonFormat[SearchResponse]): Iterator[T] =
-    hits(client, search)(timeout, format).map(_.to[T])
+                (implicit reader: HitReader[T], timeout: Duration): Iterator[T] =
+    hits(client, search)(timeout).map(_.to[T])
 }

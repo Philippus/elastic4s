@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.http.nodes
 
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.nodes.NodeStatsDefinition
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -35,12 +34,11 @@ trait NodesImplicits {
 
   implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
     override def execute(client: RestClient,
-                         request: NodeStatsDefinition,
-                         format: JsonFormat[NodesStatsResponse]): Future[NodesStatsResponse] = {
+                         request: NodeStatsDefinition): Future[NodesStatsResponse] = {
       val method = "GET"
       val endpoint = buildUrlFromDefinition(request)
       logger.debug(s"Accesing endpoint $endpoint")
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, Map.empty[String, String].asJava, _: ResponseListener), format)
+      client.future(method, endpoint, Map.empty, ResponseHandler.default)
     }
 
     private def buildUrlFromDefinition(definition: NodeStatsDefinition): String = {

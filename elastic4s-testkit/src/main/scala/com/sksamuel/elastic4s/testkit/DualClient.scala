@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.embedded.LocalNode
 import com.sksamuel.elastic4s.http.{HttpClient, HttpExecutable}
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Executable, JsonFormat, TcpClient}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Executable, TcpClient}
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 import org.scalatest._
 import org.slf4j.LoggerFactory
@@ -28,11 +28,10 @@ trait DualClient extends SuiteMixin {
 
   def execute[T, R, Q1, Q2](request: T)(implicit tcpExec: Executable[T, R, Q1],
                                         httpExec: HttpExecutable[T, Q2],
-                                        format: JsonFormat[Q2],
                                         tcpConv: ResponseConverter[Q1, Q2]): Future[Q2] = {
     if (useHttpClient) {
       logger.debug("Using HTTP client...")
-      httpExec.execute(http.rest, request, format)
+      httpExec.execute(http.rest, request)
     } else {
       try {
         logger.debug("Using TCP client...")

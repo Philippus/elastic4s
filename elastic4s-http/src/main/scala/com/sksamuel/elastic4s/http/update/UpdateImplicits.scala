@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s.http.update
 
 import cats.Show
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler, Shards}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 case class UpdateResponse(_index: String,
@@ -30,8 +28,7 @@ trait UpdateImplicits {
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
 
     override def execute(client: RestClient,
-                         request: UpdateDefinition,
-                         format: JsonFormat[UpdateResponse]): Future[UpdateResponse] = {
+                         request: UpdateDefinition): Future[UpdateResponse] = {
 
       val method = "POST"
       val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${request.id}/_update"
@@ -52,7 +49,7 @@ trait UpdateImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
       logger.debug(s"Update Entity: ${body.string}")
 
-      executeAsyncAndMapResponse(client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _), format)
+      client.future(method, endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

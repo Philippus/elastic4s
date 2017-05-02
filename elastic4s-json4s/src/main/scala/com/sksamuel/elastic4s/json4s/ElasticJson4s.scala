@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.json4s
 
-import com.sksamuel.elastic4s.{Hit, HitReader, Indexable, JsonFormat}
+import com.sksamuel.elastic4s.{Hit, HitReader, Indexable}
 import org.json4s._
 
 import scala.reflect.Manifest
@@ -8,12 +8,6 @@ import scala.util.control.NonFatal
 
 object ElasticJson4s {
   object Implicits {
-
-    implicit def format[T <: AnyRef](implicit json4s: Serialization,
-                                     formats: Formats,
-                                     mf: Manifest[T]): JsonFormat[T] = new JsonFormat[T] {
-      override def fromJson(json: String): T = json4s.read[T](json)
-    }
 
     implicit def Json4sHitReader[T](implicit json4s: Serialization,
                                     formats: Formats,

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.http.task
 
-import com.sksamuel.elastic4s.JsonFormat
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.task.{CancelTasksDefinition, ListTasksDefinition}
 import org.elasticsearch.client.{ResponseListener, RestClient}
 
@@ -38,9 +37,7 @@ trait TaskImplicits {
     val method = "GET"
     val endpoint = s"/_tasks"
 
-    override def execute(client: RestClient,
-                         request: ListTasksDefinition,
-                         format: JsonFormat[ListTaskResponse]): Future[ListTaskResponse] = {
+    override def execute(client: RestClient, request: ListTasksDefinition): Future[ListTaskResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)
@@ -54,7 +51,7 @@ trait TaskImplicits {
       request.groupBy.foreach(params.put("group_by", _))
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      client.future(method, endpoint, params.toMap, ResponseHandler.default)
     }
   }
 
@@ -63,8 +60,7 @@ trait TaskImplicits {
     val method = "POST"
 
     override def execute(client: RestClient,
-                         request: CancelTasksDefinition,
-                         format: JsonFormat[Boolean]): Future[Boolean] = {
+                         request: CancelTasksDefinition): Future[Boolean] = {
 
       val endpoint = if (request.nodeIds.isEmpty) s"/_tasks/cancel"
       else s"/_tasks/task_id:${request.nodeIds.mkString(",")}/_cancel"
@@ -75,7 +71,6 @@ trait TaskImplicits {
       if (request.actions.nonEmpty)
         params.put("actions", request.actions.mkString(","))
 
-      val fn = client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener)
       Future.successful {
         val code = client.performRequest(method, endpoint, params.asJava).getStatusLine.getStatusCode
         code >= 200 && code < 300

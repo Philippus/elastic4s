@@ -8,8 +8,6 @@ import org.scalatest.{FreeSpec, Matchers}
 
 class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
@@ -19,7 +17,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
         intField("age").stored(true)
       )
     }
-  }.await
+  }.await.acknowledged shouldBe true
 
   http.execute(
     bulk(

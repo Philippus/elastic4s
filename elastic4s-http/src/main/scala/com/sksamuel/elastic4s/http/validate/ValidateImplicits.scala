@@ -1,15 +1,13 @@
 package com.sksamuel.elastic4s.http.validate
 
 import cats.Show
-import com.sksamuel.elastic4s.JsonFormat
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpExecutable, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler, Shards}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{ResponseListener, RestClient}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.client.RestClient
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 case class ValidateResponse(valid: Boolean,
@@ -27,7 +25,7 @@ object ValidateBodyFn {
   def apply(v: ValidateDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
-    builder.rawField("query", QueryBuilderFn(v.query).bytes())
+    builder.rawField("query", QueryBuilderFn(v.query).bytes, XContentType.JSON)
     builder.endObject()
   }
 }
@@ -41,8 +39,7 @@ trait ValidateImplicits {
   implicit object ValidateHttpExecutable extends HttpExecutable[ValidateDefinition, ValidateResponse] {
 
     override def execute(client: RestClient,
-                         request: ValidateDefinition,
-                         format: JsonFormat[ValidateResponse]): Future[ValidateResponse] = {
+                         request: ValidateDefinition): Future[ValidateResponse] = {
 
       val method = "GET"
       val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
@@ -55,8 +52,7 @@ trait ValidateImplicits {
       logger.debug(s"Executing validate query $body")
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      val fn = client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
-      executeAsyncAndMapResponse(fn, format)
+      client.future(method, endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

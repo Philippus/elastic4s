@@ -38,6 +38,7 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   // the ip and port might not be available via http if http is disabled, in this case we'll set them to 0
   val ipAndPort: String = Option(nodeinfo.getHttp).map(_.address.publishAddress.toString).getOrElse("localhost:-1")
   logger.info(s"LocalNode started @ $ipAndPort")
+  logger.info(s"LocalNode data location ${settings.get("path.data")}")
 
   val ip: String = ipAndPort.takeWhile(_ != ':')
   val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
@@ -111,6 +112,7 @@ object LocalNode {
     val mergedSettings = Settings.builder().put(settings)
       .put("transport.type", "local")
       .put("http.type", "netty3")
+      .put("http.enabled", "true")
       .build()
 
     new LocalNode(mergedSettings, plugins)
