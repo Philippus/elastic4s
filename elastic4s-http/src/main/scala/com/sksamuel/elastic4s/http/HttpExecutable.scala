@@ -14,7 +14,7 @@ trait HttpExecutable[T, U] extends Logging {
 
   def execute(client: RestClient, request: T): Future[U]
 
-  // convenience methods to allow implementations of HttpExec2 to execute
+  // convenience methods to allow implementations of HttpExecutable to execute
   // a HTTP request and receive a Scala Future.
   implicit class RichRestClient(client: RestClient) {
 
