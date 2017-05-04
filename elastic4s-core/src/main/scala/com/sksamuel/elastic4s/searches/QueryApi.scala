@@ -48,7 +48,10 @@ trait QueryApi {
                      (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
     termsQuery("_field_names", names)
 
+  @deprecated("Use bool query directly", "5.3.3")
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
+
+  @deprecated("Use bool query directly", "5.3.3")
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().filter(queries)
 
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
@@ -263,9 +266,10 @@ trait QueryApi {
   def bool(mustQueries: Seq[QueryDefinition],
            shouldQueries: Seq[QueryDefinition],
            notQueries: Seq[QueryDefinition]): BoolQueryDefinition = {
-    must(mustQueries).should(shouldQueries).not(notQueries)
+    must(mustQueries).withShould(shouldQueries).withNot(notQueries)
   }
 
+  // convenience to make an emtpy bool which can be appended to
   def boolQuery(): BoolQueryDefinition = BoolQueryDefinition()
 
   // short cut for a boolean query with musts

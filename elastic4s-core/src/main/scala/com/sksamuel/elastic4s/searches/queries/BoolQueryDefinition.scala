@@ -49,17 +49,36 @@ case class BoolQueryDefinition(
     */
   def appendMust(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(must = must ++ queries.toIndexedSeq)
 
+  /**
+    * Replaces the current 'must' queries with the given queries.
+    */
+  def withMust(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = withMust(first +: rest)
+
+  /**
+    * Replaces the current 'must' queries with the given queries.
+    */
+  def withMust(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(must = queries.toSeq)
+
+  @deprecated("The existing must method did not make it clear if it would append or overwrite the queries; use appendMust or withMust", "5.3.3")
   def must(queries: QueryDefinition*): BoolQueryDefinition = must(queries)
+
+  @deprecated("The existing must method did not make it clear if it would append or overwrite the queries; use appendMust or withMust", "5.3.3")
   def must(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(must = queries.toIndexedSeq)
 
   /**
     * Replaces the current 'not' queries with the given queries.
     */
-  def not(queries: QueryDefinition*): BoolQueryDefinition = not(queries)
+  def withNot(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = withNot(first +: rest)
 
   /**
     * Replaces the current 'not' queries with the given queries.
     */
+  def withNot(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(not = queries.toSeq)
+
+  @deprecated("The existing not method did not make it clear if it would append or overwrite the queries; use appendNot or withNot", "5.3.3")
+  def not(queries: QueryDefinition*): BoolQueryDefinition = not(queries)
+
+  @deprecated("The existing not method did not make it clear if it would append or overwrite the queries; use appendNot or withNot", "5.3.3")
   def not(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(not = queries.toSeq)
 
   /**
@@ -72,7 +91,20 @@ case class BoolQueryDefinition(
     */
   def appendShould(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(should = should ++ queries.toSeq)
 
+  /**
+    * Replaces the current 'not' queries with the given queries.
+    */
+  def withShould(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = withShould(first +: rest)
+
+  /**
+    * Replaces the current 'not' queries with the given queries.
+    */
+  def withShould(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(should = queries.toSeq)
+
+  @deprecated("The existing should method did not make it clear if it would append or overwrite the queries; use appendShould or withShould", "5.3.3")
   def should(queries: QueryDefinition*): BoolQueryDefinition = should(queries)
+
+  @deprecated("The existing should method did not make it clear if it would append or overwrite the queries; use appendShould or withShould", "5.3.3")
   def should(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(should = queries.toSeq)
 
   def queryName(queryName: String): BoolQueryDefinition = copy(queryName = queryName.some)
