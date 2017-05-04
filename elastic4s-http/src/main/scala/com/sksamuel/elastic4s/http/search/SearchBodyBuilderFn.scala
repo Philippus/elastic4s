@@ -21,6 +21,9 @@ object SearchBodyBuilderFn {
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string), XContentType.JSON))
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", new BytesArray(x.string), XContentType.JSON))
 
+    request.from.foreach(builder.field("from", _))
+    request.size.foreach(builder.field("size", _))
+
     if (request.explain.contains(true)) {
       builder.field("explain", true)
     }
