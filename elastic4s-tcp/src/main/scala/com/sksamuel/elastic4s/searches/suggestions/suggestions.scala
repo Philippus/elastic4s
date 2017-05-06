@@ -25,9 +25,9 @@ trait SuggestionResult {
   type R <: Suggestion[_]
   type E <: SuggestionEntry
   def suggestion: R
-  def name = suggestion.getName
+  def name: String = suggestion.getName
   def size: Int = suggestion.getEntries.size
-  def `type`: Int = suggestion.getType
+  def `type`: Int = suggestion.getWriteableType
   def entries: Seq[E]
   def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
   def entryTerms: Seq[String] = entries.map(_.term)
@@ -81,7 +81,7 @@ case class TermSuggestionEntry(entry: TermSuggestion.Entry) extends SuggestionEn
 
 case class PhraseSuggestionEntry(entry: PhraseSuggestion.Entry) extends SuggestionEntry {
   type R = PhraseSuggestion.Entry
-  def cutoffScore = entry.getCutoffScore
+  def cutoffScore: Double = entry.getCutoffScore
 }
 
 case class CompletionSuggestionEntry(entry: CompletionSuggestion.Entry) extends SuggestionEntry {

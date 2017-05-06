@@ -51,7 +51,7 @@ trait TaskImplicits {
       request.groupBy.foreach(params.put("group_by", _))
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener)
-      client.future(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, ResponseHandler.default)
     }
   }
 

@@ -48,7 +48,7 @@ trait DeleteImplicits {
       logger.debug(s"Delete by query ${body.string}")
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
-      client.future("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 
@@ -68,7 +68,7 @@ trait DeleteImplicits {
       request.versionType.map(_.name).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
-      client.future(method, endpoint, params.toMap, ResponseHandler.failure404)
+      client.async(method, endpoint, params.toMap, ResponseHandler.failure404)
     }
   }
 }

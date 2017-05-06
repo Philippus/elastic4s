@@ -9,6 +9,7 @@ import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
 import com.sksamuel.elastic4s.http.index.{IndexAdminImplicits, IndexImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
+import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}
 import com.sksamuel.elastic4s.http.task.TaskImplicits
 import com.sksamuel.elastic4s.http.update.UpdateImplicits
@@ -30,6 +31,7 @@ trait ElasticDsl
     with LocksImplicits
     with NodesImplicits
     with SearchImplicits
+    with SearchTemplateImplicits
     with SearchScrollImplicits
     with UpdateImplicits
     with TaskImplicits

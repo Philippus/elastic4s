@@ -67,7 +67,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.waitIfOngoing.map(_.toString).foreach(params.put("wait_if_ongoing", _))
       request.force.map(_.toString).foreach(params.put("force.map", _))
 
-      client.future("POST", endpoint, params.toMap, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, ResponseHandler.default)
     }
   }
 
@@ -82,7 +82,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.queryCache.map(_.toString).foreach(params.put("query", _))
       request.requestCache.map(_.toString).foreach(params.put("request", _))
 
-      client.future("POST", endpoint, params.toMap, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, ResponseHandler.default)
     }
   }
 
@@ -122,7 +122,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: OpenIndexDefinition): Future[OpenIndexResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
-      client.future("POST", endpoint, Map.empty, ResponseHandler.default)
+      client.async("POST", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -130,7 +130,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: CloseIndexDefinition): Future[CloseIndexResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
-      client.future("POST", endpoint, Map.empty, ResponseHandler.default)
+      client.async("POST", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -139,7 +139,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: RefreshIndexDefinition): Future[RefreshIndexResponse] = {
       val endpoint = "/" + request.indexes.mkString(",") + "/_refresh"
       val method = "POST"
-      client.future(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -158,7 +158,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -169,7 +169,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = "/" + request.indexes.mkString(",")
       logger.debug(s"Executing delete index $endpoint")
 
-      client.future(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -183,7 +183,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -196,7 +196,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       request.status.foreach(params.put("status", _))
       logger.debug(s"Accesing endpoint $endpoint")
 
-      client.future(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, ResponseHandler.default)
     }
   }
 
@@ -216,7 +216,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
       logger.debug(s"Executing Put Mapping request to '$endpoint $body'")
 
-      client.future(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

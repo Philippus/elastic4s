@@ -36,7 +36,7 @@ trait GetImplicits {
       logger.debug(s"Executing multiget $body")
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future("POST", endpoint, Map.empty, entity, ResponseHandler.failure404).map { response =>
+      client.async("POST", endpoint, Map.empty, entity, ResponseHandler.failure404).map { response =>
         response.copy(docs = response.docs.map { doc =>
           doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
         })
@@ -76,7 +76,7 @@ trait GetImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.foreach(params.put("versionType", _))
 
-      client.future("GET", endpoint, params.toMap, ResponseHandler.failure404).map { response =>
+      client.async("GET", endpoint, params.toMap, ResponseHandler.failure404).map { response =>
         response.copy(fields = Option(response.fields).getOrElse(Map.empty))
       }
     }

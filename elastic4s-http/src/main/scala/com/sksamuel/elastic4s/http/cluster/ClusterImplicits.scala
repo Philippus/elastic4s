@@ -17,7 +17,7 @@ trait ClusterImplicits {
                          request: ClusterStateDefinition): Future[ClusterStateResponse] = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
       logger.debug(s"Accessing endpoint $endpoint")
-      client.future(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, ResponseHandler.default)
     }
 
     private def buildMetricsString(metrics: Seq[String]): String = {
@@ -49,7 +49,7 @@ trait ClusterImplicits {
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForNodes.map(_.toString).foreach(params.put("wait_for_nodes", _))
 
-      client.future(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, ResponseHandler.default)
     }
 
     private def indicesUrl(indices: Seq[String]): String = {

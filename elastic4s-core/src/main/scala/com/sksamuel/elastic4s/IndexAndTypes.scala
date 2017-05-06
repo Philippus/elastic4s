@@ -11,9 +11,9 @@ import scala.language.implicitConversions
 case class Indexes(values: Seq[String]) {
   // returns an IndexesAndTypes where the types is empty
   def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(values, Nil)
-  def size = values.size
-  def isEmpty = values.isEmpty
-  def isNonEmpty = values.nonEmpty
+  def size: Int = values.size
+  def isEmpty: Boolean = values.isEmpty
+  def isNonEmpty: Boolean = values.nonEmpty
 }
 
 object Indexes {

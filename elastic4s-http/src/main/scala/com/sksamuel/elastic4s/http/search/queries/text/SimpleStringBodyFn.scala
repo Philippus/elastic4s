@@ -5,9 +5,7 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object SimpleStringBodyFn {
   def apply(s: SimpleStringQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.startObject("simple_query_string")
+    val builder = XContentFactory.jsonBuilder().startObject().startObject("simple_query_string")
     s.operator.map(_.toString).foreach(builder.field("default_operator", _))
     s.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
     s.analyzeWildcard.map(_.toString).foreach(builder.field("analyze_wildcard", _))
@@ -25,8 +23,6 @@ object SimpleStringBodyFn {
       val flags = s.flags.map(_.name).mkString("|")
       builder.field("flags", flags)
     }
-    builder.field("query", s.query)
-    builder.endObject()
-    builder.endObject()
+    builder.field("query", s.query).endObject().endObject()
   }
 }

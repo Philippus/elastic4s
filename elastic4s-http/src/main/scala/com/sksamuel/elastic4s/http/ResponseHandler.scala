@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.sksamuel.exts.Logging
 
 object JacksonSupport {
 
@@ -35,13 +36,15 @@ trait ResponseHandler[U] {
 // a ResponseHandler that marshalls the body into the required type using Jackson
 // the response body is converted into a string using a codec derived from the content encoding header
 // if the content encoding header is null, then UTF-8 is assumed
-object ResponseHandler {
+object ResponseHandler extends Logging {
 
   def fromEntity[U: Manifest](entity: HttpEntity): Try[U] = {
     Try {
+      logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
       val charset = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
       implicit val codec = Codec(Charset.forName(charset))
       val body = Source.fromInputStream(entity.getContent).mkString
+      logger.debug(body)
       JacksonSupport.mapper.readValue[U](body)
     }
   }
@@ -56,7 +59,6 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
 }
 
 class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
-  override def onResponse(response: Response): Try[U] = ResponseHandler.fromEntity[U](response.getEntity)
   override def onError(e: Exception): Try[U] = {
     e match {
       case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 =>

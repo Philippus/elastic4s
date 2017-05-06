@@ -21,7 +21,7 @@ import com.sksamuel.elastic4s.searches.collapse.CollapseApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
-import com.sksamuel.elastic4s.searches.{HighlightApi, QueryApi, ScrollApi, SearchApi}
+import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.update.UpdateApi
@@ -60,6 +60,7 @@ trait ElasticApi
     with ScoreApi
     with ScrollApi
     with SearchApi
+    with SearchTemplateApi
     with SortApi
     with SuggestionApi
     with TaskApi

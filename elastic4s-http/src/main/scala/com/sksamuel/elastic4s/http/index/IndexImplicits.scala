@@ -36,7 +36,7 @@ trait IndexImplicits extends IndexShowImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       logger.debug(s"Endpoint=$endpoint")
-      client.future(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
+      client.async(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
     }
   }
 }

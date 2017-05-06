@@ -28,7 +28,7 @@ trait ExplainImplicits {
       val entity = new StringEntity(body)
 
       val fn = client.performRequestAsync(method, endpoint, params.asJava, entity, _: ResponseListener)
-      client.future(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
+      client.async(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
     }
   }
 }

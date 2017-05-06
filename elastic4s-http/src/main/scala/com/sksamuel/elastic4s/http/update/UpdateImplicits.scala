@@ -49,7 +49,7 @@ trait UpdateImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
       logger.debug(s"Update Entity: ${body.string}")
 
-      client.future(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

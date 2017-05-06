@@ -5,6 +5,7 @@ import org.apache.http.HttpEntity
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
+import scala.io.Source
 
 /**
   * @tparam T the type of the request object handled by this handler
@@ -29,19 +30,22 @@ trait HttpExecutable[T, U] extends Logging {
       p.future
     }
 
-    def future(method: String,
-               endpoint: String,
-               params: Map[String, Any],
-               handler: ResponseHandler[U]): Future[U] = {
+    def async(method: String,
+              endpoint: String,
+              params: Map[String, Any],
+              handler: ResponseHandler[U]): Future[U] = {
+      logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, _: ResponseListener)
       future(callback, handler)
     }
 
-    def future(method: String,
-               endpoint: String,
-               params: Map[String, Any],
-               entity: HttpEntity,
-               handler: ResponseHandler[U]): Future[U] = {
+    def async(method: String,
+              endpoint: String,
+              params: Map[String, Any],
+              entity: HttpEntity,
+              handler: ResponseHandler[U]): Future[U] = {
+      logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+      logger.debug(Source.fromInputStream(entity.getContent).getLines().mkString("\n"))
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
       future(callback, handler)
     }

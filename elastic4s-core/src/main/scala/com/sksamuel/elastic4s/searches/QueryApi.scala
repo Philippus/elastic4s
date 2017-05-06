@@ -266,7 +266,7 @@ trait QueryApi {
   def bool(mustQueries: Seq[QueryDefinition],
            shouldQueries: Seq[QueryDefinition],
            notQueries: Seq[QueryDefinition]): BoolQueryDefinition = {
-    must(mustQueries).withShould(shouldQueries).withNot(notQueries)
+    must(mustQueries).should(shouldQueries).not(notQueries)
   }
 
   // convenience to make an emtpy bool which can be appended to

@@ -6,9 +6,8 @@ import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.FlatSpec
 
 class CountTest extends FlatSpec with ElasticDsl with DualElasticSugar with DualClient {
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       indexInto("london/landmarks").fields("name" -> "hampton court palace")
     }.await

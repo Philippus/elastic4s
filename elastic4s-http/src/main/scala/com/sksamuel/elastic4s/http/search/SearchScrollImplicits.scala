@@ -27,7 +27,7 @@ trait SearchScrollImplicits {
       logger.debug("Executing clear scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -43,7 +43,7 @@ trait SearchScrollImplicits {
       logger.debug("Executing search scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 }

@@ -20,7 +20,7 @@ trait IndexAliasImplicits {
       val endpoint = s"$indexPathElement/_alias/${request.aliases.mkString(",")}"
       logger.debug(s"Connecting to $endpoint for get alias request")
 
-      client.future("GET", endpoint, Map.empty, new ResponseHandler[GetAliasResponse] {
+      client.async("GET", endpoint, Map.empty, new ResponseHandler[GetAliasResponse] {
         override def onError(e: Exception) = e match {
           case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 => Try(Map.empty)
           case e => Failure(e)
@@ -40,7 +40,7 @@ trait IndexAliasImplicits {
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       logger.debug(s"Executing alias actions $body")
-      client.future(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 }

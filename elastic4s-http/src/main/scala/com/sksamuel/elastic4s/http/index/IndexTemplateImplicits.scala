@@ -23,7 +23,7 @@ trait IndexTemplateImplicits {
       val endpoint = s"/_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      client.future("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -31,7 +31,7 @@ trait IndexTemplateImplicits {
     override def execute(client: RestClient,
                          request: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
-      client.future("DELETE", endpoint, Map.empty, ResponseHandler.default)
+      client.async("DELETE", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -40,7 +40,7 @@ trait IndexTemplateImplicits {
                          request: GetIndexTemplateDefinition): Future[GetIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
       val fn = client.performRequestAsync("GET", endpoint, _: ResponseListener)
-      client.future("GET", endpoint, Map.empty, ResponseHandler.default)
+      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 }

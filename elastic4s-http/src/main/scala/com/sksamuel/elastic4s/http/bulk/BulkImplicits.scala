@@ -39,7 +39,7 @@ trait BulkImplicits {
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.future("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

@@ -52,7 +52,7 @@ trait ValidateImplicits {
       logger.debug(s"Executing validate query $body")
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.future(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

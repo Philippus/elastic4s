@@ -38,7 +38,7 @@ trait NodesImplicits {
       val method = "GET"
       val endpoint = buildUrlFromDefinition(request)
       logger.debug(s"Accesing endpoint $endpoint")
-      client.future(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async(method, endpoint, Map.empty, ResponseHandler.default)
     }
 
     private def buildUrlFromDefinition(definition: NodeStatsDefinition): String = {

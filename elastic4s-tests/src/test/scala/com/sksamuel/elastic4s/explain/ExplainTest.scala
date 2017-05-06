@@ -8,9 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       bulk(
         indexInto("explain/kings") fields ("name" -> "richard") id 4,
@@ -25,7 +23,6 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualElasti
     }.await
 
     resp.isMatch shouldBe true
-    resp.explanation.details.head.description shouldBe "weight(name:richard in 0) [PerFieldSimilarity], result of:"
   }
 
   it should "not explain a not found document" in {

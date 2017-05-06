@@ -34,7 +34,7 @@ trait SearchImplicits {
       val body = MultiSearchContentBuilder(request)
       logger.debug("Executing msearch: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      client.future("POST", "/_msearch", params.toMap, entity, ResponseHandler.default)
+      client.async("POST", "/_msearch", params.toMap, entity, ResponseHandler.default)
     }
   }
 
@@ -67,7 +67,7 @@ trait SearchImplicits {
 
       val body = builder.string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      client.future("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }
