@@ -9,6 +9,12 @@ import scala.util.Try
 
 trait CatImplicits {
 
+  implicit object CatThreadPoolExecutable extends HttpExecutable[CatThreadPoolDefinition, Seq[CatThreadPool]] {
+    override def execute(client: RestClient, request: CatThreadPoolDefinition): Future[Seq[CatThreadPool]] = {
+      client.async("GET", "/_cat/thread_pool?v&format=json&h=id,name,active,rejected,completed,type,size,queue,queue_size,largest,min,max,keep_alive,node_id,ephemeral_id,pid,host,ip,port", Map.empty, ResponseHandler.default)
+    }
+  }
+
   implicit object CatHealthExecutable extends HttpExecutable[CatHealthDefinition, CatHealth] {
     override def execute(client: RestClient, request: CatHealthDefinition): Future[CatHealth] = {
       client.async("GET", "/_cat/health?v&format=json", Map.empty, new DefaultResponseHandler[CatHealth] {

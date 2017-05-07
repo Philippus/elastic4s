@@ -55,3 +55,22 @@ case class CatHealth(epoch: Long,
   def maxTaskWaitTime: String = max_task_wait_time
   def activeShardsPercent: String = active_shards_percent
 }
+
+case class CatThreadPool(id: String,
+                         name: String,
+                         active: Int,
+                         rejected: Int,
+                         completed: Int,
+                         `type`: String,
+                         size: Int,
+                         queue: Int,
+                         queue_size: Int,
+                         largest: Int,
+                         min: Int,
+                         max: Int,
+                         keep_alive: String,
+                         node_id: String,
+                         pid: Int,
+                         host: String,
+                         ip: String,
+                         port: String)
