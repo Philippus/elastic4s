@@ -50,7 +50,7 @@ class AliasesHttpTest extends WordSpec with Matchers with ElasticSugar with Elas
     "return all aliases" in {
       http.execute {
         getAliases()
-      }.await shouldBe List(Alias("mountains", Vector("landscapes")), Alias("beaches", Nil))
+      }.await.toSet shouldBe Set(Alias("mountains", Vector("landscapes")), Alias("beaches", Nil))
     }
   }
 

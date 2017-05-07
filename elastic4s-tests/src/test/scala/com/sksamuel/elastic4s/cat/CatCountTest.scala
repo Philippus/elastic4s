@@ -22,7 +22,7 @@ class CatCountTest extends FlatSpec with Matchers with SharedElasticSugar with E
   "cats count" should "return count for all cluster" in {
     http.execute {
       catCount()
-    }.await.count shouldBe 3
+    }.await.count >= 3 shouldBe true
   }
 
   it should "support counting for a single index" in {
