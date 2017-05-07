@@ -26,7 +26,7 @@ class CatAliasTest extends FlatSpec with Matchers with SharedElasticSugar with E
     val result = http.execute {
       catAliases()
     }.await
-    result.map(_.index).toSet shouldBe Set("catalias")
-    result.map(_.alias).toSet shouldBe Set("ally1", "ally2")
+    result.map(_.alias).toSet.contains("ally1") shouldBe true
+    result.map(_.alias).toSet.contains("ally2") shouldBe true
   }
 }

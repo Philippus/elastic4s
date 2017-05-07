@@ -19,10 +19,13 @@ class CatIndexesTest extends FlatSpec with Matchers with SharedElasticSugar with
   }.await
 
 
-  "cats indexes" should "return all indexes" in {
-    http.execute {
+  "catIndices" should "return all indexes" in {
+    val indexes = http.execute {
       catIndices()
-    }.await.map(_.index).toSet shouldBe Set("catindex1", "catindex2", "catindex3")
+    }.await.map(_.index).toSet
+    indexes.contains("catindex1") shouldBe true
+    indexes.contains("catindex2") shouldBe true
+    indexes.contains("catindex3") shouldBe true
   }
 
   it should "use health param" in {

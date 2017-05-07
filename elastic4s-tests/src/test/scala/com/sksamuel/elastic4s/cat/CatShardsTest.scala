@@ -26,6 +26,7 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
       catShards()
     }.await
     result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
-    result.map(_.index).toSet shouldBe Set("catshards1", "catshards2")
+    result.map(_.index).contains("catshards1") shouldBe true
+    result.map(_.index).contains("catshards2") shouldBe true
   }
 }
