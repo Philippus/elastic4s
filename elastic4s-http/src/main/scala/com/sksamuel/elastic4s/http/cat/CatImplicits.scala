@@ -15,9 +15,9 @@ trait CatImplicits {
     }
   }
 
-  implicit object CatAliasesExecutable extends HttpExecutable[CatAliasesDefinition, String] {
+  implicit object CatAliasesExecutable extends HttpExecutable[CatAliasesDefinition, Seq[CatAlias]] {
 
-    override def execute(client: RestClient, request: CatAliasesDefinition): Future[String] = {
+    override def execute(client: RestClient, request: CatAliasesDefinition): Future[Seq[CatAlias]] = {
       client.async("GET", "/_cat/aliases?v&format=json", Map.empty, ResponseHandler.default)
     }
   }
@@ -42,6 +42,9 @@ trait CatImplicits {
     }
   }
 }
+
+case class CatAlias(alias: String, index: String, filter: String, routing: Routing)
+case class Routing(index: String, search: String)
 
 case class CatMaster(id: String,
                      host: String,
