@@ -12,6 +12,9 @@ allprojects {
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.2'
-    compile 'org.scala-lang:scala-library:2.12.2'
     compile 'com.sksamuel.elastic4s:elastic4s-http_2.12:5.4.0'
+    compile "org.apache.httpcomponents:httpclient:4.5.3"
+    compile "org.apache.httpcomponents:httpcore-nio:4.4.5"
+    compile "org.apache.httpcomponents:httpcore:4.4.5"
+    compile "org.apache.httpcomponents:httpasyncclient:4.1.2"
 }

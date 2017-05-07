@@ -11,10 +11,6 @@ object HttpClientExampleApp extends App {
   // you must import the DSL to use the syntax helpers
   import com.sksamuel.elastic4s.http.ElasticDsl._
 
-  // start an in-process node. In a typical program you would connect
-  // to your real cluster
-  val node = LocalNode("mycluster", "/esdata")
-
   val client = HttpClient(ElasticsearchClientUri("localhost", 9200))
 
   client.execute {
