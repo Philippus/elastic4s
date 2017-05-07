@@ -17,6 +17,10 @@ trait AliasesApi {
     def on(index: String) = RemoveAliasActionDefinition(alias, index)
   }
 
+  def getAliases(): GetAliasesDefinition = GetAliasesDefinition()
+
   def getAlias(first: String, rest: String*): GetAliasDefinition = GetAliasDefinition(first +: rest)
   def getAlias(aliases: Iterable[String]): GetAliasDefinition = GetAliasDefinition(aliases.toSeq)
 }
+
+case class GetAliasesDefinition()

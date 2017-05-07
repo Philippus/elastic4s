@@ -4,3 +4,4 @@ case class GetAliasDefinition(aliases: Seq[String],
                               indices: Seq[String] = Nil) {
   def on(indices: String*): GetAliasDefinition = copy(indices = indices)
 }
+

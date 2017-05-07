@@ -1,14 +1,16 @@
 package com.sksamuel.elastic4s.http.search.template
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.search.SearchResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.searches.{GetSearchTemplateDefinition, PutSearchTemplateDefinition, RemoveSearchTemplateDefinition, TemplateSearchDefinition}
+import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.elasticsearch.client.{Response, ResponseException, RestClient}
 
 import scala.concurrent.Future
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 trait SearchTemplateImplicits {
 
@@ -59,10 +61,13 @@ trait SearchTemplateImplicits {
       val method = "GET"
       val endpoint = "/_search/template/" + req.name
       client.async(method, endpoint, Map.empty, new ResponseHandler[Option[GetSearchTemplateResponse]] {
-        override def onResponse(response: Response): Try[Option[GetSearchTemplateResponse]] = {
-          ResponseHandler.fromEntity[GetSearchTemplateResponse](response.getEntity).map(Some(_))
+        override def onResponse(response: Response): Try[Option[GetSearchTemplateResponse]] = Try {
+          ResponseHandler.fromEntity[GetSearchTemplateResponse](response.getEntity).some
         }
-        override def onError(e: Exception): Try[Option[GetSearchTemplateResponse]] = Try(None)
+        override def onError(e: Exception): Try[Option[GetSearchTemplateResponse]] = e match {
+          case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 => Success(None)
+          case _ => Failure(e)
+        }
       })
     }
   }
@@ -70,8 +75,6 @@ trait SearchTemplateImplicits {
 
 case class PutSearchTemplateResponse(acknowledged: Boolean)
 
-case class GetSearchTemplateResponse(private val _id: String, lang: String, found: Boolean, template: String) {
-  def id: String = _id
-}
+case class GetSearchTemplateResponse(@JsonProperty("_id") id: String, lang: String, found: Boolean, template: String)
 
 case class RemoveSearchTemplateResponse(acknowledged: Boolean)

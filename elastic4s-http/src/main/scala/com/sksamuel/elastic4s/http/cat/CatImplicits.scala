@@ -36,8 +36,8 @@ trait CatImplicits {
   implicit object CatHealthExecutable extends HttpExecutable[CatHealthDefinition, CatHealth] {
     override def execute(client: RestClient, request: CatHealthDefinition): Future[CatHealth] = {
       client.async("GET", "/_cat/health?v&format=json", Map.empty, new DefaultResponseHandler[CatHealth] {
-        override def onResponse(response: Response): Try[CatHealth] = {
-          ResponseHandler.fromEntity[Seq[CatHealth]](response.getEntity).map(_.head)
+        override def onResponse(response: Response): Try[CatHealth] = Try {
+          ResponseHandler.fromEntity[Seq[CatHealth]](response.getEntity).head
         }
       })
     }
@@ -50,8 +50,8 @@ trait CatImplicits {
         case indexes => "/_cat/count/" + indexes.mkString(",") + "?v&format=json"
       }
       client.async("GET", endpoint, Map.empty, new DefaultResponseHandler[CatCount] {
-        override def onResponse(response: Response): Try[CatCount] = {
-          ResponseHandler.fromEntity[Seq[CatCount]](response.getEntity).map(_.head)
+        override def onResponse(response: Response): Try[CatCount] = Try {
+          ResponseHandler.fromEntity[Seq[CatCount]](response.getEntity).head
         }
       })
     }
@@ -60,8 +60,8 @@ trait CatImplicits {
   implicit object CatMasterExecutable extends HttpExecutable[CatMasterDefinition, CatMaster] {
     override def execute(client: RestClient, request: CatMasterDefinition): Future[CatMaster] = {
       client.async("GET", "/_cat/master?v&format=json", Map.empty, new DefaultResponseHandler[CatMaster] {
-        override def onResponse(response: Response): Try[CatMaster] = {
-          ResponseHandler.fromEntity[Seq[CatMaster]](response.getEntity).map(_.head)
+        override def onResponse(response: Response): Try[CatMaster] = Try {
+          ResponseHandler.fromEntity[Seq[CatMaster]](response.getEntity).head
         }
       })
     }
