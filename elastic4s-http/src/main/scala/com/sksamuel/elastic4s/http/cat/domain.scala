@@ -34,6 +34,9 @@ case class Disk(indices: Long,
 
 case class CatCount(epoch: Long, timestamp: String, count: Long)
 
+case class CatPlugin(name: String, component: String, version: String)
+
+case class CatShard()
 
 case class Node(total: Long,
                 data: Long)

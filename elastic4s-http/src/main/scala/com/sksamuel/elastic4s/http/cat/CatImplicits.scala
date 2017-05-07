@@ -9,6 +9,18 @@ import scala.util.Try
 
 trait CatImplicits {
 
+  implicit object CatShardsExecutable extends HttpExecutable[CatShardsDefinition, Seq[CatShard]] {
+    override def execute(client: RestClient, request: CatShardsDefinition): Future[Seq[CatShard]] = {
+      client.async("GET", "/_cat/shards?v&format=json", Map.empty, ResponseHandler.default)
+    }
+  }
+
+  implicit object CatPluginsExecutable extends HttpExecutable[CatPluginsDefinition, Seq[CatPlugin]] {
+    override def execute(client: RestClient, request: CatPluginsDefinition): Future[Seq[CatPlugin]] = {
+      client.async("GET", "/_cat/plugins?v&format=json", Map.empty, ResponseHandler.default)
+    }
+  }
+
   implicit object CatThreadPoolExecutable extends HttpExecutable[CatThreadPoolDefinition, Seq[CatThreadPool]] {
     override def execute(client: RestClient, request: CatThreadPoolDefinition): Future[Seq[CatThreadPool]] = {
       client.async("GET", "/_cat/thread_pool?v&format=json&h=id,name,active,rejected,completed,type,size,queue,queue_size,largest,min,max,keep_alive,node_id,ephemeral_id,pid,host,ip,port", Map.empty, ResponseHandler.default)

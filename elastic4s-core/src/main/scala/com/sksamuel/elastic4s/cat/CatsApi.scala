@@ -7,6 +7,9 @@ trait CatsApi {
   def catAliases(): CatAliasesDefinition = CatAliasesDefinition()
   def catAllocation(): CatAllocationDefinition = CatAllocationDefinition()
 
+  def catPlugins(): CatPluginsDefinition = CatPluginsDefinition()
+  def catShards(): CatShardsDefinition = CatShardsDefinition()
+
   def catCount(): CatCountDefinition = CatCountDefinition()
   def catCount(first: String, rest: String*): CatCountDefinition = CatCountDefinition(first +: rest)
   def catNodes(): CatNodesDefinition = CatNodesDefinition()
@@ -26,6 +29,8 @@ object Health {
   case object Red extends Health
 }
 
+case class CatPluginsDefinition()
+case class CatShardsDefinition()
 case class CatCountDefinition(indices: Seq[String] = Nil)
 case class CatNodesDefinition()
 case class CatHealthDefinition()
