@@ -47,26 +47,27 @@ Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has de
 
 The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s (or even just the elasticsearch provided Java TCP client) you will get `NoSuchMethodException`s if you try to use it with Play or Spark. I am unaware of a workaround at present, until Spark and Play update to the latest version, other than switching to the experimental HTTP client.
 
-| Elastic4s Release | Target Elasticsearch version |
-|-------|---------------------|
-|5.3.x|5.3.x|
-|5.2.x|5.2.x|
-|5.1.x|5.1.x|
-|5.0.x|5.0.x|
-|2.4.x|2.4.X|
-|2.3.x|2.3.X|
-|2.2.1|2.2.X|
-|2.1.2|2.1.X|
-|2.0.1|2.0.X|
-|1.7.5|1.7.X|
-|1.6.6|1.6.X|
-|1.5.17|1.5.X|
-|1.4.14|1.4.x|
-|1.3.3|1.3.x|
-|1.2.3.0|1.2.x|
-|1.1.2.0|1.1.x|
-|1.0.3.0|1.0.x|
-|0.90.13.2|0.90.x|
+| Elasticsearch Vrsion | Http Client Version | Tcp Client Version |
+|-------|---------------------|--|
+|5.4.x|5.4.x|5.4.0|
+|5.3.x|5.4.x|5.3.2|
+|5.2.x|5.4.x|5.2.11|
+|5.1.x|5.4.x|5.1.5|
+|5.0.x|5.4.x|5.0.4|
+|2.4.x|no support|2.4.X|
+|2.3.x|no support|2.3.X|
+|2.2.x|no support|2.2.X|
+|2.1.x|no support|2.1.X|
+|2.0.x|no support|2.0.X|
+|1.7.x|no support|1.7.5|
+|1.6.x|no support|1.6.6|
+|1.5.x|no support|1.5.17|
+|1.4.x|no support|1.4.14|
+|1.3.x|no support|1.3.3|
+|1.2.x|no support|1.2.3.0|
+|1.1.x|no support|1.1.2.0|
+|1.0.x|no support|1.0.3.0|
+|0.90.x|no support|0.90.13.2|
 
 See full [changelog](#changelog).
 
