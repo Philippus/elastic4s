@@ -7,19 +7,23 @@ trait CatsApi {
   def catAliases(): CatAliasesDefinition = CatAliasesDefinition()
   def catAllocation(): CatAllocationDefinition = CatAllocationDefinition()
 
-  def catPlugins(): CatPluginsDefinition = CatPluginsDefinition()
-  def catShards(): CatShardsDefinition = CatShardsDefinition()
-
   def catCount(): CatCountDefinition = CatCountDefinition()
   def catCount(first: String, rest: String*): CatCountDefinition = CatCountDefinition(first +: rest)
-  def catNodes(): CatNodesDefinition = CatNodesDefinition()
+
   def catHealth(): CatHealthDefinition = CatHealthDefinition()
-  def catThreadPool(): CatThreadPoolDefinition = CatThreadPoolDefinition()
 
   def catIndices(): CatIndexesDefinition = CatIndexesDefinition(None)
   def catIndices(health: Health): CatIndexesDefinition = CatIndexesDefinition(health.some)
 
   def catMaster(): CatMasterDefinition = CatMasterDefinition()
+
+  def catNodes(): CatNodesDefinition = CatNodesDefinition()
+
+  def catPlugins(): CatPluginsDefinition = CatPluginsDefinition()
+
+  def catShards(): CatShardsDefinition = CatShardsDefinition()
+
+  def catThreadPool(): CatThreadPoolDefinition = CatThreadPoolDefinition()
 }
 
 sealed trait Health

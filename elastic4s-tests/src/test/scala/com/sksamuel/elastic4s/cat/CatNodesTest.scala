@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class CatNodesTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
@@ -18,8 +18,12 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
   }.await
 
   "cats nodes" should "return all nodes" in {
-    http.execute {
+    val result = http.execute {
       catNodes()
-    }.await
+    }.await.head
+    result.load_1m > 0 shouldBe true
+    result.load_5m > 0 shouldBe true
+    result.load_15m > 0 shouldBe true
+    result.ramPercent > 0 shouldBe true
   }
 }

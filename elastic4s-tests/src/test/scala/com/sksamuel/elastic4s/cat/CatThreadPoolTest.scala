@@ -17,7 +17,6 @@ class CatThreadPoolTest extends FlatSpec with Matchers with SharedElasticSugar w
     ).refresh(RefreshPolicy.IMMEDIATE)
   }.await
 
-
   "cat thread pool" should "return all pools" in {
     http.execute {
       catThreadPool()

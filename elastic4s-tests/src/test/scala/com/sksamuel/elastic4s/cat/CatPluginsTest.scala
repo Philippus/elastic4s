@@ -12,6 +12,6 @@ class CatPluginsTest extends FlatSpec with Matchers with SharedElasticSugar with
   "cats plugins" should "return all plugins" in {
     http.execute {
       catPlugins()
-    }.await.exists(_.name == "org.elasticsearch.index.reindex.ReindexPlugin") shouldBe true
+    }.await.exists(_.component == "org.elasticsearch.index.reindex.ReindexPlugin") shouldBe true
   }
 }
