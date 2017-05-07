@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.embedded.LocalNode
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.http.search.SearchResponse
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.common.settings.Settings
 
 object HttpClientExampleApp extends App {
 
@@ -14,7 +13,7 @@ object HttpClientExampleApp extends App {
 
   // start an in-process node. In a typical program you would connect
   // to your real cluster
-  val node = LocalNode("local-cluster", "esdata")
+  val node = LocalNode("mycluster", "esdata")
 
   val client = HttpClient(ElasticsearchClientUri("localhost", 9200))
 

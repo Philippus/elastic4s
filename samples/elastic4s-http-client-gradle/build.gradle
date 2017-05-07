@@ -1,0 +1,24 @@
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'scala'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.2'
+    compile 'org.scala-lang:scala-library:2.12.2'
+    compile 'com.sksamuel.elastic4s:elastic4s-http_2.12:5.4.0'
+    // the next 5 lines are only needed to run an embedded instance
+    // they should be deleted from your project when you connect to a real instance
+    compile 'com.sksamuel.elastic4s:elastic4s-embedded_2.12:5.4.0'
+    compile 'com.sksamuel.elastic4s:elastic4s-tcp_2.12:5.4.0'
+    compile 'joda-time:joda-time:2.9.9'
+    compile 'org.jboss.netty:netty:3.2.10.Final'
+    compile 'com.carrotsearch:hppc:0.7.2'
+}
