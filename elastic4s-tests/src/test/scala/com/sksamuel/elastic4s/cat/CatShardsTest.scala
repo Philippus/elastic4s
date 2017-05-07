@@ -12,14 +12,20 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
 
   http.execute {
     bulk(
-      indexInto("catnodes1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catnodes2/landmarks").fields("name" -> "hampton court palace")
+      indexInto("catshards1/landmarks").fields("name" -> "hampton court palace"),
+      indexInto("catshards1/landmarks").fields("name" -> "stonehenge"),
+      indexInto("catshards1/landmarks").fields("name" -> "kensington palace"),
+      indexInto("catshards2/landmarks").fields("name" -> "blenheim palace"),
+      indexInto("catshards2/landmarks").fields("name" -> "london eye"),
+      indexInto("catshards2/landmarks").fields("name" -> "tower of london")
     ).refresh(RefreshPolicy.IMMEDIATE)
   }.await
 
-  "cats nodes" should "return all nodes" in {
-    http.execute {
-      catNodes()
+  "cats shards" should "return all shards" in {
+    val result = http.execute {
+      catShards()
     }.await
+    result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
+    result.map(_.index).toSet shouldBe Set("catshards1", "catshards2")
   }
 }

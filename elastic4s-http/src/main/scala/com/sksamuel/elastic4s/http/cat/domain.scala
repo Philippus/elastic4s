@@ -5,6 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 case class CatAlias(alias: String, index: String, filter: String, routing: Routing)
 case class Routing(index: String, search: String)
 
+case class CatShards(index: String,
+                     shard: String,
+                     prirep: String,
+                     state: String,
+                     docs: Long,
+                     store: Long,
+                     ip: String,
+                     node: String)
+
 case class CatMaster(id: String,
                      host: String,
                      ip: String,
