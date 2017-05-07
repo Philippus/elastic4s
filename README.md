@@ -89,6 +89,11 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Add Alias]                               | `addAlias(<alias>).on(<index>)`           |     | yes |
 | [Bulk]                                    | `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
+| Cat Indices|                              | `catIndices()`                            | yes | |
+| Cat Allocation|                              | `catAllocation()`                            | yes | |
+| Cat Nodes|                              | `catNodes()`                            | yes | |
+| Cat Shards|                              | `catShards()`                            | yes | |
+| Cat Count|                              | `catCount()`                            | yes | |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
 | Cluster health                            | `clusterHealth()`                         |   | yes |
