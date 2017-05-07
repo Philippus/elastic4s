@@ -11,7 +11,6 @@ import org.scalatest.FlatSpec
 
 class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
   import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 
   override def beforeRunTests() = execute {

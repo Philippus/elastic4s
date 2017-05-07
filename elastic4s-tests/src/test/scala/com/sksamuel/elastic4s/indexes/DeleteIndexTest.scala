@@ -7,8 +7,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   "delete index request" should {
     "delete index" in {
 

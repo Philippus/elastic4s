@@ -12,7 +12,6 @@ import org.scalatest.{Matchers, WordSpec}
 class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Matchers {
 
   import ReactiveElastic._
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val indexName = getClass.getSimpleName.toLowerCase
   val indexType = "emperor"

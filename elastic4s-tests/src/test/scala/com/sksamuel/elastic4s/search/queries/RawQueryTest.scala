@@ -6,9 +6,8 @@ import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
 class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       bulk(
         indexInto("rawquerytest/paris").fields("landmark" -> "montmarte", "arrondissement" -> "18"),

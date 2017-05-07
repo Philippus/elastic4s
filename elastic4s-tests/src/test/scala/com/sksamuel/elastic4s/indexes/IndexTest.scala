@@ -9,8 +9,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   case class Phone(name: String, speed: String)
 
   implicit object PhoneIndexable extends Indexable[Phone] {

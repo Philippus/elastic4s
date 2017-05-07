@@ -7,8 +7,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class TypeExistsTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   override protected def beforeRunTests() = {
     execute {
       createIndex("typeexists").mappings {

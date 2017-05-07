@@ -12,8 +12,6 @@ class MultiSearchHttpTest
     with Matchers
     with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "a multi search request" should "find matching documents for all queries" in {

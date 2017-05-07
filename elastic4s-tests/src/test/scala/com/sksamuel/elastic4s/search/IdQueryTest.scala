@@ -8,8 +8,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {

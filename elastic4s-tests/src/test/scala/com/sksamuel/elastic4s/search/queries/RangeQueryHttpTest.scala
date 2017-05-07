@@ -12,8 +12,6 @@ class RangeQueryHttpTest
     with ElasticMatchers
     with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {

@@ -7,9 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class FlushIndexTest extends WordSpec with Matchers with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("flushindex").mappings(
         mapping("pasta").fields(

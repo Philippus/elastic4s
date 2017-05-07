@@ -13,8 +13,6 @@ class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with 
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
   }
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   private val Index = "termsuggest"

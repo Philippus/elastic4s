@@ -8,8 +8,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   "cluster health request" should {
     "return healthy cluster information" in {
       execute {

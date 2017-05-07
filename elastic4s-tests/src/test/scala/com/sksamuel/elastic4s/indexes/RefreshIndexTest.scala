@@ -9,8 +9,6 @@ import scala.concurrent.duration._
 
 class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   "refresh index request" should {
     "refresh pending docs" in {
 

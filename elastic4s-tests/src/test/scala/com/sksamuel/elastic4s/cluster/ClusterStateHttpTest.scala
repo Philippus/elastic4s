@@ -8,8 +8,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class ClusterStateHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "cluster state request" should {

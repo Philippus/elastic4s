@@ -8,8 +8,6 @@ import org.scalatest.{FreeSpec, Matchers}
 
 class MissingAggregationTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {

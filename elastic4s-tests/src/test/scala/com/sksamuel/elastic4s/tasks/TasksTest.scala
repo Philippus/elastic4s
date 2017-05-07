@@ -7,8 +7,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class TasksTest extends FlatSpec with SharedElasticSugar with Matchers with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "list tasks" should "include all fields" in {

@@ -14,8 +14,6 @@ class SearchIteratorTest
     with ElasticMatchers
     with ElasticDsl {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   implicit val duration: FiniteDuration = 10.seconds
 
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))

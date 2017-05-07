@@ -8,8 +8,6 @@ import org.scalatest.{Matchers, WordSpec}
 
 class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
   "delete by query" should {
     "delete matched docs" in {
 
