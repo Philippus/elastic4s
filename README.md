@@ -1,4 +1,4 @@
-elastic4s - Elasticsearch Scala Client
+elastic4s - Elasticsearch HTTP and TCP Scala Client
 =========
 
 [![Join the chat at https://gitter.im/sksamuel/elastic4s](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sksamuel/elastic4s?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
