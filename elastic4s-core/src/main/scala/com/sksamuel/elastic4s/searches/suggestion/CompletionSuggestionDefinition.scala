@@ -3,7 +3,10 @@ package com.sksamuel.elastic4s.searches.suggestion
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.SuggestBuilders
+import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext
 import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, FuzzyOptions, RegexOptions}
+
+import scala.collection.JavaConverters._
 
 case class CompletionSuggestionDefinition(name: String,
                                           fieldname: String,
@@ -19,7 +22,8 @@ case class CompletionSuggestionDefinition(name: String,
                                           size: Option[Int] = None,
                                           transpositions: Option[Boolean] = None,
                                           unicodeAware: Option[Boolean] = None,
-                                          text: Option[String] = None) extends SuggestionDefinition {
+                                          text: Option[String] = None,
+                                          categoryContexts: Map[String,Seq[String]] = Map.empty) extends SuggestionDefinition {
 
   override type B = CompletionSuggestionBuilder
 
@@ -43,6 +47,12 @@ case class CompletionSuggestionDefinition(name: String,
     regex.foreach { regex =>
       builder.regex(regex, regexOptions.orNull)
     }
+    val preparedCategoryContexts: Map[String,java.util.List[_ <: org.elasticsearch.common.xcontent.ToXContent]] = categoryContexts.map { case (contextName, values) =>
+      contextName -> values.map(value => CategoryQueryContext.builder.setCategory(value).build).asJava
+    }
+    if(preparedCategoryContexts.nonEmpty) {
+      builder.contexts(preparedCategoryContexts.asJava)
+    }
 
     builder
   }
@@ -55,6 +65,7 @@ case class CompletionSuggestionDefinition(name: String,
   def fuzziness(fuzziness: Fuzziness): CompletionSuggestionDefinition = copy(fuzziness = fuzziness.some)
   def transpositions(transpositions: Boolean): CompletionSuggestionDefinition = copy(transpositions = transpositions.some)
   def unicodeAware(unicodeAware: Boolean): CompletionSuggestionDefinition = copy(unicodeAware = unicodeAware.some)
+  def addCategoryContext(contextName: String, values: Seq[String]): CompletionSuggestionDefinition = copy(categoryContexts = categoryContexts ++ Map(contextName -> values))
 
   def prefix(prefix: String): CompletionSuggestionDefinition = copy(prefix = prefix.some)
   def prefix(prefix: String, fuzziness: Fuzziness): CompletionSuggestionDefinition =
