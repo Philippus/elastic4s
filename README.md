@@ -86,7 +86,7 @@ through to the readme page. For options that are not yet documented, refer to th
 
 | Operation                                 | Syntax | HTTP | TCP |
 |-------------------------------------------|--------|------|-----|
-| [Add Alias]                               | `addAlias(<alias>).on(<index>)`           |     | yes |
+| [Add Alias]                               | `addAlias(<alias>).on(<index>)`           | yes | yes |
 | [Bulk]                                    | `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
 | Cat Indices                               | `catIndices()`                            | yes | |
@@ -113,8 +113,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
 | Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
 | [Get]                                     | `get(<id>).from(<index> / <type>)`        | yes | yes |
-| Get All Aliases                           | `getAlias(<name>).on(<index>)` |          | yes |
-| Get Alias                                 | `getAlias(<name>).on(<index>)` |          | yes |
+| Get All Aliases                           | `getAllAlias()`                           | yes | yes |
+| Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
 | Get Segments                              | `getSegments(<indexes>)` |   | yes |
 | Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
@@ -133,7 +133,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
-| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)` |   | yes |
+| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)` | yes | yes |
 | [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
 | [Search]                                  | `search(<index> / <type>).query(<query>)` | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
