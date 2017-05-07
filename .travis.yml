@@ -1,5 +1,6 @@
 language: scala
 before_script:
+- sudo chmod +x /usr/local/bin/sbt
 - ulimit -u 30000
 scala:
 - 2.11.11
