@@ -2,11 +2,7 @@ package com.sksamuel.elastic4s.searches.suggestion
 
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.common.unit.Fuzziness
-import org.elasticsearch.search.suggest.SuggestBuilders
-import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext
-import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, FuzzyOptions, RegexOptions}
-
-import scala.collection.JavaConverters._
+import org.elasticsearch.search.suggest.completion.RegexOptions
 
 case class CompletionSuggestionDefinition(name: String,
                                           fieldname: String,
@@ -23,39 +19,7 @@ case class CompletionSuggestionDefinition(name: String,
                                           transpositions: Option[Boolean] = None,
                                           unicodeAware: Option[Boolean] = None,
                                           text: Option[String] = None,
-                                          categoryContexts: Map[String,Seq[String]] = Map.empty) extends SuggestionDefinition {
-
-  override type B = CompletionSuggestionBuilder
-
-  override def builder: CompletionSuggestionBuilder = {
-    val builder = SuggestBuilders.completionSuggestion(fieldname)
-    super.populate(builder)
-
-    prefix.foreach { prefix =>
-      fuzziness.fold(builder.prefix(prefix)) { fuzz =>
-        val options = new FuzzyOptions.Builder()
-        options.setFuzziness(fuzz)
-        unicodeAware.foreach(options.setUnicodeAware)
-        fuzzyMinLength.foreach(options.setFuzzyMinLength)
-        fuzzyPrefixLength.foreach(options.setFuzzyPrefixLength)
-        maxDeterminizedStates.foreach(options.setMaxDeterminizedStates)
-        transpositions.foreach(options.setTranspositions)
-        builder.prefix(prefix, options.build)
-      }
-    }
-
-    regex.foreach { regex =>
-      builder.regex(regex, regexOptions.orNull)
-    }
-    val preparedCategoryContexts: Map[String,java.util.List[_ <: org.elasticsearch.common.xcontent.ToXContent]] = categoryContexts.map { case (contextName, values) =>
-      contextName -> values.map(value => CategoryQueryContext.builder.setCategory(value).build).asJava
-    }
-    if(preparedCategoryContexts.nonEmpty) {
-      builder.contexts(preparedCategoryContexts.asJava)
-    }
-
-    builder
-  }
+                                          contexts: Map[String, Seq[CategoryContext]] = Map.empty) extends SuggestionDefinition {
 
   def regex(regex: String): CompletionSuggestionDefinition = copy(regex = regex.some)
   def regexOptions(regexOptions: RegexOptions): CompletionSuggestionDefinition = copy(regexOptions = regexOptions.some)
@@ -65,7 +29,14 @@ case class CompletionSuggestionDefinition(name: String,
   def fuzziness(fuzziness: Fuzziness): CompletionSuggestionDefinition = copy(fuzziness = fuzziness.some)
   def transpositions(transpositions: Boolean): CompletionSuggestionDefinition = copy(transpositions = transpositions.some)
   def unicodeAware(unicodeAware: Boolean): CompletionSuggestionDefinition = copy(unicodeAware = unicodeAware.some)
-  def addCategoryContext(contextName: String, values: Seq[String]): CompletionSuggestionDefinition = copy(categoryContexts = categoryContexts ++ Map(contextName -> values))
+
+  def context(name: String, context: CategoryContext): CompletionSuggestionDefinition = contexts(name, Seq(context))
+  def contexts(name: String, contexts: Seq[CategoryContext]): CompletionSuggestionDefinition = {
+    copy(contexts = this.contexts + (name -> contexts))
+  }
+
+  // adds more contexts to this query
+  def contexts(map: Map[String, Seq[CategoryContext]]): CompletionSuggestionDefinition = copy(contexts = this.contexts ++ map)
 
   def prefix(prefix: String): CompletionSuggestionDefinition = copy(prefix = prefix.some)
   def prefix(prefix: String, fuzziness: Fuzziness): CompletionSuggestionDefinition =
@@ -77,3 +48,5 @@ case class CompletionSuggestionDefinition(name: String,
   override def shardSize(shardSize: Int): CompletionSuggestionDefinition = copy(shardSize = shardSize.some)
   override def size(size: Int): CompletionSuggestionDefinition = copy(size = size.some)
 }
+
+case class CategoryContext(name: String, boost: Double = 0, prefix: Boolean = false)

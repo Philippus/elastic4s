@@ -1,12 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
-import org.elasticsearch.search.suggest.SuggestionBuilder
-
 trait SuggestionDefinition {
-
-  type B <: SuggestionBuilder[B]
-
-  def builder: B
 
   def name: String
   def fieldname: String
@@ -20,11 +14,4 @@ trait SuggestionDefinition {
   def shardSize(shardSize: Int): SuggestionDefinition
   def text(text: String): SuggestionDefinition
   def analyzer(analyzer: String): SuggestionDefinition
-
-  def populate(builder: B): Unit = {
-    analyzer.foreach(builder.analyzer)
-    shardSize.foreach(builder.shardSize(_))
-    size.foreach(builder.size)
-    text.foreach(builder.text)
-  }
 }

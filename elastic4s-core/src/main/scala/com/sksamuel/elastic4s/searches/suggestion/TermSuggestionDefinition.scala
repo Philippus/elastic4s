@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.search.suggest.SortBy
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}
-import org.elasticsearch.search.suggest.{SortBy, SuggestBuilders}
 
 case class TermSuggestionDefinition(name: String,
                                     fieldname: String,
@@ -22,27 +22,6 @@ case class TermSuggestionDefinition(name: String,
                                     analyzer: Option[String] = None,
                                     size: Option[Int] = None,
                                     shardSize: Option[Int] = None) extends SuggestionDefinition {
-
-  override type B = TermSuggestionBuilder
-
-  def builder: B = {
-
-    val builder = SuggestBuilders.termSuggestion(fieldname)
-    super.populate(builder)
-
-    accuracy.map(_.toFloat).foreach(builder.accuracy)
-    maxEdits.foreach(builder.maxEdits)
-    maxInspections.foreach(builder.maxInspections)
-    maxTermFreq.map(_.toFloat).foreach(builder.maxTermFreq)
-    minDocFreq.map(_.toFloat).foreach(builder.minDocFreq)
-    minWordLength.foreach(builder.minWordLength)
-    prefixLength.foreach(builder.prefixLength)
-    sort.foreach(builder.sort)
-    stringDistance.foreach(builder.stringDistance)
-    suggestMode.foreach(builder.suggestMode)
-
-    builder
-  }
 
   def accuracy(accuracy: Double): TermSuggestionDefinition = copy(accuracy = accuracy.some)
   def maxEdits(maxEdits: Int): TermSuggestionDefinition = copy(maxEdits = maxEdits.some)

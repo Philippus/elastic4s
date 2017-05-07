@@ -120,7 +120,6 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                   rest: SuggestionDefinition*): SearchDefinition = suggestions(first +: rest)
 
   def suggestions(suggs: Iterable[SuggestionDefinition]): SearchDefinition = copy(suggs = suggs.toSeq)
-
   def suggestion(sugg: SuggestionDefinition): SearchDefinition = suggestions(Seq(sugg))
 
   def globalSuggestionText(text: String): SearchDefinition = copy(globalSuggestionText = text.some)
@@ -277,5 +276,5 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchDefinition =
     copy(fetchContext = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
-  def collapse(collapse: CollapseDefinition) = copy(collapse = collapse.some)
+  def collapse(collapse: CollapseDefinition): SearchDefinition = copy(collapse = collapse.some)
 }

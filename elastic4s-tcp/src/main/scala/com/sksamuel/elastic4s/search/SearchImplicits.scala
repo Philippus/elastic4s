@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
+import com.sksamuel.elastic4s.searches.suggestions.SuggestionBuilderFn
 import org.elasticsearch.action.search.{MultiSearchResponse, SearchResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -97,7 +98,7 @@ trait SearchImplicits {
       if (search.suggs.nonEmpty) {
         val suggest = new SuggestBuilder()
         search.globalSuggestionText.foreach(suggest.setGlobalText)
-        search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, sugg.builder) }
+        search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
         builder.suggest(suggest)
       }
 
