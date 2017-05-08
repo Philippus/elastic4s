@@ -3,23 +3,37 @@ package com.sksamuel.elastic4s.http.index.admin
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.index.CreateIndexResponse
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
-import com.sksamuel.elastic4s.indexes.admin.ForceMergeDefinition
+import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.action.admin.indices.forcemerge.ForceMergeResponse
 import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
 
 trait IndexAdminImplicits extends IndexShowImplicits {
 
-  implicit object ForceMergeExecutable extends HttpExecutable[ForceMergeDefinition, ForceMergeResponse] {
+  implicit object IndexRecoveryHttpExecutable extends HttpExecutable[IndexRecoveryDefinition, IndexRecoveryResponse] {
+
+    override def execute(client: RestClient, request: IndexRecoveryDefinition): Future[IndexRecoveryResponse] = {
+
+      val endpoint = if (request.indices == Seq("_all") || request.indices.isEmpty) "/_recovery"
+      else s"/${request.indices.mkString(",")}/_recovery"
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.detailed.foreach(params.put("detailed", _))
+      request.activeOnly.foreach(params.put("active_only", _))
+
+      client.async("GET", endpoint, params.toMap, ResponseHandler.default)
+    }
+  }
+
+  implicit object ForceMergeHttpExecutable extends HttpExecutable[ForceMergeDefinition, ForceMergeResponse] {
 
     override def execute(client: RestClient, request: ForceMergeDefinition): Future[ForceMergeResponse] = {
 
-      val endpoint = if (request.indexes == Seq("_all")) "/_forcemerge"
+      val endpoint = if (request.indexes == Seq("_all") || request.indexes.isEmpty) "/_forcemerge"
       else s"/${request.indexes.mkString(",")}/_forcemerge"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
@@ -31,7 +45,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object FlushIndexExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
+  implicit object FlushIndexHttpExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
 
     override def execute(client: RestClient, request: FlushIndexDefinition): Future[FlushIndexResponse] = {
 
@@ -45,7 +59,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object ClearCacheExecutable extends HttpExecutable[ClearCacheDefinition, ClearCacheResponse] {
+  implicit object ClearCacheHttpExecutable extends HttpExecutable[ClearCacheDefinition, ClearCacheResponse] {
 
     override def execute(client: RestClient, request: ClearCacheDefinition): Future[ClearCacheResponse] = {
 
@@ -60,7 +74,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object IndexExistsExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
+  implicit object IndexExistsHttpExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
 
     override def execute(client: RestClient,
                          request: IndexExistsDefinition): Future[IndexExistsResponse] = {
@@ -72,7 +86,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object TypeExistsExecutable extends HttpExecutable[TypesExistsDefinition, TypeExistsResponse] {
+  implicit object TypeExistsHttpExecutable extends HttpExecutable[TypesExistsDefinition, TypeExistsResponse] {
     override def execute(client: RestClient,
                          request: TypesExistsDefinition): Future[TypeExistsResponse] = {
       val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
@@ -82,7 +96,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object AliasExistsExecutable extends HttpExecutable[AliasExistsDefinition, AliasExistsResponse] {
+  implicit object AliasExistsHttpExecutable extends HttpExecutable[AliasExistsDefinition, AliasExistsResponse] {
     override def execute(client: RestClient,
                          request: AliasExistsDefinition): Future[AliasExistsResponse] = {
       val endpoint = s"/_alias/${request.alias}"
@@ -92,7 +106,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object OpenIndexExecutable extends HttpExecutable[OpenIndexDefinition, OpenIndexResponse] {
+  implicit object OpenIndexHttpExecutable extends HttpExecutable[OpenIndexDefinition, OpenIndexResponse] {
     override def execute(client: RestClient,
                          request: OpenIndexDefinition): Future[OpenIndexResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
@@ -100,7 +114,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object CloseIndexExecutable extends HttpExecutable[CloseIndexDefinition, CloseIndexResponse] {
+  implicit object CloseIndexHttpExecutable extends HttpExecutable[CloseIndexDefinition, CloseIndexResponse] {
     override def execute(client: RestClient,
                          request: CloseIndexDefinition): Future[CloseIndexResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
@@ -108,7 +122,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object RefreshIndexExecutable extends HttpExecutable[RefreshIndexDefinition, RefreshIndexResponse] {
+  implicit object RefreshIndexHttpExecutable extends HttpExecutable[RefreshIndexDefinition, RefreshIndexResponse] {
     override def execute(client: RestClient,
                          request: RefreshIndexDefinition): Future[RefreshIndexResponse] = {
       val endpoint = "/" + request.indexes.mkString(",") + "/_refresh"
@@ -117,7 +131,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object CreateIndexExecutable extends HttpExecutable[CreateIndexDefinition, CreateIndexResponse] {
+  implicit object CreateIndexHttpExecutable extends HttpExecutable[CreateIndexDefinition, CreateIndexResponse] {
 
     override def execute(client: RestClient, request: CreateIndexDefinition): Future[CreateIndexResponse] = {
 
@@ -136,7 +150,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object DeleteIndexExecutable extends HttpExecutable[DeleteIndexDefinition, DeleteIndexResponse] {
+  implicit object DeleteIndexHttpExecutable extends HttpExecutable[DeleteIndexDefinition, DeleteIndexResponse] {
 
     override def execute(client: RestClient, request: DeleteIndexDefinition): Future[DeleteIndexResponse] = {
       val method = "DELETE"

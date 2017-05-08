@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("chemistry").mappings {
         mapping("elements").fields(

@@ -8,6 +8,7 @@ case class OpenIndexResponse(acknowledged: Boolean)
 case class CloseIndexResponse(acknowledged: Boolean)
 
 case class ForceMergeResponse()
+case class IndexRecoveryResponse()
 
 case class FlushIndexResponse(_shards: Shards) {
   def shards: Shards = _shards

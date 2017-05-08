@@ -89,12 +89,14 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Add Alias]                               | `addAlias(<alias>).on(<index>)`           | yes | yes |
 | [Bulk]                                    | `bulk(query1, query2, query3...)`         | yes | yes |
 | Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
-| Cat Indices                               | `catIndices()`                            | yes | |
+| Cat Aliases                               | `catAliases()`                            | yes | |
 | Cat Allocation                            | `catAllocation()`                         | yes | |
+| Cat Counts                                | `catCount()` or `catCount(<indexes>`      | yes | |
+| Cat Indices                               | `catIndices()`                            | yes | |
+| Cat Master                                | `catMaster()`                             | yes | |
 | Cat Nodes                                 | `catNodes()`                              | yes | |
-| Cat Shards                                | `catShards()`                             | yes | |
-| Cat Counts                                | `catCount()`                              | yes | |
 | Cat Plugins                               | `catPlugins()`                            | yes | |
+| Cat Shards                                | `catShards()`                             | yes | |
 | Cat Thread Pools                          | `catThreadPool()`                         | yes | |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
@@ -108,18 +110,18 @@ through to the readme page. For options that are not yet documented, refer to th
 | Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes | yes |
 | [Delete index]                            | `deleteIndex(<index>) [settings]`         | yes | yes |
 | [Delete Snapshot]                         | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
-| Delete Template                           | `deleteTemplate(<name>)` |   | yes |
+| Delete Template                           | `deleteTemplate(<name>)`                  |       | yes |
 | [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
-| Field stats                               | `fieldStats(<indexes>)` |   | yes |
+| Field stats                               | `fieldStats(<indexes>)`                   |   | yes |
 | Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
-| [Force Merge]                             | `forceMerge(<indexes>)` | yes | yes |
+| [Force Merge]                             | `forceMerge(<indexes>)`                   | yes | yes |
 | [Get]                                     | `get(<id>).from(<index> / <type>)`        | yes | yes |
-| Get All Aliases                           | `getAllAlias()`                           | yes | yes |
+| Get All Aliases                           | `getAllAliases()`                         | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
-| Get Mapping                               | `getMapping(<index> / <type>)` |   | yes |
-| Get Segments                              | `getSegments(<indexes>)` |   | yes |
-| Get Snapshot                              | `getSnapshot <name> from <repo>` |   | yes |
-| Get Template                              | `getTemplate(<name>)` |   | yes |
+| Get Mapping                               | `getMapping(<index> / <type>)`            |   | yes |
+| Get Segments                              | `getSegments(<indexes>)`                  |   | yes |
+| Get Snapshot                              | `getSnapshot <name> from <repo>`          |   | yes |
+| Get Template                              | `getTemplate(<name>)`                     |   | yes |
 | [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
 | Index Status                              | `indexStatus(<index>)`                    |   | yes |
@@ -130,15 +132,15 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
-| Recover Index                             | `recoverIndex(<name>)` |   | yes |
+| Recover Index                             | `recoverIndex(<name>)`                    | yes | yes |
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
-| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)` | yes | yes |
-| [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)` |   | yes |
+| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)`        | yes | yes |
+| [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)`    |   | yes |
 | [Search]                                  | `search(<index> / <type>).query(<query>)` | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
-| Type Exists                               | `typesExists(<types>) in <index>` | yes | yes |
-| [Update]                                  | `update(<id>).in(<index> / <type>)` | yes  | yes |
+| Type Exists                               | `typesExists(<types>) in <index>`         | yes | yes |
+| [Update]                                  | `update(<id>).in(<index> / <type>)`       | yes  | yes |
 | [Validate]                                | `validateIn(<index/type>).query(<query>)` | yes | yes |
 
 Please also note [some java interoperability notes](https://sksamuel.github.io/elastic4s/docs/misc/javainterop.html).

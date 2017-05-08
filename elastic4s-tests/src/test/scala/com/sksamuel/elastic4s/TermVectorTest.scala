@@ -6,7 +6,6 @@ import org.scalatest.time.SpanSugar._
 import org.scalatest.{Matchers, WordSpec}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 
-/** @author Stephen Samuel */
 class TermVectorTest
   extends WordSpec
     with ElasticSugar

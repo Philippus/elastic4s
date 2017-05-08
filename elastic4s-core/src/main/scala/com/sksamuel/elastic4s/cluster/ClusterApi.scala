@@ -18,7 +18,7 @@ trait ClusterApi {
   def clusterHealth(indices: Iterable[String]): ClusterHealthDefinition = ClusterHealthDefinition(indices.toIndexedSeq)
 }
 
-case class ClusterStatsDefinition
+case class ClusterStatsDefinition()
 
 case class ClusterSettingsDefinition(persistentSettings: Map[String, String],
                                      transientSettings: Map[String, String]) {
