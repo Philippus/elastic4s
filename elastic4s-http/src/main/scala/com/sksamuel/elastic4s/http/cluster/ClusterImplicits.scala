@@ -1,23 +1,19 @@
 package com.sksamuel.elastic4s.http.cluster
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterStateDefinition}
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import org.elasticsearch.client.{ResponseListener, RestClient}
+import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 trait ClusterImplicits {
 
   implicit object ClusterStateHttpExecutable extends HttpExecutable[ClusterStateDefinition, ClusterStateResponse] {
-    val method = "GET"
-
     override def execute(client: RestClient,
                          request: ClusterStateDefinition): Future[ClusterStateResponse] = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
       logger.debug(s"Accessing endpoint $endpoint")
-      client.async(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
 
     private def buildMetricsString(metrics: Seq[String]): String = {
@@ -38,8 +34,6 @@ trait ClusterImplicits {
   }
 
   implicit object ClusterHealthHttpExecutable extends HttpExecutable[ClusterHealthDefinition, ClusterHealthResponse] {
-    val method = "GET"
-
     override def execute(client: RestClient,
                          request: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
       val endpoint = "/_cluster/health" + indicesUrl(request.indices)
@@ -49,7 +43,7 @@ trait ClusterImplicits {
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForNodes.map(_.toString).foreach(params.put("wait_for_nodes", _))
 
-      client.async(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, ResponseHandler.default)
     }
 
     private def indicesUrl(indices: Seq[String]): String = {

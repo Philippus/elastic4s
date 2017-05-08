@@ -12,6 +12,7 @@ import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse
 import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
+import com.sksamuel.elastic4s.http.index.admin._
 import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
 import com.sksamuel.elastic4s.http.update.UpdateResponse
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
@@ -35,6 +36,7 @@ import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
 import org.elasticsearch.action.search.{ClearScrollResponse => TcpClearScrollResponse}
 import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
+
 import scala.collection.JavaConverters._
 
 trait ResponseConverter[T, R] {

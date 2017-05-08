@@ -8,7 +8,8 @@ import com.sksamuel.elastic4s.http.cluster.ClusterImplicits
 import com.sksamuel.elastic4s.http.delete.DeleteImplicits
 import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
-import com.sksamuel.elastic4s.http.index.{IndexAdminImplicits, IndexImplicits, IndexTemplateImplicits}
+import com.sksamuel.elastic4s.http.index.admin.IndexAdminImplicits
+import com.sksamuel.elastic4s.http.index.{IndexImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
 import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}

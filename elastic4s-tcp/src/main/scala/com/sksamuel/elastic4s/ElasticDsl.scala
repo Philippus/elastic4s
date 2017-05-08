@@ -1,18 +1,30 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.alias.GetAliasDefinition
+import com.sksamuel.elastic4s.alias.{AliasExecutables, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers._
+import com.sksamuel.elastic4s.bulk.BulkExecutables
 import com.sksamuel.elastic4s.cluster.ClusterHealthDefinition
-import com.sksamuel.elastic4s.explain.ExplainDefinition
+import com.sksamuel.elastic4s.delete.DeleteExecutables
+import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainExecutables}
+import com.sksamuel.elastic4s.get.GetExecutables
+import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables, IndexTemplateExecutables}
+import com.sksamuel.elastic4s.index.admin.ForceMergeExecutables
 import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.indexes.admin.ForceMergeApi
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
+import com.sksamuel.elastic4s.reindex.ReindexExecutables
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchImplicits}
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.queries._
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition}
+import com.sksamuel.elastic4s.task.TaskExecutables
+import com.sksamuel.elastic4s.termvectors.TermVectorsExecutables
+import com.sksamuel.elastic4s.update.UpdateExecutables
+import com.sksamuel.elastic4s.validate.ValidateExecutables
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.sort.SortOrder
 
@@ -24,13 +36,30 @@ trait ElasticDsl
   extends ElasticApi
     with ClusterDsl
     with FieldStatsDsl
-    with ForceMergeDsl
     with IndexRecoveryDsl
     with PercolateDsl
     with SettingsDsl
     with SnapshotDsl
     with TokenFilterDsl
-    with TcpExecutables
+    with AliasExecutables
+    with BulkExecutables
+    with CreateIndexExecutables
+    with DeleteExecutables
+    with DeleteIndexExecutables
+    with ExplainExecutables
+    with ForceMergeExecutables
+    with GetExecutables
+    with IndexAdminExecutables
+    with IndexExecutables
+    with IndexTemplateExecutables
+    with MappingExecutables
+    with ReindexExecutables
+    with ScrollExecutables
+    with SearchImplicits
+    with TaskExecutables
+    with TermVectorsExecutables
+    with UpdateExecutables
+    with ValidateExecutables
     with BuildableTermsQueryImplicits
     with ElasticImplicits {
 

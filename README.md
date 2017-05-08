@@ -98,8 +98,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Cat Thread Pools                          | `catThreadPool()`                         | yes | |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
 | Close index                               | `closeIndex(<name>)`                      | yes | yes |
-| Cluster health                            | `clusterHealth()`                         |   | yes |
-| Cluster stats                             | `clusterStats()`                          |   | yes |
+| Cluster health                            | `clusterHealth()`                         | yes | yes |
+| Cluster stats                             | `clusterStats()`                          | yes | yes |
 | [Create Index]                            | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
 | [Create Repository]                       | `createRepository(<repo>).type(<type>)`   |   | yes |
 | [Create Snapshot]                         | `createSnapshot(<name>).in(<repo>)`       |   | yes |
@@ -112,6 +112,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
 | Field stats                               | `fieldStats(<indexes>)` |   | yes |
 | Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
+| [Force Merge]                             | `forceMerge(<indexes>)` | yes | yes |
 | [Get]                                     | `get(<id>).from(<index> / <type>)`        | yes | yes |
 | Get All Aliases                           | `getAllAlias()`                           | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
@@ -128,7 +129,6 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Multiget]                                | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
 | [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
-| [Force Merge]                             | `forceMerge(<indexes>)` |   | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
 | Recover Index                             | `recoverIndex(<name>)` |   | yes |
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 
-class ForceMergeDslTest extends FlatSpec with MockitoSugar with ElasticSugar {
+class ForceMergeApiTest extends FlatSpec with MockitoSugar with ElasticSugar {
 
   // not testing the output of these; they are here just to test the DSL in the client
   client.execute {

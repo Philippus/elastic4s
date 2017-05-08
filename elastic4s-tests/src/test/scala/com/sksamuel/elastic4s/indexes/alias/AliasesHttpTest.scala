@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s.indexes.alias
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.index.alias.Alias
-import com.sksamuel.elastic4s.http.index.{AliasExistsResponse, IndicesAliasResponse}
+import com.sksamuel.elastic4s.http.index.IndicesAliasResponse
+import com.sksamuel.elastic4s.http.index.admin.{AliasExistsResponse, IndicesAliasResponse}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}

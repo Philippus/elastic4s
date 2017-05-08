@@ -23,8 +23,8 @@ object TermsAggregationBuilder {
       case TermsOrder("_count", asc) => builder.order(Terms.Order.count(asc))
       case TermsOrder("_term", asc) => builder.order(Terms.Order.term(asc))
       case TermsOrder(field, asc) if field.contains(".") =>
-        val (name, metric) = field.split('.')
-        builder.order(Terms.Order.aggregation(name, metric, asc))
+        val parts = field.split('.')
+        builder.order(Terms.Order.aggregation(parts(0), parts(1), asc))
       case TermsOrder(field, asc) => builder.order(Terms.Order.aggregation(field, asc))
     }
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)

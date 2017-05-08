@@ -1,61 +1,35 @@
-package com.sksamuel.elastic4s.http.index
+package com.sksamuel.elastic4s.http.index.admin
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.http.index.IndexShardStoreResponse.StoreStatusResponse
+import com.sksamuel.elastic4s.http.index.CreateIndexResponse
+import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler, Shards}
 import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.indexes.admin.ForceMergeDefinition
 import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
+import org.elasticsearch.action.admin.indices.forcemerge.ForceMergeResponse
 import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
 
-case class DeleteIndexResponse(acknowledged: Boolean)
-case class RefreshIndexResponse()
-case class OpenIndexResponse(acknowledged: Boolean)
-case class CloseIndexResponse(acknowledged: Boolean)
-
-case class FlushIndexResponse(_shards: Shards) {
-  def shards: Shards = _shards
-}
-
-case class TypeExistsResponse(exists: Boolean) {
-  def isExists: Boolean = exists
-}
-
-case class IndexExistsResponse(exists: Boolean) {
-  def isExists: Boolean = exists
-}
-
-case class AliasExistsResponse(exists: Boolean) {
-  def isExists: Boolean = exists
-}
-
-case class ClearCacheResponse(_shards: Shards) {
-  def shards: Shards = _shards
-}
-
-case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
-  def success: Boolean = acknowledged
-}
-
-case class IndicesAliasResponse(acknowledged: Boolean) {
-  def success: Boolean = acknowledged
-}
-
-case class PutMappingResponse(acknowledged: Boolean) {
-  def success: Boolean = acknowledged
-}
-
-object IndexShardStoreResponse {
-  case class StoreStatusResponse(indices: Map[String, IndexStoreStatus])
-  case class IndexStoreStatus(shards: Map[String, ShardStoreStatus])
-  type StoreStatus = Map[String, AnyRef]
-
-  case class ShardStoreStatus(stores: Seq[StoreStatus])
-}
-
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object ForceMergeExecutable extends HttpExecutable[ForceMergeDefinition, ForceMergeResponse] {
+
+    override def execute(client: RestClient, request: ForceMergeDefinition): Future[ForceMergeResponse] = {
+
+      val endpoint = if (request.indexes == Seq("_all")) "/_forcemerge"
+      else s"/${request.indexes.mkString(",")}/_forcemerge"
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.onlyExpungeDeletes.foreach(params.put("only_expunge_deletes", _))
+      request.maxSegments.foreach(params.put("max_num_segments", _))
+      request.flush.foreach(params.put("flush", _))
+
+      client.async("POST", endpoint, params.toMap, ResponseHandler.default)
+    }
+  }
 
   implicit object FlushIndexExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
 

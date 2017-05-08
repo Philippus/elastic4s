@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.alias.{GetAliasDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition}
-import com.sksamuel.elastic4s.http.index.IndicesAliasResponse
+import com.sksamuel.elastic4s.http.index.admin.IndicesAliasResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{Response, ResponseException, RestClient}
