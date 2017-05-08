@@ -71,9 +71,128 @@ See full [changelog](#changelog).
 
 ## Quick Start
 
-See the [Getting Started Guide](https://sksamuel.github.io/elastic4s/docs/index.html)
+To get started you will need to add a dependency to either
 
-### Eventual Consistency
+* [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http)
+* [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) 
+
+depending on which client you intend you use (or both).
+
+The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you
+want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response
+type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse`
+which contains the results of the search.
+
+To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the 
+TCP client, use the `TcpClient` companion object methods. Requests are the same for either client, but response classes
+may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java 
+client classes.
+
+Requests are created using the elastic4s DSL. For example to create a search request, you would do:
+
+```scala
+search("index" / "type").query("findthistext")`
+```
+
+The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is 
+identical whether you use the HTTP or TCP client, you must import the appropriate trait
+(`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which
+client you are using.
+
+### Example SBT Setup
+
+```scala
+// major.minor are in sync with the elasticsearch releases
+val elastic4sVersion = "x.x.x"
+libraryDependencies ++= Seq(
+  "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
+  // for the tcp client
+  "com.sksamuel.elastic4s" %% "elastic4s-tcp" % elastic4sVersion,
+  
+  // for the http client
+  "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
+  
+  // if you want to use reactive streams
+  "com.sksamuel.elastic4s" %% "elastic4s-streams" % elastic4sVersion,
+  
+  // testing
+  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
+  "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion % "test"
+)
+```
+
+### Example Application
+
+An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create and
+index and index a one field document. Then we will search for that document using a simple text query.
+
+For this example we will use the HTTP client and the `elastic4s-circe` json serializer for converting our case classes
+into json requests. Circe support is optional, and you can use Jackson, or Json4s for example.
+
+```scala
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, TcpClient}
+import com.sksamuel.elastic4s.searches.RichSearchResponse
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import org.elasticsearch.common.settings.Settings
+
+// circe
+import com.sksamuel.elastic4s.circe._
+import io.circe.generic.auto._ 
+
+case class Artist(name: String)
+
+object ArtistIndex extends App {
+
+    // spawn an embedded node for testing
+    val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
+    
+    // in this example we connect to the local node to get a client object
+    // in your real code you must create a client using HttpClient or TcpClient
+    // see the section on "Connecting to a cluster"
+    val client = localNode.elastic4sclient()
+    
+    // we must import the dsl
+    import com.sksamuel.elastic4s.ElasticDsl._
+
+  // Next we create an index in advance ready to receive documents.
+  // await is a helper method to make this operation synchronous instead of async
+  // You would normally avoid doing this in a real program as it will block the calling thread
+  // but is useful when testing
+  client.execute {
+    createIndex("bands").mappings(
+       mapping("artist") as(
+          textField("name")
+       )
+    )
+  }.await
+
+  // next we index a single document. Notice we can pass in the case class directly
+  // and elastic4s will marshall this for us using the circe marshaller we imported earlier.
+  // the refresh policy means that we want this document to flush to the disk immmediately.
+  // see the section on Eventual Consistency.
+  client.execute { 
+  	indexInto("bands" / "artists") doc Artist("Coldplay") refresh(RefreshPolicy.IMMEDIATE)
+  }.await
+
+  // now we can search for the document we just indexed
+  val resp = client.execute { 
+    search("bands" / "artists") query "coldplay" 
+  }.await
+  
+  println("---- Search Hit Parsed ----")
+  resp.to[Artist].foreach(println)
+  
+  // pretty print the complete response
+  import io.circe.Json
+  import io.circe.parser._
+  println("---- Response as JSON ----")
+  println(decode[Json](resp.original.toString).right.get.spaces2)
+  
+  client.close()
+}
+```
+
+## Eventual Consistency
 
 Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
 
@@ -148,16 +267,25 @@ Please also note [some java interoperability notes](https://sksamuel.github.io/e
 
 ## Connecting to a Cluster
 
-To connect to a stand alone elasticsearch cluster then you need to use the `transport` method on the `ElasticClient` object  specifying the uri of the cluster. The uri is an instance of `ElasticsearchClientUri` which can be created from a host and port or from a string. Please note that the uri uses the port of the TCP interface (normally 9300) and NOT the port you connect with when using HTTP (normally 9200).
+To connect to a stand alone elasticsearch cluster we use the methods on the HttpClient or TcpClient companion objects.
+For example, `TcpClient.transport` or `HttpClient.apply`. These methods accept an instance of `ElasticsearchClientUri`
+which specifies the host, port and cluster name of the cluster. The cluster name does not need to be specified if it is the 
+default, which is "elasticsearch" but if you changed it you must specify it in the uri.
+
+Please note that the TCP interface uses port 9300 and HTTP uses 9200 (unless of course you have changed these in your cluster).
+
+Here is an example of connecting to a TCP cluster with the standard settings.
 
 ```scala
-val client = ElasticClient.transport(ElasticsearchClientUri("host1", 9300))
+val client = TcpClient.transport(ElasticsearchClientUri("host1", 9300))
 ```
 
-For multiple nodes it's better to use the elasticsearch client uri connection string. This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
+For multiple nodes it's better to use the elasticsearch client uri connection string. 
+This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
+
 ```scala
 val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=mycluster")
-val client = ElasticClient.transport(uri)
+val client = TcpClient.transport(uri)
 ```
 
 If you need to pass settings to the client, then you need to invoke `transport` with a settings object.
@@ -166,13 +294,30 @@ For example to specify the cluster name (if you changed the default then you mus
 ```scala
 import org.elasticsearch.common.settings.Settings
 val settings = Settings.builder().put("cluster.name", "myClusterName").build()
-val client = ElasticClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
+val client = TcpClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
 ```
 
 If you already have a handle to a Node in the Java API then you can create a client from it easily:
 ```scala
 val node = ... // node from the java API somewhere
-val client = ElasticClient.fromNode(node)
+val client = TcpClient.fromNode(node)
+```
+
+Here is an example of connecting to a HTTP cluster.
+
+```scala
+val client = HttpClient(ElasticsearchClientUri("localhost", 9200))
+```
+
+The http client internally uses the Apache Http Client, which we can customize by passing in two callbacks.
+
+```scala
+val client = HttpClient(ElasticsearchClientUri("localhost", 9200), new RequestConfigCallback {
+    override def customizeRequestConfig(requestConfigBuilder: Builder) = ...
+    }
+  }, new HttpClientConfigCallback {
+    override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder) = ...
+  })
 ```
 
 ## X-Pack-Security
