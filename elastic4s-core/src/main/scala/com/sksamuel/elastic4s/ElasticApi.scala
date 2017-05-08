@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.cluster.ClusterApi
 import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
-import com.sksamuel.elastic4s.indexes.admin.ForceMergeApi
+import com.sksamuel.elastic4s.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
 import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
 import com.sksamuel.elastic4s.locks.LocksApi
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicTemplateApi
@@ -52,6 +52,7 @@ trait ElasticApi
     with HighlightApi
     with IndexApi
     with IndexAdminApi
+    with IndexRecoveryApi
     with IndexTemplateApi
     with LocksApi
     with MappingApi

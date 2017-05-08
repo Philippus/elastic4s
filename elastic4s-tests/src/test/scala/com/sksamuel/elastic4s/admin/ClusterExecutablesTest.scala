@@ -6,7 +6,7 @@ import org.elasticsearch.common.Priority
 import org.elasticsearch.common.unit.TimeValue
 import org.scalatest.{FlatSpec, Matchers}
 
-class ClusterDslTest extends FlatSpec with Matchers with SharedElasticSugar {
+class ClusterExecutablesTest extends FlatSpec with Matchers with SharedElasticSugar {
 
   "a cluster health request" should "convert empty indices to _all" in {
     val builder = ClusterHealthDefinitionExecutable.buildHealthRequest(node.client, clusterHealth())

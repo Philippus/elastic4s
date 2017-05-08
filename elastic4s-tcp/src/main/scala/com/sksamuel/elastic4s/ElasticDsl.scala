@@ -4,14 +4,14 @@ import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.alias.{AliasExecutables, GetAliasDefinition}
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.bulk.BulkExecutables
-import com.sksamuel.elastic4s.cluster.ClusterHealthDefinition
+import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStatsDefinition}
 import com.sksamuel.elastic4s.delete.DeleteExecutables
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainExecutables}
 import com.sksamuel.elastic4s.get.GetExecutables
 import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables, IndexTemplateExecutables}
 import com.sksamuel.elastic4s.index.admin.ForceMergeExecutables
 import com.sksamuel.elastic4s.indexes._
-import com.sksamuel.elastic4s.indexes.admin.ForceMergeApi
+import com.sksamuel.elastic4s.indexes.admin.IndexRecoveryDefinition
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
@@ -34,15 +34,14 @@ import scala.language.implicitConversions
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
   extends ElasticApi
-    with ClusterDsl
     with FieldStatsDsl
-    with IndexRecoveryDsl
     with PercolateDsl
     with SettingsDsl
     with SnapshotDsl
     with TokenFilterDsl
     with AliasExecutables
     with BulkExecutables
+    with ClusterExecutables
     with CreateIndexExecutables
     with DeleteExecutables
     with DeleteIndexExecutables
@@ -51,6 +50,7 @@ trait ElasticDsl
     with GetExecutables
     with IndexAdminExecutables
     with IndexExecutables
+    with IndexRecoveryExecutables
     with IndexTemplateExecutables
     with MappingExecutables
     with ReindexExecutables
@@ -66,7 +66,7 @@ trait ElasticDsl
   implicit def toRichResponse(resp: SearchResponse): RichSearchResponse = RichSearchResponse(resp)
 
   @deprecated("Use xxxAggregation(...) methods", "5.0.0")
-  def agg = aggregation
+  def agg: aggregation.type = aggregation
 
   @deprecated("Use xxxAggregation(...) methods", "5.0.0")
   case object aggregation {
@@ -74,16 +74,16 @@ trait ElasticDsl
     def avg(name: String) = AvgAggregationDefinition(name)
 
     @deprecated("Use valueCountAggregation(...)", "5.0.0")
-    def count(name: String) = valueCountAggregation(name)
+    def count(name: String): ValueCountAggregationDefinition = valueCountAggregation(name)
 
     @deprecated("Use cardinalityAggregation(...)", "5.0.0")
-    def cardinality(name: String) = cardinalityAggregation(name)
+    def cardinality(name: String): CardinalityAggregationDefinition = cardinalityAggregation(name)
 
     @deprecated("Use dateHistogramAggregation(...)", "5.0.0")
-    def datehistogram(name: String) = dateHistogramAggregation(name)
+    def datehistogram(name: String): DateHistogramAggregation = dateHistogramAggregation(name)
 
     @deprecated("Use dateRangeAggregation(...)", "5.0.0")
-    def daterange(name: String) = dateRangeAggregation(name)
+    def daterange(name: String): DateRangeAggregation = dateRangeAggregation(name)
 
     @deprecated("Use extendedStatsAggregation(...)", "5.0.0")
     def extendedstats(name: String) = extendedStatsAggregation(name)
@@ -113,10 +113,10 @@ trait ElasticDsl
     def ipRange(name: String) = ipRangeAggregation(name)
 
     @deprecated("Use maxAggregation(...)", "5.0.0")
-    def max(name: String) = maxAggregation(name)
+    def max(name: String): MaxAggregationDefinition = maxAggregation(name)
 
     @deprecated("Use minAggregation(...)", "5.0.0")
-    def min(name: String) = minAggregation(name)
+    def min(name: String): MinAggregationDefinition = minAggregation(name)
 
     @deprecated("Use nestedAggregation(...)", "5.0.0")
     def nested(name: String) = new {
@@ -124,10 +124,10 @@ trait ElasticDsl
     }
 
     @deprecated("Use missingAggregation(...)", "5.0.0")
-    def missing(name: String) = missingAggregation(name)
+    def missing(name: String): MissingAggregationDefinition = missingAggregation(name)
 
     @deprecated("Use reverseNestedAggregation(...)", "5.0.0")
-    def reverseNested(name: String) = reverseNestedAggregation(name)
+    def reverseNested(name: String): ReverseNestedAggregationDefinition = reverseNestedAggregation(name)
 
     @deprecated("Use percentilesAggregation(...)", "5.0.0")
     def percentiles(name: String) = percentilesAggregation(name)
@@ -209,20 +209,20 @@ trait ElasticDsl
 
   @deprecated("use phraseSuggestion(name)", "5.0.0")
   case object phrase {
-    def suggestion(name: String) = phraseSuggestion(name)
+    def suggestion(name: String): PhraseSuggExpectsField = phraseSuggestion(name)
   }
 
   case object remove {
     @deprecated("Use dot syntax, eg removeAlias(alias", "5.0.0")
-    def alias(alias: String) = removeAlias(alias)
+    def alias(alias: String): RemoveAliasExpectsOn = removeAlias(alias)
   }
 
   @deprecated("use recoverIndex(index)", "5.0.0")
   case object recover {
     @deprecated("use putMapping(index)", "5.0.0")
-    def index(indexes: Iterable[String]): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes.toSeq)
+    def index(indexes: Iterable[String]): IndexRecoveryDefinition = IndexRecoveryDefinition(indexes.toSeq)
     @deprecated("use putMapping(index)", "5.0.0")
-    def index(indexes: String*): IndexRecoveryDefinition = new IndexRecoveryDefinition(indexes)
+    def index(indexes: String*): IndexRecoveryDefinition = IndexRecoveryDefinition(indexes)
   }
 
   @deprecated("use refreshIndex(index)", "5.0.0")
@@ -267,13 +267,13 @@ trait ElasticDsl
     def index(name: String) = CreateIndexDefinition(name)
 
     @deprecated("use createSnapshot(name)", "5.0.0")
-    def snapshot(name: String) = createSnapshot(name)
+    def snapshot(name: String): CreateSnapshotExpectsIn = createSnapshot(name)
 
     @deprecated("use createRepository(name)", "5.0.0")
-    def repository(name: String) = createRepository(name)
+    def repository(name: String): CreateRepositoryExpectsType = createRepository(name)
 
     @deprecated("use createTemplate(name)", "5.0.0")
-    def template(name: String) = createTemplate(name)
+    def template(name: String): CreateIndexTemplateExpectsPattern = createTemplate(name)
   }
 
   case object delete {
@@ -287,7 +287,7 @@ trait ElasticDsl
     def index(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
 
     @deprecated("use deleteSnapshot(name)", "5.0.0")
-    def snapshot(name: String) = deleteSnapshot(name)
+    def snapshot(name: String): DeleteSnapshotExpectsIn = deleteSnapshot(name)
 
     @deprecated("use deleteTemplate(name)", "5.0.0")
     def template(name: String) = DeleteIndexTemplateDefinition(name)
@@ -302,7 +302,7 @@ trait ElasticDsl
 
   case object script {
     @deprecated("use scriptSort(script).typed(ScriptSortType)", "5.0.0")
-    def sort(script: ScriptDefinition) = scriptSort(script)
+    def sort(script: ScriptDefinition): ScriptSortExpectsType = scriptSort(script)
     @deprecated("use scriptField(name)", "5.0.0")
     def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
@@ -348,7 +348,7 @@ trait ElasticDsl
     def alias(aliases: String*): GetAliasDefinition = GetAliasDefinition(aliases)
 
     @deprecated("use clusterStats()", "5.0.0")
-    def cluster(stats: StatsKeyword): ClusterStatsDefinition = new ClusterStatsDefinition
+    def cluster(stats: StatsKeyword): ClusterStatsDefinition = ClusterStatsDefinition()
 
     @deprecated("use clusterHealth()", "5.0.0")
     def cluster(health: HealthKeyword): ClusterHealthDefinition = clusterHealth()
@@ -369,10 +369,10 @@ trait ElasticDsl
     def template(name: String): GetIndexTemplateDefinition = GetIndexTemplateDefinition(name)
 
     @deprecated("use getSnapshot(names)", "5.0.0")
-    def snapshot(names: Iterable[String]) = getSnapshot(names.toSeq)
+    def snapshot(names: Iterable[String]): GetSnapshotExpectsFrom = getSnapshot(names.toSeq)
 
     @deprecated("use getSnapshot(names)", "5.0.0")
-    def snapshot(names: String*) = getSnapshot(names)
+    def snapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
   }
 
   case object close {

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
-import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterStateDefinition}
+import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition, ClusterStatsDefinition}
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequestBuilder, ClusterHealthResponse}
 import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequestBuilder, ClusterUpdateSettingsResponse}
 import org.elasticsearch.action.admin.cluster.state.{ClusterStateRequestBuilder, ClusterStateResponse}
@@ -10,12 +10,7 @@ import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
 
-trait ClusterDsl {
-
-  def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
-  def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
-
-  def clusterStats() = new ClusterStatsDefinition
+trait ClusterExecutables {
 
   implicit object ClusterHealthDefinitionExecutable
     extends Executable[ClusterHealthDefinition, ClusterHealthResponse, ClusterHealthResponse] {
@@ -71,26 +66,5 @@ trait ClusterDsl {
         }
       )
     }
-  }
-}
-
-class ClusterStatsDefinition
-
-case class ClusterSettingsDefinition(persistentSettings: Map[String, String],
-                                     transientSettings: Map[String, String]) {
-
-  import scala.collection.JavaConverters._
-
-  private[elastic4s] def build(builder: ClusterUpdateSettingsRequestBuilder): ClusterUpdateSettingsRequestBuilder = {
-    builder.setPersistentSettings(persistentSettings.asJava)
-    builder.setTransientSettings(transientSettings.asJava)
-  }
-
-  def persistentSettings(settings: Map[String, String]): ClusterSettingsDefinition = {
-    copy(persistentSettings = settings)
-  }
-
-  def transientSettings(settings: Map[String, String]): ClusterSettingsDefinition = {
-    copy(transientSettings = settings)
   }
 }
