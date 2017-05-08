@@ -18,7 +18,8 @@ case class TermsAggregationDefinition(name: String,
                                       executionHint: Option[String] = None,
                                       shardMinDocCount: Option[Long] = None,
                                       collectMode: Option[Aggregator.SubAggCollectionMode] = None,
-                                      order: Option[Terms.Order] = None,
+                                      _oldOrder: Option[Terms.Order] = None,
+                                      order: Option[TermsOrder] = None,
                                       shardSize: Option[Int] = None,
                                       includeExclude: Option[IncludeExclude] = None,
                                       subaggs: Seq[AbstractAggregation] = Nil,
@@ -37,7 +38,12 @@ case class TermsAggregationDefinition(name: String,
   def executionHint(hint: String): TermsAggregationDefinition = copy(executionHint = hint.some)
   def shardMinDocCount(min: Long): TermsAggregationDefinition = copy(shardMinDocCount = min.some)
   def collectMode(mode: Aggregator.SubAggCollectionMode): TermsAggregationDefinition = copy(collectMode = mode.some)
-  def order(order: Terms.Order): TermsAggregationDefinition = copy(order = order.some)
+
+  def order(order: TermsOrder): TermsAggregationDefinition = copy(order = order.some)
+
+  @deprecated("Use order(TermsOrder) and pass in _term, _count or aggregation name", "5.4.1")
+  def order(order: Terms.Order): TermsAggregationDefinition = copy(_oldOrder = order.some)
+
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
 
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
@@ -67,3 +73,5 @@ case class TermsAggregationDefinition(name: String,
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }
+
+case class TermsOrder(name: String, asc: Boolean = true)
