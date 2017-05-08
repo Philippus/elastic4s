@@ -39,7 +39,7 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
-      "io.netty"                              % "netty-all"                 % "4.1.7.Final",
+      "io.netty"                              % "netty-all"                 % "4.1.10.Final",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
       "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
       "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
@@ -59,7 +59,9 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
-      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
+      "com.carrotsearch"                      % "hppc"                      % "0.7.1",
+      "joda-time"                             % "joda-time"                 % "2.9.5"
     ))
   .dependsOn(core)
 
