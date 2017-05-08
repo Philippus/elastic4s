@@ -13,6 +13,7 @@ import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.index.admin._
+import com.sksamuel.elastic4s.http.index.mappings.PutMappingResponse
 import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
 import com.sksamuel.elastic4s.http.update.UpdateResponse
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
@@ -34,7 +35,6 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.action.search.{ClearScrollResponse => TcpClearScrollResponse}
 import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 
 import scala.collection.JavaConverters._
@@ -174,7 +174,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object DeleteByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, DeleteByQueryResponse] {
-    override def convert(response: BulkByScrollResponse) = {
+    override def convert(response: BulkByScrollResponse): DeleteByQueryResponse = {
       val field = classOf[BulkByScrollResponse].getDeclaredField("status")
       field.setAccessible(true)
       val status = field.get(response).asInstanceOf[BulkByScrollTask.Status]

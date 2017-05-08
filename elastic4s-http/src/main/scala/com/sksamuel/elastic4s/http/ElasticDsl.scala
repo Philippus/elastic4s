@@ -9,6 +9,7 @@ import com.sksamuel.elastic4s.http.delete.DeleteImplicits
 import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
 import com.sksamuel.elastic4s.http.index.admin.IndexAdminImplicits
+import com.sksamuel.elastic4s.http.index.mappings.MappingExecutables
 import com.sksamuel.elastic4s.http.index.{IndexImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
 import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
@@ -32,6 +33,7 @@ trait ElasticDsl
     with IndexAliasImplicits
     with IndexTemplateImplicits
     with LocksImplicits
+    with MappingExecutables
     with NodesImplicits
     with SearchImplicits
     with SearchTemplateImplicits

@@ -38,10 +38,6 @@ case class IndicesAliasResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 
-case class PutMappingResponse(acknowledged: Boolean) {
-  def success: Boolean = acknowledged
-}
-
 object IndexShardStoreResponse {
   case class StoreStatusResponse(indices: Map[String, IndexStoreStatus])
   case class IndexStoreStatus(shards: Map[String, ShardStoreStatus])

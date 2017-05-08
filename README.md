@@ -118,7 +118,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Get]                                     | `get(<id>).from(<index> / <type>)`        | yes | yes |
 | Get All Aliases                           | `getAllAliases()`                         | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
-| Get Mapping                               | `getMapping(<index> / <type>)`            |   | yes |
+| Get Mapping                               | `getMapping(<index> / <type>)`            | yes | yes |
 | Get Segments                              | `getSegments(<indexes>)`                  |   | yes |
 | Get Snapshot                              | `getSnapshot <name> from <repo>`          |   | yes |
 | Get Template                              | `getTemplate(<name>)`                     |   | yes |

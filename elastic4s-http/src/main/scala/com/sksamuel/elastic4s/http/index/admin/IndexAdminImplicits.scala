@@ -187,24 +187,4 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       client.async(method, endpoint, params.toMap, ResponseHandler.default)
     }
   }
-
-  implicit object PutMappingExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
-
-    override def execute(client: RestClient, request: PutMappingDefinition): Future[PutMappingResponse] = {
-      val method = "PUT"
-      val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
-
-      val params = scala.collection.mutable.Map.empty[String, Any]
-      request.updateAllTypes.foreach(params.put("update_all_types", _))
-      request.ignoreUnavailable.foreach(params.put("ignore_unavailable", _))
-      request.allowNoIndices.foreach(params.put("allow_no_indices", _))
-      request.expandWildcards.foreach(params.put("expand_wildcards", _))
-
-      val body = PutMappingBuilder(request).string()
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      logger.debug(s"Executing Put Mapping request to '$endpoint $body'")
-
-      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
-    }
-  }
 }
