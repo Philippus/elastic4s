@@ -2,20 +2,12 @@ package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
 import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
-
-case class Index(_index: String, _type: String, _id: String, version: Long, result: String, _shards: Shards)
-
-case class BulkResponseItem(index: Index)
-
-case class BulkResponse(took: Long,
-                        errors: Boolean,
-                        items: Seq[BulkResponseItem])
 
 trait BulkImplicits {
 

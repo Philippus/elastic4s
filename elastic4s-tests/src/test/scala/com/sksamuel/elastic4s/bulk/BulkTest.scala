@@ -45,6 +45,24 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
     }.await.found shouldBe true
   }
 
+  it should "return details of which items succeeded and failed" in {
+    val result = execute {
+      bulk(
+        update(2).in("chemistry/elements").doc("atomicweight" -> 2, "name" -> "helium"),
+        indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
+        update(6).in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
+        delete(10).from("chemistry/elements")
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await
+
+    result.hasFailures shouldBe true
+    result.hasSuccesses shouldBe true
+    result.errors shouldBe true
+
+    result.failures.map(_.itemId).toSet shouldBe Set(2, 3)
+    result.successes.map(_.itemId).toSet shouldBe Set(0, 1)
+  }
+
   it should "handle multiple update operations" in {
 
     execute {

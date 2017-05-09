@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.index.RichIndexResponse
+import org.elasticsearch.action.DocWriteRequest.OpType
 import org.elasticsearch.action.bulk.BulkItemResponse
 import org.elasticsearch.action.bulk.BulkItemResponse.Failure
 import org.elasticsearch.action.delete.DeleteResponse
@@ -15,17 +16,17 @@ case class RichBulkItemResponse(original: BulkItemResponse) {
   def failureMessage: String = original.getFailureMessage
   def failureMessageOpt: Option[String] = Option(failureMessage)
 
-  def index = original.getIndex
-  def `type` = original.getType
-  def id = original.getId
+  def index: String = original.getIndex
+  def `type`: String = original.getType
+  def id: String = original.getId
   def ref = DocumentRef(index, `type`, id)
-  def version = original.getVersion
+  def version: Long = original.getVersion
 
-  def itemId = original.getItemId
-  def opType = original.getOpType
+  def itemId: Int = original.getItemId
+  def opType: OpType = original.getOpType
 
   @deprecated("use toDeleteResult", "5.0.0")
-  def deleteResponse: Option[DeleteResponse] = original.getResponse match {
+  def deleteResponse(): Option[DeleteResponse] = original.getResponse match {
     case d: DeleteResponse => Some(d)
     case _ => None
   }

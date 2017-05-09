@@ -726,6 +726,12 @@ First you have to add an additional dependeny to your `build.sbt`
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "x.x.x"
 ```
 
+or
+
+```scala
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % "x.x.x"
+```
+
 Import the new API with
 
 ```scala

@@ -1,22 +1,19 @@
 package com.sksamuel.elastic4s.http.get
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.Hit
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 
-case class GetResponse(private val _id: String,
-                       private val _index: String,
-                       private val _type: String,
-                       private val _version: Long,
+case class GetResponse(@JsonProperty("_id") id: String,
+                       @JsonProperty("_index") index: String,
+                       @JsonProperty("_type") `type`: String,
+                       @JsonProperty("_version") version: Long,
                        found: Boolean,
                        fields: Map[String, AnyRef],
                        private val _source: Map[String, AnyRef]
                       ) extends Hit {
 
-  override def index: String = _index
-  override def `type`: String = _type
-  override def id: String = _id
-  override def version: Long = _version
   override def exists: Boolean = found
   override def score: Float = 0
 

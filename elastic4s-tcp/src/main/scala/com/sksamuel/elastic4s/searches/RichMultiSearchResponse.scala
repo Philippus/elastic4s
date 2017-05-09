@@ -5,7 +5,7 @@ import org.elasticsearch.action.search.MultiSearchResponse
 
 case class RichMultiSearchResponse(original: MultiSearchResponse) {
 
-  def size = responses.size
+  def size: Int = responses.size
 
   def responses: Seq[RichMultiSearchResponseItem] = original.getResponses.map(RichMultiSearchResponseItem.apply)
 

@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.testkit
 import java.util
 import java.util.Locale
 
+import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.Shards
-import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, Index}
+import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, BulkResponseItems}
 import com.sksamuel.elastic4s.http.cluster.ClusterHealthResponse
 import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
 import com.sksamuel.elastic4s.http.explain.ExplainResponse
@@ -81,15 +82,24 @@ object ResponseConverterImplicits {
       response.took.toMillis,
       response.hasFailures,
       response.items.map { x =>
-        BulkResponseItem(
-          Index(
+        BulkResponseItems(
+          BulkResponseItem(
+            x.itemId,
             x.index,
             x.`type`,
             x.id,
             x.version,
-            x.original.status().getStatus.toString, // TODO: The model might need to be changed to use Int instead
-            null // TODO: Will likely need to be obtained from original.getResponse
-          ))
+            false,
+            false,
+            true,
+            "Created",
+            x.original.status.getStatus,
+            None,
+            None
+          ).some,
+          None,
+          None
+        )
       }
     )
   }
@@ -98,10 +108,10 @@ object ResponseConverterImplicits {
     override def convert(response: RichSearchResponse) = SearchResponse(
       response.tookInMillis.toInt,
       response.isTimedOut,
-      response.isTerminatedEarly,
+      response.isTerminatedEarly.getOrElse(false),
       null, // TODO
       Shards(response.totalShards, response.shardFailures.length, response.successfulShards),
-      response.scrollId,
+      Option(response.scrollId),
       null, // TODO: Aggregations are still being working on
       SearchHits(
         response.totalHits.toInt,
