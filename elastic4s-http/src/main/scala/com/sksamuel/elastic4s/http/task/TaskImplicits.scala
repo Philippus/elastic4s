@@ -34,7 +34,6 @@ trait TaskImplicits {
 
   implicit object ListTaskHttpExecutable extends HttpExecutable[ListTasksDefinition, ListTaskResponse] {
 
-    val method = "GET"
     val endpoint = s"/_tasks"
 
     override def execute(client: RestClient, request: ListTasksDefinition): Future[ListTaskResponse] = {
@@ -50,8 +49,7 @@ trait TaskImplicits {
         params.put("wait_for_completion", "true")
       request.groupBy.foreach(params.put("group_by", _))
 
-      val fn = client.performRequestAsync(method, endpoint, params.asJava, _: ResponseListener)
-      client.async(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, ResponseHandler.default)
     }
   }
 

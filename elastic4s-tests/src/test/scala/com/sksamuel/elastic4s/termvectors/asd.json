@@ -1,0 +1,32 @@
+{
+    "_index": "hansz",
+    "_type": "albums",
+    "_id": "1",
+    "_version": 1,
+    "found": true,
+    "took": 1,
+    "term_vectors": {
+        "name": {
+            "field_statistics": {
+                "sum_doc_freq": 1,
+                "doc_count": 1,
+                "sum_ttf": 1
+            },
+            "terms": {
+                "intersteller": {
+                    "doc_freq": 1,
+                    "ttf": 1,
+                    "term_freq": 1,
+                    "tokens": [
+                        {
+                            "position": 0,
+                            "start_offset": 0,
+                            "end_offset": 12
+                        }
+                    ],
+                    "score": 1.0
+                }
+            }
+        }
+    }
+}

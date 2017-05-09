@@ -13,7 +13,7 @@ case class TermVectorsDefinition(indexAndType: IndexAndType,
                                  preference: Option[String] = None,
                                  realtime: Option[Boolean] = None,
                                  routing: Option[String] = None,
-                                 fields: Option[Seq[String]] = None,
+                                 fields: Seq[String] = Nil,
                                  termStatistics: Option[Boolean] = None,
                                  version: Option[Long] = None,
                                  versionType: Option[String] = None,
@@ -34,8 +34,8 @@ case class TermVectorsDefinition(indexAndType: IndexAndType,
   def preference(str: String): TermVectorsDefinition = copy(preference = Option(str))
   def realtime(boolean: Boolean): TermVectorsDefinition = copy(realtime = Option(boolean))
   def routing(str: String): TermVectorsDefinition = copy(routing = Option(str))
-  def fields(fields: Iterable[String]): TermVectorsDefinition = copy(fields = Option(fields.toSeq))
-  def fields(fields: String*): TermVectorsDefinition = copy(fields = Option(fields.toSeq))
+  def fields(fields: Iterable[String]): TermVectorsDefinition = copy(fields = fields.toSeq)
+  def fields(fields: String*): TermVectorsDefinition = copy(fields = fields.toSeq)
   def termStatistics(boolean: Boolean): TermVectorsDefinition = copy(termStatistics = Option(boolean))
   def version(version: Long): TermVectorsDefinition = copy(version = Option(version))
   def versionType(versionType: String): TermVectorsDefinition = copy(versionType = versionType.some)

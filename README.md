@@ -258,6 +258,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)`    |   | yes |
 | [Search]                                  | `search(<index> / <type>).query(<query>)` | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
+| Term Vectors                              | `termVectors(<index>, <type>, <id>)`      | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>`         | yes | yes |
 | [Update]                                  | `update(<id>).in(<index> / <type>)`       | yes  | yes |
 | [Validate]                                | `validateIn(<index/type>).query(<query>)` | yes | yes |
