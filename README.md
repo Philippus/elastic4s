@@ -71,6 +71,9 @@ See full [changelog](#changelog).
 
 ## Quick Start
 
+We have created sample projects for http, tcp in both sbt, maven and gradle. Check them out here:
+https://github.com/sksamuel/elastic4s/tree/master/samples
+
 To get started you will need to add a dependency to either
 
 * [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http)
