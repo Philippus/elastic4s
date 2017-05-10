@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sksamuel.elastic4s</groupId>
-    <artifactId>elastic4s-http-client-maven</artifactId>
+    <artifactId>elastic4s-tcp-client-maven</artifactId>
     <packaging>pom</packaging>
     <version>1.0.1</version>
 
@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.sksamuel.elastic4s</groupId>
-            <artifactId>elastic4s-http_2.12</artifactId>
+            <artifactId>elastic4s-tcp_2.12</artifactId>
             <version>${elastic4sVersion}</version>
         </dependency>
     </dependencies>

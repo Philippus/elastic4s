@@ -1,16 +1,14 @@
 package com.sksamuel.elastic4s.samples
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.HttpClient
-import com.sksamuel.elastic4s.http.search.SearchResponse
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, TcpClient}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
-object HttpClientExampleApp extends App {
+object TcpClientExampleApp extends App {
 
   // you must import the DSL to use the syntax helpers
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
-  val client = HttpClient(ElasticsearchClientUri("localhost", 9200))
+  val client = TcpClient.transport(ElasticsearchClientUri("localhost", 9300))
 
   client.execute {
     bulk(
@@ -19,12 +17,12 @@ object HttpClientExampleApp extends App {
     ).refresh(RefreshPolicy.WAIT_UNTIL)
   }.await
 
-  val result: SearchResponse = client.execute {
+  val result = client.execute {
     search("myindex").matchQuery("capital", "ulaanbaatar")
   }.await
 
   // prints out the original json
-  println(result.hits.hits.head.sourceAsString)
+  println(result.hits.head.sourceAsString)
 
   client.close()
 
