@@ -64,8 +64,6 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "com.carrotsearch"                      % "hppc"                      % "0.7.1",
       "joda-time"                             % "joda-time"                 % "2.9.9",
       "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,
-      "org.elasticsearch.plugin"              % "transport-netty3-client"   % "5.4.0",
-      "org.elasticsearch.plugin"              % "transport-netty4-client"   % "5.4.0",
       "com.tdunning"                          % "t-digest"                  % "3.1"
     ))
   .dependsOn(core)
@@ -82,7 +80,7 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
       "org.apache.logging.log4j"      % "log4j-api"               % Log4jVersion  % "test",
       "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
       "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
+      "com.fasterxml.jackson.module" %% "jackson-module-scala"    % JacksonVersion exclude("org.scala-lang", "scala-library")
     )
   )
   .dependsOn(core)

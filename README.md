@@ -252,6 +252,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget]                                | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
 | [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
+| Node Info                                 | `nodeInfo(<optional node list>`           | yes | |
+| Node Stats                                | `nodeStats(<optional node list>).stats(<stats>`| yes | |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
 | Recover Index                             | `recoverIndex(<name>)`                    | yes | yes |

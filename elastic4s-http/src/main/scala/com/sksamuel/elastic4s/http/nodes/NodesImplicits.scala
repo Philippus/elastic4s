@@ -1,56 +1,104 @@
 package com.sksamuel.elastic4s.http.nodes
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.nodes.NodeStatsDefinition
-import org.elasticsearch.client.{ResponseListener, RestClient}
+import com.sksamuel.elastic4s.nodes.{NodeInfoDefinition, NodeStatsDefinition}
+import com.sksamuel.exts.collection.Maps
+import com.typesafe.config.{Config, ConfigFactory}
+import org.elasticsearch.client.RestClient
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
-case class SwapStats(total_in_bytes: Long, free_in_bytes: Long, used_in_bytes: Long) {
-  def totalInBytes: Long = total_in_bytes
-  def freeInBytes: Long = free_in_bytes
-  def usedInBytes: Long = used_in_bytes
+case class SwapStats(@JsonProperty("total_in_bytes") totalInBytes: Long,
+                     @JsonProperty("free_in_bytes") freeInBytes: Long,
+                     @JsonProperty("used_in_bytes") usedInBytes: Long)
+
+case class MemoryStats(@JsonProperty("total_in_bytes") totalInBytes: Long,
+                       @JsonProperty("free_in_bytes") freeInBytes: Long,
+                       @JsonProperty("used_in_bytes") usedInBytes: Long,
+                       @JsonProperty("free_percent") freePercent: Int,
+                       @JsonProperty("used_percent") usedPercent: Int)
+
+case class OsStats(@JsonProperty("cpu_percent") cpuPercent: Int,
+                   @JsonProperty("load_average") loadAverage: Double,
+                   mem: MemoryStats,
+                   swap: SwapStats)
+
+case class NodeStats(name: String,
+                     @JsonProperty("transport_address") transportAddress: String,
+                     host: String,
+                     ip: Seq[String],
+                     os: Option[OsStats])
+
+case class NodesStatsResponse(@JsonProperty("cluster_name") clusterName: String,
+                              nodes: Map[String, NodeStats])
+
+case class NodeInfoResponse(@JsonProperty("cluster_name") clusterName: String,
+                            nodes: Map[String, NodeInfo])
+
+case class NodeInfo(name: String,
+                    @JsonProperty("transport_address") transportAddress: String,
+                    host: String,
+                    ip: String,
+                    version: String,
+                    @JsonProperty("build_hash") buildHash: String,
+                    @JsonProperty("total_indexing_buffer") totalIndexingBuffer: Long,
+                    roles: Seq[String],
+                    @JsonProperty("settings") settingsAsMap: Map[String, AnyRef],
+                    os: OsInfo,
+                    process: Process,
+                    transport: Transport,
+                    @JsonProperty("thread_pool") threadPools: Map[String, ThreadPool]) {
+
+  def settings: Config = ConfigFactory.parseMap(Maps.deepAsJava(settingsAsMap))
 }
-case class MemoryStats(total_in_bytes: Long, free_in_bytes: Long, used_in_bytes: Long, free_percent: Int, used_percent: Int) {
-  def totalInBytes: Long = total_in_bytes
-  def freeInBytes: Long = free_in_bytes
-  def usedInBytes: Long = used_in_bytes
-  def freePercent: Int = free_percent
-  def usedPercent: Int = used_percent
+
+case class Transport(@JsonProperty("bound_address") boundAddress: Seq[String],
+                     @JsonProperty("publish_address") publishAddress: String)
+
+case class ThreadPool(`type`: String,
+                      @JsonProperty("keep_alive") keepAlive: Option[String],
+                      min: Long,
+                      max: Long,
+                      queue_size: Long)
+
+case class Process(@JsonProperty("refresh_interval_in_millis") refreshIntervalInMillis: Long,
+                   @JsonProperty("id") id: String,
+                   @JsonProperty("mlockall") mlockall: Boolean) {
+  def refreshInterval: Duration = refreshIntervalInMillis.millis
 }
-case class OsStats(cpu_percent: Int, load_average: Double, mem: MemoryStats, swap: SwapStats){
-  def cpuPercent: Int = cpu_percent
-  def loadAverage: Double = load_average
-}
-case class NodeStats(name: String, transport_address: String, host: String, ip: Seq[String], os: Option[OsStats]) {
-  def transportAddress: String = transport_address
-}
-case class NodesStatsResponse(cluster_name: String, nodes: Map[String, NodeStats]) {
-  def clusterName: String = cluster_name
+
+case class OsInfo(@JsonProperty("refresh_interval_in_millis") refreshIntervalInMillis: Long,
+                  name: String,
+                  arch: String,
+                  version: String,
+                  @JsonProperty("available_processors") availableProcessors: Int,
+                  @JsonProperty("allocated_processors") allocatedProcessors: Int) {
+  def refreshInterval: Duration = refreshIntervalInMillis.millis
 }
 
 trait NodesImplicits {
 
-  implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
-    override def execute(client: RestClient,
-                         request: NodeStatsDefinition): Future[NodesStatsResponse] = {
-      val method = "GET"
-      val endpoint = buildUrlFromDefinition(request)
-      logger.debug(s"Accesing endpoint $endpoint")
-      client.async(method, endpoint, Map.empty, ResponseHandler.default)
-    }
-
-    private def buildUrlFromDefinition(definition: NodeStatsDefinition): String = {
-      val baseUrl = "/_nodes"
-
-      if (definition.nodes.nonEmpty) {
-        baseUrl + "/" + definition.nodes.mkString(",") + "/stats/" + definition.stats.mkString(",")
+  implicit object NodeInfoExecutable extends HttpExecutable[NodeInfoDefinition, NodeInfoResponse] {
+    override def execute(client: RestClient, request: NodeInfoDefinition): Future[NodeInfoResponse] = {
+      val endpoint = if (request.nodes.isEmpty) {
+        "/_nodes/"
       } else {
-        baseUrl + "/stats/" + definition.stats.mkString(",")
+        "/_nodes/" + request.nodes.mkString(",")
       }
+      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
-
+  implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
+    override def execute(client: RestClient, request: NodeStatsDefinition): Future[NodesStatsResponse] = {
+      val endpoint = if (request.nodes.nonEmpty) {
+        "/_nodes/" + request.nodes.mkString(",") + "/stats/" + request.stats.mkString(",")
+      } else {
+        "/_nodes/stats/" + request.stats.mkString(",")
+      }
+      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
+    }
+  }
 }
