@@ -42,10 +42,10 @@ case class SearchHit(@JsonProperty("_id") id: String,
         max_score = v("max_score").asInstanceOf[Double],
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
-            _nested = hits("_nested").asInstanceOf[Map[String, AnyRef]],
-            _score = hits("_score").asInstanceOf[Double],
-            _source = hits("_source").asInstanceOf[Map[String, AnyRef]],
-            highlight = hits("highlight").asInstanceOf[Map[String, Seq[String]]]
+            nested = hits("_nested").asInstanceOf[Map[String, AnyRef]],
+            score = hits("_score").asInstanceOf[Double],
+            source = hits("_source").asInstanceOf[Map[String, AnyRef]],
+            highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty)
           )
         }
       )
@@ -64,9 +64,9 @@ case class InnerHits(total: Int,
                      max_score: Double,
                      hits: Seq[InnerHit])
 
-case class InnerHit(_nested: Map[String, AnyRef],
-                    _score: Double,
-                    _source: Map[String, AnyRef],
+case class InnerHit(nested: Map[String, AnyRef],
+                    score: Double,
+                    source: Map[String, AnyRef],
                     highlight: Map[String, Seq[String]])
 
 case class SuggestionEntry(term: String) {
