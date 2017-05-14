@@ -140,6 +140,9 @@ case class SearchResponse(took: Int,
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
+  def aggregationsAsString: String = SourceAsContentBuilder(aggregations).string()
+  def aggregationsAsMap: Map[String, AnyRef] = aggregations
+
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
