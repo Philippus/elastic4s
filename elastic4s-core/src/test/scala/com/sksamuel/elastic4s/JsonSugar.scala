@@ -1,12 +1,25 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.commodityvectors.snapshotmatchers.SnapshotSerializer
+import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import org.elasticsearch.common.xcontent.XContentBuilder
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait JsonSugar extends Matchers {
+
+  implicit lazy val xContentSerializer = new SnapshotSerializer[XContentBuilder] {
+    val mapper = new ObjectMapper with ScalaObjectMapper
+    mapper.registerModule(DefaultScalaModule)
+    mapper.enable(SerializationFeature.INDENT_OUTPUT)
+
+    override def serialize(in: XContentBuilder): String = {
+      val json = mapper.readTree(in.string())
+      mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)
+    }
+  }
 
   protected val mapper = new ObjectMapper with ScalaObjectMapper
   mapper.registerModule(DefaultScalaModule)
