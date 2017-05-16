@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, Fuzziness}
 import org.elasticsearch.common.unit
 import org.elasticsearch.common.xcontent.ToXContent
@@ -39,7 +40,8 @@ object CompletionSuggestionBuilderFn {
     }
 
     sugg.regex.foreach { regex =>
-      builder.regex(regex, RegexOptions.builder().setFlags())
+      val flags = sugg.regexFlags.map(EnumConversions.regexpFlags)
+      builder.regex(regex, RegexOptions.builder().setFlags(flags.map(_.name).mkString("|")).build)
     }
 
     if (sugg.contexts.nonEmpty) {

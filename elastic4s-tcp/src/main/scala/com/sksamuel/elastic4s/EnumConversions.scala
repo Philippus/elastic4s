@@ -16,6 +16,8 @@ import org.elasticsearch.common.lucene.search.function.{FieldValueFactorFunction
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 
+import scala.language.implicitConversions
+
 object EnumConversions {
 
   def indicesopts(opts: IndicesOptions): org.elasticsearch.action.support.IndicesOptions = {

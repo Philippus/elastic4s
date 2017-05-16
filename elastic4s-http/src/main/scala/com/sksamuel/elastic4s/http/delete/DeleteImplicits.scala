@@ -5,9 +5,9 @@ import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinit
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.concurrent.Future
 
@@ -15,7 +15,7 @@ object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
-    builder.rawField("query", QueryBuilderFn(request.query).bytes, XContentType.JSON)
+    builder.rawField("query", QueryBuilderFn(request.query))
     builder.endObject()
     builder
   }
