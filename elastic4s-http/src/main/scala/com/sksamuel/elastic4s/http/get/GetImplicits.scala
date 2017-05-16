@@ -57,7 +57,7 @@ trait GetImplicits {
         if (!context.fetchSource)
           params.put("_source", "false")
         else {
-          if (context.includes().nonEmpty) {
+          if (context.includes.nonEmpty) {
             params.put("_source_include", context.includes.mkString(","))
           }
           if (context.excludes.nonEmpty) {

@@ -10,9 +10,6 @@ import scala.collection.JavaConverters._
 
 case class GetMappingsResult(original: GetMappingsResponse) {
 
-  @deprecated("use .mappings to use scala maps, or use original.getMappings to use the java client", "2.0")
-  def getMappings = original.getMappings
-
   def mappingsFor(index: String): Map[String, MappingMetaData] = mappings.getOrElse(index, Map.empty)
 
   def mappingFor(indexAndType: IndexAndType): MappingMetaData = mappings(indexAndType.index)(indexAndType.`type`)

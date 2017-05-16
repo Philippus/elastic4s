@@ -142,19 +142,19 @@ trait ElasticDsl
     def scriptedMetric(name: String) = scriptedMetricAggregation(name)
 
     @deprecated("Use sigTermsAggregation(...)", "5.0.0")
-    def sigTerms(name: String) = sigTermsAggregation(name)
+    def sigTerms(name: String): SigTermsAggregationDefinition = sigTermsAggregation(name)
 
     @deprecated("Use statsAggregation(...)", "5.0.0")
-    def stats(name: String) = statsAggregation(name)
+    def stats(name: String): StatsAggregationDefinition = statsAggregation(name)
 
     @deprecated("Use sumAggregation(...)", "5.0.0")
-    def sum(name: String) = sumAggregation(name)
+    def sum(name: String): SumAggregationDefinition = sumAggregation(name)
 
     @deprecated("Use termsAggregation(...)", "5.0.0")
-    def terms(name: String) = termsAggregation(name)
+    def terms(name: String): TermsAggregationDefinition = termsAggregation(name)
 
     @deprecated("Use topHitsAggregation(...)", "5.0.0")
-    def topHits(name: String) = topHitsAggregation(name)
+    def topHits(name: String): TopHitsAggregationDefinition = topHitsAggregation(name)
   }
 
   def innerHit(name: String): InnerHitDefinition = InnerHitDefinition(name)
@@ -248,12 +248,6 @@ trait ElasticDsl
 
   def fuzzyQuery(name: String, value: Any) = FuzzyQueryDefinition(name, value)
 
-  @deprecated("instead search on the `_index` field", "5.0.0")
-  def indicesQuery(indices: String*) = new {
-    @deprecated("instead search on the `_index` field", "5.0.0")
-    def query(query: QueryDefinition) = IndicesQueryDefinition(indices, query)
-  }
-
   case object create {
 
     @deprecated("use createIndex(name)", "5.0.0")
@@ -335,7 +329,7 @@ trait ElasticDsl
   case object get {
 
     @deprecated("use get(id)", "5.0.0")
-    def id(id: Any) = get(id)
+    def id(id: Any): GetExpectsFrom = get(id)
 
     @deprecated("use getAlias(alias)", "5.0.0")
     def alias(aliases: String*): GetAliasDefinition = GetAliasDefinition(aliases)

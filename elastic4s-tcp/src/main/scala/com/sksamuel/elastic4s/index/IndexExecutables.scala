@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.index
 
 import com.sksamuel.elastic4s.indexes.{IndexDefinition, IndexShowImplicits}
-import com.sksamuel.elastic4s.{Executable, XContentFieldValueWriter}
+import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.{EnumConversions, Executable, XContentFieldValueWriter}
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.common.xcontent.XContentFactory
 
 import scala.concurrent.Future
 
@@ -25,9 +25,9 @@ trait IndexExecutables extends IndexShowImplicits {
           builder.setSource(source)
       }
       t.parent.foreach(builder.setParent)
-      t.refresh.foreach(builder.setRefreshPolicy)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
       t.version.foreach(builder.setVersion)
-      t.versionType.foreach(builder.setVersionType)
+      t.versionType.map(EnumConversions.versionType).foreach(builder.setVersionType)
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
       t.timestamp.foreach(builder.setTimestamp)

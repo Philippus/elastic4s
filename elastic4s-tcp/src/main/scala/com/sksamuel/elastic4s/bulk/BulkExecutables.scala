@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.{EnumConversions, Executable}
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteExecutables}
 import com.sksamuel.elastic4s.index.IndexExecutables
 import com.sksamuel.elastic4s.indexes.IndexDefinition
@@ -19,7 +19,7 @@ trait BulkExecutables {
     override def apply(c: Client, t: BulkDefinition): Future[RichBulkResponse] = {
       val builder = c.prepareBulk()
       t.timeout.foreach(builder.setTimeout)
-      t.refresh.foreach(builder.setRefreshPolicy)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
       t.requests.foreach {
         case index: IndexDefinition => builder.add(execs.IndexDefinitionExecutable.builder(c, index))
         case delete: DeleteByIdDefinition => builder.add(execs.DeleteByIdDefinitionExecutable.builder(c, delete))

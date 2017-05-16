@@ -17,19 +17,18 @@ trait DeleteExecutables {
     extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
 
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
-      val _builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
-      t.routing.foreach(_builder.setRouting)
-      t.refresh.map(EnumConversions.refreshPolicy).foreach(_builder.setRefreshPolicy)
-      t.parent.foreach(_builder.setParent)
-      t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
-      t.version.foreach(_builder.setVersion)
-      t.versionType.foreach(_builder.setVersionType)
-      _builder
+      val builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
+      t.routing.foreach(builder.setRouting)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
+      t.parent.foreach(builder.setParent)
+      t.waitForActiveShards.foreach(builder.setWaitForActiveShards)
+      t.version.foreach(builder.setVersion)
+      t.versionType.map(EnumConversions.versionType).foreach(builder.setVersionType)
+      builder
     }
 
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
-      val _builder = builder(c, t)
-      injectFuture(_builder.execute)
+      injectFuture(builder(c, t).execute)
     }
   }
 

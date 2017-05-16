@@ -20,7 +20,7 @@ object SigTermsAggregationBuilder {
 
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)
-    agg.heuristic.foreach(builder.significanceHeuristic)
+   // agg.heuristic.foreach(builder.significanceHeuristic)
     builder
   }
 }

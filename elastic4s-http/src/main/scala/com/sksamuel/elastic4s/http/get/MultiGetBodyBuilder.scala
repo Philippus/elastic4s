@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.get
 
 import com.sksamuel.elastic4s.get.MultiGetDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MultiGetBodyBuilder {
   def apply(request: MultiGetDefinition): XContentBuilder = {

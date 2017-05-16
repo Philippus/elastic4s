@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.{Executable, Indexes}
+import com.sksamuel.elastic4s.{EnumConversions, Executable, Indexes}
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
 import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsRequest, UpdateSettingsResponse}
@@ -37,7 +37,7 @@ case class GetSettingsDefinition(indexes: Indexes,
 
   def build: GetSettingsRequest = {
     val req = new GetSettingsRequest().indices(indexes.values: _*)
-    options.foreach(req.indicesOptions)
+    options.map(EnumConversions.indicesopts).foreach(req.indicesOptions)
     req
   }
 
@@ -53,7 +53,7 @@ case class UpdateSettingsDefinition(indices: Indexes,
     val req = new UpdateSettingsRequest(indices.values: _*)
     req.settings(settings.asJava)
     preserveExisting.foreach(req.setPreserveExisting)
-    options.foreach(req.indicesOptions)
+    options.map(EnumConversions.indicesopts).foreach(req.indicesOptions)
     req
   }
 

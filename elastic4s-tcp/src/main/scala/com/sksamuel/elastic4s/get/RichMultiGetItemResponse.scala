@@ -25,9 +25,9 @@ case class RichMultiGetItemResponse(original: MultiGetItemResponse) {
   @deprecated("use failure", "5.0.0")
   def getFailure = original.getFailure
 
-  def index = original.getIndex
+  def index: String = original.getIndex
   def `type`: String = original.getType
-  def id = original.getId
+  def id: String = original.getId
   def ref = DocumentRef(index, `type`, id)
 
   def to[T: HitReader]: T = responseTry match {

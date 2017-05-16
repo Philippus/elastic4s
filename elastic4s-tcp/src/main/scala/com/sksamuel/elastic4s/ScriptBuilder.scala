@@ -1,17 +1,13 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptType}
+import com.sksamuel.elastic4s.script.ScriptDefinition
 import org.elasticsearch.script.Script
 
 import scala.collection.JavaConverters._
 
 object ScriptBuilder {
 
-  implicit def toESScriptType(scriptType: ScriptType): org.elasticsearch.script.ScriptType = scriptType match {
-    case ScriptType.File => org.elasticsearch.script.ScriptType.FILE
-    case ScriptType.Inline => org.elasticsearch.script.ScriptType.INLINE
-    case ScriptType.Stored => org.elasticsearch.script.ScriptType.STORED
-  }
+  import EnumConversions._
 
   def apply(script: ScriptDefinition): Script = {
     var options = script.options.asJava

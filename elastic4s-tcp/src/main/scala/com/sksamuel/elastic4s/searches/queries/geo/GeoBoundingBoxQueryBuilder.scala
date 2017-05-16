@@ -12,7 +12,7 @@ object GeoBoundingBoxQueryBuilder {
     q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.setValidationMethod)
     q.ignoreUnmapped.foreach(builder.ignoreUnmapped)
     q.queryName.foreach(builder.queryName)
-    q.geoExecType.map(_.name).map(GeoExecType.valueOf).foreach(builder.`type`)
+    q.geoExecType.map(EnumConversions.execType).foreach(builder.`type`)
     builder
   }
 }

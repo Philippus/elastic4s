@@ -3,7 +3,8 @@ package com.sksamuel.elastic4s.searches.queries
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.exts.OptionImplicits._
 
-sealed trait SimpleQueryStringFlag {
+sealed trait SimpleQueryStringFlag
+object SimpleQueryStringFlag {
   case object ALL extends SimpleQueryStringFlag
   case object NONE extends SimpleQueryStringFlag
   case object AND extends SimpleQueryStringFlag

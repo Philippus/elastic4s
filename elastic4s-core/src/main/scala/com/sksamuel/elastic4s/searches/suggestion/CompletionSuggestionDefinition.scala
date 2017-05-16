@@ -36,7 +36,7 @@ case class CompletionSuggestionDefinition(name: String,
                                           contexts: Map[String, Seq[CategoryContext]] = Map.empty) extends SuggestionDefinition {
 
   def regex(regex: String): CompletionSuggestionDefinition = copy(regex = regex.some)
-  def regexOptions(flags: Seq[RegexpFlag]): CompletionSuggestionDefinition = copy(regexFlags = flags)
+  def regexFlags(flags: Seq[RegexpFlag]): CompletionSuggestionDefinition = copy(regexFlags = flags)
   def fuzzyMinLength(min: Int): CompletionSuggestionDefinition = copy(fuzzyMinLength = min.some)
   def maxDeterminizedStates(states: Int): CompletionSuggestionDefinition = copy(maxDeterminizedStates = states.some)
   def fuzziness(edits: Int): CompletionSuggestionDefinition = copy(fuzziness = Fuzziness.fromEdits(edits).some)

@@ -23,9 +23,9 @@ object TermSuggestionBuilderFn {
     sugg.minDocFreq.map(_.toFloat).foreach(builder.minDocFreq)
     sugg.minWordLength.foreach(builder.minWordLength)
     sugg.prefixLength.foreach(builder.prefixLength)
-    sugg.sort.map(EnumConversions.sortOrder).foreach(builder.sort)
-    sugg.stringDistance.foreach(builder.stringDistance)
-    sugg.suggestMode.foreach(builder.suggestMode)
+    sugg.sort.map(EnumConversions.sortBy).foreach(builder.sort)
+    sugg.stringDistance.map(EnumConversions.stringDistance).foreach(builder.stringDistance)
+    sugg.suggestMode.map(EnumConversions.suggestMode).foreach(builder.suggestMode)
 
     builder
   }

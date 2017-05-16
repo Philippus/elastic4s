@@ -14,7 +14,7 @@ object MovAvgPipelineBuilder {
     p.format.foreach(builder.format)
     p.gapPolicy.map(EnumConversions.gapPolicy).foreach(builder.gapPolicy)
     p.minimise.foreach(builder.minimize)
-    p.modelBuilder.foreach(builder.modelBuilder)
+    // p.modelBuilder.map(EnumConversions.modelBuilder).foreach(builder.modelBuilder)
     p.numPredictions.foreach(num => builder.predict(num))
     p.window.foreach(win => builder.window(win))
     builder

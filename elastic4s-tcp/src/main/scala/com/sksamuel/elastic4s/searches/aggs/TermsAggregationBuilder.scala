@@ -30,7 +30,7 @@ object TermsAggregationBuilder {
     agg.shardSize.foreach(builder.shardSize)
     agg.showTermDocCountError.foreach(builder.showTermDocCountError)
     agg.size.foreach(builder.size)
-    agg.valueType.foreach(builder.valueType)
+    agg.valueType.map(EnumConversions.valueType).foreach(builder.valueType)
 
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)

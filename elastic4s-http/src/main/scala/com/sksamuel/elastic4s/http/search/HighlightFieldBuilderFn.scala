@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.http.search
 import java.util
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -22,7 +22,7 @@ object HighlightFieldBuilderFn {
       field.fragmentOffset.foreach(builder.field("fragment_offset", _))
       field.fragmentSize.foreach(builder.field("fragment_size", _))
       field.highlightQuery.map(QueryBuilderFn.apply).map(_.bytes()).foreach { highlight =>
-        builder.rawField("highlight_query", highlight, XContentType.JSON)
+        builder.rawField("highlight_query", highlight)
       }
       if (field.matchedFields.nonEmpty) {
         builder.field("matched_fields", field.matchedFields.asJava)

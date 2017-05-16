@@ -4,22 +4,22 @@ import com.sksamuel.exts.OptionImplicits._
 
 sealed trait SortBy
 object SortBy {
-  case object SCORE extends SortBy
-  case object FREQUENCY extends SortBy
+  case object Score extends SortBy
+  case object Frequency extends SortBy
 }
 
 sealed trait SuggestMode
 object SuggestMode {
 
   def valueOf(str: String): SuggestMode = str.toUpperCase match {
-    case "SUGGEST_WHEN_NOT_IN_INDEX" => SUGGEST_WHEN_NOT_IN_INDEX
-    case "SUGGEST_MORE_POPULAR" => SUGGEST_MORE_POPULAR
-    case "SUGGEST_ALWAYS" => SUGGEST_ALWAYS
+    case "MISSING" => Missing
+    case "POPULAR" => Popular
+    case "ALWAYS" => Always
   }
 
-  case object SUGGEST_WHEN_NOT_IN_INDEX extends SuggestMode
-  case object SUGGEST_MORE_POPULAR extends SuggestMode
-  case object SUGGEST_ALWAYS extends SuggestMode
+  case object Missing extends SuggestMode
+  case object Popular extends SuggestMode
+  case object Always extends SuggestMode
 }
 
 sealed trait StringDistanceImpl

@@ -6,7 +6,7 @@ object XContentFactory {
 
 class XContentBuilder {
   def string(): String = ???
-
+  def bytes: Array[Byte] = ???
 
   def rawValue(value: String) = ???
 

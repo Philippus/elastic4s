@@ -14,9 +14,7 @@ case class IndicesStatsDefinition(indexes: Indexes)
 case class IndicesOptions(allowNoIndices: Boolean = false,
                           ignoreUnavailable: Boolean = false,
                           expandWildcardsOpen: Boolean = false,
-                          expandWildcardClosed: Boolean = false,
-                          allowAliasesToMultipleIndices: Boolean = true,
-                          forbidClosedIndices: Boolean = false)
+                          expandWildcardClosed: Boolean = false)
 
 case class ClearCacheDefinition(indexes: Seq[String],
                                 fieldDataCache: Option[Boolean] = None,
