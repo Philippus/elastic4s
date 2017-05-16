@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.search.queries.SortContentBuilder
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -16,7 +16,7 @@ object TopHitsAggregationBuilder {
     if (agg.sorts.nonEmpty) {
       builder.startArray("sort")
       agg.sorts.foreach { sort =>
-        builder.rawValue(SortContentBuilder(sort).bytes, XContentType.JSON)
+        builder.rawValue(SortContentBuilder(sort))
       }
       builder.endArray()
     }

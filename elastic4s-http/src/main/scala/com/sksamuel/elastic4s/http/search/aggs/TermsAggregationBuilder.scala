@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object TermsAggregationBuilder {
   def apply(agg: TermsAggregationDefinition): XContentBuilder = {
@@ -15,7 +15,7 @@ object TermsAggregationBuilder {
     agg.collectMode.map(_.parseField.getPreferredName).foreach(builder.field("collect_mode", _))
     agg.size.foreach(builder.field("size", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script).bytes, XContentType.JSON)
+      builder.rawField("script", ScriptBuilderFn(script))
     }
     agg.includeExclude.foreach { inex =>
       inex.toXContent(builder, null)

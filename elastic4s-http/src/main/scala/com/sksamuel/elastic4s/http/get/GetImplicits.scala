@@ -28,15 +28,12 @@ trait GetImplicits {
 
     import scala.concurrent.ExecutionContext.Implicits._
 
-    private val endpoint = "/_mget"
-
     override def execute(client: RestClient, request: MultiGetDefinition): Future[MultiGetResponse] = {
 
       val body = MultiGetBodyBuilder(request).string()
-      logger.debug(s"Executing multiget $body")
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async("POST", endpoint, Map.empty, entity, ResponseHandler.failure404).map { response =>
+      client.async("POST", "/_mget", Map.empty, entity, ResponseHandler.failure404).map { response =>
         response.copy(docs = response.docs.map { doc =>
           doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
         })

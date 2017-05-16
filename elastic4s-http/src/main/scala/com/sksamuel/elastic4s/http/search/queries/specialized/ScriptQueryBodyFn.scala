@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.ScriptQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object ScriptQueryBodyFn {
 
@@ -10,7 +10,7 @@ object ScriptQueryBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
     builder.startObject("script")
-    builder.rawField("script", ScriptBuilderFn(q.script).bytes)
+    builder.rawField("script", ScriptBuilderFn(q.script))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()

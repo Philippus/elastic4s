@@ -18,7 +18,6 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[TemplateSearchDefinition, SearchResponse] {
 
     override def execute(client: RestClient, req: TemplateSearchDefinition): Future[SearchResponse] = {
-      val method = "POST"
       val endpoint = req.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil) => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
@@ -26,7 +25,7 @@ trait SearchTemplateImplicits {
         case IndexesAndTypes(indexes, types) => "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
       }
       val body = TemplateSearchContentBuilder(req).string()
-      client.async(method, endpoint, Map.empty, new StringEntity(body, ContentType.APPLICATION_JSON), ResponseHandler.default)
+      client.async("POST", endpoint, Map.empty, new StringEntity(body, ContentType.APPLICATION_JSON), ResponseHandler.default)
     }
   }
 
@@ -34,9 +33,8 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
     override def execute(client: RestClient, req: RemoveSearchTemplateDefinition): Future[RemoveSearchTemplateResponse] = {
-      val method = "DELETE"
       val endpoint = "/_search/template/" + req.name
-      client.async(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async("DELETE", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -44,13 +42,10 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
     override def execute(client: RestClient, req: PutSearchTemplateDefinition): Future[PutSearchTemplateResponse] = {
-
-      val method = "POST"
       val endpoint = "/_search/template/" + req.name
-
       val body = PutSearchTemplateContentBuilder(req).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async("POST", endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
@@ -58,9 +53,8 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[GetSearchTemplateDefinition, Option[GetSearchTemplateResponse]] {
 
     override def execute(client: RestClient, req: GetSearchTemplateDefinition): Future[Option[GetSearchTemplateResponse]] = {
-      val method = "GET"
       val endpoint = "/_search/template/" + req.name
-      client.async(method, endpoint, Map.empty, new ResponseHandler[Option[GetSearchTemplateResponse]] {
+      client.async("GET", endpoint, Map.empty, new ResponseHandler[Option[GetSearchTemplateResponse]] {
         override def onResponse(response: Response): Try[Option[GetSearchTemplateResponse]] = Try {
           ResponseHandler.fromEntity[GetSearchTemplateResponse](response.getEntity).some
         }

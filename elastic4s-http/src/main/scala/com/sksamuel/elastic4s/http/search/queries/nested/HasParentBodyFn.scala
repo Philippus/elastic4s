@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object HasParentBodyFn {
 
@@ -11,7 +11,7 @@ object HasParentBodyFn {
     builder.startObject()
     builder.startObject("has_parent")
     builder.field("parent_type", q.`type`)
-    builder.rawField("query", QueryBuilderFn(q.query).bytes)
+    builder.rawField("query", QueryBuilderFn(q.query))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     if (q.score)
       builder.field("score", true)

@@ -1,13 +1,15 @@
 package com.sksamuel.elastic4s.http.delete
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 case class DeleteByQueryResponse(took: Long,
-                                 timed_out: Boolean,
+                                 @JsonProperty("timed_out") timedOut: Boolean,
                                  total: Long,
                                  deleted: Long,
                                  batches: Long,
-                                 version_conflicts: Long,
+                                 @JsonProperty("version_conflicts") versionConflicts: Long,
                                  noops: Long,
-                                 throttled_millis: Long,
-                                 requests_per_second: Long,
-                                 throttled_until_millis: Long
+                                 @JsonProperty("throttled_millis") throttledMillis: Long,
+                                 @JsonProperty("requests_per_second") requestsPerSecond: Long,
+                                 @JsonProperty("throttled_until_millis") throttledUntilMillis: Long
                                 )

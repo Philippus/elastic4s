@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object SpanTermQueryBodyFn {
   def apply(q: SpanTermQueryDefinition): XContentBuilder = {

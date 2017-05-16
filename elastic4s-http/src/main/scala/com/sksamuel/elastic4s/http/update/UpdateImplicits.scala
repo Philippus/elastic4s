@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.update
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler, Shards}
+import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}

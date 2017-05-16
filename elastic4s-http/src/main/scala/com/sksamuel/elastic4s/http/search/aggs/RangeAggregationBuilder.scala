@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object RangeAggregationBuilder {
   def apply(agg: RangeAggregationDefinition): XContentBuilder = {
@@ -14,7 +14,7 @@ object RangeAggregationBuilder {
     agg.format.foreach(builder.field("format", _))
     agg.keyed.foreach(builder.field("keyed", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script).bytes, XContentType.JSON)
+      builder.rawField("script", ScriptBuilderFn(script))
     }
 
     builder.startArray("ranges")

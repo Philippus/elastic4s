@@ -3,10 +3,9 @@ package com.sksamuel.elastic4s.http.search
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -17,9 +16,9 @@ object SearchBodyBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject()
 
-    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", new BytesArray(x.string), XContentType.JSON))
-    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string), XContentType.JSON))
-    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", new BytesArray(x.string), XContentType.JSON))
+    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
+    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
+    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
@@ -36,13 +35,13 @@ object SearchBodyBuilderFn {
     if (request.sorts.nonEmpty) {
 			builder.startArray("sort")
 			// Workaround for bug where separator is not added with rawValues
-			val arrayBody = new BytesArray(request.sorts.map(s => SortContentBuilder(s).string).mkString(","))
-			builder.rawValue(arrayBody, XContentType.JSON)
+      val arrayBody = request.sorts.map(s => SortContentBuilder(s).string).mkString(",")
+      builder.rawValue(arrayBody)
 			builder.endArray()
     }
 
     request.highlight.foreach { highlight =>
-      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields).bytes(), XContentType.JSON)
+      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields))
     }
 
     if (request.suggs.nonEmpty) {

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MultiMatchBodyFn {
   def apply(q: MultiMatchQueryDefinition): XContentBuilder = {

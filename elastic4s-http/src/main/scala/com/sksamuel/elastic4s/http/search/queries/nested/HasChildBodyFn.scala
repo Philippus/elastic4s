@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object HasChildBodyFn {
 
@@ -18,7 +18,7 @@ object HasChildBodyFn {
         builder.field("max_children", minmax._2)
     }
     builder.field("score_mode", q.scoreMode.name.toLowerCase)
-    builder.rawField("query", QueryBuilderFn(q.query).bytes)
+    builder.rawField("query", QueryBuilderFn(q.query))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition, MatchNoneQueryDefinition}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MatchAllBodyFn {
   def apply(q: MatchAllQueryDefinition): XContentBuilder = {

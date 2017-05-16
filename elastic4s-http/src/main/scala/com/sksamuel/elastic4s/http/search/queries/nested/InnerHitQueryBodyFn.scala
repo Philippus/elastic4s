@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.InnerHitDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -27,7 +27,7 @@ object InnerHitQueryBodyFn {
       builder.field("stored_fields", d.storedFieldNames.asJava)
     }
     if (d.highlights.nonEmpty) {
-      builder.rawField("highlight", HighlightFieldBuilderFn(d.highlights).bytes(), XContentType.JSON)
+      builder.rawField("highlight", HighlightFieldBuilderFn(d.highlights))
     }
     builder.endObject()
     builder

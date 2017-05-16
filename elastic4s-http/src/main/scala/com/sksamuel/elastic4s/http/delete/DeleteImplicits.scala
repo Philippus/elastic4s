@@ -3,7 +3,8 @@ package com.sksamuel.elastic4s.http.delete
 import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}

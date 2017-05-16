@@ -1,17 +1,16 @@
 package com.sksamuel.elastic4s.http.search.queries.specialized
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.MoreLikeThisQueryDefinition
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
 
 object MoreLikeThisBuilderFn {
   def apply(q: MoreLikeThisQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
 
-    builder.startObject()
-    builder.startObject("more_like_this")
+    val builder = XContentFactory.jsonBuilder()
+    builder.startObject().startObject("more_like_this")
+
     builder.field("fields", q.fields.asJava)
 
     builder.startArray("like")
@@ -27,7 +26,7 @@ object MoreLikeThisBuilderFn {
       builder.startObject()
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
-      builder.rawField("doc", new BytesArray(doc.doc))
+      builder.rawField("doc", doc.doc)
       builder.endObject()
     }
     builder.endArray()
@@ -62,8 +61,6 @@ object MoreLikeThisBuilderFn {
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
 
-    builder.endObject()
-    builder.endObject()
-    builder
+    builder.endObject().endObject()
   }
 }

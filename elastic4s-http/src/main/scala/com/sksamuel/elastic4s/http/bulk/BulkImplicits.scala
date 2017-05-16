@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
 import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
@@ -20,10 +21,7 @@ trait BulkImplicits {
     override def execute(client: RestClient,
                          bulk: BulkDefinition): Future[BulkResponse] = {
 
-      val endpoint = "/_bulk"
-
       val rows = BulkContentBuilder(bulk)
-      logger.debug(s"Bulk entity: ${rows.mkString("\n")}")
       // es seems to require a trailing new line as well
       val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
 
@@ -31,7 +29,7 @@ trait BulkImplicits {
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", "/_bulk", params.toMap, entity, ResponseHandler.default)
     }
   }
 }

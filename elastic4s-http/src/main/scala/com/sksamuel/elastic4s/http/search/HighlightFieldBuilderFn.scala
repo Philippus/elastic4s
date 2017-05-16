@@ -21,7 +21,7 @@ object HighlightFieldBuilderFn {
       field.forceSource.foreach(builder.field("force_source", _))
       field.fragmentOffset.foreach(builder.field("fragment_offset", _))
       field.fragmentSize.foreach(builder.field("fragment_size", _))
-      field.highlightQuery.map(QueryBuilderFn.apply).map(_.bytes()).foreach { highlight =>
+      field.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>
         builder.rawField("highlight_query", highlight)
       }
       if (field.matchedFields.nonEmpty) {

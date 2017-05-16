@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object RegexQueryBodyFn {
   def apply(q: RegexQueryDefinition): XContentBuilder = {

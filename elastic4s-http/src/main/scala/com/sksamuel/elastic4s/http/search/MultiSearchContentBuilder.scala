@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.searches.MultiSearchDefinition
-import org.elasticsearch.common.xcontent.XContentFactory
 
 object MultiSearchContentBuilder {
   def apply(request: MultiSearchDefinition): String = {
@@ -9,6 +9,7 @@ object MultiSearchContentBuilder {
 
       val header = XContentFactory.jsonBuilder()
       header.startObject()
+
       header.field("index", search.indexesTypes.indexes.mkString(","))
       if (search.indexesTypes.types.nonEmpty)
         header.field("type", search.indexesTypes.types.mkString(","))
@@ -20,6 +21,7 @@ object MultiSearchContentBuilder {
       val body = SearchBodyBuilderFn(search)
 
       Seq(header.string(), body.string())
+
     }.mkString("\n") + "\n"
   }
 }
