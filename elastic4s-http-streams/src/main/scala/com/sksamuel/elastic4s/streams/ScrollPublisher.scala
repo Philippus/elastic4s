@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchResponse}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
-import org.elasticsearch.ElasticsearchException
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
 import scala.collection.mutable
@@ -136,7 +135,7 @@ class PublishActor(client: HttpClient,
       stash()
     // handle when the es request dies
     case Success(resp: SearchResponse) if resp.isTimedOut =>
-      s.onError(new ElasticsearchException("Request terminated early or timed out"))
+      s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)
     // if the request to elastic failed we will terminate the subscription
     case Failure(t) =>

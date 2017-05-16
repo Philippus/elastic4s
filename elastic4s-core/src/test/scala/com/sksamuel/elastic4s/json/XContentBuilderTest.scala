@@ -21,31 +21,48 @@ class XContentBuilderTest extends FunSuite with Matchers {
     """{"wibble":{"foo":1.0,"boo":true},"dibble":{"goo":2.4}}"""
   }
 
+  test("should support raw fields in objects") {
+    XContentFactory.obj().rawField("nested", """{"test":true,"name":"foo"}""").string shouldBe """{"nested":{"test":true,"name":"foo"}}"""
+  }
+
+  test("should support raw values in arrays") {
+    XContentFactory.array().rawValue("""{"test":true,"name":"foo"}""").string shouldBe """[{"test":true,"name":"foo"}]"""
+  }
+
+  test("should support boolean arrays") {
+    XContentFactory.obj().array("booleans", Array(true, false, true)).string shouldBe """{"booleans":[true,false,true]}"""
+  }
+
   test("should support double arrays") {
-    XContentFactory.obj().field("doubles", Array(124.45, 962.23)) shouldBe """"""
+    XContentFactory.obj().array("doubles", Array(124.45, 962.23)).string shouldBe """{"doubles":[124.45,962.23]}"""
+  }
+
+  test("should support long arrays") {
+    XContentFactory.obj().array("longs", Array(345345435345L, 3257059014L)).string shouldBe """{"longs":[345345435345,3257059014]}"""
   }
 
   test("should support string arrays") {
-    XContentFactory.obj().field("doubles", Array("foo", "boo")) shouldBe """"""
+    XContentFactory.obj().array("strings", Array("foo", "boo")).string shouldBe """{"strings":["foo","boo"]}"""
   }
 
   test("should support double fields") {
-    XContentFactory.obj().field("double", 5612.3734) shouldBe """"""
+    XContentFactory.obj().field("double", 5612.3734).string shouldBe """{"double":5612.3734}"""
   }
 
   test("should support int fields") {
-    XContentFactory.obj().field("double", 3242365) shouldBe """"""
+    XContentFactory.obj().field("int", 3242365).string shouldBe """{"int":3242365.0}"""
   }
 
   test("should support long fields") {
-    XContentFactory.obj().field("double", 91118592743568234L) shouldBe """"""
+    XContentFactory.obj().field("long", 91118592743568234L).string shouldBe """{"long":9.111859274356824E16}"""
   }
 
   test("should support boolean fields") {
-    XContentFactory.obj().field("double", true) shouldBe """"""
+    XContentFactory.obj().field("boolean", true).string shouldBe """{"boolean":true}"""
   }
 
   test("should support str fields") {
-    XContentFactory.obj().field("double", "ewrewr") shouldBe """"""
+    XContentFactory.obj().field("str", "ewrewr").string shouldBe
+      """{"str":"ewrewr"}"""
   }
 }
