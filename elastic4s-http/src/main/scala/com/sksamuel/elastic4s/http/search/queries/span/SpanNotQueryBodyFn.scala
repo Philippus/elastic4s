@@ -7,8 +7,6 @@ import com.sksamuel.elastic4s.searches.queries.span.SpanNotQueryDefinition
 object SpanNotQueryBodyFn {
   def apply(q: SpanNotQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-
-    builder.startObject()
     builder.startObject("span_not")
     builder.rawField("include", QueryBuilderFn(q.include))
     builder.rawField("exclude", QueryBuilderFn(q.exclude))

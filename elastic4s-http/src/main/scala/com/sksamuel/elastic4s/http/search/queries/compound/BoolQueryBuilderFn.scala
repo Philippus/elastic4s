@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition
 object BoolQueryBuilderFn {
 
   def apply(bool: BoolQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("bool")
+    val builder = XContentFactory.jsonBuilder().startObject("bool")
 
     if (bool.must.nonEmpty) {
       builder.startArray("must")

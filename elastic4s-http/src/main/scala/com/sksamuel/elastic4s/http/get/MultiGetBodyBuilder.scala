@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 object MultiGetBodyBuilder {
   def apply(request: MultiGetDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startArray("docs")
     request.gets.foreach { get =>
       builder.startObject()

@@ -8,7 +8,6 @@ object ScriptQueryBodyFn {
 
   def apply(q: ScriptQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("script")
     builder.rawField("script", ScriptBuilderFn(q.script))
     q.boost.foreach(builder.field("boost", _))

@@ -7,7 +7,7 @@ object TermQueryBodyFn {
 
   def apply(t: TermQueryDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("term")
+    val builder = XContentFactory.jsonBuilder().startObject("term")
 
     builder.startObject(t.field)
     t.boost.map(_.toString).foreach(builder.field("boost", _))

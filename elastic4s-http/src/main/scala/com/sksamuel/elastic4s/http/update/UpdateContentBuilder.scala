@@ -8,7 +8,6 @@ object UpdateContentBuilder {
   def apply(request: UpdateDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
 
     request.documentSource.foreach { doc =>
       builder.rawField("doc", doc)

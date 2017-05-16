@@ -10,7 +10,7 @@ object TopHitsAggregationBuilder {
 
   def apply(agg: TopHitsAggregationDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("top_hits")
+    val builder = XContentFactory.jsonBuilder().startObject("top_hits")
 
     agg.size.foreach(builder.field("size", _))
     if (agg.sorts.nonEmpty) {

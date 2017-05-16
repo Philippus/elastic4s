@@ -30,7 +30,7 @@ object AggregationBuilderFn {
 
 object MaxBucketPipelineAggBuilder {
   def apply(agg: MaxBucketDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("max_bucket")
+    val builder = XContentFactory.jsonBuilder().startObject("max_bucket")
     builder.field("buckets_path", agg.bucketsPath)
     builder.endObject().endObject()
   }

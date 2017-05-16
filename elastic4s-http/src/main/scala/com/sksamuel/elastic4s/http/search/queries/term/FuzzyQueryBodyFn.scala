@@ -7,7 +7,6 @@ object FuzzyQueryBodyFn {
 
   def apply(q: FuzzyQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("fuzzy")
     builder.startObject(q.field)
     builder.field("value", q.termValue)

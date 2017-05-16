@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition
 object RegexQueryBodyFn {
   def apply(q: RegexQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("regexp")
     builder.startObject(q.field)
     builder.field("value", q.regex)

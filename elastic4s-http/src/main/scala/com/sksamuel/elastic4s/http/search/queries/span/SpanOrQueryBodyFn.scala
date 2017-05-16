@@ -7,8 +7,6 @@ import com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition
 object SpanOrQueryBodyFn {
   def apply(q: SpanOrQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-
-    builder.startObject()
     builder.startObject("span_or")
     builder.startArray("clauses")
     q.clauses.foreach { clause =>

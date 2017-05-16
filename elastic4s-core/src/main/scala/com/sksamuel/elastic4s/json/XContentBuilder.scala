@@ -107,14 +107,27 @@ class XContentBuilder(root: JsonNode) {
 
   def value(any: Any): XContentBuilder = this
 
+  def startArray(): XContentBuilder = {
+    // can only start an anoynmous array inside another array
+    stack.push(array.addArray())
+    this
+  }
+
   def startArray(name: String): XContentBuilder = {
-    stack.push(current.asInstanceOf[ObjectNode].putArray(name))
+    // can only add a named an anoynmous array inside an object
+    stack.push(obj.putArray(name))
     this
   }
 
   def endArray(): XContentBuilder = {
     require(current.isInstanceOf[ArrayNode])
     stack.pop()
+    this
+  }
+
+  def startObject(): XContentBuilder = {
+    // can only start an object if inside an array
+    stack.push(array.addObject())
     this
   }
 

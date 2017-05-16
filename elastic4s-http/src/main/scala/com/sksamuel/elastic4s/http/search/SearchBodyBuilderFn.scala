@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
@@ -15,7 +15,6 @@ object SearchBodyBuilderFn {
   def apply(request: SearchDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
 
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))

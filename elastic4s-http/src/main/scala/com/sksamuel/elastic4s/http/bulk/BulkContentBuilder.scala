@@ -15,7 +15,6 @@ object BulkContentBuilder {
       case index: IndexDefinition =>
 
         val builder = XContentFactory.jsonBuilder()
-        builder.startObject()
         builder.startObject("index")
         builder.field("_index", index.indexAndType.index)
         builder.field("_type", index.indexAndType.`type`)
@@ -30,7 +29,6 @@ object BulkContentBuilder {
       case delete: DeleteByIdDefinition =>
 
         val builder = XContentFactory.jsonBuilder()
-        builder.startObject()
         builder.startObject("delete")
         builder.field("_index", delete.indexType.index)
         builder.field("_type", delete.indexType.`type`)
@@ -44,7 +42,6 @@ object BulkContentBuilder {
       case update: UpdateDefinition =>
 
         val builder = XContentFactory.jsonBuilder()
-        builder.startObject()
         builder.startObject("update")
         builder.field("_index", update.indexAndTypes.index)
         builder.field("_type", update.indexAndTypes.types.head)

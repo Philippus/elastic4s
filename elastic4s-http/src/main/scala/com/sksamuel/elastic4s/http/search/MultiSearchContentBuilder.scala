@@ -8,7 +8,6 @@ object MultiSearchContentBuilder {
     request.searches.flatMap { search =>
 
       val header = XContentFactory.jsonBuilder()
-      header.startObject()
 
       header.field("index", search.indexesTypes.indexes.mkString(","))
       if (search.indexesTypes.types.nonEmpty)

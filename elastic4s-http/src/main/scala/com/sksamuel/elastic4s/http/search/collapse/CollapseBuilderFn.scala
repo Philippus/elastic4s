@@ -8,7 +8,6 @@ object CollapseBuilderFn {
 
   def apply(collapse: CollapseDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.field("field", collapse.field)
     collapse.maxConcurrentGroupSearches.foreach(max => builder.field("max_concurrent_group_searches", max))
     collapse

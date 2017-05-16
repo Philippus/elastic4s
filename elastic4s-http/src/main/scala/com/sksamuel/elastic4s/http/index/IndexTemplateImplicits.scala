@@ -48,7 +48,6 @@ object CreateIndexTemplateBodyFn {
   def apply(create: CreateIndexTemplateDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.field("template", create.pattern)
     create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))

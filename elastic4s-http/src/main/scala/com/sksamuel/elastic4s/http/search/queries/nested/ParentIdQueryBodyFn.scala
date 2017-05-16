@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.searches.queries.ParentIdQueryDefinition
 
 object ParentIdQueryBodyFn {
   def apply(q: ParentIdQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("parent_id")
+    val builder = XContentFactory.jsonBuilder().startObject("parent_id")
     builder.field("type", q.`type`)
     builder.field("id", q.id)
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))

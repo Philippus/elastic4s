@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 object TermsQueryBodyFn {
   def apply(t: TermsQueryDefinition[_]): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("terms")
+    val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     if (t.values.nonEmpty) {
       builder.field(t.field, t.values.asJava)

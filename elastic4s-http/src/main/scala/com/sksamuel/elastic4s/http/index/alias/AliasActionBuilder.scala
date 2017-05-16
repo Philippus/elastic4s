@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 object AliasActionBuilder {
 
   def apply(r: IndicesAliasesRequestDefinition): XContentBuilder = {
-    val source = XContentFactory.jsonBuilder().startObject().startArray("actions")
+    val source = XContentFactory.jsonBuilder().startArray("actions")
 
     val actionsArray = r.actions.map {
       case addAction: AddAliasActionDefinition => buildAddAction(addAction).string()
@@ -20,7 +20,7 @@ object AliasActionBuilder {
   }
 
   private def buildAddAction(addAction: AddAliasActionDefinition): XContentBuilder = {
-    val jsonBuilder = XContentFactory.jsonBuilder().startObject().startObject("add")
+    val jsonBuilder = XContentFactory.jsonBuilder().startObject("add")
 
     jsonBuilder.field("index", addAction.index)
     jsonBuilder.field("alias", addAction.alias)
@@ -36,7 +36,7 @@ object AliasActionBuilder {
   }
 
   private def buildRemoveAction(removeAction: RemoveAliasActionDefinition): XContentBuilder = {
-    val jsonBuilder = XContentFactory.jsonBuilder().startObject().startObject("remove")
+    val jsonBuilder = XContentFactory.jsonBuilder().startObject("remove")
 
     jsonBuilder.field("index", removeAction.index)
     jsonBuilder.field("alias", removeAction.alias)

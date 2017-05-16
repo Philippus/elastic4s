@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
 
@@ -9,7 +9,6 @@ object HasChildBodyFn {
 
   def apply(q: HasChildQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("has_child")
     builder.field("type", q.`type`)
     q.minMaxChildren.foreach { minmax =>

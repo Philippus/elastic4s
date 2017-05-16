@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 object ExplainBodyFn {
   def apply(v: ExplainDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.rawField("query", QueryBuilderFn(v.query.get))
     builder.endObject()
   }

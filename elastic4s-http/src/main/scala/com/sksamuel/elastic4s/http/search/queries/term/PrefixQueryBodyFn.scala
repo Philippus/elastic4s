@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition
 object PrefixQueryBodyFn {
   def apply(q: PrefixQueryDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("prefix")
+    val builder = XContentFactory.jsonBuilder().startObject("prefix")
 
     builder.startObject(q.field)
     builder.field("value", q.prefix)

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
-import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
 

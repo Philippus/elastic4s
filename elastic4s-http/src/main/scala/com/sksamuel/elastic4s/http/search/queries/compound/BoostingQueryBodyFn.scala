@@ -8,7 +8,6 @@ object BoostingQueryBodyFn {
   def apply(q: BoostingQueryDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("boosting")
     builder.rawField("positive", QueryBuilderFn(q.positiveQuery))
     builder.rawField("negative", QueryBuilderFn(q.negativeQuery))

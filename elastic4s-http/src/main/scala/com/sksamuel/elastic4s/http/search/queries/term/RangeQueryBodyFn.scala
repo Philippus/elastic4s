@@ -7,7 +7,7 @@ object RangeQueryBodyFn {
 
   def apply(range: RangeQueryDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("range").startObject(range.field)
+    val builder = XContentFactory.jsonBuilder().startObject("range").startObject(range.field)
 
     range.gte.foreach {
       case x: Long => builder.field("gte", x)

@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.search.queries.text
+package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.VersionType
 import com.sksamuel.elastic4s.searches.ScoreMode
@@ -16,7 +16,6 @@ object EnumConversions {
   def geoValidationMethod(method: GeoValidationMethod): String = ???
 
   def collectMode(mode: SubAggCollectionMode): String = ???
-
 
   def versionType(versionType: VersionType): String = ???
 

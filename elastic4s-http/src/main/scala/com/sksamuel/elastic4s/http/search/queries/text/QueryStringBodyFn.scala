@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
 
 object QueryStringBodyFn {
   def apply(s: QueryStringQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("query_string")
+    val builder = XContentFactory.jsonBuilder().startObject("query_string")
     s.defaultOperator.foreach(builder.field("default_operator", _))
     s.defaultField.foreach(builder.field("default_field", _))
     s.analyzer.map(_.toString).foreach(builder.field("analyzer", _))

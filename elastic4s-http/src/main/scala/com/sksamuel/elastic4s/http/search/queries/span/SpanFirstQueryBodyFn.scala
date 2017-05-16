@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.searches.queries.span.SpanFirstQueryDefinition
 object SpanFirstQueryBodyFn {
   def apply(q: SpanFirstQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.rawField("span_first", QueryBuilderFn(q.query))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

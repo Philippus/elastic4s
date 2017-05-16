@@ -9,7 +9,7 @@ object MoreLikeThisBuilderFn {
   def apply(q: MoreLikeThisQueryDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject().startObject("more_like_this")
+    builder.startObject("more_like_this")
 
     builder.field("fields", q.fields.asJava)
 

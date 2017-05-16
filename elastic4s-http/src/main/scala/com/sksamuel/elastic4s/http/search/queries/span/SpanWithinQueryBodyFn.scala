@@ -8,7 +8,6 @@ object SpanWithinQueryBodyFn {
   def apply(q: SpanWithinQueryDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("span_within")
 
     builder.rawField("little", QueryBuilderFn(q.little))

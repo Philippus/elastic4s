@@ -12,7 +12,7 @@ object SortContentBuilder {
 object FieldSortContentBuilder {
   def apply(fs: FieldSortDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject(fs.field)
+    val builder = XContentFactory.jsonBuilder().startObject(fs.field)
 
     fs.unmappedType.foreach(builder.field("unmapped_type", _))
     fs.missing.foreach(builder.field("missing", _))

@@ -33,9 +33,6 @@ trait SearchScrollImplicits {
 
   implicit object SearchScrollHttpExecutable extends HttpExecutable[SearchScrollDefinition, SearchResponse] {
 
-    private val endpoint = "/_search/scroll"
-    private val method = "POST"
-
     override def execute(client: RestClient,
                          req: SearchScrollDefinition): Future[SearchResponse] = {
 
@@ -43,7 +40,7 @@ trait SearchScrollImplicits {
       logger.debug("Executing search scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async( "POST", "/_search/scroll", Map.empty, entity, ResponseHandler.default)
     }
   }
 }
@@ -51,7 +48,6 @@ trait SearchScrollImplicits {
 object SearchScrollContentFn {
   def apply(req: SearchScrollDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     req.keepAlive.foreach(builder.field("scroll", _))
     builder.field("scroll_id", req.id)
     builder.endObject()
@@ -61,7 +57,6 @@ object SearchScrollContentFn {
 object ClearScrollContentFn {
   def apply(req: ClearScrollDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.field("scroll_id", req.ids.toArray)
     builder.endObject()
   }

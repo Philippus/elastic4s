@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.searches.queries.ConstantScoreDefinition
 object ConstantScoreBodyFn {
   def apply(q: ConstantScoreDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("constant_score")
     builder.rawField("filter", QueryBuilderFn(q.query))
     q.boost.map(_.toString).foreach(builder.field("boost", _))

@@ -12,7 +12,6 @@ object HighlightFieldBuilderFn {
 
   def apply(fields: Iterable[HighlightFieldDefinition]): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("fields")
     fields.foreach { field =>
       builder.startObject(field.field)

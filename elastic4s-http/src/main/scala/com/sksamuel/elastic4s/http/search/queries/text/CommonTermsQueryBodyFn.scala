@@ -7,7 +7,6 @@ object CommonTermsQueryBodyFn {
   def apply(q: CommonTermsQueryDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("common")
     builder.startObject(q.name)
     builder.field("query", q.text)

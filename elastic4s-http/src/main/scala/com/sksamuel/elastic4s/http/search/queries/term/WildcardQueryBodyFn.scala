@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition
 object WildcardQueryBodyFn {
   def apply(q: WildcardQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject().startObject("wildcard").startObject(q.field)
+    builder.startObject("wildcard").startObject(q.field)
     builder.field("value", q.query)
     q.rewrite.foreach(builder.field("rewrite", _))
     q.boost.foreach(builder.field("boost", _))

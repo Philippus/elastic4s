@@ -15,7 +15,7 @@ class CreateIndexShowTest extends WordSpec with Matchers with ElasticSugar with 
           mapping("characters").fields(
             stringField("name"),
             stringField("location")
-            ) timestamp true,
+          ),
           mapping("locations").fields(
             stringField("name"),
             stringField("continent"),

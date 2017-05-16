@@ -25,7 +25,6 @@ case class Explanation(index: String,
 object ValidateBodyFn {
   def apply(v: ValidateDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.rawField("query", QueryBuilderFn(v.query))
     builder.endObject()
   }

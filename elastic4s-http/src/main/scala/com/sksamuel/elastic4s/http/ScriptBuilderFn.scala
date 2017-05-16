@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptType}
 object ScriptBuilderFn {
   def apply(script: ScriptDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject()
+    val builder = XContentFactory.jsonBuilder()
 
     script.lang.foreach(builder.field("lang", _))
 

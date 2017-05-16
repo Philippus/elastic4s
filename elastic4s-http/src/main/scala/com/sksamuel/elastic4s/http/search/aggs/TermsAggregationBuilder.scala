@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
-import com.sksamuel.elastic4s.http.ScriptBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
+import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition
 
 object TermsAggregationBuilder {
   def apply(agg: TermsAggregationDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("terms")
+    val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.field("missing", _))

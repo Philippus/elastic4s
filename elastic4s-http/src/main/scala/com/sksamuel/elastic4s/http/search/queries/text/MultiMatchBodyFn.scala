@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition
 
 object MultiMatchBodyFn {
   def apply(q: MultiMatchQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("multi_match")
     builder.field("query", q.text)
     builder.field("fields", q.fields.map {

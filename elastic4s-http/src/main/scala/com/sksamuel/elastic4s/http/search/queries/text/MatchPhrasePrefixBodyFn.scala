@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.searches.queries.matches.MatchPhrasePrefixDefiniti
 object MatchPhrasePrefixBodyFn {
   def apply(q: MatchPhrasePrefixDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("match_phrase_prefix")
     builder.startObject(q.field)
     builder.field("query", q.value)

@@ -17,7 +17,7 @@ trait TermVectorsExecutables {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 
-      val builder = XContentFactory.jsonBuilder().startObject()
+      val builder = XContentFactory.jsonBuilder()
 
       if (request.fields.nonEmpty)
         builder.array("fields", request.fields.toArray)

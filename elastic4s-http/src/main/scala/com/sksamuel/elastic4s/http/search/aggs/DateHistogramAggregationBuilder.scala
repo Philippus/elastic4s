@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.searches.aggs.DateHistogramAggregation
 object DateHistogramAggregationBuilder {
   def apply(agg: DateHistogramAggregation): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("date_histogram")
     agg.interval.foreach(builder.field("interval", _))
     agg.minDocCount.foreach(builder.field("min_doc_count", _))

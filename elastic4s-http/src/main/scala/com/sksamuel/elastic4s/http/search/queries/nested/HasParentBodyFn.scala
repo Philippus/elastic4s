@@ -8,7 +8,6 @@ object HasParentBodyFn {
 
   def apply(q: HasParentQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("has_parent")
     builder.field("parent_type", q.`type`)
     builder.rawField("query", QueryBuilderFn(q.query))

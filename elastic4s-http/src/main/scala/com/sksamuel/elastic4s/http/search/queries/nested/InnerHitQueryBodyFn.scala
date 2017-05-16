@@ -9,7 +9,6 @@ object InnerHitQueryBodyFn {
 
   def apply(d: InnerHitDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     d.from.foreach(builder.field("from", _))
     d.explain.foreach(builder.field("explain", _))
     d.fetchSource.foreach(builder.field("_source", _))

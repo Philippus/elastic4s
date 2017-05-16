@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.searches.aggs.AvgAggregationDefinition
 object AvgAggregationBuilder {
   def apply(agg: AvgAggregationDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("avg")
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.field("missing", _))

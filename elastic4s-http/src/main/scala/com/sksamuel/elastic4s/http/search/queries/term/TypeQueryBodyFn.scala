@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.searches.queries.TypeQueryDefinition
 object TypeQueryBodyFn {
   def apply(q: TypeQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject().startObject("type")
+    builder.startObject("type")
     builder.field("value", q.`type`)
     builder.endObject().endObject()
   }

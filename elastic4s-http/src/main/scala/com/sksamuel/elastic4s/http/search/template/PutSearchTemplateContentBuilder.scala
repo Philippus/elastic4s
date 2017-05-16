@@ -8,7 +8,7 @@ object PutSearchTemplateContentBuilder {
 
   def apply(request: PutSearchTemplateDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("template")
+    val builder = XContentFactory.jsonBuilder().startObject("template")
     request.body.foreach(builder.rawField("query", _))
     request.query.map(QueryBuilderFn(_)).foreach(builder.rawField("query", _))
     builder.endObject().endObject()

@@ -9,7 +9,6 @@ object IdQueryBodyFn {
 
   def apply(q: IdQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("ids")
     if (q.types.nonEmpty) {
       builder.field("type", q.types.asJava)

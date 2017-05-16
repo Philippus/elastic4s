@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.searches.aggs.MaxAggregationDefinition
 object MaxAggregationBuilder {
   def apply(agg: MaxAggregationDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("max")
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.field("missing", _))
