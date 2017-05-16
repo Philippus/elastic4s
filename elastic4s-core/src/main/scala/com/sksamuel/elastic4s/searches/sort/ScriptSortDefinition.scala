@@ -3,8 +3,6 @@ package com.sksamuel.elastic4s.searches.sort
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.{SortMode, SortOrder}
 
 case class ScriptSortDefinition(script: ScriptDefinition,
                                 scriptSortType: ScriptSortType,

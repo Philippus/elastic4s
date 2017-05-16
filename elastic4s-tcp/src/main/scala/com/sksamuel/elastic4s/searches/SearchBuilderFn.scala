@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.ScriptBuilder
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.searches.collapse.CollapseBuilderFn
@@ -72,9 +73,7 @@ object SearchBuilderFn {
         case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
           builder.addScriptField(name, new Script(script))
         case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
-          builder.addScriptField(name, new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
-            options.map(_.asJava).getOrElse(new java.util.HashMap()),
-            params.map(_.asJava).getOrElse(new java.util.HashMap())))
+          builder.addScriptField(name, ScriptBuilder(script))
       }
 
     if (search.suggs.nonEmpty) {

@@ -30,8 +30,7 @@ lazy val root = Project("elastic4s", file("."))
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .settings(libraryDependencies ++= Seq(
-    "org.locationtech.spatial4j"    % "spatial4j"     % "0.6",
-    "com.vividsolutions"            % "jts"           % "1.13",
+    "joda-time"                     % "joda-time"               % "2.9.9",
     "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
     "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
     "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
@@ -40,6 +39,9 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
+      "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
+      "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6",
+      "com.vividsolutions"                    % "jts"                       % "1.13",
       "io.netty"                              % "netty-all"                 % "4.1.10.Final",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
       "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,

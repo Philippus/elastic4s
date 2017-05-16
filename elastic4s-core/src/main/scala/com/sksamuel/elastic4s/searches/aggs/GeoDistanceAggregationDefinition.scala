@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.DistanceUnit
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.searches.GeoPoint
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
-import org.elasticsearch.common.unit.DistanceUnit
 
 case class GeoDistanceAggregationDefinition(name: String,
                                             origin: GeoPoint,

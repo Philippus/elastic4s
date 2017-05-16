@@ -22,7 +22,6 @@ object QueryBuilderFn {
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBuilder(q)
     case q: GeoDistanceRangeQueryDefinition => GeoDistanceRangeQueryBuilderFn(q)
     case q: GeoPolygonQueryDefinition => GeoPolygonQueryBuilderFn(q)
-    case q: GeoShapeDefinition => GeoShapeQueryBuilder(q)
     case q: HasChildQueryDefinition => HasChildQueryBuilderFn(q)
     case q: HasParentQueryDefinition => HasParentQueryBuilderFn(q)
     case q: IdQueryDefinition => IdQueryBuilderFn(q)

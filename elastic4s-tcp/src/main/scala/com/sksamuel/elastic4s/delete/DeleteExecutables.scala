@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.{EnumConversions, Executable, RefreshPolicy}
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.reindex.{DeleteByQueryAction, DeleteByQueryRequestBuilder}
@@ -20,7 +19,7 @@ trait DeleteExecutables {
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
       val _builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
       t.routing.foreach(_builder.setRouting)
-      t.refresh.foreach(_builder.setRefreshPolicy)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(_builder.setRefreshPolicy)
       t.parent.foreach(_builder.setParent)
       t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
       t.version.foreach(_builder.setVersion)
@@ -43,7 +42,7 @@ trait DeleteExecutables {
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       d.size.foreach(builder.size)
       d.maxRetries.foreach(builder.setMaxRetries)
-      if (d.refresh.contains(RefreshPolicy.IMMEDIATE))
+      if (d.refresh.contains(RefreshPolicy.Immediate))
         builder.refresh(true)
       d.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       d.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)

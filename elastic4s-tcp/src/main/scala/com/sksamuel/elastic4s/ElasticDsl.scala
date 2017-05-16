@@ -191,14 +191,7 @@ trait ElasticDsl
 
   case object term {
     @deprecated("use termSuggestion(name)", "5.0.0")
-    def suggestion(name: String) = termSuggestion(name)
-  }
-
-  case object score {
-    @deprecated("use scoreSort()", "5.0.0")
-    def sort = new {
-      def order(order: SortOrder): ScoreSortDefinition = ScoreSortDefinition(order)
-    }
+    def suggestion(name: String): TermSuggExpectsField = termSuggestion(name)
   }
 
   @deprecated("use putMapping(index)", "5.0.0")

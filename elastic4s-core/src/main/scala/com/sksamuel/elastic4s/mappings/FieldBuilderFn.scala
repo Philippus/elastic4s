@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-
-import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CommonFieldBuilder {
   def apply(field: FieldDefinition): XContentBuilder = {
@@ -15,7 +13,7 @@ object CommonFieldBuilder {
     field.boost.foreach(builder.field("boost", _))
 
     if (field.copyTo.nonEmpty)
-      builder.field("copy_to", field.copyTo.asJavaCollection)
+      builder.field("copy_to", field.copyTo)
 
     if (field.fields.nonEmpty) {
       field match {
@@ -24,7 +22,7 @@ object CommonFieldBuilder {
         case _ => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
-        builder.rawField(subfield.name, FieldBuilderFn(subfield).bytes)
+        builder.rawField(subfield.name, FieldBuilderFn(subfield))
       }
       builder.endObject()
     }

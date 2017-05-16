@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 abstract class LanguageAnalyzerDef(override val name: String,
                                    stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {

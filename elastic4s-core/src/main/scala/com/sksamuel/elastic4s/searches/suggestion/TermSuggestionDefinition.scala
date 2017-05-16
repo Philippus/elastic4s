@@ -1,9 +1,44 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.suggest.SortBy
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}
+
+sealed trait SortBy
+object SortBy {
+  case object SCORE extends SortBy
+  case object FREQUENCY extends SortBy
+}
+
+sealed trait SuggestMode
+object SuggestMode {
+
+  def valueOf(str: String): SuggestMode = str.toUpperCase match {
+    case "SUGGEST_WHEN_NOT_IN_INDEX" => SUGGEST_WHEN_NOT_IN_INDEX
+    case "SUGGEST_MORE_POPULAR" => SUGGEST_MORE_POPULAR
+    case "SUGGEST_ALWAYS" => SUGGEST_ALWAYS
+  }
+
+  case object SUGGEST_WHEN_NOT_IN_INDEX extends SuggestMode
+  case object SUGGEST_MORE_POPULAR extends SuggestMode
+  case object SUGGEST_ALWAYS extends SuggestMode
+}
+
+sealed trait StringDistanceImpl
+object StringDistanceImpl {
+
+  def valueOf(str: String): StringDistanceImpl = str.toUpperCase match {
+    case "INTERNAL" => INTERNAL
+    case "DAMERAU_LEVENSHTEIN" => DAMERAU_LEVENSHTEIN
+    case "LEVENSTEIN" => LEVENSTEIN
+    case "JAROWINKLER" => JAROWINKLER
+    case "NGRAM" => NGRAM
+  }
+
+  case object INTERNAL extends StringDistanceImpl
+  case object DAMERAU_LEVENSHTEIN extends StringDistanceImpl
+  case object LEVENSTEIN extends StringDistanceImpl
+  case object JAROWINKLER extends StringDistanceImpl
+  case object NGRAM extends StringDistanceImpl
+}
 
 case class TermSuggestionDefinition(name: String,
                                     fieldname: String,

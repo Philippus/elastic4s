@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s.indexes
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingContentBuilder
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object CreateIndexContentBuilder {
 
   def apply(d: CreateIndexDefinition): XContentBuilder = {
     if (d.rawSource.isDefined) {
-      XContentFactory.jsonBuilder().rawValue(new BytesArray(d.rawSource.get), XContentType.JSON)
+      XContentFactory.jsonBuilder().rawValue(d.rawSource.get)
     } else {
       val source = XContentFactory.jsonBuilder().startObject()
 

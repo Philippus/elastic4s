@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.bulk
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 import scala.concurrent.duration.Duration
 

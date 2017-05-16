@@ -4,8 +4,6 @@ import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -21,7 +19,6 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
                             script: Option[ScriptDefinition] = None,
                             scriptedUpsert: Option[Boolean] = None,
                             timeout: Option[Duration] = None,
-                            ttl: Option[String] = None,
                             version: Option[Long] = None,
                             versionType: Option[String] = None,
                             waitForActiveShards: Option[Int] = None,
@@ -63,20 +60,14 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
   def docAsUpsert(map: Map[String, Any]): UpdateDefinition = doc(map).copy(docAsUpsert = true.some)
 
-  // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  //  def docAsUpsert(value: FieldValue): UpdateDefinition = {
-  //    docAsUpsert(true)
-  //    doc(value)
-  //  }
-
   // should the doc be also used for a new document
   def docAsUpsert(shouldUpsertDoc: Boolean): UpdateDefinition = copy(docAsUpsert = shouldUpsertDoc.some)
 
-  def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = new FetchSourceContext(fetch).some)
+  def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = FetchSourceContext(fetch).some)
 
   def fetchSource(includes: Iterable[String],
                   excludes: Iterable[String]): UpdateDefinition =
-    copy(fetchSource = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
+    copy(fetchSource = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def parent(parent: String): UpdateDefinition = copy(parent = parent.some)
 
@@ -97,9 +88,6 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   def sourceAsUpsert[T: Indexable](t: T): UpdateDefinition = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): UpdateDefinition = copy(timeout = duration.some)
-
-  def ttl(ttl: Long): UpdateDefinition = copy(ttl.toString)
-  def ttl(ttl: String): UpdateDefinition = copy(ttl = ttl.some)
 
   // If the document does not already exist, the contents of the upsert element will be inserted as a new document.
   def upsert(map: Map[String, Any]): UpdateDefinition = copy(upsertFields = map)

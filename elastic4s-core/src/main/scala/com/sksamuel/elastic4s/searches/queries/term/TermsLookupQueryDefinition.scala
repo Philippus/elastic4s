@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.term
 
+import com.sksamuel.elastic4s.searches.TermsLookup
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.indices.TermsLookup
 import com.sksamuel.exts.OptionImplicits._
 
 case class TermsLookupQueryDefinition(field: String,

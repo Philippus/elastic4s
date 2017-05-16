@@ -1,20 +1,15 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-
-import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 abstract class Tokenizer(val name: String) {
 
-  @SuppressWarnings(Array("all"))
   def build(source: XContentBuilder): Unit = {}
 
   def json: XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder
-    builder.startObject()
+    val builder = XContentFactory.jsonBuilder.startObject()
     build(builder)
     builder.endObject()
-    builder
   }
 
   def customized: Boolean = false
@@ -94,7 +89,7 @@ case class NGramTokenizer(override val name: String,
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
-      source.field("token_chars", tokenChars.asJava)
+      source.field("token_chars", tokenChars)
   }
 
   def minMaxGrams(min: Int, max: Int): NGramTokenizer = copy(minGram = min, maxGram = max)
@@ -111,7 +106,7 @@ case class EdgeNGramTokenizer(override val name: String,
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
-      source.field("token_chars", tokenChars.asJava)
+      source.field("token_chars", tokenChars)
   }
 
   def minMaxGrams(min: Int, max: Int): EdgeNGramTokenizer = copy(minGram = min, maxGram = max)

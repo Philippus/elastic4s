@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
-import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
-
 case class StatsBucketDefinition(name: String,
                                  bucketsPath: String,
                                  format: Option[String] = None,

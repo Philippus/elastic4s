@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
+import com.sksamuel.elastic4s.EnumConversions
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders
 import org.elasticsearch.search.aggregations.pipeline.movavg.MovAvgPipelineAggregationBuilder
 
@@ -11,7 +12,7 @@ object MovAvgPipelineBuilder {
     val builder = PipelineAggregatorBuilders.movingAvg(p.name, p.bucketsPath)
     if (p.metadata.nonEmpty) builder.setMetaData(p.metadata.asJava)
     p.format.foreach(builder.format)
-    p.gapPolicy.foreach(builder.gapPolicy)
+    p.gapPolicy.map(EnumConversions.gapPolicy).foreach(builder.gapPolicy)
     p.minimise.foreach(builder.minimize)
     p.modelBuilder.foreach(builder.modelBuilder)
     p.numPredictions.foreach(num => builder.predict(num))

@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable}
+import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.index.VersionType
 
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,

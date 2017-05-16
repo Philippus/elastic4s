@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.MultiValueMode
 
 case class LinearDecayScoreDefinition(field: String,
                                       origin: String,

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.analyzers
 
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.xcontent.XContentBuilder
 
 import scala.collection.JavaConverters._
 

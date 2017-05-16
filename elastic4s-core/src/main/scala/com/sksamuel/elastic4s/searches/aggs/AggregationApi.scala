@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.searches.GeoPoint
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.GeoPoint
 
 trait AggregationApi {
 
@@ -24,8 +24,6 @@ trait AggregationApi {
   def filterAgg(name: String, query: QueryDefinition) = FilterAggregationDefinition(name, query)
   def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
-    @deprecated("use query", "5.0.0")
-    def filter(query: QueryDefinition) = FilterAggregationDefinition(name, query)
     def query(query: QueryDefinition) = FilterAggregationDefinition(name, query)
   }
 
@@ -42,7 +40,7 @@ trait AggregationApi {
 
   def geoDistanceAggregation(name: String) = new GeoDistanceAggregationExpectsOrigin(name)
   class GeoDistanceAggregationExpectsOrigin(name: String) {
-    def origin(lat: Double, long: Double): GeoDistanceAggregationDefinition = origin(new GeoPoint(lat, long))
+    def origin(lat: Double, long: Double): GeoDistanceAggregationDefinition = origin(GeoPoint(lat, long))
     def origin(origin: GeoPoint): GeoDistanceAggregationDefinition = GeoDistanceAggregationDefinition(name, origin)
   }
 

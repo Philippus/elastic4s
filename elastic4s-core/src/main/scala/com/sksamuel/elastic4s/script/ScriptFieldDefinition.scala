@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.script
 
-import org.elasticsearch.script.ScriptType
-
 case class ScriptFieldDefinition(field: String,
                                  script: String,
                                  language: Option[String] = None,
                                  parameters: Option[Map[String, AnyRef]] = None,
                                  options: Option[Map[String, String]] = None,
-                                 scriptType: ScriptType = ScriptType.INLINE) {
+                                 scriptType: ScriptType = ScriptType.Inline) {
 
   def lang(l: String): ScriptFieldDefinition = copy(language = Option(l))
 

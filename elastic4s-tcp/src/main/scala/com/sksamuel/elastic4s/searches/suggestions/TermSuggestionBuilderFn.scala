@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
 import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
@@ -22,7 +23,7 @@ object TermSuggestionBuilderFn {
     sugg.minDocFreq.map(_.toFloat).foreach(builder.minDocFreq)
     sugg.minWordLength.foreach(builder.minWordLength)
     sugg.prefixLength.foreach(builder.prefixLength)
-    sugg.sort.foreach(builder.sort)
+    sugg.sort.map(EnumConversions.sortOrder).foreach(builder.sort)
     sugg.stringDistance.foreach(builder.stringDistance)
     sugg.suggestMode.foreach(builder.suggestMode)
 

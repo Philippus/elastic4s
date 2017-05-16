@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.IndexesAndTypes
+import com.sksamuel.elastic4s.admin.IndicesOptions
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.searches.collapse.CollapseDefinition
@@ -9,11 +9,8 @@ import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition,
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
+import com.sksamuel.elastic4s.{FetchSourceContext, IndexesAndTypes}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.search.SearchType
-import org.elasticsearch.action.support.IndicesOptions
-import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -223,9 +220,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def limit(i: Int): SearchDefinition = size(i)
   def size(i: Int): SearchDefinition = copy(size = i.some)
 
-  @deprecated("Use the elasticsearch enum rather than the elastic4s one", "5.2.0")
   def preference(pref: com.sksamuel.elastic4s.Preference): SearchDefinition = preference(pref.value)
-  def preference(pref: Preference): SearchDefinition = preference(pref.`type`)
   def preference(pref: String): SearchDefinition = copy(pref = pref.some)
 
   def indicesOptions(options: IndicesOptions): SearchDefinition = copy(indicesOptions = options.some)
@@ -265,7 +260,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def storedFields(fields: Iterable[String]): SearchDefinition = copy(storedFields = fields.toSeq)
 
   def fetchContext(context: FetchSourceContext): SearchDefinition = copy(fetchContext = context.some)
-  def fetchSource(fetch: Boolean): SearchDefinition = copy(fetchContext = new FetchSourceContext(fetch).some)
+  def fetchSource(fetch: Boolean): SearchDefinition = copy(fetchContext = FetchSourceContext(fetch).some)
 
   def sourceInclude(first: String, rest: String*): SearchDefinition = sourceFiltering(first +: rest, Nil)
   def sourceInclude(includes: Iterable[String]) : SearchDefinition = sourceFiltering(includes, Nil)
@@ -274,7 +269,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def sourceExclude(excludes: Iterable[String]) : SearchDefinition = sourceFiltering(Nil, excludes)
 
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchDefinition =
-    copy(fetchContext = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
+    copy(fetchContext = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def collapse(collapse: CollapseDefinition): SearchDefinition = copy(collapse = collapse.some)
 }

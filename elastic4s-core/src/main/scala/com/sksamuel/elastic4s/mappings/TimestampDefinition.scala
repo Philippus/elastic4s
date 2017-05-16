@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 case class TimestampDefinition(enabled: Boolean,
                                path: Option[String] = None,

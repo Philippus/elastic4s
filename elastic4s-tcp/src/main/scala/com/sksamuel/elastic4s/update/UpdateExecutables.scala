@@ -70,8 +70,7 @@ trait UpdateExecutables {
       }
 
       t.routing.foreach(builder.setRouting)
-      t.refresh.foreach(builder.setRefreshPolicy)
-      t.ttl.foreach(builder.setTtl)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
       t.timeout.map(dur => TimeValue.timeValueMillis(dur.toMillis)).foreach(builder.setTimeout)
       t.retryOnConflict.foreach(builder.setRetryOnConflict)
       t.waitForActiveShards.foreach(builder.setWaitForActiveShards)

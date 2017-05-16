@@ -1,11 +1,27 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.searches.IncludeExclude
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.Aggregator
-import org.elasticsearch.search.aggregations.bucket.terms.Terms
-import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
-import org.elasticsearch.search.aggregations.support.ValueType
+
+sealed trait ValueType
+object ValueType {
+  case object STRING extends ValueType
+  case object LONG extends ValueType
+  case object DOUBLE extends ValueType
+  case object NUMBER extends ValueType
+  case object NUMERIC extends ValueType
+  case object DATE extends ValueType
+  case object IP extends ValueType
+  case object GEOPOINT extends ValueType
+  case object BOOLEAN extends ValueType
+}
+
+sealed trait SubAggCollectionMode
+object SubAggCollectionMode {
+  case object DepthFirst extends SubAggCollectionMode
+  case object BreadthFirst extends SubAggCollectionMode
+}
 
 case class TermsAggregationDefinition(name: String,
                                       field: Option[String] = None,
@@ -17,8 +33,7 @@ case class TermsAggregationDefinition(name: String,
                                       valueType: Option[ValueType] = None,
                                       executionHint: Option[String] = None,
                                       shardMinDocCount: Option[Long] = None,
-                                      collectMode: Option[Aggregator.SubAggCollectionMode] = None,
-                                      _oldOrder: Option[Terms.Order] = None,
+                                      collectMode: Option[SubAggCollectionMode] = None,
                                       order: Option[TermsOrder] = None,
                                       shardSize: Option[Int] = None,
                                       includeExclude: Option[IncludeExclude] = None,
@@ -37,37 +52,25 @@ case class TermsAggregationDefinition(name: String,
   def valueType(valueType: ValueType): TermsAggregationDefinition = copy(valueType = valueType.some)
   def executionHint(hint: String): TermsAggregationDefinition = copy(executionHint = hint.some)
   def shardMinDocCount(min: Long): TermsAggregationDefinition = copy(shardMinDocCount = min.some)
-  def collectMode(mode: Aggregator.SubAggCollectionMode): TermsAggregationDefinition = copy(collectMode = mode.some)
+  def collectMode(mode: SubAggCollectionMode): TermsAggregationDefinition = copy(collectMode = mode.some)
 
   def order(order: TermsOrder): TermsAggregationDefinition = copy(order = order.some)
-
-  @deprecated("Use order(TermsOrder) and pass in _term, _count or aggregation name", "5.4.1")
-  def order(order: Terms.Order): TermsAggregationDefinition = copy(_oldOrder = order.some)
 
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
 
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
-    copy(includeExclude = new IncludeExclude(include.some.orNull, exclude.some.orNull).some)
+    copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
 
   def includeExclude(include: Iterable[String], exclude: Iterable[String]): TermsAggregationDefinition = {
-    // empty array doesn't work, has to be null
-    val inc = if (include.isEmpty) null else include.toArray
-    val exc = if (exclude.isEmpty) null else exclude.toArray
-    copy(includeExclude = new IncludeExclude(inc, exc).some)
+    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
   }
 
   def includeExcludeLongs(include: Iterable[Long], exclude: Iterable[Long]): TermsAggregationDefinition = {
-    // empty array doesn't work, has to be null
-    val inc = if (include.isEmpty) null else include.toArray
-    val exc = if (exclude.isEmpty) null else exclude.toArray
-    copy(includeExclude = new IncludeExclude(inc, exc).some)
+    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
   }
 
   def includeExcludeDoubles(include: Iterable[Double], exclude: Iterable[Double]): TermsAggregationDefinition = {
-    // empty array doesn't work, has to be null
-    val inc = if (include.isEmpty) null else include.toArray
-    val exc = if (exclude.isEmpty) null else exclude.toArray
-    copy(includeExclude = new IncludeExclude(inc, exc).some)
+    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
   }
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)

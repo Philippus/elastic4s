@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.{Executable, Indexes}
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
 import org.elasticsearch.action.admin.indices.settings.put.{UpdateSettingsRequest, UpdateSettingsResponse}
-import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.client.Client
 
 import scala.collection.JavaConverters._
@@ -50,7 +49,7 @@ case class UpdateSettingsDefinition(indices: Indexes,
                                     settings: Map[String, String] = Map.empty,
                                     options: Option[IndicesOptions] = None) {
 
-  def build = {
+  def build: UpdateSettingsRequest = {
     val req = new UpdateSettingsRequest(indices.values: _*)
     req.settings(settings.asJava)
     preserveExisting.foreach(req.setPreserveExisting)

@@ -6,6 +6,9 @@ import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 
 object RolloverBuilderFn {
+
+  import com.sksamuel.elastic4s.EnumConversions._
+
   def apply(client: Client, req: RolloverDefinition): RolloverRequestBuilder = {
     val builder = client.admin().indices().prepareRolloverIndex(req.sourceAlias)
     req.maxIndexAgeCondition.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.addMaxIndexAgeCondition)
@@ -13,7 +16,8 @@ object RolloverBuilderFn {
     req.dryRun.foreach(builder.dryRun)
     req.mappings.foreach { mapping => builder.mapping(mapping.`type`, MappingContentBuilder.buildWithName(mapping, mapping.`type`).string) }
     req.newIndexName.foreach(builder.setNewIndexName)
-    req.settings.foreach(builder.settings)
+    if (req.settings.nonEmpty)
+      builder.settings(req.settings)
     req.waitForActiveShards.foreach(builder.waitForActiveShards)
     req.masterNodeTimeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setMasterNodeTimeout)
     builder

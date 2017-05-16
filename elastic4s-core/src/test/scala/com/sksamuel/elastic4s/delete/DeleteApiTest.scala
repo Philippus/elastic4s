@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.delete
 
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.index.VersionType
+import com.sksamuel.elastic4s.{RefreshPolicy, VersionType}
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -32,11 +31,11 @@ class DeleteApiTest extends FlatSpec with Matchers with TypeCheckedTripleEquals 
   }
 
   it should "accept version and version type" in {
-    delete(141212) from "places" / "type1" version 53423l versionType VersionType.EXTERNAL
+    delete(141212) from "places" / "type1" version 53423l versionType VersionType.External
   }
 
   it should "accept refresh" in {
-    delete(141212) from "places" / "type1" refresh RefreshPolicy.IMMEDIATE
+    delete(141212) from "places" / "type1" refresh RefreshPolicy.Immediate
   }
 
   "a delete by query request" should "support the dsl syntax" in {

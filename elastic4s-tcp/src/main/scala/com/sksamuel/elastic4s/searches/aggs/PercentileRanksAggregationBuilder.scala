@@ -8,6 +8,8 @@ import scala.collection.JavaConverters._
 
 object PercentileRanksAggregationBuilder {
 
+  import com.sksamuel.elastic4s.EnumConversions._
+
   def apply(agg: PercentileRanksAggregationDefinition): PercentileRanksAggregationBuilder = {
 
     val builder = AggregationBuilders.percentileRanks(agg.name)
@@ -17,7 +19,7 @@ object PercentileRanksAggregationBuilder {
     agg.format.foreach(builder.format)
     agg.keyed.foreach(builder.keyed)
     agg.compression.foreach(builder.compression)
-    agg.method.foreach(builder.method)
+    agg.method.foreach(method => builder.method(_))
     agg.numberOfSignificantValueDigits.foreach(builder.numberOfSignificantValueDigits)
 
     if (agg.values.nonEmpty) builder.values(agg.values: _*)

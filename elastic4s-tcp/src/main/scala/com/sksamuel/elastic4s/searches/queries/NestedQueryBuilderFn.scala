@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
-import org.apache.lucene.search.join.ScoreMode
+import com.sksamuel.elastic4s.searches.{QueryBuilderFn, ScoreMode}
 import org.elasticsearch.index.query.{NestedQueryBuilder, QueryBuilders}
 
 object NestedQueryBuilderFn {
+
+  import com.sksamuel.elastic4s.EnumConversions._
 
   def apply(q: NestedQueryDefinition): NestedQueryBuilder = {
     val builder = QueryBuilders.nestedQuery(

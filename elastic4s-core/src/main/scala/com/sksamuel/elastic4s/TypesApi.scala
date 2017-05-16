@@ -209,7 +209,4 @@ trait TypesApi {
     @deprecated("use tokenCountField(name)", "5.2.11")
     def typed(ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
   }
-
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-  def field(name: String, ft: StringType.type): BasicFieldDefinition = stringField(name)
 }

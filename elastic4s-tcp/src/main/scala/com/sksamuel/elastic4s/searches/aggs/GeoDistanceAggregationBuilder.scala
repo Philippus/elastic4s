@@ -8,6 +8,8 @@ import scala.collection.JavaConverters._
 
 object GeoDistanceAggregationBuilder {
 
+  import com.sksamuel.elastic4s.EnumConversions._
+
   def apply(agg: GeoDistanceAggregationDefinition): GeoDistanceAggregationBuilder = {
 
     val builder = AggregationBuilders.geoDistance(agg.name, agg.origin)
@@ -16,8 +18,8 @@ object GeoDistanceAggregationBuilder {
     agg.missing.foreach(builder.missing)
     agg.format.foreach(builder.format)
     agg.keyed.foreach(builder.keyed)
-    agg.distanceType.foreach(builder.distanceType)
-    agg.unit.foreach(builder.unit)
+    agg.distanceType.foreach(_ => builder.distanceType(_))
+    agg.unit.foreach(_ => builder.unit(_))
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
 
     agg.ranges.foreach {

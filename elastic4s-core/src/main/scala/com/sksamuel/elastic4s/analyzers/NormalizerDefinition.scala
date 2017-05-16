@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 import scala.collection.JavaConverters._
 

@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{FetchSourceContext, IndexAndType}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class GetDefinition(indexAndType: IndexAndType,
                          id: String,
@@ -19,11 +18,11 @@ case class GetDefinition(indexAndType: IndexAndType,
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   def fetchSourceContext(sourceEnabled: Boolean): GetDefinition =
-    copy(fetchSource = new FetchSourceContext(sourceEnabled).some)
+    copy(fetchSource = FetchSourceContext(sourceEnabled).some)
 
   def fetchSourceContext(include: Iterable[String],
                          exclude: Iterable[String] = Nil): GetDefinition =
-    copy(fetchSource = new FetchSourceContext(true, include.toArray, exclude.toArray).some)
+    copy(fetchSource = FetchSourceContext(true, include.toArray, exclude.toArray).some)
 
   def fetchSourceContext(context: FetchSourceContext): GetDefinition = copy(fetchSource = context.some)
 
