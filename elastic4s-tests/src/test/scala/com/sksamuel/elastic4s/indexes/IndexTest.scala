@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
@@ -15,7 +14,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticS
     override def json(t: Phone): String = s"""{ "name" : "${t.name}", "speed" : "${t.speed}" }"""
   }
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("electronics").mappings(mapping("phone"))
     }.await

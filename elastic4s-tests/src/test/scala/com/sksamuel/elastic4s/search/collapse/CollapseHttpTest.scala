@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.collapse
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
 class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar with ElasticDsl with BeforeAndAfterAll {

@@ -6,8 +6,7 @@ import com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition
 
 object RangeAggregationBuilder {
   def apply(agg: RangeAggregationDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
+    val builder = XContentFactory.obj
     builder.startObject("range")
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.field("missing", _))

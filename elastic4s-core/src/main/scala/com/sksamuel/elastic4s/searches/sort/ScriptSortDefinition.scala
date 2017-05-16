@@ -22,4 +22,7 @@ case class ScriptSortDefinition(script: ScriptDefinition,
 
   def order(order: SortOrder): ScriptSortDefinition = copy(order = order.some)
   def sortOrder(order: SortOrder): ScriptSortDefinition = copy(order = order.some)
+
+  def asc() :ScriptSortDefinition = sortOrder(SortOrder.Asc)
+  def desc() :ScriptSortDefinition = sortOrder(SortOrder.Desc)
 }

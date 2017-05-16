@@ -9,6 +9,7 @@ object XContentFactory {
   def jsonBuilder(): XContentBuilder = obj()
   def obj() = new XContentBuilder(JacksonSupport.mapper.createObjectNode)
   def array() = new XContentBuilder(JacksonSupport.mapper.createArrayNode)
+  def parse(content: String): XContentBuilder = new XContentBuilder(JacksonSupport.mapper.readTree(content))
 }
 
 class XContentBuilder(root: JsonNode) {
@@ -18,7 +19,9 @@ class XContentBuilder(root: JsonNode) {
 
   private def current = stack.peek()
 
+  def array(field: String, contents: Array[XContentBuilder]) = ???
   def array(field: String, strings: Array[String]) = ???
+  def array(field: String, doubles: Array[Double]) = ???
   def array(field: String, longs: Array[Long]) = ???
   def array(field: String, ints: Array[Int]) = ???
   def array(field: String, floats: Array[Float]) = ???
@@ -72,10 +75,13 @@ class XContentBuilder(root: JsonNode) {
   def startArray(name: String): XContentBuilder = this
 
   def startArray(): XContentBuilder = ???
-
-  def endArray(): XContentBuilder = ???
-
   def startObject(): XContentBuilder = ???
+
+  def endArray(): XContentBuilder = {
+    require(current.isInstanceOf[ArrayNode])
+    stack.pop()
+    this
+  }
 
   def startObject(name: String): XContentBuilder = {
     stack.push(current.asInstanceOf[ObjectNode].putObject(name))

@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search
 
 import cats.Show
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 import scala.concurrent.Future
 
@@ -14,7 +14,7 @@ case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 trait SearchScrollImplicits {
 
   implicit object SearchScrollShow extends Show[SearchScrollDefinition] {
-    override def show(req: SearchScrollDefinition): String = SearchScrollContentFn(req).string()
+    override def show(req: SearchScrollDefinition): String = SearchScrollContentFn(req).string
   }
 
   implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
+import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
@@ -62,9 +63,9 @@ object SearchBodyBuilderFn {
           term.prefixLength.foreach(builder.field("prefix_length", _))
           term.size.foreach(builder.field("size", _))
           term.shardSize.foreach(builder.field("shard_size", _))
-          term.sort.map(_.name().toLowerCase).foreach(builder.field("sort", _))
-          term.stringDistance.map(_.name.toLowerCase).foreach(builder.field("string_distance", _))
-          term.suggestMode.map(_.name().toLowerCase).foreach(builder.field("suggest_mode", _))
+          term.sort.map(EnumConversions.sortBy).foreach(builder.field("sort", _))
+          term.stringDistance.map(EnumConversions.stringDistance).foreach(builder.field("string_distance", _))
+          term.suggestMode.map(EnumConversions.suggestMode).foreach(builder.field("suggest_mode", _))
           builder.endObject()
           builder.endObject()
       }
@@ -103,7 +104,7 @@ object SearchBodyBuilderFn {
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")
       request.aggs.foreach { agg =>
-        builder.rawField(agg.name, AggregationBuilderFn(agg).bytes, XContentType.JSON)
+        builder.rawField(agg.name, AggregationBuilderFn(agg))
       }
       builder.endObject()
     }

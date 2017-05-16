@@ -20,6 +20,10 @@ object SuggestMode {
   case object Missing extends SuggestMode
   case object Popular extends SuggestMode
   case object Always extends SuggestMode
+
+  def MISSING = Missing
+  def POPULAR = Popular
+  def ALWAYS = Always
 }
 
 sealed trait StringDistanceImpl

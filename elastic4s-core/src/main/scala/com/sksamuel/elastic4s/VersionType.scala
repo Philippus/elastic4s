@@ -14,4 +14,8 @@ object VersionType {
   case object ExternalGte extends VersionType
   case object Force extends VersionType
   case object Internal extends VersionType
+
+  def EXTERNAL = External
+  def EXTERNAL_GTE = ExternalGte
+  def INTERNAL = Internal
 }

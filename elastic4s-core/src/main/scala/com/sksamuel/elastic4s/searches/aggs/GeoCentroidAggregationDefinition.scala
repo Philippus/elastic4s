@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.ValueType
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
 

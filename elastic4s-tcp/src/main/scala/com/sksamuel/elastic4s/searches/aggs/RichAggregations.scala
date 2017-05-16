@@ -17,6 +17,9 @@ import scala.collection.JavaConverters._
 
 case class RichAggregations(aggregations: Aggregations) {
 
+  @deprecated("use map", "5.0.0")
+  def getAsMap: util.Map[String, Aggregation] = aggregations.getAsMap
+
   def map: Map[String, Aggregation] = aggregations.getAsMap.asScala.toMap
 
   def getAs[T](name: String): T = aggregations.getAsMap.get(name).asInstanceOf[T]

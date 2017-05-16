@@ -12,7 +12,7 @@ object DateHistogramBuilder {
     agg.extendedBounds.foreach(bounds => builder.extendedBounds(new org.elasticsearch.search.aggregations.bucket.histogram.ExtendedBounds(bounds.min, bounds.max)))
     agg.field.foreach(builder.field)
     agg.format.foreach(builder.format)
-    agg.interval.map(_.toSeconds.toInt).map(DateHistogramInterval.seconds).foreach(builder.dateHistogramInterval)
+    agg.interval.map(_.interval).map(new DateHistogramInterval(_)).foreach(builder.dateHistogramInterval)
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
     agg.offset.foreach(builder.offset)

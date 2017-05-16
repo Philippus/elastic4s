@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.cluster
 
+import com.sksamuel.elastic4s.HealthStatus
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
@@ -18,7 +19,7 @@ class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with Dual
       }.await
 
       val health = execute {
-        clusterHealth() waitForStatus ClusterHealthStatus.GREEN
+        clusterHealth() waitForStatus HealthStatus.Green
       }.await
 
       health.clusterName should startWith("node_")

@@ -11,6 +11,8 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition],
 
   def timeout(timeout: Duration): BulkDefinition = copy(timeout = (timeout.toNanos + "n").some)
   def timeout(timeout: String): BulkDefinition = copy(timeout = timeout.some)
+
+  @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): BulkDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): BulkDefinition = copy(refresh = refresh.some)
 }

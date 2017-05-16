@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.joda.time.DateTimeZone
@@ -18,7 +19,7 @@ object HistogramOrder {
 case class ExtendedBounds(min: Long, max: Long)
 
 case class DateHistogramAggregation(name: String,
-                                    interval: Option[FiniteDuration] = None,
+                                    interval: Option[DateHistogramInterval] = None,
                                     minDocCount: Option[Long] = None,
                                     timeZone: Option[DateTimeZone] = None,
                                     order: Option[HistogramOrder] = None,
@@ -38,7 +39,8 @@ case class DateHistogramAggregation(name: String,
   def extendedBounds(bounds: ExtendedBounds): DateHistogramAggregation = copy(extendedBounds = bounds.some)
 
   def interval(seconds: Long): DateHistogramAggregation = interval(seconds.seconds)
-  def interval(interval: FiniteDuration): DateHistogramAggregation = copy(interval = interval.some)
+  def interval(dur: FiniteDuration): DateHistogramAggregation = interval(DateHistogramInterval.seconds(dur.toSeconds))
+  def interval(interval: DateHistogramInterval): DateHistogramAggregation = copy(interval = interval.some)
 
   def minDocCount(min: Long): DateHistogramAggregation = copy(minDocCount = min.some)
 

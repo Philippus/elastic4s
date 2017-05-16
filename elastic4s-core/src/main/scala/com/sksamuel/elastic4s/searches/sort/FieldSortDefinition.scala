@@ -19,12 +19,24 @@ object SortMode {
   case object Min extends SortMode
   case object Max extends SortMode
   case object Sum extends SortMode
+
+  def AVG = Avg
+  def MEDIAN = Median
+  def MIN = Min
+  def MAX = Max
+  def SUM = Sum
 }
 
 sealed trait SortOrder
 object SortOrder {
   case object Asc extends SortOrder
   case object Desc extends SortOrder
+
+  @deprecated("use Desc", "6.0.0")
+  def DESC = Desc
+
+  @deprecated("use Asc", "6.0.0")
+  def ASC = Asc
 }
 
 case class FieldSortDefinition(field: String,

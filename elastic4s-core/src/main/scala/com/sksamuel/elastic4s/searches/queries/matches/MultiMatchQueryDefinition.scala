@@ -31,6 +31,9 @@ object ZeroTermsQuery {
   }
   case object All extends ZeroTermsQuery
   case object None extends ZeroTermsQuery
+
+  def ALL = All
+  def NONE = None
 }
 
 case class MultiMatchQueryDefinition(text: String,

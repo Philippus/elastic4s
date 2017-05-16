@@ -10,4 +10,7 @@ object Operator {
 
   case object And extends Operator
   case object Or extends Operator
+
+  def AND = And
+  def OR = Or
 }

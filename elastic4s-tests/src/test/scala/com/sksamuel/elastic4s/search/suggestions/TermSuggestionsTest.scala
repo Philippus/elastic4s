@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.search.suggestions
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
 import org.scalatest.{Matchers, WordSpec}
 
 class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {

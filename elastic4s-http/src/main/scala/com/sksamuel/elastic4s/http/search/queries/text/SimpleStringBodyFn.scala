@@ -20,7 +20,7 @@ object SimpleStringBodyFn {
       builder.field("fields", fields)
     }
     if (s.flags.nonEmpty) {
-      val flags = s.flags.map(_.name).mkString("|")
+      val flags = s.flags.map(EnumConversions.simpleQueryStringFlag).mkString("|")
       builder.field("flags", flags)
     }
     builder.field("query", s.query).endObject().endObject()

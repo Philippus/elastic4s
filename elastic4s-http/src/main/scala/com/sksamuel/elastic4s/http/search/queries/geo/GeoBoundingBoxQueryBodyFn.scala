@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
+import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition
 
@@ -26,9 +27,9 @@ object GeoBoundingBoxQueryBodyFn {
       builder.endObject()
     }
 
-    q.geoExecType.map(_.name.toLowerCase).foreach(builder.field("type", _))
+    q.geoExecType.map(EnumConversions.geoExecType(_)).foreach(builder.field("type", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
-    q.validationMethod.map(_.name).foreach(builder.field("validation_method", _))
+    q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.queryName.foreach(builder.field("_name", _))
 
     builder.endObject().endObject().endObject()

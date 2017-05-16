@@ -63,11 +63,9 @@ trait SearchImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
 
       val builder = SearchBodyBuilderFn(request)
-      logger.debug("Executing search request: " + builder.string)
-
       val body = builder.string()
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+
+      client.async("POST", endpoint, params.toMap, new StringEntity(body, ContentType.APPLICATION_JSON), ResponseHandler.default)
     }
   }
 }

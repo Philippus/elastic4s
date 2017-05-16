@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http.delete
 import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.http.search.queries.text.EnumConversions
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -66,7 +67,7 @@ trait DeleteImplicits {
       request.routing.foreach(params.put("routing", _))
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
-      request.versionType.map(_.name).foreach(params.put("versionType", _))
+      request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
       client.async(method, endpoint, params.toMap, ResponseHandler.failure404)

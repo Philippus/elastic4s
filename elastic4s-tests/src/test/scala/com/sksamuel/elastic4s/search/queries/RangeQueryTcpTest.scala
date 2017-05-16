@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers {

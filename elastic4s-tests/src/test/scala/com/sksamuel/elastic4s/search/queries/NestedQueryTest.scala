@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {

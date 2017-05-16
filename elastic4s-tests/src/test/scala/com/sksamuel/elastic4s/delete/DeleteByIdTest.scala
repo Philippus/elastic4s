@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.delete
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {

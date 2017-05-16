@@ -1,21 +1,9 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.ValueType
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.exts.OptionImplicits._
-
-sealed trait ValueType
-object ValueType {
-  case object STRING extends ValueType
-  case object LONG extends ValueType
-  case object DOUBLE extends ValueType
-  case object NUMBER extends ValueType
-  case object NUMERIC extends ValueType
-  case object DATE extends ValueType
-  case object IP extends ValueType
-  case object GEOPOINT extends ValueType
-  case object BOOLEAN extends ValueType
-}
 
 sealed trait SubAggCollectionMode
 object SubAggCollectionMode {

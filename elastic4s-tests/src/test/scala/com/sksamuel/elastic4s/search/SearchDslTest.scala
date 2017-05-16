@@ -3,20 +3,14 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s._
-import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.action.search.SearchType
-import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
-import org.elasticsearch.common.unit.DistanceUnit
-import org.elasticsearch.index.query.{MultiMatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag}
-import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
-import org.elasticsearch.search.MultiValueMode
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
-import org.elasticsearch.search.aggregations.bucket.terms.Terms
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
-import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.{SortMode, SortOrder}
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
+import com.sksamuel.elastic4s.searches.aggs.TermsOrder
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s.searches.queries.funcscorer.MultiValueMode
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance
+import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.searches.sort.{ScriptSortType, SortMode, SortOrder}
+import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
+import com.sksamuel.elastic4s.searches.{DateHistogramInterval, GeoPoint, ScoreMode, SearchType}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
@@ -60,7 +54,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "use preference when specified" in {
-    val req = search("*") types("users", "tweets") query "coldplay" preference Preference.PRIMARY_FIRST
+    val req = search("*") types("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
     req.show should matchJsonResource("/json/search/search_preference_primary_first.json")
   }
 
@@ -108,7 +102,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for a regex query" in {
     val req = search("*") types("users", "tweets") limit 5 query {
-      regexQuery("drummmer" -> "will*") boost 4 flags RegexpFlag.INTERSECTION rewrite "rewrite-to"
+      regexQuery("drummmer" -> "will*") boost 4 flags RegexpFlag.Intersection rewrite "rewrite-to"
     }
     req.show should matchJsonResource("/json/search/search_regex.json")
   }
@@ -195,7 +189,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate json for a boolean compound query" in {
     val req = search("*") types("bands", "artists") limit 5 query {
       boolQuery().must(
-        regexQuery("drummmer" -> "will*") boost 5 flags RegexpFlag.ANYSTRING,
+        regexQuery("drummmer" -> "will*") boost 5 flags RegexpFlag.AnyString,
         termQuery("singer" -> "chris")
       ) should termQuery("bassist" -> "berryman") not termQuery("singer" -> "anderson")
     }
@@ -440,7 +434,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val lat = 269.9986267089844
     val lon = 539.9986267089844
     val req = search("music") types "bands" sortBy {
-      geoSort("location").points(List(new GeoPoint(lat, lon))).mode(SortMode.MAX).geoDistance(GeoDistance.ARC)
+      geoSort("location").points(List(GeoPoint(lat, lon))).mode(SortMode.MAX).geoDistance(GeoDistance.ARC)
     }
     req.show should matchJsonResource("/json/search/search_sort_geo.json")
   }
@@ -504,7 +498,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       multiMatchQuery("this is my query") fields("name", "location", "genre") analyzer WhitespaceAnalyzer boost
         3.4 cutoffFrequency 1.7 fuzziness
         "something" prefixLength 4 minimumShouldMatch 2 tieBreaker 4.5 zeroTermsQuery
-        ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator "AND" matchType MultiMatchQueryBuilder.Type.CROSS_FIELDS
+        ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator "AND" matchType MultiMatchQueryBuilderType.CROSS_FIELDS
     }
     req.show should matchJsonResource("/json/search/search_query_multi_match.json")
   }
@@ -520,9 +514,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       bool(
         should(
-          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.PLANE geohash "geo1234" distance "120mi"
+          geoDistanceQuery("distance") point(10.5d, 35.0d) geoDistance GeoDistance.Plane geohash "geo1234" distance "120mi"
         ) not (
-          geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.YARD)
+          geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.Yard)
           )
       )
     }
@@ -541,7 +535,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val scorers = Seq(
       randomScore(1234).weight(1.2),
       scriptScore("some script here").weight(0.5),
-      gaussianScore("field1", "1m", "2m").multiValueMode(MultiValueMode.MEDIAN),
+      gaussianScore("field1", "1m", "2m").multiValueMode(MultiValueMode.Median),
       fieldFactorScore("field2").factor(1.2)
     )
 
@@ -557,9 +551,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") types "bands" postFilter {
       geoPolygonQuery(
         "distance",
-        new GeoPoint(10, 10),
-        new GeoPoint(20, 20),
-        new GeoPoint(30, 30)
+        GeoPoint(10, 10),
+        GeoPoint(20, 20),
+        GeoPoint(30, 30)
       )
     }
     req.show should matchJsonResource("/json/search/search_filter_geo_polygon.json")
@@ -580,7 +574,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for datehistogram aggregation" in {
     val req = search("music") types "bands" aggs {
-      dateHistogramAggregation("years") field "date" interval DateHistogramInterval.YEAR minDocCount 0
+      dateHistogramAggregation("years") field "date" interval DateHistogramInterval.Year minDocCount 0
     }
     req.show should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
   }
@@ -639,14 +633,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for terms aggregation" ignore {
     val req = search("music") types "bands" aggs {
-      termsAggregation("my_terms_agg") field "keyword" size 10 order Terms.Order.count(false)
+      termsAggregation("my_terms_agg") field "keyword" size 10 order TermsOrder("count", true)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
   it should "generate correct json for top hits aggregation" ignore {
     val req = search("music") types "bands" aggs {
-      termsAggregation("top-tags") field "tags" size 3 order Terms.Order.count(true) subAggregation (
+      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count", true) subAggregation (
         topHitsAggregation("top_tag_hits") size 1 sortBy {
           fieldSort("last_activity_date") order SortOrder.DESC
         } fetchSource(Array("title"), Array.empty)
@@ -671,7 +665,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for sub aggregation" ignore {
     val req = search("music") types "bands" aggs {
-      aggregation datehistogram "days" field "date" interval DateHistogramInterval.DAY subAggregations(
+      aggregation datehistogram "days" field "date" interval DateHistogramInterval.Day subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }
@@ -741,7 +735,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for percentileranks aggregation" in {
     val req = search("school") aggs {
-      aggregation percentileranks "grades_percentileranks" field "grade" percents(95, 99, 99.9) compression 200
+      aggregation percentileranks "grades_percentileranks" field "grade" values(95, 99, 99.9) compression 200
     }
     req.show should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
   }
@@ -775,8 +769,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music").highlighting(
       highlightOptions().tagsSchema("styled") boundaryChars "\\b" boundaryMaxScan 4 order "score" preTags
         "<b>" postTags "</b>" encoder "html",
-      "name" fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
-      "type" numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
+      highlight("name") fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
+      highlight("type") numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
     )
     req.show should matchJsonResource("/json/search/search_highlighting.json")
   }

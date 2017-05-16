@@ -6,11 +6,8 @@ import com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition
 
 object SpanNearQueryBodyFn {
   def apply(q: SpanNearQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
 
-    builder.startObject()
-    builder.startObject("span_or")
-    builder.startArray("clauses")
+    val builder = XContentFactory.jsonBuilder().startObject().startObject("span_or").startArray("clauses")
     q.clauses.foreach { clause =>
       builder.rawValue(QueryBuilderFn(clause))
     }

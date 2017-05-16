@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.admin.IndicesOptions
 import com.sksamuel.elastic4s.script.ScriptType
 import com.sksamuel.elastic4s.searches.aggs.pipeline.GapPolicy
-import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, PercentilesMethod, SubAggCollectionMode, ValueType}
+import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, PercentilesMethod, SubAggCollectionMode}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FieldValueFactorFunctionModifier, FunctionScoreQueryScoreMode, MultiValueMode}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
+import com.sksamuel.elastic4s.searches.aggs.HistogramOrder
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 
 import scala.collection.JavaConverters._
@@ -55,7 +56,7 @@ class HistogramAggregationTest extends AbstractAggregationTest {
     "should respect ordering" in {
       val resp = client.execute {
         search in "aggregations/breakingbad" aggregations {
-          aggregation histogram "agg1" field "age" interval 10 order Histogram.Order.COUNT_DESC
+          aggregation histogram "agg1" field "age" interval 10 order HistogramOrder.COUNT_ASC
         }
       }.await
       resp.totalHits shouldBe 10

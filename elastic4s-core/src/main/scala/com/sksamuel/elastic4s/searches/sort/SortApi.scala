@@ -11,6 +11,9 @@ object ScriptSortType {
   }
   case object String extends ScriptSortType
   case object Number extends ScriptSortType
+
+  def STRING = String
+  def NUMBER = Number
 }
 
 trait SortApi {
