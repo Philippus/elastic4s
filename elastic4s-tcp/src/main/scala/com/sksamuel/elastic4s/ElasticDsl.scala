@@ -367,11 +367,6 @@ trait ElasticDsl
     def index(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
   }
 
-  case object timestamp {
-    @deprecated("use timestamp(boolean)", "5.0.0")
-    def enabled(en: Boolean): TimestampDefinition = TimestampDefinition(en)
-  }
-
   case object clear {
     @deprecated("use clearCache(indexes)", "5.0.0")
     def cache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)

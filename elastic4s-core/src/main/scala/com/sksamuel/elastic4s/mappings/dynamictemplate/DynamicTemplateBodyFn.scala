@@ -13,7 +13,7 @@ object DynamicTemplateBodyFn {
 
   def build(dyn: DynamicTemplateDefinition, builder: XContentBuilder): Unit = {
 
-    builder.startObject().startObject(dyn.name)
+    builder.startObject(dyn.name)
 
     dyn.`match`.foreach(builder.field("match", _))
     dyn.unmatch.foreach(builder.field("unmatch", _))

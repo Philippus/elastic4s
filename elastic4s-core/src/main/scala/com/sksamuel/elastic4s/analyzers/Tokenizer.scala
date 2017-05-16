@@ -7,7 +7,7 @@ abstract class Tokenizer(val name: String) {
   def build(source: XContentBuilder): Unit = {}
 
   def json: XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder.startObject()
+    val builder = XContentFactory.jsonBuilder
     build(builder)
     builder.endObject()
   }

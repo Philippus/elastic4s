@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 object UpdateIndexLevelSettingsBuilder {
 
   def apply(d: UpdateIndexLevelSettingsDefinition): XContentBuilder = {
-    val source = XContentFactory.jsonBuilder().startObject().startObject("index")
+    val source = XContentFactory.jsonBuilder().startObject("index")
 
     d.numberOfReplicas.foreach(source.field("number_of_replicas", _))
     d.autoExpandReplicas.foreach(source.field("auto_expand_replicas", _))

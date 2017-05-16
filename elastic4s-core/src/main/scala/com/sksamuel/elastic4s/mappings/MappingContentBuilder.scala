@@ -8,14 +8,14 @@ import scala.collection.JavaConverters._
 object MappingContentBuilder {
 
   def build(d: MappingDefinitionLike): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject()
+    val builder = XContentFactory.jsonBuilder()
     build(d, builder)
     builder.endObject()
   }
 
   // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
   def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject()
+    val builder = XContentFactory.jsonBuilder
     builder.startObject(tpe)
     build(d, builder)
     builder.endObject()
@@ -49,8 +49,6 @@ object MappingContentBuilder {
     d.analyzer.foreach(x => builder.startObject("_analyzer").field("path", x).endObject())
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())
     d.size.foreach(x => builder.startObject("_size").field("enabled", x).endObject())
-
-    d.timestamp.foreach(_.build(builder))
 
     if (d.fields.nonEmpty) {
       builder.startObject("properties")

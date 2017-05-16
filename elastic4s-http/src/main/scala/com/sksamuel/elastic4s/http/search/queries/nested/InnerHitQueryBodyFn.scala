@@ -20,7 +20,11 @@ object InnerHitQueryBodyFn {
       builder.array("docvalue_fields", d.docValueFields.toArray)
     }
     if (d.sorts.nonEmpty) {
-      builder.array("sort", d.sorts.map(SortContentBuilder.apply).toArray)
+      builder.startArray("sort")
+      d.sorts.foreach { sort =>
+        builder.rawValue(SortContentBuilder(sort))
+      }
+      builder.endArray()
     }
     if (d.storedFieldNames.nonEmpty) {
       builder.array("stored_fields", d.storedFieldNames.toArray)

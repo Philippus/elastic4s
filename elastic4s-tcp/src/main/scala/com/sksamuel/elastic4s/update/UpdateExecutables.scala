@@ -40,7 +40,7 @@ trait UpdateExecutables {
     extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
 
     def fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
-      val source = XContentFactory.jsonBuilder().startObject()
+      val source = XContentFactory.jsonBuilder()
       fields.foreach(XContentFieldValueWriter(source, _))
       source.endObject()
     }

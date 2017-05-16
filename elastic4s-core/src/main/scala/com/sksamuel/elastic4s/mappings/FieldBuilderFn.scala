@@ -6,7 +6,6 @@ object CommonFieldBuilder {
   def apply(field: FieldDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.field("type", field.`type`)
 
     field.analyzer.foreach(builder.field("analyzer", _))

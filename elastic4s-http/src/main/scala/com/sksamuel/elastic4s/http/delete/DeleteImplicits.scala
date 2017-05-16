@@ -15,7 +15,6 @@ import scala.concurrent.Future
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.rawField("query", QueryBuilderFn(request.query))
     builder.endObject()
     builder

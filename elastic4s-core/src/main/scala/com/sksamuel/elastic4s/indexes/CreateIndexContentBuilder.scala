@@ -9,7 +9,7 @@ object CreateIndexContentBuilder {
     if (d.rawSource.isDefined) {
       XContentFactory.jsonBuilder().rawValue(d.rawSource.get)
     } else {
-      val source = XContentFactory.jsonBuilder().startObject()
+      val source = XContentFactory.jsonBuilder()
 
       if (d.settings.settings.nonEmpty || d.analysis.nonEmpty) {
         source.startObject("settings")

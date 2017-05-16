@@ -19,7 +19,7 @@ trait IndexExecutables extends IndexShowImplicits {
       t.source match {
         case Some(json) => builder.setSource(json)
         case _ =>
-          val source = XContentFactory.jsonBuilder().startObject()
+          val source = XContentFactory.jsonBuilder()
           t.fields.foreach(XContentFieldValueWriter(source, _))
           source.endObject()
           builder.setSource(source)

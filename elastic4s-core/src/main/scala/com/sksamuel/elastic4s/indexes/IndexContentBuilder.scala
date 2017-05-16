@@ -8,7 +8,7 @@ object IndexContentBuilder {
     request.source match {
       case Some(json) => XContentFactory.jsonBuilder().rawValue(json)
       case None =>
-        val source = XContentFactory.jsonBuilder().startObject()
+        val source = XContentFactory.jsonBuilder()
         request.fields.foreach(XContentFieldValueWriter(source, _))
         source.endObject()
         source

@@ -20,7 +20,6 @@ trait MappingDefinitionLike {
   def dynamic: Option[DynamicMapping]
   def meta: Map[String, Any]
   def routing: Option[RoutingDefinition]
-  def timestamp: Option[TimestampDefinition]
   def templates: Seq[DynamicTemplateDefinition]
 }
 
@@ -44,7 +43,6 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
                                 dynamic: Option[DynamicMapping] = None,
                                 meta: Map[String, Any] = Map.empty,
                                 routing: Option[RoutingDefinition] = None,
-                                timestamp: Option[TimestampDefinition] = None,
                                 templates: Seq[DynamicTemplateDefinition] = Nil,
                                 rawSource: Option[String] = None
                                ) extends MappingDefinitionLike {
@@ -79,14 +77,6 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
   def as(fields: FieldDefinition*): PutMappingDefinition = as(fields.toIterable)
   def as(iterable: Iterable[FieldDefinition]): PutMappingDefinition = copy(fields = fields ++ iterable)
 
-  def timestamp(enabled: Boolean,
-                path: Option[String] = None,
-                format: Option[String] = None,
-                default: Option[String] = None): PutMappingDefinition =
-    copy(timestamp = TimestampDefinition(enabled, path, format, default).some)
-
-  def timestamp(t: TimestampDefinition): PutMappingDefinition = copy(timestamp = t.some)
-
   def dynamicDateFormats(dynamic_date_formats: String*): PutMappingDefinition =
     copy(dynamicDateFormats = dynamic_date_formats.toSeq)
 
@@ -120,7 +110,6 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
                              dynamic: Option[DynamicMapping] = None,
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[RoutingDefinition] = None,
-                             timestamp: Option[TimestampDefinition] = None,
                              templates: Seq[DynamicTemplateDefinition] = Nil,
                              rawSource: Option[String] = None
                             ) extends MappingDefinitionLike {
@@ -152,14 +141,6 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
 
   def as(fields: FieldDefinition*): MappingDefinition = as(fields.toIterable)
   def as(iterable: Iterable[FieldDefinition]): MappingDefinition = copy(fields = fields ++ iterable)
-
-  def timestamp(enabled: Boolean,
-                path: Option[String] = None,
-                format: Option[String] = None,
-                default: Option[String] = None): MappingDefinition =
-    copy(timestamp = TimestampDefinition(enabled, path, format, default).some)
-
-  def timestamp(t: TimestampDefinition): MappingDefinition = copy(timestamp = t.some)
 
   def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition =
     copy(dynamicDateFormats = dynamic_date_formats.toSeq)

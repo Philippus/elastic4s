@@ -112,9 +112,6 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def startArray(): XContentBuilder = ???
-  def startObject(): XContentBuilder = ???
-
   def endArray(): XContentBuilder = {
     require(current.isInstanceOf[ArrayNode])
     stack.pop()

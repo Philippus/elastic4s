@@ -15,28 +15,22 @@ abstract class NormalizerDefinition (val name: String) {
 
   def buildWithName(): XContentBuilder = {
     val xc = XContentFactory.jsonBuilder()
-    xc.startObject()
     buildWithName(xc)
     xc.endObject()
-    xc
   }
 
   def build(): XContentBuilder = {
     val xc = XContentFactory.jsonBuilder()
-    xc.startObject()
     build(xc)
     xc.endObject()
-    xc
   }
 
   def build(source: XContentBuilder): Unit
 
   def json: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder
-    builder.startObject()
     build(builder)
     builder.endObject()
-    builder
   }
 }
 
