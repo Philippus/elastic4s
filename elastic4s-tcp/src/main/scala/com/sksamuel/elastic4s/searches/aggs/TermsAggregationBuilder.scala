@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
+import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder}
 
 import scala.collection.JavaConverters._
@@ -15,7 +16,8 @@ object TermsAggregationBuilder {
     agg.field.foreach(builder.field)
     agg.collectMode.map(EnumConversions.collectMode).foreach(builder.collectMode)
     agg.executionHint.foreach(builder.executionHint)
-    agg.includeExclude.foreach(builder.includeExclude)
+    agg.includeExclude.foreach { it => builder.includeExclude(new IncludeExclude(it.include.toArray, it.exclude.toArray)) }
+    agg.includePartition.foreach { it => builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions)) }
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
     agg.order.foreach {

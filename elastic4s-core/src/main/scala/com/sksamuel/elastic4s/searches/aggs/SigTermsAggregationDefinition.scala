@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.searches.IncludeExclude
+import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
@@ -9,6 +9,7 @@ case class SigTermsAggregationDefinition(name: String,
                                          executionHint: Option[String] = None,
                                          size: Option[Int] = None,
                                          includeExclude: Option[IncludeExclude] = None,
+                                         includePartition: Option[IncludePartition] = None,
                                          field: Option[String] = None,
                                          shardMinDocCount: Option[Long] = None,
                                          shardSize: Option[Int] = None,
@@ -24,12 +25,17 @@ case class SigTermsAggregationDefinition(name: String,
   def executionHint(hint: String): SigTermsAggregationDefinition = copy(executionHint = hint.some)
   def size(size: Int): SigTermsAggregationDefinition = copy(size = size.some)
 
-  def includeExclude(include: String, exclude: String): SigTermsAggregationDefinition =
+  def includeExclude(include: String, exclude: String): T =
     copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
 
-  def includeExclude(include: Iterable[String], exclude: Iterable[String]): SigTermsAggregationDefinition = {
+  def includeExclude(include: Iterable[String], exclude: Iterable[String]): T = {
     copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
   }
+
+  def includePartition(partition: Int, numPartitions: Int): T = {
+    copy(includePartition = IncludePartition(partition, numPartitions).some)
+  }
+
   def significanceHeuristic(heuristic: String): SigTermsAggregationDefinition = copy(heuristic = heuristic.some)
 
   def field(field: String): SigTermsAggregationDefinition = copy(field = field.some)

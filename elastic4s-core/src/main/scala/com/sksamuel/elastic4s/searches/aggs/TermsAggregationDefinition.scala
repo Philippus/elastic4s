@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.IncludeExclude
+import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.exts.OptionImplicits._
 
 sealed trait ValueType
@@ -37,6 +37,7 @@ case class TermsAggregationDefinition(name: String,
                                       order: Option[TermsOrder] = None,
                                       shardSize: Option[Int] = None,
                                       includeExclude: Option[IncludeExclude] = None,
+                                      includePartition: Option[IncludePartition] = None,
                                       subaggs: Seq[AbstractAggregation] = Nil,
                                       metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
@@ -65,12 +66,8 @@ case class TermsAggregationDefinition(name: String,
     copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
   }
 
-  def includeExcludeLongs(include: Iterable[Long], exclude: Iterable[Long]): TermsAggregationDefinition = {
-    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
-  }
-
-  def includeExcludeDoubles(include: Iterable[Double], exclude: Iterable[Double]): TermsAggregationDefinition = {
-    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
+  def includePartition(partition: Int, numPartitions: Int): TermsAggregationDefinition = {
+    copy(includePartition = IncludePartition(partition, numPartitions).some)
   }
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
