@@ -79,7 +79,9 @@ object MappingContentBuilder {
 
     if (d.templates.nonEmpty) {
       builder.startArray("dynamic_templates")
-      d.templates.foreach(DynamicTemplateBodyFn.build(_, builder))
+      d.templates.foreach { template =>
+        builder.rawValue(DynamicTemplateBodyFn.build(template))
+      }
       builder.endArray()
     }
   }

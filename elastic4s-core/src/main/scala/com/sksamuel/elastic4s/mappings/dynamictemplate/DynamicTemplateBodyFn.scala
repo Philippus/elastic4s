@@ -6,13 +6,8 @@ import com.sksamuel.elastic4s.mappings.FieldBuilderFn
 object DynamicTemplateBodyFn {
 
   def build(dyn: DynamicTemplateDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder
-    build(dyn, builder)
-    builder
-  }
 
-  def build(dyn: DynamicTemplateDefinition, builder: XContentBuilder): Unit = {
-
+    val builder = XContentFactory.obj()
     builder.startObject(dyn.name)
 
     dyn.`match`.foreach(builder.field("match", _))
@@ -24,6 +19,6 @@ object DynamicTemplateBodyFn {
 
     builder.rawField("mapping", FieldBuilderFn(dyn.mapping))
 
-    builder.endObject().endObject()
+    builder.endObject()
   }
 }
