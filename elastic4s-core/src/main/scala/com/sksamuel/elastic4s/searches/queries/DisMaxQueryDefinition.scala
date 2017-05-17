@@ -6,7 +6,7 @@ case class DisMaxQueryDefinition(queries: Seq[QueryDefinition],
                                  boost: Option[Double] = None,
                                  tieBreaker: Option[Double] = None,
                                  queryName: Option[String] = None
-                           ) extends QueryDefinition {
+                                ) extends QueryDefinition {
 
   def boost(boost: Double): DisMaxQueryDefinition = copy(boost = boost.some)
   def queryName(queryName: String): DisMaxQueryDefinition = copy(queryName = queryName.some)

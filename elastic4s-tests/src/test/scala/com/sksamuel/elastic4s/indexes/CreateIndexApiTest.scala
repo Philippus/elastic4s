@@ -259,40 +259,9 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
 
   it should "support creating parent mappings" in {
     val req = createIndex("docsAndTags").mappings(
-      mapping("tags") as stringField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
+      mapping("tags") as textField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/create_parent_mappings.json")
-  }
-
-  it should "generate json to enable timestamp" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
-        geopointField("name"),
-        dateField("content") nullValue "no content"
-      ) all true size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp true
-    )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_1.json")
-  }
-
-  it should "generate json to enable timestamp with path and format" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
-        geopointField("name"),
-        dateField("content") nullValue "no content"
-      ) source false size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, path = Some(
-        "post_date"), format = Some("YYYY-MM-dd"))
-    )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_2.json")
-  }
-
-  it should "generate json to enable timestamp with path and format and default null" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
-        geopointField("name"),
-        dateField("content") nullValue "no content"
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" timestamp(true, default = Some(null))
-    )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_timestamp_3.json")
   }
 
   it should "accept pre-built mapping JSON" ignore {
@@ -301,6 +270,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       .mkString
 
     val req = createIndex("tweets").source(source)
-    val content = CreateIndexContentBuilder(req)
+    CreateIndexContentBuilder(req)
   }
 }

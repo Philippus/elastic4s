@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FreeSpec, Matchers}
 
 class MinMaxAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
@@ -24,7 +24,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with SharedElasticSugar with Ma
       indexInto("minmaxagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("minmaxagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("minmaxagg/buildings") fields("name" -> "Tower of London", "height" -> 169)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "max agg" - {

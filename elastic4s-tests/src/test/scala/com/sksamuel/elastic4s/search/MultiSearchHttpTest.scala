@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class MultiSearchHttpTest
@@ -24,7 +24,7 @@ class MultiSearchHttpTest
       bulk(
         indexInto("jtull/albums") fields ("name" -> "aqualung") id 14,
         indexInto("jtull/albums") fields ("name" -> "passion play") id 51
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
 
     val resp = http.execute {

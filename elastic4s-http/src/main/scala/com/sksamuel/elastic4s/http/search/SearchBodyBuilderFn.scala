@@ -1,25 +1,22 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
-
-import scala.collection.JavaConverters._
 
 object SearchBodyBuilderFn {
 
   def apply(request: SearchDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
 
-    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", new BytesArray(x.string), XContentType.JSON))
-    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string), XContentType.JSON))
-    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", new BytesArray(x.string), XContentType.JSON))
+    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
+    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
+    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
@@ -30,19 +27,19 @@ object SearchBodyBuilderFn {
 
     request.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty) {
-      builder.field("search_after", request.searchAfter.asJava)
+      builder.autoarray("search_after", request.searchAfter)
     }
 
     if (request.sorts.nonEmpty) {
 			builder.startArray("sort")
 			// Workaround for bug where separator is not added with rawValues
-			val arrayBody = new BytesArray(request.sorts.map(s => SortContentBuilder(s).string).mkString(","))
-			builder.rawValue(arrayBody, XContentType.JSON)
+      val arrayBody = request.sorts.map(s => SortContentBuilder(s).string).mkString(",")
+      builder.rawValue(arrayBody)
 			builder.endArray()
     }
 
     request.highlight.foreach { highlight =>
-      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields).bytes(), XContentType.JSON)
+      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields))
     }
 
     if (request.suggs.nonEmpty) {
@@ -63,9 +60,9 @@ object SearchBodyBuilderFn {
           term.prefixLength.foreach(builder.field("prefix_length", _))
           term.size.foreach(builder.field("size", _))
           term.shardSize.foreach(builder.field("shard_size", _))
-          term.sort.map(_.name().toLowerCase).foreach(builder.field("sort", _))
-          term.stringDistance.map(_.name.toLowerCase).foreach(builder.field("string_distance", _))
-          term.suggestMode.map(_.name().toLowerCase).foreach(builder.field("suggest_mode", _))
+          term.sort.map(EnumConversions.sortBy).foreach(builder.field("sort", _))
+          term.stringDistance.map(EnumConversions.stringDistance).foreach(builder.field("string_distance", _))
+          term.suggestMode.map(EnumConversions.suggestMode).foreach(builder.field("suggest_mode", _))
           builder.endObject()
           builder.endObject()
       }
@@ -73,7 +70,7 @@ object SearchBodyBuilderFn {
     }
 
     if (request.storedFields.nonEmpty) {
-      builder.field("stored_fields", request.storedFields.asJava)
+      builder.array("stored_fields", request.storedFields.toArray)
     }
 
     if (request.indexBoosts.nonEmpty) {
@@ -91,8 +88,8 @@ object SearchBodyBuilderFn {
       if (context.fetchSource) {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
-          builder.field("includes", context.includes.toList.asJava)
-          builder.field("excludes", context.excludes.toList.asJava)
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
           builder.endObject()
         }
       } else {
@@ -104,7 +101,7 @@ object SearchBodyBuilderFn {
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")
       request.aggs.foreach { agg =>
-        builder.rawField(agg.name, AggregationBuilderFn(agg).bytes, XContentType.JSON)
+        builder.rawField(agg.name, AggregationBuilderFn(agg))
       }
       builder.endObject()
     }

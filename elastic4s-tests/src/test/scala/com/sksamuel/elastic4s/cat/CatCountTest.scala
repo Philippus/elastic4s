@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.cat
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class CatCountTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
@@ -15,7 +15,7 @@ class CatCountTest extends FlatSpec with Matchers with SharedElasticSugar with E
       indexInto("catcount1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catcount1/landmarks").fields("name" -> "tower of london"),
       indexInto("catcount2/landmarks").fields("name" -> "stonehenge")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 

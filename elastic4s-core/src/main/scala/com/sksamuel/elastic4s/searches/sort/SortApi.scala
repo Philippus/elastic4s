@@ -1,9 +1,23 @@
 package com.sksamuel.elastic4s.searches.sort
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import org.elasticsearch.common.geo.GeoPoint
-import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.SortOrder
+import com.sksamuel.elastic4s.searches.GeoPoint
+
+sealed trait ScriptSortType
+object ScriptSortType {
+  def valueOf(str: String): ScriptSortType = str.toLowerCase match {
+    case "string" => String
+    case "number" => Number
+  }
+  case object String extends ScriptSortType
+  case object Number extends ScriptSortType
+
+  @deprecated("use String", "6.0.0")
+  def STRING = String
+
+  @deprecated("use Number", "6.0.0")
+  def NUMBER = Number
+}
 
 trait SortApi {
 

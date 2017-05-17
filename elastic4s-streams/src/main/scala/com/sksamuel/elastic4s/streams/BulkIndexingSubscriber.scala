@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor._
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.TcpClient
+import com.sksamuel.elastic4s.{RefreshPolicy, TcpClient}
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition, RichBulkItemResponse, RichBulkResponse}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -131,7 +130,7 @@ class BulkActor[T](client: TcpClient,
     self ! BulkActor.Request(config.batchSize * config.concurrentRequests)
   }
 
-  def receive = {
+  def receive: PartialFunction[Any, Unit] = {
     case t: Throwable => handleError(t)
 
     case BulkActor.Completed =>
@@ -189,7 +188,7 @@ class BulkActor[T](client: TcpClient,
   }
 
   // Stops the schedulers if they exist and invoke final functions
-  override def postStop() = {
+  override def postStop(): Unit = {
     flushIntervalScheduler.map(_.cancel)
     flushAfterScheduler.map(_.cancel)
     if (failed == 0)
@@ -214,13 +213,13 @@ class BulkActor[T](client: TcpClient,
 
     // returns just requests that failed as a new bulk definition (+ originals)
     def getRetryDef(resp: RichBulkResponse): (BulkDefinition, Seq[T]) = {
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.None
 
       val failureIds = resp.failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
       val failedReqs = filterByIndexes(req.requests, failureIds)
 
-      (BulkDefinition(failedReqs).refresh(policy.name), retryOriginals)
+      (BulkDefinition(failedReqs).refresh(policy), retryOriginals)
     }
 
     client.execute(req).onComplete {
@@ -256,8 +255,8 @@ class BulkActor[T](client: TcpClient,
 
     def bulkDef: BulkDefinition = {
       val defs = buffer.map(t => builder.request(t))
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
-      BulkDefinition(defs).refresh(policy.name)
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.None
+      BulkDefinition(defs).refresh(policy)
     }
 
     sent = sent + buffer.size

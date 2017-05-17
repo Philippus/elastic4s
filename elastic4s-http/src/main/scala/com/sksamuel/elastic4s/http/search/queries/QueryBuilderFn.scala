@@ -8,12 +8,12 @@ import com.sksamuel.elastic4s.http.search.queries.span._
 import com.sksamuel.elastic4s.http.search.queries.specialized.{MoreLikeThisBuilderFn, ScriptQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
-import org.elasticsearch.common.xcontent.XContentBuilder
 
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {

@@ -7,7 +7,7 @@ object BoolQueryBuilderFn {
   def apply(q: BoolQueryDefinition): BoolQueryBuilder = {
     val builder = QueryBuilders.boolQuery()
     q.adjustPureNegative.foreach(builder.adjustPureNegative)
-    q.minimumShouldMatch.foreach(builder.minimumNumberShouldMatch)
+    q.minimumShouldMatch.foreach(builder.minimumShouldMatch)
     q.disableCoord.foreach(builder.disableCoord)
     q.queryName.foreach(builder.queryName)
     q.boost.map(_.toFloat).foreach(builder.boost)

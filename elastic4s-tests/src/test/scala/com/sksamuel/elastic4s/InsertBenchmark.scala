@@ -79,7 +79,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
     }.await.getHits.totalHits shouldBe n
   }
 
-  def randomTitle = "some article " + UUID.randomUUID.toString
+  def randomTitle: String = "some article " + UUID.randomUUID.toString
   def article = Article(randomTitle, Random.shuffle(sampleBody.split("\\s").toList).mkString(" "), new Date)
 }
 

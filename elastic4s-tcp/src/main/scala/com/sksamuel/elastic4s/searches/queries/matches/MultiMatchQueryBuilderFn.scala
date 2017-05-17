@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries.matches
 
+import com.sksamuel.elastic4s.EnumConversions
 import org.elasticsearch.index.query.{MultiMatchQueryBuilder, QueryBuilders}
 
 object MultiMatchQueryBuilderFn {
@@ -20,9 +21,9 @@ object MultiMatchQueryBuilderFn {
     q.queryName.foreach(_builder.queryName)
     q.boost.map(_.toFloat).foreach(_builder.boost)
     q.prefixLength.foreach(_builder.prefixLength)
-    q.zeroTermsQuery.foreach(_builder.zeroTermsQuery)
+    q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(_builder.zeroTermsQuery)
     q.tieBreaker.map(_.toFloat).foreach(_builder.tieBreaker)
-    q.operator.foreach(_builder.operator)
+    q.operator.map(EnumConversions.operator).foreach(_builder.operator)
     q.`type`.foreach(_builder.`type`)
     _builder
   }

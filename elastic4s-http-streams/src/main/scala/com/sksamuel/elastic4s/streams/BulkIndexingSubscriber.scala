@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition}
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -211,13 +211,13 @@ class BulkActor[T](client: HttpClient,
 
     // returns just requests that failed as a new bulk definition (+ originals)
     def getRetryDef(resp: BulkResponse): (BulkDefinition, Seq[T]) = {
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
 
       val failureIds = resp.failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
       val failedReqs = filterByIndexes(req.requests, failureIds)
 
-      (BulkDefinition(failedReqs).refresh(policy.name), retryOriginals)
+      (BulkDefinition(failedReqs).refresh(policy), retryOriginals)
     }
 
     val f = client.execute(req)
@@ -254,8 +254,8 @@ class BulkActor[T](client: HttpClient,
 
     def bulkDef: BulkDefinition = {
       val defs = buffer.map(t => builder.request(t))
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
-      BulkDefinition(defs).refresh(policy.name)
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
+      BulkDefinition(defs).refresh(policy)
     }
 
     sent = sent + buffer.size

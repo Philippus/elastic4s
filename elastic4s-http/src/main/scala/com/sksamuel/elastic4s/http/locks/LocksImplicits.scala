@@ -1,7 +1,8 @@
-package com.sksamuel.elastic4s.http
+package com.sksamuel.elastic4s.http.locks
 
 import java.util
 
+import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLockDefinition, ReleaseGlobalLockDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseException, RestClient}

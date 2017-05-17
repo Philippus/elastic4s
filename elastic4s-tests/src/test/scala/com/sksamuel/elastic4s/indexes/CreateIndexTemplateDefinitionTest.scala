@@ -6,7 +6,7 @@ class CreateIndexTemplateDefinitionTest extends WordSpec {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  val req = createTemplate("my_template").pattern("matchme.*").mappings(
+  private val req = createTemplate("my_template").pattern("matchme.*").mappings(
     mapping("sometype1").fields(
       keywordField("field1"),
       geopointField("field2")

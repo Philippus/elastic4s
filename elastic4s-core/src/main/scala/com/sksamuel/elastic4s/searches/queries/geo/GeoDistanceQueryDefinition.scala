@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
+import com.sksamuel.elastic4s.DistanceUnit
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.geo.GeoDistance
-import org.elasticsearch.common.unit.DistanceUnit
-import org.elasticsearch.index.query.GeoValidationMethod
 
 case class GeoDistanceQueryDefinition(field: String,
                                       geoDistance: Option[GeoDistance] = None,

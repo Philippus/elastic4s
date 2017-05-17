@@ -2,32 +2,31 @@ package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object AliasActionBuilder {
 
   def apply(r: IndicesAliasesRequestDefinition): XContentBuilder = {
-    val source = XContentFactory.jsonBuilder().startObject().startArray("actions")
+    val source = XContentFactory.jsonBuilder().startArray("actions")
 
     val actionsArray = r.actions.map {
       case addAction: AddAliasActionDefinition => buildAddAction(addAction).string()
       case removeAction: RemoveAliasActionDefinition => buildRemoveAction(removeAction).string()
     }.mkString(",")
 
-    source.rawValue(new BytesArray(actionsArray))
+    source.rawValue(actionsArray)
 
     source.endArray().endObject()
   }
 
   private def buildAddAction(addAction: AddAliasActionDefinition): XContentBuilder = {
-    val jsonBuilder = XContentFactory.jsonBuilder().startObject().startObject("add")
+    val jsonBuilder = XContentFactory.jsonBuilder().startObject("add")
 
     jsonBuilder.field("index", addAction.index)
     jsonBuilder.field("alias", addAction.alias)
 
     addAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
-      jsonBuilder.rawField("filter", queryBuilder.bytes())
+      jsonBuilder.rawField("filter", queryBuilder)
     }
     addAction.routing.foreach(jsonBuilder.field("routing", _))
     addAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))
@@ -37,13 +36,13 @@ object AliasActionBuilder {
   }
 
   private def buildRemoveAction(removeAction: RemoveAliasActionDefinition): XContentBuilder = {
-    val jsonBuilder = XContentFactory.jsonBuilder().startObject().startObject("remove")
+    val jsonBuilder = XContentFactory.jsonBuilder().startObject("remove")
 
     jsonBuilder.field("index", removeAction.index)
     jsonBuilder.field("alias", removeAction.alias)
 
     removeAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
-      jsonBuilder.rawField("filter", queryBuilder.bytes())
+      jsonBuilder.rawField("filter", queryBuilder)
     }
     removeAction.routing.foreach(jsonBuilder.field("routing", _))
     removeAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))

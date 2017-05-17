@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s.http.update
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler, Shards}
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -9,13 +12,15 @@ import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
 
-case class UpdateResponse(_index: String,
-                          _type: String,
-                          _id: String,
-                          _version: Long,
+case class UpdateResponse(@JsonProperty("_index") index: String,
+                          @JsonProperty("_type") `type`: String,
+                          @JsonProperty("_id") id: String,
+                          @JsonProperty("_version") version: Long,
                           result: String,
-                          forced_refresh: Boolean,
-                          _shards: Shards)
+                          @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
+                          @JsonProperty("_shards") shards: Shards) {
+  def ref = DocumentRef(index, `type`, id)
+}
 
 object UpdateImplicits extends UpdateImplicits
 
@@ -30,7 +35,6 @@ trait UpdateImplicits {
     override def execute(client: RestClient,
                          request: UpdateDefinition): Future[UpdateResponse] = {
 
-      val method = "POST"
       val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${request.id}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
@@ -47,9 +51,8 @@ trait UpdateImplicits {
 
       val body = UpdateContentBuilder(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      logger.debug(s"Update Entity: ${body.string}")
 
-      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
   }
 }

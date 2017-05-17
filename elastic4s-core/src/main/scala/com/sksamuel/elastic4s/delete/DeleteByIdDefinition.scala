@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{IndexAndType, RefreshPolicy, VersionType}
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.index.VersionType
 
 case class DeleteByIdDefinition(indexType: IndexAndType,
                                 id: Any,

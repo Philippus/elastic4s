@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.{EnumConversions, Executable, RefreshPolicy}
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.reindex.{DeleteByQueryAction, DeleteByQueryRequestBuilder}
@@ -18,19 +17,18 @@ trait DeleteExecutables {
     extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
 
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
-      val _builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
-      t.routing.foreach(_builder.setRouting)
-      t.refresh.foreach(_builder.setRefreshPolicy)
-      t.parent.foreach(_builder.setParent)
-      t.waitForActiveShards.foreach(_builder.setWaitForActiveShards)
-      t.version.foreach(_builder.setVersion)
-      t.versionType.foreach(_builder.setVersionType)
-      _builder
+      val builder = c.prepareDelete().setIndex(t.indexType.index).setType(t.indexType.`type`).setId(t.id.toString)
+      t.routing.foreach(builder.setRouting)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
+      t.parent.foreach(builder.setParent)
+      t.waitForActiveShards.foreach(builder.setWaitForActiveShards)
+      t.version.foreach(builder.setVersion)
+      t.versionType.map(EnumConversions.versionType).foreach(builder.setVersionType)
+      builder
     }
 
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
-      val _builder = builder(c, t)
-      injectFuture(_builder.execute)
+      injectFuture(builder(c, t).execute)
     }
   }
 
@@ -43,7 +41,7 @@ trait DeleteExecutables {
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       d.size.foreach(builder.size)
       d.maxRetries.foreach(builder.setMaxRetries)
-      if (d.refresh.contains(RefreshPolicy.IMMEDIATE))
+      if (d.refresh.contains(RefreshPolicy.Immediate))
         builder.refresh(true)
       d.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       d.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)

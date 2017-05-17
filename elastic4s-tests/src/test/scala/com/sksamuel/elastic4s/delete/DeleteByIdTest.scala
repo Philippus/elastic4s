@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.delete
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
@@ -20,11 +20,11 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualEla
       }.await
 
       execute {
-        indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id(2).refresh(RefreshPolicy.IMMEDIATE)
+        indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id(2).refresh(RefreshPolicy.Immediate)
       }.await
 
       execute {
-        indexInto("lecarre" / "characters").fields("name" -> "george smiley").id(4).refresh(RefreshPolicy.IMMEDIATE)
+        indexInto("lecarre" / "characters").fields("name" -> "george smiley").id(4).refresh(RefreshPolicy.Immediate)
       }.await
 
       execute {
@@ -32,7 +32,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualEla
       }.await.totalHits shouldBe 2
 
       execute {
-        delete(2).from("lecarre" / "characters").refresh(RefreshPolicy.IMMEDIATE)
+        delete(2).from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
       execute {
@@ -40,7 +40,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualEla
       }.await.totalHits shouldBe 1
 
       execute {
-        delete(4).from("lecarre" / "characters").refresh(RefreshPolicy.IMMEDIATE)
+        delete(4).from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
       execute {

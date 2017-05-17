@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition, ClusterStatsDefinition}
+import com.sksamuel.elastic4s.{Executable, HealthStatus, Priority}
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequestBuilder, ClusterHealthResponse}
-import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequestBuilder, ClusterUpdateSettingsResponse}
+import org.elasticsearch.action.admin.cluster.settings.ClusterUpdateSettingsResponse
 import org.elasticsearch.action.admin.cluster.state.{ClusterStateRequestBuilder, ClusterStateResponse}
 import org.elasticsearch.action.admin.cluster.stats.ClusterStatsResponse
 import org.elasticsearch.client.Client
+import org.elasticsearch.cluster.health.ClusterHealthStatus
 
 import scala.concurrent.Future
 
@@ -23,10 +24,21 @@ trait ClusterExecutables {
     private[admin] def buildHealthRequest(client: Client, definition: ClusterHealthDefinition): ClusterHealthRequestBuilder = {
       val builder = client.admin.cluster().prepareHealth(definition.indices: _*)
       definition.timeout.foreach(builder.setTimeout)
-      definition.waitForStatus.foreach(builder.setWaitForStatus)
+      definition.waitForStatus.map {
+        case HealthStatus.Green => ClusterHealthStatus.GREEN
+        case HealthStatus.Yellow => ClusterHealthStatus.YELLOW
+        case HealthStatus.Red => ClusterHealthStatus.RED
+      }.foreach(builder.setWaitForStatus)
       definition.waitForNodes.foreach(builder.setWaitForNodes)
       definition.waitForActiveShards.foreach(builder.setWaitForActiveShards)
-      definition.waitForEvents.foreach(builder.setWaitForEvents)
+      definition.waitForEvents.map {
+        case Priority.High => org.elasticsearch.common.Priority.HIGH
+        case Priority.Immediate => org.elasticsearch.common.Priority.IMMEDIATE
+        case Priority.Languid => org.elasticsearch.common.Priority.LANGUID
+        case Priority.Low => org.elasticsearch.common.Priority.LOW
+        case Priority.Normal => org.elasticsearch.common.Priority.NORMAL
+        case Priority.Urgent => org.elasticsearch.common.Priority.URGENT
+      }.foreach(builder.setWaitForEvents)
 
       builder
     }
@@ -41,8 +53,14 @@ trait ClusterExecutables {
 
   implicit object ClusterSettingsExecutable
     extends Executable[ClusterSettingsDefinition, ClusterUpdateSettingsResponse, ClusterUpdateSettingsResponse] {
+
+    import scala.collection.JavaConverters._
+
     override def apply(c: Client, t: ClusterSettingsDefinition): Future[ClusterUpdateSettingsResponse] = {
-      injectFuture(t.build(c.admin.cluster.prepareUpdateSettings).execute)
+      val builder = c.admin.cluster.prepareUpdateSettings
+      builder.setPersistentSettings(t.persistentSettings.asJava)
+      builder.setTransientSettings(t.transientSettings.asJava)
+      injectFuture(builder.execute)
     }
   }
 

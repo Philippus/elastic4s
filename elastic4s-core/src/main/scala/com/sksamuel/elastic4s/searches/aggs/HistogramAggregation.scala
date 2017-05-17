@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 
 case class HistogramAggregation(name: String,
                                 field: Option[String] = None,
@@ -14,7 +12,7 @@ case class HistogramAggregation(name: String,
                                 keyed: Option[Boolean] = None,
                                 offset: Option[Double] = None,
                                 extendedBounds: Option[(Double, Double)] = None,
-                                order: Option[Histogram.Order] = None,
+                                order: Option[HistogramOrder] = None,
                                 script: Option[ScriptDefinition] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty) extends AggregationDefinition {
@@ -33,7 +31,7 @@ case class HistogramAggregation(name: String,
   def interval(interval: Double): HistogramAggregation = copy(interval = interval.some)
   def minDocCount(min: Long): HistogramAggregation = copy(minDocCount = min.some)
 
-  def order(order: Histogram.Order): HistogramAggregation = copy(order = order.some)
+  def order(order: HistogramOrder): HistogramAggregation = copy(order = order.some)
   def offset(offset: Double): HistogramAggregation = copy(offset = offset.some)
   def extendedBounds(min: Double, max: Double): HistogramAggregation = copy(extendedBounds = (min, max).some)
 }

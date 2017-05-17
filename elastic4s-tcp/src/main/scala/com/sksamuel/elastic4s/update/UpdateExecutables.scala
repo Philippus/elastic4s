@@ -2,12 +2,13 @@ package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.XContentType
 import org.elasticsearch.index.VersionType
 import org.elasticsearch.index.reindex.UpdateByQueryAction
 
@@ -40,7 +41,7 @@ trait UpdateExecutables {
     extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
 
     def fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
-      val source = XContentFactory.jsonBuilder().startObject()
+      val source = XContentFactory.jsonBuilder()
       fields.foreach(XContentFieldValueWriter(source, _))
       source.endObject()
     }
@@ -58,20 +59,19 @@ trait UpdateExecutables {
       t.detectNoop.foreach(builder.setDetectNoop)
       t.docAsUpsert.foreach(builder.setDocAsUpsert)
 
-      t.upsertSource.foreach(builder.setUpsert)
-      t.documentSource.foreach(builder.setDoc)
+      t.upsertSource.foreach(builder.setUpsert(_, XContentType.JSON))
+      t.documentSource.foreach(builder.setDoc(_, XContentType.JSON))
 
       if (t.upsertFields.nonEmpty) {
-        builder.setUpsert(fieldsAsXContent(FieldsMapper.mapFields(t.upsertFields)))
+        builder.setUpsert(fieldsAsXContent(FieldsMapper.mapFields(t.upsertFields)).bytes, XContentType.JSON)
       }
 
       if (t.documentFields.nonEmpty) {
-        builder.setDoc(fieldsAsXContent(FieldsMapper.mapFields(t.documentFields)))
+        builder.setDoc(fieldsAsXContent(FieldsMapper.mapFields(t.documentFields)).bytes, XContentType.JSON)
       }
 
       t.routing.foreach(builder.setRouting)
-      t.refresh.foreach(builder.setRefreshPolicy)
-      t.ttl.foreach(builder.setTtl)
+      t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
       t.timeout.map(dur => TimeValue.timeValueMillis(dur.toMillis)).foreach(builder.setTimeout)
       t.retryOnConflict.foreach(builder.setRetryOnConflict)
       t.waitForActiveShards.foreach(builder.setWaitForActiveShards)

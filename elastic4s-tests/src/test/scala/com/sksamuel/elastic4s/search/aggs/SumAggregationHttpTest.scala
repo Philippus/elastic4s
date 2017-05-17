@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FreeSpec, Matchers}
 
 class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
@@ -27,7 +27,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("sumagg/actors") fields("name" -> "nicholas cage"),
       indexInto("sumagg/actors") fields("name" -> "sean connery", "age" -> "32"),
       indexInto("sumagg/actors") fields("name" -> "kevin costner", "age" -> "42")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "sum aggregation" - {

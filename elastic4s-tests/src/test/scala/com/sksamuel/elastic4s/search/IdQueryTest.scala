@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticDsl {
@@ -18,7 +18,7 @@ class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticD
     bulk(
       indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id 5,
       indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "id query" should "find by id" in {

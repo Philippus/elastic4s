@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.RangeQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object RangeQueryBodyFn {
 
   def apply(range: RangeQueryDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("range").startObject(range.field)
+    val builder = XContentFactory.jsonBuilder().startObject("range").startObject(range.field)
 
     range.gte.foreach {
       case x: Long => builder.field("gte", x)

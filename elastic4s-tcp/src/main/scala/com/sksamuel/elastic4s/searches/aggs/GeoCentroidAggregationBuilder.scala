@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.metrics.geocentroid.GeoCentroidAggregationBuilder
 
@@ -13,7 +13,7 @@ object GeoCentroidAggregationBuilder {
     agg.field.foreach(builder.field)
     agg.missing.foreach(builder.missing)
     agg.format.foreach(builder.format)
-    agg.valueType.foreach(builder.valueType)
+    agg.valueType.map(EnumConversions.valueType).foreach(builder.valueType)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)

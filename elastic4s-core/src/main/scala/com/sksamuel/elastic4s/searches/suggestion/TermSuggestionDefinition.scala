@@ -1,9 +1,48 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.suggest.SortBy
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.{StringDistanceImpl, SuggestMode}
+
+sealed trait SortBy
+object SortBy {
+  case object Score extends SortBy
+  case object Frequency extends SortBy
+}
+
+sealed trait SuggestMode
+object SuggestMode {
+
+  def valueOf(str: String): SuggestMode = str.toUpperCase match {
+    case "MISSING" => Missing
+    case "POPULAR" => Popular
+    case "ALWAYS" => Always
+  }
+
+  case object Missing extends SuggestMode
+  case object Popular extends SuggestMode
+  case object Always extends SuggestMode
+
+  def MISSING = Missing
+  def POPULAR = Popular
+  def ALWAYS = Always
+}
+
+sealed trait StringDistanceImpl
+object StringDistanceImpl {
+
+  def valueOf(str: String): StringDistanceImpl = str.toUpperCase match {
+    case "INTERNAL" => INTERNAL
+    case "DAMERAU_LEVENSHTEIN" => DAMERAU_LEVENSHTEIN
+    case "LEVENSTEIN" => LEVENSTEIN
+    case "JAROWINKLER" => JAROWINKLER
+    case "NGRAM" => NGRAM
+  }
+
+  case object INTERNAL extends StringDistanceImpl
+  case object DAMERAU_LEVENSHTEIN extends StringDistanceImpl
+  case object LEVENSTEIN extends StringDistanceImpl
+  case object JAROWINKLER extends StringDistanceImpl
+  case object NGRAM extends StringDistanceImpl
+}
 
 case class TermSuggestionDefinition(name: String,
                                     fieldname: String,

@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
+import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
 import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder}
 
 import scala.collection.JavaConverters._
@@ -13,12 +14,16 @@ object TermsAggregationBuilder {
     val builder = AggregationBuilders.terms(agg.name)
 
     agg.field.foreach(builder.field)
-    agg.collectMode.foreach(builder.collectMode)
+    agg.collectMode.map(EnumConversions.collectMode).foreach(builder.collectMode)
     agg.executionHint.foreach(builder.executionHint)
-    agg.includeExclude.foreach(builder.includeExclude)
+    agg.includeExclude.foreach { it =>
+      val inc = if (it.include.isEmpty) null else it.include.toArray
+      val exc = if (it.exclude.isEmpty) null else it.exclude.toArray
+      builder.includeExclude(new IncludeExclude(inc, exc))
+    }
+    agg.includePartition.foreach { it => builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions)) }
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
-    agg._oldOrder.foreach(builder.order)
     agg.order.foreach {
       case TermsOrder("_count", asc) => builder.order(Terms.Order.count(asc))
       case TermsOrder("_term", asc) => builder.order(Terms.Order.term(asc))
@@ -31,7 +36,7 @@ object TermsAggregationBuilder {
     agg.shardSize.foreach(builder.shardSize)
     agg.showTermDocCountError.foreach(builder.showTermDocCountError)
     agg.size.foreach(builder.size)
-    agg.valueType.foreach(builder.valueType)
+    agg.valueType.map(EnumConversions.valueType).foreach(builder.valueType)
 
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)

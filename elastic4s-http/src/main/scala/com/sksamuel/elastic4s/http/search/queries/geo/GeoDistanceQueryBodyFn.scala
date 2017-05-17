@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
-import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.http.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
 
 object GeoDistanceQueryBodyFn {
 
@@ -18,9 +19,9 @@ object GeoDistanceQueryBodyFn {
       case (lat, long) => builder.array(q.field, Array(long, lat))
     }
     q.geohash.foreach(builder.field(q.field, _))
-    q.geoDistance.foreach(builder.field("distance_type", _))
+    q.geoDistance.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
-    q.validationMethod.map(_.name).foreach(builder.field("validation_method", _))
+    q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()

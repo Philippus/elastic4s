@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FreeSpec, Matchers}
 
 class MissingAggregationTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
@@ -26,7 +26,7 @@ class MissingAggregationTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("missingagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("missingagg/buildings") fields("name" -> "Tower of London", "floors" -> 7),
       indexInto("missingagg/buildings") fields("name" -> "London Bridge", "height" -> 63)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "missing aggregation" - {

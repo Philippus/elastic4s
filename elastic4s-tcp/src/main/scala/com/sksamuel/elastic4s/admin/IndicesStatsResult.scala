@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.admin
 
 import org.elasticsearch.action.admin.indices.stats.{CommonStats, IndexStats, IndicesStatsResponse, ShardStats}
 import org.elasticsearch.cluster.routing.ShardRouting

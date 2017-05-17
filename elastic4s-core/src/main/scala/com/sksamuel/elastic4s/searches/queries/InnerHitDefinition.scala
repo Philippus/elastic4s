@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.FetchSourceContext
 import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class InnerHitDefinition(name: String,
                               size: Option[Int] = None,

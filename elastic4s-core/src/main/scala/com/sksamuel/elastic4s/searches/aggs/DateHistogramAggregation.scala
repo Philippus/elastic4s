@@ -1,23 +1,33 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramInterval, ExtendedBounds, Histogram}
 import org.joda.time.DateTimeZone
 
 import scala.concurrent.duration.{FiniteDuration, _}
+
+case class HistogramOrder(name: String, asc: Boolean)
+object HistogramOrder {
+  val KEY_ASC = HistogramOrder("_key", true)
+  val KEY_DESC = HistogramOrder("_key", false)
+  val COUNT_ASC = HistogramOrder("_count", true)
+  val COUNT_DESC = HistogramOrder("_count", false)
+}
+
+case class ExtendedBounds(min: Long, max: Long)
 
 case class DateHistogramAggregation(name: String,
                                     interval: Option[DateHistogramInterval] = None,
                                     minDocCount: Option[Long] = None,
                                     timeZone: Option[DateTimeZone] = None,
-                                    order: Option[Histogram.Order] = None,
+                                    order: Option[HistogramOrder] = None,
                                     offset: Option[String] = None,
                                     format: Option[String] = None,
                                     field: Option[String] = None,
                                     script: Option[ScriptDefinition] = None,
-                                    missing: Option[AnyRef] = None,
+                                    missing: Option[Any] = None,
                                     extendedBounds: Option[ExtendedBounds] = None,
                                     pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                     subaggs: Seq[AbstractAggregation] = Nil,
@@ -29,21 +39,20 @@ case class DateHistogramAggregation(name: String,
   def extendedBounds(bounds: ExtendedBounds): DateHistogramAggregation = copy(extendedBounds = bounds.some)
 
   def interval(seconds: Long): DateHistogramAggregation = interval(seconds.seconds)
-
-  def interval(interval: DateHistogramInterval): DateHistogramAggregation = dateHistogramInterval(interval)
-  def interval(interval: FiniteDuration): DateHistogramAggregation =
-    dateHistogramInterval(DateHistogramInterval.seconds(interval.toSeconds.toInt))
-  def dateHistogramInterval(interval: DateHistogramInterval): DateHistogramAggregation = copy(interval = interval.some)
+  def interval(dur: FiniteDuration): DateHistogramAggregation = interval(DateHistogramInterval.seconds(dur.toSeconds))
+  def interval(interval: DateHistogramInterval): DateHistogramAggregation = copy(interval = interval.some)
 
   def minDocCount(min: Long): DateHistogramAggregation = copy(minDocCount = min.some)
 
   def timeZone(timeZone: DateTimeZone): DateHistogramAggregation = copy(timeZone = timeZone.some)
   def offset(offset: String): DateHistogramAggregation = copy(offset = offset.some)
-  def order(order: Histogram.Order): DateHistogramAggregation = copy(order = order.some)
+
+  def order(order: HistogramOrder): DateHistogramAggregation = copy(order = order.some)
+
   def format(format: String): DateHistogramAggregation = copy(format = format.some)
   def field(field: String): DateHistogramAggregation = copy(field = field.some)
   def script(script: ScriptDefinition): DateHistogramAggregation = copy(script = script.some)
-  def missing(missing: AnyRef): DateHistogramAggregation = copy(missing = missing.some)
+  def missing(missing: Any): DateHistogramAggregation = copy(missing = missing.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)

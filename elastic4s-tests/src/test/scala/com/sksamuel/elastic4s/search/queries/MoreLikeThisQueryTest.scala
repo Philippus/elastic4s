@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
@@ -24,7 +24,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
       indexInto("drinks/alcohol") fields ("text" -> "Gordons popular gin UK") id 7,
       indexInto("drinks/alcohol") fields ("text" -> "coors regular is another coors beer by molson") id 8,
       indexInto("drinks/alcohol") fields ("text" -> "Hendricks upmarket gin UK") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a more like this query" should {

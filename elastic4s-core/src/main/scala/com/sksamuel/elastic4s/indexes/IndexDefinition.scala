@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, IndexAndType, Indexable}
+import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.index.VersionType
 
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
@@ -13,7 +11,6 @@ case class IndexDefinition(indexAndType: IndexAndType,
                            parent: Option[String] = None,
                            pipeline: Option[String] = None,
                            routing: Option[String] = None,
-                           timestamp: Option[String] = None,
                            timeout: Option[String] = None,
                            version: Option[Long] = None,
                            versionType: Option[VersionType] = None,
@@ -32,9 +29,11 @@ case class IndexDefinition(indexAndType: IndexAndType,
 
   def pipeline(pipeline: String): IndexDefinition = copy(pipeline = pipeline.some)
   def parent(parent: String): IndexDefinition = copy(parent = parent.some)
+
+  @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): IndexDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): IndexDefinition = copy(refresh = refresh.some)
-  def timestamp(timestamp: String): IndexDefinition = copy(timestamp = timestamp.some)
+
   def routing(routing: String): IndexDefinition = copy(routing = routing.some)
 
   def version(version: Long): IndexDefinition = copy(version = version.some)

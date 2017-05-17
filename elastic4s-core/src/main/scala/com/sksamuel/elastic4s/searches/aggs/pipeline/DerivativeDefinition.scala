@@ -1,19 +1,20 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
-import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
+import scala.concurrent.duration.FiniteDuration
 
 case class DerivativeDefinition(name: String,
                                 bucketsPath: String,
                                 format: Option[String] = None,
                                 gapPolicy: Option[GapPolicy] = None,
-                                unit: Option[DateHistogramInterval] = None,
+                                unit: Option[FiniteDuration] = None,
                                 unitString: Option[String] = None,
                                 metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
   type T = DerivativeDefinition
 
-  def unit(unit: DateHistogramInterval): DerivativeDefinition = copy(unit = Some(unit))
+  def unit(unit: FiniteDuration): DerivativeDefinition = copy(unit = Some(unit))
+
+  @deprecated("use unit(duration)", "6.0.0")
   def unit(unit: String): DerivativeDefinition = copy(unitString = Some(unit))
 
   def format(format: String): DerivativeDefinition = copy(format = Some(format))

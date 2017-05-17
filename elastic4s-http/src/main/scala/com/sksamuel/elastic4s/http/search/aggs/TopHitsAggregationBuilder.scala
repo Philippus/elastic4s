@@ -1,22 +1,20 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.search.queries.SortContentBuilder
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
-
-import scala.collection.JavaConverters._
 
 object TopHitsAggregationBuilder {
 
   def apply(agg: TopHitsAggregationDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("top_hits")
+    val builder = XContentFactory.jsonBuilder().startObject("top_hits")
 
     agg.size.foreach(builder.field("size", _))
     if (agg.sorts.nonEmpty) {
       builder.startArray("sort")
       agg.sorts.foreach { sort =>
-        builder.rawValue(SortContentBuilder(sort).bytes, XContentType.JSON)
+        builder.rawValue(SortContentBuilder(sort))
       }
       builder.endArray()
     }
@@ -26,8 +24,8 @@ object TopHitsAggregationBuilder {
       if (context.fetchSource) {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
-          builder.field("includes", context.includes.toList.asJava)
-          builder.field("excludes", context.excludes.toList.asJava)
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
           builder.endObject()
         }
       } else {

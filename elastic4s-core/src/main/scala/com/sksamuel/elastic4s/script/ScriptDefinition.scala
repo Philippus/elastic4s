@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.script
 
-import org.elasticsearch.script.ScriptType
-
 import scala.language.implicitConversions
 
 case class ScriptDefinition(script: String,
                             lang: Option[String] = None,
-                            scriptType: ScriptType = ScriptType.INLINE,
+                            scriptType: ScriptType = ScriptType.Inline,
                             params: Map[String, Any] = Map.empty,
                             options: Map[String, String] = Map.empty) {
 

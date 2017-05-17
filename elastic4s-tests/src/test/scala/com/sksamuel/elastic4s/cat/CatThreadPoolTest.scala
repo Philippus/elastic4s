@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.cat
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class CatThreadPoolTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
@@ -14,7 +14,7 @@ class CatThreadPoolTest extends FlatSpec with Matchers with SharedElasticSugar w
     bulk(
       indexInto("amoonshapedpool1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("amoonshapedpool2/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cat thread pool" should "return all pools" in {

@@ -1,21 +1,19 @@
 package com.sksamuel.elastic4s.mappings
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-
-import scala.collection.JavaConverters._
 
 object MappingContentBuilder {
 
   def build(d: MappingDefinitionLike): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject()
+    val builder = XContentFactory.jsonBuilder()
     build(d, builder)
     builder.endObject()
   }
 
   // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
   def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject()
+    val builder = XContentFactory.jsonBuilder
     builder.startObject(tpe)
     build(d, builder)
     builder.endObject()
@@ -26,13 +24,13 @@ object MappingContentBuilder {
 
     for (all <- d.all) builder.startObject("_all").field("enabled", all).endObject()
     (d.source, d.sourceExcludes) match {
-      case (_, l) if l.nonEmpty => builder.startObject("_source").field("excludes", l.asJava).endObject()
+      case (_, l) if l.nonEmpty => builder.startObject("_source").array("excludes", l.toArray).endObject()
       case (Some(source), _) => builder.startObject("_source").field("enabled", source).endObject()
       case _ =>
     }
 
     if (d.dynamicDateFormats.nonEmpty)
-      builder.field("dynamic_date_formats", d.dynamicDateFormats.asJava)
+      builder.array("dynamic_date_formats", d.dynamicDateFormats.toArray)
 
     for (dd <- d.dateDetection) builder.field("date_detection", dd)
     for (nd <- d.numericDetection) builder.field("numeric_detection", nd)
@@ -50,12 +48,10 @@ object MappingContentBuilder {
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())
     d.size.foreach(x => builder.startObject("_size").field("enabled", x).endObject())
 
-    d.timestamp.foreach(_.build(builder))
-
     if (d.fields.nonEmpty) {
       builder.startObject("properties")
       for (field <- d.fields) {
-        builder.rawField(field.name, FieldBuilderFn(field).bytes)
+        builder.rawField(field.name, FieldBuilderFn(field))
       }
       builder.endObject() // end properties
     }
@@ -63,7 +59,14 @@ object MappingContentBuilder {
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
       for (meta <- d.meta) {
-        builder.field(meta._1, meta._2)
+        meta match {
+          case (name, s: String) => builder.field(name, s)
+          case (name, s: Double) => builder.field(name, s)
+          case (name, s: Boolean) => builder.field(name, s)
+          case (name, s: Long) => builder.field(name, s)
+          case (name, s: Float) => builder.field(name, s)
+          case (name, s: Int) => builder.field(name, s)
+        }
       }
       builder.endObject()
     }
@@ -76,7 +79,9 @@ object MappingContentBuilder {
 
     if (d.templates.nonEmpty) {
       builder.startArray("dynamic_templates")
-      d.templates.foreach(DynamicTemplateBodyFn.build(_, builder))
+      d.templates.foreach { template =>
+        builder.rawValue(DynamicTemplateBodyFn.build(template))
+      }
       builder.endArray()
     }
   }

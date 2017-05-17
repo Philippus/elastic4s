@@ -23,7 +23,7 @@ class ClusterStateHttpTest extends WordSpec with Matchers with SharedElasticSuga
         clusterState()
       }.await
 
-      state.cluster_name should be("classloader-node")
+      state.clusterName should be("classloader-node")
 
       val indexMetadata = state.metadata.flatMap(m => m.indices.headOption).map(_._2).getOrElse(Index("closed", Seq.empty))
 

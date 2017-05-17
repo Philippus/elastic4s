@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.searches.suggestions._
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.search.SearchHits
+import org.elasticsearch.search.aggregations.Aggregations
 import org.elasticsearch.search.suggest.Suggest
 
 import scala.concurrent.duration._
@@ -47,6 +48,9 @@ case class RichSearchResponse(original: SearchResponse) {
 
   def isTimedOut: Boolean = original.isTimedOut
   def isTerminatedEarly: Option[Boolean] = Option[java.lang.Boolean](original.isTerminatedEarly).map(_.booleanValue())
+
+  @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")
+  def getAggregations: Aggregations = original.getAggregations
 
   // java aliases
   @deprecated("use suggest", "5.0.0")

@@ -11,6 +11,7 @@ import com.sksamuel.elastic4s.http.get.GetImplicits
 import com.sksamuel.elastic4s.http.index.admin.IndexAdminImplicits
 import com.sksamuel.elastic4s.http.index.mappings.MappingExecutables
 import com.sksamuel.elastic4s.http.index.{IndexImplicits, IndexTemplateImplicits}
+import com.sksamuel.elastic4s.http.locks.LocksImplicits
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
 import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}

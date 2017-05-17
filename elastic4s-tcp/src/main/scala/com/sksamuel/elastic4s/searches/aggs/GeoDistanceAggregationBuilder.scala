@@ -1,12 +1,14 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceAggregationBuilder
 
 import scala.collection.JavaConverters._
 
 object GeoDistanceAggregationBuilder {
+
+  import com.sksamuel.elastic4s.EnumConversions._
 
   def apply(agg: GeoDistanceAggregationDefinition): GeoDistanceAggregationBuilder = {
 
@@ -16,8 +18,8 @@ object GeoDistanceAggregationBuilder {
     agg.missing.foreach(builder.missing)
     agg.format.foreach(builder.format)
     agg.keyed.foreach(builder.keyed)
-    agg.distanceType.foreach(builder.distanceType)
-    agg.unit.foreach(builder.unit)
+    agg.distanceType.map(EnumConversions.geoDistance).foreach(builder.distanceType)
+    agg.unit.map(EnumConversions.distanceUnit).foreach(builder.unit)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
 
     agg.ranges.foreach {

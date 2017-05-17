@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 
@@ -14,8 +15,8 @@ object FunctionScoreBuilderFn {
     q.boost.map(_.toFloat).foreach(builder.boost)
     q.maxBoost.map(_.toFloat).foreach(builder.maxBoost)
     q.minScore.map(_.toFloat).foreach(builder.setMinScore)
-    q.boostMode.foreach(builder.boostMode)
-    q.scoreMode.foreach(builder.scoreMode)
+    q.boostMode.map(EnumConversions.combineFunction).foreach(builder.boostMode)
+    q.scoreMode.map(EnumConversions.functionScoreQueryScoreMode).foreach(builder.scoreMode)
     builder
   }
 }

@@ -2,7 +2,12 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod
+
+sealed trait PercentilesMethod
+object PercentilesMethod {
+  case object TDigest extends PercentilesMethod
+  case object HDR extends PercentilesMethod
+}
 
 case class PercentileRanksAggregationDefinition(name: String,
                                                 field: Option[String] = None,
@@ -29,12 +34,7 @@ case class PercentileRanksAggregationDefinition(name: String,
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 
-  @deprecated("use values", "5.0.0")
-  def percents(first: Double, rest: Double*): PercentileRanksAggregationDefinition = values(first +: rest)
   def values(first: Double, rest: Double*): PercentileRanksAggregationDefinition = values(first +: rest)
-
-  @deprecated("use values", "5.0.0")
-  def percents(values: Iterable[Double]): PercentileRanksAggregationDefinition = copy(values = values.toSeq)
   def values(values: Iterable[Double]): PercentileRanksAggregationDefinition = copy(values = values.toSeq)
 
   def method(method: PercentilesMethod): PercentileRanksAggregationDefinition = copy(method = method.some)

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 object AnalysisContentBuilder {
 

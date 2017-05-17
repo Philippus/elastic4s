@@ -1,10 +1,8 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.Executable
+import com.sksamuel.elastic4s.{EnumConversions, Executable}
 import org.elasticsearch.action.get.{GetResponse, MultiGetRequest, MultiGetRequestBuilder, MultiGetResponse}
 import org.elasticsearch.client.Client
-import org.elasticsearch.index.VersionType
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.Future
 
@@ -31,7 +29,7 @@ trait GetExecutables {
       }
       t.preference.foreach(req.setPreference)
       t.version.foreach(req.setVersion)
-      t.versionType.map(VersionType.fromString).foreach(req.setVersionType)
+      t.versionType.map(EnumConversions.versionType).foreach(req.setVersionType)
 
       injectFutureAndMap(req.execute)(RichGetResponse)
     }
@@ -57,12 +55,12 @@ trait GetExecutables {
         val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
 
         get.fetchSource.foreach { context =>
-          item.fetchSourceContext(new FetchSourceContext(context.fetchSource, context.includes, context.excludes))
+          item.fetchSourceContext(EnumConversions.fetchSource(context))
         }
 
         get.routing.foreach(item.routing)
         get.version.foreach(item.version)
-        get.versionType.map(VersionType.fromString).foreach(item.versionType)
+        get.versionType.map(EnumConversions.versionType).foreach(item.versionType)
         get.parent.foreach(item.parent)
 
         if (get.storedFields.nonEmpty)

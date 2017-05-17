@@ -3,8 +3,6 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.action.admin.indices.alias.Alias
-import org.elasticsearch.common.settings.Settings
 import com.sksamuel.exts.OptionImplicits._
 
 case class TemplateAlias(name: String,
@@ -16,14 +14,13 @@ case class TemplateAlias(name: String,
 
 case class CreateIndexTemplateDefinition(name: String,
                                          pattern: String,
-                                         settings: Settings = Settings.EMPTY,
+                                         settings: Map[String, Any] = Map.empty,
                                          mappings: Seq[MappingDefinition] = Nil,
                                          analysis: Option[AnalysisDefinition] = None,
                                          order: Option[Int] = None,
                                          version: Option[Int] = None,
                                          create: Option[Boolean] = None,
-                                         aliases: Seq[Alias] = Nil,
-                                         alias: Seq[TemplateAlias] = Nil) {
+                                         aliases: Seq[TemplateAlias] = Nil) {
   require(name.nonEmpty, "template name must not be null or empty")
   require(pattern.nonEmpty, "pattern must not be null or empty")
 
@@ -48,26 +45,26 @@ case class CreateIndexTemplateDefinition(name: String,
 
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexTemplateDefinition = copy(mappings = mappings.toSeq)
 
-  // adds a new setting
-  def indexSetting(key: String, value: Double): CreateIndexTemplateDefinition = settings(Settings.builder().put(settings).put(key, value).build())
-  def indexSetting(key: String, value: Long): CreateIndexTemplateDefinition = settings(Settings.builder().put(settings).put(key, value).build())
-  def indexSetting(key: String, value: Boolean): CreateIndexTemplateDefinition = settings(Settings.builder().put(settings).put(key, value).build())
-  def indexSetting(key: String, value: String): CreateIndexTemplateDefinition = settings(Settings.builder().put(settings).put(key, value).build())
+  @deprecated("use settings(map)", "6.0.0")
+  def indexSetting(key: String, value: Double): CreateIndexTemplateDefinition = settings(Map(key -> value))
+
+  @deprecated("use settings(map)", "6.0.0")
+  def indexSetting(key: String, value: Long): CreateIndexTemplateDefinition = settings(Map(key -> value))
+
+  @deprecated("use settings(map)", "6.0.0")
+  def indexSetting(key: String, value: Boolean): CreateIndexTemplateDefinition = settings(Map(key -> value))
+
+  @deprecated("use settings(map)", "6.0.0")
+  def indexSetting(key: String, value: String): CreateIndexTemplateDefinition = settings(Map(key -> value))
 
   def version(version: Int): CreateIndexTemplateDefinition = copy(version = version.some)
 
   // replaces all settings with the given settings
-  def settings(settings: Settings): CreateIndexTemplateDefinition = copy(settings = settings)
+  def settings(settings: Map[String, Any]): CreateIndexTemplateDefinition = copy(settings = settings)
 
   def order(order: Int): CreateIndexTemplateDefinition = copy(order = order.some)
   def create(create: Boolean): CreateIndexTemplateDefinition = copy(create = create.some)
 
   def aliases(first: TemplateAlias, rest: TemplateAlias*): CreateIndexTemplateDefinition = aliases(first +: rest)
-  def aliases(aliases: Iterable[TemplateAlias]): CreateIndexTemplateDefinition = copy(alias = aliases.toSeq)
-
-  @deprecated("Use the aliases(TemplateAlias) methods", "5.2.12")
-  def alias(alias: Alias): CreateIndexTemplateDefinition = aliases(Seq(alias))
-
-  @deprecated("Use the aliases(TemplateAlias) methods", "5.2.12")
-  def aliases(aliases: Seq[Alias]): CreateIndexTemplateDefinition = copy(aliases = aliases)
+  def aliases(aliases: Iterable[TemplateAlias]): CreateIndexTemplateDefinition = copy(aliases = aliases.toSeq)
 }

@@ -2,9 +2,6 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DocumentRef
 
-@deprecated("use DocumentRef", "5.0.0")
-case class MoreLikeThisItem(index: String, `type`: String, id: String)
-
 case class ArtificialDocument(index: String, `type`: String, doc: String)
 
 case class MoreLikeThisQueryDefinition(fields: Seq[String],
@@ -39,10 +36,10 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
   def unlikeText(first: String, rest: String*): MoreLikeThisQueryDefinition = unlikeText(first +: rest)
   def unlikeText(unlikes: Iterable[String]): MoreLikeThisQueryDefinition = copy(unlikeTexts = unlikeTexts ++ unlikes)
 
-  def unlikeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition =
+  def unlikeItems(first: DocumentRef, rest: DocumentRef*): MoreLikeThisQueryDefinition =
     unlikeItems(first +: rest)
 
-  def unlikeItems(unlikes: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
+  def unlikeItems(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
     unlikeDocs(unlikes.map { item => DocumentRef(item.index, item.`type`, item.id) })
 
   def unlikeDocs(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =

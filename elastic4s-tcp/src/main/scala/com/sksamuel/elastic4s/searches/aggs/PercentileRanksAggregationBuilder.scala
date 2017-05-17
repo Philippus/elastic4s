@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.metrics.percentiles.PercentileRanksAggregationBuilder
 
@@ -17,7 +17,7 @@ object PercentileRanksAggregationBuilder {
     agg.format.foreach(builder.format)
     agg.keyed.foreach(builder.keyed)
     agg.compression.foreach(builder.compression)
-    agg.method.foreach(builder.method)
+    agg.method.map(EnumConversions.percentilesMethod).foreach(builder.method)
     agg.numberOfSignificantValueDigits.foreach(builder.numberOfSignificantValueDigits)
 
     if (agg.values.nonEmpty) builder.values(agg.values: _*)

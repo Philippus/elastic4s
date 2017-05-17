@@ -87,7 +87,7 @@ trait IndexAdminExecutables {
         builder.setFields(req.fields: _*)
       req.requestCache.foreach(builder.setRequestCache)
       req.queryCache.foreach(builder.setQueryCache)
-      req.indicesOptions.foreach(builder.setIndicesOptions)
+      req.indicesOptions.map(EnumConversions.indicesopts).foreach(builder.setIndicesOptions)
 
       injectFuture(builder.execute)
     }

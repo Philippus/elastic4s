@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.mappings.MappingDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.settings.Settings
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -12,7 +11,7 @@ case class RolloverDefinition(sourceAlias: String,
                               dryRun: Option[Boolean] = None,
                               mappings: Seq[MappingDefinition] = Nil,
                               newIndexName: Option[String] = None,
-                              settings: Option[Settings] = None,
+                              settings: Map[String, Any] = Map.empty,
                               waitForActiveShards: Option[Int] = None,
                               masterNodeTimeout: Option[FiniteDuration] = None
                              ) {
@@ -35,5 +34,5 @@ case class RolloverDefinition(sourceAlias: String,
 
   def mappings(mappings: Iterable[MappingDefinition]): RolloverDefinition = copy(mappings = mappings.toSeq)
 
-  def settings(settings: Settings): RolloverDefinition = copy(settings = settings.some)
+  def settings(settings: Map[String, Any]): RolloverDefinition = copy(settings = settings)
 }

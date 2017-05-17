@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
+import com.sksamuel.elastic4s.searches.GeoPoint
+import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.GeoHashUtils
 
 case class GeoHashCellQueryDefinition(field: String,
-                                      geohash: String,
+                                      geopoint: Option[GeoPoint] = None,
+                                      geohash: Option[String] = None,
                                       neighbors: Option[Boolean] = None,
                                       ignoreUnmapped: Option[Boolean] = None,
                                       precisionLevels: Option[Int] = None,
@@ -12,8 +14,10 @@ case class GeoHashCellQueryDefinition(field: String,
                                       boost: Option[Double] = None,
                                       queryName: Option[String] = None) extends QueryDefinition {
 
-  def point(lat: Double, long: Double) :GeoHashCellQueryDefinition=
-    copy(geohash = GeoHashUtils.stringEncode(lat, long))
+  def point(lat: Double, long: Double): GeoHashCellQueryDefinition = copy(geopoint = GeoPoint(lat, long).some)
+  def point(geoPoint: GeoPoint): GeoHashCellQueryDefinition = copy(geopoint = geoPoint.some)
+
+  def geohash(geohash: String): GeoHashCellQueryDefinition = copy(geohash = geohash.some)
 
   def withPrecision(precision: Int): GeoHashCellQueryDefinition = copy(precisionLevels = Some(precision))
   def withPrecision(precision: String): GeoHashCellQueryDefinition = copy(precisionString = Some(precision))

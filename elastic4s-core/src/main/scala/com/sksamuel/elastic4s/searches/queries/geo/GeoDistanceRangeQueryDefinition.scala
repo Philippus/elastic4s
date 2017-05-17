@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.geo
 
+import com.sksamuel.elastic4s.searches.GeoPoint
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
-import org.elasticsearch.index.query.GeoValidationMethod
 
 case class GeoDistanceRangeQueryDefinition(field: String,
                                            geopoint: GeoPoint,

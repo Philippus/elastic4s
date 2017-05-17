@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.admin
 
 import java.util
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -43,7 +43,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
         indexInto("brewers" / "brands") fields(
           "name" -> "fullers",
           "year_founded" -> 1829
-        ) refresh RefreshPolicy.IMMEDIATE
+        ) refresh RefreshPolicy.Immediate
       }.await
 
       blockUntilCount(1, "brewers")

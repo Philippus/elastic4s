@@ -4,6 +4,9 @@ import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.index.query.{HasChildQueryBuilder, QueryBuilders}
 
 object HasChildQueryBuilderFn {
+
+  import com.sksamuel.elastic4s.EnumConversions._
+
   def apply(q: HasChildQueryDefinition): HasChildQueryBuilder = {
 
     val builder = QueryBuilders.hasChildQuery(

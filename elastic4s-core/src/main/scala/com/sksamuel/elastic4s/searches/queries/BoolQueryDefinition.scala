@@ -2,16 +2,15 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
 
-case class BoolQueryDefinition(
-                                adjustPureNegative: Option[Boolean] = None,
-                                boost: Option[Double] = None,
-                                disableCoord: Option[Boolean] = None,
-                                minimumShouldMatch: Option[String] = None,
-                                queryName: Option[String] = None,
-                                filters: Seq[QueryDefinition] = Nil,
-                                must: Seq[QueryDefinition] = Nil,
-                                not: Seq[QueryDefinition] = Nil,
-                                should: Seq[QueryDefinition] = Nil
+case class BoolQueryDefinition(adjustPureNegative: Option[Boolean] = None,
+                               boost: Option[Double] = None,
+                               disableCoord: Option[Boolean] = None,
+                               minimumShouldMatch: Option[String] = None,
+                               queryName: Option[String] = None,
+                               filters: Seq[QueryDefinition] = Nil,
+                               must: Seq[QueryDefinition] = Nil,
+                               not: Seq[QueryDefinition] = Nil,
+                               should: Seq[QueryDefinition] = Nil
                               ) extends QueryDefinition {
 
   def adjustPureNegative(adjustPureNegative: Boolean): BoolQueryDefinition =

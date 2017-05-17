@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ElasticApi
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
+import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import org.scalatest.{FlatSpec, Matchers}
 
 class FilterAggregationDslTest extends FlatSpec with Matchers with ElasticApi {
@@ -16,7 +16,7 @@ class FilterAggregationDslTest extends FlatSpec with Matchers with ElasticApi {
     ).subAggregation(
       dateHistogramAggregation("per_month")
         .field("some_date_field")
-        .interval(DateHistogramInterval.MONTH)
+        .interval(DateHistogramInterval.Month)
         .minDocCount(0L)
     )
   }

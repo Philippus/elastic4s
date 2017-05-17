@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.search.Bucket
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FreeSpec, Matchers}
 
 class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
@@ -27,7 +27,7 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       indexInto("termsagg/curry") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Chilli Masala", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Tikka Masala", "strength" -> "medium")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "terms aggregation" - {

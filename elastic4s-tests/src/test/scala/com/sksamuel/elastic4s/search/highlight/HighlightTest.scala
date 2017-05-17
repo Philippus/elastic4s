@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.highlight
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class HighlightTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
@@ -23,7 +23,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with DualElas
         .fields(
           "name" -> "star trek",
           "text" -> "Space, the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new life and new civilisations, to boldly go where no one has gone before."
-        ).refresh(RefreshPolicy.IMMEDIATE)
+        ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

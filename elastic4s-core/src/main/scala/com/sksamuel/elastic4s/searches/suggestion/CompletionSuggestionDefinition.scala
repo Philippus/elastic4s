@@ -1,8 +1,22 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
+import com.sksamuel.elastic4s.searches.queries.RegexpFlag
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.unit.Fuzziness
-import org.elasticsearch.search.suggest.completion.RegexOptions
+
+sealed trait Fuzziness
+object Fuzziness {
+
+  def fromEdits(edits: Int): Fuzziness = edits match {
+    case 0 => Zero
+    case 1 => One
+    case 2 => Two
+  }
+
+  case object Zero extends Fuzziness
+  case object One extends Fuzziness
+  case object Two extends Fuzziness
+  case object Auto extends Fuzziness
+}
 
 case class CompletionSuggestionDefinition(name: String,
                                           fieldname: String,
@@ -13,7 +27,7 @@ case class CompletionSuggestionDefinition(name: String,
                                           fuzzyPrefixLength: Option[Int] = None,
                                           maxDeterminizedStates: Option[Int] = None,
                                           regex: Option[String] = None,
-                                          regexOptions: Option[RegexOptions] = None,
+                                          regexFlags: Seq[RegexpFlag] = Nil,
                                           shardSize: Option[Int] = None,
                                           size: Option[Int] = None,
                                           transpositions: Option[Boolean] = None,
@@ -22,7 +36,7 @@ case class CompletionSuggestionDefinition(name: String,
                                           contexts: Map[String, Seq[CategoryContext]] = Map.empty) extends SuggestionDefinition {
 
   def regex(regex: String): CompletionSuggestionDefinition = copy(regex = regex.some)
-  def regexOptions(regexOptions: RegexOptions): CompletionSuggestionDefinition = copy(regexOptions = regexOptions.some)
+  def regexFlags(flags: Seq[RegexpFlag]): CompletionSuggestionDefinition = copy(regexFlags = flags)
   def fuzzyMinLength(min: Int): CompletionSuggestionDefinition = copy(fuzzyMinLength = min.some)
   def maxDeterminizedStates(states: Int): CompletionSuggestionDefinition = copy(maxDeterminizedStates = states.some)
   def fuzziness(edits: Int): CompletionSuggestionDefinition = copy(fuzziness = Fuzziness.fromEdits(edits).some)

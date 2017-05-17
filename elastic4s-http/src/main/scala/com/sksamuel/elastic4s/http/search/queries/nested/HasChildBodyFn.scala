@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object HasChildBodyFn {
 
   def apply(q: HasChildQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("has_child")
     builder.field("type", q.`type`)
     q.minMaxChildren.foreach { minmax =>
@@ -17,8 +17,8 @@ object HasChildBodyFn {
       if (minmax._2 > 0)
         builder.field("max_children", minmax._2)
     }
-    builder.field("score_mode", q.scoreMode.name.toLowerCase)
-    builder.rawField("query", QueryBuilderFn(q.query).bytes)
+    builder.field("score_mode", EnumConversions.scoreMode(q.scoreMode))
+    builder.rawField("query", QueryBuilderFn(q.query))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

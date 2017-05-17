@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with DualClient {
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
     execute {
       createIndex("foo").mappings(
         mapping("bar").fields(

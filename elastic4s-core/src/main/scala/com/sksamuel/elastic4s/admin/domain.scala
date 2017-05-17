@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s._
-import org.elasticsearch.action.support.IndicesOptions
 import com.sksamuel.exts.OptionImplicits._
 
 case class OpenIndexDefinition(indexes: Indexes)
@@ -11,6 +10,11 @@ case class IndexExistsDefinition(index: String)
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
 case class AliasExistsDefinition(alias: String)
 case class IndicesStatsDefinition(indexes: Indexes)
+
+case class IndicesOptions(allowNoIndices: Boolean = false,
+                          ignoreUnavailable: Boolean = false,
+                          expandWildcardsOpen: Boolean = false,
+                          expandWildcardClosed: Boolean = false)
 
 case class ClearCacheDefinition(indexes: Seq[String],
                                 fieldDataCache: Option[Boolean] = None,

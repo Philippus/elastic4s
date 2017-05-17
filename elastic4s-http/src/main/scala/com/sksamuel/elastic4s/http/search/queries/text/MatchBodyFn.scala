@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MatchBodyFn {
   def apply(q: MatchQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.startObject("match")
-    builder.startObject(q.field)
-    builder.field("query", q.value)
+    builder.startObject("match").startObject(q.field)
+
+    builder.autofield("query", q.value)
+
     q.zeroTerms.map(_.toString).foreach(builder.field("zero_terms_query", _))
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
     q.cutoffFrequency.map(_.toString).foreach(builder.field("cutoff_frequency", _))
@@ -22,8 +22,7 @@ object MatchBodyFn {
     q.fuzzyRewrite.foreach(builder.field("fuzzy_rewrite", _))
     q.maxExpansions.foreach(builder.field("max_expansions", _))
     q.boost.foreach(builder.field("boost", _))
-    builder.endObject()
-    builder.endObject()
-    builder.endObject()
+
+    builder.endObject().endObject().endObject()
   }
 }

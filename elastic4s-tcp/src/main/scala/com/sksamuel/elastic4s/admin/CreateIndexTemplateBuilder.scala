@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.indexes.{AnalysisContentBuilder, CreateIndexTemplateDefinition}
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.mappings.MappingContentBuilder
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder
 import org.elasticsearch.common.io.stream.BytesStreamOutput
-import org.elasticsearch.common.xcontent.XContentFactory
-
-import scala.collection.JavaConverters._
 
 object CreateIndexTemplateBuilder {
   def apply(builder: PutIndexTemplateRequestBuilder, req: CreateIndexTemplateDefinition): Unit = {
@@ -16,9 +14,8 @@ object CreateIndexTemplateBuilder {
     builder.setTemplate(req.pattern)
     req.order.foreach(builder.setOrder)
     req.create.foreach(builder.setCreate)
-    req.aliases.foreach(builder.addAlias)
 
-    req.alias.foreach { a =>
+    req.aliases.foreach { a =>
       val alias = new Alias(a.name)
       a.filter.map(QueryBuilderFn.apply).foreach(alias.filter)
       a.routing.foreach(alias.routing)
@@ -29,9 +26,9 @@ object CreateIndexTemplateBuilder {
       builder.addMapping(mapping.`type`, MappingContentBuilder.buildWithName(mapping, mapping.`type`))
     }
 
-    if (!req.settings.isEmpty || req.analysis.nonEmpty) {
-      val source = XContentFactory.jsonBuilder().startObject()
-      req.settings.getAsMap.asScala.foreach { p => source.field(p._1, p._2) }
+    if (req.settings.nonEmpty || req.analysis.nonEmpty) {
+      val source = XContentFactory.jsonBuilder()
+      req.settings.foreach { p => source.field(p._1, p._2.toString) }
       req.analysis.foreach(AnalysisContentBuilder.build(_, source))
       source.endObject()
       builder.setSettings(source.string())

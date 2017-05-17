@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, HealthStatus, HealthStatus$, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class CatIndexesTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
@@ -15,7 +14,7 @@ class CatIndexesTest extends FlatSpec with Matchers with SharedElasticSugar with
       indexInto("catindex1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catindex2/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catindex3/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 
@@ -30,7 +29,7 @@ class CatIndexesTest extends FlatSpec with Matchers with SharedElasticSugar with
 
   it should "use health param" in {
     val result = http.execute {
-      catIndices(Health.Red)
+      catIndices(HealthStatus.Red)
     }.await.isEmpty shouldBe true
   }
 

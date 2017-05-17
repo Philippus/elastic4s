@@ -64,37 +64,5 @@ class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar wit
       )
       CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
     }
-    "include timestamp path field" in {
-      val req = createIndex("docsAndTags").mappings(
-        mapping ("foo") timestamp {
-          timestamp(true) path "mypath" store true
-        }
-      )
-      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_path.json")
-    }
-    "include timestamp store field" in {
-      val req = createIndex("docsAndTags").mappings(
-        mapping("foo") timestamp {
-          timestamp(true) path "mypath" store true
-        }
-      )
-      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_store.json")
-    }
-    "include timestamp format field" in {
-      val req = createIndex("docsAndTags").mappings(
-        mapping("foo") timestamp {
-          timestamp(true) format "qwerty"
-        }
-      )
-      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_format.json")
-    }
-    "include honor disabled timestamp" in {
-      val req = createIndex("docsAndTags").mappings(
-        mapping("foo") timestamp {
-          timestamp(false)
-        }
-      )
-      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/timestamp_disabled.json")
-    }
   }
 }

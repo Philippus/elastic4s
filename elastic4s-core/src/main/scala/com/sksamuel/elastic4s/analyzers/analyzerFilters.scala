@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-
-import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 trait AnalyzerFilter {
   def name: String
@@ -16,7 +14,6 @@ trait AnalyzerFilterDefinition {
   protected[elastic4s] def build(source: XContentBuilder): Unit
   def json: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder
-    builder.startObject()
     builder.field("type", filterType)
     build(builder)
     builder.endObject()
@@ -38,7 +35,7 @@ case class MappingCharFilter(name: String, mappings: (String, String)*)
   val filterType = "mapping"
 
   def build(source: XContentBuilder): Unit = {
-    source.field("mappings", mappings.map({ case (k, v) => s"$k=>$v" }).asJava)
+    source.array("mappings", mappings.map({ case (k, v) => s"$k=>$v" }).toArray)
   }
 }
 

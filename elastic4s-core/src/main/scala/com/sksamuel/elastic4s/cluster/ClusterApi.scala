@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.cluster
 
-import org.elasticsearch.cluster.health.ClusterHealthStatus
-import org.elasticsearch.common.Priority
+import com.sksamuel.elastic4s.{HealthStatus, Priority}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.admin.cluster.settings.ClusterUpdateSettingsRequestBuilder
 
 trait ClusterApi {
 
@@ -22,13 +20,6 @@ case class ClusterStatsDefinition()
 
 case class ClusterSettingsDefinition(persistentSettings: Map[String, String],
                                      transientSettings: Map[String, String]) {
-
-  import scala.collection.JavaConverters._
-
-  private[elastic4s] def build(builder: ClusterUpdateSettingsRequestBuilder): ClusterUpdateSettingsRequestBuilder = {
-    builder.setPersistentSettings(persistentSettings.asJava)
-    builder.setTransientSettings(transientSettings.asJava)
-  }
 
   def persistentSettings(settings: Map[String, String]): ClusterSettingsDefinition = {
     copy(persistentSettings = settings)
@@ -50,7 +41,7 @@ case class ClusterHealthDefinition(indices: Seq[String],
                                    timeout: Option[String] = None,
                                    waitForActiveShards: Option[Int] = None,
                                    waitForEvents: Option[Priority] = None,
-                                   waitForStatus: Option[ClusterHealthStatus] = None,
+                                   waitForStatus: Option[HealthStatus] = None,
                                    waitForNodes: Option[String] = None) {
 
   def timeout(value: String): ClusterHealthDefinition = copy(timeout = value.some)
@@ -60,7 +51,7 @@ case class ClusterHealthDefinition(indices: Seq[String],
 
   def waitForEvents(waitForEvents: Priority): ClusterHealthDefinition = copy(waitForEvents = waitForEvents.some)
 
-  def waitForStatus(waitForStatus: ClusterHealthStatus): ClusterHealthDefinition =
+  def waitForStatus(waitForStatus: HealthStatus): ClusterHealthDefinition =
     copy(waitForStatus = waitForStatus.some)
 
   def waitForNodes(waitForNodes: String): ClusterHealthDefinition = copy(waitForNodes = waitForNodes.some)

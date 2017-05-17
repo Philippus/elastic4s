@@ -7,13 +7,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefi
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
-import com.sksamuel.elastic4s.{DocumentRef, Indexable}
-import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.common.geo.GeoPoint
-import org.elasticsearch.common.geo.builders.ShapeBuilder
-import org.elasticsearch.common.unit.DistanceUnit
-import org.elasticsearch.index.query._
-import org.elasticsearch.indices.TermsLookup
+import com.sksamuel.elastic4s.{DistanceUnit, DocumentRef, Indexable}
 
 import scala.language.{implicitConversions, reflectiveCalls}
 
@@ -75,11 +69,11 @@ trait QueryApi {
 
   def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
 
-  def geoHashCell(field: String, value: String): GeoHashCellQueryDefinition =
-    GeoHashCellQueryDefinition(field, value)
+  def geoHashCell(field: String, geohash: String): GeoHashCellQueryDefinition =
+    GeoHashCellQueryDefinition(field).geohash(geohash)
 
-  def geoHashCell(field: String, value: GeoPoint): GeoHashCellQueryDefinition =
-    GeoHashCellQueryDefinition(field, value.geohash)
+  def geoHashCell(field: String, point: GeoPoint): GeoHashCellQueryDefinition =
+    GeoHashCellQueryDefinition(field).point(point)
 
   @deprecated("use geoPolygonQuery", "5.2.0")
   def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
@@ -97,14 +91,14 @@ trait QueryApi {
                       points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
-  def geoShapeQuery(field: String,
-                    shape: ShapeBuilder): GeoShapeDefinition =
-    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, shape))
-
-  def geoShapeQuery(field: String,
-                    indexedShapeId: String,
-                    indexedShapeType: String): GeoShapeDefinition =
-    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, indexedShapeId, indexedShapeType))
+  //  def geoShapeQuery(field: String,
+  //                    shape: ShapeBuilder): GeoShapeDefinition =
+  //    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, shape))
+  //
+  //  def geoShapeQuery(field: String,
+  //                    indexedShapeId: String,
+  //                    indexedShapeType: String): GeoShapeDefinition =
+  //    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, indexedShapeId, indexedShapeType))
 
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
@@ -157,12 +151,6 @@ trait QueryApi {
     def likeTexts(texts: Iterable[String]): MoreLikeThisQueryDefinition =
       MoreLikeThisQueryDefinition(fields, texts.toSeq)
 
-    def likeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition =
-      likeItems(first +: rest)
-
-    def likeItems(items: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
-      likeDocs(items.map { item => DocumentRef(item.index, item.`type`, item.id) })
-
     def likeDocs(first: DocumentRef,
                  rest: DocumentRef*): MoreLikeThisQueryDefinition = likeDocs(first +: rest)
 
@@ -174,12 +162,6 @@ trait QueryApi {
 
     def artificialDocs(docs: Iterable[ArtificialDocument]): MoreLikeThisQueryDefinition =
       MoreLikeThisQueryDefinition(fields).copy(artificialDocs = docs.toSeq)
-
-    @deprecated("use likeDocs or likeTexts", "5.0.0")
-    def like(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition = likeItems(first +: rest)
-
-    @deprecated("use likeDocs or likeTexts", "5.0.0")
-    def like(first: String, rest: String*): MoreLikeThisQueryDefinition = likeTexts(first +: rest)
   }
 
   def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
@@ -249,7 +231,7 @@ trait QueryApi {
                    (implicit buildable: BuildableTermsQuery[T]) = TermsQueryDefinition(field, values)
 
   def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
-    TermsLookupQueryDefinition(field, new TermsLookup(ref.index, ref.`type`, ref.id, path))
+    TermsLookupQueryDefinition(field, TermsLookup(ref, path))
 
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)

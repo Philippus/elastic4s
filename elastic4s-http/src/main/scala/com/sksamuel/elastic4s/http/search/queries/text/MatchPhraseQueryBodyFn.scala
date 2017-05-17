@@ -1,15 +1,14 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.matches.MatchPhraseDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object MatchPhraseQueryBodyFn {
   def apply(q: MatchPhraseDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("match_phrase")
     builder.startObject(q.field)
-    builder.field("query", q.value)
+    builder.autofield("query", q.value)
     q.analyzer.foreach(builder.field("analyzer", _))
     q.slop.foreach(builder.field("slop", _))
     q.boost.foreach(builder.field("boost", _))

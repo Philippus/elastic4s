@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.search.suggestions
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
 import org.scalatest.{Matchers, WordSpec}
 
 class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
@@ -34,7 +34,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with 
       indexInto(indexType) doc Song("Monster", "Mumford and sons"),
       indexInto(indexType) doc Song("Goodbye the yellow brick road", "Elton John"),
       indexInto(indexType) doc Song("Your song", "Elton John")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "suggestions" should {

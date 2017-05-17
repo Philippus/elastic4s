@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
@@ -18,7 +17,7 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
       indexInto("catshards2/landmarks").fields("name" -> "blenheim palace"),
       indexInto("catshards2/landmarks").fields("name" -> "london eye"),
       indexInto("catshards2/landmarks").fields("name" -> "tower of london")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cats shards" should "return all shards" in {

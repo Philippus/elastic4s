@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
-
-import scala.collection.JavaConverters._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 // Base class for normalizers that have custom parameters set.
 abstract class NormalizerDefinition (val name: String) {
@@ -15,31 +13,24 @@ abstract class NormalizerDefinition (val name: String) {
 
   def buildWithName(): XContentBuilder = {
     val xc = XContentFactory.jsonBuilder()
-    xc.startObject()
     buildWithName(xc)
     xc.endObject()
-    xc
   }
 
   def build(): XContentBuilder = {
     val xc = XContentFactory.jsonBuilder()
-    xc.startObject()
     build(xc)
     xc.endObject()
-    xc
   }
 
   def build(source: XContentBuilder): Unit
 
   def json: XContentBuilder = {
     val builder = XContentFactory.jsonBuilder
-    builder.startObject()
     build(builder)
     builder.endObject()
-    builder
   }
 }
-
 
 case class CustomNormalizerDefinition(override val name: String,
                                     filters: Seq[AnalyzerFilter] = Nil) extends NormalizerDefinition(name) {
@@ -49,10 +40,10 @@ case class CustomNormalizerDefinition(override val name: String,
     val tokenFilters = filters.collect { case token: TokenFilter => token }
     val charFilters = filters.collect { case char: CharFilter => char }
     if (tokenFilters.nonEmpty) {
-      source.field("filter", tokenFilters.map(_.name).asJava)
+      source.array("filter", tokenFilters.map(_.name).toArray)
     }
     if (charFilters.nonEmpty) {
-      source.field("char_filter", charFilters.map(_.name).asJava)
+      source.array("char_filter", charFilters.map(_.name).toArray)
     }
   }
 

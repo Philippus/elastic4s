@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-import org.apache.lucene.search.join.ScoreMode
+import com.sksamuel.elastic4s.searches.ScoreMode
 
 case class NestedQueryDefinition(path: String,
                                  query: QueryDefinition,

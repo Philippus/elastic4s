@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.collapse
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
 class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar with ElasticDsl with BeforeAndAfterAll {
@@ -28,7 +28,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar wi
         indexInto("collapse" / "hotels") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB"),
 
         indexInto("collapse" / "hotels") id "3" fields("name" -> "Best Tenerife", "board" -> "AI")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

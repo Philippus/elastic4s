@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.searches.ScoreMode
 import com.sksamuel.exts.OptionImplicits._
-import org.apache.lucene.search.join.ScoreMode
 
 case class HasChildQueryDefinition(`type`: String,
                                    query: QueryDefinition,

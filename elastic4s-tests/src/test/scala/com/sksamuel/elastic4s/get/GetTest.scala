@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.get
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
 class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
@@ -31,7 +31,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSug
           "brand" -> "bud",
           "ingredients" -> Seq("hops", "barley", "water", "yeast")
         ) id 8
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

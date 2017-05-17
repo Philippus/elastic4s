@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.Priority
 import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.elasticsearch.action.support.ActiveShardCount
-import org.elasticsearch.common.Priority
 import org.elasticsearch.common.unit.TimeValue
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -24,8 +24,8 @@ class ClusterExecutablesTest extends FlatSpec with Matchers with SharedElasticSu
   }
 
   it should "allow waiting for events" in {
-    val builder = ClusterHealthDefinitionExecutable.buildHealthRequest(node.client, clusterHealth("index1", "index2").waitForEvents(Priority.IMMEDIATE))
-    builder.request.waitForEvents() shouldBe Priority.IMMEDIATE
+    val builder = ClusterHealthDefinitionExecutable.buildHealthRequest(node.client, clusterHealth("index1", "index2").waitForEvents(Priority.Immediate))
+    builder.request.waitForEvents() shouldBe org.elasticsearch.common.Priority.IMMEDIATE
   }
 
   it should "allow a timeout" in {

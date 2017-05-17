@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
-import com.sksamuel.elastic4s.searches.sort.FieldSortDefinition
+import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortMode}
 import org.scalatest.{FunSuite, Matchers}
 
 class TopHitsAggregationBuilderTest extends FunSuite with Matchers {
@@ -10,8 +10,8 @@ class TopHitsAggregationBuilderTest extends FunSuite with Matchers {
       .size(5)
       .version(true)
       .explain(false)
-      .sortBy(List(FieldSortDefinition("price")))
+      .sortBy(List(FieldSortDefinition("price").sortMode(SortMode.Median)))
     TopHitsAggregationBuilder(q).string() shouldBe
-      """{"top_hits":{"size":5,"sort":[{"price":{"order":"asc"}}],"explain":false,"version":true}}"""
+      """{"top_hits":{"size":5,"sort":[{"price":{"mode":"median","order":"asc"}}],"explain":false,"version":true}}"""
   }
 }

@@ -1,14 +1,23 @@
 package com.sksamuel.elastic4s.update
 
+import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
+
+import scala.util.Try
 
 class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        ElasticApi.deleteIndex("hands")
+      }.await
+    }
+
     execute {
       createIndex("hans").mappings(
         mapping("albums").fields(
@@ -29,7 +38,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
     execute {
       update(5).in("hans" / "albums").doc(
         "name" -> "man of steel"
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.result shouldBe "updated"
 
     execute {
@@ -39,7 +48,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
 
   it should "support string based update" in {
     execute {
-      update(5).in("hans" / "albums").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.IMMEDIATE)
+      update(5).in("hans" / "albums").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.Immediate)
     }.await.result shouldBe "updated"
 
     execute {
@@ -52,7 +61,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
     execute {
       update(5).in("hans/albums").docAsUpsert(
         "name" -> "batman"
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.result shouldBe "updated"
 
     execute {
@@ -62,7 +71,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
 
   it should "support string based upsert" in {
     execute {
-      update(44).in("hans" / "albums").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.IMMEDIATE)
+      update(44).in("hans" / "albums").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
     }.await.result shouldBe "created"
 
     execute {
@@ -75,7 +84,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
     execute {
       update(5).in("hans/albums").docAsUpsert(
         "length" -> 12.34
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.result shouldBe "updated"
 
     execute {

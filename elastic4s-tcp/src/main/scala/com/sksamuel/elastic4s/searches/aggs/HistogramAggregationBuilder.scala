@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.histogram.HistogramAggregationBuilder
 
@@ -13,7 +13,7 @@ object HistogramAggregationBuilder {
     agg.field.foreach(builder.field)
     agg.missing.foreach(builder.missing)
     agg.format.foreach(builder.format)
-    agg.order.foreach(builder.order)
+    agg.order.map(EnumConversions.histogramOrder).foreach(builder.order)
     agg.keyed.foreach(builder.keyed)
     agg.interval.foreach(builder.interval)
     agg.minDocCount.foreach(builder.minDocCount)
