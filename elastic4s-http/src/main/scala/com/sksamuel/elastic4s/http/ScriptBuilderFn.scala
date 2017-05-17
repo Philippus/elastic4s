@@ -18,7 +18,7 @@ object ScriptBuilderFn {
     if (script.params.nonEmpty) {
       builder.startObject("params")
       script.params.foreach { case (key, value) =>
-        builder.field(key, value)
+        builder.field(key, value.toString)
       }
       builder.endObject()
     }
@@ -26,7 +26,7 @@ object ScriptBuilderFn {
     if (script.options.nonEmpty) {
       builder.startObject("options")
       script.params.foreach { case (key, value) =>
-        builder.field(key, value)
+        builder.field(key, value.toString)
       }
       builder.endObject()
     }

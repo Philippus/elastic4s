@@ -9,7 +9,7 @@ object TemplateSearchContentBuilder {
     builder.field("id", req.name)
     if (req.params.nonEmpty) {
       builder.startObject("params")
-      req.params.foreach { case (key, value) => builder.field(key, value) }
+      req.params.foreach { case (key, value) => builder.autofield(key, value) }
       builder.endObject()
     }
     builder.endObject()

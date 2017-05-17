@@ -3,8 +3,6 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
 
-import scala.collection.JavaConverters._
-
 object MappingContentBuilder {
 
   def build(d: MappingDefinitionLike): XContentBuilder = {
@@ -26,13 +24,13 @@ object MappingContentBuilder {
 
     for (all <- d.all) builder.startObject("_all").field("enabled", all).endObject()
     (d.source, d.sourceExcludes) match {
-      case (_, l) if l.nonEmpty => builder.startObject("_source").field("excludes", l.asJava).endObject()
+      case (_, l) if l.nonEmpty => builder.startObject("_source").array("excludes", l.toArray).endObject()
       case (Some(source), _) => builder.startObject("_source").field("enabled", source).endObject()
       case _ =>
     }
 
     if (d.dynamicDateFormats.nonEmpty)
-      builder.field("dynamic_date_formats", d.dynamicDateFormats.asJava)
+      builder.array("dynamic_date_formats", d.dynamicDateFormats.toArray)
 
     for (dd <- d.dateDetection) builder.field("date_detection", dd)
     for (nd <- d.numericDetection) builder.field("numeric_detection", nd)
@@ -61,7 +59,14 @@ object MappingContentBuilder {
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
       for (meta <- d.meta) {
-        builder.field(meta._1, meta._2)
+        meta match {
+          case (name, s: String) => builder.field(name, s)
+          case (name, s: Double) => builder.field(name, s)
+          case (name, s: Boolean) => builder.field(name, s)
+          case (name, s: Long) => builder.field(name, s)
+          case (name, s: Float) => builder.field(name, s)
+          case (name, s: Int) => builder.field(name, s)
+        }
       }
       builder.endObject()
     }

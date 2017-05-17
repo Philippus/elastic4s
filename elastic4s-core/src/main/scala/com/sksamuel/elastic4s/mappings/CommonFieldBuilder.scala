@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CommonFieldBuilder {
+
   def apply(field: FieldDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
@@ -12,7 +13,7 @@ object CommonFieldBuilder {
     field.boost.foreach(builder.field("boost", _))
 
     if (field.copyTo.nonEmpty)
-      builder.field("copy_to", field.copyTo)
+      builder.array("copy_to", field.copyTo.toArray)
 
     if (field.fields.nonEmpty) {
       field match {
@@ -32,7 +33,14 @@ object CommonFieldBuilder {
     field.index.foreach(builder.field("index", _))
     field.normalizer.foreach(builder.field("normalizer", _))
     field.norms.foreach(builder.field("norms", _))
-    field.nullValue.foreach(builder.field("null_value", _))
+    field.nullValue.foreach {
+      case v: String => builder.field("null_value", v)
+      case v: Boolean => builder.field("null_value", v)
+      case v: Float => builder.field("null_value", v)
+      case v: Long => builder.field("null_value", v)
+      case v: Double => builder.field("null_value", v)
+      case v: Int => builder.field("null_value", v)
+    }
     field.searchAnalyzer.foreach(builder.field("search_analyzer", _))
     field.store.foreach(builder.field("store", _))
     field.termVector.foreach(builder.field("term_vector", _))

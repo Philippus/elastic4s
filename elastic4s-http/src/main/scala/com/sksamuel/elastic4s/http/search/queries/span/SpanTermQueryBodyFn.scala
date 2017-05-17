@@ -7,7 +7,7 @@ object SpanTermQueryBodyFn {
   def apply(q: SpanTermQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_term")
-    builder.field(q.field, q.value)
+    builder.autofield(q.field, q.value)
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()

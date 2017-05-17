@@ -1,14 +1,26 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.VersionType
-import com.sksamuel.elastic4s.searches.ScoreMode
-import com.sksamuel.elastic4s.searches.aggs.SubAggCollectionMode
+import com.sksamuel.elastic4s.searches.{DateHistogramInterval, ScoreMode}
+import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.searches.queries.SimpleQueryStringFlag
-import com.sksamuel.elastic4s.searches.queries.geo.{GeoExecType, GeoValidationMethod}
+import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
+import org.joda.time.DateTimeZone
 
 object EnumConversions {
+  def geoDistance(distance: GeoDistance): String = ???
+
+  def order(order: TermsOrder): String = ???
+
+  def order(order: HistogramOrder): String = ???
+
+  def timeZone(zone: DateTimeZone): String = ???
+
+  def interval(interval: DateHistogramInterval): String = ???
+
+
   def scoreMode(scoreMode: ScoreMode): String = ???
 
   def geoExecType(execType: GeoExecType): String = ???

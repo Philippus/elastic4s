@@ -7,7 +7,7 @@ object WildcardQueryBodyFn {
   def apply(q: WildcardQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("wildcard").startObject(q.field)
-    builder.field("value", q.query)
+    builder.autofield("value", q.query)
     q.rewrite.foreach(builder.field("rewrite", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

@@ -2,8 +2,6 @@ package com.sksamuel.elastic4s.analyzers
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
-import scala.collection.JavaConverters._
-
 // Base class for normalizers that have custom parameters set.
 abstract class NormalizerDefinition (val name: String) {
 
@@ -34,7 +32,6 @@ abstract class NormalizerDefinition (val name: String) {
   }
 }
 
-
 case class CustomNormalizerDefinition(override val name: String,
                                     filters: Seq[AnalyzerFilter] = Nil) extends NormalizerDefinition(name) {
 
@@ -43,10 +40,10 @@ case class CustomNormalizerDefinition(override val name: String,
     val tokenFilters = filters.collect { case token: TokenFilter => token }
     val charFilters = filters.collect { case char: CharFilter => char }
     if (tokenFilters.nonEmpty) {
-      source.field("filter", tokenFilters.map(_.name).asJava)
+      source.array("filter", tokenFilters.map(_.name).toArray)
     }
     if (charFilters.nonEmpty) {
-      source.field("char_filter", charFilters.map(_.name).asJava)
+      source.array("char_filter", charFilters.map(_.name).toArray)
     }
   }
 

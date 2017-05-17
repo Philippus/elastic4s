@@ -40,7 +40,7 @@ object AggMetaDataFn {
   def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit = {
     if (agg.metadata.nonEmpty) {
       builder.startObject("meta")
-      agg.metadata.foreach { case (key, value) => builder.field(key, value) }
+      agg.metadata.foreach { case (key, value) => builder.autofield(key, value) }
       builder.endObject()
     }
   }

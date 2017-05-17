@@ -57,7 +57,7 @@ object SearchScrollContentFn {
 object ClearScrollContentFn {
   def apply(req: ClearScrollDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.field("scroll_id", req.ids.toArray)
+    builder.array("scroll_id", req.ids.toArray)
     builder.endObject()
   }
 }

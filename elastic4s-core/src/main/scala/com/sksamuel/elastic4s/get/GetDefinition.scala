@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.{FetchSourceContext, IndexAndType}
+import com.sksamuel.elastic4s.{FetchSourceContext, IndexAndType, VersionType}
 import com.sksamuel.exts.OptionImplicits._
 
 case class GetDefinition(indexAndType: IndexAndType,
@@ -12,7 +12,7 @@ case class GetDefinition(indexAndType: IndexAndType,
                          refresh: Option[Boolean] = None,
                          routing: Option[String] = None,
                          version: Option[Long] = None,
-                         versionType: Option[String] = None,
+                         versionType: Option[VersionType] = None,
                          fetchSource: Option[FetchSourceContext] = None) {
   require(indexAndType != null, "indexAndType must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
@@ -53,5 +53,6 @@ case class GetDefinition(indexAndType: IndexAndType,
   def routing(r: String): GetDefinition = copy(routing = r.some)
   def version(ver: Long): GetDefinition = copy(version = ver.some)
 
-  def versionType(versionType: String): GetDefinition = copy(versionType = versionType.some)
+  def versionType(vtype: String): GetDefinition = versionType(VersionType.valueOf(vtype))
+  def versionType(vtype: VersionType): GetDefinition = copy(versionType = vtype.some)
 }

@@ -19,10 +19,9 @@ trait IndexExecutables extends IndexShowImplicits {
       t.source match {
         case Some(json) => builder.setSource(json)
         case _ =>
-          val source = XContentFactory.jsonBuilder()
+          val source = XContentFactory.obj()
           t.fields.foreach(XContentFieldValueWriter(source, _))
-          source.endObject()
-          builder.setSource(source)
+          builder.setSource(source.string)
       }
       t.parent.foreach(builder.setParent)
       t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)

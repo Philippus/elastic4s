@@ -19,7 +19,7 @@ object GeoDistanceQueryBodyFn {
       case (lat, long) => builder.array(q.field, Array(long, lat))
     }
     q.geohash.foreach(builder.field(q.field, _))
-    q.geoDistance.foreach(builder.field("distance_type", _))
+    q.geoDistance.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.boost.foreach(builder.field("boost", _))

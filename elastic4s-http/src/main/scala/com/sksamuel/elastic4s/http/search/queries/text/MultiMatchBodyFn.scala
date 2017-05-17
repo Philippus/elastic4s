@@ -9,7 +9,7 @@ object MultiMatchBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("multi_match")
     builder.field("query", q.text)
-    builder.field("fields", q.fields.map {
+    builder.array("fields", q.fields.map {
       case (field, 0) => field
       case (field, boost) => s"$field^$boost"
     }.toArray)

@@ -3,15 +3,15 @@ package com.sksamuel.elastic4s.http.search.queries.term
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition
 
-import scala.collection.JavaConverters._
-
 object TermsQueryBodyFn {
   def apply(t: TermsQueryDefinition[_]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     if (t.values.nonEmpty) {
-      builder.field(t.field, t.values.asJava)
+      builder.startArray()
+      t.values.foreach(builder.autovalue)
+      builder.endArray()
     }
     t.ref.foreach { ref =>
       builder.field("index", ref.index)

@@ -16,7 +16,7 @@ object UpdateContentBuilder {
     if (request.documentFields.nonEmpty) {
       builder.startObject("doc")
       request.documentFields.foreach { case (name, value) =>
-        builder.field(name, FieldsMapper.mapper(value))
+        builder.autofield(name, FieldsMapper.mapper(value))
       }
       builder.endObject()
     }
@@ -28,7 +28,7 @@ object UpdateContentBuilder {
     if (request.upsertFields.nonEmpty) {
       builder.startObject("upsert")
       request.upsertFields.foreach { case (name, value) =>
-        builder.field(name, FieldsMapper.mapper(value))
+        builder.autofield(name, FieldsMapper.mapper(value))
       }
       builder.endObject()
     }

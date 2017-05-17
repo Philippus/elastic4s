@@ -30,7 +30,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DualElasticSugar with Dua
     blockUntilCount(3, "places")
   }
 
-  "an index" should "do nothing when deleting a document where the id does not exist using id" in {
+  "an index" should "do nothing when deleting a document where the id does not exist" in {
     execute {
       delete(141212) from "places" -> "cities"
     }.await

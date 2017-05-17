@@ -11,7 +11,21 @@ object InnerHitQueryBodyFn {
     val builder = XContentFactory.jsonBuilder()
     d.from.foreach(builder.field("from", _))
     d.explain.foreach(builder.field("explain", _))
-    d.fetchSource.foreach(builder.field("_source", _))
+
+    // source filtering
+    d.fetchSource foreach { context =>
+      if (context.fetchSource) {
+        if (context.includes.nonEmpty || context.excludes.nonEmpty) {
+          builder.startObject("_source")
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
+          builder.endObject()
+        }
+      } else {
+        builder.field("_source", false)
+      }
+    }
+
     d.trackScores.foreach(builder.field("track_scores", _))
     d.version.foreach(builder.field("version", _))
     d.size.foreach(builder.field("size", _))

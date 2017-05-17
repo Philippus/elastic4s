@@ -18,7 +18,14 @@ object SourceAsContentBuilder {
           addSeq(values)
           builder.endArray()
         case (key, value) =>
-          builder.field(key, value)
+          value match {
+            case x: String => builder.field(key, x)
+            case x: Double => builder.field(key, x)
+            case x: Float => builder.field(key, x)
+            case x: Boolean => builder.field(key, x)
+            case x: Long => builder.field(key, x)
+            case x: Int => builder.field(key, x)
+          }
       }
     }
 
@@ -37,7 +44,7 @@ object SourceAsContentBuilder {
           addSeq(product.productIterator.toSeq)
           builder.endArray()
         case other =>
-          builder.value(other)
+          builder.autovalue(other)
       }
     }
 

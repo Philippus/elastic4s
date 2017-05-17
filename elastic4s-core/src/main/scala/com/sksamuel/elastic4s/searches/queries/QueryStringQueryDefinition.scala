@@ -63,7 +63,6 @@ case class QueryStringQueryDefinition(query: String,
   def allowLeadingWildcard(allowLeadingWildcard: Boolean): QueryStringQueryDefinition =
     copy(allowLeadingWildcard = allowLeadingWildcard.some)
 
-
   def lenient(lenient: Boolean): QueryStringQueryDefinition =
     copy(lenient = lenient.some)
 

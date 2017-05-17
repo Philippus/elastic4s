@@ -10,7 +10,7 @@ object TermsAggregationBuilder {
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     agg.field.foreach(builder.field("field", _))
-    agg.missing.foreach(builder.field("missing", _))
+    agg.missing.foreach(builder.autofield("missing", _))
     agg.executionHint.foreach(builder.field("execution_hint", _))
     agg.collectMode.map(EnumConversions.collectMode).foreach(builder.field("collect_mode", _))
     agg.size.foreach(builder.field("size", _))
@@ -31,7 +31,7 @@ object TermsAggregationBuilder {
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))
     agg.shardSize.foreach(builder.field("shard_size", _))
     agg.showTermDocCountError.foreach(builder.field("show_term_doc_count_error", _))
-    agg.order.foreach(builder.field("order", _))
+    agg.order.map(EnumConversions.order).foreach(builder.field("order", _))
 
     builder.endObject()
 

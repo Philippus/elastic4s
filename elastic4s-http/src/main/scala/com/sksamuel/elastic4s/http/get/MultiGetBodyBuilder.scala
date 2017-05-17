@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MultiGetBodyBuilder {
   def apply(request: MultiGetDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
+    val builder = XContentFactory.obj()
     builder.startArray("docs")
     request.gets.foreach { get =>
       builder.startObject()
@@ -16,21 +16,20 @@ object MultiGetBodyBuilder {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
           if (context.includes.nonEmpty)
-            builder.field("include", context.includes)
+            builder.array("include", context.includes)
           if (context.excludes.nonEmpty)
-            builder.field("exclude", context.excludes)
+            builder.array("exclude", context.excludes)
           builder.endObject()
         } else {
           builder.field("_source", false)
         }
       }
       if (get.storedFields.nonEmpty) {
-        builder.field("stored_fields", get.storedFields.toArray)
+        builder.array("stored_fields", get.storedFields.toArray)
       }
       builder.endObject()
     }
     builder.endArray()
     builder.endObject()
-    builder
   }
 }

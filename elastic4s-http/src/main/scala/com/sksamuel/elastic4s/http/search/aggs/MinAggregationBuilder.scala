@@ -9,7 +9,7 @@ object MinAggregationBuilder {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("min")
     agg.field.foreach(builder.field("field", _))
-    agg.missing.foreach(builder.field("missing", _))
+    agg.missing.foreach(builder.autofield("missing", _))
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
     }

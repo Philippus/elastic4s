@@ -9,7 +9,7 @@ object PrefixQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("prefix")
 
     builder.startObject(q.field)
-    builder.field("value", q.prefix)
+    builder.autofield("value", q.prefix)
     q.rewrite.foreach(builder.field("rewrite", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

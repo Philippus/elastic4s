@@ -89,7 +89,7 @@ case class NGramTokenizer(override val name: String,
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
-      source.field("token_chars", tokenChars)
+      source.array("token_chars", tokenChars.toArray)
   }
 
   def minMaxGrams(min: Int, max: Int): NGramTokenizer = copy(minGram = min, maxGram = max)
@@ -106,7 +106,7 @@ case class EdgeNGramTokenizer(override val name: String,
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
-      source.field("token_chars", tokenChars)
+      source.array("token_chars", tokenChars.toArray)
   }
 
   def minMaxGrams(min: Int, max: Int): EdgeNGramTokenizer = copy(minGram = min, maxGram = max)

@@ -9,7 +9,7 @@ object RangeAggregationBuilder {
     val builder = XContentFactory.obj
     builder.startObject("range")
     agg.field.foreach(builder.field("field", _))
-    agg.missing.foreach(builder.field("missing", _))
+    agg.missing.foreach(builder.autofield("missing", _))
     agg.format.foreach(builder.field("format", _))
     agg.keyed.foreach(builder.field("keyed", _))
     agg.script.foreach { script =>

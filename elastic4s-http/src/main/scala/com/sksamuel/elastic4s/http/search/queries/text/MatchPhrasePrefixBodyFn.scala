@@ -8,7 +8,7 @@ object MatchPhrasePrefixBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("match_phrase_prefix")
     builder.startObject(q.field)
-    builder.field("query", q.value)
+    builder.autofield("query", q.value)
     q.analyzer.foreach(builder.field("analyzer", _))
     q.slop.foreach(builder.field("slop", _))
     q.maxExpansions.foreach(builder.field("max_expansions", _))

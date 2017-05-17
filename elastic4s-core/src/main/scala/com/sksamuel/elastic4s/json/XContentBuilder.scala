@@ -15,12 +15,17 @@ object XContentFactory {
 
 class XContentBuilder(root: JsonNode) {
 
+
   private val stack = new util.ArrayDeque[JsonNode]
   stack.push(root)
 
   private def current = stack.peek()
   private def array = current.asInstanceOf[ArrayNode]
   private def obj = current.asInstanceOf[ObjectNode]
+
+  // generate a json string from the contents of the builder
+  def string(): String = JacksonSupport.mapper.writeValueAsString(root)
+  def bytes: Array[Byte] = JacksonSupport.mapper.writeValueAsBytes(root)
 
   def array(field: String, strings: Array[String]): XContentBuilder = {
     startArray(field)
@@ -64,23 +69,56 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def string(): String = JacksonSupport.mapper.writeValueAsString(root)
-  def bytes: Array[Byte] = JacksonSupport.mapper.writeValueAsBytes(root)
-
   def rawValue(value: XContentBuilder): this.type = rawValue(value.string)
   def rawValue(value: String): this.type = {
     array.addRawValue(new RawValue(value))
     this
   }
 
-  def nullField(name: String): XContentBuilder = this
-
-  def field(name: String, any: Any): XContentBuilder = this
+  def nullField(name: String): XContentBuilder = {
+    obj.putNull(name)
+    this
+  }
 
   def field(name: String, double: Double): XContentBuilder = {
-    require(current.isInstanceOf[ObjectNode])
-    // we can only insert fields into objects
-    current.asInstanceOf[ObjectNode].put(name, double)
+    obj.put(name, double)
+    this
+  }
+
+  def autovalue(value: Any): XContentBuilder = {
+    value match {
+      case v: String => array.add(v)
+      case v: Double => array.add(v)
+      case v: Float => array.add(v)
+      case v: Int => array.add(v)
+      case v: Long => array.add(v)
+      case v: Boolean => array.add(v)
+      case v: Short => array.add(v)
+      case v: Byte => array.add(v)
+      case v: BigDecimal => array.add(v.bigDecimal)
+    }
+    this
+  }
+
+  def autoarray(name: String, values: Seq[Any]): XContentBuilder = {
+    startArray(name)
+    values.foreach(autovalue)
+    endArray()
+    this
+  }
+
+  def autofield(name: String, value: Any): XContentBuilder = {
+    value match {
+      case v: String => obj.put(name, v)
+      case v: Double => obj.put(name, v)
+      case v: Float => obj.put(name, v)
+      case v: Int => obj.put(name, v)
+      case v: Long => obj.put(name, v)
+      case v: Boolean => obj.put(name, v)
+      case v: Short => obj.put(name, v)
+      case v: Byte => obj.put(name, v)
+      case v: BigDecimal => obj.put(name, v.bigDecimal)
+    }
     this
   }
 
@@ -104,8 +142,6 @@ class XContentBuilder(root: JsonNode) {
     array.add(str)
     this
   }
-
-  def value(any: Any): XContentBuilder = this
 
   def startArray(): XContentBuilder = {
     // can only start an anoynmous array inside another array

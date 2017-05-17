@@ -55,7 +55,7 @@ object CreateIndexTemplateBodyFn {
     if (create.settings.nonEmpty) {
       builder.startObject("settings")
       create.settings.foreach {
-        case (key, value) => builder.field(key, value)
+        case (key, value) => builder.autofield(key, value)
       }
       builder.endObject()
     }

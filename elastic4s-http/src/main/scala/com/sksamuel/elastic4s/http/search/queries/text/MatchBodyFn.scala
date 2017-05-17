@@ -8,7 +8,7 @@ object MatchBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("match").startObject(q.field)
 
-    builder.field("query", q.value)
+    builder.autofield("query", q.value)
 
     q.zeroTerms.map(_.toString).foreach(builder.field("zero_terms_query", _))
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))

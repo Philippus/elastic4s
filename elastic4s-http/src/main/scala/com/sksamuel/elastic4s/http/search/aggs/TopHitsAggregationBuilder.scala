@@ -4,8 +4,6 @@ import com.sksamuel.elastic4s.http.search.queries.SortContentBuilder
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
 
-import scala.collection.JavaConverters._
-
 object TopHitsAggregationBuilder {
 
   def apply(agg: TopHitsAggregationDefinition): XContentBuilder = {
@@ -26,8 +24,8 @@ object TopHitsAggregationBuilder {
       if (context.fetchSource) {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
-          builder.field("includes", context.includes.toList.asJava)
-          builder.field("excludes", context.excludes.toList.asJava)
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
           builder.endObject()
         }
       } else {

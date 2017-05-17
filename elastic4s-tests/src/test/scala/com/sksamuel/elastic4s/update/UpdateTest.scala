@@ -1,14 +1,23 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        ElasticApi.deleteIndex("hands")
+      }.await
+    }
+
     execute {
       createIndex("hans").mappings(
         mapping("albums").fields(

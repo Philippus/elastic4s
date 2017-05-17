@@ -12,7 +12,7 @@ object TermQueryBodyFn {
     builder.startObject(t.field)
     t.boost.map(_.toString).foreach(builder.field("boost", _))
     t.queryName.foreach(builder.field("_name", _))
-    builder.field("value", t.value)
+    builder.autofield("value", t.value)
 
     builder.endObject().endObject().endObject()
   }

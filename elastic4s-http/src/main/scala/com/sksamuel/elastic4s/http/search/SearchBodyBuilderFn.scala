@@ -8,8 +8,6 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
 
-import scala.collection.JavaConverters._
-
 object SearchBodyBuilderFn {
 
   def apply(request: SearchDefinition): XContentBuilder = {
@@ -29,7 +27,7 @@ object SearchBodyBuilderFn {
 
     request.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty) {
-      builder.field("search_after", request.searchAfter.asJava)
+      builder.autoarray("search_after", request.searchAfter)
     }
 
     if (request.sorts.nonEmpty) {
@@ -72,7 +70,7 @@ object SearchBodyBuilderFn {
     }
 
     if (request.storedFields.nonEmpty) {
-      builder.field("stored_fields", request.storedFields.asJava)
+      builder.array("stored_fields", request.storedFields.toArray)
     }
 
     if (request.indexBoosts.nonEmpty) {
@@ -90,8 +88,8 @@ object SearchBodyBuilderFn {
       if (context.fetchSource) {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
-          builder.field("includes", context.includes.toList.asJava)
-          builder.field("excludes", context.excludes.toList.asJava)
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
           builder.endObject()
         }
       } else {

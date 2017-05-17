@@ -112,12 +112,13 @@ object EnumConversions {
   }
 
   implicit def fetchSource(fetch: FetchSourceContext): org.elasticsearch.search.fetch.subphase.FetchSourceContext = {
-    val inc = if (fetch.includes.isEmpty) null else fetch.includes
-    val exc = if (fetch.excludes.isEmpty) null else fetch.excludes
-    if (fetch.fetchSource)
+    if (fetch.fetchSource) {
+      val inc = if (fetch.includes.isEmpty) null else fetch.includes
+      val exc = if (fetch.excludes.isEmpty) null else fetch.excludes
       new org.elasticsearch.search.fetch.subphase.FetchSourceContext(fetch.fetchSource, inc, exc)
-    else
+    } else {
       new org.elasticsearch.search.fetch.subphase.FetchSourceContext(false)
+    }
   }
 
   implicit def sortBy(sortBy: SortBy): org.elasticsearch.search.suggest.SortBy = {

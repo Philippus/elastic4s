@@ -28,7 +28,7 @@ object CreateIndexTemplateBuilder {
 
     if (req.settings.nonEmpty || req.analysis.nonEmpty) {
       val source = XContentFactory.jsonBuilder()
-      req.settings.foreach { p => source.field(p._1, p._2) }
+      req.settings.foreach { p => source.field(p._1, p._2.toString) }
       req.analysis.foreach(AnalysisContentBuilder.build(_, source))
       source.endObject()
       builder.setSettings(source.string())

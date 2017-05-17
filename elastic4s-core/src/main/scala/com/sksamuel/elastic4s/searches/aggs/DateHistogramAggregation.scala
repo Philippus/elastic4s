@@ -27,7 +27,7 @@ case class DateHistogramAggregation(name: String,
                                     format: Option[String] = None,
                                     field: Option[String] = None,
                                     script: Option[ScriptDefinition] = None,
-                                    missing: Option[AnyRef] = None,
+                                    missing: Option[Any] = None,
                                     extendedBounds: Option[ExtendedBounds] = None,
                                     pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                     subaggs: Seq[AbstractAggregation] = Nil,
@@ -50,7 +50,7 @@ case class DateHistogramAggregation(name: String,
   def format(format: String): DateHistogramAggregation = copy(format = format.some)
   def field(field: String): DateHistogramAggregation = copy(field = field.some)
   def script(script: ScriptDefinition): DateHistogramAggregation = copy(script = script.some)
-  def missing(missing: AnyRef): DateHistogramAggregation = copy(missing = missing.some)
+  def missing(missing: Any): DateHistogramAggregation = copy(missing = missing.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)

@@ -18,7 +18,7 @@ object SimpleStringBodyFn {
         case (name, 0.0D) => name
         case (name, boost) => s"$name^$boost"
       }.toArray
-      builder.field("fields", fields)
+      builder.array("fields", fields)
     }
     if (s.flags.nonEmpty) {
       val flags = s.flags.map(EnumConversions.simpleQueryStringFlag).mkString("|")

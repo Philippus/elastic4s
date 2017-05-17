@@ -9,7 +9,7 @@ object SumAggregationBuilder {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("sum")
     agg.field.foreach(builder.field("field", _))
-    agg.missing.foreach(builder.field("missing", _))
+    agg.missing.foreach(builder.autofield("missing", _))
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
     }

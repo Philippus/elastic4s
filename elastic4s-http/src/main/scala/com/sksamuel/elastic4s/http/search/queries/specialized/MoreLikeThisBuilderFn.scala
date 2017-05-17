@@ -11,7 +11,7 @@ object MoreLikeThisBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("more_like_this")
 
-    builder.field("fields", q.fields.asJava)
+    builder.array("fields", q.fields.toArray)
 
     builder.startArray("like")
     q.likeTexts.foreach(text => builder.value(text))
@@ -52,7 +52,7 @@ object MoreLikeThisBuilderFn {
     q.maxWordLength.foreach(builder.field("max_word_length", _))
 
     if (q.stopWords.nonEmpty)
-      builder.field("stop_words", q.stopWords.asJava)
+      builder.array("stop_words", q.stopWords.toArray)
 
     q.analyzer.foreach(builder.field("analyzer", _))
     q.minShouldMatch.foreach(builder.field("minimum_should_match", _))

@@ -9,7 +9,7 @@ object FuzzyQueryBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("fuzzy")
     builder.startObject(q.field)
-    builder.field("value", q.termValue)
+    builder.autofield("value", q.termValue)
     q.maxExpansions.foreach(builder.field("max_expansions", _))
     q.prefixLength.foreach(builder.field("prefix_length", _))
     q.fuzziness.foreach(builder.field("fuzziness", _))

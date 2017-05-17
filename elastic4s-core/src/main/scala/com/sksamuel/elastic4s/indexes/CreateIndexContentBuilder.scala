@@ -19,7 +19,7 @@ object CreateIndexContentBuilder {
 
           d.settings.settings foreach {
             case (key, value) =>
-              source.field(key, value)
+              source.field(key, value.toString)
           }
 
           source.endObject()
