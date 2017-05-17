@@ -14,7 +14,7 @@ class CatNodesTest extends FlatSpec with Matchers with SharedElasticSugar with E
     bulk(
       indexInto("catnodes1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catnodes2/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cats nodes" should "return all nodes" in {

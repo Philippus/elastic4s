@@ -24,7 +24,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
       indexInto("drinks/alcohol") fields ("text" -> "Gordons popular gin UK") id 7,
       indexInto("drinks/alcohol") fields ("text" -> "coors regular is another coors beer by molson") id 8,
       indexInto("drinks/alcohol") fields ("text" -> "Hendricks upmarket gin UK") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a more like this query" should {

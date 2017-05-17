@@ -22,7 +22,7 @@ class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DualElas
         indexInto("fonts/family").fields("name" -> "times new roman", "style" -> "serif"),
         indexInto("fonts/family").fields("name" -> "roman comic", "style" -> "comic"),
         indexInto("fonts/family").fields("name" -> "comic sans", "style" -> "comic")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

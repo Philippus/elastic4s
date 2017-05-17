@@ -21,7 +21,7 @@ class MatchQueryTest
   http.execute {
     bulk(
       indexInto("units/base") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a match query" should "support selecting nested properties" in {

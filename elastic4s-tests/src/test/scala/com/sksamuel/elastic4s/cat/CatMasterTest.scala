@@ -13,7 +13,7 @@ class CatMasterTest extends FlatSpec with Matchers with SharedElasticSugar with 
   http.execute {
     bulk(
       indexInto("catmaster/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 

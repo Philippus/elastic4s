@@ -11,7 +11,7 @@ class CatAliasTest extends FlatSpec with Matchers with SharedElasticSugar with E
   val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
-    indexInto("catalias/landmarks").fields("name" -> "hampton court palace").refresh(RefreshPolicy.IMMEDIATE)
+    indexInto("catalias/landmarks").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)
   }.await
 
   http.execute {

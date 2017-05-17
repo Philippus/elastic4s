@@ -32,7 +32,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DualElasticSugar with Dua
 
   "an index" should "do nothing when deleting a document where the id does not exist" in {
     execute {
-      delete(141212) from "places" -> "cities"
+      delete(141212) from "places" / "cities"
     }.await
     refresh("places")
     Thread.sleep(1000)

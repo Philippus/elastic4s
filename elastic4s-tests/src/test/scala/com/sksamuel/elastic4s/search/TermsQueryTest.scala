@@ -27,7 +27,7 @@ class TermsQueryTest
       indexInto("lords/people") fields ("name" -> "edmure"),
       indexInto("lords/people") fields ("name" -> "umber"),
       indexInto("lords/people") fields ("name" -> "byron")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a terms query" should "find multiple terms using 'or'" in {

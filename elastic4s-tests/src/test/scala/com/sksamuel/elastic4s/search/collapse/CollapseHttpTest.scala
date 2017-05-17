@@ -28,7 +28,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar wi
         indexInto("collapse" / "hotels") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB"),
 
         indexInto("collapse" / "hotels") id "3" fields("name" -> "Best Tenerife", "board" -> "AI")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

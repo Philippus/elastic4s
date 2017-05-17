@@ -27,7 +27,7 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       indexInto("termsagg/curry") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Chilli Masala", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Tikka Masala", "strength" -> "medium")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "terms aggregation" - {

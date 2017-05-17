@@ -34,7 +34,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with 
       indexInto(indexType) doc Song("Monster", "Mumford and sons"),
       indexInto(indexType) doc Song("Goodbye the yellow brick road", "Elton John"),
       indexInto(indexType) doc Song("Your song", "Elton John")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "suggestions" should {

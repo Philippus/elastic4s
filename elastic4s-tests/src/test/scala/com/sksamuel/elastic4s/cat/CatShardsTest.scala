@@ -17,7 +17,7 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
       indexInto("catshards2/landmarks").fields("name" -> "blenheim palace"),
       indexInto("catshards2/landmarks").fields("name" -> "london eye"),
       indexInto("catshards2/landmarks").fields("name" -> "tower of london")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cats shards" should "return all shards" in {

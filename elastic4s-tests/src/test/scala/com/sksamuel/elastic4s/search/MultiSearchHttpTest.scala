@@ -24,7 +24,7 @@ class MultiSearchHttpTest
       bulk(
         indexInto("jtull/albums") fields ("name" -> "aqualung") id 14,
         indexInto("jtull/albums") fields ("name" -> "passion play") id 51
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
 
     val resp = http.execute {

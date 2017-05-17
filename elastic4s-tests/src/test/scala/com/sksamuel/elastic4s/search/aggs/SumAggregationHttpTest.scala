@@ -27,7 +27,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("sumagg/actors") fields("name" -> "nicholas cage"),
       indexInto("sumagg/actors") fields("name" -> "sean connery", "age" -> "32"),
       indexInto("sumagg/actors") fields("name" -> "kevin costner", "age" -> "42")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "sum aggregation" - {

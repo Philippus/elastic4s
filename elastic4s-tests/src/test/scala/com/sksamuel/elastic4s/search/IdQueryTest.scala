@@ -18,7 +18,7 @@ class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticD
     bulk(
       indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id 5,
       indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "id query" should "find by id" in {

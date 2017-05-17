@@ -24,7 +24,7 @@ class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with Shared
     bulk(
       indexInto("hansz/albums").fields("name" -> "interstellar", "rating" -> 10) id 1,
       indexInto("hansz/albums").fields("name" -> "lion king", "rating" -> 8) id 2
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "term vectors" should "return full stats" in {

@@ -26,7 +26,7 @@ class MissingAggregationTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("missingagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("missingagg/buildings") fields("name" -> "Tower of London", "floors" -> 7),
       indexInto("missingagg/buildings") fields("name" -> "London Bridge", "height" -> 63)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "missing aggregation" - {

@@ -15,7 +15,7 @@ class CatAllocationTest extends FlatSpec with Matchers with SharedElasticSugar w
       indexInto("catalloc1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catalloc2/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catalloc3/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 

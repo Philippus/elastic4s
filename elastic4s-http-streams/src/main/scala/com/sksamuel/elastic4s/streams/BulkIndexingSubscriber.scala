@@ -211,7 +211,7 @@ class BulkActor[T](client: HttpClient,
 
     // returns just requests that failed as a new bulk definition (+ originals)
     def getRetryDef(resp: BulkResponse): (BulkDefinition, Seq[T]) = {
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
 
       val failureIds = resp.failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
@@ -254,7 +254,7 @@ class BulkActor[T](client: HttpClient,
 
     def bulkDef: BulkDefinition = {
       val defs = buffer.map(t => builder.request(t))
-      val policy = if (config.refreshAfterOp) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE
+      val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
       BulkDefinition(defs).refresh(policy)
     }
 

@@ -15,7 +15,7 @@ class CatCountTest extends FlatSpec with Matchers with SharedElasticSugar with E
       indexInto("catcount1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catcount1/landmarks").fields("name" -> "tower of london"),
       indexInto("catcount2/landmarks").fields("name" -> "stonehenge")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 

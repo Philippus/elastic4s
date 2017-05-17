@@ -13,8 +13,13 @@ object GeoValidationMethod {
   case object IgnoreMalformed extends GeoValidationMethod
   case object Strict extends GeoValidationMethod
 
+  @deprecated
   def COERCE = Coerce
+
+  @deprecated
   def IGNORE_MALFORMED = IgnoreMalformed
+
+  @deprecated
   def STRICT = Strict
 }
 

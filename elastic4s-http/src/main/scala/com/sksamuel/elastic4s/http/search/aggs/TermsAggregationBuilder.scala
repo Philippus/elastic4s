@@ -31,7 +31,7 @@ object TermsAggregationBuilder {
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))
     agg.shardSize.foreach(builder.field("shard_size", _))
     agg.showTermDocCountError.foreach(builder.field("show_term_doc_count_error", _))
-    agg.order.map(EnumConversions.order).foreach(builder.field("order", _))
+    agg.order.map(EnumConversions.order).foreach(builder.rawField("order", _))
 
     builder.endObject()
 

@@ -29,7 +29,6 @@ trait IndexExecutables extends IndexShowImplicits {
       t.versionType.map(EnumConversions.versionType).foreach(builder.setVersionType)
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
-      t.timestamp.foreach(builder.setTimestamp)
       t.source.foreach(builder.setSource)
       t.createOnly.foreach(builder.setCreate)
       builder

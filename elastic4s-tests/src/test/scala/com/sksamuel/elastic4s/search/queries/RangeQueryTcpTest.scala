@@ -49,7 +49,7 @@ class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers {
         "value" -> 1,
         "count" -> 8
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a range query" should {

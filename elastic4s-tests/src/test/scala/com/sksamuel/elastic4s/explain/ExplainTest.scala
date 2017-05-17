@@ -13,7 +13,7 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualElasti
       bulk(
         indexInto("explain/kings") fields ("name" -> "richard") id 4,
         indexInto("explain/kings") fields ("name" -> "edward") id 5
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

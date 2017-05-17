@@ -24,25 +24,25 @@ class MappingApiTest extends FlatSpec with MockitoSugar with SharedElasticSugar 
 
   "the get mapping dsl" should "be accepted by the client" in {
     client.execute {
-      get mapping "index" types "type"
+      getMapping("index").types("type")
     }
   }
 
   it should "support multiple indexes" in {
     client.execute {
-      get mapping("index1", "index2")
+      getMapping("index1", "index2")
     }
   }
 
   it should "support multiple types" in {
     client.execute {
-      get mapping "index" types("type1", "type2")
+      getMapping("index").types("type1", "type2")
     }
   }
 
   it should "support multiple indexes and multiple types" in {
     client.execute {
-      get mapping("index1", "index2") types("type1", "type2")
+      getMapping("index1", "index2").types("type1", "type2")
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 
@@ -16,8 +17,8 @@ object FieldSortContentBuilder {
 
     fs.unmappedType.foreach(builder.field("unmapped_type", _))
     fs.missing.foreach(builder.autofield("missing", _))
-    fs.sortMode.map(_.toString).foreach(builder.field("mode", _))
-    builder.field("order", fs.order.toString)
+    fs.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
+    builder.field("order", EnumConversions.order(fs.order))
     fs.nestedPath.foreach(builder.field("nested_path", _))
     fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
 

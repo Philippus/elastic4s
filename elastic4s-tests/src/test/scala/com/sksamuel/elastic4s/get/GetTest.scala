@@ -31,7 +31,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSug
           "brand" -> "bud",
           "ingredients" -> Seq("hops", "barley", "water", "yeast")
         ) id 8
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

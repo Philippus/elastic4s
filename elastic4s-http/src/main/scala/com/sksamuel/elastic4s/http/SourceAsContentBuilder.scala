@@ -48,9 +48,7 @@ object SourceAsContentBuilder {
       }
     }
 
-    builder.startObject()
     addMap(source)
-    builder.endObject()
     builder
   }
 }

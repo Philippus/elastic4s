@@ -845,6 +845,17 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 6.0.0
+
+* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release.
+* Add methods deprecated before version 5.0.0 have been removed
+* Operations that accept an index and a type have been deprecated in favour of index only operations. See 
+* Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
+
+###### 5.4.0
+
+* Http Client is now considered production ready and no longer marked as experimental
+
 ###### 5.2.12
 
 * Add index template support to the HTTP client

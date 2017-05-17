@@ -12,9 +12,9 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
   client.execute {
     createIndex("q").mappings {
       mapping("r") as Seq(
-        field("a", TextType) stored true analyzer WhitespaceAnalyzer,
-        field("b", TextType),
-        field("kw", KeywordType) normalizer "my_normalizer"
+        textField("a") stored true analyzer WhitespaceAnalyzer,
+        textField("b"),
+        keywordField("kw") normalizer "my_normalizer"
       )
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -35,7 +35,7 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
     "return schema" in {
 
       val mapping = client.execute {
-        get mapping "q" / "r"
+        getMapping("q" / "r")
       }.await
 
       val map = mapping.mappings("q")("r").sourceAsMap()
@@ -62,14 +62,14 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
     "add new fields" in {
 
       client.execute {
-        put mapping "q" / "r" as Seq(
-          field("c", FloatType) boost 1.2,
-          field("d", TextType) analyzer FrenchLanguageAnalyzer
+        putMapping("q" / "r") as Seq(
+          floatField("c") boost 1.2,
+          textField("d") analyzer FrenchLanguageAnalyzer
         )
       }.await
 
       val mapping = client.execute {
-        get mapping "q" / "r"
+        getMapping("q" / "r")
       }.await
 
       val map = mapping.mappings("q")("r").sourceAsMap()

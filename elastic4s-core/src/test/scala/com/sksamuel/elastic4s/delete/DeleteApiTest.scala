@@ -8,22 +8,13 @@ class DeleteApiTest extends FlatSpec with Matchers with TypeCheckedTripleEquals 
 
   import com.sksamuel.elastic4s.ElasticApi._
 
-  "a delete by id request" should "accept tuple for from" in {
-    delete(141212) from "places" -> "cities"
-  }
-
-  it should "parse slash indextype" in {
+  "a delete by id request" should "parse slash indextype" in {
     delete(141212) from "index/type"
   }
 
   it should "accept index and type in dot syntax" in {
-    delete(123).from("places", "type1")
-    delete(123).from("places", "type1")
-  }
-
-  it should "accept tuple in dot syntax" in {
-    delete(123).from("places" -> "type1")
-    delete(123).from("places" -> "type1")
+    delete(123).from("places" / "type1")
+    delete(123).from("places" / "type1")
   }
 
   it should "accept routing key" in {

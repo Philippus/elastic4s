@@ -24,7 +24,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with SharedElasticSugar wit
       indexInto("valuecount/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("valuecount/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("valuecount/buildings") fields("name" -> "Tower of London", "height" -> 169)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "cardinality agg" - {

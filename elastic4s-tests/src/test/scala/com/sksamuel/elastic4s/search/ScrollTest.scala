@@ -32,7 +32,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualElastic
         indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985"),
         indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985"),
         indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

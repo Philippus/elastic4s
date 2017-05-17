@@ -14,7 +14,7 @@ class CatThreadPoolTest extends FlatSpec with Matchers with SharedElasticSugar w
     bulk(
       indexInto("amoonshapedpool1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("amoonshapedpool2/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cat thread pool" should "return all pools" in {

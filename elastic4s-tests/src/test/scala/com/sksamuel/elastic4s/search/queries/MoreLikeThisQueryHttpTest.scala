@@ -32,7 +32,7 @@ class MoreLikeThisQueryHttpTest
       indexInto("mltq/alcohol") fields ("text" -> "Gordons popular gin UK") id 7,
       indexInto("mltq/alcohol") fields ("text" -> "coors regular is another coors beer by molson") id 8,
       indexInto("mltq/alcohol") fields ("text" -> "Hendricks upmarket gin UK") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a more like this query" should {

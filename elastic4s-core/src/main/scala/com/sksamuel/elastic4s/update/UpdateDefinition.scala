@@ -48,6 +48,8 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
   // Sets the field to use for updates when a script is not specified.
   //def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
 
+  def docAsUpsert(json: String): UpdateDefinition = doc(json).copy(docAsUpsert = true.some)
+
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
   def docAsUpsert[T: Indexable](t: T): UpdateDefinition = doc(t).copy(docAsUpsert = true.some)
 
@@ -73,6 +75,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
 
   def routing(routing: String): UpdateDefinition = copy(routing = routing.some)
 
+  @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): UpdateDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): UpdateDefinition = copy(refresh = refresh.some)
 

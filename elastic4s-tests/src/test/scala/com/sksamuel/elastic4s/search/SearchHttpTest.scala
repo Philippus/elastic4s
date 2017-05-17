@@ -76,7 +76,7 @@ class SearchHttpTest
         "name" -> "modern defence",
         "rank" -> -0.1
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a search query" should {

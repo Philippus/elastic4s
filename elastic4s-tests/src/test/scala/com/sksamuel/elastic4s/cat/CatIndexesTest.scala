@@ -14,7 +14,7 @@ class CatIndexesTest extends FlatSpec with Matchers with SharedElasticSugar with
       indexInto("catindex1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catindex2/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catindex3/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 

@@ -30,36 +30,42 @@ class XContentBuilder(root: JsonNode) {
   def array(field: String, strings: Array[String]): XContentBuilder = {
     startArray(field)
     strings.foreach(array.add)
+    endArray()
     this
   }
 
   def array(field: String, doubles: Array[Double]): XContentBuilder = {
     startArray(field)
     doubles.foreach(array.add)
+    endArray()
     this
   }
 
   def array(field: String, longs: Array[Long]): XContentBuilder = {
     startArray(field)
     longs.foreach(array.add)
+    endArray()
     this
   }
 
   def array(field: String, ints: Array[Int]): XContentBuilder = {
     startArray(field)
     ints.foreach(array.add)
+    endArray()
     this
   }
 
   def array(field: String, floats: Array[Float]): XContentBuilder = {
     startArray(field)
     floats.foreach(array.add)
+    endArray()
     this
   }
 
   def array(field: String, booleans: Array[Boolean]): XContentBuilder = {
     startArray(field)
     booleans.foreach(array.add)
+    endArray()
     this
   }
 
@@ -77,6 +83,11 @@ class XContentBuilder(root: JsonNode) {
 
   def nullField(name: String): XContentBuilder = {
     obj.putNull(name)
+    this
+  }
+
+  def field(name: String, int: Int): XContentBuilder = {
+    obj.put(name, int)
     this
   }
 

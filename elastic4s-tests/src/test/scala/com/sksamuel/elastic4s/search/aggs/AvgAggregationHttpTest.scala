@@ -24,7 +24,7 @@ class AvgAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("avgagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("avgagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("avgagg/buildings") fields("name" -> "Tower of London", "height" -> 169)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "avg agg" - {

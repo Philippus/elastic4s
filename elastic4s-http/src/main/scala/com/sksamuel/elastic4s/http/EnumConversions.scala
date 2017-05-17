@@ -1,18 +1,38 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.VersionType
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, ScoreMode}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
-import com.sksamuel.elastic4s.searches.queries.SimpleQueryStringFlag
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
 import org.joda.time.DateTimeZone
 
 object EnumConversions {
-  def geoDistance(distance: GeoDistance): String = ???
 
-  def order(order: TermsOrder): String = ???
+  def regexflag(flag: RegexpFlag): String = flag.toString.toUpperCase
+
+  def order(order: SortOrder): String = order match {
+    case SortOrder.Asc => "asc"
+    case SortOrder.Desc => "desc"
+  }
+
+  def sortMode(mode: SortMode): String = mode.toString.toLowerCase
+
+  def geoDistance(distance: GeoDistance): String = distance.toString.toLowerCase
+
+  def order(order: TermsOrder): XContentBuilder = {
+    val builder = XContentFactory.obj()
+    if (order.asc) {
+      builder.field(order.name, "asc")
+    } else {
+      builder.field(order.name, "desc")
+    }
+    builder.endObject()
+  }
 
   def order(order: HistogramOrder): String = ???
 
@@ -40,6 +60,7 @@ object EnumConversions {
   def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = ???
 
   def zeroTermsQuery(terms: ZeroTermsQuery): String = ???
+
   def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String = ???
 
 }

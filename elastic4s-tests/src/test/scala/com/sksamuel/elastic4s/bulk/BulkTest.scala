@@ -29,7 +29,7 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
         indexInto("chemistry/elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
         indexInto("chemistry/elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4,
         indexInto("chemistry/molecule") fields("name" -> "LiH") id 1 parent "4"
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {
@@ -52,7 +52,7 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
         indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
         update(6).in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
         delete(10).from("chemistry/elements")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
 
     result.hasFailures shouldBe true
@@ -70,7 +70,7 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
         update(2).in("chemistry/elements") doc("atomicweight" -> 6, "name" -> "carbon"),
         update(4).in("chemistry/elements") doc("atomicweight" -> 8, "name" -> "oxygen"),
         update(1).in("chemistry/molecule") parent "4" doc("name" -> "CO")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {
@@ -93,7 +93,7 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
         delete(2).from("chemistry/elements"),
         delete(4).from("chemistry/elements"),
         delete(1).from("chemistry/molecule").parent("4")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {

@@ -228,9 +228,9 @@ object EnumConversions {
   }
 
   implicit def geoValidationMethod(method: GeoValidationMethod): org.elasticsearch.index.query.GeoValidationMethod = method match {
-    case GeoValidationMethod.COERCE => org.elasticsearch.index.query.GeoValidationMethod.COERCE
-    case GeoValidationMethod.IGNORE_MALFORMED => org.elasticsearch.index.query.GeoValidationMethod.IGNORE_MALFORMED
-    case GeoValidationMethod.STRICT => org.elasticsearch.index.query.GeoValidationMethod.STRICT
+    case GeoValidationMethod.Coerce => org.elasticsearch.index.query.GeoValidationMethod.COERCE
+    case GeoValidationMethod.IgnoreMalformed => org.elasticsearch.index.query.GeoValidationMethod.IGNORE_MALFORMED
+    case GeoValidationMethod.Strict => org.elasticsearch.index.query.GeoValidationMethod.STRICT
   }
 
   implicit def sortMode(sortMode: SortMode): org.elasticsearch.search.sort.SortMode = sortMode match {

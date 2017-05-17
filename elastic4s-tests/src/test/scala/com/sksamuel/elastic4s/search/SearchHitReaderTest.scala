@@ -27,7 +27,7 @@ class SearchHitReaderTest extends FlatSpec with Matchers with SharedElasticSugar
     }.await
 
     http.execute {
-      indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.IMMEDIATE)
+      indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.Immediate)
     }.await
 
     Thread.sleep(3000)

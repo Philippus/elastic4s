@@ -45,7 +45,7 @@ class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {
           )
         )
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "nested query" should {

@@ -24,7 +24,7 @@ class AggregationAsStringTest extends FunSuite with SharedElasticSugar with Matc
       indexInto("aggstring/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("aggstring/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("aggstring/buildings") fields("name" -> "Tower of London", "height" -> 169)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   test("agg as string should return aggregation json") {
