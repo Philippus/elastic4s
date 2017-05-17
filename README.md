@@ -847,7 +847,10 @@ folder. There is no need to configure anything externally.
 
 ###### 6.0.0 - Pre-release
 
-* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients.
+* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients. Notably,
+
+> The Java REST client is the future for Java users of Elasticsearch. Please get involved and try out the high-level client as soon as it becomes available, as your feedback will help us to make it better faster. As soon as the REST client is feature complete and is mature enough to replace the Java API entirely, we will deprecate and finally remove the transport client and the Java API.
+
 * HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
 * Any methods deprecated before version 5.0.0 have been removed.
 * Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
