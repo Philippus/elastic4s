@@ -845,16 +845,95 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
-###### 6.0.0
+###### 6.0.0 - Pre-release
 
-* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release.
-* Add methods deprecated before version 5.0.0 have been removed
-* Operations that accept an index and a type have been deprecated in favour of index only operations. See 
+* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients.
+* HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
+* Any methods deprecated before version 5.0.0 have been removed.
+* Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
+
+###### 5.4.3
+
+* Can extract aggregations as a JSON string
+
+###### 5.4.2
+
+* Added http streams implementation; available as `elastic-http-streams` module
+* Bulk items to show full response in http
+
+###### 5.4.1
+
+* Added get mapping to http
+* Added index recovery to http
+* Added force merge to http
+* Terms agg now supports easier custom ordering #440
 
 ###### 5.4.0
 
-* Http Client is now considered production ready and no longer marked as experimental
+* Http Client is now considered production ready and no longer marked as experimental.
+* Get all indices with their alias #871
+* added cat shards, plugins, nodes, thread pool, health, alloc, aliases, master and indices  #872
+* Added search template #894
+* FieldsMapper doesn't handle null #899
+* Multisearch now sets from/size properly #901
+* Add simple category contexts for completion suggestions
+* #786 #792 #832 Internal json marshalling now via jackson
+* Added match none query #893
+* Keywords are docvalued by default
+* Implement field collapsing introduced in 5.3.0
+* fix StackOverflowError for GeoBoundingBoxQueryDefinition.corners(GeoPoint, GeoPoint)
+* In exponential decay score the decay is disregarded when offset was not provided #883
+* failureMessageOpt in RichBulkResponse doesn't work as an option #890
+* #884 Added global suggestion text
+
+###### 5.3.2
+
+* Fix spray-json method names
+* Added support of range aggregation for http client
+* Bumped sbt version to 0.13.15
+* Bumped Scala version to 2.12.2
+* Support inner highlight
+* Fixes 'type' and 'matched_fields' for highlight query.
+* Added support of HDR percentiles aggregation (tcp only)
+
+###### 5.3.1
+
+* Updated rich search responses to throw exceptions on bad `to`
+* client should handle integers in range queries #865
+* Added max bucket agg builder for http
+* pipeline aggregation regression #838
+
+###### 5.3.0
+
+* Added top hits aggs support to http #857
+* Added support for {dynamic_type} in dynamic templates? #519
+* Added clearScroll implementation for http client.
+* Removing id property as cannot be send to ES anymore.
+* DateHistogramAggregation support for HttpClient
+* PutMapping implementation in Http client
+* Implemented support for spray-json
+* use utf-8 for http entities instead of system encoding
+* make `RichSearchHit#fieldValueOpt` return an `Option[AnyRef]`
+* Enable parallel tests
+* DateRangeAggregation support for multiple unbounded ranges
+* Added parent support for http client bulk request.
+* Remove deprecation warning for FuzzyQuery
+* Starting embedded node with `http.enabled: false` crashes with NPE #781
+* Object and nested fields broken in 5.2.11 #819
+* npe in terms aggregation #828
+* Adding publishMicrosite to release process
+* Handle http client failures by endpoint
+* #821 Fixed omitted `value` field in RegexQuery serialization
+* Add raw query support for HTTP
+* #565 create index from raw json string
+* Added index template to http
+* Added span within and span containing queries to tcp
+* Added span containing query to http
+* Added span not, span within, and span or queries to http
+* Added parent id query to http
+* Added script query to http
+* added geo bounding box query to http
 
 ###### 5.2.12
 
