@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.searches.aggs.HistogramOrder
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
 
 import scala.collection.JavaConverters._
 
@@ -10,8 +9,8 @@ class HistogramAggregationTest extends AbstractAggregationTest {
   "histogram aggregation" - {
     "should create histogram by field" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
-          aggregation histogram "h" field "age" interval 10
+        search("aggregations/breakingbad") aggregations {
+          histogramAggregation("h") field "age" interval 10
         }
       }.await
       resp.totalHits shouldBe 10
@@ -26,7 +25,7 @@ class HistogramAggregationTest extends AbstractAggregationTest {
     }
     "should use offset" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
+        search("aggregations/breakingbad") aggregations {
           histogramAggregation("h") field "age" interval 10 offset 5
         }
       }.await
@@ -42,8 +41,8 @@ class HistogramAggregationTest extends AbstractAggregationTest {
 
     "should respect min_doc_count" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
-          aggregation histogram "agg1" field "age" interval 10 minDocCount 2
+        search("aggregations/breakingbad") aggregations {
+          histogramAggregation("agg1") field "age" interval 10 minDocCount 2
         }
       }.await
       resp.totalHits shouldBe 10
@@ -55,15 +54,15 @@ class HistogramAggregationTest extends AbstractAggregationTest {
 
     "should respect ordering" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
-          aggregation histogram "agg1" field "age" interval 10 order HistogramOrder.COUNT_ASC
+        search("aggregations/breakingbad") aggregations {
+          histogramAggregation("agg1") field "age" interval 10 order HistogramOrder.COUNT_ASC
         }
       }.await
       resp.totalHits shouldBe 10
       val buckets = resp.aggregations.histogramResult("agg1").getBuckets.asScala
       buckets.size shouldBe 5
-      buckets.head.getKeyAsString shouldBe "50.0"
-      buckets.tail.head.getKeyAsString shouldBe "40.0"
+      // should be lowest qty buckets first
+      buckets.map(_.getKeyAsString) shouldBe Seq("20.0", "30.0", "60.0", "40.0", "50.0")
     }
   }
 }

@@ -379,21 +379,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for range filter" in {
     val req = search("music") types "bands" postFilter {
-      rangeQuery("released") includeLower true includeUpper true gte "2010-01-01" lte "2012-12-12"
+      rangeQuery("released") gte "2010-01-01" lte "2012-12-12"
     } preference Shards("5", "7")
     req.show should matchJsonResource("/json/search/search_range_filter.json")
   }
 
   it should "generate json for field sort" in {
     val req = search("music") types "bands" sortBy {
-      fieldSort("singer") missing "no-singer" order SortOrder.DESC mode SortMode.AVG nestedPath "nest"
+      fieldSort("singer") missing "no-singer" order SortOrder.Desc mode SortMode.Avg nestedPath "nest"
     }
     req.show should matchJsonResource("/json/search/search_sort_field.json")
   }
 
   it should "generate json for nested field sort" in {
     val req = search("music") types "bands" sortBy {
-      fieldSort("singer.weight") order SortOrder.DESC mode SortMode.SUM nestedFilter {
+      fieldSort("singer.weight") order SortOrder.Desc mode SortMode.Sum nestedFilter {
         termQuery("singer.name", "coldplay")
       }
     }
@@ -402,7 +402,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for score sort" in {
     val req = search("music") types "bands" sortBy {
-      scoreSort().order(SortOrder.ASC)
+      scoreSort().order(SortOrder.Asc)
     }
     req.show should matchJsonResource("/json/search/search_sort_score.json")
   }
@@ -418,14 +418,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for script sort with params" in {
     val req = search("music") types "bands" sortBy {
       scriptSort(script("doc.score")
-        .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.DESC
+        .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
     } preference com.sksamuel.elastic4s.Preference.Custom("custom-node")
     req.show should matchJsonResource("/json/search/search_sort_script_params.json")
   }
 
   it should "generate correct json for geo sort" in {
     val req = search("music") types "bands" sortBy {
-      geoSort("location").points("ABCDEFG").sortMode(SortMode.MAX).geoDistance(GeoDistance.ARC)
+      geoSort("location").points("ABCDEFG").sortMode(SortMode.Max).geoDistance(GeoDistance.Arc)
     }
     req.show should matchJsonResource("/json/search/search_sort_geo.json")
   }
@@ -434,16 +434,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val lat = 269.9986267089844
     val lon = 539.9986267089844
     val req = search("music") types "bands" sortBy {
-      geoSort("location").points(List(GeoPoint(lat, lon))).mode(SortMode.MAX).geoDistance(GeoDistance.ARC)
+      geoSort("location").points(List(GeoPoint(lat, lon))).mode(SortMode.Max).geoDistance(GeoDistance.Arc)
     }
     req.show should matchJsonResource("/json/search/search_sort_geo.json")
   }
 
   it should "generate correct json for multiple sorts" in {
     val sorts = Seq(
-      scriptSort("document.score") typed ScriptSortType.STRING order SortOrder.ASC,
-      scoreSort().order(SortOrder.DESC),
-      fieldSort("dancer") order SortOrder.DESC
+      scriptSort("document.score") typed ScriptSortType.String order SortOrder.Asc,
+      scoreSort().order(SortOrder.Desc),
+      fieldSort("dancer") order SortOrder.Desc
     )
     val req = search("music") types "bands" sortBy sorts
     req.show should matchJsonResource("/json/search/search_sort_multiple.json")
@@ -451,7 +451,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for field sort with score tracking enabled" in {
     val req = search("music") types "bands" trackScores true sortBy {
-      fieldSort("singer") order SortOrder.DESC
+      fieldSort("singer") order SortOrder.Desc
     }
     req.show should matchJsonResource("/json/search/search_sort_track_scores.json")
   }
@@ -701,7 +701,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for avg aggregation" in {
     val req = search("school") types "student" aggs {
-      aggregation avg "grades_avg" field "grade" script {
+      avgAggregation("grades_avg") field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
     }
@@ -710,7 +710,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for stats aggregation" in {
     val req = search("school") aggs {
-      aggregation stats "grades_stats" field "grade" script {
+      statsAggregation("grades_stats") field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
     }
@@ -719,7 +719,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for extendedstats aggregation" in {
     val req = search("school") aggs {
-      aggregation extendedstats "grades_extendedstats" field "grade" script {
+      extendedStatsAggregation("grades_extendedstats") field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
     }
@@ -728,21 +728,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for percentiles aggregation" ignore {
     val req = search("school") aggs {
-      aggregation percentiles "grades_percentiles" field "grade" percents(95, 99, 99.9) compression 200
+      percentilesAggregation("grades_percentiles") field "grade" percents(95, 99, 99.9) compression 200
     }
     req.show should matchJsonResource("/json/search/search_aggregations_percentiles.json")
   }
 
   it should "generate correct json for percentileranks aggregation" in {
     val req = search("school") aggs {
-      aggregation percentileranks "grades_percentileranks" field "grade" values(95, 99, 99.9) compression 200
+      percentileRanksAggregation("grades_percentileranks") field "grade" values(95, 99, 99.9) compression 200
     }
     req.show should matchJsonResource("/json/search/search_aggregations_percentileranks.json")
   }
 
   it should "generate correct json for value count aggregation" in {
     val req = search("school") aggs {
-      aggregation count "grades_count" field "grade" script {
+      valueCountAggregation("grades_count") field "grade" script {
         script("doc['grade'].value").lang("lua")
       }
     }
@@ -751,14 +751,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for cardinality aggregation" ignore {
     val req = search("school") aggs {
-      aggregation cardinality "grades_cardinality" field "grade" precisionThreshold 40000
+      cardinalityAggregation("grades_cardinality") field "grade" precisionThreshold 40000
     }
     req.show should matchJsonResource("/json/search/search_aggregations_cardinality.json")
   }
 
   it should "generate correct json for nested aggregation" ignore {
     val req = search("music") aggs {
-      aggregation nested "nested_agg" path "nested_obj" subAggregations {
+      nestedAggregation("nested_agg","nested_obj") subAggregations {
         aggregation terms "my_nested_terms_agg" field "keyword"
       }
     }

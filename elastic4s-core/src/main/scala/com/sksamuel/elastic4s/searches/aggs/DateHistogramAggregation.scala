@@ -8,12 +8,12 @@ import org.joda.time.DateTimeZone
 
 import scala.concurrent.duration.{FiniteDuration, _}
 
-sealed trait HistogramOrder
+case class HistogramOrder(name: String, asc: Boolean)
 object HistogramOrder {
-  case object KEY_ASC extends HistogramOrder
-  case object KEY_DESC extends HistogramOrder
-  case object COUNT_ASC extends HistogramOrder
-  case object COUNT_DESC extends HistogramOrder
+  val KEY_ASC = HistogramOrder("_key", true)
+  val KEY_DESC = HistogramOrder("_key", false)
+  val COUNT_ASC = HistogramOrder("_count", true)
+  val COUNT_DESC = HistogramOrder("_count", false)
 }
 
 case class ExtendedBounds(min: Long, max: Long)
@@ -46,7 +46,9 @@ case class DateHistogramAggregation(name: String,
 
   def timeZone(timeZone: DateTimeZone): DateHistogramAggregation = copy(timeZone = timeZone.some)
   def offset(offset: String): DateHistogramAggregation = copy(offset = offset.some)
+
   def order(order: HistogramOrder): DateHistogramAggregation = copy(order = order.some)
+
   def format(format: String): DateHistogramAggregation = copy(format = format.some)
   def field(field: String): DateHistogramAggregation = copy(field = field.some)
   def script(script: ScriptDefinition): DateHistogramAggregation = copy(script = script.some)

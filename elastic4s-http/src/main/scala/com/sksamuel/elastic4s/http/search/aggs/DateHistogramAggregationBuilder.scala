@@ -13,7 +13,7 @@ object DateHistogramAggregationBuilder {
     agg.interval.map(EnumConversions.interval).foreach(builder.field("interval", _))
     agg.minDocCount.foreach(builder.field("min_doc_count", _))
     agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
-    agg.order.map(EnumConversions.order).foreach(builder.field("order", _))
+    agg.order.map(EnumConversions.order).foreach(builder.rawField("order", _))
     agg.offset.foreach(builder.field("offset", _))
     agg.format.foreach(builder.field("format", _))
     agg.field.foreach(builder.field("field", _))

@@ -17,11 +17,11 @@ object TermsAggregationBuilder {
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
     }
-    agg.includeExclude.foreach { inex =>
-      if (inex.include.nonEmpty)
-        builder.array("include", inex.include.toArray)
-      if (inex.include.nonEmpty)
-        builder.array("exclude", inex.include.toArray)
+    agg.includeExclude.foreach { incexc =>
+      if (incexc.include.nonEmpty)
+        builder.array("include", incexc.include.toArray)
+      if (incexc.exclude.nonEmpty)
+        builder.array("exclude", incexc.include.toArray)
     }
     agg.includePartition.foreach { incpart =>
       builder.field("partition", incpart.partition)

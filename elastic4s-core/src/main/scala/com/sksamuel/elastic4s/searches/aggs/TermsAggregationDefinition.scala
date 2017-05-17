@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ValueType
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.StringOption
 
 sealed trait SubAggCollectionMode
 object SubAggCollectionMode {
@@ -48,7 +49,7 @@ case class TermsAggregationDefinition(name: String,
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
 
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
-    copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
+    copy(includeExclude = IncludeExclude(StringOption(include).toSeq, StringOption(exclude).toSeq).some)
 
   def includeExclude(include: Iterable[String], exclude: Iterable[String]): TermsAggregationDefinition = {
     copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)

@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.VersionType
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, ScoreMode}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
+import com.sksamuel.elastic4s.searches.queries.geo.GeoValidationMethod.{Coerce, IgnoreMalformed}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
@@ -34,26 +35,42 @@ object EnumConversions {
     builder.endObject()
   }
 
-  def order(order: HistogramOrder): String = ???
+  def order(order: HistogramOrder): XContentBuilder = {
+    val builder = XContentFactory.obj()
+    if (order.asc) {
+      builder.field(order.name, "asc")
+    } else {
+      builder.field(order.name, "desc")
+    }
+    builder.endObject()
+  }
 
   def timeZone(zone: DateTimeZone): String = ???
 
-  def interval(interval: DateHistogramInterval): String = ???
+  def interval(interval: DateHistogramInterval): String = interval.interval
 
+  def scoreMode(scoreMode: ScoreMode): String = scoreMode.toString.toLowerCase
 
-  def scoreMode(scoreMode: ScoreMode): String = ???
+  def geoExecType(execType: GeoExecType): String = execType.toString.toLowerCase
 
-  def geoExecType(execType: GeoExecType): String = ???
-
-  def geoValidationMethod(method: GeoValidationMethod): String = ???
+  def geoValidationMethod(method: GeoValidationMethod): String = method match {
+    case GeoValidationMethod.Coerce => "COERCE"
+    case GeoValidationMethod.IgnoreMalformed => "IGNORE_MALFORMED"
+    case GeoValidationMethod.Strict => "STRICT"
+  }
 
   def collectMode(mode: SubAggCollectionMode): String = ???
 
-  def versionType(versionType: VersionType): String = ???
+  def versionType(versionType: VersionType): String = versionType match {
+    case VersionType.External => "external"
+    case VersionType.ExternalGte => "external_gte"
+    case VersionType.Force => "force"
+    case VersionType.Internal => "internal"
+  }
 
-  def sortBy(by: SortBy): String = ???
+  def sortBy(by: SortBy): String = by.toString.toLowerCase
 
-  def suggestMode(mode: SuggestMode): String = ???
+  def suggestMode(mode: SuggestMode): String = mode.toString.toLowerCase
 
   def stringDistance(impl: StringDistanceImpl): String = ???
 

@@ -5,7 +5,7 @@ object VersionType {
 
   def valueOf(str: String): VersionType = str.toLowerCase match {
     case "external" => VersionType.External
-    case "externalgte" | "external_gte" => VersionType.External
+    case "externalgte" | "external_gte" => VersionType.ExternalGte
     case "force" => VersionType.Force
     case _ => VersionType.Internal
   }

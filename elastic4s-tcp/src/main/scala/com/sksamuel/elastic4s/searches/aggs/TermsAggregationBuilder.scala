@@ -16,7 +16,11 @@ object TermsAggregationBuilder {
     agg.field.foreach(builder.field)
     agg.collectMode.map(EnumConversions.collectMode).foreach(builder.collectMode)
     agg.executionHint.foreach(builder.executionHint)
-    agg.includeExclude.foreach { it => builder.includeExclude(new IncludeExclude(it.include.toArray, it.exclude.toArray)) }
+    agg.includeExclude.foreach { it =>
+      val inc = if (it.include.isEmpty) null else it.include.toArray
+      val exc = if (it.exclude.isEmpty) null else it.exclude.toArray
+      builder.includeExclude(new IncludeExclude(inc, exc))
+    }
     agg.includePartition.foreach { it => builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions)) }
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
