@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStat
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
-import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
@@ -80,7 +79,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: IndexExistsDefinition): Future[IndexExistsResponse] = {
 
       val endpoint = request.index
-      logger.debug(s"Connecting to $endpoint for indexes exists check")
       val resp = client.performRequest("HEAD", endpoint)
       Future.successful(IndexExistsResponse(resp.getStatusLine.getStatusCode == 200))
     }
@@ -90,7 +88,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: TypesExistsDefinition): Future[TypeExistsResponse] = {
       val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
-      logger.debug(s"Connecting to $endpoint for type exists check")
       val resp = client.performRequest("HEAD", endpoint)
       Future.successful(TypeExistsResponse(resp.getStatusLine.getStatusCode == 200))
     }
@@ -100,7 +97,6 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: AliasExistsDefinition): Future[AliasExistsResponse] = {
       val endpoint = s"/_alias/${request.alias}"
-      logger.debug(s"Connecting to $endpoint for alias exists check")
       val resp = client.performRequest("HEAD", endpoint)
       Future.successful(AliasExistsResponse(resp.getStatusLine.getStatusCode == 200))
     }
@@ -126,8 +122,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: RefreshIndexDefinition): Future[RefreshIndexResponse] = {
       val endpoint = "/" + request.indexes.mkString(",") + "/_refresh"
-      val method = "POST"
-      client.async(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async("POST", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
@@ -135,56 +130,46 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
     override def execute(client: RestClient, request: CreateIndexDefinition): Future[CreateIndexResponse] = {
 
-      val method = "PUT"
       val endpoint = "/" + request.name
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = CreateIndexContentBuilder(request).string()
-      logger.debug(s"Executing create index $body")
-
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
   implicit object DeleteIndexHttpExecutable extends HttpExecutable[DeleteIndexDefinition, DeleteIndexResponse] {
 
     override def execute(client: RestClient, request: DeleteIndexDefinition): Future[DeleteIndexResponse] = {
-      val method = "DELETE"
       val endpoint = "/" + request.indexes.mkString(",")
-      logger.debug(s"Executing delete index $endpoint")
-
-      client.async(method, endpoint, Map.empty, ResponseHandler.default)
+      client.async("DELETE", endpoint, Map.empty, ResponseHandler.default)
     }
   }
 
   implicit object UpdateIndexLevelSettingsExecutable extends HttpExecutable[UpdateIndexLevelSettingsDefinition, UpdateIndexLevelSettingsResponse] {
     override def execute(client: RestClient, request: UpdateIndexLevelSettingsDefinition): Future[UpdateIndexLevelSettingsResponse] = {
 
-      val method = "PUT"
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
       val body = UpdateIndexLevelSettingsBuilder(request).string()
-      logger.debug(s"Executing update index level settings $body")
-
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async(method, endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
     }
   }
 
   implicit object IndexShardStoreExecutable extends HttpExecutable[IndexShardStoreDefinition, StoreStatusResponse] {
 
     override def execute(client: RestClient, request: IndexShardStoreDefinition): Future[StoreStatusResponse] = {
-      val method = "GET"
+
       val endpoint = "/" + request.indexes.values.mkString(",") + "/_shard_stores"
       val params = scala.collection.mutable.Map.empty[String, String]
       request.status.foreach(params.put("status", _))
-      logger.debug(s"Accesing endpoint $endpoint")
 
-      client.async(method, endpoint, params.toMap, ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, ResponseHandler.default)
     }
   }
 }

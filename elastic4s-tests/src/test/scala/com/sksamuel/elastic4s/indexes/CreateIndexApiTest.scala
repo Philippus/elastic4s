@@ -259,7 +259,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
 
   it should "support creating parent mappings" in {
     val req = createIndex("docsAndTags").mappings(
-      mapping("tags") as stringField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
+      mapping("tags") as textField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/create_parent_mappings.json")
   }
@@ -270,6 +270,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       .mkString
 
     val req = createIndex("tweets").source(source)
-    val content = CreateIndexContentBuilder(req)
+    CreateIndexContentBuilder(req)
   }
 }

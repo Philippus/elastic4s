@@ -25,7 +25,7 @@ class ClusterExecutablesTest extends FlatSpec with Matchers with SharedElasticSu
 
   it should "allow waiting for events" in {
     val builder = ClusterHealthDefinitionExecutable.buildHealthRequest(node.client, clusterHealth("index1", "index2").waitForEvents(Priority.Immediate))
-    builder.request.waitForEvents() shouldBe Priority.Immediate
+    builder.request.waitForEvents() shouldBe org.elasticsearch.common.Priority.IMMEDIATE
   }
 
   it should "allow a timeout" in {

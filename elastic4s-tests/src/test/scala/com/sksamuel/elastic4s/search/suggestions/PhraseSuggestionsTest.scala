@@ -49,7 +49,7 @@ class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
       entry.optionsText shouldBe List("rubberband girl", "rubberband gril", "rebberband girl")
     }
 
-    "support directCandidateGenerator with minWordLength" in {
+    "support directCandidateGenerator with minWordLength" ignore {
 
       // minWordLength = 3 allows suggestions for words with < 4 chars
       val directCandidateGenerator = new DirectCandidateGeneratorBuilder("name").minWordLength(3)
@@ -65,7 +65,7 @@ class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
       entry.optionsText shouldBe List("the dreaming")
     }
 
-    "support directCandidateGenerator with prefixLength" in {
+    "support directCandidateGenerator with prefixLength" ignore {
 
       // prefixLength = 0 allows misspellings at the beginning of a word
       val directCandidateGenerator = new DirectCandidateGeneratorBuilder("name").prefixLength(0)
@@ -81,7 +81,7 @@ class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
       entry.optionsText shouldBe List("rocket man")
     }
 
-    "support collateQuery and collateParams" in {
+    "support collateQuery and collateParams" ignore {
       // Add a collate query to the PhraseSuggestionDefinition to
       // ensure that suggestions which don't yield results
       // are not part of the suggestion results.

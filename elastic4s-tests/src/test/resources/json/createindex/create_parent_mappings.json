@@ -13,7 +13,7 @@
       },
       "properties": {
         "tag": {
-          "type": "string"
+          "type": "text"
         }
       }
     }

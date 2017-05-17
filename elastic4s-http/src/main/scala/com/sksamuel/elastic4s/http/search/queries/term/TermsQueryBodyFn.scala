@@ -9,7 +9,7 @@ object TermsQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     if (t.values.nonEmpty) {
-      builder.startArray()
+      builder.startArray(t.field)
       t.values.foreach(builder.autovalue)
       builder.endArray()
     }

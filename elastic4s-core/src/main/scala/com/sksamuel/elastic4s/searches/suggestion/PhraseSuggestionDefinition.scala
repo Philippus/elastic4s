@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
 
@@ -38,27 +39,16 @@ case class PhraseSuggestionDefinition(name: String,
   def collateQuery(collateQuery: ScriptDefinition): PhraseSuggestionDefinition = copy(collateQuery = collateQuery.some)
 
   def collateQuery(queryType: String, fieldVariable: String, suggestionVariable: String): PhraseSuggestionDefinition = {
-    //    val collateQueryAsJson = XContentFactory.jsonBuilder()
-    //      .startObject()
-    //      .startObject(queryType)
-    //      .field(s"{{$fieldVariable}}", s"{{$suggestionVariable}}")
-    //      .endObject()
-    //      .endObject()
-    //      .string()
-    //
-    //    val options = Map("content_type" -> XContentType.JSON.mediaType())
-    //    val template = new Script(
-    //      Script.DEFAULT_SCRIPT_TYPE,
-    //      Script.DEFAULT_TEMPLATE_LANG,
-    //      collateQueryAsJson,
-    //      options.asJava,
-    //      Map.empty[String, AnyRef].asJava
-    //    )
-    //
-    //    collateQuery(template)
+    val collateQueryAsJson = XContentFactory.jsonBuilder()
+      .startObject()
+      .startObject(queryType)
+      .field(s"{{$fieldVariable}}", s"{{$suggestionVariable}}")
+      .endObject()
+      .endObject()
+      .string()
 
-    // todo restore
-    ???
+    val template = ScriptDefinition(collateQueryAsJson)
+    collateQuery(template)
   }
 
   def confidence(c: Float): PhraseSuggestionDefinition = copy(confidence = c.some)

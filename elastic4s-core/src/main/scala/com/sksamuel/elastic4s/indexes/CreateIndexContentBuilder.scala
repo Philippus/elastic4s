@@ -7,7 +7,7 @@ object CreateIndexContentBuilder {
 
   def apply(d: CreateIndexDefinition): XContentBuilder = {
     if (d.rawSource.isDefined) {
-      XContentFactory.jsonBuilder().rawValue(d.rawSource.get)
+      XContentFactory.parse(d.rawSource.get)
     } else {
       val source = XContentFactory.jsonBuilder()
 
@@ -19,7 +19,7 @@ object CreateIndexContentBuilder {
 
           d.settings.settings foreach {
             case (key, value) =>
-              source.field(key, value.toString)
+              source.autofield(key, value)
           }
 
           source.endObject()

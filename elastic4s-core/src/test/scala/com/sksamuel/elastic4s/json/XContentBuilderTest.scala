@@ -18,7 +18,7 @@ class XContentBuilderTest extends FunSuite with Matchers {
     XContentFactory.obj()
       .startObject("wibble").field("foo", 1).field("boo", true).endObject()
       .startObject("dibble").field("goo", 2.4).string() shouldBe
-    """{"wibble":{"foo":1.0,"boo":true},"dibble":{"goo":2.4}}"""
+    """{"wibble":{"foo":1,"boo":true},"dibble":{"goo":2.4}}"""
   }
 
   test("should support raw fields in objects") {
@@ -50,7 +50,7 @@ class XContentBuilderTest extends FunSuite with Matchers {
   }
 
   test("should support int fields") {
-    XContentFactory.obj().field("int", 3242365).string shouldBe """{"int":3242365.0}"""
+    XContentFactory.obj().field("int", 3242365).string shouldBe """{"int":3242365}"""
   }
 
   test("should support long fields") {

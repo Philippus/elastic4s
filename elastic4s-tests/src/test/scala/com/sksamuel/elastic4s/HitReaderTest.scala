@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
@@ -47,7 +46,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with SharedElasticSugar w
 
   "hit reader" should "unmarshall search results" in {
     val teams = client.execute {
-      search("football").matchAll()
+      search("football").matchAllQuery()
     }.await.to[Team]
 
     teams.toSet shouldBe Set(
@@ -58,7 +57,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with SharedElasticSugar w
 
   it should "unmarshall safely search results" in {
     val teams = client.execute {
-      search("football").matchAll()
+      search("football").matchAllQuery()
     }.await.safeTo[Team]
 
     teams.toSet shouldBe Set(
