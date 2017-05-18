@@ -27,7 +27,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       }.await
 
       resp.getIndexTemplates.get(0).name shouldBe "brewery_template"
-      resp.getIndexTemplates.get(0).template() shouldBe "brew*"
+      resp.getIndexTemplates.get(0).getPatterns.toArray shouldBe Array("brew*")
 
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
       source shouldBe """{"brands":{"properties":{"name":{"type":"text"},"year_founded":{"type":"double"}}}}"""

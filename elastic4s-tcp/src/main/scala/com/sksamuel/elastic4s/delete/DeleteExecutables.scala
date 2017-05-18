@@ -28,7 +28,7 @@ trait DeleteExecutables {
     }
 
     override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
-      injectFuture(builder(c, t).execute)
+      injectFuture(builder(c, t).execute(_))
     }
   }
 
@@ -53,7 +53,7 @@ trait DeleteExecutables {
     override def apply(client: Client, d: DeleteByQueryDefinition): Future[BulkByScrollResponse] = {
       val builder = DeleteByQueryAction.INSTANCE.newRequestBuilder(client)
       populate(builder, d)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

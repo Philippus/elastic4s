@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder
 import org.elasticsearch.common.io.stream.BytesStreamOutput
+import org.elasticsearch.common.xcontent.XContentType
 
 object CreateIndexTemplateBuilder {
   def apply(builder: PutIndexTemplateRequestBuilder, req: CreateIndexTemplateDefinition): Unit = {
@@ -31,7 +32,7 @@ object CreateIndexTemplateBuilder {
       req.settings.foreach { p => source.field(p._1, p._2.toString) }
       req.analysis.foreach(AnalysisContentBuilder.build(_, source))
       source.endObject()
-      builder.setSettings(source.string())
+      builder.setSettings(source.string(), XContentType.JSON)
     }
 
     val output = new BytesStreamOutput()

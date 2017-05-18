@@ -19,7 +19,7 @@ trait ValidateExecutables {
       v.rewrite.foreach(builder.setRewrite)
       v.explain.foreach(builder.setExplain)
 
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

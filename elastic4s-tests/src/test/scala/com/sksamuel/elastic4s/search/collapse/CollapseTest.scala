@@ -50,7 +50,7 @@ class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeA
       resp.hits.length shouldBe 4
       resp.totalHits shouldBe 7L
 
-      resp.hits.map(_.java.id) shouldBe Array("7", "2", "6", "5")
+      resp.hits.map(_.java.getId) shouldBe Array("7", "2", "6", "5")
     }
 
     "should support inner hits" in {
@@ -62,12 +62,12 @@ class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeA
         } sortByFieldDesc "rating"
       }.await
 
-      resp.hits.map(_.java.id) shouldBe Array("5", "6", "2", "7")
+      resp.hits.map(_.java.getId) shouldBe Array("5", "6", "2", "7")
 
       val inner = resp.hits(0).java.getInnerHits.get("by-price")
-      inner.hits.length shouldBe 1
+      inner.getHits.length shouldBe 1
       inner.totalHits shouldBe 3L
-      inner.getHits.head.id shouldBe "5"
+      inner.getHits.head.getId shouldBe "5"
     }
   }
 }

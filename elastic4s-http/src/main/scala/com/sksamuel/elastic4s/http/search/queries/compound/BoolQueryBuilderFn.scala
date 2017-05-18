@@ -38,7 +38,6 @@ object BoolQueryBuilderFn {
     }
 
     bool.boost.foreach(builder.field("boost", _))
-    bool.disableCoord.foreach(builder.field("disable_coord", _))
     bool.queryName.foreach(builder.field("_name", _))
     bool.minimumShouldMatch.foreach(builder.field("minimum_should_match", _))
 

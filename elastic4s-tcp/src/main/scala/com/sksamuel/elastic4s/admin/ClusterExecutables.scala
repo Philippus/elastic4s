@@ -18,7 +18,7 @@ trait ClusterExecutables {
 
     override def apply(c: Client, t: ClusterHealthDefinition): Future[ClusterHealthResponse] = {
       val builder = buildHealthRequest(c, t)
-      injectFuture(builder.execute())
+      injectFuture(builder.execute(_))
     }
 
     private[admin] def buildHealthRequest(client: Client, definition: ClusterHealthDefinition): ClusterHealthRequestBuilder = {
@@ -47,7 +47,7 @@ trait ClusterExecutables {
   implicit object ClusterStatsExecutable
     extends Executable[ClusterStatsDefinition, ClusterStatsResponse, ClusterStatsResponse] {
     override def apply(c: Client, cs: ClusterStatsDefinition): Future[ClusterStatsResponse] = {
-      injectFuture(c.admin.cluster.prepareClusterStats.execute)
+      injectFuture(c.admin.cluster.prepareClusterStats.execute(_))
     }
   }
 
@@ -60,14 +60,14 @@ trait ClusterExecutables {
       val builder = c.admin.cluster.prepareUpdateSettings
       builder.setPersistentSettings(t.persistentSettings.asJava)
       builder.setTransientSettings(t.transientSettings.asJava)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
   implicit object ClusterStateExecutable
     extends Executable[ClusterStateDefinition, ClusterStateResponse, ClusterStateResponse] {
     override def apply(c: Client, t: ClusterStateDefinition): Future[ClusterStateResponse] = {
-      injectFuture(buildRequest(c, t).execute)
+      injectFuture(buildRequest(c, t).execute(_))
     }
 
     private def buildRequest(c: Client, definition: ClusterStateDefinition): ClusterStateRequestBuilder = {

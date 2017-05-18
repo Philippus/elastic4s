@@ -17,7 +17,7 @@ trait IndexTemplateExecutables {
     override def apply(c: Client, t: CreateIndexTemplateDefinition): Future[PutIndexTemplateResponse] = {
       val builder = c.admin.indices.preparePutTemplate(t.name)
       CreateIndexTemplateBuilder(builder, t)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
@@ -25,7 +25,7 @@ trait IndexTemplateExecutables {
     extends Executable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse, DeleteIndexTemplateResponse] {
     override def apply(c: Client, t: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
       val builder = c.admin().indices().prepareDeleteTemplate(t.name)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
@@ -33,7 +33,7 @@ trait IndexTemplateExecutables {
     extends Executable[GetIndexTemplateDefinition, GetIndexTemplatesResponse, GetIndexTemplatesResponse] {
     override def apply(c: Client, t: GetIndexTemplateDefinition): Future[GetIndexTemplatesResponse] = {
       val builder = c.admin().indices().prepareGetTemplates(t.name)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

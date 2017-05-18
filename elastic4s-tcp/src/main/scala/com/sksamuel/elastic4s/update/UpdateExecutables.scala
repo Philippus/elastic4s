@@ -33,7 +33,7 @@ trait UpdateExecutables {
       t.abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
       t.pipeline.foreach(builder.setPipeline)
       t.script.map(ScriptBuilder.apply).foreach(builder.script)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 

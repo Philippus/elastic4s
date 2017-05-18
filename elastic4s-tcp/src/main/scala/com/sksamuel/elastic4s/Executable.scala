@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.action.{ActionListener, ListenableActionFuture}
+import org.elasticsearch.action.{ActionFuture, ActionListener, ListenableActionFuture}
 import org.elasticsearch.client.Client
 
 import scala.concurrent.{Future, Promise}

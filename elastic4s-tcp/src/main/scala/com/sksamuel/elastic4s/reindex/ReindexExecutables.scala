@@ -32,7 +32,7 @@ trait ReindexExecutables {
     override def apply(c: Client, r: ReindexDefinition): Future[BulkByScrollResponse] = {
       val builder = new ReindexRequestBuilder(c, ReindexAction.INSTANCE)
       populate(builder, r)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

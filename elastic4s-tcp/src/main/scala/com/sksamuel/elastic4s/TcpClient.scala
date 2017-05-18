@@ -7,7 +7,7 @@ import com.sksamuel.exts.Logging
 import org.elasticsearch.{ElasticsearchException, ElasticsearchWrapperException}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.common.transport.InetSocketTransportAddress
+import org.elasticsearch.common.transport.TransportAddress
 import org.elasticsearch.node.Node
 import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.transport.client.PreBuiltTransportClient
@@ -103,7 +103,7 @@ trait TcpClientConstructors extends Logging {
 
     val client = new PreBuiltTransportClient(combinedSettings, plugins: _*)
     for ((host, port) <- uri.hosts) {
-      client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(host, port)))
+      client.addTransportAddress(new TransportAddress(new InetSocketAddress(host, port)))
     }
     fromClient(client)
   }

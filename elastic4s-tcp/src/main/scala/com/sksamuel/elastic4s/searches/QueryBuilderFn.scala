@@ -20,7 +20,6 @@ object QueryBuilderFn {
     case q: FuzzyQueryDefinition => FuzzyQueryBuilderFn(q)
     case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBuilder(q)
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBuilder(q)
-    case q: GeoDistanceRangeQueryDefinition => GeoDistanceRangeQueryBuilderFn(q)
     case q: GeoPolygonQueryDefinition => GeoPolygonQueryBuilderFn(q)
     case q: HasChildQueryDefinition => HasChildQueryBuilderFn(q)
     case q: HasParentQueryDefinition => HasParentQueryBuilderFn(q)

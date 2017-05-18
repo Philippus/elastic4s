@@ -22,21 +22,21 @@ trait IndexAdminExecutables {
     extends Executable[ShrinkDefinition, ShrinkResponse, ShrinkResponse] {
     override def apply(c: Client, t: ShrinkDefinition): Future[ShrinkResponse] = {
       val builder = ShrinkBuilderFn(c, t)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
     override def apply(c: Client, t: OpenIndexDefinition): Future[OpenIndexResponse] = {
-      injectFuture(c.admin.indices.prepareOpen(t.indexes.values: _*).execute)
+      injectFuture(c.admin.indices.prepareOpen(t.indexes.values: _*).execute(_))
     }
   }
 
   implicit object CloseIndexDefinitionExecutable
     extends Executable[CloseIndexDefinition, CloseIndexResponse, CloseIndexResponse] {
     override def apply(c: Client, t: CloseIndexDefinition): Future[CloseIndexResponse] = {
-      injectFuture(c.admin.indices.prepareClose(t.indexes.values: _*).execute)
+      injectFuture(c.admin.indices.prepareClose(t.indexes.values: _*).execute(_))
     }
   }
 
@@ -50,7 +50,7 @@ trait IndexAdminExecutables {
   implicit object IndexExistsDefinitionExecutable
     extends Executable[IndexExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
     override def apply(c: Client, t: IndexExistsDefinition): Future[IndicesExistsResponse] = {
-      injectFuture(c.admin.indices.prepareExists(t.index).execute)
+      injectFuture(c.admin.indices.prepareExists(t.index).execute(_))
     }
   }
 
@@ -58,14 +58,14 @@ trait IndexAdminExecutables {
     extends Executable[RolloverDefinition, RolloverResponse, RolloverResponse] {
     override def apply(c: Client, r: RolloverDefinition): Future[RolloverResponse] = {
       val req = RolloverBuilderFn(c, r)
-      injectFuture(req.execute)
+      injectFuture(req.execute(_))
     }
   }
 
   implicit object TypesExistsDefinitionExecutable
     extends Executable[TypesExistsDefinition, TypesExistsResponse, TypesExistsResponse] {
     override def apply(c: Client, t: TypesExistsDefinition): Future[TypesExistsResponse] = {
-      injectFuture(c.admin.indices.prepareTypesExists(t.indexes: _*).setTypes(t.types: _*).execute)
+      injectFuture(c.admin.indices.prepareTypesExists(t.indexes: _*).setTypes(t.types: _*).execute(_))
     }
   }
 
@@ -89,21 +89,21 @@ trait IndexAdminExecutables {
       req.queryCache.foreach(builder.setQueryCache)
       req.indicesOptions.map(EnumConversions.indicesopts).foreach(builder.setIndicesOptions)
 
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
   implicit object FlushIndexDefinitionExecutable
     extends Executable[FlushIndexDefinition, FlushResponse, FlushResponse] {
     override def apply(c: Client, t: FlushIndexDefinition): Future[FlushResponse] = {
-      injectFuture(c.admin.indices.prepareFlush(t.indexes: _*).execute)
+      injectFuture(c.admin.indices.prepareFlush(t.indexes: _*).execute(_))
     }
   }
 
   implicit object RefreshDefinitionExecutable
     extends Executable[RefreshIndexDefinition, RefreshResponse, RefreshResponse] {
     override def apply(c: Client, t: RefreshIndexDefinition): Future[RefreshResponse] = {
-      injectFuture(c.admin.indices.prepareRefresh(t.indexes: _*).execute)
+      injectFuture(c.admin.indices.prepareRefresh(t.indexes: _*).execute(_))
     }
   }
 }

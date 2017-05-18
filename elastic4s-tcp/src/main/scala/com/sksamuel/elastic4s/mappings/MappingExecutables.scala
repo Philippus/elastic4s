@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.Executable
+import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.client.Client
@@ -22,10 +23,10 @@ trait MappingExecutables {
   implicit object PutMappingDefinitionExecutable
     extends Executable[PutMappingDefinition, PutMappingResponse, PutMappingResponse] {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
-      val listener = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
+      val listener: ActionListener[PutMappingResponse] => Unit = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
         .setType(t.indexesAndType.`type`)
         .setSource(MappingContentBuilder.build(t).string)
-        .execute()
+        .execute(_)
       injectFuture(listener)
     }
   }

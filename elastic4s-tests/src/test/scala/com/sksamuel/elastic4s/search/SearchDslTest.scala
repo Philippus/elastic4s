@@ -205,7 +205,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
         termQuery("bassist" -> "berryman")
       }.not {
         termQuery("singer" -> "anderson")
-      } boost 2.4 minimumShouldMatch 2 adjustPureNegative false disableCoord true queryName "booly"
+      } boost 2.4 minimumShouldMatch 2 adjustPureNegative false queryName "booly"
     }
     req.show should matchJsonResource("/json/search/search_boolean2.json")
   }

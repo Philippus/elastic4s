@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.{EnumConversions, Executable, XContentFieldValueWriter}
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.xcontent.XContentType
 
 import scala.concurrent.Future
 
@@ -29,7 +30,7 @@ trait IndexExecutables extends IndexShowImplicits {
       t.versionType.map(EnumConversions.versionType).foreach(builder.setVersionType)
       t.routing.foreach(builder.setRouting)
       t.pipeline.foreach(builder.setPipeline)
-      t.source.foreach(builder.setSource)
+      t.source.foreach(builder.setSource(_, XContentType.JSON))
       t.createOnly.foreach(builder.setCreate)
       builder
     }
