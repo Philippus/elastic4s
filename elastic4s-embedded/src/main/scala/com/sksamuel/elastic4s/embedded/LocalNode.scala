@@ -109,7 +109,6 @@ object LocalNode {
     val plugins = List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
 
     val mergedSettings = Settings.builder().put(settings)
-      .put("transport.type", "local")
       .put("http.type", "netty4")
       .put("http.enabled", "true")
       .build()
