@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{FunSuite, Matchers}
 
-class AggregationAsStringTest extends FunSuite with SharedElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class AggregationAsStringTest extends FunSuite with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("aggstring") mappings {

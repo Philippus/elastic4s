@@ -7,20 +7,18 @@ import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class SubscriberFlushAfterTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class SubscriberFlushAfterTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with ClassloaderLocalNodeProvider {
 
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 
   implicit val system = ActorSystem()
-
-  private val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   implicit object SpaceshipRequestBuilder extends RequestBuilder[Spaceship] {
     override def request(ship: Spaceship): BulkCompatibleDefinition = {

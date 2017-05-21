@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar {
+class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("books").mappings(

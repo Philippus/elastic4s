@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.suggestions
 
-import com.sksamuel.elastic4s.Indexable
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.elasticsearch.search.suggest.phrase.DirectCandidateGeneratorBuilder
 import org.scalatest.{Matchers, WordSpec}
 
-class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
+class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
@@ -31,10 +31,8 @@ class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
       indexInto(indexType) doc Song("The Red Shoes", "Kate Bush"),
       indexInto(indexType) doc Song("The Dreaming", "Kate Bush"),
       indexInto(indexType) doc Song("The Big Sky", "Kate Bush")
-    )
+    ).immediateRefresh()
   ).await
-
-  blockUntilCount(7, Index)
 
   "phrase suggestions" should {
     "support maxErrors" in {

@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, SharedElasticSugar}
+import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 class SearchTest
   extends WordSpec
-    with SharedElasticSugar
+    with ClassloaderLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 
@@ -28,11 +28,8 @@ class SearchTest
         "guitar" -> "martin barre",
         "keyboards" -> "johnny smith"
       ) id 45
-    )
+    ).immediateRefresh()
   }.await
-
-  refresh("musicians")
-  blockUntilCount(3, "musicians")
 
   "a search query" should {
     "find an indexed document that matches a string query" in {

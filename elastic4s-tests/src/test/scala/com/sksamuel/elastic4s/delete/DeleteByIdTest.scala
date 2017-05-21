@@ -2,22 +2,33 @@ package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("lecarre")
+      }.await
+    }
+
+    execute {
+      createIndex("lecarre").mappings(
+        mapping("characters").fields(
+          textField("name")
+        )
+      ).shards(1).waitForActiveShards(1)
+    }.await
+  }
 
   "delete by id request" should {
     "delete matched docs" in {
-
-      execute {
-        createIndex("lecarre").mappings(
-          mapping("characters").fields(
-            textField("name")
-          )
-        ).shards(1).waitForActiveShards(1)
-      }.await
 
       execute {
         indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id(2).refresh(RefreshPolicy.Immediate)

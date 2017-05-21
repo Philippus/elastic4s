@@ -18,11 +18,11 @@ trait IndexExecutables extends IndexShowImplicits {
       val builder = c.prepareIndex(t.indexAndType.index, t.indexAndType.`type`)
       t.id.map(_.toString).foreach(builder.setId)
       t.source match {
-        case Some(json) => builder.setSource(json)
+        case Some(json) => builder.setSource(json, XContentType.JSON)
         case _ =>
           val source = XContentFactory.obj()
           t.fields.foreach(XContentFieldValueWriter(source, _))
-          builder.setSource(source.string)
+          builder.setSource(source.string, XContentType.JSON)
       }
       t.parent.foreach(builder.setParent)
       t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)

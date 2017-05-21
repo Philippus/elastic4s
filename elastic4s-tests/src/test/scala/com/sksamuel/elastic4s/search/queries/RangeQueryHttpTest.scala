@@ -2,17 +2,16 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar, HttpElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
 
 class RangeQueryHttpTest
   extends WordSpec
-    with ElasticSugar
+    with HttpElasticSugar
+    with ClassloaderLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("rangequeryhttptest").mappings(

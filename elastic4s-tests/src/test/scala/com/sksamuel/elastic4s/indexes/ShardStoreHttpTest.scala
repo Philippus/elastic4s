@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.{ShardStoreStatus, IndexStoreStatus}
-import com.sksamuel.elastic4s.http.{HttpClient, ElasticDsl}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.{IndexStoreStatus, ShardStoreStatus}
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class ShardStoreHttpTest extends WordSpec with Matchers with SharedElasticSugar with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class ShardStoreHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   "shard store request" should {
     "get green shards" in {

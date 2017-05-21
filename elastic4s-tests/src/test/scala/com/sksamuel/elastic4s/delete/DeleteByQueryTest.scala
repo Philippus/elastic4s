@@ -1,24 +1,34 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
+import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import org.scalatest.{Matchers, WordSpec}
 
-class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("charlesd")
+      }.await
+    }
+
+    execute {
+      createIndex("charlesd").mappings(
+        mapping("characters").fields(
+          textField("name")
+        )
+      ).shards(1).waitForActiveShards(1)
+    }.await
+  }
 
   "delete by query" should {
     "delete matched docs" in {
-
-      execute {
-        createIndex("charlesd").mappings(
-          mapping("characters").fields(
-            textField("name")
-          )
-        ).shards(1).waitForActiveShards(1)
-      }.await
-
       execute {
         bulk(
           indexInto("charlesd" / "characters").fields("name" -> "mr bumbles").id(1),

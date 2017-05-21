@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.{Path, Paths}
 
 import com.sksamuel.elastic4s.TcpClient
+import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
@@ -29,7 +30,6 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     }
   })
 
-
   val nodeId: String = client().admin().cluster().prepareState().get().getState.getNodes.getLocalNodeId
 
   private val nodeinfo = client().admin().cluster().prepareNodesInfo(nodeId).get().getNodes.iterator().next()
@@ -40,6 +40,7 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   logger.info(s"LocalNode data location ${settings.get("path.data")}")
 
   val ip: String = ipAndPort.takeWhile(_ != ':')
+  val host: String = ip
   val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
 
   def stop(removeData: Boolean = false): Any = {
@@ -72,17 +73,27 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   // the location of the config folder for this node
   val pathConfig: Path = pathHome resolve "config"
 
+  @deprecated("use tcp()", "6.0.0")
+  def elastic4sclient(shutdownNodeOnClose: Boolean = true): TcpClient = tcp(shutdownNodeOnClose)
+
   /**
-  * Returns a new ElasticClient connected to this node.
-  *
-  * If shutdownNodeOnClose is true, then the local node will be shutdown once this
-  * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
-  */
-  def elastic4sclient(shutdownNodeOnClose: Boolean = true): TcpClient =
-    new LocalElasticClient(this, shutdownNodeOnClose)
+    * Returns a new TcpClient connected to this node.
+    *
+    * If shutdownNodeOnClose is true, then the local node will be shutdown once this
+    * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
+    */
+  def tcp(shutdownNodeOnClose: Boolean = true): TcpClient = new LocalNodeTcpClient(this, shutdownNodeOnClose)
+
+  /**
+    * Returns a new HttpClient connected to this node.
+    *
+    * If shutdownNodeOnClose is true, then the local node will be shutdown once this
+    * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
+    */
+  def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port")
 }
 
-class LocalElasticClient(node: LocalNode, shutdownNodeOnClose: Boolean) extends TcpClient {
+class LocalNodeTcpClient(node: LocalNode, shutdownNodeOnClose: Boolean) extends TcpClient {
 
   override val java: Client = {
     node.start()

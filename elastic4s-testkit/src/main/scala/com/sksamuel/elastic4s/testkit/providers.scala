@@ -4,12 +4,18 @@ import java.nio.file.{Path, Paths}
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicLong
 
+import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.embedded.LocalNode
+import com.sksamuel.elastic4s.http.HttpClient
 
 // LocalNodeProvider provides helper methods to create a local (embedded) node
 trait LocalNodeProvider {
   // returns an embedded, started, node
   def getNode: LocalNode
+  def node: LocalNode = getNode
+
+  implicit lazy val client: TcpClient = getNode.tcp(false)
+  implicit lazy val http: HttpClient = getNode.http(false)
 }
 
 // implementation of LocalNodeProvider that uses a single

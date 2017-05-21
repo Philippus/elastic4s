@@ -1,14 +1,22 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("foo")
+      }.await
+    }
+
     execute {
       createIndex("foo").mappings(
         mapping("bar").fields(

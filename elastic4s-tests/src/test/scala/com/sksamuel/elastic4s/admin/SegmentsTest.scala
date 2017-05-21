@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.time.SpanSugar._
 
-class SegmentsTest extends WordSpec with Matchers with ElasticSugar with ScalaFutures {
+class SegmentsTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl with ScalaFutures {
 
   client.execute {
     bulk(

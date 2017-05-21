@@ -103,7 +103,7 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
       "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion
     )
   )
-  .dependsOn(tcp)
+  .dependsOn(tcp, http)
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(

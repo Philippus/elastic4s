@@ -3,11 +3,10 @@ package com.sksamuel.elastic4s.mappings
 import java.util
 
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class MappingTest extends WordSpec with ElasticSugar with Matchers {
+class MappingTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("q").mappings {

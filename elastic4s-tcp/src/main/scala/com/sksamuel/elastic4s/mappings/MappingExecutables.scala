@@ -5,6 +5,7 @@ import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse
 import org.elasticsearch.client.Client
+import org.elasticsearch.common.xcontent.XContentType
 
 import scala.concurrent.Future
 
@@ -25,7 +26,7 @@ trait MappingExecutables {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
       val listener: ActionListener[PutMappingResponse] => Unit = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
         .setType(t.indexesAndType.`type`)
-        .setSource(MappingContentBuilder.build(t).string)
+        .setSource(MappingContentBuilder.build(t).string, XContentType.JSON)
         .execute(_)
       injectFuture(listener)
     }

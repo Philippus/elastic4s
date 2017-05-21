@@ -5,19 +5,18 @@ import java.util.concurrent.Executors
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar {
+class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 
   implicit val system = ActorSystem()
-
 
   implicit object SpaceshipRequestBuilder extends RequestBuilder[Spaceship] {
     override def request(ship: Spaceship): BulkCompatibleDefinition = {
@@ -79,7 +78,7 @@ class SpaceshipSlowPublisher(duration: FiniteDuration) extends Publisher[Spacesh
   override def subscribe(s: Subscriber[_ >: Spaceship]): Unit = {
     val sub = new Subscription {
       private val executor = Executors.newSingleThreadExecutor()
-      var remaining = Spaceship.ships
+      private var remaining: List[Spaceship] = Spaceship.ships
       override def cancel(): Unit = executor.shutdownNow()
       override def request(ignored: Long): Unit = {
         executor.submit(new Runnable {

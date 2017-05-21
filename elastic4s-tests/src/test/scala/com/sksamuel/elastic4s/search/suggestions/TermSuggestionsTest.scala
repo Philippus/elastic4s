@@ -1,19 +1,16 @@
 package com.sksamuel.elastic4s.search.suggestions
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Indexable}
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class TermSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ElasticDsl {
+class TermSuggestionsTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
   }
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   private val Index = "termsuggest"
   private val indexType = Index / "music"

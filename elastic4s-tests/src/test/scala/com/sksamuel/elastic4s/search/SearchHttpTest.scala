@@ -1,23 +1,20 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
 class SearchHttpTest
   extends WordSpec
-    with ElasticSugar
+    with ClassloaderLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   Try {
     http.execute {

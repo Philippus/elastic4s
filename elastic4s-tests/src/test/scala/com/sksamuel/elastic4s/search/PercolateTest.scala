@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
-class PercolateTest extends FlatSpec with Matchers with MockitoSugar with ElasticSugar {
+class PercolateTest extends FlatSpec with Matchers with MockitoSugar with ElasticSugar with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("percolate").mappings(

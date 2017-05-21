@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
 
-abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar {
+abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("aggregations") mappings {
@@ -26,7 +26,7 @@ abstract class AbstractAggregationTest extends FreeSpec with Matchers with Elast
       indexInto("aggregations/breakingbad") fields("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
       indexInto("aggregations/breakingbad") fields("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
       indexInto("aggregations/breakingbad") fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
-    )
+    ).immediateRefresh()
   ).await
 
   refresh("aggregations")

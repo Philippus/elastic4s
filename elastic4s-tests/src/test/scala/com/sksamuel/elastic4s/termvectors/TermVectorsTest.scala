@@ -1,15 +1,12 @@
 package com.sksamuel.elastic4s.termvectors
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.termvectors._
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.http.termvectors._
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with SharedElasticSugar {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with ClassloaderLocalNodeProvider {
 
   http.execute {
     createIndex("hansz").mappings(

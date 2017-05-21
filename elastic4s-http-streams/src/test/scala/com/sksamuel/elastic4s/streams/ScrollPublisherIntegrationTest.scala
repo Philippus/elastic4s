@@ -3,23 +3,21 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{ElasticSugar, SharedElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
-class ScrollPublisherIntegrationTest extends WordSpec with SharedElasticSugar with Matchers with ElasticDsl {
+class ScrollPublisherIntegrationTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl with HttpElasticSugar {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
   import ReactiveElastic._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   private val indexName = getClass.getSimpleName.toLowerCase
   private val indexType = "emperor"
-  private val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   implicit val system = ActorSystem()
 
@@ -53,7 +51,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with SharedElasticSugar wi
 
   ensureIndexExists(indexName)
 
-  client.execute {
+  http.execute {
     bulk(emperors.map(indexInto(indexName / indexType).source(_)))
   }.await
 

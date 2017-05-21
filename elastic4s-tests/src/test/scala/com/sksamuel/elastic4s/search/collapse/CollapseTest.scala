@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.collapse
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
-class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeAndAfterAll {
+class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeAndAfterAll with ClassloaderLocalNodeProvider {
 
   override protected def beforeAll(): Unit = {
     client.execute {

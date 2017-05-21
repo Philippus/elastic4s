@@ -1,20 +1,20 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
 
     Try {
       execute {
-        ElasticApi.deleteIndex("hands")
+        ElasticApi.deleteIndex("hans")
       }.await
     }
 
@@ -27,10 +27,8 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualElastic
     }.await
 
     execute(
-      indexInto("hans/albums") fields "name" -> "intersteller" id 5
+      indexInto("hans/albums") fields "name" -> "intersteller" id 5 refresh (RefreshPolicy.Immediate)
     ).await
-
-    blockUntilCount(1, "hans")
   }
 
   "an update request" should "support field based update" in {

@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.analyzers
 import java.io.PrintWriter
 
 import com.sksamuel.elastic4s.indexes._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
 
-class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar {
+class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   // setup the stop file list
   node.pathConfig.toFile.mkdirs()

@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
 import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSugar with MockitoSugar {
+class ElasticJacksonIndexableTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl with MockitoSugar {
 
   import ElasticJackson.Implicits._
 

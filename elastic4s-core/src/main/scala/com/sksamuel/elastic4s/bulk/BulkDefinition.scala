@@ -15,6 +15,9 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition],
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): BulkDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): BulkDefinition = copy(refresh = refresh.some)
+
+  def immediateRefresh(): BulkDefinition = refresh(RefreshPolicy.Immediate)
+  def waitForRefresh(): BulkDefinition = refresh(RefreshPolicy.WaitFor)
 }
 
 trait BulkCompatibleDefinition

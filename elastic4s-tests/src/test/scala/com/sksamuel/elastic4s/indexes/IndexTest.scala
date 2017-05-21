@@ -1,12 +1,14 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class IndexTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   case class Phone(name: String, speed: String)
 
@@ -15,6 +17,13 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticS
   }
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("electronics")
+      }.await
+    }
+
     execute {
       createIndex("electronics").mappings(mapping("phone"))
     }.await

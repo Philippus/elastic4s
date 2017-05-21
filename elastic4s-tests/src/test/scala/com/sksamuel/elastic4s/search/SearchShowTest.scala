@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
+class SearchShowTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   "Search" should {
     "have a show typeclass implementation" in {
@@ -49,7 +50,6 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
           |          }
           |        }
           |      ],
-          |      "disable_coord" : false,
           |      "adjust_pure_negative" : true,
           |      "boost" : 1.0
           |    }

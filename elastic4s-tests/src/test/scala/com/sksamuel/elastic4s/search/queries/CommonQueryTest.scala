@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.Indexable
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
+class CommonQueryTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider with ElasticDsl {
 
   case class Condiment(name: String, desc: String)
   implicit object CondimentIndexable extends Indexable[Condiment] {

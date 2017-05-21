@@ -5,15 +5,15 @@ import java.util
 import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DualClientTests}
 import org.scalatest.Matchers
 import org.scalatest.FlatSpec
 
-class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with  DualClientTests {
 
   import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 
-  override def beforeRunTests() = execute {
+  override def beforeRunTests(): Unit = execute {
     createIndex("index")
   }.await
 

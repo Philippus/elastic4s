@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.analyzers
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
 
-class NormalizerTest extends FreeSpec with Matchers with ElasticSugar {
+class NormalizerTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("normalizer").mappings {

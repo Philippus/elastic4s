@@ -1,23 +1,30 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("rawquerytest")
+      }.await
+    }
+
     execute {
       bulk(
         indexInto("rawquerytest/paris").fields("landmark" -> "montmarte", "arrondissement" -> "18"),
         indexInto("rawquerytest/paris").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7"),
         indexInto("rawquerytest/tokyo").fields("landmark" -> "tokyo tower"),
         indexInto("rawquerytest/tokyo").fields("landmark" -> "meiji shrine")
-      )
+      ).immediateRefresh()
     }.await
-
-    blockUntilCount(2, "rawquerytest")
   }
 
   "raw query" should {

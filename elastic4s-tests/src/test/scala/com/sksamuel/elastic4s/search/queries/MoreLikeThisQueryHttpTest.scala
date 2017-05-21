@@ -4,18 +4,17 @@ import com.sksamuel.elastic4s.{DocumentRef, ElasticsearchClientUri}
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar, HttpElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryHttpTest
   extends WordSpec
     with Matchers
-    with ElasticSugar
+    with ClassloaderLocalNodeProvider
+    with HttpElasticSugar
     with ElasticMatchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("mltq").mappings {

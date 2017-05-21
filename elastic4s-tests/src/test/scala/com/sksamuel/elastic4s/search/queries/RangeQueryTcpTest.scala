@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers {
+class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   client.execute {
     createIndex("rangequerytcptest").mappings(

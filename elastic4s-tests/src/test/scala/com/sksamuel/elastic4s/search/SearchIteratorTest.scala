@@ -3,20 +3,19 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.search.SearchIterator
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
+
 import scala.concurrent.duration._
 
 class SearchIteratorTest
   extends WordSpec
-    with ElasticSugar
+    with ClassloaderLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 
   implicit val duration: FiniteDuration = 10.seconds
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("searchiterator").mappings(

@@ -1,17 +1,15 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TermsQueryTest
   extends FlatSpec
-    with SharedElasticSugar
+    with ClassloaderLocalNodeProvider
     with Matchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("lords").mappings(

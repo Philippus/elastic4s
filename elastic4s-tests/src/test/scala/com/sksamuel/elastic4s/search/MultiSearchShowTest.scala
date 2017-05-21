@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import com.sksamuel.elastic4s.{ElasticDsl, JsonSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class MultiSearchShowTest extends WordSpec with Matchers with ElasticSugar with JsonSugar {
+class MultiSearchShowTest extends WordSpec with Matchers with JsonSugar with ElasticDsl {
 
   "MultiSearch" should {
     "have a show typeclass implementation" in {

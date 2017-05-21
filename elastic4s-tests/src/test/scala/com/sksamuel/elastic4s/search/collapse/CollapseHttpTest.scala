@@ -1,18 +1,13 @@
 package com.sksamuel.elastic4s.search.collapse
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
-class CollapseHttpTest extends FreeSpec with Matchers with SharedElasticSugar with ElasticDsl with BeforeAndAfterAll {
-
-  var http: HttpClient = _
+class CollapseHttpTest extends FreeSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
-    http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
     http.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(

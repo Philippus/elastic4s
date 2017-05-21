@@ -30,7 +30,7 @@ object ElasticsearchClientUri {
           case _ => sys.error(s"Invalid query $query")
         }
         ElasticsearchClientUri(str, hosts.toList, options.toMap)
-      case _ => sys.error("Invalid uri, must be in format elasticsearch://host:port,host:port?querystr")
+      case _ => sys.error(s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr")
     }
   }
 }

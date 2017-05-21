@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar, HttpElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
-class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with ElasticDsl with ClassloaderLocalNodeProvider {
 
   http.execute {
     createIndex("sodas")

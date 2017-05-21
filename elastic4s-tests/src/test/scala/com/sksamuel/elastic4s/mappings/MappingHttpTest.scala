@@ -3,12 +3,18 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class MappingHttpTest extends WordSpec with SharedElasticSugar with Matchers with ElasticDsl {
+import scala.util.Try
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class MappingHttpTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("index")
+    }.await
+  }
 
   http.execute {
     createIndex("index").mappings(

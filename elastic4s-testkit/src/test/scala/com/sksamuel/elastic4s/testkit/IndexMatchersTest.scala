@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.testkit
 
+import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import org.scalatest.WordSpec
 
-class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
+class IndexMatchersTest extends WordSpec with IndexMatchers with ClassloaderLocalNodeProvider with ElasticApi {
 
-  val indexname = getClass.getSimpleName.toLowerCase
+  import com.sksamuel.elastic4s.ElasticDsl._
+  private val indexname = getClass.getSimpleName.toLowerCase
 
   client.execute {
     bulk(
@@ -12,14 +14,12 @@ class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
       indexInto(indexname / "tubestops") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
       indexInto(indexname / "tubestops") fields("name" -> "cockfosters", "line" -> "picadilly") id 3,
       indexInto(indexname / "tubestops") fields("name" -> "bank", "line" -> "northern")
-    )
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   client.execute {
-    create index "sammy"
+    createIndex("sammy")
   }.await
-
-  blockUntilCount(4, indexname)
 
   "index matchers" should {
     "support index document count" in {

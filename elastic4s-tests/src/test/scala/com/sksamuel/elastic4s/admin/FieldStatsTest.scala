@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.admin
 
+import com.sksamuel.elastic4s.{ElasticApi, ElasticDsl}
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.elasticsearch.action.fieldstats.FieldStats
-import org.scalatest.{WordSpec, Matchers}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import org.scalatest.{Matchers, WordSpec}
 
-class FieldStatsTest extends WordSpec with Matchers with ElasticSugar {
+class FieldStatsTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   client.execute(
     bulk(
@@ -15,11 +16,8 @@ class FieldStatsTest extends WordSpec with Matchers with ElasticSugar {
       indexInto("fieldstats/pizza") fields("topping" -> "mushrooms", "qty" -> 73),
       indexInto("fieldstats/pizza") fields("topping" -> "sausage", "qty" -> 15),
       indexInto("fieldstats/pizza") fields("topping" -> "ham", "qty" -> 6)
-    )
+    ).immediateRefresh()
   ).await
-
-  refresh("fieldstats")
-  blockUntilCount(7, "fieldstats")
 
   "field stats" should {
     "return stats for specified fields" in {

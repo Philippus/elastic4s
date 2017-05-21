@@ -2,15 +2,24 @@ package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 
-class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("coldplay")
+      }.await
+    }
+
     execute {
       createIndex("coldplay").shards(2).mappings(
         mapping("albums").fields(
@@ -28,8 +37,6 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualE
         indexInto("coldplay" / "albums") id 7 fields("name" -> "ghost stories", "year" -> 2015)
       ).refresh(RefreshPolicy.Immediate)
     ).await
-
-    blockUntilCount(4, "coldplay")
   }
 
   "a multiget request" should "retrieve documents by id" in {

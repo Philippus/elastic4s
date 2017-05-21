@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
-class FieldNamesFieldTest extends FlatSpec with Matchers with ElasticSugar {
+class FieldNamesFieldTest extends FlatSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   client.execute {
     createIndex("space")

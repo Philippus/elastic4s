@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   "refresh index request" should {
     "refresh pending docs" in {

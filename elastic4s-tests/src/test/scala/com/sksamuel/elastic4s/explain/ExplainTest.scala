@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.explain
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, DualClientTests}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
-class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
     execute {

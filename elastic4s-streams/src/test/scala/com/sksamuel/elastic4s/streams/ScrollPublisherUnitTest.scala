@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class ScrollPublisherUnitTest extends WordSpec with Matchers with ElasticSugar {
+class ScrollPublisherUnitTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   import ReactiveElastic._
 

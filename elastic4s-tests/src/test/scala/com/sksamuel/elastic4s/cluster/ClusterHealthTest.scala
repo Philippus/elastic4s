@@ -2,17 +2,16 @@ package com.sksamuel.elastic4s.cluster
 
 import com.sksamuel.elastic4s.HealthStatus
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.scalatest.{Matchers, WordSpec}
 
-class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   "cluster health request" should {
     "return healthy cluster information" in {
       execute {
-        createIndex("mountains")
+        createIndex(indexname)
           .shards(1)
           .replicas(0)
           .waitForActiveShards(1)

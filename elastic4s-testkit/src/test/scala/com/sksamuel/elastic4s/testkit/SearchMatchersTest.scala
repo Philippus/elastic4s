@@ -1,11 +1,14 @@
 package com.sksamuel.elastic4s.testkit
 
+import com.sksamuel.elastic4s.ElasticApi
 import org.scalatest.WordSpec
 
-class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar {
+class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticApi with ClassloaderLocalNodeProvider {
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"
+
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   client.execute {
     createIndex(indexname).mappings(
@@ -19,21 +22,19 @@ class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar 
       indexInto(indexname / "tubestops").fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
       indexInto(indexname / "tubestops").fields("name" -> "cockfosters", "line" -> "picadilly").id(3),
       indexInto(indexname / "tubestops").fields("name" -> "bank", "line" -> "northern")
-    )
+    ).immediateRefresh()
   }.await
-
-  blockUntilCount(4, indexname)
 
   "search matchers" should {
     "support haveHit" in {
-      (search in indexname query "picadilly") should containId(3)
+      (search(indexname) query "picadilly") should containId(3)
     }
     "support haveHits" in {
-      (search in indexname query "*") should haveHits(4)
-      (search in indexname query "bank") should haveHits(1)
+      (search(indexname) query "*") should haveHits(4)
+      (search(indexname) query "bank") should haveHits(1)
     }
     "support haveNoHits" in {
-      (search in indexname query "aldgate") should haveNoHits
+      (search(indexname) query "aldgate") should haveNoHits
     }
   }
 }

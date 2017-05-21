@@ -2,12 +2,21 @@ package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import org.scalatest.{Matchers, WordSpec}
 
-class ClearCacheTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
 
-  override protected def beforeRunTests() = {
+class ClearCacheTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("clearcache1")
+      }.await
+    }
+
     execute {
       createIndex("clearcache1").mappings(
         mapping("flowers").fields(

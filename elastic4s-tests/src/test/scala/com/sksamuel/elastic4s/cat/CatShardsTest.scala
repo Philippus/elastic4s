@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class CatShardsTest extends FlatSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
 
   http.execute {
     bulk(
