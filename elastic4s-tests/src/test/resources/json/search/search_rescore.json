@@ -8,7 +8,6 @@
             "query": "coldplay",
             "flags": -1,
             "default_operator": "or",
-            "lenient": false,
             "analyze_wildcard": false,
             "boost": 1.0
           }

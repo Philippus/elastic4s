@@ -3,7 +3,6 @@
         "common": {
             "name": {
                 "query": "some text here",
-                "disable_coord": true,
                 "high_freq_operator": "AND",
                 "low_freq_operator": "OR",
                 "analyzer": "whitespace",
