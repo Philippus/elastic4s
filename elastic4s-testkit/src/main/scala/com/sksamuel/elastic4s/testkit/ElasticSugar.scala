@@ -75,12 +75,10 @@ trait ElasticSugar extends ElasticDsl {
   }
 
   def deleteIndex(name: String): Unit = {
-    if (doesIndexExists(name)) {
-      Try {
-        client.execute {
-          ElasticDsl.deleteIndex(name)
-        }.await
-      }
+    Try {
+      client.execute {
+        ElasticDsl.deleteIndex(name)
+      }.await
     }
   }
 

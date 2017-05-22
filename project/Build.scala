@@ -25,7 +25,7 @@ object Build extends AutoPlugin {
     val PlayJsonVersion = "2.6.0-M7"
     val ReactiveStreamsVersion = "1.0.0"
     val ScalaVersion = "2.12.2"
-    val ScalatestVersion = "3.0.1"
+    val ScalatestVersion = "3.0.3"
     val Slf4jVersion = "1.7.12"
   }
 
@@ -42,7 +42,7 @@ object Build extends AutoPlugin {
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/89f6d17",
-    fork in Test := true,
+    fork in Test := false,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     parallelExecution in Test := true,

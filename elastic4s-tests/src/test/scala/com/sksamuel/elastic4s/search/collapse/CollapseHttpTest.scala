@@ -5,9 +5,18 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
+import scala.util.Try
+
 class CollapseHttpTest extends FreeSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
+
+    Try {
+      http.execute {
+        deleteIndex("collapse")
+      }.await
+    }
+
     http.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(

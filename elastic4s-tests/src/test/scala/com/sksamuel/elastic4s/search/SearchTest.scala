@@ -18,10 +18,6 @@ class SearchTest
         "drummer" -> "will champion",
         "guitar" -> "johnny buckland"
       ),
-      indexInto("musicians/performers").fields(
-        "name" -> "kate bush",
-        "singer" -> "kate bush"
-      ),
       indexInto("musicians/bands").fields(
         "name" -> "jethro tull",
         "singer" -> "ian anderson",
@@ -34,10 +30,6 @@ class SearchTest
   "a search query" should {
     "find an indexed document that matches a string query" in {
       search("musicians" -> "bands") query "anderson" should haveTotalHits(1)
-    }
-    "find an indexed document in the given type only" in {
-      search("musicians" -> "bands") query "kate" should haveNoHits
-      search("musicians" -> "performers") query "kate" should haveTotalHits(1)
     }
     "return source" in {
       search("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")
@@ -57,8 +49,8 @@ class SearchTest
       s should not(haveSourceField("name"))
     }
     "support limits" in {
-      search("musicians").matchAllQuery().limit(2) should haveHits(2)
-      search("musicians").matchAllQuery().limit(2) should haveTotalHits(3)
+      search("musicians").matchAllQuery().limit(1) should haveHits(1)
+      search("musicians").matchAllQuery().limit(2) should haveTotalHits(2)
     }
   }
 }

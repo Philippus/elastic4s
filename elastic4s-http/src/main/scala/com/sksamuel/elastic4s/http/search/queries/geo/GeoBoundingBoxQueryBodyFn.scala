@@ -27,7 +27,7 @@ object GeoBoundingBoxQueryBodyFn {
       builder.endObject()
     }
 
-    q.geoExecType.map(EnumConversions.geoExecType(_)).foreach(builder.field("type", _))
+    q.geoExecType.map(EnumConversions.geoExecType).foreach(builder.field("type", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.queryName.foreach(builder.field("_name", _))

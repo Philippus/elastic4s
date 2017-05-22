@@ -17,6 +17,12 @@ class ClearCacheTest extends WordSpec with Matchers with ElasticDsl with DualCli
       }.await
     }
 
+    Try {
+      execute {
+        deleteIndex("clearcache2")
+      }.await
+    }
+
     execute {
       createIndex("clearcache1").mappings(
         mapping("flowers").fields(
