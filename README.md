@@ -855,6 +855,7 @@ folder. There is no need to configure anything externally.
 * Any methods deprecated before version 5.0.0 have been removed.
 * Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
+* The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
 
 ###### 5.4.3
 

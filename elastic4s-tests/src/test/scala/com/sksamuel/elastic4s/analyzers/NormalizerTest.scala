@@ -13,7 +13,7 @@ class NormalizerTest extends FreeSpec with Matchers with ElasticSugar with Class
         )
     } normalizers(
       customNormalizer("lowercaseNorm", LowercaseTokenFilter),
-      customNormalizer("uppercaseMappingCharNorm", UppercaseTokenFilter, MappingCharFilter("xtoy","x" -> "y" ))
+      customNormalizer("uppercaseMappingCharNorm", UppercaseTokenFilter, PatternReplaceCharFilter("xtoy", "x", "y"))
     )
   }.await
 

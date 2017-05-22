@@ -2,11 +2,16 @@ package com.sksamuel.elastic4s.mappings
 
 import java.util
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class MappingTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider {
+import scala.util.Try
+
+class MappingTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+
+  deleteIndex("q")
 
   client.execute {
     createIndex("q").mappings {
@@ -20,14 +25,6 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers with Classloa
     } normalizers {
       CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
     }
-  }.await
-
-  client.execute {
-    createIndex("z") mappings(
-      mapping("r"),
-      mapping("s"),
-      mapping("t")
-    )
   }.await
 
   "mapping get" should {
@@ -50,11 +47,6 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers with Classloa
       val kw = map.get("properties").asInstanceOf[util.Map[String, Any]].get("kw").asInstanceOf[util.Map[String, Any]]
       kw.get("type") shouldBe "keyword"
       kw.get("normalizer") shouldBe "my_normalizer"
-    }
-    "support getting all mappings" in {
-      client.execute {
-        getMapping("z")
-      }.await.mappingsFor("z").keySet shouldBe Set("r", "s", "t")
     }
   }
   "mapping put" should {

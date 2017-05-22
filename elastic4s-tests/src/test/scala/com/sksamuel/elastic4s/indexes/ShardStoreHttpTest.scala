@@ -5,17 +5,26 @@ import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.{IndexSto
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class ShardStoreHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("beaches")
+    }.await
+  }
+
+  http.execute {
+    createIndex("beaches").mappings(
+      mapping("dday").fields(
+        textField("name")
+      )
+    ).shards(1).replicas(0).waitForActiveShards(1)
+  }.await
 
   "shard store request" should {
     "get green shards" in {
-      http.execute {
-        createIndex("beaches").mappings(
-          mapping("dday").fields(
-            textField("name")
-          )
-        ).shards(1).replicas(0).waitForActiveShards(1)
-      }.await
 
       val indexInfo = http.execute {
         indexShardStores("beaches") status "green"

@@ -8,6 +8,8 @@ import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
 import org.slf4j.LoggerFactory
 
+import scala.util.Try
+
 /**
   * Provides helper methods for things like refreshing an index, and blocking until an
   * index has a certain count of documents. These methods are very useful when writing
@@ -74,9 +76,11 @@ trait ElasticSugar extends ElasticDsl {
 
   def deleteIndex(name: String): Unit = {
     if (doesIndexExists(name)) {
-      client.execute {
-        ElasticDsl.deleteIndex(name)
-      }.await
+      Try {
+        client.execute {
+          ElasticDsl.deleteIndex(name)
+        }.await
+      }
     }
   }
 

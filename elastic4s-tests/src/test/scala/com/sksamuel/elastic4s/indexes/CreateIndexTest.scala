@@ -17,6 +17,18 @@ class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
       }.await
     }
 
+    Try {
+      execute {
+        deleteIndex("cuisine")
+      }.await
+    }
+
+    Try {
+      execute {
+        deleteIndex("landscape")
+      }.await
+    }
+
     execute {
       createIndex("foo").mappings(
         mapping("bar").fields(
@@ -41,27 +53,6 @@ class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
       }.await
 
       resp.acknowledged shouldBe true
-    }
-
-    "support multiple types" in {
-
-      execute {
-        createIndex("geography").mappings(
-          mapping("shire").fields(
-            textField("name")
-          ),
-          mapping("mountain").fields(
-            textField("range")
-          )
-        ).shards(1).waitForActiveShards(1)
-      }.await
-
-      val resp = client.execute {
-        getMapping("geography").types("shire", "mountain")
-      }.await
-
-      resp.mappings.keys shouldBe Set("geography")
-      resp.mappings("geography").keySet shouldBe Set("shire", "mountain")
     }
 
     "create from raw source" in {

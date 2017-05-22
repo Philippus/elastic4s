@@ -5,6 +5,8 @@ import org.scalatest.{FreeSpec, Matchers}
 
 abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
+  deleteIndex("aggregations")
+
   client.execute {
     createIndex("aggregations") mappings {
       mapping("breakingbad") fields(
@@ -28,7 +30,4 @@ abstract class AbstractAggregationTest extends FreeSpec with Matchers with Elast
       indexInto("aggregations/breakingbad") fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
     ).immediateRefresh()
   ).await
-
-  refresh("aggregations")
-  blockUntilCount(10, "aggregations")
 }

@@ -20,9 +20,7 @@ class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DualClien
     execute {
       bulk(
         indexInto("rawquerytest/paris").fields("landmark" -> "montmarte", "arrondissement" -> "18"),
-        indexInto("rawquerytest/paris").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7"),
-        indexInto("rawquerytest/tokyo").fields("landmark" -> "tokyo tower"),
-        indexInto("rawquerytest/tokyo").fields("landmark" -> "meiji shrine")
+        indexInto("rawquerytest/paris").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7")
       ).immediateRefresh()
     }.await
   }
@@ -34,14 +32,6 @@ class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DualClien
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }
       }.await.totalHits shouldBe 1
-    }
-
-    "work for multiple types" in {
-      execute {
-        search("*").types("tokyo", "paris") limit 5 rawQuery {
-          """{ "term": { "landmark": "tower" } }"""
-        }
-      }.await.totalHits shouldBe 2
     }
   }
 }

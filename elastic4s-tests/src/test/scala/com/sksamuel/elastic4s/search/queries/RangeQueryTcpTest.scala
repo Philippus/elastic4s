@@ -4,14 +4,15 @@ import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
 import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+
+  deleteIndex("rangequerytcptest")
 
   client.execute {
     createIndex("rangequerytcptest").mappings(
       mapping("pieces").fields(
-        textField("name").fielddata(true)
-      ),
-      mapping("openings").fields(
         textField("name").fielddata(true)
       )
     )

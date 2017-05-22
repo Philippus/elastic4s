@@ -10,8 +10,8 @@ class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl with Class
   client.execute {
     createIndex("settings_test").mappings(
       mapping("r").as(
-        stringField("a") stored true analyzer WhitespaceAnalyzer,
-        stringField("b")
+        textField("a") stored true analyzer WhitespaceAnalyzer,
+        longField("b")
       )
     )
   }.await

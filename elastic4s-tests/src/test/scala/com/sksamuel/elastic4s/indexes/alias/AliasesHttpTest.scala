@@ -6,7 +6,12 @@ import com.sksamuel.elastic4s.http.index.alias.Alias
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class AliasesHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+
+  removeIndex("beaches")
+  removeIndex("mountains")
 
   addIndex("beaches")
   addIndex("mountains")
@@ -48,6 +53,14 @@ class AliasesHttpTest extends WordSpec with Matchers with ClassloaderLocalNodePr
       http.execute {
         getAliases()
       }.await.toSet shouldBe Set(Alias("mountains", Vector("landscapes")), Alias("beaches", Nil))
+    }
+  }
+
+  private def removeIndex(name: String): Unit = {
+    Try {
+      http.execute {
+        deleteIndex(name)
+      }.await
     }
   }
 
