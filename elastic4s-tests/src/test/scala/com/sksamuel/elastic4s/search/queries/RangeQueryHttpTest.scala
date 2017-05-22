@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar, HttpElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
 import org.scalatest.WordSpec
 
 class RangeQueryHttpTest
@@ -16,9 +15,6 @@ class RangeQueryHttpTest
   http.execute {
     createIndex("rangequeryhttptest").mappings(
       mapping("pieces").fields(
-        textField("name").fielddata(true)
-      ),
-      mapping("openings").fields(
         textField("name").fielddata(true)
       )
     )

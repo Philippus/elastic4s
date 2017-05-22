@@ -11,6 +11,7 @@ import scala.util.Try
 class MappingHttpTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
 
   Try {
+
     http.execute {
       deleteIndex("index")
     }.await
@@ -21,10 +22,6 @@ class MappingHttpTest extends WordSpec with ClassloaderLocalNodeProvider with Ma
       mapping("mapping1") as Seq(
         textField("a") stored true analyzer WhitespaceAnalyzer,
         keywordField("b") normalizer "my_normalizer"
-      ),
-      mapping("mapping2") as Seq(
-        textField("p"),
-        keywordField("q")
       )
     ) analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -49,12 +46,6 @@ class MappingHttpTest extends WordSpec with ClassloaderLocalNodeProvider with Ma
       val b = properties("b").asInstanceOf[Map[String, Any]]
       b("type") shouldBe "keyword"
       b("normalizer") shouldBe "my_normalizer"
-    }
-    "support all mappings for an index" in {
-      val mappings = http.execute {
-        getMapping("index")
-      }.await
-      mappings.find(_.index == "index").get.mappings.keySet shouldBe Set("mapping1", "mapping2")
     }
   }
 }

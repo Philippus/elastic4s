@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.explain
 
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import org.apache.http.entity.StringEntity
+import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
@@ -22,7 +22,7 @@ trait ExplainImplicits {
       request.lenient.map(_.toString).foreach(params.put("lenient", _))
 
       val body = ExplainBodyFn(request).string()
-      val entity = new StringEntity(body)
+      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       client.async("GET", endpoint, params.toMap, entity, ResponseHandler.failure404)
     }

@@ -6,6 +6,5 @@
                 "precision_threshold": 40000
             }
         }
-    },
-    "ext": {}
+    }
 }

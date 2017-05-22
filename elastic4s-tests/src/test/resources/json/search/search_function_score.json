@@ -1,75 +1,74 @@
 {
-  "query": {
-    "function_score": {
-      "query": {
-        "simple_query_string": {
-          "query": "coldplay",
-          "flags": -1,
-          "default_operator": "or",
-          "lenient": false,
-          "analyze_wildcard": false,
-          "boost": 1.0
-        }
-      },
-      "functions": [
-        {
-          "filter": {
-            "match_all": {
-              "boost": 1.0
-            }
-          },
-          "weight": 1.2,
-          "random_score": {
-            "seed": 1234
-          }
-        },
-        {
-          "filter": {
-            "match_all": {
-              "boost": 1.0
-            }
-          },
-          "weight": 0.5,
-          "script_score": {
-            "script": {
-              "inline": "some script here",
-              "lang": "painless"
-            }
-          }
-        },
-        {
-          "filter": {
-            "match_all": {
-              "boost": 1.0
-            }
-          },
-          "gauss": {
-            "field1": {
-              "origin": "1m",
-              "scale": "2m",
-              "decay": 0.5
+    "query": {
+        "function_score": {
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay",
+                    "flags": -1,
+                    "default_operator": "or",
+                    "analyze_wildcard": false,
+                    "boost": 1.0
+                }
             },
-            "multi_value_mode": "MEDIAN"
-          }
-        },
-        {
-          "filter": {
-            "match_all": {
-              "boost": 1.0
-            }
-          },
-          "field_value_factor": {
-            "field": "field2",
-            "factor": 1.2,
-            "modifier": "none"
-          }
+            "functions": [
+                {
+                    "filter": {
+                        "match_all": {
+                            "boost": 1.0
+                        }
+                    },
+                    "weight": 1.2,
+                    "random_score": {
+                        "seed": 1234
+                    }
+                },
+                {
+                    "filter": {
+                        "match_all": {
+                            "boost": 1.0
+                        }
+                    },
+                    "weight": 0.5,
+                    "script_score": {
+                        "script": {
+                            "inline": "some script here",
+                            "lang": "painless"
+                        }
+                    }
+                },
+                {
+                    "filter": {
+                        "match_all": {
+                            "boost": 1.0
+                        }
+                    },
+                    "gauss": {
+                        "field1": {
+                            "origin": "1m",
+                            "scale": "2m",
+                            "decay": 0.5
+                        },
+                        "multi_value_mode": "MEDIAN"
+                    }
+                },
+                {
+                    "filter": {
+                        "match_all": {
+                            "boost": 1.0
+                        }
+                    },
+                    "field_value_factor": {
+                        "field": "field2",
+                        "factor": 1.2,
+                        "modifier": "none"
+                    }
+                }
+            ],
+            "score_mode": "multiply",
+            "boost_mode": "max",
+            "max_boost": 1.9,
+            "min_score": 1.2,
+            "boost": 1.4
         }
-      ],
-      "score_mode": "multiply",
-      "boost_mode": "max",
-      "max_boost": 3.4028235E38,
-      "min_score": 1.2,
-      "boost": 1.9
     }
-  }
 }

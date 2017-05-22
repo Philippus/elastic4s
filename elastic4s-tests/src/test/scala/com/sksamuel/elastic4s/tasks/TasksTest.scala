@@ -12,7 +12,7 @@ class TasksTest extends FlatSpec with ClassloaderLocalNodeProvider with Matchers
       listTasks()
     }.await
 
-    resp.nodes.head._2.host shouldBe "local"
+    resp.nodes.head._2.host shouldBe "127.0.0.1"
     resp.nodes.head._2.roles shouldBe Seq("master", "data", "ingest")
     resp.nodes.head._2.tasks.values.forall(_.startTime.toMillis > 0) shouldBe true
     resp.nodes.head._2.tasks.values.forall(_.runningTime.toMillis > 0) shouldBe true

@@ -4,12 +4,11 @@
             "terms": {
                 "field": "tags",
                 "size": 3,
-                "shard_size": -1,
                 "min_doc_count": 1,
                 "shard_min_doc_count": 0,
                 "show_term_doc_count_error": false,
                 "order": {
-                    "_count": "asc"
+                    "count": "asc"
                 }
             },
             "aggregations": {
@@ -36,6 +35,5 @@
                 }
             }
         }
-    },
-    "ext": {}
+    }
 }

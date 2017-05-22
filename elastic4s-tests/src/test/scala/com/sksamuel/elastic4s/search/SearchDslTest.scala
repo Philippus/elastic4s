@@ -112,7 +112,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_minscore.json")
   }
 
-  it should "generate json for an index boost" ignore {
+  it should "generate json for an index boost" in {
     val req = search("*") types("users", "tweets") query "coldplay" indexBoost("index1" -> 1.4, "index2" -> 1.3)
     req.show should matchJsonResource("/json/search/search_indexboost.json")
   }
@@ -530,7 +530,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_rescore.json")
   }
 
-  it should "generate correct json for function score query" ignore {
+  it should "generate correct json for function score query" in {
 
     val scorers = Seq(
       randomScore(1234).weight(1.2),
@@ -579,7 +579,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
   }
 
-  it should "generate correct json for range aggregation" ignore {
+  it should "generate correct json for range aggregation" in {
     val req = search("music") types "bands" aggs {
       rangeAggregation("range_agg") field "score" range(10.0, 15.0)
     }
@@ -631,18 +631,18 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_aggregations_filter.json")
   }
 
-  it should "generate correct json for terms aggregation" ignore {
+  it should "generate correct json for terms aggregation" in {
     val req = search("music") types "bands" aggs {
       termsAggregation("my_terms_agg") field "keyword" size 10 order TermsOrder("count", true)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
-  it should "generate correct json for top hits aggregation" ignore {
+  it should "generate correct json for top hits aggregation" in {
     val req = search("music") types "bands" aggs {
       termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count", true) subAggregation (
         topHitsAggregation("top_tag_hits") size 1 sortBy {
-          fieldSort("last_activity_date") order SortOrder.DESC
+          fieldSort("last_activity_date") order SortOrder.Desc
         } fetchSource(Array("title"), Array.empty)
         )
     }
@@ -658,14 +658,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geodistance aggregation" ignore {
     val req = search("music") types "bands" aggs {
-      geoDistanceAggregation("geo_agg") origin(45.0, 27.0) field "geo_point" geoDistance GeoDistance.ARC range(1.0, 1.0)
+      geoDistanceAggregation("geo_agg") origin(45.0, 27.0) field "geo_point" geoDistance GeoDistance.Arc range(1.0, 1.0)
     }
     req.show should matchJsonResource("/json/search/search_aggregations_geodistance.json")
   }
 
   it should "generate correct json for sub aggregation" ignore {
     val req = search("music") types "bands" aggs {
-      aggregation datehistogram "days" field "date" interval DateHistogramInterval.Day subAggregations(
+      dateHistogramAggregation("days") field "date" interval DateHistogramInterval.Day subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }
@@ -749,17 +749,17 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_aggregations_count.json")
   }
 
-  it should "generate correct json for cardinality aggregation" ignore {
+  it should "generate correct json for cardinality aggregation" in {
     val req = search("school") aggs {
       cardinalityAggregation("grades_cardinality") field "grade" precisionThreshold 40000
     }
     req.show should matchJsonResource("/json/search/search_aggregations_cardinality.json")
   }
 
-  it should "generate correct json for nested aggregation" ignore {
+  it should "generate correct json for nested aggregation" in {
     val req = search("music") aggs {
       nestedAggregation("nested_agg","nested_obj") subAggregations {
-        aggregation terms "my_nested_terms_agg" field "keyword"
+        termsAggregation("my_nested_terms_agg") field "keyword"
       }
     }
     req.show should matchJsonResource("/json/search/search_aggregations_nested.json")
@@ -781,7 +781,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       termSuggestion("my-suggestion-2") on "names" text "aqualuck by jethro toll" size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
       termSuggestion("my-suggestion-3") on "names" text "bountiful day by u22" maxInspections 3 stringDistance "levenstein",
       termSuggestion("my-suggestion-4") on "names" text "whatever some text" maxTermFreq 0.5 minWordLength 5 mode
-        SuggestMode.ALWAYS
+        SuggestMode.Always
     )
     req.show should matchJsonResource("/json/search/search_suggestions_multiple.json")
   }
@@ -830,7 +830,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_query_nested.json")
   }
 
-  it should "generate correct json for nested query with inner highlight" ignore {
+  it should "generate correct json for nested query with inner highlight" in {
     val req = search("music") query {
       nestedQuery("obj1") query {
         constantScoreQuery {
@@ -842,13 +842,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
   }
 
-  it should "generate correct json for nested query with inner-hits source modulation" ignore {
+  it should "generate correct json for nested query with inner-hits source modulation" in {
     val req = search("music") query {
       nestedQuery("obj1") query {
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode "avg" inner innerHits("obj1").fetchSource(new FetchSourceContext(true, Seq("incme").toArray, Seq("excme").toArray))
+      } scoreMode "avg" inner innerHits("obj1").fetchSource(FetchSourceContext(true, Seq("incme").toArray, Seq("excme").toArray))
     }
     req.show should matchJsonResource("/json/search/search_query_nested_inner_hits_source.json")
   }

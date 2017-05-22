@@ -21,6 +21,7 @@
             "boost": 1.0,
             "inner_hits": {
                 "name": "obj1",
+                "ignore_unmapped": false,
                 "from": 0,
                 "size": 3,
                 "version": false,
@@ -36,6 +37,5 @@
                 }
             }
         }
-    },
-    "ext": {}
+    }
 }

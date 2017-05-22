@@ -20,8 +20,7 @@ class CountTest extends FlatSpec with ElasticDsl with DualClientTests {
     execute {
       bulk(
         indexInto("london/landmarks").fields("name" -> "hampton court palace"),
-        indexInto("london/landmarks").fields("name" -> "tower of london"),
-        indexInto("london/pubs").fields("name" -> "blue bell")
+        indexInto("london/landmarks").fields("name" -> "tower of london")
       ).immediateRefresh()
     }.await
   }
@@ -30,7 +29,7 @@ class CountTest extends FlatSpec with ElasticDsl with DualClientTests {
     val resp = execute {
       search("london").size(0)
     }.await
-    assert(3 === resp.totalHits)
+    assert(2 === resp.totalHits)
   }
 
   it should "return the document count for the correct type" in {

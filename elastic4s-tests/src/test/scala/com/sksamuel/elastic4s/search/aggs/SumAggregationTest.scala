@@ -6,7 +6,7 @@ class SumAggregationTest extends AbstractAggregationTest {
     "should sum values for field" in {
 
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
+        search("aggregations/breakingbad") aggregations {
           sumAggregation("agg1").field("age")
         }
       }.await

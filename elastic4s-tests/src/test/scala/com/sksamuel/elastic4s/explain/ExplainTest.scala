@@ -6,9 +6,18 @@ import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, DualClientT
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("explain")
+      }.await
+    }
+
     execute {
       bulk(
         indexInto("explain/kings") fields ("name" -> "richard") id 4,
