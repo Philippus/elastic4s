@@ -5,10 +5,11 @@ import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, 
 import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.span._
-import com.sksamuel.elastic4s.http.search.queries.specialized.{MoreLikeThisBuilderFn, ScriptQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBodyFn, MoreLikeThisBuilderFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.json.XContentBuilder
+import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
@@ -58,5 +59,7 @@ object QueryBuilderFn {
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
+    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBodyFn(q)
+    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
   }
 }

@@ -9,6 +9,7 @@ object ScoreMode {
     case "total" => Total
     case "none" => None
     case "min" => Min
+    case "sum" => Sum
   }
 
   case object Avg extends ScoreMode
@@ -16,4 +17,5 @@ object ScoreMode {
   case object Total extends ScoreMode
   case object Min extends ScoreMode
   case object None extends ScoreMode
+  case object Sum extends ScoreMode
 }

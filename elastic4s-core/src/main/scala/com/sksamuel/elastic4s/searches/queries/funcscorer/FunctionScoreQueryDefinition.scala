@@ -8,7 +8,8 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
                                         maxBoost: Option[Double] = None,
                                         minScore: Option[Double] = None,
                                         scoreMode: Option[FunctionScoreQueryScoreMode] = None,
-                                        boostMode: Option[CombineFunction] = None) extends QueryDefinition {
+                                        boostMode: Option[CombineFunction] = None,
+                                        scriptScore: Option[ScriptScoreDefinition] = None) extends QueryDefinition {
 
   def boost(boost: Double): FunctionScoreQueryDefinition = copy(boost = Option(boost))
   def minScore(min: Double): FunctionScoreQueryDefinition = copy(minScore = Option(min))
@@ -19,6 +20,8 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
 
   def boostMode(mode: String): FunctionScoreQueryDefinition = boostMode(CombineFunction.valueOf(mode.toUpperCase))
   def boostMode(mode: CombineFunction): FunctionScoreQueryDefinition = copy(boostMode = Some(mode))
+
+  def scriptScore(script: ScriptScoreDefinition): FunctionScoreQueryDefinition = copy(scriptScore = Some(script))
 
   def query(query: QueryDefinition): FunctionScoreQueryDefinition = copy(query = Some(query))
 
