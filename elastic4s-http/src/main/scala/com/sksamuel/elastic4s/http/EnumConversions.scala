@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.VersionType
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, ScoreMode}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
-import com.sksamuel.elastic4s.searches.queries.geo.GeoValidationMethod.{Coerce, IgnoreMalformed}
+import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
@@ -50,6 +50,10 @@ object EnumConversions {
   def interval(interval: DateHistogramInterval): String = interval.interval
 
   def scoreMode(scoreMode: ScoreMode): String = scoreMode.toString.toLowerCase
+
+  def scoreMode(scoreMode: FunctionScoreQueryScoreMode): String = scoreMode.toString.toLowerCase
+
+  def boostMode(combineFunction: CombineFunction): String = combineFunction.toString.toLowerCase
 
   def geoExecType(execType: GeoExecType): String = execType.toString.toLowerCase
 

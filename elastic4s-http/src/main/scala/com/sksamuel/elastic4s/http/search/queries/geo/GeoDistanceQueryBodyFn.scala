@@ -8,7 +8,6 @@ object GeoDistanceQueryBodyFn {
 
   def apply(q: GeoDistanceQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
     builder.startObject("geo_distance")
     q.distance.foreach {
       case (value, unit) => builder.field("distance", unit.toMeters(value) + "m")
@@ -24,7 +23,6 @@ object GeoDistanceQueryBodyFn {
     q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
-    builder.endObject()
     builder.endObject()
     builder
   }
