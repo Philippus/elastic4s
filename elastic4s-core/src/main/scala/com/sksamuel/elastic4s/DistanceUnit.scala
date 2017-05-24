@@ -13,5 +13,5 @@ object DistanceUnit {
   case object Millimeters extends DistanceUnit { val meters  = 0.001}
   case object Centimeters extends DistanceUnit { val meters  = 0.01}
   case object Miles extends DistanceUnit { val meters  = 1609.344}
-  case object Meters extends DistanceUnit { val meters = 1}
+  case object Meters extends DistanceUnit { val meters = 1.0}
 }
