@@ -73,6 +73,8 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   // the location of the config folder for this node
   val pathConfig: Path = pathHome resolve "config"
 
+  val clusterName: String = settings.get("cluster.name")
+
   @deprecated("use tcp()", "6.0.0")
   def elastic4sclient(shutdownNodeOnClose: Boolean = true): TcpClient = tcp(shutdownNodeOnClose)
 

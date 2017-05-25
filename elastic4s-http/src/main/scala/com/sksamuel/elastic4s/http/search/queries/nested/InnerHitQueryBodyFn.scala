@@ -43,9 +43,12 @@ object InnerHitQueryBodyFn {
       builder.array("stored_fields", d.storedFieldNames.toArray)
     }
     if (d.highlights.nonEmpty) {
-      builder.rawField("highlight", HighlightFieldBuilderFn(d.highlights))
+      builder.startObject("highlight")
+      d.highlights.foreach { highlight =>
+        builder.rawField(highlight.field, HighlightFieldBuilderFn(highlight))
+      }
+      builder.endObject()
     }
     builder.endObject()
-    builder
   }
 }

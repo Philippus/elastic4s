@@ -41,7 +41,7 @@ object SearchBodyBuilderFn {
     request.trackScores.map(builder.field("track_scores", _))
 
     request.highlight.foreach { highlight =>
-      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields))
+      builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
 
     if (request.suggs.nonEmpty) {
@@ -109,6 +109,5 @@ object SearchBodyBuilderFn {
     }
 
     builder.endObject()
-    builder
   }
 }

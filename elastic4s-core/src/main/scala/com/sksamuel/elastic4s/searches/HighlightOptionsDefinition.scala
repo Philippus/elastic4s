@@ -8,6 +8,8 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
                                       useExplicitFieldOrder: Option[Boolean] = None,
                                       boundaryChars: Option[String] = None,
                                       boundaryMaxScan: Option[Int] = None,
+                                      boundaryScanner: Option[String] = None,
+                                      boundaryScannerLocale: Option[String] = None,
                                       fragmenter: Option[String] = None,
                                       fragmentSize: Option[Int] = None,
                                       forceSource: Option[Boolean] = None,
@@ -25,6 +27,8 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
 
   def boundaryChars(boundaryChars: String): HighlightOptionsDefinition = copy(boundaryChars = boundaryChars.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightOptionsDefinition = copy(boundaryMaxScan = boundaryMaxScan.some)
+  def boundaryScanner(boundaryScanner: String): HighlightOptionsDefinition = copy(boundaryScanner = boundaryScanner.some)
+  def boundaryScannerLocale(locale: String): HighlightOptionsDefinition = copy(boundaryScannerLocale = locale.some)
 
   def encoder(encoder: String): HighlightOptionsDefinition = copy(encoder = encoder.some)
   def tagsSchema(tagsSchema: String): HighlightOptionsDefinition = copy(tagsSchema = tagsSchema.some)

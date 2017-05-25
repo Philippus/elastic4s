@@ -8,6 +8,8 @@ import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.embedded.LocalNode
 import com.sksamuel.elastic4s.http.HttpClient
 
+import scala.util.Random
+
 // LocalNodeProvider provides helper methods to create a local (embedded) node
 trait LocalNodeProvider {
   // returns an embedded, started, node
@@ -27,7 +29,12 @@ trait ClassloaderLocalNodeProvider extends LocalNodeProvider {
 object ClassloaderLocalNodeProvider {
   private lazy val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
   private lazy val pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
-  lazy val node = LocalNode("classloader-node", pathHome.toAbsolutePath.toString)
+  val node: LocalNode = try {
+    LocalNode("classloader-node", pathHome.toAbsolutePath.toString)
+  } catch {
+    case t: Throwable => t.printStackTrace()
+      throw t
+  }
 }
 
 // implementation of LocalNodeProvider that uses a single
@@ -43,6 +50,10 @@ trait ClassLocalNodeProvider extends LocalNodeProvider {
   )
 }
 
+object ClassLocalNodeProvider {
+  val counter = new AtomicLong(1)
+}
+
 trait AlwaysNewLocalNodeProvider extends LocalNodeProvider {
 
   private def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
@@ -50,12 +61,8 @@ trait AlwaysNewLocalNodeProvider extends LocalNodeProvider {
 
   override def getNode: LocalNode = {
     LocalNode(
-      "node_" + ClassLocalNodeProvider.counter.getAndIncrement(),
+      "node_" + Random.nextInt(),
       pathHome.toAbsolutePath.toString
     )
   }
-}
-
-object ClassLocalNodeProvider {
-  val counter = new AtomicLong(1)
 }

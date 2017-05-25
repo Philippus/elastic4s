@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class HighlightTest extends WordSpec with Matchers with ElasticDsl with  DualClientTests {
+class HighlightTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
 

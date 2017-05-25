@@ -12,6 +12,8 @@ object HighlightBuilderFn {
     options.useExplicitFieldOrder.foreach(builder.useExplicitFieldOrder)
     options.boundaryChars.map(_.toCharArray).foreach(builder.boundaryChars)
     options.boundaryMaxScan.foreach(int => builder.boundaryMaxScan(int))
+    options.boundaryScanner.foreach(builder.boundaryScannerType)
+    options.boundaryScannerLocale.foreach(builder.boundaryScannerLocale)
     options.fragmenter.foreach(builder.fragmenter)
     options.fragmentSize.foreach(int => builder.fragmentSize(int))
     options.highlighterType.foreach(builder.highlighterType)
