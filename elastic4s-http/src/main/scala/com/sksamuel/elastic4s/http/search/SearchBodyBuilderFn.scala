@@ -46,6 +46,7 @@ object SearchBodyBuilderFn {
 
     if (request.suggs.nonEmpty) {
       builder.startObject("suggest")
+      request.globalSuggestionText.foreach(builder.field("text", _))
       request.suggs.foreach {
         case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
       }
