@@ -63,4 +63,4 @@ case class CompletionSuggestionDefinition(name: String,
   override def size(size: Int): CompletionSuggestionDefinition = copy(size = size.some)
 }
 
-case class CategoryContext(name: String, boost: Double = 0, prefix: Boolean = false)
+case class CategoryContext(name: String, boost: Double = 1, prefix: Boolean = false)
