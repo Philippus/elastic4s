@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.http.search
 
-import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
+import com.sksamuel.elastic4s.http.search.suggs.TermSuggestionBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
@@ -47,26 +47,7 @@ object SearchBodyBuilderFn {
     if (request.suggs.nonEmpty) {
       builder.startObject("suggest")
       request.suggs.foreach {
-        case term: TermSuggestionDefinition =>
-          builder.startObject(term.name)
-          term.text.foreach(builder.field("text", _))
-          builder.startObject("term")
-          builder.field("field", term.fieldname)
-          term.analyzer.foreach(builder.field("analyzer", _))
-          term.lowercaseTerms.foreach(builder.field("lowercase_terms", _))
-          term.maxEdits.foreach(builder.field("max_edits", _))
-          term.minWordLength.foreach(builder.field("min_word_length", _))
-          term.maxInspections.foreach(builder.field("max_inspections", _))
-          term.minDocFreq.foreach(builder.field("min_doc_freq", _))
-          term.maxTermFreq.foreach(builder.field("max_term_freq", _))
-          term.prefixLength.foreach(builder.field("prefix_length", _))
-          term.size.foreach(builder.field("size", _))
-          term.shardSize.foreach(builder.field("shard_size", _))
-          term.sort.map(EnumConversions.sortBy).foreach(builder.field("sort", _))
-          term.stringDistance.map(EnumConversions.stringDistance).foreach(builder.field("string_distance", _))
-          term.suggestMode.map(EnumConversions.suggestMode).foreach(builder.field("suggest_mode", _))
-          builder.endObject()
-          builder.endObject()
+        case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
       }
       builder.endObject()
     }
