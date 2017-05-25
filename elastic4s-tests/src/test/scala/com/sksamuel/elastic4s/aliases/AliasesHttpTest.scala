@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.indexes.alias
+package com.sksamuel.elastic4s.aliases
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.admin.{AliasExistsResponse, IndicesAliasResponse}

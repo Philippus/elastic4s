@@ -44,9 +44,11 @@ object InnerHitQueryBodyFn {
     }
     if (d.highlights.nonEmpty) {
       builder.startObject("highlight")
+      builder.startObject("fields")
       d.highlights.foreach { highlight =>
         builder.rawField(highlight.field, HighlightFieldBuilderFn(highlight))
       }
+      builder.endObject()
       builder.endObject()
     }
     builder.endObject()

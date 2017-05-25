@@ -1,10 +1,21 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.aliases
 
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class AliasesTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodeProvider with Matchers with com.sksamuel.elastic4s.http.ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("aliases")
+    }.await
+    http.execute {
+      deleteIndex("aliases_updated")
+    }.await
+  }
 
   http.execute(
     bulk(
@@ -68,7 +79,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodePr
 
   it should "be in query for alias on waterways" in {
     val resp = http.execute {
-      getAlias("english_waterways") on "waterways"
+      getAlias("english_waterways") on "aliases"
     }.await
 
     // compareAliasesForIndex(resp, "waterways", Set("english_waterways"))
@@ -76,7 +87,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodePr
 
   "moving_alias" should "move from 'waterways' to 'waterways_updated'" in {
     val resp = http.execute {
-      getAlias("moving_alias") on("aliases", "waterways_updated")
+      getAlias("moving_alias") on("aliases", "aliases_updated")
     }.await
 
     //    compareAliasesForIndex(resp, "waterways", Set("moving_alias"))

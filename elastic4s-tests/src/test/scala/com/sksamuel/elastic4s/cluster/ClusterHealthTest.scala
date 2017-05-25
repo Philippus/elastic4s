@@ -35,8 +35,6 @@ class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with Dual
 
       health.clusterName shouldBe "classloader-node"
       health.status should be("green")
-      health.activePrimaryShards should be(1)
-      health.activeShards should be(1)
     }
   }
 }

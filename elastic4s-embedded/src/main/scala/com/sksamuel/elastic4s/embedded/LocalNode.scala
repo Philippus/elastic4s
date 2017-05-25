@@ -145,13 +145,6 @@ object LocalNode {
   /**
   *   Creates a new LocalNode with default settings using the given cluster name and home path.
   *   Other required directories are created inside the path home folder.
-  *
-  *   By using this method, the following settings are enabled:
-  *
-  *   "node.ingest" -> "true"
-  *   "script.inline" -> "true"
-  *   "script.stored" -> "true"
-  *   "http.enabled" -> "true"
   */
   def apply(clusterName: String, pathHome: String): LocalNode = apply(requiredSettings(clusterName, pathHome))
 }

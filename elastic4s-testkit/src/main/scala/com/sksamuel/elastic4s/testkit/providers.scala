@@ -29,10 +29,12 @@ trait ClassloaderLocalNodeProvider extends LocalNodeProvider {
 object ClassloaderLocalNodeProvider {
   private lazy val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
   private lazy val pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
-  val node: LocalNode = try {
+  lazy val node: LocalNode = try {
     LocalNode("classloader-node", pathHome.toAbsolutePath.toString)
   } catch {
-    case t: Throwable => t.printStackTrace()
+    case t: Throwable =>
+      t.printStackTrace()
+      println(getClass.getClassLoader)
       throw t
   }
 }
