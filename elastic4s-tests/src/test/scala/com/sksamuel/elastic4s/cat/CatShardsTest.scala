@@ -5,7 +5,18 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class CatShardsTest extends FlatSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("catshards1")
+    }.await
+    http.execute {
+      deleteIndex("catshards2")
+    }.await
+  }
 
   http.execute {
     bulk(

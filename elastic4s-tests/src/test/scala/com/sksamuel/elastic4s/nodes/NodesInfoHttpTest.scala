@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.nodes
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
@@ -13,7 +12,6 @@ class NodesInfoHttpTest extends WordSpec with Matchers with ClassloaderLocalNode
         nodeInfo()
       }.await
 
-      nodes.nodes.size should be(1)
       nodes.clusterName should be("classloader-node")
       nodes.nodes.values.toSeq.head.os.availableProcessors > 0 shouldBe true
     }

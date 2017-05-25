@@ -2,18 +2,26 @@ package com.sksamuel.elastic4s.analyzers
 
 import java.io.PrintWriter
 
-import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
+
+import scala.util.Try
 
 class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
 
   // setup the stop file list
   node.pathConfig.toFile.mkdirs()
-  val newStopListFile = (node.pathConfig resolve "stoplist.txt").toFile
-  val writer = new PrintWriter(newStopListFile)
+  private val newStopListFile = (node.pathConfig resolve "stoplist.txt").toFile
+  private val writer = new PrintWriter(newStopListFile)
   writer.write("a\nan\nthe\nis\nand\nwhich") // writing the stop words to the file
   writer.close()
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex("analyzer")
+    }.await
+  }
 
   client.execute {
     createIndex("analyzer").mappings {
@@ -87,7 +95,7 @@ class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar with Classlo
   }.await
 
   client.execute {
-    index into "analyzer" / "test" fields(
+    indexInto("analyzer" / "test") fields(
       "keyword" -> "light as a feather",
       "snowball" -> "flying in the skies",
       "whitespace" -> "and and and qwerty uiop",

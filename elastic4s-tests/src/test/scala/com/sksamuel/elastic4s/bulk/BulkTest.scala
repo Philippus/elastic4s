@@ -6,9 +6,18 @@ import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, DualClientTests}
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests with ClassloaderLocalNodeProvider {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("elements")
+      }.await
+    }
+
     execute {
       createIndex(indexname).mappings {
         mapping("elements").fields(

@@ -9,18 +9,18 @@ class NormalizerTest extends FreeSpec with Matchers with ElasticSugar with Class
     createIndex("normalizer").mappings {
       mapping("test") fields (
         keywordField("keywordLowercase") normalizer "lowercaseNorm",
-        keywordField("keywordUppercaseMappingChar") normalizer "uppercaseMappingCharNorm"
+        keywordField("keywordUppercase") normalizer "uppercaseNorm"
         )
     } normalizers(
       customNormalizer("lowercaseNorm", LowercaseTokenFilter),
-      customNormalizer("uppercaseMappingCharNorm", UppercaseTokenFilter, PatternReplaceCharFilter("xtoy", "x", "y"))
+      customNormalizer("uppercaseNorm", UppercaseTokenFilter)
     )
   }.await
 
   client.execute {
     indexInto("normalizer" / "test").fields(
       "keywordLowercase" -> "VeryMuchMixedCASe",
-      "keywordUppercaseMappingChar" -> "Replace xs with ys"
+      "keywordUppercase" -> "I want to be UPPER"
       )
   }.await
 
@@ -38,12 +38,13 @@ class NormalizerTest extends FreeSpec with Matchers with ElasticSugar with Class
       }.await.totalHits shouldBe 1
     }
 
-    "should apply a token filter and a character filter" in {
+    // todo add a test back in once (if?) elasticsearch 6.0 supports char filters again
+    "should apply a token filter and a character filter" ignore {
       client.execute {
-        search("normalizer" / "test") query termQuery("keywordUppercaseMappingChar" -> "REPLACE XS WITH YS")
+        search("normalizer" / "test") query termQuery("keywordUppercase" -> "REPLACE XS WITH YS")
       }.await.totalHits shouldBe 0
       client.execute {
-        search("normalizer" / "test") query termQuery("keywordUppercaseMappingChar" -> "REPLACE YS WITH YS")
+        search("normalizer" / "test") query termQuery("keywordUppercase" -> "REPLACE YS WITH YS")
       }.await.totalHits shouldBe 1
     }
   }

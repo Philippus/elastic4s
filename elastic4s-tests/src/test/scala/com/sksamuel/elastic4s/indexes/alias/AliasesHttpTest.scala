@@ -50,9 +50,12 @@ class AliasesHttpTest extends WordSpec with Matchers with ClassloaderLocalNodePr
 
   "get aliases" should {
     "return all aliases" in {
-      http.execute {
+      val aliases = http.execute {
         getAliases()
-      }.await.toSet shouldBe Set(Alias("mountains", Vector("landscapes")), Alias("beaches", Nil))
+      }.await.toSet
+
+      aliases.contains(Alias("mountains", Vector("landscapes"))) shouldBe true
+      aliases.contains(Alias("beaches", Nil)) shouldBe true
     }
   }
 

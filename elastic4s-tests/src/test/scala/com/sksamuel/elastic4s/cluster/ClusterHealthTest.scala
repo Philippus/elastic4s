@@ -11,6 +11,7 @@ import scala.util.Try
 class ClusterHealthTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
+
     Try {
       execute {
         deleteIndex("clusterhealth")
