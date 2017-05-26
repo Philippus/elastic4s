@@ -8,6 +8,8 @@ import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
 
+import scala.util.Try
+
 class ScrollPublisherVerificationTest
   extends PublisherVerification[RichSearchHit](
     new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
@@ -19,6 +21,12 @@ class ScrollPublisherVerificationTest
   implicit val system = ActorSystem()
 
   ensureIndexExists("scrollpubver")
+
+  Try {
+    client.execute {
+      deleteIndex("scrollpubver")
+    }.await
+  }
 
   client.execute {
     bulk(

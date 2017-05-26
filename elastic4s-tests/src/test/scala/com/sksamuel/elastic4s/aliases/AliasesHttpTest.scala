@@ -37,14 +37,14 @@ class AliasesHttpTest extends WordSpec with Matchers with ClassloaderLocalNodePr
 
       http.execute {
         getAlias("landscapes")
-      }.await shouldBe Map("mountains" -> Map("aliases" -> Map("landscapes" -> Map())))
+      }.await.get shouldBe Alias("mountains", List("landscapes"))
 
     }
 
     "return empty response when not found" in {
       http.execute {
         getAlias("does_not_exist")
-      }.await shouldBe Map()
+      }.await shouldBe None
     }
   }
 

@@ -4,12 +4,10 @@ import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasDefinitio
 import com.sksamuel.elastic4s.http.index.admin.IndicesAliasResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.elasticsearch.client.{Response, ResponseException, RestClient}
 
 import scala.concurrent.Future
 import scala.util.Try
-
-case class GetAlias(index: String, alias: String)
 
 trait IndexAliasImplicits {
 
@@ -25,25 +23,31 @@ trait IndexAliasImplicits {
     }
   }
 
-  implicit object GetAliasExecutable extends HttpExecutable[GetAliasDefinition, GetAlias] {
+  implicit object GetAliasExecutable extends HttpExecutable[GetAliasDefinition, Option[Alias]] {
     override def execute(client: RestClient,
-                         request: GetAliasDefinition): Future[GetAlias] = {
+                         request: GetAliasDefinition): Future[Option[Alias]] = {
 
       val indexPathElement = if (request.indices.isEmpty) "" else s"/${request.indices.mkString(",")}"
       val endpoint = s"$indexPathElement/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore => Map("ignore_unavailable" -> ignore) }
 
-      //      client.async("GET", endpoint, params, new ResponseHandler[GetAlias] {
-      //        override def onError(ex: Exception): Try[Map[String, Nothing]] = ex match {
-      //          case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 => Try(Map.empty)
-      //          case e => Failure(e)
-      //        }
-      //        override def onResponse(response: Response): Try[GetAlias] = Try {
-      //          ResponseHandler.fromEntity[GetAlias](response.getEntity)
-      //        }
-      //      })
+      client.async("GET", endpoint, params, new ResponseHandler[Option[Alias]] {
 
-      client.async("GET", endpoint, params, ResponseHandler.default)
+        import scala.collection.JavaConverters._
+
+        override def onError(e: Exception): Try[Option[Alias]] = e match {
+          case r: ResponseException if r.getResponse.getStatusLine.getStatusCode == 404 => Try(None)
+          case _ => super.onError(e)
+        }
+
+        override def onResponse(response: Response): Try[Option[Alias]] = Try {
+          val root = ResponseHandler.json(response.getEntity)
+          root.fields.asScala.toVector.headOption.map { entry =>
+            val aliases = entry.getValue.findValue("aliases").fieldNames().asScala.toList
+            Alias(entry.getKey, aliases)
+          }
+        }
+      })
     }
   }
 

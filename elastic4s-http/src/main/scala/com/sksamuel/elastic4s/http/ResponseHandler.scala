@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.http
 
 import java.nio.charset.Charset
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpEntity
@@ -19,6 +20,8 @@ trait ResponseHandler[U] {
 // the response body is converted into a string using a codec derived from the content encoding header
 // if the content encoding header is null, then UTF-8 is assumed
 object ResponseHandler extends Logging {
+
+  def json(entity: HttpEntity): JsonNode = fromEntity[JsonNode](entity)
 
   def fromEntity[U: Manifest](entity: HttpEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
