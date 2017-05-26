@@ -211,7 +211,7 @@ object ResponseConverterImplicits {
       response.`type`,
       response.version,
       response.exists,
-      response.original.getFields.asScala.toMap.mapValues(_.getValues.asScala),
+      Option(response.original.getFields).map(_.asScala.toMap).getOrElse(Map.empty).mapValues(_.getValues.asScala),
       response.sourceAsMap.asScalaNested
     )
   }
