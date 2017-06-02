@@ -30,8 +30,10 @@ lazy val root = Project("elastic4s", file("."))
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .settings(libraryDependencies ++= Seq(
-    "org.locationtech.spatial4j"    % "spatial4j"     % "0.6",
-    "com.vividsolutions"            % "jts"           % "1.13",
+    "joda-time"                     % "joda-time"               % "2.9.9",
+    "org.locationtech.spatial4j"    % "spatial4j"               % "0.6",
+    "org.apache.lucene"             % "lucene-join"             % LuceneVersion,
+    "com.vividsolutions"            % "jts"                     % "1.13",
     "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
     "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
     "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library")
@@ -41,28 +43,11 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
       "io.netty"                              % "netty-all"                 % "4.1.10.Final",
-      "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-grouping"           % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-highlighter"        % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-memory"             % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-misc"               % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-queries"            % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-queryparser"        % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-sandbox"            % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-spatial"            % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-spatial-extras"     % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
-      "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
       "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
-      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
       "com.carrotsearch"                      % "hppc"                      % "0.7.1",
-      "joda-time"                             % "joda-time"                 % "2.9.9",
       "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,
       "com.tdunning"                          % "t-digest"                  % "3.1"
     ))
