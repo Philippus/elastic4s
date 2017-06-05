@@ -161,13 +161,13 @@ trait QueryApi {
       likeItems(first +: rest)
 
     def likeItems(items: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
-      likeDocs(items.map { item => DocumentRef(item.index, item.`type`, item.id) })
+      MoreLikeThisQueryDefinition(fields).copy(likeDocs = items.toSeq)
 
     def likeDocs(first: DocumentRef,
                  rest: DocumentRef*): MoreLikeThisQueryDefinition = likeDocs(first +: rest)
 
     def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
-      MoreLikeThisQueryDefinition(fields).copy(likeDocs = docs.toSeq)
+      likeItems(docs.map { d => MoreLikeThisItem(d) })
 
     def artificialDocs(first: ArtificialDocument,
                        rest: ArtificialDocument*): MoreLikeThisQueryDefinition = artificialDocs(first +: rest)
