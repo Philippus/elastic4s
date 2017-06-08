@@ -17,9 +17,10 @@ object MoreLikeThisBuilderFn {
     q.likeTexts.foreach(text => builder.value(text))
     q.likeDocs.foreach { doc =>
       builder.startObject()
-      builder.field("_index", doc.index)
-      builder.field("_type", doc.`type`)
-      builder.field("_id", doc.id)
+      builder.field("_index", doc.ref.index)
+      builder.field("_type", doc.ref.`type`)
+      builder.field("_id", doc.ref.id)
+      doc.routing.foreach { r ⇒ builder.field("_routing", r) }
       builder.endObject()
     }
     q.artificialDocs.foreach { doc =>
@@ -27,6 +28,7 @@ object MoreLikeThisBuilderFn {
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
       builder.rawField("doc", doc.doc)
+      doc.routing.foreach { r ⇒ builder.field("_routing", r) }
       builder.endObject()
     }
     builder.endArray()
@@ -36,9 +38,10 @@ object MoreLikeThisBuilderFn {
       q.unlikeTexts.foreach(text => builder.value(text))
       q.unlikeDocs.foreach { doc =>
         builder.startObject()
-        builder.field("_index", doc.index)
-        builder.field("_type", doc.`type`)
-        builder.field("_id", doc.id)
+        builder.field("_index", doc.ref.index)
+        builder.field("_type", doc.ref.`type`)
+        builder.field("_id", doc.ref.id)
+        doc.routing.foreach { r ⇒ builder.field("_routing", r) }
         builder.endObject()
       }
       builder.endArray()

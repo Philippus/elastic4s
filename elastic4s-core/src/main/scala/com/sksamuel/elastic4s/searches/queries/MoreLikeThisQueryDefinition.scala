@@ -2,11 +2,19 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DocumentRef
 
-case class ArtificialDocument(index: String, `type`: String, doc: String)
+case class MoreLikeThisItem(ref: DocumentRef, routing: Option[String] = None)
+object MoreLikeThisItem {
+  def apply(index: String, `type`: String, id: String): MoreLikeThisItem =
+    MoreLikeThisItem(DocumentRef(index, `type`, id))
+  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem =
+    MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
+}
+
+case class ArtificialDocument(index: String, `type`: String, doc: String, routing: Option[String] = None)
 
 case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        likeTexts: Seq[String] = Nil,
-                                       likeDocs: Seq[DocumentRef] = Nil,
+                                       likeDocs: Seq[MoreLikeThisItem] = Nil,
                                        analyzer: Option[String] = None,
                                        artificialDocs: Seq[ArtificialDocument] = Nil,
                                        boost: Option[Double] = None,
@@ -21,7 +29,7 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
                                        maxQueryTerms: Option[Int] = None,
                                        minShouldMatch: Option[String] = None,
                                        unlikeTexts: Seq[String] = Nil,
-                                       unlikeDocs: Seq[DocumentRef] = Nil,
+                                       unlikeDocs: Seq[MoreLikeThisItem] = Nil,
                                        stopWords: Seq[String] = Nil,
                                        queryName: Option[String] = None) extends QueryDefinition {
 
@@ -36,14 +44,17 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
   def unlikeText(first: String, rest: String*): MoreLikeThisQueryDefinition = unlikeText(first +: rest)
   def unlikeText(unlikes: Iterable[String]): MoreLikeThisQueryDefinition = copy(unlikeTexts = unlikeTexts ++ unlikes)
 
-  def unlikeItems(first: DocumentRef, rest: DocumentRef*): MoreLikeThisQueryDefinition =
+  def unlikeItems(first: MoreLikeThisItem, rest: MoreLikeThisItem*): MoreLikeThisQueryDefinition =
     unlikeItems(first +: rest)
 
-  def unlikeItems(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
-    unlikeDocs(unlikes.map { item => DocumentRef(item.index, item.`type`, item.id) })
+  def unlikeItems(unlikes: Iterable[MoreLikeThisItem]): MoreLikeThisQueryDefinition =
+    copy(unlikeDocs = unlikeDocs ++ unlikes)
+
+  def unlikeDocs(first: DocumentRef, rest: DocumentRef*): MoreLikeThisQueryDefinition =
+    unlikeDocs(first +: rest)
 
   def unlikeDocs(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
-    copy(unlikeDocs = unlikeDocs ++ unlikes)
+    unlikeItems(unlikes.map { d => MoreLikeThisItem(d) })
 
   def include(inc: Boolean): MoreLikeThisQueryDefinition = copy(include = Some(inc))
 
