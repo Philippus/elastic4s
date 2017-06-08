@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.searches.queries.{ArtificialDocument, MoreLikeThisItem}
 import com.sksamuel.elastic4s.testkit.ElasticSugar
@@ -44,11 +43,11 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
     }
 
     "find matches based on doc refs" in {
-      val ref = DocumentRef("drinks", "drink", "4")
+      val item = MoreLikeThisItem("drinks", "drink", "4")
       val resp1 = client.execute {
         search("drinks" / "drink").query {
           moreLikeThisQuery("text")
-            .likeItems(MoreLikeThisItem(ref, Some("2"))) minTermFreq 1 minDocFreq 1
+            .likeItems(item.copy(routing = Some("2"))) minTermFreq 1 minDocFreq 1
         }
       }.await
       resp1.hits.map(_.id).toSet shouldBe Set()
@@ -56,7 +55,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
       val resp2 = client.execute {
         search("drinks" / "drink").query {
           moreLikeThisQuery("text")
-            .likeItems(MoreLikeThisItem(ref, Some("1"))) minTermFreq 1 minDocFreq 1
+            .likeItems(item.copy(routing = Some("1"))) minTermFreq 1 minDocFreq 1
         }
       }.await
       resp2.hits.map(_.id).toSet shouldBe Set("8")

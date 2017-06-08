@@ -167,7 +167,7 @@ trait QueryApi {
                  rest: DocumentRef*): MoreLikeThisQueryDefinition = likeDocs(first +: rest)
 
     def likeDocs(docs: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
-      likeItems(docs.map { d => MoreLikeThisItem(d) })
+      likeItems(docs.map { d => MoreLikeThisItem(d.index, d.`type`, d.id) })
 
     def artificialDocs(first: ArtificialDocument,
                        rest: ArtificialDocument*): MoreLikeThisQueryDefinition = artificialDocs(first +: rest)

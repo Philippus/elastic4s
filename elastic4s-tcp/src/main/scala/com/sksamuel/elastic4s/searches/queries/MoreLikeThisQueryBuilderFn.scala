@@ -8,7 +8,7 @@ object MoreLikeThisQueryBuilderFn {
   def apply(q: MoreLikeThisQueryDefinition): MoreLikeThisQueryBuilder = {
 
     val docs = q.likeDocs.map { item =>
-      new MoreLikeThisQueryBuilder.Item(item.ref.index, item.ref.`type`, item.ref.id).routing(item.routing.orNull)
+      new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id).routing(item.routing.orNull)
     } ++ q.artificialDocs.map { doc =>
 
       val parser = XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
@@ -41,7 +41,7 @@ object MoreLikeThisQueryBuilderFn {
     q.queryName.foreach(builder.queryName)
 
     builder.unlike(q.unlikeDocs.toArray.map { item =>
-      new MoreLikeThisQueryBuilder.Item(item.ref.index, item.ref.`type`, item.ref.id).routing(item.routing.orNull)
+      new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id).routing(item.routing.orNull)
     })
     builder.unlike(q.unlikeTexts.toArray)
     builder.stopWords(q.stopWords: _*)

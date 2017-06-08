@@ -2,13 +2,7 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.DocumentRef
 
-case class MoreLikeThisItem(ref: DocumentRef, routing: Option[String] = None)
-object MoreLikeThisItem {
-  def apply(index: String, `type`: String, id: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id))
-  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
-}
+case class MoreLikeThisItem(index: String, `type`: String, id: String, routing: Option[String] = None)
 
 case class ArtificialDocument(index: String, `type`: String, doc: String, routing: Option[String] = None)
 
@@ -51,7 +45,7 @@ case class MoreLikeThisQueryDefinition(fields: Seq[String],
     copy(unlikeDocs = unlikeDocs ++ unlikes)
 
   def unlikeDocs(unlikes: Iterable[DocumentRef]): MoreLikeThisQueryDefinition =
-    unlikeItems(unlikes.map { d => MoreLikeThisItem(d) })
+    unlikeItems(unlikes.map { d => MoreLikeThisItem(d.index, d.`type`, d.id) })
 
   def include(inc: Boolean): MoreLikeThisQueryDefinition = copy(include = Some(inc))
 
