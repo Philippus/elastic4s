@@ -21,6 +21,7 @@ object MoreLikeThisBuilderFn {
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
       builder.field("_id", doc.id)
+      doc.routing.foreach { r ⇒ builder.field("_routing", r) }
       builder.endObject()
     }
     q.artificialDocs.foreach { doc =>
@@ -28,6 +29,7 @@ object MoreLikeThisBuilderFn {
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
       builder.rawField("doc", new BytesArray(doc.doc))
+      doc.routing.foreach { r ⇒ builder.field("_routing", r) }
       builder.endObject()
     }
     builder.endArray()
@@ -40,6 +42,7 @@ object MoreLikeThisBuilderFn {
         builder.field("_index", doc.index)
         builder.field("_type", doc.`type`)
         builder.field("_id", doc.id)
+        doc.routing.foreach { r ⇒ builder.field("_routing", r) }
         builder.endObject()
       }
       builder.endArray()

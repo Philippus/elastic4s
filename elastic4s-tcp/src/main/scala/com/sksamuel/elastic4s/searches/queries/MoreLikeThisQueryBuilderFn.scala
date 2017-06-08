@@ -7,15 +7,16 @@ object MoreLikeThisQueryBuilderFn {
 
   def apply(q: MoreLikeThisQueryDefinition): MoreLikeThisQueryBuilder = {
 
-    val docs = q.likeDocs.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) } ++
-      q.artificialDocs.map { doc =>
+    val docs = q.likeDocs.map { item =>
+      new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id).routing(item.routing.orNull)
+    } ++ q.artificialDocs.map { doc =>
 
-        val parser = XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
-        parser.close()
-        val builder = XContentFactory.jsonBuilder().copyCurrentStructure(parser)
+      val parser = XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
+      parser.close()
+      val builder = XContentFactory.jsonBuilder().copyCurrentStructure(parser)
 
-        new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, builder)
-      }
+      new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, builder).routing(doc.routing.orNull)
+    }
 
     println(docs)
 
@@ -39,7 +40,9 @@ object MoreLikeThisQueryBuilderFn {
     q.minWordLength.foreach(builder.minWordLength)
     q.queryName.foreach(builder.queryName)
 
-    builder.unlike(q.unlikeDocs.toArray.map { doc => new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, doc.id) })
+    builder.unlike(q.unlikeDocs.toArray.map { item =>
+      new MoreLikeThisQueryBuilder.Item(item.index, item.`type`, item.id).routing(item.routing.orNull)
+    })
     builder.unlike(q.unlikeTexts.toArray)
     builder.stopWords(q.stopWords: _*)
     builder
