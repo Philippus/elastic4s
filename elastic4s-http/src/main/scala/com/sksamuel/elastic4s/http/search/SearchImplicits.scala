@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -61,6 +61,9 @@ trait SearchImplicits {
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.version.map(_.toString).foreach(params.put("version", _))
+      request.indicesOptions.foreach { opts =>
+        IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
+      }
 
       val builder = SearchBodyBuilderFn(request)
       logger.debug("Executing search request: " + builder.string)
