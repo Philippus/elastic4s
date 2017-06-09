@@ -857,6 +857,16 @@ folder. There is no need to configure anything externally.
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
 * The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
 
+###### 5.4.4
+
+* TCP Client was not setting types correctly for delete by query #942 
+* HTTP Update was not setting script correctly #930
+* Elasticsearch Client URI now supports SSL for the HTTP client #932
+* IndicesOptions was not being set on search correctly for HTTP #943
+* More like this query now supports routing on items
+* Fixed ScoreMode.TOTAL serialization for HTTP #937
+* Upgraded to Elastic 5.4.1 to fix #939
+
 ###### 5.4.3
 
 * Can extract aggregations as a JSON string
