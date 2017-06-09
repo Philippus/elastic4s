@@ -17,7 +17,7 @@ object UpdateContentBuilder {
     }
 
     request.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", ScriptBuilderFn(script).bytes, XContentType.JSON)
     }
 
     if (request.documentFields.nonEmpty) {
