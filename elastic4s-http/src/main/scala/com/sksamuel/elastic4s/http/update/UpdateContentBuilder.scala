@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.update
 
 import com.sksamuel.elastic4s.FieldsMapper
+import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
@@ -13,6 +14,10 @@ object UpdateContentBuilder {
 
     request.documentSource.foreach { doc =>
       builder.rawField("doc", new BytesArray(doc), XContentType.JSON)
+    }
+
+    request.script.foreach { script =>
+      builder.rawField("script", ScriptBuilderFn(script))
     }
 
     if (request.documentFields.nonEmpty) {
