@@ -39,6 +39,8 @@ trait DeleteExecutables {
 
     def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition): Unit = {
       builder.source(d.indexesAndTypes.indexes: _*)
+      if (d.indexesAndTypes.types.nonEmpty)
+        builder.source().setTypes(d.indexesAndTypes.types: _*)
       builder.filter(QueryBuilderFn(d.query))
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       d.size.foreach(builder.size)
