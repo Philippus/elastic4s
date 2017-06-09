@@ -857,6 +857,10 @@ folder. There is no need to configure anything externally.
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
 * The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
 
+###### 5.4.5
+
+* UnmappableCharacterException when operating non-ASCII characters #928. This would cause exceptions if your requests had non-ascii characters and was introduced in 5.4.3.
+
 ###### 5.4.4
 
 * TCP Client was not setting types correctly for delete by query #942 
