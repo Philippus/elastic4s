@@ -44,7 +44,9 @@ object HttpClient extends Logging {
             requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
             httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
            ): HttpClient = {
-    val hosts = uri.hosts.map { case (host, port) => new HttpHost(host, port, "http") }
+    val hosts = uri.hosts.map { case (host, port) =>
+      new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")
+    }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 
     val client = RestClient.builder(hosts: _*)
