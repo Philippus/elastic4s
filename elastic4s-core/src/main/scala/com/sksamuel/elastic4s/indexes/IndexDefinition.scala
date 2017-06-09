@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
 
+import scala.concurrent.duration.FiniteDuration
+
 case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
                            createOnly: Option[Boolean] = None,
@@ -40,6 +42,7 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def versionType(versionType: VersionType): IndexDefinition = copy(versionType = versionType.some)
 
   def timeout(timeout: String): IndexDefinition = copy(timeout = timeout.some)
+  def timeout(duration: FiniteDuration): IndexDefinition = copy(timeout = (duration.toSeconds + "s").some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexDefinition = copy(createOnly = createOnly.some)
