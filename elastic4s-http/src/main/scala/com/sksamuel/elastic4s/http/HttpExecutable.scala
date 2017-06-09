@@ -5,7 +5,7 @@ import org.apache.http.HttpEntity
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
-import scala.io.Source
+import scala.io.{Codec, Source}
 
 /**
   * @tparam T the type of the request object handled by this handler
@@ -45,7 +45,7 @@ trait HttpExecutable[T, U] extends Logging {
               entity: HttpEntity,
               handler: ResponseHandler[U]): Future[U] = {
       logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
-      logger.debug(Source.fromInputStream(entity.getContent).getLines().mkString("\n"))
+      logger.debug(Source.fromInputStream(entity.getContent)(Codec.UTF8).getLines().mkString("\n"))
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
       future(callback, handler)
     }
