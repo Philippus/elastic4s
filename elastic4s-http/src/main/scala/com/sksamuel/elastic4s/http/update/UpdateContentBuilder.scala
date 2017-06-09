@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.update
 
 import com.sksamuel.elastic4s.FieldsMapper
+import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 
@@ -11,6 +12,10 @@ object UpdateContentBuilder {
 
     request.documentSource.foreach { doc =>
       builder.rawField("doc", doc)
+    }
+
+    request.script.foreach { script =>
+      builder.rawField("script", ScriptBuilderFn(script))
     }
 
     if (request.documentFields.nonEmpty) {
