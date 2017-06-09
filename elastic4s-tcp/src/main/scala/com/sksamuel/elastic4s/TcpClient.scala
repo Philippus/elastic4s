@@ -20,7 +20,12 @@ trait TcpClient {
 
   def java: Client
 
-  // returns a String containing the Json of the request
+  /**
+    * Returns a json String containing the request body.
+    * Note: This only works for requests which have a cats.Show typeclass implemented, which is most,
+    * but not all. Also, some requests intentionally do not provide a Show implementation as
+    * they are "header only" requests - that is, they have no body - for example, delete by id, or delete index.
+    */
   def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
   def execute[T, R, Q](request: T)(implicit executable: Executable[T, R, Q]): Future[Q] = {
