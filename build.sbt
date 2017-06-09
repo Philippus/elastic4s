@@ -15,7 +15,6 @@ lazy val root = Project("elastic4s", file("."))
     tcp,
     http,
     embedded,
-    tests,
     testkit,
     circe,
     jackson,
@@ -112,20 +111,20 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   )
   .dependsOn(core, embedded, http)
 
-lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
-  .settings(
-    name := "elastic4s-tests",
-    libraryDependencies ++= Seq(
-      "commons-io"                    % "commons-io"              % CommonsIoVersion      % "test",
-      "org.mockito"                   % "mockito-all"             % MockitoVersion        % "test",
-      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
-      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
-      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j"      % "log4j-api"               % "2.7"                 % "test",
-      "org.apache.logging.log4j"      % "log4j-slf4j-impl"        % "2.7"                 % "test"
-    )
-  )
-  .dependsOn(tcp, http, jackson, testkit % "test")
+//lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
+//  .settings(
+//    name := "elastic4s-tests",
+//    libraryDependencies ++= Seq(
+//      "commons-io"                    % "commons-io"              % CommonsIoVersion      % "test",
+//      "org.mockito"                   % "mockito-all"             % MockitoVersion        % "test",
+//      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion        % "test",
+//      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion        % "test",
+//      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library"),
+//      "org.apache.logging.log4j"      % "log4j-api"               % "2.7"                 % "test",
+//      "org.apache.logging.log4j"      % "log4j-slf4j-impl"        % "2.7"                 % "test"
+//    )
+//  )
+//  .dependsOn(tcp, http, jackson, testkit % "test")
 
 lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
   .settings(

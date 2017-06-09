@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.testkit
 
 import org.scalatest.WordSpec
 
-class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar {
+class SearchMatchersTest extends WordSpec with SearchMatchers with SharedElasticSugar {
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"

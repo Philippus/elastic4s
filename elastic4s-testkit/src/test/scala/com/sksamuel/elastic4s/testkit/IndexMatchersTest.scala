@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.testkit
 
 import org.scalatest.WordSpec
 
-class IndexMatchersTest extends WordSpec with IndexMatchers with ElasticSugar {
+class IndexMatchersTest extends WordSpec with IndexMatchers with SharedElasticSugar {
 
   val indexname = getClass.getSimpleName.toLowerCase
 
