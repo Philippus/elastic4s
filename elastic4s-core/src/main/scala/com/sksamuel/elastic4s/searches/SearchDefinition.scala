@@ -248,7 +248,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
   def indexBoost(tuples: (String, Double)*): SearchDefinition = copy(indexBoosts = tuples)
 
-  def timeout(duration: FiniteDuration): SearchDefinition = copy(timeout = duration.some)
+  def timeout(timeout: FiniteDuration): SearchDefinition = copy(timeout = timeout.some)
   def stats(groups: String*): SearchDefinition = copy(stats = groups.toSeq)
 
   def trackScores(enabled: Boolean): SearchDefinition = copy(trackScores = enabled.some)
