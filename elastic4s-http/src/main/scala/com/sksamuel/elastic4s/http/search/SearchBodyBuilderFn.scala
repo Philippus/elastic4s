@@ -41,6 +41,8 @@ object SearchBodyBuilderFn {
 			builder.endArray()
     }
 
+    request.trackScores.map(builder.field("track_scores", _))
+
     request.highlight.foreach { highlight =>
       builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields).bytes(), XContentType.JSON)
     }
