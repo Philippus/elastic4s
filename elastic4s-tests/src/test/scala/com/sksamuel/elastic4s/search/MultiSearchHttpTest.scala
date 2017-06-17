@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 class MultiSearchHttpTest
   extends FlatSpec
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with Matchers
     with ElasticDsl {
 

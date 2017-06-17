@@ -5,13 +5,13 @@ import java.util.concurrent.Executors
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
+class SubscriberFlushAfterTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   import ElasticJackson.Implicits._
   import ReactiveElastic._

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.elasticsearch.search.suggest.phrase.DirectCandidateGeneratorBuilder
 import org.scalatest.{Matchers, WordSpec}
 
-class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider with ElasticDsl {
+class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""

@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, ClassloaderLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
@@ -13,7 +13,7 @@ class ScrollPublisherVerificationTest
   extends PublisherVerification[SearchHit](
     new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
     PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
-  ) with HttpElasticSugar with TestNGSuiteLike with ClassloaderLocalNodeProvider with ElasticDsl {
+  ) with HttpElasticSugar with TestNGSuiteLike with DiscoveryLocalNodeProvider with ElasticDsl {
 
   import ElasticJackson.Implicits._
 

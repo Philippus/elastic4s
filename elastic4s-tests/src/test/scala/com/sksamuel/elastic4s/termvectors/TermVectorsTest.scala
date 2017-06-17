@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.termvectors
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.termvectors._
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with ClassloaderLocalNodeProvider {
+class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   http.execute {
     createIndex("hansz").mappings(

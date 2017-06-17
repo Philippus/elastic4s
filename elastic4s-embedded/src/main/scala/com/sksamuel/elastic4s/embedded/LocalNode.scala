@@ -18,19 +18,50 @@ import org.elasticsearch.transport.Netty4Plugin
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
-  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava) with Logging {
+trait LocalNode {
+  def nodeId: String
+  def ip: String
+  def host: String
+  def port: Int
+  def tcp(shutdownNodeOnClose: Boolean = true): TcpClient
+  def http(shutdownNodeOnClose: Boolean): HttpClient
+  def clusterName: String
+  def pathData: Path
+  def pathConfig: Path
+}
+
+// a connection to a local node that was already started
+class RemoteLocalNode(val clusterName: String, val nodeId: String, val ip: String, httpAddress: String, transportAddress: String) extends LocalNode {
+
+  override def tcp(shutdownNodeOnClose: Boolean): TcpClient = {
+    val host = transportAddress.split(':').head
+    val port = transportAddress.split(':').last
+    TcpClient.transport(s"elasticsearch://$host:$port?cluster.name=$clusterName")
+  }
+
+  override def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
+  override def pathData: Path = Paths.get("unknown")
+  override def pathConfig: Path = Paths.get("unknown")
+  override def host: String = httpAddress.split(':').head
+  override def port: Int = httpAddress.split(':').last.toInt
+}
+
+// a new locally started internal node
+class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
+  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
+    with LocalNode
+    with Logging {
   super.start()
 
   logger.info("Registering shutdown hook for local node")
   Runtime.getRuntime.addShutdownHook(new Thread() {
     override def run(): Unit = {
       logger.info(s"Shutting down local node ${settings.get("cluster.name")}")
-      LocalNode.this.stop()
+      InternalLocalNode.this.stop()
     }
   })
 
-  val nodeId: String = client().admin().cluster().prepareState().get().getState.getNodes.getLocalNodeId
+  override val nodeId: String = client().admin().cluster().prepareState().get().getState.getNodes.getLocalNodeId
 
   private val nodeinfo = client().admin().cluster().prepareNodesInfo(nodeId).get().getNodes.iterator().next()
 
@@ -39,9 +70,9 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   logger.info(s"LocalNode started @ $ipAndPort")
   logger.info(s"LocalNode data location ${settings.get("path.data")}")
 
-  val ip: String = ipAndPort.takeWhile(_ != ':')
-  val host: String = ip
-  val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
+  override val ip: String = ipAndPort.takeWhile(_ != ':')
+  override val host: String = ip
+  override val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
 
   def stop(removeData: Boolean = false): Any = {
     super.close()
@@ -65,15 +96,15 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   val pathHome: Path = Paths get settings.get("path.home")
 
   // the path that is used for the "path.data" property of the elasticsearch node
-  val pathData: Path = Paths get settings.get("path.data")
+  override val pathData: Path = Paths get settings.get("path.data")
 
   // the path that is used for the "path.repo" property of the elasticsearch node
   val pathRepo: Path = Paths get settings.get("path.repo")
 
   // the location of the config folder for this node
-  val pathConfig: Path = pathHome resolve "config"
+  override val pathConfig: Path = pathHome resolve "config"
 
-  val clusterName: String = settings.get("cluster.name")
+  override val clusterName: String = settings.get("cluster.name")
 
   @deprecated("use tcp()", "6.0.0")
   def elastic4sclient(shutdownNodeOnClose: Boolean = true): TcpClient = tcp(shutdownNodeOnClose)
@@ -84,7 +115,7 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * If shutdownNodeOnClose is true, then the local node will be shutdown once this
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
-  def tcp(shutdownNodeOnClose: Boolean = true): TcpClient = new LocalNodeTcpClient(this, shutdownNodeOnClose)
+  override def tcp(shutdownNodeOnClose: Boolean = true): TcpClient = new LocalNodeTcpClient(this, shutdownNodeOnClose)
 
   /**
     * Returns a new HttpClient connected to this node.
@@ -92,10 +123,10 @@ class LocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * If shutdownNodeOnClose is true, then the local node will be shutdown once this
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
-  def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port")
+  override def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port")
 }
 
-class LocalNodeTcpClient(node: LocalNode, shutdownNodeOnClose: Boolean) extends TcpClient {
+class LocalNodeTcpClient(node: InternalLocalNode, shutdownNodeOnClose: Boolean) extends TcpClient {
 
   override val java: Client = {
     node.start()
@@ -113,7 +144,7 @@ object LocalNode {
 
   // creates a LocalNode with all settings provided by the user
   // and using default plugins
-  def apply(settings: Settings): LocalNode = {
+  def apply(settings: Settings): InternalLocalNode = {
     require(settings.getAsMap.containsKey("cluster.name"))
     require(settings.getAsMap.containsKey("path.home"))
     require(settings.getAsMap.containsKey("path.data"))
@@ -124,19 +155,21 @@ object LocalNode {
     val mergedSettings = Settings.builder().put(settings)
       .put("http.type", "netty4")
       .put("http.enabled", "true")
+      .put("node.max_local_storage_nodes", "10")
       .build()
 
-    new LocalNode(mergedSettings, plugins)
+    new InternalLocalNode(mergedSettings, plugins)
   }
 
   // creates a LocalNode with all settings provided by the user
-  def apply(settings: Map[String, String]): LocalNode = apply(Settings.builder().put(settings.asJava).build)
+  def apply(settings: Map[String, String]): InternalLocalNode = apply(Settings.builder().put(settings.asJava).build)
 
   // returns the minimum required settings to create a local node
   def requiredSettings(clusterName: String, homePath: String): Map[String, String] = {
     Map(
       "cluster.name" -> clusterName,
       "path.home" -> homePath,
+      "node.max_local_storage_nodes" -> "10",
       "path.repo" -> Paths.get(homePath).resolve("repo").toString,
       "path.data" -> Paths.get(homePath).resolve("data").toString
     )
@@ -146,5 +179,5 @@ object LocalNode {
   *   Creates a new LocalNode with default settings using the given cluster name and home path.
   *   Other required directories are created inside the path home folder.
   */
-  def apply(clusterName: String, pathHome: String): LocalNode = apply(requiredSettings(clusterName, pathHome))
+  def apply(clusterName: String, pathHome: String): InternalLocalNode = apply(requiredSettings(clusterName, pathHome))
 }

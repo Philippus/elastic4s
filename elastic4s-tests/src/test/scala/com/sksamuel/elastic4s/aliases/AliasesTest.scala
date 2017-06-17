@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.aliases
 
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class AliasesTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodeProvider with Matchers with com.sksamuel.elastic4s.http.ElasticDsl {
+class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with Matchers with com.sksamuel.elastic4s.http.ElasticDsl {
 
   Try {
     http.execute {

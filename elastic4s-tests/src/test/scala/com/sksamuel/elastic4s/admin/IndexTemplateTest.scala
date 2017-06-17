@@ -4,11 +4,11 @@ import java.util
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers with ClassloaderLocalNodeProvider {
+class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers with DiscoveryLocalNodeProvider {
 
   "create template" ignore {
     "be stored" in {

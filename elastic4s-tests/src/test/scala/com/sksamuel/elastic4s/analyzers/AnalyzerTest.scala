@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.analyzers
 import java.io.PrintWriter
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
 
-class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
+class AnalyzerTest extends FreeSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   // setup the stop file list
   node.pathConfig.toFile.mkdirs()

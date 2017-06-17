@@ -39,6 +39,7 @@ case class NodeInfoResponse(@JsonProperty("cluster_name") clusterName: String,
 
 case class NodeInfo(name: String,
                     @JsonProperty("transport_address") transportAddress: String,
+                    @JsonProperty("http_address") httpAddress: String,
                     host: String,
                     ip: String,
                     version: String,

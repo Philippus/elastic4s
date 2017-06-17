@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 
-class MappingApiTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodeProvider with ElasticDsl {
+class MappingApiTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {

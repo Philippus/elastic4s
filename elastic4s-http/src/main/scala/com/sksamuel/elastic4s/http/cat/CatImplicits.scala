@@ -17,7 +17,10 @@ trait CatImplicits {
 
   implicit object CatNodesExecutable extends HttpExecutable[CatNodesDefinition, Seq[CatNodes]] {
     override def execute(client: RestClient, request: CatNodesDefinition): Future[Seq[CatNodes]] = {
-      client.async("GET", "/_cat/nodes?v&format=json", Map.empty, ResponseHandler.default)
+      val headers = Seq(
+        "id", "pid", "ip", "port", "http_address", "version", "build", "jdk", "disk.avail", "heap.current", "heap.percent", "heap.max", "ram.current", "ram.percent", "ram.max", "file_desc.current", "file_desc.percent", "file_desc.max", "cpu", "load_1m", "load_5m", "load_15m", "uptime", "node.role", "master", "name", "completion.size", "fielddata.memory_size", "fielddata.evictions", "query_cache.memory_size", "query_cache.evictions", "request_cache.memory_size", "request_cache.evictions", "request_cache.miss_count", "flush.total"
+      ).mkString(",")
+      client.async("GET", s"/_cat/nodes?v&h=$headers&format=json", Map.empty, ResponseHandler.default)
     }
   }
 

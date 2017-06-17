@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.{IndexStoreStatus, ShardStoreStatus}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ShardStoreHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class ShardStoreHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   Try {
     http.execute {

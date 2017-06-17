@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import org.scalatest.WordSpec
 
-class IndexMatchersTest extends WordSpec with IndexMatchers with ClassloaderLocalNodeProvider with ElasticApi {
+class IndexMatchersTest extends WordSpec with IndexMatchers with DiscoveryLocalNodeProvider with ElasticApi {
 
   import com.sksamuel.elastic4s.ElasticDsl._
   private val indexname = getClass.getSimpleName.toLowerCase

@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
 import org.scalatest.WordSpec
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 
-class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl with ClassloaderLocalNodeProvider {
+class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
 
   client.execute {
     createIndex("settings_test").mappings(

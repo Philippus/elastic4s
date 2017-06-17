@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
-class CardinalityAggregationHttpTest extends FreeSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
+class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("cardagg") mappings {

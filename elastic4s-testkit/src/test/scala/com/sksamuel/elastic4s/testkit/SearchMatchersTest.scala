@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.ElasticApi
 import org.scalatest.WordSpec
 
-class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticApi with ClassloaderLocalNodeProvider {
+class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticApi with DiscoveryLocalNodeProvider {
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"

@@ -8,13 +8,13 @@ import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar, HttpElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.util.Random
 
-class BulkIndexingSubscriberIntegrationTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with BeforeAndAfter with ElasticDsl with HttpElasticSugar {
+class BulkIndexingSubscriberIntegrationTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with BeforeAndAfter with ElasticDsl with HttpElasticSugar {
 
   import ReactiveElastic._
 

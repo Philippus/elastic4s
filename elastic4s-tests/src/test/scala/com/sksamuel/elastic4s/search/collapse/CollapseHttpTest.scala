@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.search.collapse
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
 import scala.util.Try
 
-class CollapseHttpTest extends FreeSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl with BeforeAndAfterAll {
+class CollapseHttpTest extends FreeSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl with BeforeAndAfterAll {
 
   override protected def beforeAll(): Unit = {
 

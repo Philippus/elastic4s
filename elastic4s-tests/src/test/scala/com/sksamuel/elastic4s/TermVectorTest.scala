@@ -4,12 +4,12 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{Matchers, WordSpec}
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 
 class TermVectorTest
   extends WordSpec
     with ElasticSugar
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with Matchers
     with ScalaFutures {
 

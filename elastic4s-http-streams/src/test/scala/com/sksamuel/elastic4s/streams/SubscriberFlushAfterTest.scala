@@ -7,13 +7,13 @@ import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class SubscriberFlushAfterTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with ClassloaderLocalNodeProvider {
+class SubscriberFlushAfterTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
 
   import ElasticJackson.Implicits._
   import ReactiveElastic._

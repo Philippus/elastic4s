@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.explain
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, DualClientTests}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FlatSpec, Matchers}
 

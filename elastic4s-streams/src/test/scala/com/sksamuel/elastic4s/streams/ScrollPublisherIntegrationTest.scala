@@ -5,11 +5,11 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
-class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Matchers with ClassloaderLocalNodeProvider {
+class ScrollPublisherIntegrationTest extends WordSpec with ElasticSugar with Matchers with DiscoveryLocalNodeProvider {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
   import ReactiveElastic._

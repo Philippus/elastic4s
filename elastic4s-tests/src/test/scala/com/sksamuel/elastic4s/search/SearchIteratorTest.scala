@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.search.SearchIterator
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar}
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
 
@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 
 class SearchIteratorTest
   extends WordSpec
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 

@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.get
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, DualClientTests}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class GetTest extends FlatSpec with Matchers with ElasticDsl with ClassloaderLocalNodeProvider with DualClientTests {
+class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
     Try {

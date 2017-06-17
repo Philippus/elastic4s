@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar, HttpElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
-class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with ElasticDsl with ClassloaderLocalNodeProvider {
+class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   http.execute {
     createIndex("sodas")

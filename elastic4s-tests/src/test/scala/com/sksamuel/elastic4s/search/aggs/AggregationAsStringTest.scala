@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FunSuite, Matchers}
 
-class AggregationAsStringTest extends FunSuite with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
+class AggregationAsStringTest extends FunSuite with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("aggstring") mappings {

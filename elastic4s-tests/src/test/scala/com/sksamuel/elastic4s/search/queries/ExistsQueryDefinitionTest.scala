@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class ExistsQueryDefinitionTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
+class ExistsQueryDefinitionTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   client.execute(
     bulk(

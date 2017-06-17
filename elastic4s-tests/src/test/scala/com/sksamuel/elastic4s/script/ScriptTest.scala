@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.script
 
 import com.sksamuel.elastic4s.searches.sort.{ScriptSortType, SortOrder}
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar}
 import org.scalatest.FreeSpec
 
-class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar with ClassloaderLocalNodeProvider {
+class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   client.execute {
     bulk(

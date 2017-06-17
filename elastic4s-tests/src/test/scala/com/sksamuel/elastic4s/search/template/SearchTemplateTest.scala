@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search.template
 
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class SearchTemplateTest extends FlatSpec with ElasticDsl with ClassloaderLocalNodeProvider with Matchers {
+class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvider with Matchers {
 
   http.execute {
     bulk(

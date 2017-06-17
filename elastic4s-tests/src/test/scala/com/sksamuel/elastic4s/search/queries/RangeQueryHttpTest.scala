@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
 import org.scalatest.WordSpec
 
 class RangeQueryHttpTest
   extends WordSpec
     with HttpElasticSugar
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 

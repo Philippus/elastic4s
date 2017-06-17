@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TermsQueryTest
   extends FlatSpec
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with Matchers
     with ElasticDsl {
 

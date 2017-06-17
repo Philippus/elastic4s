@@ -4,10 +4,10 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.bulk.RichBulkItemResponse
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
+class SubscriberListenerTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   import ReactiveElastic._
 

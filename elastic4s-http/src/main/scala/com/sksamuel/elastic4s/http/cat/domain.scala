@@ -43,10 +43,15 @@ case class CatCount(epoch: Long, timestamp: String, count: Long)
 
 case class CatPlugin(name: String, component: String, version: String)
 
-case class CatNodes(ip: String,
+case class CatNodes(id: String,
+                    ip: String,
+                    pid: String,
+                    cpu: Double,
+                    uptime: String,
                     @JsonProperty("heap.percent") heapPercent: Double,
                     @JsonProperty("ram.percent") ramPercent: Double,
-                    cpu: Double,
+                    @JsonProperty("ram.percent") httpAddress: String,
+                    port: Int,
                     load_1m: Double,
                     load_5m: Double,
                     load_15m: Double,

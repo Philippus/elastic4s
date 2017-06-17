@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticMatchers}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 class SearchTest
   extends WordSpec
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 

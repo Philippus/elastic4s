@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.searches.suggestion.Fuzziness
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
+class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""

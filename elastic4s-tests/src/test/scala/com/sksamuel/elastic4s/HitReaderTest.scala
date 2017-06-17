@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.indexes.IndexDefinition
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 
-class HitReaderTest extends FlatSpec with MockitoSugar with ClassloaderLocalNodeProvider with Matchers  {
+class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with Matchers  {
 
   import com.sksamuel.elastic4s.http.ElasticDsl._
 

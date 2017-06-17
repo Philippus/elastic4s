@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FreeSpec, Matchers}
 
-abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar with ClassloaderLocalNodeProvider {
+abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   deleteIndex("aggregations")
 

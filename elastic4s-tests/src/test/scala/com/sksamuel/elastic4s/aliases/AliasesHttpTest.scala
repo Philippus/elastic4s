@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.aliases
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.admin.{AliasExistsResponse, IndicesAliasResponse}
 import com.sksamuel.elastic4s.http.index.alias.Alias
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class AliasesHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   removeIndex("beaches")
   removeIndex("mountains")

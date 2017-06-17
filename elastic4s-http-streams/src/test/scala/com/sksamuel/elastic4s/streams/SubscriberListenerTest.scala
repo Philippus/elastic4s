@@ -5,10 +5,10 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class SubscriberListenerTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with ClassloaderLocalNodeProvider {
+class SubscriberListenerTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
 
   import ReactiveElastic._
 

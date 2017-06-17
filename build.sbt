@@ -125,7 +125,10 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
       "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion        % "test" exclude("org.scala-lang", "scala-library"),
       "org.apache.logging.log4j"      % "log4j-api"               % "2.7"                 % "test",
       "org.apache.logging.log4j"      % "log4j-slf4j-impl"        % "2.7"                 % "test"
-    )
+    ),
+    fork in Test := false,
+    parallelExecution in Test := false,
+    testForkedParallel in Test := false
   )
   .dependsOn(tcp, http, jackson, testkit % "test")
 
@@ -215,8 +218,8 @@ lazy val docs = project
     docsMappingsAPIDir := "api",
     addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
     ghpagesNoJekyll := false,
-    fork in tut := true,
-    fork in (ScalaUnidoc, unidoc) := true,
+    fork in tut := false,
+    fork in (ScalaUnidoc, unidoc) := false,
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
     // push microsite on release
     releaseProcess += releaseStepTask(publishMicrosite)

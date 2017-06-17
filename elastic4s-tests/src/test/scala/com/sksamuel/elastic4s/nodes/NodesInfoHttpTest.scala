@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.nodes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class NodesInfoHttpTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class NodesInfoHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "node info request" should {
     "return node information" in {

@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class SearchHitReaderTest extends FlatSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class SearchHitReaderTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 

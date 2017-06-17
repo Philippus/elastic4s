@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{ElasticDsl, Priority}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.common.unit.TimeValue
 import org.scalatest.{FlatSpec, Matchers}
 
-class ClusterExecutablesTest extends FlatSpec with Matchers with ElasticDsl with ClassloaderLocalNodeProvider {
+class ClusterExecutablesTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   "a cluster health request" should "convert empty indices to _all" in {
     val builder = ClusterHealthDefinitionExecutable.buildHealthRequest(client.java, clusterHealth())

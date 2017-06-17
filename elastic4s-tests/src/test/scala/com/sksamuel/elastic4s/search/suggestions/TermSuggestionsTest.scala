@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.search.suggestions
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class TermSuggestionsTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class TermSuggestionsTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""

@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.search.Bucket
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FreeSpec, Matchers}
 
-class TermsAggregationHttpTest extends FreeSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl {
+class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("termsagg") mappings {

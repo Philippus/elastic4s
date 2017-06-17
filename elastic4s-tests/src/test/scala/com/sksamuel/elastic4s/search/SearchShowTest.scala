@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class SearchShowTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class SearchShowTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "Search" should {
     "have a show typeclass implementation" in {

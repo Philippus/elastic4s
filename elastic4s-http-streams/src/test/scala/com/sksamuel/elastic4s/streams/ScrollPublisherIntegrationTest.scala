@@ -7,11 +7,11 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
-class ScrollPublisherIntegrationTest extends WordSpec with ClassloaderLocalNodeProvider with Matchers with ElasticDsl with HttpElasticSugar {
+class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl with HttpElasticSugar {
 
   import ReactiveElastic._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._

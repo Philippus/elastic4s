@@ -12,7 +12,7 @@ import scala.util.Random
 
 trait DualClientTests
   extends SuiteMixin
-    with ClassloaderLocalNodeProvider
+    with DiscoveryLocalNodeProvider
     with ElasticApi
     with Logging
     with com.sksamuel.elastic4s.ElasticDsl

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.{ElasticApi, ElasticDsl}
-import com.sksamuel.elastic4s.testkit.ClassloaderLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.elasticsearch.action.fieldstats.FieldStats
 import org.scalatest.{Matchers, WordSpec}
 
-class FieldStatsTest extends WordSpec with Matchers with ClassloaderLocalNodeProvider with ElasticDsl {
+class FieldStatsTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   client.execute(
     bulk(
