@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
-import org.elasticsearch.search.aggregations.AggregationBuilders
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder
 import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
-import org.elasticsearch.search.aggregations.bucket.terms.{Terms, TermsAggregationBuilder}
+import org.elasticsearch.search.aggregations.{AggregationBuilders, BucketOrder}
 
 import scala.collection.JavaConverters._
 
@@ -25,12 +25,12 @@ object TermsAggregationBuilder {
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
     agg.order.foreach {
-      case TermsOrder("_count", asc) => builder.order(Terms.Order.count(asc))
-      case TermsOrder("_term", asc) => builder.order(Terms.Order.term(asc))
+      case TermsOrder("_count", asc) => builder.order(BucketOrder.count(asc))
+      case TermsOrder("_term", asc) => builder.order(BucketOrder.key(asc))
       case TermsOrder(field, asc) if field.contains(".") =>
         val parts = field.split('.')
-        builder.order(Terms.Order.aggregation(parts(0), parts(1), asc))
-      case TermsOrder(field, asc) => builder.order(Terms.Order.aggregation(field, asc))
+        builder.order(BucketOrder.aggregation(parts(0), parts(1), asc))
+      case TermsOrder(field, asc) => builder.order(BucketOrder.aggregation(field, asc))
     }
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.shardSize.foreach(builder.shardSize)

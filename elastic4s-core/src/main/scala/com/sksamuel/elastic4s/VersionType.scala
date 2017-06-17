@@ -12,6 +12,7 @@ object VersionType {
 
   case object External extends VersionType
   case object ExternalGte extends VersionType
+  @deprecated("to be removed in 7.0", "6.0")
   case object Force extends VersionType
   case object Internal extends VersionType
 

@@ -4,17 +4,17 @@ import com.sksamuel.elastic4s.admin.IndicesOptions
 import com.sksamuel.elastic4s.script.ScriptType
 import com.sksamuel.elastic4s.searches.aggs.pipeline.GapPolicy
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, PercentilesMethod, SubAggCollectionMode}
-import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FieldValueFactorFunctionModifier, FunctionScoreQueryScoreMode, MultiValueMode}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.ZeroTermsQuery
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{ScriptSortType, SortMode, SortOrder}
 import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
 import com.sksamuel.elastic4s.searches.{GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
 import org.elasticsearch.action.support.WriteRequest
 import org.elasticsearch.common.lucene.search.function.{FieldValueFactorFunction, FiltersFunctionScoreQuery}
 import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram
+import org.elasticsearch.search.aggregations.BucketOrder
 
 import scala.language.implicitConversions
 
@@ -243,7 +243,6 @@ object EnumConversions {
 
   implicit def scriptType(scriptType: ScriptType): org.elasticsearch.script.ScriptType = scriptType match {
     case ScriptType.Inline => org.elasticsearch.script.ScriptType.INLINE
-    case ScriptType.File => org.elasticsearch.script.ScriptType.FILE
     case ScriptType.Stored => org.elasticsearch.script.ScriptType.STORED
   }
 
@@ -273,12 +272,12 @@ object EnumConversions {
     case SubAggCollectionMode.DepthFirst => org.elasticsearch.search.aggregations.Aggregator.SubAggCollectionMode.DEPTH_FIRST
   }
 
-  implicit def histogramOrder(histogramOrder: HistogramOrder): Histogram.Order = {
+  implicit def histogramOrder(histogramOrder: HistogramOrder): BucketOrder = {
     histogramOrder match {
-      case HistogramOrder.COUNT_ASC => Histogram.Order.COUNT_ASC
-      case HistogramOrder.COUNT_DESC => Histogram.Order.COUNT_DESC
-      case HistogramOrder.KEY_ASC => Histogram.Order.KEY_ASC
-      case HistogramOrder.KEY_DESC => Histogram.Order.KEY_DESC
+      case HistogramOrder.COUNT_ASC => BucketOrder.count(true)
+      case HistogramOrder.COUNT_DESC => BucketOrder.count(false)
+      case HistogramOrder.KEY_ASC => BucketOrder.key(true)
+      case HistogramOrder.KEY_DESC => BucketOrder.key(false)
     }
   }
 

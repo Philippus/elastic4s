@@ -79,7 +79,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
         .order("asc")
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
-      """{"text":{"order":"asc"}}"""
+      """{"order":"asc"}"""
   }
   test("'phraseLimit' generates 'phrase_limit' field.") {
     // Given
@@ -99,7 +99,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
         .postTag(Nil)
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
-      """{"text":{}}"""
+      """{}"""
   }
   test("em tag will be generated as post tag if specified pre tag only") {
     // Given

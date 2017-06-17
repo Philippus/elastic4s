@@ -11,7 +11,6 @@ object ScriptBuilderFn {
     script.lang.foreach(builder.field("lang", _))
 
     script.scriptType match {
-      case ScriptType.File => builder.field("file", script.script)
       case ScriptType.Inline => builder.field("inline", script.script)
     }
 

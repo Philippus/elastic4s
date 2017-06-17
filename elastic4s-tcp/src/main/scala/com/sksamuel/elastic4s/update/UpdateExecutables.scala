@@ -3,14 +3,13 @@ package com.sksamuel.elastic4s.update
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentType
 import org.elasticsearch.index.VersionType
-import org.elasticsearch.index.reindex.UpdateByQueryAction
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, UpdateByQueryAction}
 
 import scala.concurrent.Future
 
