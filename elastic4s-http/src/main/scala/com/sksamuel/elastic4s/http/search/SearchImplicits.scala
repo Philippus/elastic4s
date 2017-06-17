@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams}
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 
@@ -25,8 +25,7 @@ trait SearchImplicits {
 
   implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
 
-    override def execute(client: RestClient,
-                         request: MultiSearchDefinition): Future[MultiSearchResponse] = {
+    override def execute(client: RestClient, request: MultiSearchDefinition): Future[Response] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -34,14 +33,13 @@ trait SearchImplicits {
       val body = MultiSearchContentBuilder(request)
       logger.debug("Executing msearch: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-      client.async("POST", "/_msearch", params.toMap, entity, ResponseHandler.default)
+      client.async("POST", "/_msearch", params.toMap, entity)
     }
   }
 
   implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
-    override def execute(client: RestClient,
-                         request: SearchDefinition): Future[SearchResponse] = {
+    override def execute(client: RestClient, request: SearchDefinition): Future[Response] = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
@@ -68,7 +66,7 @@ trait SearchImplicits {
       val builder = SearchBodyBuilderFn(request)
       val body = builder.string()
 
-      client.async("POST", endpoint, params.toMap, new StringEntity(body, ContentType.APPLICATION_JSON), ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, new StringEntity(body, ContentType.APPLICATION_JSON))
     }
   }
 }

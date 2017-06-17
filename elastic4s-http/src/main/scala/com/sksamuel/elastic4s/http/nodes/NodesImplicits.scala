@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.nodes.{NodeInfoDefinition, NodeStatsDefinition}
 import com.sksamuel.exts.collection.Maps
 import com.typesafe.config.{Config, ConfigFactory}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -85,24 +85,24 @@ case class OsInfo(@JsonProperty("refresh_interval_in_millis") refreshIntervalInM
 trait NodesImplicits {
 
   implicit object NodeInfoExecutable extends HttpExecutable[NodeInfoDefinition, NodeInfoResponse] {
-    override def execute(client: RestClient, request: NodeInfoDefinition): Future[NodeInfoResponse] = {
+    override def execute(client: RestClient, request: NodeInfoDefinition): Future[Response] = {
       val endpoint = if (request.nodes.isEmpty) {
         "/_nodes/"
       } else {
         "/_nodes/" + request.nodes.mkString(",")
       }
-      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
+      client.async("GET", endpoint, Map.empty)
     }
   }
 
   implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
-    override def execute(client: RestClient, request: NodeStatsDefinition): Future[NodesStatsResponse] = {
+    override def execute(client: RestClient, request: NodeStatsDefinition): Future[Response] = {
       val endpoint = if (request.nodes.nonEmpty) {
         "/_nodes/" + request.nodes.mkString(",") + "/stats/" + request.stats.mkString(",")
       } else {
         "/_nodes/stats/" + request.stats.mkString(",")
       }
-      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
+      client.async("GET", endpoint, Map.empty)
     }
   }
 }

@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s.http.validate
 
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.values.Shards
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 
@@ -38,8 +38,7 @@ trait ValidateImplicits {
 
   implicit object ValidateHttpExecutable extends HttpExecutable[ValidateDefinition, ValidateResponse] {
 
-    override def execute(client: RestClient,
-                         request: ValidateDefinition): Future[ValidateResponse] = {
+    override def execute(client: RestClient, request: ValidateDefinition): Future[Response] = {
 
       val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
 
@@ -50,7 +49,7 @@ trait ValidateImplicits {
       val body = ValidateBodyFn(request).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async("GET", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, entity)
     }
   }
 }

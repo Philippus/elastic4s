@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 
@@ -28,7 +28,7 @@ trait DeleteImplicits {
 
   implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
 
-    override def execute(client: RestClient, request: DeleteByQueryDefinition): Future[DeleteByQueryResponse] = {
+    override def execute(client: RestClient, request: DeleteByQueryDefinition): Future[Response] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
         s"/${request.indexesAndTypes.indexes.mkString(",")}/_delete_by_query"
@@ -48,14 +48,15 @@ trait DeleteImplicits {
       logger.debug(s"Delete by query ${body.string}")
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity)
     }
   }
 
   implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
 
-    override def execute(client: RestClient,
-                         request: DeleteByIdDefinition): Future[DeleteResponse] = {
+    override def responseHandler: ResponseHandler[DeleteResponse] = ResponseHandler.failure404
+
+    override def execute(client: RestClient, request: DeleteByIdDefinition): Future[Response] = {
 
       val method = "DELETE"
       val endpoint = s"/${request.indexType.index}/${request.indexType.`type`}/${request.id}"
@@ -68,7 +69,7 @@ trait DeleteImplicits {
       request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
-      client.async(method, endpoint, params.toMap, ResponseHandler.failure404)
+      client.async(method, endpoint, params.toMap)
     }
   }
 }

@@ -25,7 +25,12 @@ trait HttpClient extends Logging {
   def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
   // Executes the given request type T, and returns a Future of the response type U.
-  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[U] = exec.execute(rest, request)
+  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[U] = exec.response(rest, request)
+
+  // executes the given request and returns a Future with the response Json
+  // this variante should be used if you need access to the underlying json, rather than a strongly typed
+  // object returned by the normal execute(req) method.
+  def executeRaw[T](request: T)(implicit exec: HttpExecutable[T, _]): Future[String] = exec.json(rest, request)
 
   def close(): Unit
 }

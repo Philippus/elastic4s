@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 
@@ -12,8 +12,9 @@ trait IndexImplicits extends IndexShowImplicits {
 
   implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
 
-    override def execute(client: RestClient,
-                         request: IndexDefinition): Future[IndexResponse] = {
+    override def responseHandler: ResponseHandler[IndexResponse] = ResponseHandler.failure404
+
+    override def execute(client: RestClient, request: IndexDefinition): Future[Response] = {
 
       val (method, endpoint) = request.id match {
         case Some(id) => "PUT" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}/$id"
@@ -37,7 +38,7 @@ trait IndexImplicits extends IndexShowImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       logger.debug(s"Endpoint=$endpoint")
-      client.async(method, endpoint, params.toMap, entity, ResponseHandler.failure404)
+      client.async(method, endpoint, params.toMap, entity)
     }
   }
 }

@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.http.task
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.task.{CancelTasksDefinition, ListTasksDefinition}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Success, Try}
 
 case class ListTaskResponse(nodes: Map[String, Node])
 
@@ -33,7 +33,7 @@ trait TaskImplicits {
 
   implicit object ListTaskHttpExecutable extends HttpExecutable[ListTasksDefinition, ListTaskResponse] {
 
-    override def execute(client: RestClient, request: ListTasksDefinition): Future[ListTaskResponse] = {
+    override def execute(client: RestClient, request: ListTasksDefinition): Future[Response] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)
@@ -46,14 +46,20 @@ trait TaskImplicits {
         params.put("wait_for_completion", "true")
       request.groupBy.foreach(params.put("group_by", _))
 
-      client.async("GET", s"/_tasks", params.toMap, ResponseHandler.default)
+      client.async("GET", s"/_tasks", params.toMap)
     }
   }
 
   implicit object CancelTaskHttpExecutable extends HttpExecutable[CancelTasksDefinition, Boolean] {
 
-    override def execute(client: RestClient,
-                         request: CancelTasksDefinition): Future[Boolean] = {
+    override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
+      override def onResponse(response: Response): Try[Boolean] = {
+        val code = response.getStatusLine.getStatusCode
+        Success(code >= 200 && code < 300)
+      }
+    }
+
+    override def execute(client: RestClient, request: CancelTasksDefinition): Future[Response] = {
 
       val endpoint = if (request.nodeIds.isEmpty) s"/_tasks/cancel"
       else s"/_tasks/task_id:${request.nodeIds.mkString(",")}/_cancel"
@@ -64,10 +70,7 @@ trait TaskImplicits {
       if (request.actions.nonEmpty)
         params.put("actions", request.actions.mkString(","))
 
-      Future.successful {
-        val code = client.performRequest("POST", endpoint, params.asJava).getStatusLine.getStatusCode
-        code >= 200 && code < 300
-      }
+      client.async("POST", endpoint, params.toMap)
     }
   }
 }

@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.http.update
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
 
@@ -32,8 +32,7 @@ trait UpdateImplicits {
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
 
-    override def execute(client: RestClient,
-                         request: UpdateDefinition): Future[UpdateResponse] = {
+    override def execute(client: RestClient, request: UpdateDefinition): Future[Response] = {
 
       val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${request.id}/_update"
 
@@ -52,7 +51,7 @@ trait UpdateImplicits {
       val body = UpdateContentBuilder(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity)
     }
   }
 }

@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.http.index
 
+import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingContentBuilder
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{ResponseListener, RestClient}
+import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
 import scala.concurrent.Future
 
@@ -18,28 +18,28 @@ trait IndexTemplateImplicits {
 
   implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: CreateIndexTemplateDefinition): Future[CreateIndexTemplateResponse] = {
+                         request: CreateIndexTemplateDefinition): Future[Response] = {
       val endpoint = s"/_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      client.async("PUT", endpoint, Map.empty, entity, ResponseHandler.default)
+      client.async("PUT", endpoint, Map.empty, entity)
     }
   }
 
   implicit object DeleteIndexTemplateHttpExecutable extends HttpExecutable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: DeleteIndexTemplateDefinition): Future[DeleteIndexTemplateResponse] = {
+                         request: DeleteIndexTemplateDefinition): Future[Response] = {
       val endpoint = s"/_template/" + request.name
-      client.async("DELETE", endpoint, Map.empty, ResponseHandler.default)
+      client.async("DELETE", endpoint, Map.empty)
     }
   }
 
   implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplateResponse] {
     override def execute(client: RestClient,
-                         request: GetIndexTemplateDefinition): Future[GetIndexTemplateResponse] = {
+                         request: GetIndexTemplateDefinition): Future[Response] = {
       val endpoint = s"/_template/" + request.name
       val fn = client.performRequestAsync("GET", endpoint, _: ResponseListener)
-      client.async("GET", endpoint, Map.empty, ResponseHandler.default)
+      client.async("GET", endpoint, Map.empty)
     }
   }
 }
