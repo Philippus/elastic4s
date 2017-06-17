@@ -27,11 +27,23 @@ trait LocalNode {
   def http(shutdownNodeOnClose: Boolean): HttpClient
   def clusterName: String
   def pathData: Path
-  def pathConfig: Path
+  def pathHome: Path
+
+  // the location of the config folder for this node
+  def pathConfig: Path = pathHome resolve "config"
 }
 
 // a connection to a local node that was already started
-class RemoteLocalNode(val clusterName: String, val nodeId: String, val ip: String, httpAddress: String, transportAddress: String) extends LocalNode {
+class RemoteLocalNode(val clusterName: String,
+                      val nodeId: String,
+                      val ip: String,
+                      httpAddress: String,
+                      transportAddress: String,
+                      val pathData: Path,
+                      val pathHome: Path,
+                      pathRepo: Path) extends LocalNode {
+  require(httpAddress != null, "httpAddress cannot be null")
+  require(transportAddress != null, "transportAddress cannot be null")
 
   override def tcp(shutdownNodeOnClose: Boolean): TcpClient = {
     val host = transportAddress.split(':').head
@@ -40,8 +52,6 @@ class RemoteLocalNode(val clusterName: String, val nodeId: String, val ip: Strin
   }
 
   override def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
-  override def pathData: Path = Paths.get("unknown")
-  override def pathConfig: Path = Paths.get("unknown")
   override def host: String = httpAddress.split(':').head
   override def port: Int = httpAddress.split(':').last.toInt
 }
@@ -93,16 +103,13 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   }
 
   // the path that is used for the "path.home" property of the elasticsearch node
-  val pathHome: Path = Paths get settings.get("path.home")
+  override val pathHome: Path = Paths get settings.get("path.home")
 
   // the path that is used for the "path.data" property of the elasticsearch node
   override val pathData: Path = Paths get settings.get("path.data")
 
   // the path that is used for the "path.repo" property of the elasticsearch node
   val pathRepo: Path = Paths get settings.get("path.repo")
-
-  // the location of the config folder for this node
-  override val pathConfig: Path = pathHome resolve "config"
 
   override val clusterName: String = settings.get("cluster.name")
 

@@ -38,27 +38,27 @@ object DateHistogramInterval {
     val interval = "1y"
   }
 
-  def fromString(str: String) = new DateHistogramInterval {
+  def fromString(str: String): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = str
   }
 
-  def seconds(seconds: Long) = new DateHistogramInterval {
+  def seconds(seconds: Long): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = seconds + "s"
   }
 
-  def minutes(mins: Long) = new DateHistogramInterval {
+  def minutes(mins: Long): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = mins + "m"
   }
 
-  def hours(hours: Long) = new DateHistogramInterval {
+  def hours(hours: Long): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = hours + "h"
   }
 
-  def days(days: Long) = new DateHistogramInterval {
+  def days(days: Long): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = days + "d"
   }
 
-  def weeks(weeks: Long) = new DateHistogramInterval {
+  def weeks(weeks: Long): DateHistogramInterval = new DateHistogramInterval {
     override def interval: String = weeks + "w"
   }
 }

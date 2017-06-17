@@ -39,14 +39,21 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
       val nodeinfo = client.execute(nodeInfo()).await
       val (id, node) = nodeinfo.nodes.head
       println(s"Found local node $id")
-      new RemoteLocalNode(nodeinfo.clusterName, id, node.ip, node.httpAddress, node.transportAddress)
+      val paths = node.settingsAsMap("path").asInstanceOf[Map[String, AnyRef]]
+      val pathData = Paths get paths("data").toString
+      val pathHome = Paths get paths("home").toString
+      val pathRepo = Paths get paths("repo").toString
+      new RemoteLocalNode(nodeinfo.clusterName, id, node.ip, node.http.publishAddress, node.transport.publishAddress, pathData, pathHome, pathRepo)
 
     } catch {
       case NonFatal(e) =>
         println(s"Creating new local node")
         val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
         val pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
-        LocalNode("localnode-cluster", pathHome.toAbsolutePath.toString)
+        val node = LocalNode("localnode-cluster", pathHome.toAbsolutePath.toString)
+        // allow time for the node to start up
+        Thread.sleep(3000)
+        node
     }
   }
 }

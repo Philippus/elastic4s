@@ -1,0 +1,950 @@
+{
+    "_nodes": {
+        "total": 4,
+        "successful": 4,
+        "failed": 0
+    },
+    "cluster_name": "localnode-cluster",
+    "nodes": {
+        "eCyQGGtuQISnpCEzBMUtXw": {
+            "name": "eCyQGGt",
+            "transport_address": "127.0.0.1:9302",
+            "host": "127.0.0.1",
+            "ip": "127.0.0.1",
+            "version": "6.0.0-alpha2",
+            "build_hash": "0424099",
+            "total_indexing_buffer": 381786521,
+            "roles": [
+                "master",
+                "data",
+                "ingest"
+            ],
+            "settings": {
+                "client": {
+                    "type": "node"
+                },
+                "cluster": {
+                    "name": "localnode-cluster"
+                },
+                "http": {
+                    "type": "netty4",
+                    "enabled": "true"
+                },
+                "node": {
+                    "max_local_storage_nodes": "10",
+                    "name": "eCyQGGt"
+                },
+                "path": {
+                    "data": [
+                        "/tmp/a4e442bf-37fb-4312-8502-188610a1b0f3/data"
+                    ],
+                    "logs": "/tmp/a4e442bf-37fb-4312-8502-188610a1b0f3/logs",
+                    "home": "/tmp/a4e442bf-37fb-4312-8502-188610a1b0f3",
+                    "repo": "/tmp/a4e442bf-37fb-4312-8502-188610a1b0f3/repo"
+                },
+                "transport": {
+                    "type": {
+                        "default": "netty4"
+                    }
+                }
+            },
+            "os": {
+                "refresh_interval_in_millis": 1000,
+                "name": "Linux",
+                "arch": "amd64",
+                "version": "3.19.0-15-generic",
+                "available_processors": 8,
+                "allocated_processors": 8
+            },
+            "process": {
+                "refresh_interval_in_millis": 1000,
+                "id": 3543,
+                "mlockall": false
+            },
+            "jvm": {
+                "pid": 3543,
+                "version": "1.8.0_45",
+                "vm_name": "Java HotSpot(TM) 64-Bit Server VM",
+                "vm_version": "25.45-b02",
+                "vm_vendor": "Oracle Corporation",
+                "start_time_in_millis": 1497704964850,
+                "mem": {
+                    "heap_init_in_bytes": 1073741824,
+                    "heap_max_in_bytes": 3817865216,
+                    "non_heap_init_in_bytes": 2555904,
+                    "non_heap_max_in_bytes": 2281701376,
+                    "direct_max_in_bytes": 3817865216
+                },
+                "gc_collectors": [
+                    "PS Scavenge",
+                    "PS MarkSweep"
+                ],
+                "memory_pools": [
+                    "Code Cache",
+                    "Metaspace",
+                    "Compressed Class Space",
+                    "PS Eden Space",
+                    "PS Survivor Space",
+                    "PS Old Gen"
+                ],
+                "using_compressed_ordinary_object_pointers": "true",
+                "input_arguments": [
+                    "-Xms1024m",
+                    "-XX:ReservedCodeCacheSize=128m",
+                    "-Xmx4G",
+                    "-XX:MaxMetaspaceSize=1G",
+                    "-XX:MaxPermSize=1G"
+                ]
+            },
+            "thread_pool": {
+                "force_merge": {
+                    "type": "fixed",
+                    "min": 1,
+                    "max": 1,
+                    "queue_size": -1
+                },
+                "fetch_shard_started": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "listener": {
+                    "type": "fixed",
+                    "min": 4,
+                    "max": 4,
+                    "queue_size": -1
+                },
+                "index": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "refresh": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "generic": {
+                    "type": "scaling",
+                    "min": 4,
+                    "max": 128,
+                    "keep_alive": "30s",
+                    "queue_size": -1
+                },
+                "warmer": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "search": {
+                    "type": "fixed_auto_queue_size",
+                    "min": 13,
+                    "max": 13,
+                    "queue_size": 1000
+                },
+                "flush": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "fetch_shard_store": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "management": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 5,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "get": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 1000
+                },
+                "bulk": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "snapshot": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                }
+            },
+            "transport": {
+                "bound_address": [
+                    "[::1]:9302",
+                    "127.0.0.1:9302"
+                ],
+                "publish_address": "127.0.0.1:9302",
+                "profiles": {}
+            },
+            "http": {
+                "bound_address": [
+                    "[::1]:9202",
+                    "127.0.0.1:9202"
+                ],
+                "publish_address": "127.0.0.1:9202",
+                "max_content_length_in_bytes": 104857600
+            },
+            "plugins": [
+                {
+                    "name": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.transport.Netty4Plugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.transport.Netty4Plugin",
+                    "has_native_controller": false
+                }
+            ],
+            "modules": [],
+            "ingest": {
+                "processors": []
+            }
+        },
+        "Gp-uXlDjSKC9doHxne4rqw": {
+            "name": "Gp-uXlD",
+            "transport_address": "127.0.0.1:9303",
+            "host": "127.0.0.1",
+            "ip": "127.0.0.1",
+            "version": "6.0.0-alpha2",
+            "build_hash": "0424099",
+            "total_indexing_buffer": 381786521,
+            "roles": [
+                "master",
+                "data",
+                "ingest"
+            ],
+            "settings": {
+                "client": {
+                    "type": "node"
+                },
+                "cluster": {
+                    "name": "localnode-cluster"
+                },
+                "http": {
+                    "type": "netty4",
+                    "enabled": "true"
+                },
+                "node": {
+                    "max_local_storage_nodes": "10",
+                    "name": "Gp-uXlD"
+                },
+                "path": {
+                    "data": [
+                        "/tmp/4ce8a474-2a3c-4cbd-bc3e-93c3776f223d/data"
+                    ],
+                    "logs": "/tmp/4ce8a474-2a3c-4cbd-bc3e-93c3776f223d/logs",
+                    "home": "/tmp/4ce8a474-2a3c-4cbd-bc3e-93c3776f223d",
+                    "repo": "/tmp/4ce8a474-2a3c-4cbd-bc3e-93c3776f223d/repo"
+                },
+                "transport": {
+                    "type": {
+                        "default": "netty4"
+                    }
+                }
+            },
+            "os": {
+                "refresh_interval_in_millis": 1000,
+                "name": "Linux",
+                "arch": "amd64",
+                "version": "3.19.0-15-generic",
+                "available_processors": 8,
+                "allocated_processors": 8
+            },
+            "process": {
+                "refresh_interval_in_millis": 1000,
+                "id": 3543,
+                "mlockall": false
+            },
+            "jvm": {
+                "pid": 3543,
+                "version": "1.8.0_45",
+                "vm_name": "Java HotSpot(TM) 64-Bit Server VM",
+                "vm_version": "25.45-b02",
+                "vm_vendor": "Oracle Corporation",
+                "start_time_in_millis": 1497704964850,
+                "mem": {
+                    "heap_init_in_bytes": 1073741824,
+                    "heap_max_in_bytes": 3817865216,
+                    "non_heap_init_in_bytes": 2555904,
+                    "non_heap_max_in_bytes": 2281701376,
+                    "direct_max_in_bytes": 3817865216
+                },
+                "gc_collectors": [
+                    "PS Scavenge",
+                    "PS MarkSweep"
+                ],
+                "memory_pools": [
+                    "Code Cache",
+                    "Metaspace",
+                    "Compressed Class Space",
+                    "PS Eden Space",
+                    "PS Survivor Space",
+                    "PS Old Gen"
+                ],
+                "using_compressed_ordinary_object_pointers": "true",
+                "input_arguments": [
+                    "-Xms1024m",
+                    "-XX:ReservedCodeCacheSize=128m",
+                    "-Xmx4G",
+                    "-XX:MaxMetaspaceSize=1G",
+                    "-XX:MaxPermSize=1G"
+                ]
+            },
+            "thread_pool": {
+                "force_merge": {
+                    "type": "fixed",
+                    "min": 1,
+                    "max": 1,
+                    "queue_size": -1
+                },
+                "fetch_shard_started": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "listener": {
+                    "type": "fixed",
+                    "min": 4,
+                    "max": 4,
+                    "queue_size": -1
+                },
+                "index": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "refresh": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "generic": {
+                    "type": "scaling",
+                    "min": 4,
+                    "max": 128,
+                    "keep_alive": "30s",
+                    "queue_size": -1
+                },
+                "warmer": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "search": {
+                    "type": "fixed_auto_queue_size",
+                    "min": 13,
+                    "max": 13,
+                    "queue_size": 1000
+                },
+                "flush": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "fetch_shard_store": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "management": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 5,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "get": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 1000
+                },
+                "bulk": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "snapshot": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                }
+            },
+            "transport": {
+                "bound_address": [
+                    "[::1]:9303",
+                    "127.0.0.1:9303"
+                ],
+                "publish_address": "127.0.0.1:9303",
+                "profiles": {}
+            },
+            "http": {
+                "bound_address": [
+                    "[::1]:9203",
+                    "127.0.0.1:9203"
+                ],
+                "publish_address": "127.0.0.1:9203",
+                "max_content_length_in_bytes": 104857600
+            },
+            "plugins": [
+                {
+                    "name": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.transport.Netty4Plugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.transport.Netty4Plugin",
+                    "has_native_controller": false
+                }
+            ],
+            "modules": [],
+            "ingest": {
+                "processors": []
+            }
+        },
+        "Yu9FV7toRhuVgxXFhnlw2w": {
+            "name": "Yu9FV7t",
+            "transport_address": "127.0.0.1:9300",
+            "host": "127.0.0.1",
+            "ip": "127.0.0.1",
+            "version": "6.0.0-alpha2",
+            "build_hash": "0424099",
+            "total_indexing_buffer": 381786521,
+            "roles": [
+                "master",
+                "data",
+                "ingest"
+            ],
+            "settings": {
+                "client": {
+                    "type": "node"
+                },
+                "cluster": {
+                    "name": "localnode-cluster"
+                },
+                "http": {
+                    "type": "netty4",
+                    "enabled": "true"
+                },
+                "node": {
+                    "max_local_storage_nodes": "10",
+                    "name": "Yu9FV7t"
+                },
+                "path": {
+                    "data": [
+                        "/tmp/2fda6c43-e31d-4118-9fca-bc5420147815/data"
+                    ],
+                    "logs": "/tmp/2fda6c43-e31d-4118-9fca-bc5420147815/logs",
+                    "home": "/tmp/2fda6c43-e31d-4118-9fca-bc5420147815",
+                    "repo": "/tmp/2fda6c43-e31d-4118-9fca-bc5420147815/repo"
+                },
+                "transport": {
+                    "type": {
+                        "default": "netty4"
+                    }
+                }
+            },
+            "os": {
+                "refresh_interval_in_millis": 1000,
+                "name": "Linux",
+                "arch": "amd64",
+                "version": "3.19.0-15-generic",
+                "available_processors": 8,
+                "allocated_processors": 8
+            },
+            "process": {
+                "refresh_interval_in_millis": 1000,
+                "id": 3543,
+                "mlockall": false
+            },
+            "jvm": {
+                "pid": 3543,
+                "version": "1.8.0_45",
+                "vm_name": "Java HotSpot(TM) 64-Bit Server VM",
+                "vm_version": "25.45-b02",
+                "vm_vendor": "Oracle Corporation",
+                "start_time_in_millis": 1497704964850,
+                "mem": {
+                    "heap_init_in_bytes": 1073741824,
+                    "heap_max_in_bytes": 3817865216,
+                    "non_heap_init_in_bytes": 2555904,
+                    "non_heap_max_in_bytes": 2281701376,
+                    "direct_max_in_bytes": 3817865216
+                },
+                "gc_collectors": [
+                    "PS Scavenge",
+                    "PS MarkSweep"
+                ],
+                "memory_pools": [
+                    "Code Cache",
+                    "Metaspace",
+                    "Compressed Class Space",
+                    "PS Eden Space",
+                    "PS Survivor Space",
+                    "PS Old Gen"
+                ],
+                "using_compressed_ordinary_object_pointers": "true",
+                "input_arguments": [
+                    "-Xms1024m",
+                    "-XX:ReservedCodeCacheSize=128m",
+                    "-Xmx4G",
+                    "-XX:MaxMetaspaceSize=1G",
+                    "-XX:MaxPermSize=1G"
+                ]
+            },
+            "thread_pool": {
+                "force_merge": {
+                    "type": "fixed",
+                    "min": 1,
+                    "max": 1,
+                    "queue_size": -1
+                },
+                "fetch_shard_started": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "listener": {
+                    "type": "fixed",
+                    "min": 4,
+                    "max": 4,
+                    "queue_size": -1
+                },
+                "index": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "refresh": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "generic": {
+                    "type": "scaling",
+                    "min": 4,
+                    "max": 128,
+                    "keep_alive": "30s",
+                    "queue_size": -1
+                },
+                "warmer": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "search": {
+                    "type": "fixed_auto_queue_size",
+                    "min": 13,
+                    "max": 13,
+                    "queue_size": 1000
+                },
+                "flush": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "fetch_shard_store": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "management": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 5,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "get": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 1000
+                },
+                "bulk": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "snapshot": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                }
+            },
+            "transport": {
+                "bound_address": [
+                    "[::1]:9300",
+                    "127.0.0.1:9300"
+                ],
+                "publish_address": "127.0.0.1:9300",
+                "profiles": {}
+            },
+            "http": {
+                "bound_address": [
+                    "[::1]:9201",
+                    "127.0.0.1:9201"
+                ],
+                "publish_address": "127.0.0.1:9201",
+                "max_content_length_in_bytes": 104857600
+            },
+            "plugins": [
+                {
+                    "name": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.transport.Netty4Plugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.transport.Netty4Plugin",
+                    "has_native_controller": false
+                }
+            ],
+            "modules": [],
+            "ingest": {
+                "processors": []
+            }
+        },
+        "a1S2NTKYSeGPcvGwzyUKyA": {
+            "name": "a1S2NTK",
+            "transport_address": "127.0.0.1:9301",
+            "host": "127.0.0.1",
+            "ip": "127.0.0.1",
+            "version": "6.0.0-alpha2",
+            "build_hash": "0424099",
+            "total_indexing_buffer": 381786521,
+            "roles": [
+                "master",
+                "data",
+                "ingest"
+            ],
+            "settings": {
+                "client": {
+                    "type": "node"
+                },
+                "cluster": {
+                    "name": "localnode-cluster"
+                },
+                "http": {
+                    "type": "netty4",
+                    "enabled": "true"
+                },
+                "node": {
+                    "max_local_storage_nodes": "10",
+                    "name": "a1S2NTK"
+                },
+                "path": {
+                    "data": [
+                        "/tmp/0b419a22-df5d-4ed2-8c13-87256ecf7a9c/data"
+                    ],
+                    "logs": "/tmp/0b419a22-df5d-4ed2-8c13-87256ecf7a9c/logs",
+                    "home": "/tmp/0b419a22-df5d-4ed2-8c13-87256ecf7a9c",
+                    "repo": "/tmp/0b419a22-df5d-4ed2-8c13-87256ecf7a9c/repo"
+                },
+                "transport": {
+                    "type": {
+                        "default": "netty4"
+                    }
+                }
+            },
+            "os": {
+                "refresh_interval_in_millis": 1000,
+                "name": "Linux",
+                "arch": "amd64",
+                "version": "3.19.0-15-generic",
+                "available_processors": 8,
+                "allocated_processors": 8
+            },
+            "process": {
+                "refresh_interval_in_millis": 1000,
+                "id": 3543,
+                "mlockall": false
+            },
+            "jvm": {
+                "pid": 3543,
+                "version": "1.8.0_45",
+                "vm_name": "Java HotSpot(TM) 64-Bit Server VM",
+                "vm_version": "25.45-b02",
+                "vm_vendor": "Oracle Corporation",
+                "start_time_in_millis": 1497704964850,
+                "mem": {
+                    "heap_init_in_bytes": 1073741824,
+                    "heap_max_in_bytes": 3817865216,
+                    "non_heap_init_in_bytes": 2555904,
+                    "non_heap_max_in_bytes": 2281701376,
+                    "direct_max_in_bytes": 3817865216
+                },
+                "gc_collectors": [
+                    "PS Scavenge",
+                    "PS MarkSweep"
+                ],
+                "memory_pools": [
+                    "Code Cache",
+                    "Metaspace",
+                    "Compressed Class Space",
+                    "PS Eden Space",
+                    "PS Survivor Space",
+                    "PS Old Gen"
+                ],
+                "using_compressed_ordinary_object_pointers": "true",
+                "input_arguments": [
+                    "-Xms1024m",
+                    "-XX:ReservedCodeCacheSize=128m",
+                    "-Xmx4G",
+                    "-XX:MaxMetaspaceSize=1G",
+                    "-XX:MaxPermSize=1G"
+                ]
+            },
+            "thread_pool": {
+                "force_merge": {
+                    "type": "fixed",
+                    "min": 1,
+                    "max": 1,
+                    "queue_size": -1
+                },
+                "fetch_shard_started": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "listener": {
+                    "type": "fixed",
+                    "min": 4,
+                    "max": 4,
+                    "queue_size": -1
+                },
+                "index": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "refresh": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "generic": {
+                    "type": "scaling",
+                    "min": 4,
+                    "max": 128,
+                    "keep_alive": "30s",
+                    "queue_size": -1
+                },
+                "warmer": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "search": {
+                    "type": "fixed_auto_queue_size",
+                    "min": 13,
+                    "max": 13,
+                    "queue_size": 1000
+                },
+                "flush": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "fetch_shard_store": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 16,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "management": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 5,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                },
+                "get": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 1000
+                },
+                "bulk": {
+                    "type": "fixed",
+                    "min": 8,
+                    "max": 8,
+                    "queue_size": 200
+                },
+                "snapshot": {
+                    "type": "scaling",
+                    "min": 1,
+                    "max": 4,
+                    "keep_alive": "5m",
+                    "queue_size": -1
+                }
+            },
+            "transport": {
+                "bound_address": [
+                    "[::1]:9301",
+                    "127.0.0.1:9301"
+                ],
+                "publish_address": "127.0.0.1:9301",
+                "profiles": {}
+            },
+            "http": {
+                "bound_address": [
+                    "[::1]:9200",
+                    "127.0.0.1:9200"
+                ],
+                "publish_address": "127.0.0.1:9200",
+                "max_content_length_in_bytes": 104857600
+            },
+            "plugins": [
+                {
+                    "name": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.index.reindex.ReindexPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.percolator.PercolatorPlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.script.mustache.MustachePlugin",
+                    "has_native_controller": false
+                },
+                {
+                    "name": "org.elasticsearch.transport.Netty4Plugin",
+                    "version": "NA",
+                    "description": "classpath plugin",
+                    "classname": "org.elasticsearch.transport.Netty4Plugin",
+                    "has_native_controller": false
+                }
+            ],
+            "modules": [],
+            "ingest": {
+                "processors": []
+            }
+        }
+    }
+}

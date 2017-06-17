@@ -39,7 +39,6 @@ case class NodeInfoResponse(@JsonProperty("cluster_name") clusterName: String,
 
 case class NodeInfo(name: String,
                     @JsonProperty("transport_address") transportAddress: String,
-                    @JsonProperty("http_address") httpAddress: String,
                     host: String,
                     ip: String,
                     version: String,
@@ -50,6 +49,7 @@ case class NodeInfo(name: String,
                     os: OsInfo,
                     process: Process,
                     transport: Transport,
+                    http: Http,
                     @JsonProperty("thread_pool") threadPools: Map[String, ThreadPool]) {
 
   def settings: Config = ConfigFactory.parseMap(Maps.deepAsJava(settingsAsMap))
@@ -57,6 +57,9 @@ case class NodeInfo(name: String,
 
 case class Transport(@JsonProperty("bound_address") boundAddress: Seq[String],
                      @JsonProperty("publish_address") publishAddress: String)
+
+case class Http(@JsonProperty("bound_address") boundAddress: Seq[String],
+                @JsonProperty("publish_address") publishAddress: String)
 
 case class ThreadPool(`type`: String,
                       @JsonProperty("keep_alive") keepAlive: Option[String],
