@@ -1,13 +1,18 @@
 package com.sksamuel.elastic4s.http.search
 
+import java.nio.charset.Charset
+
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams}
+import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
+import scala.io.{Codec, Source}
+import scala.util.Try
 
 trait SearchImplicits {
 
@@ -24,6 +29,26 @@ trait SearchImplicits {
   }
 
   implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
+
+    import scala.collection.JavaConverters._
+
+    override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
+      override def onResponse(response: Response): Try[MultiSearchResponse] = Try {
+        val charset = Option(response.getEntity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
+        implicit val codec = Codec(Charset.forName(charset))
+        val body = Source.fromInputStream(response.getEntity.getContent).mkString
+        val json = JacksonSupport.mapper.readTree(body)
+        val items = json.get("responses").elements.asScala.zipWithIndex.map { case (element, index) =>
+          val status = element.get("status").intValue()
+          val either = if (element.has("error"))
+            Left(JacksonSupport.mapper.treeToValue[SearchError](element))
+          else
+            Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
+          MultisearchResponseItem(index, status, either)
+        }.toSeq
+        MultiSearchResponse(items)
+      }
+    }
 
     override def execute(client: RestClient, request: MultiSearchDefinition): Future[Response] = {
 

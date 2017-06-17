@@ -22,7 +22,7 @@ trait HttpExecutable[T, U] extends Logging {
   implicit def ev: Manifest[U] = {
     val parameterizedType = getClass.getGenericInterfaces.apply(0).asInstanceOf[ParameterizedType]
     val typeArguments = parameterizedType.getActualTypeArguments
-    val klass = typeArguments.apply(0).asInstanceOf[Class[U]]
+    val klass = typeArguments.apply(1).asInstanceOf[Class[U]]
     Manifest.classType(klass)
   }
 

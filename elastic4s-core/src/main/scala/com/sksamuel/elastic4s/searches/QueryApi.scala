@@ -197,6 +197,8 @@ trait QueryApi {
 
   def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
 
+  def rawQuery(json: String): RawQueryDefinition = RawQueryDefinition(json)
+
   def regexQuery(tuple: (String, String)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: String): RegexQueryDefinition = RegexQueryDefinition(field, value)
 

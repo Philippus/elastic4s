@@ -1,9 +1,29 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.HitReader
 
-case class MultiSearchResponse(responses: Seq[SearchResponse]) {
-  def size: Int = responses.size
-  def to[T: HitReader]: IndexedSeq[T] = responses.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = responses.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
+case class SearchError(`type`: String,
+                       `reason`: String,
+                       @JsonProperty("resource.type") resourceType: String,
+                       @JsonProperty("resource.id") resourceId: String,
+                       index_uuid: String,
+                       index: String)
+
+case class MultisearchResponseItem(index: Int, status: Int, response: Either[SearchError, SearchResponse])
+
+case class MultiSearchResponse(items: Seq[MultisearchResponseItem]) {
+
+  def size: Int = items.size
+
+  def failures: Seq[SearchError] = items.map(_.response).collect {
+    case left: Left[SearchError, SearchResponse] => left.value
+  }
+
+  def successes: Seq[SearchResponse] = items.map(_.response).collect {
+    case right: Right[SearchError, SearchResponse] => right.value
+  }
+
+  def to[T: HitReader]: IndexedSeq[T] = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
 }
