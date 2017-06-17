@@ -11,12 +11,8 @@ object HasChildBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("has_child")
     builder.field("type", q.`type`)
-    q.minMaxChildren.foreach { minmax =>
-      if (minmax._1 > 0)
-        builder.field("min_children", minmax._1)
-      if (minmax._2 > 0)
-        builder.field("max_children", minmax._2)
-    }
+    q.minChildren.foreach(builder.field("min_children", _))
+    q.maxChildren.foreach(builder.field("max_children", _))
     builder.field("score_mode", EnumConversions.scoreMode(q.scoreMode))
     builder.rawField("query", QueryBuilderFn(q.query))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))

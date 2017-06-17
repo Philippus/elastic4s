@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, ClassloaderLocalNodeProvider, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassloaderLocalNodeProvider, ElasticSugar}
 import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
@@ -24,7 +25,7 @@ class ScrollPublisherVerificationTest
 
   Try {
     client.execute {
-      deleteIndex("scrollpubver")
+      ElasticDsl.deleteIndex("scrollpubver")
     }.await
   }
 
