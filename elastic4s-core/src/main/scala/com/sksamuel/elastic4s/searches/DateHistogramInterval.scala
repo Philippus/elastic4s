@@ -38,6 +38,10 @@ object DateHistogramInterval {
     val interval = "1y"
   }
 
+  def fromString(str: String) = new DateHistogramInterval {
+    override def interval: String = str
+  }
+
   def seconds(seconds: Long) = new DateHistogramInterval {
     override def interval: String = seconds + "s"
   }
