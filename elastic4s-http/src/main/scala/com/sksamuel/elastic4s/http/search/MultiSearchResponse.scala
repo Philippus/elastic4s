@@ -17,11 +17,11 @@ case class MultiSearchResponse(items: Seq[MultisearchResponseItem]) {
   def size: Int = items.size
 
   def failures: Seq[SearchError] = items.map(_.response).collect {
-    case left: Left[SearchError, SearchResponse] => left.value
+    case left: Left[SearchError, SearchResponse] => left.left.get
   }
 
   def successes: Seq[SearchResponse] = items.map(_.response).collect {
-    case right: Right[SearchError, SearchResponse] => right.value
+    case right: Right[SearchError, SearchResponse] => right.right.get
   }
 
   def to[T: HitReader]: IndexedSeq[T] = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq

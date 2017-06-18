@@ -37,8 +37,8 @@ object Build extends AutoPlugin {
     ivyConfigurations += config("compileonly").hide,
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
-    scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.8", scalaVersion.value),
+    scalaVersion := "2.11.8",
+    crossScalaVersions := Seq("2.11.8", "2.12.2"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/89f6d17",
