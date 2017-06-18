@@ -8,10 +8,10 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar with Di
 
   client.execute {
     bulk(
-      index into "script/tubestops" fields("name" -> "south kensington", "line" -> "district"),
-      index into "script/tubestops" fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
-      index into "script/tubestops" fields("name" -> "cockfosters", "line" -> "picadilly"),
-      index into "script/tubestops" fields("name" -> "bank", "line" -> "northern")
+      indexInto("script/tubestops") fields("name" -> "south kensington", "line" -> "district"),
+      indexInto("script/tubestops") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
+      indexInto("script/tubestops") fields("name" -> "cockfosters", "line" -> "picadilly"),
+      indexInto("script/tubestops") fields("name" -> "bank", "line" -> "northern")
     )
   }.await
 
@@ -25,7 +25,9 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar with Di
     }
     "can use params" ignore {
       search("script/tubestops") query "earls" scriptfields (
-        scriptField("a") script "'Fare is: ' + doc['zone'].value * fare" params Map("fare" -> 4.50)
+        scriptField("a") script (
+          script("'Fare is: ' + doc['zone'].value * fare") params Map("fare" -> 4.50)
+          )
         ) should haveFieldValue("Fare is: 9.0")
     }
   }

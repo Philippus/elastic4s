@@ -290,8 +290,6 @@ trait ElasticDsl
   case object script {
     @deprecated("use scriptSort(script).typed(ScriptSortType)", "5.0.0")
     def sort(script: ScriptDefinition): ScriptSortExpectsType = scriptSort(script)
-    @deprecated("use scriptField(name)", "5.0.0")
-    def field(n: String): ExpectsScript = ExpectsScript(field = n)
   }
 
   trait HealthKeyword

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
@@ -28,6 +29,31 @@ object SearchBodyBuilderFn {
     request.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty) {
       builder.autoarray("search_after", request.searchAfter)
+    }
+
+    if (request.scriptFields.nonEmpty) {
+      builder.startObject("script_fields")
+      request.scriptFields.foreach { field =>
+        builder.startObject(field.field)
+        builder.rawField("script", ScriptBuilderFn(field.script))
+        builder.endObject()
+      }
+      builder.endObject()
+    }
+
+    if (request.rescorers.nonEmpty) {
+      builder.startArray("rescore")
+      request.rescorers.foreach { rescore =>
+        builder.startObject()
+        rescore.windowSize.foreach(builder.field("window_size", _))
+        builder.startObject("query")
+        builder.rawField("rescore_query", QueryBuilderFn(rescore.query))
+        rescore.rescoreQueryWeight.foreach(builder.field("rescore_query_weight", _))
+        rescore.originalQueryWeight.foreach(builder.field("query_weight", _))
+        rescore.scoreMode.map(EnumConversions.queryRescoreMode).foreach(builder.field("score_mode", _))
+        builder.endObject().endObject()
+      }
+      builder.endArray()
     }
 
     if (request.sorts.nonEmpty) {

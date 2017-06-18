@@ -1,8 +1,7 @@
 {
-  "post_filter": {
-    "type": {
-      "value": "sometype",
-      "boost": 1.0
+    "post_filter": {
+        "type": {
+            "value": "sometype"
+        }
     }
-  }
 }

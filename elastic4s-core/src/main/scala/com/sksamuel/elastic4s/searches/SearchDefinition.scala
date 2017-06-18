@@ -96,18 +96,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     * @return this, an instance of [[SearchDefinition]]
     */
   def scriptfields(fields: ScriptFieldDefinition*): SearchDefinition = scriptfields(fields)
-  def scriptfields(fields: Iterable[ScriptFieldDefinition]): SearchDefinition = {
-    //    defs.foreach {
-    //      case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
-    //        _builder.addScriptField(name, new Script(script))
-    //      case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
-    //        _builder.addScriptField(name, new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
-    //                                                 options.map(_.asJava).getOrElse(new util.HashMap()),
-    //                                                 params.map(_.asJava).getOrElse(new util.HashMap())))
-    //    }
-    //    this
-    copy(scriptFields = fields.toSeq)
-  }
+  def scriptfields(fields: Iterable[ScriptFieldDefinition]): SearchDefinition = copy(scriptFields = fields.toSeq)
 
   /**
     * Adds a new suggestion to the search request, which can be looked up in the response

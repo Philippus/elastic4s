@@ -23,16 +23,14 @@ object ResponseHandler extends Logging {
 
   def json(entity: HttpEntity): JsonNode = fromEntity[JsonNode](entity)
 
-  def fromEntity[U](entity: HttpEntity, klass: Class[U]): U = {
-    logger.debug(s"Attempting to unmarshall response to ${klass.getName}")
+  def fromEntity[U: Manifest](entity: HttpEntity): U = {
+    logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
     val charset = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
     implicit val codec = Codec(Charset.forName(charset))
     val body = Source.fromInputStream(entity.getContent).mkString
     logger.debug(body)
-    JacksonSupport.mapper.readValue(body, klass)
+    JacksonSupport.mapper.readValue[U](body)
   }
-
-  def fromEntity[U: Manifest](entity: HttpEntity): U = fromEntity(entity, manifest.runtimeClass.asInstanceOf[Class[U]])
 
   def default[U: Manifest] = new DefaultResponseHandler[U]
   def failure404[U: Manifest] = new NotFound404ResponseHandler[U]

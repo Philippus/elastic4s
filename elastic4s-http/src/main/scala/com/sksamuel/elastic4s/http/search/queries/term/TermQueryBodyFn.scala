@@ -10,7 +10,7 @@ object TermQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("term")
 
     builder.startObject(t.field)
-    t.boost.map(_.toString).foreach(builder.field("boost", _))
+    t.boost.foreach(builder.field("boost", _))
     t.queryName.foreach(builder.field("_name", _))
     builder.autofield("value", t.value)
 

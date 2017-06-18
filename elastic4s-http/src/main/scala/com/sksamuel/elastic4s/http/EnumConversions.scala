@@ -2,14 +2,17 @@ package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.VersionType
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.{DateHistogramInterval, ScoreMode}
+import com.sksamuel.elastic4s.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode}
-import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance.{Arc, Plane}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
+import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
+import com.sksamuel.elastic4s.searches.{DateHistogramInterval, QueryRescoreMode, ScoreMode}
 import org.joda.time.DateTimeZone
 
 object EnumConversions {
@@ -21,9 +24,20 @@ object EnumConversions {
     case SortOrder.Desc => "desc"
   }
 
+  def queryRescoreMode(mode: QueryRescoreMode): String = mode match {
+    case Avg => "avg"
+    case Max => "max"
+    case Min => "min"
+    case Total => "total"
+    case Multiply => "multiply"
+  }
+
   def sortMode(mode: SortMode): String = mode.toString.toLowerCase
 
-  def geoDistance(distance: GeoDistance): String = distance.toString.toLowerCase
+  def geoDistance(distance: GeoDistance): String = distance match {
+    case Arc => "arc"
+    case Plane => "plane"
+  }
 
   def order(order: TermsOrder): XContentBuilder = {
     val builder = XContentFactory.obj()
@@ -76,12 +90,21 @@ object EnumConversions {
 
   def suggestMode(mode: SuggestMode): String = mode.toString.toLowerCase
 
-  def stringDistance(impl: StringDistanceImpl): String = ???
+  def stringDistance(impl: StringDistanceImpl): String = impl.toString
 
-  def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = ???
+  def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = flag.toString.toUpperCase
 
-  def zeroTermsQuery(terms: ZeroTermsQuery): String = ???
+  def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
+    case ZeroTermsQuery.All => "all"
+    case ZeroTermsQuery.None => "none"
+  }
 
-  def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String = ???
+  def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String = mtype match {
+    case BEST_FIELDS => "best_fields"
+    case MOST_FIELDS => "most_fields"
+    case CROSS_FIELDS => "cross_fields"
+    case PHRASE => "phrase"
+    case PHRASE_PREFIX => "phrase_prefix"
+  }
 
 }

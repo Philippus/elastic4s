@@ -1,25 +1,21 @@
-
 {
-  "query": {
-    "nested": {
-      "query": {
-        "constant_score": {
-          "filter": {
-            "term": {
-              "name": {
-                "value": "sammy",
-                "boost": 1.0
-              }
-            }
-          },
-          "boost": 1.0
+    "query": {
+        "nested": {
+            "path": "obj1",
+            "score_mode": "avg",
+            "query": {
+                "constant_score": {
+                    "filter": {
+                        "term": {
+                            "name": {
+                                "value": "sammy"
+                            }
+                        }
+                    }
+                }
+            },
+            "boost": 14.5,
+            "_name": "namey"
         }
-      },
-      "path": "obj1",
-      "ignore_unmapped": false,
-      "score_mode": "avg",
-      "boost": 14.5,
-      "_name": "namey"
     }
-  }
 }

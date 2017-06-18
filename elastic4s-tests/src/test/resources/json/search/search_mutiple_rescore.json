@@ -12,6 +12,18 @@
                 "query_weight": 1.4,
                 "score_mode": "max"
             }
+        },
+        {
+            "window_size": 9,
+            "query": {
+                "rescore_query": {
+                    "simple_query_string": {
+                        "query": "quick brown fox"
+                    }
+                },
+                "rescore_query_weight": 2.4,
+                "score_mode": "multiply"
+            }
         }
     ]
 }

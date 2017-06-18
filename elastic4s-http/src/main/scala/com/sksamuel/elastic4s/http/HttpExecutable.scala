@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http
 
-import java.lang.reflect.ParameterizedType
 import java.nio.charset.Charset
 
 import com.sksamuel.exts.Logging
@@ -15,16 +14,9 @@ import scala.util.{Failure, Success}
   * @tparam T the type of the request object handled by this handler
   * @tparam U the type of the response object returned by this handler
   */
-trait HttpExecutable[T, U] extends Logging {
+abstract class HttpExecutable[T, U: Manifest] extends Logging {
 
   import scala.concurrent.ExecutionContext.Implicits.global
-
-  implicit def ev: Manifest[U] = {
-    val parameterizedType = getClass.getGenericInterfaces.apply(0).asInstanceOf[ParameterizedType]
-    val typeArguments = parameterizedType.getActualTypeArguments
-    val klass = typeArguments.apply(1).asInstanceOf[Class[U]]
-    Manifest.classType(klass)
-  }
 
   def responseHandler: ResponseHandler[U] = ResponseHandler.default[U]
 

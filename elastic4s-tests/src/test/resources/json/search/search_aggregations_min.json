@@ -1,17 +1,16 @@
-
 {
-  "aggregations": {
-    "grades_min": {
-      "min": {
-        "field": "grade",
-        "script": {
-          "inline": "doc['grade'].value",
-          "lang": "lua",
-          "params": {
-            "apple": "bad"
-          }
+    "aggs": {
+        "grades_min": {
+            "min": {
+                "field": "grade",
+                "script": {
+                    "lang": "lua",
+                    "inline": "doc['grade'].value",
+                    "params": {
+                        "apple": "bad"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

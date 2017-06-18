@@ -1,15 +1,13 @@
 {
-  "query": {
-    "simple_query_string": {
-      "query": "coldplay",
-      "fields": [
-        "name^1.0"
-      ],
-      "analyzer": "whitespace",
-      "flags": 548,
-      "default_operator": "and",
-      "analyze_wildcard": false,
-      "boost": 1.0
+    "query": {
+        "simple_query_string": {
+            "default_operator": "AND",
+            "analyzer": "whitespace",
+            "fields": [
+                "name^-1.0"
+            ],
+            "flags": "PRECEDENCE|OR|SLOP",
+            "query": "coldplay"
+        }
     }
-  }
 }

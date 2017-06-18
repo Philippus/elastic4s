@@ -20,7 +20,7 @@ object TermsQueryBodyFn {
     }
     t.path.foreach(builder.field("path", _))
     t.routing.foreach(builder.field("routing", _))
-    t.boost.map(_.toString).foreach(builder.field("boost", _))
+    t.boost.foreach(builder.field("boost", _))
     t.queryName.foreach(builder.field("_name", _))
 
     builder.endObject().endObject()

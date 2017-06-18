@@ -1,29 +1,25 @@
 {
-  "size": 5,
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "term": {
-            "title": {
-              "value": "Search",
-              "boost": 1.0
-            }
-          }
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "term": {
+                        "title": {
+                            "value": "Search"
+                        }
+                    }
+                }
+            ],
+            "filter": [
+                {
+                    "term": {
+                        "status": {
+                            "value": "published"
+                        }
+                    }
+                }
+            ]
         }
-      ],
-      "filter": [
-        {
-          "term": {
-            "status": {
-              "value": "published",
-              "boost": 1.0
-            }
-          }
-        }
-      ],
-      "adjust_pure_negative": true,
-      "boost": 1.0
-    }
-  }
+    },
+    "size": 5
 }

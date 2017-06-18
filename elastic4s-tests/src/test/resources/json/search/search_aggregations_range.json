@@ -1,5 +1,5 @@
 {
-    "aggregations": {
+    "aggs": {
         "range_agg": {
             "range": {
                 "field": "score",
@@ -8,8 +8,7 @@
                         "from": 10.0,
                         "to": 15.0
                     }
-                ],
-                "keyed": false
+                ]
             }
         }
     }

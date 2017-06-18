@@ -1,12 +1,9 @@
 {
-  "post_filter": {
-    "regexp": {
-      "singer": {
-        "value": "chris martin",
-        "flags_value": 65535,
-        "max_determinized_states": 10000,
-        "boost": 1.0
-      }
+    "post_filter": {
+        "regexp": {
+            "singer": {
+                "value": "chris martin"
+            }
+        }
     }
-  }
 }

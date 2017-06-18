@@ -1,10 +1,9 @@
 {
-  "post_filter": {
-    "prefix": {
-      "singer": {
-        "value": "chris martin",
-        "boost": 1.0
-      }
+    "post_filter": {
+        "prefix": {
+            "singer": {
+                "value": "chris martin"
+            }
+        }
     }
-  }
 }

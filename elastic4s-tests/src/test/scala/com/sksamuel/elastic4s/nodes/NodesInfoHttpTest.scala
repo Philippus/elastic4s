@@ -12,7 +12,7 @@ class NodesInfoHttpTest extends WordSpec with Matchers with DiscoveryLocalNodePr
         nodeInfo()
       }.await
 
-      nodes.clusterName should be("classloader-node")
+      nodes.clusterName should be("localnode-cluster")
       nodes.nodes.values.toSeq.head.os.availableProcessors > 0 shouldBe true
     }
   }

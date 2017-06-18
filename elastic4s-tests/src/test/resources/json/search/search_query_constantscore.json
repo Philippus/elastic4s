@@ -1,15 +1,14 @@
 {
-  "query": {
-    "constant_score": {
-      "filter": {
-        "term": {
-          "name": {
-            "value": "sammy",
-            "boost": 1.0
-          }
+    "query": {
+        "constant_score": {
+            "filter": {
+                "term": {
+                    "name": {
+                        "value": "sammy"
+                    }
+                }
+            },
+            "boost": 14.5
         }
-      },
-      "boost": 14.5
     }
-  }
 }

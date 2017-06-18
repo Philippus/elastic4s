@@ -36,7 +36,7 @@ object RangeQueryBodyFn {
     range.includeUpper.foreach(builder.field("include_upper", _))
     range.includeLower.foreach(builder.field("include_lower", _))
 
-    range.boost.map(_.toString).foreach(builder.field("boost", _))
+    range.boost.foreach(builder.field("boost", _))
     range.timeZone.foreach(builder.field("time_zone", _))
     range.queryName.foreach(builder.field("_name", _))
 

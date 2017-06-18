@@ -1,18 +1,17 @@
 {
-  "sort": [
-    {
-      "singer.weight": {
-        "order": "desc",
-        "mode": "sum",
-        "nested_filter": {
-          "term": {
-            "singer.name": {
-              "value": "coldplay",
-              "boost": 1.0
+    "sort": [
+        {
+            "singer.weight": {
+                "mode": "sum",
+                "order": "desc",
+                "nested_filter": {
+                    "term": {
+                        "singer.name": {
+                            "value": "coldplay"
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  ]
+    ]
 }

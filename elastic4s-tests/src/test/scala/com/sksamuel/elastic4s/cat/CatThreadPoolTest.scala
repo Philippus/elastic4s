@@ -15,9 +15,12 @@ class CatThreadPoolTest extends FlatSpec with Matchers with DiscoveryLocalNodePr
   }.await
 
   "cat thread pool" should "return all pools" in {
-    http.execute {
+    val pools = http.execute {
       catThreadPool()
-    }.await.map(_.name).toSet shouldBe Set("refresh", "bulk", "listener", "warmer", "generic", "fetch_shard_store", "snapshot", "force_merge", "management", "flush", "get", "fetch_shard_started", "index", "search")
+    }.await.map(_.name).toSet
+    Set("refresh", "bulk", "listener", "warmer", "generic", "fetch_shard_store", "snapshot", "force_merge", "management", "flush", "get", "fetch_shard_started", "index", "search").foreach { pool =>
+      pools.contains(pool) shouldBe true
+    }
   }
 
 }

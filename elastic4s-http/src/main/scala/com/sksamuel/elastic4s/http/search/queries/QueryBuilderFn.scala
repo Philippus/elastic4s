@@ -33,7 +33,7 @@ object QueryBuilderFn {
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
     case q: MatchNoneQueryDefinition => MatchNoneBodyFn(q)
-    case q: MatchQueryDefinition => MatchBodyFn(q)
+    case q: MatchQueryDefinition => MatchQueryBuilderFn(q)
     case q: MatchPhraseDefinition => MatchPhraseQueryBodyFn(q)
     case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBodyFn(q)
     case q: MoreLikeThisQueryDefinition => MoreLikeThisBuilderFn(q)

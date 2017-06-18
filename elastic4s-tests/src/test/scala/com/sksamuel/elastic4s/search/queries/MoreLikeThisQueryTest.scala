@@ -10,9 +10,6 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar wit
 
   client.execute {
     createIndex("drinks").mappings (
-      mapping("category") as (
-        textField("name") store true analyzer StandardAnalyzer
-        ),
       mapping("drink") as (
         textField("text") store true analyzer StandardAnalyzer
         ) parent "a"
@@ -21,7 +18,6 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar wit
 
   client.execute {
     bulk(
-      indexInto("drinks/category") fields("name" → "alcohol") id 1,
       indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id 4 parent "1",
       indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id 6 parent "1",
       indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id 7 parent "1",

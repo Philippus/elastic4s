@@ -19,7 +19,7 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DualClientTests {
         clusterState()
       }.await
 
-      state.clusterName should be("classloader-node")
+      state.clusterName should be("localnode-cluster")
 
       val indexMetadata = state.metadata.flatMap(m => m.indices.headOption).map(_._2).getOrElse(Index("closed", Seq.empty))
 

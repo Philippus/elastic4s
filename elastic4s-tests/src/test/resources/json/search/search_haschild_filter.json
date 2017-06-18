@@ -1,21 +1,19 @@
 {
-  "post_filter": {
-    "has_child": {
-      "query": {
-        "term": {
-          "name": {
-            "value": "chris",
-            "boost": 1.0
-          }
+    "post_filter": {
+        "has_child": {
+            "type": "singer",
+            "min_children": 2,
+            "max_children": 4,
+            "score_mode": "min",
+            "query": {
+                "term": {
+                    "name": {
+                        "value": "chris"
+                    }
+                }
+            },
+            "boost": 2.3,
+            "_name": "namey"
         }
-      },
-      "type": "singer",
-      "score_mode": "min",
-      "min_children": 2,
-      "max_children": 4,
-      "ignore_unmapped": false,
-      "boost": 2.3,
-      "_name": "namey"
     }
-  }
 }

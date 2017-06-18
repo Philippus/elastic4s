@@ -182,7 +182,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     parallelExecution in Test := false,
     testForkedParallel in Test := false
   )
-  .dependsOn(tcp, http, jackson, testkit % "test")
+  .dependsOn(tcp, http, jackson, circe, testkit % "test")
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
 

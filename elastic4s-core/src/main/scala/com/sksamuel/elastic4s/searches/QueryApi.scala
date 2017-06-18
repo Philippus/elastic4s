@@ -48,6 +48,8 @@ trait QueryApi {
   @deprecated("Use bool query directly", "5.3.3")
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = BoolQueryDefinition().filter(queries)
 
+  def fuzzyQuery(field: String, value: String): FuzzyQueryDefinition = FuzzyQueryDefinition(field, value)
+
   def functionScoreQuery(): FunctionScoreQueryDefinition = FunctionScoreQueryDefinition()
   def functionScoreQuery(query: QueryDefinition): FunctionScoreQueryDefinition = functionScoreQuery().query(query)
 

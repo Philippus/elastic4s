@@ -1,17 +1,16 @@
 {
-  "post_filter": {
-    "ids": {
-      "type": [
-        "x",
-        "y",
-        "z"
-      ],
-      "values": [
-        "a",
-        "b",
-        "c"
-      ],
-      "boost": 1.0
+    "post_filter": {
+        "ids": {
+            "type": [
+                "x",
+                "y",
+                "z"
+            ],
+            "values": [
+                "a",
+                "b",
+                "c"
+            ]
+        }
     }
-  }
 }

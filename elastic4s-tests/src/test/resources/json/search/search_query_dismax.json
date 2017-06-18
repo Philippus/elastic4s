@@ -1,28 +1,20 @@
 {
-  "query": {
-    "dis_max": {
-      "tie_breaker": 1.2,
-      "queries": [
-        {
-          "simple_query_string": {
-            "query": "coldplay",
-            "flags": -1,
-            "default_operator": "or",
-            "analyze_wildcard": false,
-            "boost": 1.0
-          }
-        },
-        {
-          "simple_query_string": {
-            "query": "london",
-            "flags": -1,
-            "default_operator": "or",
-            "analyze_wildcard": false,
-            "boost": 1.0
-          }
+    "query": {
+        "dis_max": {
+            "tie_breaker": 1.2,
+            "boost": 4.5,
+            "queries": [
+                {
+                    "simple_query_string": {
+                        "query": "coldplay"
+                    }
+                },
+                {
+                    "simple_query_string": {
+                        "query": "london"
+                    }
+                }
+            ]
         }
-      ],
-      "boost": 4.5
     }
-  }
 }

@@ -12,10 +12,7 @@ object ScriptSortType {
   case object String extends ScriptSortType
   case object Number extends ScriptSortType
 
-  @deprecated("use String", "6.0.0")
   def STRING = String
-
-  @deprecated("use Number", "6.0.0")
   def NUMBER = Number
 }
 

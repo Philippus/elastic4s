@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.search.Bucket
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.http.search.Bucket
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
 class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
@@ -29,7 +28,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
   ).await
 
   "terms aggregation" - {
-    "should group by field" ignore {
+    "should group by field" in {
 
       val resp = http.execute {
         search("termsagg/curry").matchAllQuery().aggs {
@@ -42,7 +41,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.buckets.toSet shouldBe Set(Bucket("hot", 2), Bucket("medium", 1), Bucket("mild", 1))
     }
 
-    "should only include matching documents in the query" ignore {
+    "should only include matching documents in the query" in {
       val resp = http.execute {
         // should match 2 documents
         search("termsagg/curry").matchQuery("name", "masala").aggregations {
@@ -55,7 +54,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.buckets.toSet shouldBe Set(Bucket("hot", 1), Bucket("medium", 1))
     }
 
-    "should support missing value" ignore {
+    "should support missing value" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -68,7 +67,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.buckets.toSet shouldBe Set(Bucket("india", 3), Bucket("unknown", 1))
     }
 
-    "should support min doc count" ignore {
+    "should support min doc count" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -81,7 +80,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
     }
 
-    "should support size" ignore {
+    "should support size" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -92,6 +91,10 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
 
       val agg = resp.termsAgg("agg1")
       agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
+    }
+
+    "should support sub aggregations" in {
+
     }
 
     //    "should only return included fields" in {

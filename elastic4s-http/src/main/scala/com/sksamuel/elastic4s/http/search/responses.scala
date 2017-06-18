@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 import com.sksamuel.elastic4s.http.values.Shards
+import com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -107,8 +108,8 @@ trait AggregationResponse {
   protected def aggdata: Map[String, AnyRef]
   protected def agg(name: String): Map[String, AnyRef] = aggdata(name).asInstanceOf[Map[String, AnyRef]]
 
-  def termsAgg(name: String): TermsAggregationResult = {
-    TermsAggregationResult(
+  def termsAgg(name: String): TermsAggResult = {
+    TermsAggResult(
       name,
       agg(name)("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map { map => Bucket(map("key").toString, map("doc_count").toString.toInt) },
       agg(name)("doc_count_error_upper_bound").toString.toInt,
@@ -120,6 +121,21 @@ trait AggregationResponse {
   def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
   def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
   def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+}
+
+case class CardinalityAggResult()
+case class DateHistogramAggResult()
+case class SumAggResult()
+case class MinAggResult()
+case class MaxAggResult()
+
+case class Aggregations(json: String) {
+  def terms(name: String): TermsAggResult = ???
+  def cardinality(name: String): CardinalityAggResult = ???
+  def dateHistogram(name: String): DateHistogramAggResult = ???
+  def sum(name: String): SumAggResult = ???
+  def min(name: String): MinAggResult = ???
+  def max(name: String): MaxAggResult = ???
 }
 
 case class SearchResponse(took: Int,
@@ -163,10 +179,10 @@ case class FilterAggregationResult(name: String,
                                    aggdata: Map[String, AnyRef]) extends AggregationResponse
 
 
-case class TermsAggregationResult(name: String,
-                                  buckets: Seq[Bucket],
-                                  docCountErrorUpperBound: Int,
-                                  otherDocCount: Int) {
+case class TermsAggResult(name: String,
+                          buckets: Seq[Bucket],
+                          docCountErrorUpperBound: Int,
+                          otherDocCount: Int) {
 
   @deprecated("use buckets", "5.2.9")
   def getBuckets: Seq[Bucket] = buckets

@@ -1,18 +1,15 @@
 {
-  "post_filter": {
-    "nested": {
-      "query": {
-        "term": {
-          "name": {
-            "value": "chris",
-            "boost": 1.0
-          }
+    "post_filter": {
+        "nested": {
+            "path": "singer",
+            "score_mode": "min",
+            "query": {
+                "term": {
+                    "name": {
+                        "value": "chris"
+                    }
+                }
+            }
         }
-      },
-      "path": "singer",
-      "ignore_unmapped": false,
-      "score_mode": "min",
-      "boost": 1.0
     }
-  }
 }

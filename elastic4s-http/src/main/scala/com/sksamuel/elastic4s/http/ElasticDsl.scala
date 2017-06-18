@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http
 
+import cats.Show
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.http.index.alias.IndexAliasImplicits
 import com.sksamuel.elastic4s.http.bulk.BulkImplicits
@@ -43,6 +44,10 @@ trait ElasticDsl
     with UpdateImplicits
     with TaskImplicits
     with TermVectorsExecutables
-    with ValidateImplicits
+    with ValidateImplicits {
+  implicit class RichRequest[T](req: T) {
+    def show(implicit show: Show[T]): String = show.show(req)
+  }
+}
 
 object ElasticDsl extends ElasticDsl

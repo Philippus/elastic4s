@@ -10,7 +10,7 @@ import com.sksamuel.elastic4s.searches.suggestions.SuggestionBuilderFn
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.script.Script
+import org.elasticsearch.script.{Script, ScriptType}
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
@@ -71,13 +71,20 @@ object SearchBuilderFn {
         builder.addSort(convertSort(sort))
       }
 
-    if (search.scriptFields.nonEmpty)
-      search.scriptFields.foreach {
-        case ScriptFieldDefinition(name, script, None, None, _, ScriptType.Inline) =>
-          builder.addScriptField(name, new Script(script))
-        case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
-          builder.addScriptField(name, ScriptBuilder(script))
+    if (search.scriptFields.nonEmpty) {
+      import scala.collection.JavaConverters._
+      search.scriptFields.foreach { scriptfield =>
+        builder.addScriptField(scriptfield.field,
+          new Script(
+            EnumConversions.scriptType(scriptfield.script.scriptType),
+            scriptfield.script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG): String,
+            scriptfield.script.script: String,
+            scriptfield.script.options.asJava: java.util.Map[String, String],
+            scriptfield.script.params.map { case (key, value) => key -> (value.toString: Object) }.asJava: java.util.Map[String, Object]
+          )
+        )
       }
+    }
 
     if (search.suggs.nonEmpty) {
       val suggest = new SuggestBuilder()

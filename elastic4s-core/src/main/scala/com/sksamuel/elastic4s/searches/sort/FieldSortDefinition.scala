@@ -20,19 +20,10 @@ object SortMode {
   case object Max extends SortMode
   case object Sum extends SortMode
 
-  @deprecated("use Avg", "6.0.0")
   def AVG = Avg
-
-  @deprecated("use Median", "6.0.0")
   def MEDIAN = Median
-
-  @deprecated("use Min", "6.0.0")
   def MIN = Min
-
-  @deprecated("use Max", "6.0.0")
   def MAX = Max
-
-  @deprecated("use Sum", "6.0.0")
   def SUM = Sum
 }
 
@@ -41,10 +32,7 @@ object SortOrder {
   case object Asc extends SortOrder
   case object Desc extends SortOrder
 
-  @deprecated("use Desc", "6.0.0")
   def DESC = Desc
-
-  @deprecated("use Asc", "6.0.0")
   def ASC = Asc
 }
 

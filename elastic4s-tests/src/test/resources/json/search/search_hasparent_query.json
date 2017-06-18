@@ -1,20 +1,15 @@
 {
-  "size": 5,
-  "query": {
-    "has_parent": {
-      "query": {
-        "simple_query_string": {
-          "query": "coldplay",
-          "flags": -1,
-          "default_operator": "or",
-          "analyze_wildcard": false,
-          "boost": 1.0
+    "query": {
+        "has_parent": {
+            "parent_type": "sometype",
+            "query": {
+                "simple_query_string": {
+                    "query": "coldplay"
+                }
+            },
+            "score": true,
+            "boost": 1.2
         }
-      },
-      "parent_type": "sometype",
-      "score": true,
-      "ignore_unmapped": false,
-      "boost": 1.2
-    }
-  }
+    },
+    "size": 5
 }

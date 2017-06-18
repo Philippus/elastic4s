@@ -154,6 +154,13 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def value(str: Double): XContentBuilder = {
+    require(current.isInstanceOf[ArrayNode])
+    // we can only insert values into lists
+    array.add(str)
+    this
+  }
+
   def startArray(): XContentBuilder = {
     // can only start an anoynmous array inside another array
     stack.push(array.addArray())

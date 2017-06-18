@@ -13,11 +13,10 @@ class CatHealthTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "cat health" should "return cluster health" in {
     http.execute {
       catHealth()
-    }.await.cluster shouldBe "classloader-node"
+    }.await.cluster shouldBe "localnode-cluster"
   }
 
 }

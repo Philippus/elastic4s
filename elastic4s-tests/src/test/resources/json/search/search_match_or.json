@@ -1,17 +1,12 @@
 {
-  "size": 5,
-  "query": {
-    "match": {
-      "drummmer": {
-        "query": "will",
-        "operator": "OR",
-        "prefix_length": 0,
-        "max_expansions": 50,
-        "fuzzy_transpositions": true,
-        "lenient": false,
-        "zero_terms_query": "NONE",
-        "boost": 4.0
-      }
-    }
-  }
+    "query": {
+        "match": {
+            "drummmer": {
+                "query": "will",
+                "boost": 4.0,
+                "operator": "OR"
+            }
+        }
+    },
+    "size": 5
 }
