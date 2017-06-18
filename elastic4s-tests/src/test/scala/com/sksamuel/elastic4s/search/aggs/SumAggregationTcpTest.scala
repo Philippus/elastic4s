@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
-class SumAggregationTest extends AbstractAggregationTest {
+class SumAggregationTcpTest extends AbstractAggregationTest {
 
   "sum aggregation" - {
     "should sum values for field" in {

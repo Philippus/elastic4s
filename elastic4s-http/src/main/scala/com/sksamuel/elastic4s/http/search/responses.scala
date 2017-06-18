@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 import com.sksamuel.elastic4s.http.values.Shards
-import com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -71,83 +70,14 @@ case class InnerHit(nested: Map[String, AnyRef],
                     source: Map[String, AnyRef],
                     highlight: Map[String, Seq[String]])
 
-case class SuggestionEntry(term: String) {
-  def options: Seq[String] = Nil
-  def optionsText: String = ""
-}
-
-case class CompletionSuggestionResult(entries: Seq[SuggestionEntry]) {
-  def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
-}
-
-case class PhraseSuggestionResult(entries: Seq[SuggestionEntry]) {
-  def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
-}
-
-case class SuggestionOption(text: String, score: Double, freq: Int)
-
-case class SuggestionResult(text: String,
-                            offset: Int,
-                            length: Int,
-                            options: Seq[SuggestionOption]) {
-  def toTerm: TermSuggestionResult = TermSuggestionResult(text, offset, length, options)
-}
-
-case class TermSuggestionResult(text: String,
-                                offset: Int,
-                                length: Int,
-                                options: Seq[SuggestionOption]) {
-  def optionsText: Seq[String] = options.map(_.text)
-}
-
-case class Bucket(key: String,
-                  @JsonProperty("doc_count") docCount: Int)
-
-trait AggregationResponse {
-
-  protected def aggdata: Map[String, AnyRef]
-  protected def agg(name: String): Map[String, AnyRef] = aggdata(name).asInstanceOf[Map[String, AnyRef]]
-
-  def termsAgg(name: String): TermsAggResult = {
-    TermsAggResult(
-      name,
-      agg(name)("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map { map => Bucket(map("key").toString, map("doc_count").toString.toInt) },
-      agg(name)("doc_count_error_upper_bound").toString.toInt,
-      agg(name)("sum_other_doc_count").toString.toInt
-    )
-  }
-
-  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
-  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
-  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
-  def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
-}
-
-case class CardinalityAggResult()
-case class DateHistogramAggResult()
-case class SumAggResult()
-case class MinAggResult()
-case class MaxAggResult()
-
-case class Aggregations(json: String) {
-  def terms(name: String): TermsAggResult = ???
-  def cardinality(name: String): CardinalityAggResult = ???
-  def dateHistogram(name: String): DateHistogramAggResult = ???
-  def sum(name: String): SumAggResult = ???
-  def min(name: String): MinAggResult = ???
-  def max(name: String): MaxAggResult = ???
-}
-
 case class SearchResponse(took: Int,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
                           @JsonProperty("terminated_early") isTerminatedEarly: Boolean,
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
-                          aggregations: Map[String, AnyRef],
-                          hits: SearchHits) extends AggregationResponse {
-
-  protected def aggdata: Map[String, AnyRef] = aggregations
+                          @JsonProperty("aggregations") aggregationsAsMap: Map[String, AnyRef],
+                          hits: SearchHits) {
 
   def totalHits: Int = hits.total
   def size: Int = hits.size
@@ -157,8 +87,9 @@ case class SearchResponse(took: Int,
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  def aggregationsAsString: String = SourceAsContentBuilder(aggregations).string()
-  def aggregationsAsMap: Map[String, AnyRef] = aggregations
+  def aggregationsAsString: String = SourceAsContentBuilder(aggregationsAsMap).string()
+  def aggs: Aggregations = aggregations
+  def aggregations: Aggregations = Aggregations(aggregationsAsMap)
 
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
@@ -168,28 +99,4 @@ case class SearchResponse(took: Int,
 
   def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
-}
-
-case class SumAggregationResult(name: String, value: Double)
-case class MinAggregationResult(name: String, value: Double)
-case class MaxAggregationResult(name: String, value: Double)
-
-case class FilterAggregationResult(name: String,
-                                   docCount: Int,
-                                   aggdata: Map[String, AnyRef]) extends AggregationResponse
-
-
-case class TermsAggResult(name: String,
-                          buckets: Seq[Bucket],
-                          docCountErrorUpperBound: Int,
-                          otherDocCount: Int) {
-
-  @deprecated("use buckets", "5.2.9")
-  def getBuckets: Seq[Bucket] = buckets
-
-  @deprecated("use bucket", "5.2.9")
-  def getBucketByKey(key: String): Bucket = bucket(key)
-
-  def bucket(key: String): Bucket = bucketOpt(key).get
-  def bucketOpt(key: String): Option[Bucket] = buckets.find(_.key == key)
 }

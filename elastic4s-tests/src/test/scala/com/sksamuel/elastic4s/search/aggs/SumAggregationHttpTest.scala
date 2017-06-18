@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
 class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
@@ -38,7 +37,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
       }.await
       resp.totalHits shouldBe 6
 
-      val agg = resp.sumAgg("agg1")
+      val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 260.0
     }
     "should support missing" in {
@@ -50,7 +49,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
       }.await
       resp.totalHits shouldBe 6
 
-      val agg = resp.sumAgg("agg1")
+      val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 360
     }
   }

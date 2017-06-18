@@ -1,11 +1,21 @@
 package com.sksamuel.elastic4s.search.collapse
 
+import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
+
+import scala.util.Try
 
 class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeAndAfterAll with DiscoveryLocalNodeProvider {
 
   override protected def beforeAll(): Unit = {
+
+    Try {
+      client.execute {
+        ElasticApi.deleteIndex("collapse")
+      }.await
+    }
+
     client.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(

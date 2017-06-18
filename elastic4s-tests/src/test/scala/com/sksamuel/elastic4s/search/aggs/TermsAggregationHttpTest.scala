@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.http.search.Bucket
+import com.sksamuel.elastic4s.http.search.TermBucket
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -37,8 +37,8 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2), Bucket("medium", 1), Bucket("mild", 1))
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty), TermBucket("medium", 1, Map.empty), TermBucket("mild", 1, Map.empty))
     }
 
     "should only include matching documents in the query" in {
@@ -50,8 +50,8 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
       resp.size shouldBe 2
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 1), Bucket("medium", 1))
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 1, Map.empty), TermBucket("medium", 1, Map.empty))
     }
 
     "should support missing value" in {
@@ -63,8 +63,8 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("india", 3), Bucket("unknown", 1))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 3, Map.empty), TermBucket("unknown", 1, Map.empty))
     }
 
     "should support min doc count" in {
@@ -76,8 +76,8 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
     }
 
     "should support size" in {
@@ -89,12 +89,23 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
     }
 
     "should support sub aggregations" in {
 
+      val resp = http.execute {
+        search("termsagg/curry").matchAllQuery().aggs {
+          termsAgg("agg1", "strength").subagg(
+            termsAgg("agg2", "origin")
+          )
+        }
+      }.await
+      resp.totalHits shouldBe 4
+
+      val agg = resp.aggregations.terms("agg1")
+      agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 2, Map.empty))
     }
 
     //    "should only return included fields" in {

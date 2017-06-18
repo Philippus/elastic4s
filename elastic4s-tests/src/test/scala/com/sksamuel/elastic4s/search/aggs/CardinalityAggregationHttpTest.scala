@@ -35,7 +35,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
 
       resp.totalHits shouldBe 3
 
-      val agg = resp.maxAgg("agg1")
+      val agg = resp.aggs.cardinality("agg1")
       // should be 6 unique terms, the 'of' in tower of london will be filtered out by the analyzer
       agg.value shouldBe 6
     }

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
-class FilterAggregationTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class FilterAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("filteragg") mappings {
@@ -25,7 +25,7 @@ class FilterAggregationTest extends FreeSpec with DiscoveryLocalNodeProvider wit
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
-  "filter ag" - {
+  "filter agg" - {
     "should create a bucket matching the query" in {
 
       val resp = http.execute {
@@ -36,8 +36,8 @@ class FilterAggregationTest extends FreeSpec with DiscoveryLocalNodeProvider wit
         }
       }.await
       resp.totalHits shouldBe 4
-      resp.filterAgg("agg1").docCount shouldBe 2
-      resp.filterAgg("agg1").sumAgg("agg2").value shouldBe 232
+      resp.aggs.filter("agg1").docCount shouldBe 2
+      resp.aggs.filter("agg1").sum("agg2").value shouldBe 232
     }
   }
 }

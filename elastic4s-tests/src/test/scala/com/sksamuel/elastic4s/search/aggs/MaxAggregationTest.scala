@@ -5,7 +5,7 @@ class MaxAggregationTest extends AbstractAggregationTest {
   "max aggregation" - {
     "should count max value for field" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
+        search("aggregations/breakingbad") aggregations {
           maxAggregation("agg1") field "age"
         }
       }.await

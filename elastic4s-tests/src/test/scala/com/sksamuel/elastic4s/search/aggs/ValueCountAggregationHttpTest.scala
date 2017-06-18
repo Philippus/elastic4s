@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
 class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
@@ -34,7 +33,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProv
         }
       }.await
       resp.totalHits shouldBe 3
-      val agg = resp.maxAgg("agg1")
+      val agg = resp.aggs.valueCount("agg1")
       agg.value shouldBe 7
     }
   }

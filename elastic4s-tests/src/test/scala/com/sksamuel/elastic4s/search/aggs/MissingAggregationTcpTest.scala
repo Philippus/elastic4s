@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
-class MissingAggregationHttpTest extends AbstractAggregationTest {
+class MissingAggregationTcpTest extends AbstractAggregationTest {
 
   "missing aggregation" - {
     "should return documents missing a value" in {
       val resp = client.execute {
-        search in "aggregations/breakingbad" aggregations {
+        search("aggregations/breakingbad") aggregations {
           aggregation missing "agg1" field "actor"
         }
       }.await
