@@ -29,7 +29,7 @@ trait UpdateExecutables {
       t.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
       t.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
       t.shouldStoreResult.foreach(builder.setShouldStoreResult)
-      t.abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
+      t.proceedOnConflicts.foreach(builder.abortOnVersionConflict)
       t.pipeline.foreach(builder.setPipeline)
       t.script.map(ScriptBuilder.apply).foreach(builder.script)
       injectFuture(builder.execute(_))
