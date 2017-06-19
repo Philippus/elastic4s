@@ -83,7 +83,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
 
     override def execute(client: RestClient, request: IndexExistsDefinition): Future[Response] = {
-      val endpoint = request.index
+      val endpoint = s"/${request.index}"
       client.async("HEAD", endpoint, Map.empty)
     }
   }
