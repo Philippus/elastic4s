@@ -48,7 +48,7 @@ trait DeleteExecutables {
       d.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
       d.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
       d.shouldStoreResult.foreach(builder.setShouldStoreResult)
-      d.abortOnVersionConflict.foreach(builder.abortOnVersionConflict)
+      d.proceedOnConflicts.foreach(builder.abortOnVersionConflict)
     }
 
     override def apply(client: Client, d: DeleteByQueryDefinition): Future[BulkByScrollResponse] = {

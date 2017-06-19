@@ -10,7 +10,7 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    query: QueryDefinition,
                                    requestsPerSecond: Option[Float] = None,
                                    maxRetries: Option[Int] = None,
-                                   abortOnVersionConflict: Option[Boolean] = None,
+                                   proceedOnConflicts: Option[Boolean] = None,
                                    refresh: Option[RefreshPolicy] = None,
                                    waitForActiveShards: Option[Int] = None,
                                    retryBackoffInitialTime: Option[FiniteDuration] = None,
@@ -19,8 +19,12 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
 
+  def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryDefinition =
+    copy(proceedOnConflicts = proceedOnConflicts.some)
+
+  @deprecated("use proceedOnConflicts")
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryDefinition =
-    copy(abortOnVersionConflict = abortOnVersionConflict.some)
+    proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): DeleteByQueryDefinition = copy(refresh = refresh.some)
 
