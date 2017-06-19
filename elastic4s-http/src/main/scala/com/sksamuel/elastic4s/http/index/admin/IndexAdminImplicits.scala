@@ -79,7 +79,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: RestClient,
                          request: IndexExistsDefinition): Future[IndexExistsResponse] = {
 
-      val endpoint = request.index
+      val endpoint = s"/${request.index}"
       logger.debug(s"Connecting to $endpoint for indexes exists check")
       val resp = client.performRequest("HEAD", endpoint)
       Future.successful(IndexExistsResponse(resp.getStatusLine.getStatusCode == 200))
