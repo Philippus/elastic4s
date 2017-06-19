@@ -1,5 +1,9 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.json.JacksonSupport
+
 trait AggBucket extends HasAggregations
 
 case class TermBucket(key: String,
@@ -60,10 +64,34 @@ case class DateHistogramBucket(date: String,
                                docCount: Long,
                                private[elastic4s] val data: Map[String, AnyRef]) extends AggBucket
 
+case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
 case class MinAggResult(name: String, value: Double) extends MetricAggregation
 case class MaxAggResult(name: String, value: Double) extends MetricAggregation
 case class ValueCountResult(name: String, value: Double) extends MetricAggregation
+
+case class TopHit(@JsonProperty("_index") index: String,
+                  @JsonProperty("_type") `type`: String,
+                  @JsonProperty("_id") id: String,
+                  @JsonProperty("_score") score: Option[Double],
+                  sort: Seq[String],
+                  @JsonProperty("_source") source: Map[String, AnyRef]) {
+  def ref = DocumentRef(index, `type`, id)
+}
+
+case class TopHitsResult(name: String,
+                         total: Long,
+                         @JsonProperty("max_score") maxScore: Option[Double],
+                         hits: Seq[TopHit]
+                        ) extends MetricAggregation
+
+object TopHitsResult {
+  def apply(name: String, data: Map[String, AnyRef]): TopHitsResult = {
+    val hits = data("hits").asInstanceOf[Map[String, AnyRef]]
+    val result = JacksonSupport.mapper.readValue[TopHitsResult](JacksonSupport.mapper.writeValueAsBytes(hits))
+    result.copy(name = name)
+  }
+}
 
 case class Aggregations(data: Map[String, AnyRef]) extends HasAggregations
 
@@ -80,16 +108,17 @@ trait HasAggregations {
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
 
   // metric aggs
+  def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
   def cardinality(name: String): CardinalityAggResult = CardinalityAggResult(name, agg(name)("value").toString.toDouble)
   def sum(name: String): SumAggResult = SumAggResult(name, agg(name)("value").toString.toDouble)
   def min(name: String): MinAggResult = MinAggResult(name, agg(name)("value").toString.toDouble)
   def max(name: String): MaxAggResult = MaxAggResult(name, agg(name)("value").toString.toDouble)
+  def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
 }
 
 trait MetricAggregation {
   def name: String
-  def value: Double
 }
 
 trait BucketAggregation {

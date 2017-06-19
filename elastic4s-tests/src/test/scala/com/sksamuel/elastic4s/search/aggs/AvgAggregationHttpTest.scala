@@ -33,7 +33,7 @@ class AvgAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
         }
       }.await
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.max("agg1")
+      val agg = resp.aggs.avg("agg1")
       agg.value > 1289 shouldBe true
       agg.value > 1290 shouldBe false
     }

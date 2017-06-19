@@ -85,6 +85,7 @@ trait AggregationApi {
   def termsAggregation(name: String): TermsAggregationDefinition = TermsAggregationDefinition(name)
   def termsAgg(name: String, field: String): TermsAggregationDefinition = TermsAggregationDefinition(name).field(field)
 
+  def topHitsAgg(name: String): TopHitsAggregationDefinition = TopHitsAggregationDefinition(name)
   def topHitsAggregation(name: String): TopHitsAggregationDefinition = TopHitsAggregationDefinition(name)
 
   def valueCountAgg(name: String, field: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name).field(field)
