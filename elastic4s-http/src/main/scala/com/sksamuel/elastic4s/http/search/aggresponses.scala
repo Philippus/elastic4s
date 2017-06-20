@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.json.JacksonSupport
 
-trait AggBucket extends HasAggregations
+trait AggBucket extends HasAggregations {
+  def docCount: Int
+}
 
 case class TermBucket(key: String,
                       docCount: Int,
