@@ -69,8 +69,6 @@ trait QueryApi {
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQueryDefinition = gdef.distance(distance, unit)
   }
 
-  def geoDistanceRangeQuery(field: String, geoPoint: GeoPoint) = GeoDistanceRangeQueryDefinition(field, geoPoint)
-
   def geoHashCell(field: String, geohash: String): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field).geohash(geohash)
 
