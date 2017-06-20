@@ -7,8 +7,10 @@ import com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
+
       case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)
+      case agg: ChildrenAggregationDefinition => ChildrenAggregationBuilder(agg)
       case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)

@@ -26,7 +26,6 @@ object CommonTermsQueryBodyFn {
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
     q.cutoffFrequency.map(_.toString).foreach(builder.field("cutoff_frequency", _))
     q.boost.foreach(builder.field("boost", _))
-    q.disableCoord.foreach(builder.field("disable_coord", _))
 
     builder.endObject()
     builder.endObject()

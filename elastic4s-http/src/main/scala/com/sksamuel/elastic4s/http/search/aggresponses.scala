@@ -5,11 +5,11 @@ import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.json.JacksonSupport
 
 trait AggBucket extends HasAggregations {
-  def docCount: Int
+  def docCount: Long
 }
 
 case class TermBucket(key: String,
-                      docCount: Int,
+                      override val docCount: Long,
                       private[elastic4s] val data: Map[String, AnyRef]) extends AggBucket
 
 case class TermsAggResult(name: String,
@@ -63,7 +63,7 @@ object DateHistogramAggResult {
 
 case class DateHistogramBucket(date: String,
                                timestamp: Long,
-                               docCount: Long,
+                               override val docCount: Long,
                                private[elastic4s] val data: Map[String, AnyRef]) extends AggBucket
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
@@ -95,6 +95,18 @@ object TopHitsResult {
   }
 }
 
+case class ChildrenAggResult(name: String,
+                             docCount: Long,
+                             private[elastic4s] val data: Map[String, AnyRef]) extends HasAggregations
+
+object ChildrenAggResult {
+  def apply(name: String, data: Map[String, AnyRef]): ChildrenAggResult = ChildrenAggResult(
+    name,
+    data("doc_count").toString.toLong,
+    data
+  )
+}
+
 case class Aggregations(data: Map[String, AnyRef]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
@@ -108,6 +120,7 @@ trait HasAggregations {
   def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
+  def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
