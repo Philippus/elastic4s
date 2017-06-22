@@ -17,6 +17,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             aggs: Seq[AbstractAggregation] = Nil,
                             collapse: Option[CollapseDefinition] = None,
+                            docValues: Seq[String] = Nil,
                             explain: Option[Boolean] = None,
                             fetchContext: Option[FetchSourceContext] = None,
                             from: Option[Int] = None,
@@ -233,6 +234,10 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     * early. Defaults to no.
     */
   def terminateAfter(terminateAfter: Int): SearchDefinition = copy(terminateAfter = terminateAfter.some)
+
+  // Allows to return the doc value representation of a field for each hit, for example:
+  def docValues(first: String, rest: String*): SearchDefinition = docValues(first +: rest)
+  def docValues(fields: Seq[String]): SearchDefinition = copy(docValues = fields)
 
   def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
   def indexBoost(tuples: (String, Double)*): SearchDefinition = copy(indexBoosts = tuples)

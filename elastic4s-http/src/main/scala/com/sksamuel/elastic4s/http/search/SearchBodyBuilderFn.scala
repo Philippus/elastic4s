@@ -107,6 +107,9 @@ object SearchBodyBuilderFn {
       }
     }
 
+    if (request.docValues.nonEmpty)
+      builder.array("docvalue_fields", request.docValues.toArray)
+
     // aggregations
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")

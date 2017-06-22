@@ -84,6 +84,8 @@ trait SearchImplicits {
           builder.getClass.getMethod("sort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
         }
 
+      search.docValues.foreach(builder.docValueField)
+
       if (search.scriptFields.nonEmpty) {
         import scala.collection.JavaConverters._
         search.scriptFields.foreach { scriptfield =>
