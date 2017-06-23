@@ -11,11 +11,11 @@ trait AggregationDefinition extends AbstractAggregation {
 
   def subaggs: Seq[AbstractAggregation]
 
-  def subagg(agg: AbstractAggregation): T = subaggs(agg)
+  def subagg(agg: AbstractAggregation): T = subaggs(agg, subaggs: _*)
   def subaggs(first: AbstractAggregation, rest: AbstractAggregation*): T = subaggs(first +: rest)
   def subaggs(aggs: Iterable[AbstractAggregation]): T = subAggregations(aggs)
 
-  def subAggregation(agg: AbstractAggregation): T = subAggregations(agg)
+  def subAggregation(agg: AbstractAggregation): T = subAggregations(agg, subaggs: _*)
   def subAggregations(first: AbstractAggregation, rest: AbstractAggregation*): T = subAggregations(first +: rest)
   def subAggregations(aggs: Iterable[AbstractAggregation]): T
 }
