@@ -148,15 +148,26 @@ class XContentBuilder(root: JsonNode) {
   }
 
   def value(str: String): XContentBuilder = {
-    require(current.isInstanceOf[ArrayNode])
-    // we can only insert values into lists
     array.add(str)
     this
   }
 
   def value(str: Double): XContentBuilder = {
-    require(current.isInstanceOf[ArrayNode])
-    // we can only insert values into lists
+    array.add(str)
+    this
+  }
+
+  def value(str: Long): XContentBuilder = {
+    array.add(str)
+    this
+  }
+
+  def value(str: Float): XContentBuilder = {
+    array.add(str)
+    this
+  }
+
+  def value(str: Boolean): XContentBuilder = {
     array.add(str)
     this
   }
