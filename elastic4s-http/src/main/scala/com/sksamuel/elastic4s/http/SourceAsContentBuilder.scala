@@ -25,6 +25,7 @@ object SourceAsContentBuilder {
             case x: Boolean => builder.field(key, x)
             case x: Long => builder.field(key, x)
             case x: Int => builder.field(key, x)
+            case null => builder.nullField(key)
           }
       }
     }
