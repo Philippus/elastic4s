@@ -16,6 +16,7 @@ object AggregationBuilderFn {
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
+      case agg: NestedAggregationDefinition => NestedAggregationBuilder(agg)
       case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
       case agg: TopHitsAggregationDefinition => TopHitsAggregationBuilder(agg)
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
