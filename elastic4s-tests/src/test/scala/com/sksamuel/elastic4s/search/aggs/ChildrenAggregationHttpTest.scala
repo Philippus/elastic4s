@@ -48,8 +48,8 @@ class ChildrenAggregationHttpTest extends FlatSpec with Matchers with ElasticDsl
     // so we're finding the top term per month
     val resp = http.execute {
       search("childrenaggs").matchAllQuery().aggs(
-        dateHistogramAgg("agg1", "date").interval(DateHistogramInterval.Month).subagg(
-          childrenAggregation("agg2", "answer").subagg(
+        dateHistogramAgg("agg1", "date").interval(DateHistogramInterval.Month).addSubagg(
+          childrenAggregation("agg2", "answer").addSubagg(
             termsAgg("agg3", "text").size(1)
           )
         )

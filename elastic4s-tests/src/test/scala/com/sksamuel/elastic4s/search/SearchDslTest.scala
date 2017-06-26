@@ -649,7 +649,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for top hits aggregation" in {
     val req = search("music") types "bands" aggs {
-      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count", true) subAggregation (
+      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count", true) addSubAggregation (
         topHitsAggregation("top_tag_hits") size 1 sortBy {
           fieldSort("last_activity_date") order SortOrder.Desc
         } fetchSource(Array("title"), Array.empty)

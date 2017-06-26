@@ -13,7 +13,7 @@ class FilterAggregationDslTest extends FlatSpec with Matchers with ElasticApi {
           .gte("now-1y")
           .to("now")
       )
-    ).subAggregation(
+    ).addSubAggregation(
       dateHistogramAggregation("per_month")
         .field("some_date_field")
         .interval(DateHistogramInterval.Month)

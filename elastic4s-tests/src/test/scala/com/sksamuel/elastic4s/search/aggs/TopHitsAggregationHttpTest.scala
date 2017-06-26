@@ -31,7 +31,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvide
 
       val resp = http.execute {
         search("tophits/landmarks").matchAllQuery().aggs {
-          termsAgg("agg1", "location").subagg(
+          termsAgg("agg1", "location").addSubagg(
             topHitsAgg("agg2").sortBy(fieldSort("name"))
           )
         }

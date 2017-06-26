@@ -97,7 +97,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
 
       val resp = http.execute {
         search("termsagg/curry").matchAllQuery().aggs {
-          termsAgg("agg1", "strength").subagg(
+          termsAgg("agg1", "strength").addSubagg(
             termsAgg("agg2", "origin")
           )
         }
