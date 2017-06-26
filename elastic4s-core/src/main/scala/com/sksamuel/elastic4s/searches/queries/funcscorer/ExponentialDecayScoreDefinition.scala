@@ -13,4 +13,6 @@ case class ExponentialDecayScoreDefinition(field: String,
 
   def decay(decay: Double): ExponentialDecayScoreDefinition = copy(decay = decay.some)
   def offset(offset: Any): ExponentialDecayScoreDefinition = copy(offset = offset.some)
+  def weight(weight: Double): ExponentialDecayScoreDefinition = copy(weight = weight.some)
+  def multiValueMode(mode: MultiValueMode): ExponentialDecayScoreDefinition = copy(multiValueMode = mode.some)
 }
