@@ -15,10 +15,10 @@ object DisMaxQueryBodyFn {
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
 
-    builder.startArray()
-    // Workaround for bug where separator is not added with rawValues
-    val arrayBody = new BytesArray(q.queries.map(q => QueryBuilderFn(q).string()).mkString(","))
-    builder.rawValue(arrayBody, XContentType.JSON)
+    builder.startArray("queries")
+      // Workaround for bug where separator is not added with rawValues
+      val arrayBody = new BytesArray(q.queries.map(q => QueryBuilderFn(q).string()).mkString(","))
+      builder.rawValue(arrayBody, XContentType.JSON)
     builder.endArray()
 
     builder.endObject()
