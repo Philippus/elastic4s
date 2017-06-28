@@ -65,7 +65,7 @@ object CreateIndexTemplateBodyFn {
     if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       create.mappings.foreach { mapping =>
-        builder.rawValue(MappingContentBuilder.buildWithName(mapping, mapping.`type`).bytes, XContentType.JSON)
+        builder.rawField(mapping.`type`, MappingContentBuilder.build(mapping).bytes, XContentType.JSON)
       }
       builder.endObject()
     }
