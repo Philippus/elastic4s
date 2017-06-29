@@ -50,7 +50,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
       """{"range":{"field":"price","script":{"lang":"painless","inline":"doc['price'].value"},"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 
-  test("range aggregation with a keyed parameter setted to true should generate expected json") {
+  test("range aggregation with a keyed parameter set to true should generate expected json") {
     val agg = RangeAggregationDefinition("price_ranges")
       .field("price")
       .range(0, 50)
@@ -61,7 +61,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
       """{"range":{"field":"price","keyed":true,"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 
-  test("range aggregation with a missing parameter setted should generate expected json") {
+  test("range aggregation with a missing parameter set should generate expected json") {
     val agg = RangeAggregationDefinition("price_ranges")
       .field("price")
       .missing(Int.box(0))
