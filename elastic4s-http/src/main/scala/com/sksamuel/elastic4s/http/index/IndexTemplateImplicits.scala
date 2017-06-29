@@ -63,7 +63,7 @@ object CreateIndexTemplateBodyFn {
     if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       create.mappings.foreach { mapping =>
-        builder.rawValue(MappingContentBuilder.buildWithName(mapping, mapping.`type`))
+        builder.rawField(mapping.`type`, MappingContentBuilder.build(mapping))
       }
       builder.endObject()
     }
