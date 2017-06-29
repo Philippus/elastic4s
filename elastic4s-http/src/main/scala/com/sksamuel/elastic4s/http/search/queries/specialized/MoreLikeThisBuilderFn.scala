@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.searches.queries.MoreLikeThisQueryDefinition
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -28,7 +28,7 @@ object MoreLikeThisBuilderFn {
       builder.startObject()
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
-      builder.rawField("doc", new BytesArray(doc.doc))
+      builder.rawField("doc", new BytesArray(doc.doc), XContentType.JSON)
       doc.routing.foreach { r ⇒ builder.field("_routing", r) }
       builder.endObject()
     }

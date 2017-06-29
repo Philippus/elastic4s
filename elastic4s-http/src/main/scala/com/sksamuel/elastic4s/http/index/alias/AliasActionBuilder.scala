@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index.alias
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object AliasActionBuilder {
 
@@ -15,7 +15,7 @@ object AliasActionBuilder {
       case removeAction: RemoveAliasActionDefinition => buildRemoveAction(removeAction).string()
     }.mkString(",")
 
-    source.rawValue(new BytesArray(actionsArray))
+    source.rawValue(new BytesArray(actionsArray), XContentType.JSON)
 
     source.endArray().endObject()
   }
@@ -27,7 +27,7 @@ object AliasActionBuilder {
     jsonBuilder.field("alias", addAction.alias)
 
     addAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
-      jsonBuilder.rawField("filter", queryBuilder.bytes())
+      jsonBuilder.rawField("filter", queryBuilder.bytes(), XContentType.JSON)
     }
     addAction.routing.foreach(jsonBuilder.field("routing", _))
     addAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))
@@ -43,7 +43,7 @@ object AliasActionBuilder {
     jsonBuilder.field("alias", removeAction.alias)
 
     removeAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
-      jsonBuilder.rawField("filter", queryBuilder.bytes())
+      jsonBuilder.rawField("filter", queryBuilder.bytes(), XContentType.JSON)
     }
     removeAction.routing.foreach(jsonBuilder.field("routing", _))
     removeAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))

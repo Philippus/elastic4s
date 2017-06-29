@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -55,7 +55,7 @@ object MappingContentBuilder {
     if (d.fields.nonEmpty) {
       builder.startObject("properties")
       for (field <- d.fields) {
-        builder.rawField(field.name, FieldBuilderFn(field).bytes)
+        builder.rawField(field.name, FieldBuilderFn(field).bytes, XContentType.JSON)
       }
       builder.endObject() // end properties
     }

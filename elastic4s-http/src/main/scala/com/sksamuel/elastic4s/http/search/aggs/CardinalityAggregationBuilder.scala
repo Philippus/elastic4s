@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object CardinalityAggregationBuilder {
   def apply(agg: CardinalityAggregationDefinition): XContentBuilder = {
@@ -11,7 +11,7 @@ object CardinalityAggregationBuilder {
     agg.missing.foreach(builder.field("missing", _))
     agg.precisionThreshold.foreach(builder.field("precision_threshold", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script).bytes)
+      builder.rawField("script", ScriptBuilderFn(script).bytes, XContentType.JSON)
     }
     builder.endObject().endObject()
   }

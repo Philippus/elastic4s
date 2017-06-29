@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.mappings.dynamictemplate
 
 import com.sksamuel.elastic4s.mappings.FieldBuilderFn
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object DynamicTemplateBodyFn {
 
@@ -22,7 +22,7 @@ object DynamicTemplateBodyFn {
     dyn.MatchPattern.foreach(builder.field("match_pattern", _))
     dyn.matchMappingType.foreach(builder.field("match_mapping_type", _))
 
-    builder.rawField("mapping", FieldBuilderFn(dyn.mapping).bytes)
+    builder.rawField("mapping", FieldBuilderFn(dyn.mapping).bytes, XContentType.JSON)
 
     builder.endObject().endObject()
   }
