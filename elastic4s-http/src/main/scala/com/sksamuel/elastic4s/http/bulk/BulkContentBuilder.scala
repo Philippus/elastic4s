@@ -21,6 +21,7 @@ object BulkContentBuilder {
         builder.field("_type", index.indexAndType.`type`)
         index.id.foreach(id => builder.field("_id", id))
         index.parent.foreach(builder.field("_parent", _))
+        index.routing.foreach(builder.field("_routing", _))
         builder.endObject()
         builder.endObject()
 
@@ -36,6 +37,7 @@ object BulkContentBuilder {
         builder.field("_type", delete.indexType.`type`)
         builder.field("_id", delete.id)
         delete.parent.foreach(builder.field("_parent", _))
+        delete.routing.foreach(builder.field("_routing", _))
         builder.endObject()
         builder.endObject()
 
@@ -50,6 +52,7 @@ object BulkContentBuilder {
         builder.field("_type", update.indexAndTypes.types.head)
         builder.field("_id", update.id)
         update.parent.foreach(builder.field("_parent", _))
+        update.routing.foreach(builder.field("_routing", _))
         builder.endObject()
         builder.endObject()
 
