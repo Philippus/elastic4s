@@ -116,6 +116,9 @@ trait HasAggregations {
   private[elastic4s] def data: Map[String, AnyRef]
   private def agg(name: String): Map[String, AnyRef] = data(name).asInstanceOf[Map[String, AnyRef]]
 
+  def contains(name: String): Boolean = data.contains(name)
+  def names: Iterable[String] = data.keys
+
   // bucket aggs
   def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
