@@ -145,7 +145,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val body = CreateIndexContentBuilder(request).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
-      client.async("PUT", endpoint, Map.empty, entity)
+      client.async("PUT", endpoint, params.toMap, entity)
     }
   }
 
