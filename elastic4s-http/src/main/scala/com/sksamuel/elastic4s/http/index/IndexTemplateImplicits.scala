@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.index
 
+import cats.Show
 import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.indexes.{CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
+import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -42,6 +43,10 @@ trait IndexTemplateImplicits {
       client.async("GET", endpoint, Map.empty)
     }
   }
+
+  implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateDefinition] {
+    override def show(req: CreateIndexTemplateDefinition): String = CreateIndexTemplateBodyFn(req).string()
+  }
 }
 
 object CreateIndexTemplateBodyFn {
@@ -52,10 +57,13 @@ object CreateIndexTemplateBodyFn {
     create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
 
-    if (create.settings.nonEmpty) {
+    if (create.settings.nonEmpty || create.analysis.nonEmpty) {
       builder.startObject("settings")
       create.settings.foreach {
         case (key, value) => builder.autofield(key, value)
+      }
+      create.analysis.foreach { analysis =>
+        AnalysisBuilderFn.build(analysis, builder)
       }
       builder.endObject()
     }

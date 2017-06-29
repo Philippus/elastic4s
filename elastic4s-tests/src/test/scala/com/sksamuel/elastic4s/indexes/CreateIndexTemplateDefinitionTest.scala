@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.ElasticDsl.{intField, keywordField}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
@@ -49,5 +48,4 @@ class CreateIndexTemplateDefinitionTest extends WordSpec
       resp.head.mappings("sometype1").keySet shouldBe Set("field1", "field2", "field3", "field4")
     }
   }
-
 }
