@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.searches.aggs.DateHistogramAggregation
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.elasticsearch.common.xcontent.{ToXContent, XContentBuilder, XContentFactory, XContentType}
 
 object DateHistogramAggregationBuilder {
   def apply(agg: DateHistogramAggregation): XContentBuilder = {
@@ -20,7 +20,7 @@ object DateHistogramAggregationBuilder {
       builder.rawField("script", ScriptBuilderFn(script).bytes, XContentType.JSON)
     }
     agg.missing.foreach(builder.field("missing", _))
-    agg.extendedBounds.foreach(builder.field("extended_bounds", _))
+    agg.extendedBounds.foreach(_.toXContent(builder, ToXContent.EMPTY_PARAMS))
     builder.endObject()
     SubAggsBuilderFn(agg, builder)
     AggMetaDataFn(agg, builder)
