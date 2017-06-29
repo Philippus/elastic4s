@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition, SortDefinition}
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object SortContentBuilder {
   def apply(sort: SortDefinition): XContentBuilder = sort match {
@@ -22,7 +22,7 @@ object FieldSortContentBuilder {
     fs.sortMode.map(_.toString).foreach(builder.field("mode", _))
     builder.field("order", fs.order.toString)
     fs.nestedPath.foreach(builder.field("nested_path", _))
-    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).map(new BytesArray(_)).foreach(builder.rawField("nested_filter", _))
+    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).map(new BytesArray(_)).foreach(builder.rawField("nested_filter", _, XContentType.JSON))
     builder.endObject()
     builder.endObject()
     builder
@@ -54,7 +54,7 @@ object GeoDistanceSortContentBuilder {
     fs.sortMode.map(_.toString.toLowerCase).foreach(builder.field("mode", _))
     fs.order.map(o => builder.field("order", o.toString))
     fs.nestedPath.foreach(builder.field("nested_path", _))
-    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).map(new BytesArray(_)).foreach(builder.rawField("nested_filter", _))
+    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).map(new BytesArray(_)).foreach(builder.rawField("nested_filter", _, XContentType.JSON))
 
     builder.endObject()
     builder.endObject()

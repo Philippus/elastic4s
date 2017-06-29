@@ -12,7 +12,7 @@ object FunctionScoreQueryBodyFn {
     builder.startObject()
     builder.startObject("function_score")
 
-    q.query.map(qDef => builder.rawField("query", QueryBuilderFn(qDef).bytes()))
+    q.query.map(qDef => builder.rawField("query", QueryBuilderFn(qDef).bytes(), XContentType.JSON))
     q.minScore.map(builder.field("min_score", _))
     q.boost.map(builder.field("boost", _))
     q.maxBoost.map(builder.field("max_boost", _))

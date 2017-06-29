@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -24,7 +24,7 @@ object CommonFieldBuilder {
         case _ => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
-        builder.rawField(subfield.name, FieldBuilderFn(subfield).bytes)
+        builder.rawField(subfield.name, FieldBuilderFn(subfield).bytes, XContentType.JSON)
       }
       builder.endObject()
     }
