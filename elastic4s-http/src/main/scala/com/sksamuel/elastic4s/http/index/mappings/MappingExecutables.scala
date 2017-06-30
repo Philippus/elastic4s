@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.index.mappings
 
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.PutMappingBuilder
+import com.sksamuel.elastic4s.indexes.PutMappingBuilderFn
 import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, PutMappingDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{Response, RestClient}
@@ -50,7 +50,7 @@ trait MappingExecutables {
       request.allowNoIndices.foreach(params.put("allow_no_indices", _))
       request.expandWildcards.foreach(params.put("expand_wildcards", _))
 
-      val body = PutMappingBuilder(request).string()
+      val body = PutMappingBuilderFn(request).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
       client.async("PUT", endpoint, params.toMap, entity)

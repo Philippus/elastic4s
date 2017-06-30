@@ -3,14 +3,12 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.{MappingBuilderFn, PutMappingDefinition}
 
-object PutMappingBuilder {
+object PutMappingBuilderFn {
 
   def apply(pm: PutMappingDefinition): XContentBuilder = {
-    pm.rawSource.fold ({
-      MappingBuilderFn.build(pm)
-    })({ raw =>
-      XContentFactory.jsonBuilder().rawValue(raw)
-    })
+    pm.rawSource match {
+      case None => MappingBuilderFn.build(pm)
+      case Some(source) => XContentFactory.jsonBuilder().rawValue(source)
+    }
   }
-
 }

@@ -11,7 +11,7 @@ import org.scalatest.FlatSpec
 
 import scala.util.Try
 
-class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with  DualClientTests {
+class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests {
 
   import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 
