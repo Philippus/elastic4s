@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.PutSearchTemplateDefinition
 
-object PutSearchTemplateContentBuilder {
+object PutSearchTemplateBuilderFn {
 
   def apply(request: PutSearchTemplateDefinition): XContentBuilder = {
 

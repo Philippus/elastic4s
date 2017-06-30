@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 
-object UpdateContentBuilder {
+object UpdateBuilderFn {
   def apply(request: UpdateDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

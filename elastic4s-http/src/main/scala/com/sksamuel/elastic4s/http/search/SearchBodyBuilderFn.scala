@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
+import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
 import com.sksamuel.elastic4s.http.search.suggs.TermSuggestionBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
@@ -59,7 +59,7 @@ object SearchBodyBuilderFn {
     if (request.sorts.nonEmpty) {
 			builder.startArray("sort")
 			// Workaround for bug where separator is not added with rawValues
-      val arrayBody = request.sorts.map(s => SortContentBuilder(s).string).mkString(",")
+      val arrayBody = request.sorts.map(s => SortBuilderFn(s).string).mkString(",")
       builder.rawValue(arrayBody)
 			builder.endArray()
     }

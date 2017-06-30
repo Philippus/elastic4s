@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.http.HttpExecutable
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.indexes.{CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.mappings.MappingContentBuilder
+import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
@@ -63,7 +63,7 @@ object CreateIndexTemplateBodyFn {
     if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       create.mappings.foreach { mapping =>
-        builder.rawField(mapping.`type`, MappingContentBuilder.build(mapping))
+        builder.rawValue(MappingBuilderFn.buildWithName(mapping, mapping.`type`))
       }
       builder.endObject()
     }

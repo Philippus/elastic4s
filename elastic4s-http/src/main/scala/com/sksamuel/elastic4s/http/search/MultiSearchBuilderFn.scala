@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.searches.MultiSearchDefinition
 
-object MultiSearchContentBuilder {
+object MultiSearchBuilderFn {
   def apply(request: MultiSearchDefinition): String = {
     request.searches.flatMap { search =>
 

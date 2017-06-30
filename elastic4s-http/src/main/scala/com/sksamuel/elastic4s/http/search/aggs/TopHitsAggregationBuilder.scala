@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
-import com.sksamuel.elastic4s.http.search.queries.SortContentBuilder
+import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
 
@@ -14,7 +14,7 @@ object TopHitsAggregationBuilder {
     if (agg.sorts.nonEmpty) {
       builder.startArray("sort")
       agg.sorts.foreach { sort =>
-        builder.rawValue(SortContentBuilder(sort))
+        builder.rawValue(SortBuilderFn(sort))
       }
       builder.endArray()
     }

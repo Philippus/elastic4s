@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.mappings.MappingContentBuilder
+import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 
 object CreateIndexContentBuilder {
 
@@ -25,7 +25,7 @@ object CreateIndexContentBuilder {
           source.endObject()
         }
 
-        d.analysis.foreach(AnalysisContentBuilder.build(_, source))
+        d.analysis.foreach(AnalysisBuilderFn.build(_, source))
 
         source.endObject() // end settings
       }
@@ -34,7 +34,7 @@ object CreateIndexContentBuilder {
         source.startObject("mappings")
         for (mapping <- d.mappings) {
           source.startObject(mapping.`type`)
-          MappingContentBuilder.build(mapping, source)
+          MappingBuilderFn.build(mapping, source)
           source.endObject()
         }
         source.endObject()

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
 
-object MappingContentBuilder {
+object MappingBuilderFn {
 
   def build(d: MappingDefinitionLike): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()

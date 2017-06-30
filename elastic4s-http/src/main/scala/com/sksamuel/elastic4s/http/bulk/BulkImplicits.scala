@@ -13,14 +13,14 @@ import scala.concurrent.Future
 trait BulkImplicits {
 
   implicit object BulkShow extends Show[BulkDefinition] {
-    override def show(f: BulkDefinition): String = BulkContentBuilder(f).mkString("\n")
+    override def show(f: BulkDefinition): String = BulkBuilderFn(f).mkString("\n")
   }
 
   implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
 
     override def execute(client: RestClient, bulk: BulkDefinition): Future[Response] = {
 
-      val rows = BulkContentBuilder(bulk)
+      val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well
       val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
 

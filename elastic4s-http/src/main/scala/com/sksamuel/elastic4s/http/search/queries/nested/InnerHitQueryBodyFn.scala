@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.SortContentBuilder
+import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.InnerHitDefinition
 
@@ -35,7 +35,7 @@ object InnerHitQueryBodyFn {
     if (d.sorts.nonEmpty) {
       builder.startArray("sort")
       d.sorts.foreach { sort =>
-        builder.rawValue(SortContentBuilder(sort))
+        builder.rawValue(SortBuilderFn(sort))
       }
       builder.endArray()
     }

@@ -26,7 +26,7 @@ trait MappingExecutables {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
       val listener: ActionListener[PutMappingResponse] => Unit = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
         .setType(t.indexesAndType.`type`)
-        .setSource(MappingContentBuilder.build(t).string, XContentType.JSON)
+        .setSource(MappingBuilderFn.build(t).string, XContentType.JSON)
         .execute(_)
       injectFuture(listener)
     }

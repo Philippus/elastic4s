@@ -24,7 +24,7 @@ trait SearchTemplateImplicits {
         case IndexesAndTypes(Nil, types) => "/_all/" + types.mkString(",") + "/_search/template"
         case IndexesAndTypes(indexes, types) => "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
       }
-      val body = TemplateSearchContentBuilder(req).string()
+      val body = TemplateSearchBuilderFn(req).string()
       client.async("POST", endpoint, Map.empty, new StringEntity(body, ContentType.APPLICATION_JSON))
     }
   }
@@ -43,7 +43,7 @@ trait SearchTemplateImplicits {
 
     override def execute(client: RestClient, req: PutSearchTemplateDefinition): Future[Response] = {
       val endpoint = "/_search/template/" + req.name
-      val body = PutSearchTemplateContentBuilder(req).string()
+      val body = PutSearchTemplateBuilderFn(req).string()
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
       client.async("POST", endpoint, Map.empty, entity)
     }

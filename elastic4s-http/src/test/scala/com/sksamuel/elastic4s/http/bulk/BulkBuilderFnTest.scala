@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.bulk
 import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{FunSuite, Matchers}
 
-class BulkContentBuilderTest extends FunSuite with Matchers {
+class BulkBuilderFnTest extends FunSuite with Matchers {
 
   import com.sksamuel.elastic4s.ElasticApi._
 
@@ -15,7 +15,7 @@ class BulkContentBuilderTest extends FunSuite with Matchers {
       delete(10).from("chemistry/elements")
     ).refresh(RefreshPolicy.Immediate)
 
-    BulkContentBuilder(req).mkString("\n") shouldBe
+    BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_type":"elements","_id":"2"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}
         |{"index":{"_index":"chemistry","_type":"elements","_id":"8"}}

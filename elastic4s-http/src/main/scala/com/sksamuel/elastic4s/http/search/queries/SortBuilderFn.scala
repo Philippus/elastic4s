@@ -4,16 +4,16 @@ import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, GeoDistanceSortDefinition, ScoreSortDefinition, ScriptSortDefinition, SortDefinition}
 
-object SortContentBuilder {
+object SortBuilderFn {
   def apply(sort: SortDefinition): XContentBuilder = sort match {
-    case fs: FieldSortDefinition => FieldSortContentBuilder(fs)
-    case gs: GeoDistanceSortDefinition => GeoDistanceSortContentBuilder(gs)
-    case ss: ScoreSortDefinition => ScoreSortContentBuilder(ss)
+    case fs: FieldSortDefinition => FieldSortBuilderFn(fs)
+    case gs: GeoDistanceSortDefinition => GeoDistanceSortBuilderFn(gs)
+    case ss: ScoreSortDefinition => ScoreSortBuilderFn(ss)
     case ss: ScriptSortDefinition => ???
   }
 }
 
-object FieldSortContentBuilder {
+object FieldSortBuilderFn {
   def apply(fs: FieldSortDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject(fs.field)
@@ -29,7 +29,7 @@ object FieldSortContentBuilder {
   }
 }
 
-object ScoreSortContentBuilder {
+object ScoreSortBuilderFn {
   def apply(fs: ScoreSortDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("_score")
     builder.field("order", EnumConversions.order(fs.order))
@@ -37,7 +37,7 @@ object ScoreSortContentBuilder {
   }
 }
 
-object GeoDistanceSortContentBuilder {
+object GeoDistanceSortBuilderFn {
   def apply(geo: GeoDistanceSortDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("_geo_distance")

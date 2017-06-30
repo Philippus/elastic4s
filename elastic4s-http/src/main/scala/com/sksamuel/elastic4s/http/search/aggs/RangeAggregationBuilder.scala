@@ -6,8 +6,9 @@ import com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition
 
 object RangeAggregationBuilder {
   def apply(agg: RangeAggregationDefinition): XContentBuilder = {
-    val builder = XContentFactory.obj
-    builder.startObject("range")
+
+    val builder = XContentFactory.obj.startObject("range")
+
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.autofield("missing", _))
     agg.format.foreach(builder.field("format", _))
@@ -45,6 +46,7 @@ object RangeAggregationBuilder {
 
     SubAggsBuilderFn(agg, builder)
     AggMetaDataFn(agg, builder)
-    builder.endObject()
+
+    builder
   }
 }

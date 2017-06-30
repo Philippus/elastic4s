@@ -6,10 +6,14 @@ import com.sksamuel.elastic4s.searches.aggs.FilterAggregationDefinition
 
 object FilterAggregationBuilder {
   def apply(agg: FilterAggregationDefinition): XContentBuilder = {
+
     val builder = XContentFactory.jsonBuilder()
+
     builder.rawField("filter", QueryBuilderFn(agg.query))
+
     SubAggsBuilderFn(agg, builder)
     AggMetaDataFn(agg, builder)
-    builder.endObject()
+
+    builder
   }
 }

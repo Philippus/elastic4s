@@ -27,7 +27,7 @@ object UpdateImplicits extends UpdateImplicits
 trait UpdateImplicits {
 
   implicit object UpdateShow extends Show[UpdateDefinition] {
-    override def show(f: UpdateDefinition): String = UpdateContentBuilder(f).string()
+    override def show(f: UpdateDefinition): String = UpdateBuilderFn(f).string()
   }
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
@@ -48,7 +48,7 @@ trait UpdateImplicits {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateContentBuilder(request)
+      val body = UpdateBuilderFn(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
 
       client.async("POST", endpoint, params.toMap, entity)

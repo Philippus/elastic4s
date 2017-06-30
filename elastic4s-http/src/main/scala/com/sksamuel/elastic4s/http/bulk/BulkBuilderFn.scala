@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.http.bulk
 
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
-import com.sksamuel.elastic4s.http.update.UpdateContentBuilder
+import com.sksamuel.elastic4s.http.update.UpdateBuilderFn
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition}
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.update.UpdateDefinition
 
-object BulkContentBuilder {
+object BulkBuilderFn {
 
   def apply(bulk: BulkDefinition): Seq[String] = {
     val rows = List.newBuilder[String]
@@ -54,7 +54,7 @@ object BulkContentBuilder {
         builder.endObject()
 
         rows += builder.string
-        rows += UpdateContentBuilder(update).string()
+        rows += UpdateBuilderFn(update).string()
     }
     rows.result()
   }

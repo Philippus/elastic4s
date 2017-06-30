@@ -25,7 +25,7 @@ trait SearchImplicits {
   }
 
   implicit object MultiSearchShow extends Show[MultiSearchDefinition] {
-    override def show(req: MultiSearchDefinition): String = MultiSearchContentBuilder(req)
+    override def show(req: MultiSearchDefinition): String = MultiSearchBuilderFn(req)
   }
 
   implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
@@ -55,7 +55,7 @@ trait SearchImplicits {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
 
-      val body = MultiSearchContentBuilder(request)
+      val body = MultiSearchBuilderFn(request)
       logger.debug("Executing msearch: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
       client.async("POST", "/_msearch", params.toMap, entity)

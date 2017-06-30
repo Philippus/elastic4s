@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.json.XContentBuilder
 
-object AnalysisContentBuilder {
+object AnalysisBuilderFn {
 
   def build(ad: AnalysisDefinition, source: XContentBuilder) {
     source.startObject("analysis")

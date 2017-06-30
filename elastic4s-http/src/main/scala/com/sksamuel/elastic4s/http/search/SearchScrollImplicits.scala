@@ -14,7 +14,7 @@ case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 trait SearchScrollImplicits {
 
   implicit object SearchScrollShow extends Show[SearchScrollDefinition] {
-    override def show(req: SearchScrollDefinition): String = SearchScrollContentFn(req).string
+    override def show(req: SearchScrollDefinition): String = SearchScrollBuilderFn(req).string
   }
 
   implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
@@ -35,7 +35,7 @@ trait SearchScrollImplicits {
 
     override def execute(client: RestClient, req: SearchScrollDefinition): Future[Response] = {
 
-      val body = SearchScrollContentFn(req).string()
+      val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)
       val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
 
@@ -44,7 +44,7 @@ trait SearchScrollImplicits {
   }
 }
 
-object SearchScrollContentFn {
+object SearchScrollBuilderFn {
   def apply(req: SearchScrollDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     req.keepAlive.foreach(builder.field("scroll", _))
