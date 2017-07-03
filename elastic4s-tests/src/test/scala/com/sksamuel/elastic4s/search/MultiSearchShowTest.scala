@@ -20,24 +20,33 @@ class MultiSearchShowTest extends WordSpec with Matchers with JsonSugar with Ela
                                        |{
                                        |  "query" : {
                                        |    "term" : {
-                                       |      "name" : "snow"
+                                       |      "name" : {
+                                       |        "value": "snow",
+                                       |        "boost" : 1.0
+                                       |      }
                                        |    }
                                        |  }
                                        |},
                                        |{
                                        |  "query" : {
                                        |    "term" : {
-                                       |      "name" : "tyrion"
+                                       |      "name": {
+                                       |        "value" : "tyrion",
+                                       |        "boost" : 1.0
+                                       |      }
                                        |    }
                                        |  }
                                        |},
                                        |{
                                        |  "query" : {
                                        |    "term" : {
-                                       |      "name" : "brienne"
+                                       |      "name" : {
+                                       |        "value" : "brienne",
+                                       |        "boost" : 1.0
+                                       |      }
                                        |    }
                                        |  }
-                                       |}]""")
+                                       |}]""".stripMargin)
     }
   }
 }
