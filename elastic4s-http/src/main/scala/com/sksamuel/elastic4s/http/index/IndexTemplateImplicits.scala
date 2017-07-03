@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.index
 
+import cats.Show
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.{CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
+import com.sksamuel.elastic4s.indexes.{AnalysisContentBuilder, CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
 import com.sksamuel.elastic4s.mappings.MappingContentBuilder
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{ResponseListener, RestClient}
@@ -43,6 +44,10 @@ trait IndexTemplateImplicits {
       client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
   }
+
+  implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateDefinition] {
+    override def show(req: CreateIndexTemplateDefinition): String = CreateIndexTemplateBodyFn(req).string()
+  }
 }
 
 object CreateIndexTemplateBodyFn {
@@ -54,10 +59,13 @@ object CreateIndexTemplateBodyFn {
     create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
 
-    if (create.settings.getAsMap.size > 0) {
+    if (!create.settings.getAsMap.isEmpty || create.analysis.nonEmpty) {
       builder.startObject("settings")
       create.settings.getAsMap.asScala.foreach {
         case (key, value) => builder.field(key, value)
+      }
+      create.analysis.foreach { analysis =>
+        AnalysisContentBuilder.build(analysis, builder)
       }
       builder.endObject()
     }
@@ -65,7 +73,7 @@ object CreateIndexTemplateBodyFn {
     if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       create.mappings.foreach { mapping =>
-        builder.rawValue(MappingContentBuilder.buildWithName(mapping, mapping.`type`).bytes, XContentType.JSON)
+        builder.rawField(mapping.`type`, MappingContentBuilder.build(mapping).bytes, XContentType.JSON)
       }
       builder.endObject()
     }
