@@ -58,7 +58,6 @@ trait MappingExecutables {
   }
 }
 
-case class GetMapping()
 
 case class PutMappingResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged

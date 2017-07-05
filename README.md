@@ -857,8 +857,9 @@ folder. There is no need to configure anything externally.
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
 * The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
 * Added doc values to search requests
-* Reworked the HTTP aggregation response API
+* Reworked the HTTP aggregation response API to support better types and subaggs
 * disableCoord has been removed from bool and common term queries
+* Added getIndex request type
 
 ###### 5.4.5
 

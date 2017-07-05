@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s.http.index
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
+import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition, IndexShowImplicits}
+import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.{Response, RestClient}
 
@@ -41,6 +43,23 @@ trait IndexImplicits extends IndexShowImplicits {
       client.async(method, endpoint, params.toMap, entity)
     }
   }
+
+  implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndexDefinition, Map[String, GetIndex]] {
+
+    override def execute(client: RestClient, request: GetIndexDefinition): Future[Response] = {
+      val endpoint = "/" + request.index
+      val method = "GET"
+      client.async(method, endpoint, Map.empty)
+    }
+  }
 }
 
+case class Mapping(properties: Map[String, Field])
 
+case class Field(`type`: String)
+
+case class GetIndex(aliases: Map[String, Map[String, Any]],
+                    mappings: Map[String, Mapping],
+                    @JsonProperty("settings") private val _settings: Map[String, Any]) {
+  def settings: Map[String, Any] = Maps.flatten(_settings, ".")
+}

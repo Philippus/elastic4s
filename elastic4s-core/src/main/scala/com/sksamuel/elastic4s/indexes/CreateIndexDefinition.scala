@@ -26,6 +26,10 @@ case class CreateIndexDefinition(name: String,
   def refreshInterval(duration: Duration): CreateIndexDefinition = refreshInterval(duration.toMillis + "ms")
   def refreshInterval(interval: String): CreateIndexDefinition = copy(settings = settings.refreshInterval = interval)
 
+  def settings(map: Map[String, Any]): CreateIndexDefinition = {
+    copy(settings = map.foldLeft(new IndexSettings()) { case (setting, (key, value)) => setting.add(key, value) })
+  }
+
   def indexSetting(name: String, value: Any): CreateIndexDefinition = copy(settings = settings.add(name, value))
 
   def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexDefinition = mappings(first +: rest)
