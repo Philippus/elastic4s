@@ -710,10 +710,14 @@ To create one, use the iterate method on the companion object, passing in the ht
 search request must specify a keep alive value (which is used by elasticsearch for scrolling).
 
 ```scala
-SearchIterator.iterate(client, search(index).matchAllQuery.keepAlive("1m").size(50))
+implicit val reader : HitReader[MyType] =  ...
+val iterator = SearchIterator.iterate[MyType](client, search(index).matchAllQuery.keepAlive("1m").size(50))
+iterator.foreach(println)
 ```
 
-For instance, in the above we are bringing back all documents in the index, 50 results at a time. 
+For instance, in the above we are bringing back all documents in the index, 50 results at a time, marshalled into
+instances of `MyType` using the implicit `HitReader` (see the section on HitReaders). If you want just the raw
+elasticsearch `Hit` object, then use `SearchIterator.hits`
 
 Note: Whenever the results in a particular
 batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query. 
