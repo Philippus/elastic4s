@@ -700,6 +700,26 @@ val resp = client.execute {
 }.await
 ```
 
+## Search Iterator
+
+Sometimes you may wish to iterate over all the results in a search, without worrying too much about handling futures, and re-requesting
+via a scroll. The `SearchIterator` will do this for you, although it will block between requests. A search iterator is just an implementation
+of `scala.collection.Iterator` backed by elasticsearch queries.
+
+To create one, use the iterate method on the companion object, passing in the http client, and a search request to execute. The
+search request must specify a keep alive value (which is used by elasticsearch for scrolling).
+
+```scala
+SearchIterator.iterate(client, search(index).matchAllQuery.keepAlive("1m").size(50))
+```
+
+For instance, in the above we are bringing back all documents in the index, 50 results at a time. 
+
+Note: Whenever the results in a particular
+batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query. 
+So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a 
+quick and simple way to iterate over some data without bringing back all the results at once `SearchIterator` is perfect.
+
 ## DSL Completeness
 
 As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations.
