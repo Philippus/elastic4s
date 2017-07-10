@@ -344,7 +344,7 @@ resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven
 
 ## Embedded Node
 
-A locally configured node and client can be created be including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
+A locally configured node and client can be created by including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
