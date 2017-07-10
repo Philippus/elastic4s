@@ -1,17 +1,13 @@
 package com.sksamuel.elastic4s.http.search
 
-import java.nio.charset.Charset
-
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.io.{Codec, Source}
 import scala.util.Try
 
 trait SearchImplicits {
@@ -33,11 +29,8 @@ trait SearchImplicits {
     import scala.collection.JavaConverters._
 
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
-      override def onResponse(response: Response): Try[MultiSearchResponse] = Try {
-        val charset = Option(response.getEntity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-        implicit val codec = Codec(Charset.forName(charset))
-        val body = Source.fromInputStream(response.getEntity.getContent).mkString
-        val json = JacksonSupport.mapper.readTree(body)
+      override def handle(response: HttpResponse): Try[MultiSearchResponse] = Try {
+        val json = JacksonSupport.mapper.readTree(response.entity.get.content)
         val items = json.get("responses").elements.asScala.zipWithIndex.map { case (element, index) =>
           val status = element.get("status").intValue()
           val either = if (element.has("error"))
@@ -50,21 +43,21 @@ trait SearchImplicits {
       }
     }
 
-    override def execute(client: RestClient, request: MultiSearchDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: MultiSearchDefinition): Future[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
 
       val body = MultiSearchBuilderFn(request)
       logger.debug("Executing msearch: " + body)
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_msearch", params.toMap, entity)
     }
   }
 
   implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
-    override def execute(client: RestClient, request: SearchDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
@@ -91,7 +84,7 @@ trait SearchImplicits {
       val builder = SearchBodyBuilderFn(request)
       val body = builder.string()
 
-      client.async("POST", endpoint, params.toMap, new StringEntity(body, ContentType.APPLICATION_JSON))
+      client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

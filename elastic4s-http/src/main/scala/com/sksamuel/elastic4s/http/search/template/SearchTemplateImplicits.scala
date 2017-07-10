@@ -3,11 +3,10 @@ package com.sksamuel.elastic4s.http.search.template
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.search.SearchResponse
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.searches.{GetSearchTemplateDefinition, PutSearchTemplateDefinition, RemoveSearchTemplateDefinition, TemplateSearchDefinition}
 import com.sksamuel.exts.OptionImplicits._
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, ResponseException, RestClient}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -17,7 +16,7 @@ trait SearchTemplateImplicits {
   implicit object TemplateSearchExecutable
     extends HttpExecutable[TemplateSearchDefinition, SearchResponse] {
 
-    override def execute(client: RestClient, req: TemplateSearchDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, req: TemplateSearchDefinition): Future[HttpResponse] = {
       val endpoint = req.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil) => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
@@ -25,14 +24,14 @@ trait SearchTemplateImplicits {
         case IndexesAndTypes(indexes, types) => "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
       }
       val body = TemplateSearchBuilderFn(req).string()
-      client.async("POST", endpoint, Map.empty, new StringEntity(body, ContentType.APPLICATION_JSON))
+      client.async("POST", endpoint, Map.empty, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 
   implicit object RemoveSearchTemplateExecutable
     extends HttpExecutable[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
-    override def execute(client: RestClient, req: RemoveSearchTemplateDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, req: RemoveSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_search/template/" + req.name
       client.async("DELETE", endpoint, Map.empty)
     }
@@ -41,10 +40,10 @@ trait SearchTemplateImplicits {
   implicit object PutSearchTemplateExecutable
     extends HttpExecutable[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
-    override def execute(client: RestClient, req: PutSearchTemplateDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, req: PutSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_search/template/" + req.name
       val body = PutSearchTemplateBuilderFn(req).string()
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", endpoint, Map.empty, entity)
     }
   }
@@ -53,16 +52,16 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[GetSearchTemplateDefinition, Option[GetSearchTemplateResponse]] {
 
     override def responseHandler: ResponseHandler[Option[GetSearchTemplateResponse]] = new ResponseHandler[Option[GetSearchTemplateResponse]] {
-      override def onResponse(response: Response): Try[Option[GetSearchTemplateResponse]] = Try {
-        ResponseHandler.fromEntity[GetSearchTemplateResponse](response.getEntity).some
-      }
-      override def onError(e: Throwable): Try[Option[GetSearchTemplateResponse]] = e match {
-        case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 => Success(None)
-        case _ => Failure(e)
+      override def handle(response: HttpResponse): Try[Option[GetSearchTemplateResponse]] =  {
+        response.statusCode match {
+          case 200 => Try { ResponseHandler.fromEntity[GetSearchTemplateResponse](response.entity.get).some }
+          case 404 => Success(None)
+          case _ => Failure(new RuntimeException(response.entity.map(_.content).getOrElse("")))
+        }
       }
     }
 
-    override def execute(client: RestClient, req: GetSearchTemplateDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, req: GetSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_search/template/" + req.name
       client.async("GET", endpoint, Map.empty)
     }

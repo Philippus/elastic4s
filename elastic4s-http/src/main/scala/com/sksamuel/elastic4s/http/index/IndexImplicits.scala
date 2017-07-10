@@ -2,11 +2,10 @@ package com.sksamuel.elastic4s.http.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import com.sksamuel.exts.collection.Maps
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -16,7 +15,7 @@ trait IndexImplicits extends IndexShowImplicits {
 
     override def responseHandler: ResponseHandler[IndexResponse] = ResponseHandler.failure404
 
-    override def execute(client: RestClient, request: IndexDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
 
       val (method, endpoint) = request.id match {
         case Some(id) => "PUT" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}/$id"
@@ -37,7 +36,7 @@ trait IndexImplicits extends IndexShowImplicits {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body = IndexContentBuilder(request)
-      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       logger.debug(s"Endpoint=$endpoint")
       client.async(method, endpoint, params.toMap, entity)
@@ -46,7 +45,7 @@ trait IndexImplicits extends IndexShowImplicits {
 
   implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndexDefinition, Map[String, GetIndex]] {
 
-    override def execute(client: RestClient, request: GetIndexDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: GetIndexDefinition): Future[HttpResponse] = {
       val endpoint = "/" + request.index
       val method = "GET"
       client.async(method, endpoint, Map.empty)

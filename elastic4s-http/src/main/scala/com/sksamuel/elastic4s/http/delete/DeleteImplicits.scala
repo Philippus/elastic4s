@@ -4,10 +4,9 @@ import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{EnumConversions, HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -28,7 +27,7 @@ trait DeleteImplicits {
 
   implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
 
-    override def execute(client: RestClient, request: DeleteByQueryDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: DeleteByQueryDefinition): Future[HttpResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
         s"/${request.indexesAndTypes.indexes.mkString(",")}/_delete_by_query"
@@ -46,7 +45,7 @@ trait DeleteImplicits {
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")
-      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("POST", endpoint, params.toMap, entity)
     }
@@ -56,7 +55,7 @@ trait DeleteImplicits {
 
     override def responseHandler: ResponseHandler[DeleteResponse] = ResponseHandler.failure404
 
-    override def execute(client: RestClient, request: DeleteByIdDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
 
       val method = "DELETE"
       val endpoint = s"/${request.indexType.index}/${request.indexType.`type`}/${request.id}"

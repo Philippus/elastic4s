@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.http.HttpExecutable
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -19,13 +18,13 @@ trait SearchScrollImplicits {
 
   implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
 
-    override def execute(client: RestClient, request: ClearScrollDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, request: ClearScrollDefinition): Future[HttpResponse] = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
       val body = ClearScrollContentFn(request).string()
       logger.debug("Executing clear scroll: " + body)
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async(method, endpoint, Map.empty, entity)
     }
@@ -33,11 +32,11 @@ trait SearchScrollImplicits {
 
   implicit object SearchScrollHttpExecutable extends HttpExecutable[SearchScrollDefinition, SearchResponse] {
 
-    override def execute(client: RestClient, req: SearchScrollDefinition): Future[Response] = {
+    override def execute(client: HttpRequestClient, req: SearchScrollDefinition): Future[HttpResponse] = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("POST", "/_search/scroll", Map.empty, entity)
     }

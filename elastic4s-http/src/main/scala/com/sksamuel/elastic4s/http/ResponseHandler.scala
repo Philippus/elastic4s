@@ -5,15 +5,13 @@ import java.nio.charset.Charset
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.exts.Logging
-import org.apache.http.HttpEntity
-import org.elasticsearch.client.{Response, ResponseException}
 
-import scala.io.{Codec, Source}
+import scala.io.Codec
 import scala.util.{Failure, Try}
 
 trait ResponseHandler[U] {
-  def onResponse(response: Response): Try[U]
-  def onError(e: Throwable): Try[U] = Failure(e)
+  def handle(response: HttpResponse): Try[U]
+  protected def handleError(response: HttpResponse): Failure[U] = Failure(new RuntimeException(response.entity.map(_.content).getOrElse("no error message")))
 }
 
 // a ResponseHandler that marshalls the body into the required type using Jackson
@@ -25,11 +23,10 @@ object ResponseHandler extends Logging {
 
   def fromEntity[U: Manifest](entity: HttpEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
-    val charset = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
+    val charset = entity.contentType.getOrElse("UTF-8")
     implicit val codec = Codec(Charset.forName(charset))
-    val body = Source.fromInputStream(entity.getContent).mkString
-    logger.debug(body)
-    JacksonSupport.mapper.readValue[U](body)
+    logger.debug(entity.content)
+    JacksonSupport.mapper.readValue[U](entity.content)
   }
 
   def default[U: Manifest] = new DefaultResponseHandler[U]
@@ -37,16 +34,12 @@ object ResponseHandler extends Logging {
 }
 
 class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
-  override def onResponse(response: Response): Try[U] = Try(ResponseHandler.fromEntity[U](response.getEntity))
-  override def onError(e: Throwable): Try[U] = Failure(e)
+  override def handle(response: HttpResponse): Try[U] = Try(ResponseHandler.fromEntity[U](response.entity.get))
 }
 
 class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
-  override def onError(e: Throwable): Try[U] = {
-    e match {
-      case re: ResponseException if re.getResponse.getStatusLine.getStatusCode == 404 =>
-        Try(ResponseHandler.fromEntity[U](re.getResponse.getEntity))
-      case _ => Failure(e)
-    }
+  override def handle(response: HttpResponse): Try[U] = {
+    if (response.statusCode == 404) Failure(new RuntimeException(response.entity.map(_.content).getOrElse("no error message")))
+    else super.handle(response)
   }
 }
