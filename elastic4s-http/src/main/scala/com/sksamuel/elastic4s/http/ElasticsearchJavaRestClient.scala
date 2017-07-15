@@ -21,10 +21,10 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
 
       def fromResponse(r: Response): HttpResponse = {
         val entity = Option(r.getEntity).map { entity =>
-          val contentType = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-          implicit val codec = Codec(Charset.forName(contentType))
+          val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
+          implicit val codec = Codec(Charset.forName(contentEncoding))
           val body = Source.fromInputStream(entity.getContent).mkString
-          HttpEntity(body, contentType)
+          HttpEntity(body, contentEncoding)
         }
         val headers = r.getHeaders.map { header => header.getName -> header.getValue }.toMap
         HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
@@ -56,7 +56,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
       method,
       endpoint,
       params.mapValues(_.toString).asJava,
-      new StringEntity(entity.content, ContentType.create(entity.contentType.getOrElse("UTF-8"))),
+      new StringEntity(entity.content, ContentType.APPLICATION_JSON),
       _: ResponseListener)
     future(callback)
   }

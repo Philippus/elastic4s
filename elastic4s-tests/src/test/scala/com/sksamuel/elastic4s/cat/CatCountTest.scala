@@ -15,7 +15,6 @@ class CatCountTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvide
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "cats count" should "return count for all cluster" in {
     http.execute {
       catCount()

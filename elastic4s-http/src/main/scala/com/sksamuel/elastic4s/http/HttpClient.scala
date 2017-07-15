@@ -71,6 +71,7 @@ trait HttpRequestClient extends Logging {
 case class HttpResponse(statusCode: Int, entity: Option[HttpEntity], headers: Map[String, String])
 case class HttpEntity(content: String, contentType: Option[String])
 object HttpEntity {
+  def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = HttpEntity(content, Some(contentType))
 }
 
