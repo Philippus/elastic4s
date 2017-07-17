@@ -40,7 +40,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DualClientTests with Matc
   "an index" should "do nothing when deleting a document where the id does not exist" in {
 
     execute {
-      delete(141212) from "places" / "cities" refresh (RefreshPolicy.Immediate)
+      delete(141212) from "places" / "cities" refresh RefreshPolicy.Immediate
     }.await
 
     execute {
@@ -51,7 +51,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DualClientTests with Matc
 
   it should "remove a document when deleting by id" in {
     execute {
-      delete(99) from "places/cities" refresh (RefreshPolicy.Immediate)
+      delete(99) from "places/cities" refresh RefreshPolicy.Immediate
     }.await
 
     execute {

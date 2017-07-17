@@ -69,14 +69,10 @@ trait SearchImplicits {
         "/" + request.indexesTypes.indexes.mkString(",") + "/" + request.indexesTypes.types.mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.keepAlive.foreach(params.put("scroll", _))
-      request.pref.foreach(params.put("preference", _))
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
-      request.routing.foreach(params.put("routing", _))
       request.searchType.map(_.toString).foreach(params.put("search_type", _))
-      request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
-      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
-      request.version.map(_.toString).foreach(params.put("version", _))
+      request.keepAlive.foreach(params.put("scroll", _))
+
       request.indicesOptions.foreach { opts =>
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }

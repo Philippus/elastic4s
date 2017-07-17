@@ -8,7 +8,7 @@ import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
@@ -45,9 +45,15 @@ trait GetImplicits {
 
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
-    override def responseHandler: ResponseHandler[GetResponse] = new NotFound404ResponseHandler[GetResponse] {
+    override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
       override def handle(response: HttpResponse): Try[GetResponse] = {
-        super.handle(response).map(r => r.copy(fields = Option(r.fields).getOrElse(Map.empty)))
+        response.statusCode match {
+          case 404 | 200 => Try {
+            val r = ResponseHandler.fromEntity[GetResponse](response.entity.get)
+            r.copy(fields = Option(r.fields).getOrElse(Map.empty))
+          }
+          case _ => Failure(new RuntimeException("Error"))
+        }
       }
     }
 

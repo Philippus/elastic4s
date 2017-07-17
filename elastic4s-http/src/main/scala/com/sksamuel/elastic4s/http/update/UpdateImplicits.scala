@@ -4,12 +4,13 @@ import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
+import scala.util.Try
 
 case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("_type") `type`: String,
@@ -30,6 +31,15 @@ trait UpdateImplicits {
   }
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
+
+    override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {
+      override def handle(response: HttpResponse): Try[UpdateResponse] = response.statusCode match {
+        case 404 => sys.error("Error updating")
+        case _ => Try {
+          ResponseHandler.fromEntity[UpdateResponse](response.entity.get)
+        }
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
 

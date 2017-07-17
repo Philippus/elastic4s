@@ -39,7 +39,9 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
 
 class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
   override def handle(response: HttpResponse): Try[U] = {
-    if (response.statusCode == 404) Failure(new RuntimeException(response.entity.map(_.content).getOrElse("no error message")))
-    else super.handle(response)
+    response.statusCode match {
+      case 404 | 500 => Failure(new RuntimeException(response.entity.map(_.content).getOrElse("no error message")))
+      case _ => super.handle(response)
+    }
   }
 }

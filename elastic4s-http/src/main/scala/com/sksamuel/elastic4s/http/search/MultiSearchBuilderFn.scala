@@ -12,8 +12,7 @@ object MultiSearchBuilderFn {
       header.field("index", search.indexesTypes.indexes.mkString(","))
       if (search.indexesTypes.types.nonEmpty)
         header.field("type", search.indexesTypes.types.mkString(","))
-      search.routing.foreach(header.field("routing", _))
-      search.pref.foreach(header.field("preference", _))
+      search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
       search.searchType.map(_.toString).foreach(header.field("search_type", _))
       header.endObject()
 

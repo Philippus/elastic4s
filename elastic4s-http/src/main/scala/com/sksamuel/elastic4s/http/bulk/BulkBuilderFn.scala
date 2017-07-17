@@ -16,8 +16,8 @@ object BulkBuilderFn {
 
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("index")
-        builder.field("_index", index.indexAndType.index)
-        builder.field("_type", index.indexAndType.`type`)
+        builder.field("_index", index.indexAndTypes.index)
+        builder.field("_type", index.indexAndTypes.types.headOption.getOrElse(index.indexAndTypes.index))
         index.id.foreach(id => builder.field("_id", id.toString))
         index.parent.foreach(builder.field("_parent", _))
         index.routing.foreach(builder.field("_routing", _))

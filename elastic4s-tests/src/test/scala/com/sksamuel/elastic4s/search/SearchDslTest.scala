@@ -299,7 +299,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate json for regex query post filter" in {
     val req = search("music") types "bands" postFilter {
       regexQuery("singer", "chris martin")
-    } preference com.sksamuel.elastic4s.Preference.PreferNode("a")
+    }
     req.show should matchJsonResource("/json/search/search_regex_query.json")
   }
 
@@ -374,14 +374,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate json for type filter" in {
     val req = search("music") types "bands" postFilter {
       typeQuery("sometype")
-    } preference com.sksamuel.elastic4s.Preference.Shards("5", "7")
+    }
     req.show should matchJsonResource("/json/search/search_type_filter.json")
   }
 
   it should "generate json for range filter" in {
     val req = search("music") types "bands" postFilter {
       rangeQuery("released") gte "2010-01-01" lte "2012-12-12"
-    } preference Shards("5", "7")
+    }
     req.show should matchJsonResource("/json/search/search_range_filter.json")
   }
 

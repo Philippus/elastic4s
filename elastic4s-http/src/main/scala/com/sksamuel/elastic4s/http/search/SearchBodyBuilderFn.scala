@@ -15,6 +15,12 @@ object SearchBodyBuilderFn {
 
     val builder = XContentFactory.jsonBuilder()
 
+    request.pref.foreach(builder.field("preference", _))
+    request.routing.foreach(builder.field("routing", _))
+    request.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
+    request.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
+    request.version.map(_.toString).foreach(builder.field("version", _))
+
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))

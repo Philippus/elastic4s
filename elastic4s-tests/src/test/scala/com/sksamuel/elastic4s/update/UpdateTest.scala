@@ -27,7 +27,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DualClientT
     }.await
 
     execute(
-      indexInto("hans/albums") fields "name" -> "intersteller" id 5 refresh (RefreshPolicy.Immediate)
+      indexInto("hans/albums") fields "name" -> "intersteller" id 5 refresh RefreshPolicy.Immediate
     ).await
   }
 

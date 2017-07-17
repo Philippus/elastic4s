@@ -9,6 +9,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
+import scala.util.{Failure, Try}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryDefinition): XContentBuilder = {
@@ -53,7 +54,16 @@ trait DeleteImplicits {
 
   implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
 
-    override def responseHandler: ResponseHandler[DeleteResponse] = ResponseHandler.failure404
+    override def responseHandler: ResponseHandler[DeleteResponse] = new ResponseHandler[DeleteResponse] {
+      override def handle(response: HttpResponse): Try[DeleteResponse] = {
+        response.statusCode match {
+          case 200 | 404 => Try {
+            ResponseHandler.fromEntity[DeleteResponse](response.entity.get)
+          }
+          case _ => Failure(new RuntimeException("Error deleting"))
+        }
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
 
