@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.json
 
 import java.util
 
+import cats.instances.int
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
@@ -88,6 +89,11 @@ class XContentBuilder(root: JsonNode) {
 
   def field(name: String, int: Int): XContentBuilder = {
     obj.put(name, int)
+    this
+  }
+
+  def field(name: String, long: Long): XContentBuilder = {
+    obj.put(name, long)
     this
   }
 
