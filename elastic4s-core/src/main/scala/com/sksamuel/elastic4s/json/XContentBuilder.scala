@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.json
 
 import java.util
 
-import cats.instances.int
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
@@ -15,7 +14,6 @@ object XContentFactory {
 }
 
 class XContentBuilder(root: JsonNode) {
-
 
   private val stack = new util.ArrayDeque[JsonNode]
   stack.push(root)
@@ -97,6 +95,11 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def field(name: String, bd: BigDecimal): XContentBuilder = {
+    obj.put(name, bd.underlying)
+    this
+  }
+
   def field(name: String, double: Double): XContentBuilder = {
     obj.put(name, double)
     this
@@ -170,6 +173,11 @@ class XContentBuilder(root: JsonNode) {
 
   def value(str: Float): XContentBuilder = {
     array.add(str)
+    this
+  }
+
+  def value(bd: BigDecimal): XContentBuilder = {
+    array.add(bd.underlying)
     this
   }
 
