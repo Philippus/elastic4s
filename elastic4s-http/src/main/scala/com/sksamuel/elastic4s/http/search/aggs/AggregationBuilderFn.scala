@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{CumulativeSumDefinition, MaxBucketDefinition}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object AggregationBuilderFn {
@@ -9,7 +9,9 @@ object AggregationBuilderFn {
     val builder = agg match {
       case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)
+      case agg: CumulativeSumDefinition => CumulativeSumAggregationBuilder(agg)
       case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
+      case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
