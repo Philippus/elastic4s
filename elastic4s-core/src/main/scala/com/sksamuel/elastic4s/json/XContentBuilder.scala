@@ -116,6 +116,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Short => array.add(v)
       case v: Byte => array.add(v)
       case v: BigDecimal => array.add(v.bigDecimal)
+      case null => array.add(null.asInstanceOf[JsonNode]) // handled internally by add(JsonNode) as a NullNode
     }
     this
   }
@@ -138,6 +139,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Short => obj.put(name, v)
       case v: Byte => obj.put(name, v)
       case v: BigDecimal => obj.put(name, v.bigDecimal)
+      case null => obj.putNull(name)
     }
     this
   }
