@@ -20,7 +20,9 @@ case class HighlightFieldDefinition(field: String,
                                     preTags: Seq[String] = Nil,
                                     requireFieldMatch: Option[Boolean] = None,
                                     matchedFields: Seq[String] = Nil,
-                                    phraseLimit: Option[Int] = None) {
+                                    phraseLimit: Option[Int] = None,
+                                    options: Option[Map[String, AnyRef]] = None
+                                   ) {
 
   def boundaryChars(chars: Array[Char]): HighlightFieldDefinition = copy(boundaryChars = chars.some)
   def boundaryChars(chars: String): HighlightFieldDefinition = copy(boundaryChars = chars.toCharArray.some)
@@ -57,4 +59,7 @@ case class HighlightFieldDefinition(field: String,
   def postTag(tags: Iterable[String]): HighlightFieldDefinition = copy(postTags = tags.toSeq)
 
   def requireFieldMatchScan(req: Boolean): HighlightFieldDefinition = copy(requireFieldMatch = req.some)
+
+  def options(newOptions: Map[String, AnyRef]): HighlightFieldDefinition = copy(options = newOptions.some)
+
 }
