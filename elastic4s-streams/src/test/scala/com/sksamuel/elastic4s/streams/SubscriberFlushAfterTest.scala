@@ -87,7 +87,7 @@ class SpaceshipSlowPublisher(duration: FiniteDuration) extends Publisher[Spacesh
         executor.submit(new Runnable {
           override def run(): Unit = {
             while (remaining.nonEmpty) {
-              remaining.take(1).foreach(s.onNext)
+              remaining.take(1).foreach(i ⇒ s.onNext(i))
               remaining = remaining.drop(1)
               Thread.sleep(duration.toMillis)
             }
