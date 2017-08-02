@@ -37,7 +37,7 @@ package object circe {
     implicit decoder: Decoder[T]      
   ): HitAs[T] = new HitAs[T] {
     override def as(hit: RichSearchHit): T = decode[T](hit.sourceAsString)
-      .getOrElse(throw new IllegalArgumentException(s"Unable to parse ${hit.sourceAsString}"))
+      .fold(e ⇒ throw new IllegalArgumentException(s"Unable to parse ${hit.sourceAsString}", e), identity)
   }
   
   @implicitNotFound("No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance ")
