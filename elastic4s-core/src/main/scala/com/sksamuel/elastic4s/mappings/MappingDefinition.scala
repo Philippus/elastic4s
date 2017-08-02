@@ -51,6 +51,8 @@ case class PutMappingDefinition(indexesAndType: IndexesAndType,
 
   def all(all: Boolean): PutMappingDefinition = copy(all = all.some)
   def source(source: Boolean): PutMappingDefinition = copy(source = source.some)
+
+  // the raw source should include proeprties but not the type
   def rawSource(rawSource: String): PutMappingDefinition = copy(rawSource = rawSource.some)
 
   def sourceExcludes(sourceExcludes: String*): PutMappingDefinition = copy(sourceExcludes = sourceExcludes)
@@ -152,6 +154,8 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
     copy(routing = Some(RoutingDefinition(required, path)))
 
   def size(size: Boolean): MappingDefinition = copy(size = size.some)
+
+  def rawSource(source: String): MappingDefinition = copy(rawSource = source.some)
 
   def dynamicTemplates(temps: Iterable[DynamicTemplateDefinition]): MappingDefinition = templates(temps)
   def dynamicTemplates(temps: DynamicTemplateDefinition*): MappingDefinition = templates(temps)
