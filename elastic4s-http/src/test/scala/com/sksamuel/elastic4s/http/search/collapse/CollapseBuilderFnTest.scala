@@ -16,6 +16,6 @@ class CollapseBuilderFnTest extends FunSuite with Matchers {
       .inner(InnerHitDefinition("name").size(1))
       .maxConcurrentGroupSearches(8)
     CollapseBuilderFn.apply(c).string shouldBe
-      """{"field":"something","max_concurrent_group_searches":8,"inner_hits":{"size":1}}"""
+      """{"field":"something","max_concurrent_group_searches":8,"inner_hits":{"name":"name","size":1}}"""
   }
 }
