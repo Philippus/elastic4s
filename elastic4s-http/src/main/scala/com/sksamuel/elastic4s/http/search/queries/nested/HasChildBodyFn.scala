@@ -19,6 +19,7 @@ object HasChildBodyFn {
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
+    q.innerHit.foreach(inner => builder.rawField("inner_hits", InnerHitQueryBodyFn(inner).bytes, XContentType.JSON))
     builder.endObject()
     builder.endObject()
     builder

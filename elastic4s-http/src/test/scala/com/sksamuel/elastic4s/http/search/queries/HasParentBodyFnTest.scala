@@ -14,6 +14,6 @@ class HasParentBodyFnTest extends FunSuite with Matchers {
       .innerHit(InnerHitDefinition("inners"))
       .queryName("myquery")
     HasParentBodyFn(q).string() shouldBe
-      """{"has_parent":{"parent_type":"blog","query":{"match":{"tag":{"query":"something"}}},"ignore_unmapped":true,"score":true,"boost":1.2,"inner_hits":{},"_name":"myquery"}}"""
+      """{"has_parent":{"parent_type":"blog","query":{"match":{"tag":{"query":"something"}}},"ignore_unmapped":true,"score":true,"boost":1.2,"inner_hits":{"name":"inners"},"_name":"myquery"}}"""
   }
 }
