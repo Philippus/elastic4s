@@ -14,15 +14,15 @@ object Build extends AutoPlugin {
     val ScalatestVersion = "3.0.0"
     val ScalacticVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
-    val AkkaVersion = "2.3.12"
+    val AkkaVersion = "2.4.19"
     val ReactiveStreamsVersion = "1.0.0"
-    val JacksonVersion = "2.7.5"
+    val JacksonVersion = "2.7.9"
     val Slf4jVersion = "1.7.12"
-    val ElasticsearchVersion = "2.4.1"
+    val ElasticsearchVersion = "2.4.6"
     val Log4jVersion = "1.2.17"
     val CommonsIoVersion = "2.4"
-    val CirceVersion = "0.4.1"
-    val PlayJsonVersion = "2.5.9"
+    val CirceVersion = "0.6.1"
+    val PlayJsonVersion = "2.6.2"
   }
 
   import autoImport._
@@ -30,7 +30,7 @@ object Build extends AutoPlugin {
   override def projectSettings = Seq(
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.8"),
+    crossScalaVersions += "2.12.3",
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     fork in Test := true,

@@ -1148,7 +1148,7 @@ case class TermsLookupQueryDefinition(field: String)
 
 case class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
-  val builder = value match {
+  val builder: TermQueryBuilder = value match {
     case str: String => QueryBuilders.termQuery(field, str)
     case iter: Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
     case other => QueryBuilders.termQuery(field, other)
