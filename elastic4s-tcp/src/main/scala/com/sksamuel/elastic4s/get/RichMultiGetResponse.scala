@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.get
 
-import cats.syntax.either._
 import com.sksamuel.elastic4s.HitReader
 import org.elasticsearch.action.get.MultiGetResponse
 import org.elasticsearch.action.get.MultiGetResponse.Failure
@@ -10,12 +9,12 @@ import scala.collection.JavaConverters._
 case class RichMultiGetResponse(original: MultiGetResponse) {
 
   @deprecated("use responses", "5.0.0")
-  def getResponses = items
+  def getResponses: Seq[RichMultiGetItemResponse] = items
 
-  def size = items.size
+  def size: Int = items.size
   def items: Seq[RichMultiGetItemResponse] = original.iterator.asScala.map(RichMultiGetItemResponse.apply).toList
 
-  def to[T: HitReader]: Seq[T] = safeTo[T].flatMap(_.toOption)
+  def to[T: HitReader]: Seq[T] = safeTo[T].map(_.right.get)
   def safeTo[T: HitReader]: Seq[Either[Throwable, T]] = items.map(_.safeTo)
 
   // returns only those items which were successful

@@ -1,31 +1,36 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
+
+import scala.util.Try
 
 class MultiSearchHttpTest
   extends FlatSpec
-    with SharedElasticSugar
+    with DiscoveryLocalNodeProvider
     with Matchers
     with ElasticDsl {
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
-  "a multi search request" should "find matching documents for all queries" in {
-
+  Try {
     http.execute {
-      createIndex("jtull")
+      deleteIndex("jtull")
     }.await
+  }
 
-    http.execute {
-      bulk(
-        indexInto("jtull/albums") fields ("name" -> "aqualung") id 14,
-        indexInto("jtull/albums") fields ("name" -> "passion play") id 51
-      ).refresh(RefreshPolicy.IMMEDIATE)
-    }.await
+  http.execute {
+    createIndex("jtull")
+  }.await
+
+  http.execute {
+    bulk(
+      indexInto("jtull" / "albums") fields ("name" -> "aqualung") id 14,
+      indexInto("jtull" / "albums") fields ("name" -> "passion play") id 51
+    ).refresh(RefreshPolicy.Immediate)
+  }.await
+
+  "a multi search request" should "perform search for all queries" in {
 
     val resp = http.execute {
       multi(
@@ -35,14 +40,30 @@ class MultiSearchHttpTest
       )
     }.await
 
-    resp.responses.size shouldBe 3
+    resp.successes.size shouldBe 3
     resp.size shouldBe 3
 
-    resp.responses.head.hits.hits.head.id shouldBe "14"
-    resp.responses.tail.head.hits.hits.head.id shouldBe "51"
+    resp.successes.head.hits.hits.head.id shouldBe "14"
+    resp.successes.tail.head.hits.hits.head.id shouldBe "51"
 
-    resp.responses.head.totalHits shouldBe 1
-    resp.responses.tail.head.totalHits shouldBe 1
-    resp.responses.last.totalHits shouldBe 2
+    resp.successes.head.totalHits shouldBe 1
+    resp.successes.tail.head.totalHits shouldBe 1
+    resp.successes.last.totalHits shouldBe 2
+  }
+
+  it should "correctly set errored and successful items" in {
+    val resp = http.execute {
+      multi(
+        search("jtull") query matchQuery("name", "aqualung"),
+        search("unknown") query matchAllQuery()
+      )
+    }.await
+
+    resp.successes.size shouldBe 1
+    resp.failures.size shouldBe 1
+    resp.items.head.index shouldBe 0
+    resp.items.head.status shouldBe 200
+    resp.items.last.index shouldBe 1
+    resp.items.last.status shouldBe 404
   }
 }

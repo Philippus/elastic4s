@@ -1,24 +1,23 @@
 {
-  "sort": [
-    {
-      "_script": {
-        "script": {
-          "inline": "document.score",
-          "lang": "painless"
+    "sort": [
+        {
+            "_geo_distance": {
+                "location": [
+                    "ABCDEFG"
+                ],
+                "distance_type": "arc",
+                "mode": "max"
+            }
         },
-        "type": "string",
-        "order": "asc"
-      }
-    },
-    {
-      "_score": {
-        "order": "desc"
-      }
-    },
-    {
-      "dancer": {
-        "order": "desc"
-      }
-    }
-  ]
+        {
+            "_score": {
+                "order": "desc"
+            }
+        },
+        {
+            "dancer": {
+                "order": "desc"
+            }
+        }
+    ]
 }

@@ -2,12 +2,13 @@ package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
 import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSugar with MockitoSugar {
+class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl with MockitoSugar {
 
   import ElasticJackson.Implicits._
 
@@ -19,10 +20,8 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSug
           indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId(1),
           indexInto("jacksontest" / "characters").source(Character("hank", "breaking bad")).withId(2),
           indexInto("jacksontest" / "characters").source(Location("dorne", "game of thrones")).withId(3)
-        )
-      }
-
-      blockUntilCount(3, "jacksontest")
+        ).refresh(RefreshPolicy.WaitFor)
+      }.await
     }
     "read a case class" in {
 

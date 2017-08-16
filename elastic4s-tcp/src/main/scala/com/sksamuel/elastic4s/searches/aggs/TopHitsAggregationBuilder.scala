@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import com.sksamuel.elastic4s.script.SortBuilderFn
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import org.elasticsearch.search.aggregations.AggregationBuilders
@@ -14,7 +14,7 @@ object TopHitsAggregationBuilder {
 
     val builder = AggregationBuilders.topHits(agg.name)
     agg.explain.foreach(builder.explain)
-    agg.fetchSource.foreach(builder.fetchSource)
+    agg.fetchSource.map(EnumConversions.fetchSource).foreach(builder.fetchSource)
     agg.trackScores.foreach(builder.trackScores)
     agg.version.foreach(builder.version)
     agg.size.foreach(builder.size)

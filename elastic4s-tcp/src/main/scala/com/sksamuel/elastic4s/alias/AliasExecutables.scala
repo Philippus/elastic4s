@@ -8,6 +8,7 @@ import org.elasticsearch.action.admin.indices.alias.{IndicesAliasesRequest, Indi
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
 object AliasActionBuilders {
 
@@ -36,7 +37,7 @@ trait AliasExecutables {
     extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {
       val _builder = c.admin().indices().prepareGetAliases(t.aliases: _*).addIndices(t.indices: _*)
-      injectFuture(_builder.execute)
+      injectFuture(_builder.execute(_))
     }
   }
 
@@ -52,7 +53,7 @@ trait AliasExecutables {
       }.foreach { action =>
         _builder.addAliasAction(action)
       }
-      injectFuture(_builder.execute)
+      injectFuture(_builder.execute(_))
     }
   }
 
@@ -61,7 +62,7 @@ trait AliasExecutables {
     extends Executable[AddAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: AddAliasActionDefinition): Future[IndicesAliasesResponse] = {
       val _builder = c.admin.indices().prepareAliases().addAliasAction(AliasActionBuilders.add(t))
-      injectFuture(_builder.execute)
+      injectFuture(_builder.execute(_))
     }
   }
 
@@ -70,7 +71,7 @@ trait AliasExecutables {
     extends Executable[RemoveAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: RemoveAliasActionDefinition): Future[IndicesAliasesResponse] = {
       val _builder = c.admin.indices().prepareAliases().addAliasAction(AliasActionBuilders.remove(t))
-      injectFuture(_builder.execute)
+      injectFuture(_builder.execute(_))
     }
   }
 

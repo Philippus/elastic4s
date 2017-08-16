@@ -6,13 +6,20 @@ import org.elasticsearch.script.Script
 import scala.collection.JavaConverters._
 
 object ScriptBuilder {
+
+  import EnumConversions._
+
   def apply(script: ScriptDefinition): Script = {
+    var options = script.options.asJava
+    if (script.scriptType != com.sksamuel.elastic4s.script.ScriptType.Inline) {
+      options = null
+    }
     if (script.params.isEmpty) {
       new Script(
         script.scriptType,
         script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG),
         script.script,
-        script.options.asJava,
+        options,
         new java.util.HashMap[String, Object]()
       )
     } else {
@@ -21,7 +28,7 @@ object ScriptBuilder {
         script.scriptType,
         script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG),
         script.script,
-        script.options.asJava,
+        options,
         mappedParams
       )
     }

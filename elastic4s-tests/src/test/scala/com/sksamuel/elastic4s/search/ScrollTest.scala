@@ -1,16 +1,24 @@
 package com.sksamuel.elastic4s.search
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
+import scala.util.Try
 
-class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("katebush")
+      }.await
+    }
+
     execute {
       createIndex("katebush").mappings(
         mapping("songs").fields(
@@ -32,7 +40,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualElastic
         indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985"),
         indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985"),
         indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

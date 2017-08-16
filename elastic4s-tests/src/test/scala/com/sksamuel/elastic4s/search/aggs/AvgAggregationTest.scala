@@ -8,18 +8,18 @@ class AvgAggregationTest extends AbstractAggregationTest {
     "should average by field" in {
       val resp = client.execute {
         search("aggregations/breakingbad") aggregations {
-          aggregation avg "agg1" field "age"
+          avgAgg("agg1", "age")
         }
       }.await
       resp.totalHits shouldBe 10
-      val agg = resp.aggregations.getAsMap.get("agg1").asInstanceOf[InternalAvg]
+      val agg = resp.aggregations.map("agg1").asInstanceOf[InternalAvg]
       agg.getValue shouldBe 45.4
     }
     "should only include matching documents in the query" in {
       val resp = client.execute {
         // should match 3 documents
         search("aggregations/breakingbad") query prefixQuery("name" -> "g") aggregations {
-          aggregation avg "agg1" field "age"
+          avgAggregation("agg1").field("age")
         }
       }.await
       resp.totalHits shouldBe 3

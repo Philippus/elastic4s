@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar, HttpElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
-class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   http.execute {
     createIndex("sodas")
@@ -18,7 +15,7 @@ class IdQueryTest extends FlatSpec with ElasticSugar with Matchers with ElasticD
     bulk(
       indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id 5,
       indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "id query" should "find by id" in {

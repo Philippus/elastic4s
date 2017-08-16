@@ -7,13 +7,13 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, RichBulkItemResponse}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.util.Random
 
-class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers with BeforeAndAfter {
+class BulkIndexingSubscriberIntegrationTest extends WordSpec with ElasticSugar with Matchers with BeforeAndAfter with DiscoveryLocalNodeProvider {
 
   import ReactiveElastic._
   import scala.concurrent.duration._

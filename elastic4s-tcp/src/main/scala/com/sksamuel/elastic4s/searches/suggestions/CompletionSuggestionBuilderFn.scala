@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
-import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestionDefinition
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, Fuzziness}
+import org.elasticsearch.common.unit
 import org.elasticsearch.common.xcontent.ToXContent
 import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext
-import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, FuzzyOptions}
+import org.elasticsearch.search.suggest.completion.{CompletionSuggestionBuilder, FuzzyOptions, RegexOptions}
 
 import scala.collection.JavaConverters._
 
@@ -22,7 +24,12 @@ object CompletionSuggestionBuilderFn {
     sugg.prefix.foreach { prefix =>
       sugg.fuzziness.fold(builder.prefix(prefix)) { fuzz =>
         val options = new FuzzyOptions.Builder()
-        options.setFuzziness(fuzz)
+        options.setFuzziness(fuzz match {
+          case Fuzziness.Zero => unit.Fuzziness.ZERO
+          case Fuzziness.One => unit.Fuzziness.ONE
+          case Fuzziness.Two => unit.Fuzziness.TWO
+          case Fuzziness.Auto => unit.Fuzziness.AUTO
+        })
         sugg.unicodeAware.foreach(options.setUnicodeAware)
         sugg.fuzzyMinLength.foreach(options.setFuzzyMinLength)
         sugg.fuzzyPrefixLength.foreach(options.setFuzzyPrefixLength)
@@ -33,7 +40,8 @@ object CompletionSuggestionBuilderFn {
     }
 
     sugg.regex.foreach { regex =>
-      builder.regex(regex, sugg.regexOptions.orNull)
+      val flags = sugg.regexFlags.map(EnumConversions.regexpFlags)
+      builder.regex(regex, RegexOptions.builder().setFlags(flags.map(_.name).mkString("|")).build)
     }
 
     if (sugg.contexts.nonEmpty) {

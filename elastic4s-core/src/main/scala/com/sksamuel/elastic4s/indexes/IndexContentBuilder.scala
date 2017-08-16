@@ -1,15 +1,14 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.XContentFieldValueWriter
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object IndexContentBuilder {
   def apply(request: IndexDefinition): XContentBuilder = {
     request.source match {
-      case Some(json) => XContentFactory.jsonBuilder().rawValue(new BytesArray(json))
+      case Some(json) => XContentFactory.parse(json)
       case None =>
-        val source = XContentFactory.jsonBuilder().startObject()
+        val source = XContentFactory.jsonBuilder()
         request.fields.foreach(XContentFieldValueWriter(source, _))
         source.endObject()
         source

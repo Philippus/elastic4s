@@ -1,14 +1,34 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with DualClient {
+import scala.util.Try
 
-  override protected def beforeRunTests() = {
+class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("foo")
+      }.await
+    }
+
+    Try {
+      execute {
+        deleteIndex("cuisine")
+      }.await
+    }
+
+    Try {
+      execute {
+        deleteIndex("landscape")
+      }.await
+    }
+
     execute {
       createIndex("foo").mappings(
         mapping("bar").fields(
@@ -33,27 +53,6 @@ class CreateIndexTest extends WordSpec with Matchers with DualElasticSugar with 
       }.await
 
       resp.acknowledged shouldBe true
-    }
-
-    "support multiple types" in {
-
-      execute {
-        createIndex("geography").mappings(
-          mapping("shire").fields(
-            textField("name")
-          ),
-          mapping("mountain").fields(
-            textField("range")
-          )
-        ).shards(1).waitForActiveShards(1)
-      }.await
-
-      val resp = client.execute {
-        getMapping("geography").types("shire", "mountain")
-      }.await
-
-      resp.mappings.keys shouldBe Set("geography")
-      resp.mappings("geography").keySet shouldBe Set("shire", "mountain")
     }
 
     "create from raw source" in {

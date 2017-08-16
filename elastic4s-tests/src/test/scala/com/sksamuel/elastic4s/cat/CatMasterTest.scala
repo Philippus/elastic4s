@@ -1,26 +1,23 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatMasterTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class CatMasterTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   http.execute {
     bulk(
       indexInto("catmaster/landmarks").fields("name" -> "hampton court palace")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
 
   "cat master" should "return master node info" in {
     http.execute {
       catMaster()
-    }.await.host shouldBe "local"
+    }.await.host shouldBe "127.0.0.1"
   }
 
 }

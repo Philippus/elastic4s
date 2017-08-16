@@ -1,31 +1,24 @@
 {
-  "post_filter": {
-    "bool": {
-      "must_not": [
-        {
-          "geo_distance": {
-            "distance": 41.147999999999996,
-            "distance_type": "arc",
-            "validation_method": "STRICT",
-            "ignore_unmapped": false,
-            "boost": 1.0
-          }
+    "post_filter": {
+        "bool": {
+            "should": [
+                {
+                    "geo_distance": {
+                        "distance": "geo1234",
+                        "distance_type": "plane"
+                    }
+                }
+            ],
+            "must_not": [
+                {
+                    "geo_distance": {
+                        "distance": [
+                            76.6,
+                            45.4
+                        ]
+                    }
+                }
+            ]
         }
-      ],
-      "should": [
-        {
-          "geo_distance": {
-            "distance": 193121.28,
-            "distance_type": "plane",
-            "validation_method": "STRICT",
-            "ignore_unmapped": false,
-            "boost": 1.0
-          }
-        }
-      ],
-      "disable_coord": false,
-      "adjust_pure_negative": true,
-      "boost": 1.0
     }
-  }
 }

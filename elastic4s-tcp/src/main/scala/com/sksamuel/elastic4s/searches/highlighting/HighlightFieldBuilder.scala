@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s.searches.highlighting
 
 import com.sksamuel.elastic4s.searches.{HighlightFieldDefinition, QueryBuilderFn}
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
+import scala.collection.JavaConversions._
+
 
 object HighlightFieldBuilder {
   def apply(highlight: HighlightFieldDefinition): HighlightBuilder.Field = {
@@ -18,6 +20,8 @@ object HighlightFieldBuilder {
     highlight.order.foreach(builder.order)
     highlight.noMatchSize.map(Integer.valueOf).foreach(builder.noMatchSize)
     highlight.numOfFragments.map(Integer.valueOf).foreach(builder.numOfFragments)
+    highlight.options.foreach(options => builder.options(options))
+
     if (highlight.postTags.nonEmpty)
       builder.postTags(highlight.postTags: _*)
     if (highlight.preTags.nonEmpty)

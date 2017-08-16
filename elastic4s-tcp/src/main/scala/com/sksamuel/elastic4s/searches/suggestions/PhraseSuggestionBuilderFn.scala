@@ -17,10 +17,10 @@ object PhraseSuggestionBuilderFn {
     sugg.text.foreach(builder.text)
 
     sugg.analyzer.foreach(builder.analyzer)
-    sugg.candidateGenerator.foreach(builder.addCandidateGenerator)
+    // sugg.candidateGenerator.foreach(builder.addCandidateGenerator)
     builder.collateParams(sugg.collateParams.asJava)
     sugg.collatePrune.foreach(builder.collatePrune)
-    sugg.collateQuery.foreach(builder.collateQuery)
+    //  sugg.collateQuery.foreach(builder.collateQuery)
     sugg.confidence.foreach(builder.confidence)
     sugg.forceUnigrams.foreach(builder.forceUnigrams)
     sugg.gramSize.foreach(builder.gramSize)
@@ -31,7 +31,7 @@ object PhraseSuggestionBuilderFn {
     sugg.maxErrors.foreach(builder.maxErrors)
     sugg.realWordErrorLikelihood.foreach(builder.realWordErrorLikelihood)
     sugg.separator.foreach(builder.separator)
-    sugg.smoothingModel.foreach(builder.smoothingModel)
+    //  sugg.smoothingModel.foreach(builder.smoothingModel)
     builder
   }
 }

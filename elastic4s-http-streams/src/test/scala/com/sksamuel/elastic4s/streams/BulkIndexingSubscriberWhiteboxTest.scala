@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, SharedElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
 import org.reactivestreams.{Subscriber, Subscription}
@@ -13,13 +12,12 @@ import org.scalatest.testng.TestNGSuiteLike
 
 class BulkIndexingSubscriberWhiteboxTest
   extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
-    with SharedElasticSugar with TestNGSuiteLike with ClassLocalNodeProvider with ElasticDsl {
+    with HttpElasticSugar with TestNGSuiteLike with DiscoveryLocalNodeProvider with ElasticDsl {
 
   implicit val system = ActorSystem()
-  private val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   try {
-    client.execute {
+    http.execute {
       createIndex("bulkindexwhitebox")
     }.await
   } catch {

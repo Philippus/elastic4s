@@ -1,13 +1,10 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatPluginsTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class CatPluginsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "cats plugins" should "return all plugins" in {
     http.execute {

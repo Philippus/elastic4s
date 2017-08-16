@@ -12,25 +12,25 @@ import com.sksamuel.elastic4s.get.GetApi
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
 import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
 import com.sksamuel.elastic4s.locks.LocksApi
+import com.sksamuel.elastic4s.mappings.MappingApi
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicTemplateApi
-import com.sksamuel.elastic4s.mappings.{MappingApi, TimestampDefinition}
 import com.sksamuel.elastic4s.nodes.NodesApi
 import com.sksamuel.elastic4s.reindex.ReindexApi
 import com.sksamuel.elastic4s.script.ScriptApi
+import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi
 import com.sksamuel.elastic4s.searches.collapse.CollapseApi
 import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
-import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.update.UpdateApi
 import com.sksamuel.elastic4s.validate.ValidateApi
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 // contains all the syntactic definitions
 trait ElasticApi
@@ -78,8 +78,6 @@ trait ElasticApi
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 10.seconds): T = Await.result(future, duration)
   }
-
-  def timestamp(en: Boolean): TimestampDefinition = TimestampDefinition(en)
 }
 
 object ElasticApi extends ElasticApi

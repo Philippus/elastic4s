@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class IndexTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
 
   case class Phone(name: String, speed: String)
 
@@ -15,7 +16,14 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticS
     override def json(t: Phone): String = s"""{ "name" : "${t.name}", "speed" : "${t.speed}" }"""
   }
 
-  override protected def beforeRunTests() = {
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("electronics")
+      }.await
+    }
+
     execute {
       createIndex("electronics").mappings(mapping("phone"))
     }.await
@@ -29,7 +37,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticS
         indexInto("electronics" / "phone").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
         indexInto("electronics" / "phone").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
         indexInto("electronics" / "phone").source(Phone("nokia blabble", "4g"))
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 
@@ -88,7 +96,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DualElasticS
     }
     "return created status" in {
       val result = execute {
-        indexInto("electronics" / "phone").fields("name" -> "super phone").refresh(RefreshPolicy.IMMEDIATE)
+        indexInto("electronics" / "phone").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
       result.created shouldBe true
       result.result shouldBe "created"

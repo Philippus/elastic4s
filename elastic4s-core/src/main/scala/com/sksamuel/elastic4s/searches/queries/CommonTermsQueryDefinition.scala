@@ -10,7 +10,6 @@ case class CommonTermsQueryDefinition(name: String,
                                       highFreqMinimumShouldMatch: Option[String] = None,
                                       cutoffFrequency: Option[Double] = None,
                                       queryName: Option[String] = None,
-                                      disableCoord: Option[Boolean] = None,
                                       boost: Option[Double] = None,
                                       highFreqOperator: Option[String] = None,
                                       lowFreqOperator: Option[String] = None,
@@ -18,7 +17,6 @@ case class CommonTermsQueryDefinition(name: String,
   extends QueryDefinition {
 
   def boost(boost: Double): CommonTermsQueryDefinition = copy(boost = Some(boost))
-  def disableCoord(disableCoord: Boolean): CommonTermsQueryDefinition = copy(disableCoord = Some(disableCoord))
   def queryName(queryName: String): CommonTermsQueryDefinition = copy(queryName = Some(queryName))
   def cutoffFrequency(freq: Double): CommonTermsQueryDefinition = copy(cutoffFrequency = freq.some)
 

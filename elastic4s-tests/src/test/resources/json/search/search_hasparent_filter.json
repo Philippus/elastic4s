@@ -1,19 +1,17 @@
 {
-  "post_filter": {
-    "has_parent": {
-      "query": {
-        "term": {
-          "name": {
-            "value": "chris",
-            "boost": 1.0
-          }
+    "post_filter": {
+        "has_parent": {
+            "parent_type": "singer",
+            "query": {
+                "term": {
+                    "name": {
+                        "value": "chris"
+                    }
+                }
+            },
+            "score": true,
+            "boost": 2.3,
+            "_name": "spidername"
         }
-      },
-      "parent_type": "singer",
-      "score": true,
-      "ignore_unmapped": false,
-      "boost": 2.3,
-      "_name": "spidername"
     }
-  }
 }

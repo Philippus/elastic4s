@@ -1,23 +1,20 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
 class SearchHttpTest
   extends WordSpec
-    with ElasticSugar
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   Try {
     http.execute {
@@ -28,9 +25,6 @@ class SearchHttpTest
   http.execute {
     createIndex("chess").mappings(
       mapping("pieces").fields(
-        textField("name").fielddata(true)
-      ),
-      mapping("openings").fields(
         textField("name").fielddata(true)
       )
     )
@@ -67,16 +61,8 @@ class SearchHttpTest
         "name" -> "pawn",
         "value" -> 1,
         "count" -> 8
-      ),
-      indexInto("chess/openings").fields(
-        "name" -> "queen gambit",
-        "rank" -> 0.2
-      ),
-      indexInto("chess/openings").fields(
-        "name" -> "modern defence",
-        "rank" -> -0.1
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a search query" should {
@@ -87,32 +73,23 @@ class SearchHttpTest
     }
     "find an indexed document in the given type only" in {
       http.execute {
-        search("chess") query matchQuery("name", "queen")
-      }.await.totalHits shouldBe 2
-      http.execute {
         search("chess" / "pieces") query matchQuery("name", "queen")
       }.await.totalHits shouldBe 1
     }
     "support match all query" in {
       http.execute {
         search("chess") query matchAllQuery()
-      }.await.totalHits shouldBe 8
+      }.await.totalHits shouldBe 6
     }
     "support sorting in a single type" in {
       http.execute {
         search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
       }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
-      http.execute {
-        search("chess" / "openings") query matchAllQuery() sortBy fieldSort("name")
-      }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("modern defence", "queen gambit")
     }
     "support limits" in {
       http.execute {
         search("chess").matchAllQuery().limit(2)
       }.await.size shouldBe 2
-      http.execute {
-        search("chess").matchAllQuery()
-      }.await.size shouldBe 8
     }
     "support unmarshalling through a HitReader" in {
       implicit val reader = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]

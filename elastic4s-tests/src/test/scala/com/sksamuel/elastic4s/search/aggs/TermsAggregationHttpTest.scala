@@ -1,15 +1,12 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.search.Bucket
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.http.search.TermBucket
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
-class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("termsagg") mappings {
@@ -27,11 +24,11 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       indexInto("termsagg/curry") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Chilli Masala", "strength" -> "hot", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Tikka Masala", "strength" -> "medium")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "terms aggregation" - {
-    "should group by field" ignore {
+    "should group by field" in {
 
       val resp = http.execute {
         search("termsagg/curry").matchAllQuery().aggs {
@@ -40,11 +37,11 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2), Bucket("medium", 1), Bucket("mild", 1))
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty), TermBucket("medium", 1, Map.empty), TermBucket("mild", 1, Map.empty))
     }
 
-    "should only include matching documents in the query" ignore {
+    "should only include matching documents in the query" in {
       val resp = http.execute {
         // should match 2 documents
         search("termsagg/curry").matchQuery("name", "masala").aggregations {
@@ -53,11 +50,11 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       }.await
       resp.size shouldBe 2
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 1), Bucket("medium", 1))
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 1, Map.empty), TermBucket("medium", 1, Map.empty))
     }
 
-    "should support missing value" ignore {
+    "should support missing value" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -66,11 +63,11 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("india", 3), Bucket("unknown", 1))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 3, Map.empty), TermBucket("unknown", 1, Map.empty))
     }
 
-    "should support min doc count" ignore {
+    "should support min doc count" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -79,11 +76,11 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
     }
 
-    "should support size" ignore {
+    "should support size" in {
 
       val resp = http.execute {
         search("termsagg/curry").aggregations {
@@ -92,8 +89,23 @@ class TermsAggregationHttpTest extends FreeSpec with SharedElasticSugar with Mat
       }.await
       resp.totalHits shouldBe 4
 
-      val agg = resp.termsAgg("agg1")
-      agg.buckets.toSet shouldBe Set(Bucket("hot", 2))
+      val agg = resp.aggs.terms("agg1")
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
+    }
+
+    "should support sub aggregations" in {
+
+      val resp = http.execute {
+        search("termsagg/curry").matchAllQuery().aggs {
+          termsAgg("agg1", "strength").addSubagg(
+            termsAgg("agg2", "origin")
+          )
+        }
+      }.await
+      resp.totalHits shouldBe 4
+
+      val agg = resp.aggregations.terms("agg1")
+      agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 2, Map.empty))
     }
 
     //    "should only return included fields" in {

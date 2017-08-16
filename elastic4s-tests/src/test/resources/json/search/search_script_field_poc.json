@@ -1,26 +1,22 @@
 {
-  "query": {
-    "match_all": {
-      "boost": 1.0
-    }
-  },
-  "script_fields": {
-    "balance": {
-      "script": {
-        "inline": "portfolioscript",
-        "lang": "native",
-        "params": {
-          "fieldName": "rate_of_return"
-        }
-      },
-      "ignore_failure": false
+    "query": {
+        "match_all": {}
     },
-    "date": {
-      "script": {
-        "inline": "doc['date'].value",
-        "lang": "groovy"
-      },
-      "ignore_failure": false
+    "script_fields": {
+        "balance": {
+            "script": {
+                "lang": "native",
+                "inline": "portfolioscript",
+                "params": {
+                    "fieldName": "rate_of_return"
+                }
+            }
+        },
+        "date": {
+            "script": {
+                "lang": "groovy",
+                "inline": "doc['date'].value"
+            }
+        }
     }
-  }
 }

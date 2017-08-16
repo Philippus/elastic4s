@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
+import com.sksamuel.elastic4s.http.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object GeoBoundingBoxQueryBodyFn {
 
   def apply(q: GeoBoundingBoxQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.startObject("geo_bounding_box")
+    val builder = XContentFactory.jsonBuilder().startObject().startObject("geo_bounding_box")
     builder.startObject(q.field)
 
     q.corners.foreach { corners =>
@@ -28,14 +27,11 @@ object GeoBoundingBoxQueryBodyFn {
       builder.endObject()
     }
 
-    q.geoExecType.map(_.name.toLowerCase).foreach(builder.field("type", _))
+    q.geoExecType.map(EnumConversions.geoExecType).foreach(builder.field("type", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
-    q.validationMethod.map(_.name).foreach(builder.field("validation_method", _))
+    q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
     q.queryName.foreach(builder.field("_name", _))
 
-    builder.endObject()
-    builder.endObject()
-    builder.endObject()
-    builder
+    builder.endObject().endObject().endObject()
   }
 }

@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, SharedElasticSugar}
+import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 class SearchTest
   extends WordSpec
-    with SharedElasticSugar
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
 
@@ -18,29 +18,18 @@ class SearchTest
         "drummer" -> "will champion",
         "guitar" -> "johnny buckland"
       ),
-      indexInto("musicians/performers").fields(
-        "name" -> "kate bush",
-        "singer" -> "kate bush"
-      ),
       indexInto("musicians/bands").fields(
         "name" -> "jethro tull",
         "singer" -> "ian anderson",
         "guitar" -> "martin barre",
         "keyboards" -> "johnny smith"
       ) id 45
-    )
+    ).immediateRefresh()
   }.await
-
-  refresh("musicians")
-  blockUntilCount(3, "musicians")
 
   "a search query" should {
     "find an indexed document that matches a string query" in {
       search("musicians" -> "bands") query "anderson" should haveTotalHits(1)
-    }
-    "find an indexed document in the given type only" in {
-      search("musicians" -> "bands") query "kate" should haveNoHits
-      search("musicians" -> "performers") query "kate" should haveTotalHits(1)
     }
     "return source" in {
       search("musicians" / "bands").query("jethro") should haveSourceFieldValue("singer", "ian anderson")
@@ -60,8 +49,8 @@ class SearchTest
       s should not(haveSourceField("name"))
     }
     "support limits" in {
-      search("musicians").matchAllQuery().limit(2) should haveHits(2)
-      search("musicians").matchAllQuery().limit(2) should haveTotalHits(3)
+      search("musicians").matchAllQuery().limit(1) should haveHits(1)
+      search("musicians").matchAllQuery().limit(2) should haveTotalHits(2)
     }
   }
 }

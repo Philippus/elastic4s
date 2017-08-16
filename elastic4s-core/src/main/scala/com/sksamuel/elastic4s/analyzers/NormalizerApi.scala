@@ -7,8 +7,8 @@ trait NormalizerApi {
   }
 
   def customNormalizer(name: String,
-                     filter: AnalyzerFilter,
-                     rest: AnalyzerFilter*): CustomNormalizerDefinition = {
+                       filter: AnalyzerFilter,
+                       rest: AnalyzerFilter*): CustomNormalizerDefinition = {
     CustomNormalizerDefinition(name, filter +: rest)
   }
 }

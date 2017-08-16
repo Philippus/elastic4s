@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.IndexesAndTypes
+import com.sksamuel.elastic4s.{IndexesAndTypes, RefreshPolicy}
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -11,7 +10,7 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    query: QueryDefinition,
                                    requestsPerSecond: Option[Float] = None,
                                    maxRetries: Option[Int] = None,
-                                   abortOnVersionConflict: Option[Boolean] = None,
+                                   proceedOnConflicts: Option[Boolean] = None,
                                    refresh: Option[RefreshPolicy] = None,
                                    waitForActiveShards: Option[Int] = None,
                                    retryBackoffInitialTime: Option[FiniteDuration] = None,
@@ -20,11 +19,13 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
 
-  def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryDefinition =
-    copy(abortOnVersionConflict = abortOnVersionConflict.some)
+  def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryDefinition =
+    copy(proceedOnConflicts = proceedOnConflicts.some)
 
-  @deprecated("use the variant that accepts a RefreshPolicy enum", "5.2.0")
-  def refresh(refr: Boolean): DeleteByQueryDefinition = refresh(if (refr) RefreshPolicy.IMMEDIATE else RefreshPolicy.NONE)
+  @deprecated("use proceedOnConflicts")
+  def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryDefinition =
+    proceedOnConflicts(abortOnVersionConflict)
+
   def refresh(refresh: RefreshPolicy): DeleteByQueryDefinition = copy(refresh = refresh.some)
 
   def scrollSize(scrollSize: Int): DeleteByQueryDefinition = copy(scrollSize = scrollSize.some)

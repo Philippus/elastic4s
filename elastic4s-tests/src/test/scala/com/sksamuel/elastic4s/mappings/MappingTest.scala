@@ -2,19 +2,23 @@ package com.sksamuel.elastic4s.mappings
 
 import java.util
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class MappingTest extends WordSpec with ElasticSugar with Matchers {
+import scala.util.Try
+
+class MappingTest extends WordSpec with ElasticSugar with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  deleteIndex("q")
 
   client.execute {
     createIndex("q").mappings {
       mapping("r") as Seq(
-        field("a", TextType) stored true analyzer WhitespaceAnalyzer,
-        field("b", TextType),
-        field("kw", KeywordType) normalizer "my_normalizer"
+        textField("a") stored true analyzer WhitespaceAnalyzer,
+        textField("b"),
+        keywordField("kw") normalizer "my_normalizer"
       )
     } analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -23,19 +27,11 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
     }
   }.await
 
-  client.execute {
-    createIndex("z") mappings(
-      mapping("r"),
-      mapping("s"),
-      mapping("t")
-    )
-  }.await
-
   "mapping get" should {
     "return schema" in {
 
       val mapping = client.execute {
-        get mapping "q" / "r"
+        getMapping("q" / "r")
       }.await
 
       val map = mapping.mappings("q")("r").sourceAsMap()
@@ -52,24 +48,19 @@ class MappingTest extends WordSpec with ElasticSugar with Matchers {
       kw.get("type") shouldBe "keyword"
       kw.get("normalizer") shouldBe "my_normalizer"
     }
-    "support getting all mappings" in {
-      client.execute {
-        getMapping("z")
-      }.await.mappingsFor("z").keySet shouldBe Set("r", "s", "t")
-    }
   }
   "mapping put" should {
     "add new fields" in {
 
       client.execute {
-        put mapping "q" / "r" as Seq(
-          field("c", FloatType) boost 1.2,
-          field("d", TextType) analyzer FrenchLanguageAnalyzer
+        putMapping("q" / "r") as Seq(
+          floatField("c") boost 1.2,
+          textField("d") analyzer FrenchLanguageAnalyzer
         )
       }.await
 
       val mapping = client.execute {
-        get mapping "q" / "r"
+        getMapping("q" / "r")
       }.await
 
       val map = mapping.mappings("q")("r").sourceAsMap()

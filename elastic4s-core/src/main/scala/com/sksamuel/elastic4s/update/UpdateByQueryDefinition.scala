@@ -11,7 +11,7 @@ case class UpdateByQueryDefinition(sourceIndexes: Indexes,
                                    query: QueryDefinition,
                                    requestsPerSecond: Option[Float] = None,
                                    maxRetries: Option[Int] = None,
-                                   abortOnVersionConflict: Option[Boolean] = None,
+                                   proceedOnConflicts: Option[Boolean] = None,
                                    pipeline: Option[String] = None,
                                    refresh: Option[Boolean] = None,
                                    script: Option[ScriptDefinition] = None,
@@ -21,8 +21,12 @@ case class UpdateByQueryDefinition(sourceIndexes: Indexes,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
 
+  def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryDefinition =
+    copy(proceedOnConflicts = proceedOnConflicts.some)
+
+  @deprecated("use proceedOnConflicts")
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryDefinition =
-    copy(abortOnVersionConflict = abortOnVersionConflict.some)
+    proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: Boolean): UpdateByQueryDefinition = copy(refresh = refresh.some)
 

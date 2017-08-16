@@ -1,47 +1,24 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.embedded.LocalNode
 import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes, TcpClient}
 import org.elasticsearch.ResourceAlreadyExistsException
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.transport.RemoteTransportException
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.Suite
 import org.slf4j.LoggerFactory
 
-trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with BeforeAndAfterAll {
-  this: Suite with LocalNodeProvider =>
-
-  implicit val node = getNode
-  implicit val client = node.elastic4sclient(false)
-
-  override def afterAll(): Unit = {
-    node.stop(true)
-  }
-}
-
-trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeProvider {
-  this: Suite with LocalNodeProvider =>
-
-  implicit val node = getNode
-  implicit val client = node.elastic4sclient(false)
-}
-
-trait DualElasticSugar extends AbstractElasticSugar with AlwaysNewLocalNodeProvider {
-  this: Suite with LocalNodeProvider =>
-}
+import scala.util.Try
 
 /**
   * Provides helper methods for things like refreshing an index, and blocking until an
   * index has a certain count of documents. These methods are very useful when writing
   * tests to allow for blocking, iterative coding
   */
-trait AbstractElasticSugar extends ElasticDsl {
+trait ElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
-  def node: LocalNode
-  def client: TcpClient
-  private val logger = LoggerFactory.getLogger(getClass)
+  val logger = LoggerFactory.getLogger(getClass)
 
   // refresh all indexes
   def refreshAll(): RefreshResponse = refresh(Indexes.All)
@@ -98,7 +75,7 @@ trait AbstractElasticSugar extends ElasticDsl {
   }
 
   def deleteIndex(name: String): Unit = {
-    if (doesIndexExists(name)) {
+    Try {
       client.execute {
         ElasticDsl.deleteIndex(name)
       }.await

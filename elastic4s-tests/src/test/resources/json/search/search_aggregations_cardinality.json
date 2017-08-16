@@ -1,11 +1,10 @@
 {
-    "aggregations": {
+    "aggs": {
         "grades_cardinality": {
             "cardinality": {
                 "field": "grade",
-                "precision_threshold": 40000
+                "precision_threshold": 40000.0
             }
         }
-    },
-    "ext": {}
+    }
 }

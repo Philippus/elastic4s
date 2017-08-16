@@ -23,7 +23,7 @@ trait ExplainExecutables {
 
     override def apply(c: Client, t: ExplainDefinition): Future[ExplainResponse] = {
       val _builder = builder(c, t)
-      injectFuture(_builder.execute)
+      injectFuture(_builder.execute(_))
     }
   }
 }

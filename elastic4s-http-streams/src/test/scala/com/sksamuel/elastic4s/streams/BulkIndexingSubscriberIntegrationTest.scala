@@ -5,21 +5,20 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar, HttpElasticSugar}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.util.Random
 
-class BulkIndexingSubscriberIntegrationTest extends WordSpec with SharedElasticSugar with Matchers with BeforeAndAfter with ElasticDsl {
+class BulkIndexingSubscriberIntegrationTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with BeforeAndAfter with ElasticDsl with HttpElasticSugar {
 
   import ReactiveElastic._
-  import scala.concurrent.duration._
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+  import scala.concurrent.duration._
 
   implicit val system = ActorSystem()
 
@@ -116,8 +115,8 @@ object Ship {
 
 class ShipRequestBuilder(indexName: String = "bulkindexsubint") extends RequestBuilder[Ship] {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
   import ElasticDsl._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   override def request(ship: Ship): BulkCompatibleDefinition = {
     indexInto(s"$indexName/ships") source ship

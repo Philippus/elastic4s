@@ -6,7 +6,6 @@ import java.util.Locale
 import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
-import com.sksamuel.elastic4s.http.Shards
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, BulkResponseItems}
 import com.sksamuel.elastic4s.http.cluster.ClusterHealthResponse
 import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
@@ -18,6 +17,7 @@ import com.sksamuel.elastic4s.http.index.mappings.PutMappingResponse
 import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
 import com.sksamuel.elastic4s.http.update.UpdateResponse
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
+import com.sksamuel.elastic4s.http.values.Shards
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.{ClearScrollResult, RichSearchResponse}
 import com.sksamuel.elastic4s.update.RichUpdateResponse
@@ -36,7 +36,7 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, BulkByScrollTask}
 
 import scala.collection.JavaConverters._
 
@@ -122,6 +122,7 @@ object ResponseConverterImplicits {
             x.index,
             x.`type`,
             x.score,
+            None, // TODO
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
@@ -211,7 +212,7 @@ object ResponseConverterImplicits {
       response.`type`,
       response.version,
       response.exists,
-      response.original.getFields.asScala.toMap.mapValues(_.getValues.asScala),
+      Option(response.original.getFields).map(_.asScala.toMap).getOrElse(Map.empty).mapValues(_.getValues.asScala),
       response.sourceAsMap.asScalaNested
     )
   }

@@ -1,36 +1,48 @@
 package com.sksamuel.elastic4s.http.update
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler, Shards}
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
+import scala.util.Try
 
-case class UpdateResponse(_index: String,
-                          _type: String,
-                          _id: String,
-                          _version: Long,
+case class UpdateResponse(@JsonProperty("_index") index: String,
+                          @JsonProperty("_type") `type`: String,
+                          @JsonProperty("_id") id: String,
+                          @JsonProperty("_version") version: Long,
                           result: String,
-                          forced_refresh: Boolean,
-                          _shards: Shards)
+                          @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
+                          @JsonProperty("_shards") shards: Shards) {
+  def ref = DocumentRef(index, `type`, id)
+}
 
 object UpdateImplicits extends UpdateImplicits
 
 trait UpdateImplicits {
 
   implicit object UpdateShow extends Show[UpdateDefinition] {
-    override def show(f: UpdateDefinition): String = UpdateContentBuilder(f).string()
+    override def show(f: UpdateDefinition): String = UpdateBuilderFn(f).string()
   }
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
 
-    override def execute(client: RestClient,
-                         request: UpdateDefinition): Future[UpdateResponse] = {
+    override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {
+      override def handle(response: HttpResponse): Try[UpdateResponse] = response.statusCode match {
+        case 404 => sys.error("Error updating")
+        case _ => Try {
+          ResponseHandler.fromEntity[UpdateResponse](response.entity.get)
+        }
+      }
+    }
 
-      val method = "POST"
+    override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
+
       val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${request.id}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
@@ -45,11 +57,10 @@ trait UpdateImplicits {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateContentBuilder(request)
-      val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      logger.debug(s"Update Entity: ${body.string}")
+      val body = UpdateBuilderFn(request)
+      val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity)
     }
   }
 }

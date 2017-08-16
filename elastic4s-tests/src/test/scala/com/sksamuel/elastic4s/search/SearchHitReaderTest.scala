@@ -1,16 +1,13 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class SearchHitReaderTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
+class SearchHitReaderTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   "SearchHit" should "support HitReader[T] for complex types" in {
 
@@ -27,7 +24,7 @@ class SearchHitReaderTest extends FlatSpec with Matchers with SharedElasticSugar
     }.await
 
     http.execute {
-      indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.IMMEDIATE)
+      indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.Immediate)
     }.await
 
     Thread.sleep(3000)

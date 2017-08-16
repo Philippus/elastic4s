@@ -16,7 +16,7 @@ trait ForceMergeExecutables {
       t.flush.foreach(builder.setFlush)
       t.onlyExpungeDeletes.foreach(builder.setOnlyExpungeDeletes)
       t.maxSegments.foreach(builder.setMaxNumSegments)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 

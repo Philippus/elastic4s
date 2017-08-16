@@ -18,7 +18,7 @@ trait TaskExecutables {
       d.detailed.foreach(builder.setDetailed)
       if (d.actions.nonEmpty)
         builder.setActions(d.actions: _*)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
@@ -28,7 +28,7 @@ trait TaskExecutables {
       val builder = client.admin().cluster().prepareCancelTasks(d.nodeIds: _*)
       d.timeout.foreach(duration => builder.setTimeout(TimeValue.timeValueNanos(duration.toNanos)))
       builder.setActions(d.actions: _*)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 
@@ -38,7 +38,7 @@ trait TaskExecutables {
       val builder = client.admin().cluster().preparePendingClusterTasks()
       builder.setLocal(d.local)
       d.masterNodeTimeout.foreach(duration => builder.setMasterNodeTimeout(TimeValue.timeValueNanos(duration.toNanos)))
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

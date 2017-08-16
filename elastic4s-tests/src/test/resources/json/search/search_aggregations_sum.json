@@ -1,18 +1,17 @@
-
 {
-  "aggregations": {
-    "grades_sum": {
-      "sum": {
-        "field": "grade",
-        "script": {
-          "inline": "doc['grade'].value",
-          "lang": "lua",
-          "params": {
-            "classsize": "30",
-            "room": "101A"
-          }
+    "aggs": {
+        "grades_sum": {
+            "sum": {
+                "field": "grade",
+                "script": {
+                    "lang": "lua",
+                    "inline": "doc['grade'].value",
+                    "params": {
+                        "classsize": "30",
+                        "room": "101A"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

@@ -2,25 +2,25 @@ package com.sksamuel.elastic4s.http.termvectors
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.termvectors.TermVectorsDefinition
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.XContentFactory
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
 trait TermVectorsExecutables {
 
   implicit object TermVectorHttpExecutable extends HttpExecutable[TermVectorsDefinition, TermVectorsResponse] {
-    override def execute(client: RestClient, request: TermVectorsDefinition): Future[TermVectorsResponse] = {
+
+    override def execute(client: HttpRequestClient, request: TermVectorsDefinition): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 
-      val builder = XContentFactory.jsonBuilder().startObject()
+      val builder = XContentFactory.jsonBuilder()
 
       if (request.fields.nonEmpty)
-        builder.array("fields", request.fields: _*)
+        builder.array("fields", request.fields.toArray)
 
       request.termStatistics.foreach(builder.field("term_statistics", _))
       request.fieldStatistics.foreach(builder.field("field_statistics", _))
@@ -43,7 +43,7 @@ trait TermVectorsExecutables {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.realtime.foreach(params.put("realtime", _))
 
-      client.async("GET", endpoint, params.toMap, new StringEntity(builder.string(), ContentType.APPLICATION_JSON), ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

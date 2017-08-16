@@ -1,12 +1,14 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar {
+class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
+
+  deleteIndex("books")
 
   client.execute {
     createIndex("books").mappings(
@@ -31,15 +33,15 @@ class BulkProcessorTest extends FlatSpec with Matchers with ElasticSugar {
 
     val processor = BulkProcessorBuilder().actionCount(2).concurrentRequests(1).build(client)
 
-    processor.add(indexInto("books" / "novels").fields("name" -> "Moby Dick"))
-    processor.add(indexInto("books" / "novels").fields("name" -> "Uncle Toms Cabin"))
+    processor.add(indexInto("books" / "plays").fields("name" -> "Moby Dick"))
+    processor.add(indexInto("books" / "plays").fields("name" -> "Uncle Toms Cabin"))
 
-    blockUntilCount(2, "books" / "novels")
+    blockUntilCount(6, "books" / "plays")
 
-    processor.add(indexInto("books" / "novels").fields("name" -> "Life of Pi"))
-    processor.add(indexInto("books" / "novels").fields("name" -> "Catcher in the Rye"))
+    processor.add(indexInto("books" / "plays").fields("name" -> "Life of Pi"))
+    processor.add(indexInto("books" / "plays").fields("name" -> "Catcher in the Rye"))
 
-    blockUntilCount(4, "books" / "novels")
+    blockUntilCount(8, "books" / "plays")
     Await.ready(processor.close(), 10.seconds)
   }
 

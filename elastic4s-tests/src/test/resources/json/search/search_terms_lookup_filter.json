@@ -1,12 +1,11 @@
 {
-  "post_filter": {
-    "terms": {
-      "user": [
-        "val",
-        "vallllll"
-      ],
-      "boost": 1.0,
-      "_name": "namey"
+    "post_filter": {
+        "terms": {
+            "user": [
+                "val",
+                "vallllll"
+            ],
+            "_name": "namey"
+        }
     }
-  }
 }

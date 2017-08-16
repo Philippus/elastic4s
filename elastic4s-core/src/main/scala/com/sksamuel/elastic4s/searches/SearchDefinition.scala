@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.IndexesAndTypes
+import com.sksamuel.elastic4s.admin.IndicesOptions
 import com.sksamuel.elastic4s.script.ScriptFieldDefinition
 import com.sksamuel.elastic4s.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.searches.collapse.CollapseDefinition
@@ -9,17 +9,15 @@ import com.sksamuel.elastic4s.searches.queries.matches.{MatchAllQueryDefinition,
 import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
+import com.sksamuel.elastic4s.{FetchSourceContext, IndexesAndTypes}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.search.SearchType
-import org.elasticsearch.action.support.IndicesOptions
-import org.elasticsearch.cluster.routing.Preference
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             aggs: Seq[AbstractAggregation] = Nil,
                             collapse: Option[CollapseDefinition] = None,
+                            docValues: Seq[String] = Nil,
                             explain: Option[Boolean] = None,
                             fetchContext: Option[FetchSourceContext] = None,
                             from: Option[Int] = None,
@@ -99,18 +97,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     * @return this, an instance of [[SearchDefinition]]
     */
   def scriptfields(fields: ScriptFieldDefinition*): SearchDefinition = scriptfields(fields)
-  def scriptfields(fields: Iterable[ScriptFieldDefinition]): SearchDefinition = {
-    //    defs.foreach {
-    //      case ScriptFieldDefinition(name, script, None, None, _, ScriptType.INLINE) =>
-    //        _builder.addScriptField(name, new Script(script))
-    //      case ScriptFieldDefinition(name, script, lang, params, options, scriptType) =>
-    //        _builder.addScriptField(name, new Script(scriptType, lang.getOrElse(Script.DEFAULT_SCRIPT_LANG), script,
-    //                                                 options.map(_.asJava).getOrElse(new util.HashMap()),
-    //                                                 params.map(_.asJava).getOrElse(new util.HashMap())))
-    //    }
-    //    this
-    copy(scriptFields = fields.toSeq)
-  }
+  def scriptfields(fields: Iterable[ScriptFieldDefinition]): SearchDefinition = copy(scriptFields = fields.toSeq)
 
   /**
     * Adds a new suggestion to the search request, which can be looked up in the response
@@ -223,9 +210,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def limit(i: Int): SearchDefinition = size(i)
   def size(i: Int): SearchDefinition = copy(size = i.some)
 
-  @deprecated("Use the elasticsearch enum rather than the elastic4s one", "5.2.0")
   def preference(pref: com.sksamuel.elastic4s.Preference): SearchDefinition = preference(pref.value)
-  def preference(pref: Preference): SearchDefinition = preference(pref.`type`)
   def preference(pref: String): SearchDefinition = copy(pref = pref.some)
 
   def indicesOptions(options: IndicesOptions): SearchDefinition = copy(indicesOptions = options.some)
@@ -250,10 +235,14 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     */
   def terminateAfter(terminateAfter: Int): SearchDefinition = copy(terminateAfter = terminateAfter.some)
 
+  // Allows to return the doc value representation of a field for each hit, for example:
+  def docValues(first: String, rest: String*): SearchDefinition = docValues(first +: rest)
+  def docValues(fields: Seq[String]): SearchDefinition = copy(docValues = fields)
+
   def indexBoost(map: Map[String, Double]): SearchDefinition = indexBoost(map.toList: _*)
   def indexBoost(tuples: (String, Double)*): SearchDefinition = copy(indexBoosts = tuples)
 
-  def timeout(duration: FiniteDuration): SearchDefinition = copy(timeout = duration.some)
+  def timeout(timeout: FiniteDuration): SearchDefinition = copy(timeout = timeout.some)
   def stats(groups: String*): SearchDefinition = copy(stats = groups.toSeq)
 
   def trackScores(enabled: Boolean): SearchDefinition = copy(trackScores = enabled.some)
@@ -265,7 +254,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def storedFields(fields: Iterable[String]): SearchDefinition = copy(storedFields = fields.toSeq)
 
   def fetchContext(context: FetchSourceContext): SearchDefinition = copy(fetchContext = context.some)
-  def fetchSource(fetch: Boolean): SearchDefinition = copy(fetchContext = new FetchSourceContext(fetch).some)
+  def fetchSource(fetch: Boolean): SearchDefinition = copy(fetchContext = FetchSourceContext(fetch).some)
 
   def sourceInclude(first: String, rest: String*): SearchDefinition = sourceFiltering(first +: rest, Nil)
   def sourceInclude(includes: Iterable[String]) : SearchDefinition = sourceFiltering(includes, Nil)
@@ -274,7 +263,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def sourceExclude(excludes: Iterable[String]) : SearchDefinition = sourceFiltering(Nil, excludes)
 
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchDefinition =
-    copy(fetchContext = new FetchSourceContext(true, includes.toArray, excludes.toArray).some)
+    copy(fetchContext = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def collapse(collapse: CollapseDefinition): SearchDefinition = copy(collapse = collapse.some)
 }

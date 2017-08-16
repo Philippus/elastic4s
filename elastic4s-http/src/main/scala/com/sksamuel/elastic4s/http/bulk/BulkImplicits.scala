@@ -2,36 +2,32 @@ package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
 import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
 trait BulkImplicits {
 
   implicit object BulkShow extends Show[BulkDefinition] {
-    override def show(f: BulkDefinition): String = BulkContentBuilder(f).mkString("\n")
+    override def show(f: BulkDefinition): String = BulkBuilderFn(f).mkString("\n")
   }
 
   implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
 
-    override def execute(client: RestClient,
-                         bulk: BulkDefinition): Future[BulkResponse] = {
+    override def execute(client: HttpRequestClient, bulk: BulkDefinition): Future[HttpResponse] = {
 
-      val endpoint = "/_bulk"
-
-      val rows = BulkContentBuilder(bulk)
-      logger.debug(s"Bulk entity: ${rows.mkString("\n")}")
+      val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well
-      val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON.getMimeType)
 
       val params = scala.collection.mutable.Map.empty[String, String]
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", "/_bulk", params.toMap, entity)
     }
   }
 }

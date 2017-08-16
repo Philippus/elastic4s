@@ -1,50 +1,43 @@
 {
-  "size": 5,
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "regexp": {
-            "drummmer": {
-              "value": "will*",
-              "flags_value": 8,
-              "max_determinized_states": 10000,
-              "boost": 5.0
-            }
-          }
-        },
-        {
-          "term": {
-            "singer": {
-              "value": "chris",
-              "boost": 1.0
-            }
-          }
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "regexp": {
+                        "drummmer": {
+                            "value": "will*",
+                            "flags": "ANYSTRING",
+                            "boost": 5.0
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "singer": {
+                            "value": "chris"
+                        }
+                    }
+                }
+            ],
+            "should": [
+                {
+                    "term": {
+                        "bassist": {
+                            "value": "berryman"
+                        }
+                    }
+                }
+            ],
+            "must_not": [
+                {
+                    "term": {
+                        "singer": {
+                            "value": "anderson"
+                        }
+                    }
+                }
+            ]
         }
-      ],
-      "must_not": [
-        {
-          "term": {
-            "singer": {
-              "value": "anderson",
-              "boost": 1.0
-            }
-          }
-        }
-      ],
-      "should": [
-        {
-          "term": {
-            "bassist": {
-              "value": "berryman",
-              "boost": 1.0
-            }
-          }
-        }
-      ],
-      "disable_coord": false,
-      "adjust_pure_negative": true,
-      "boost": 1.0
-    }
-  }
+    },
+    "size": 5
 }

@@ -1,11 +1,10 @@
 {
-  "post_filter": {
-    "term": {
-      "singer": {
-        "value": "chris martin",
-        "boost": 1.0,
-        "_name": "namey"
-      }
+    "post_filter": {
+        "term": {
+            "singer": {
+                "_name": "namey",
+                "value": "chris martin"
+            }
+        }
     }
-  }
 }

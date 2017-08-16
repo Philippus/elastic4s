@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.admin
 
-import com.sksamuel.elastic4s.{Executable, ProxyClients}
+import com.sksamuel.elastic4s.{EnumConversions, Executable, ProxyClients}
 import org.elasticsearch.action.admin.cluster.repositories.put.{PutRepositoryRequest, PutRepositoryResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotAction, CreateSnapshotRequestBuilder, CreateSnapshotResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotAction, DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsAction, GetSnapshotsRequestBuilder, GetSnapshotsResponse}
-import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotAction, RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
-import org.elasticsearch.action.support.IndicesOptions
+import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotAction, CreateSnapshotRequest, CreateSnapshotRequestBuilder, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.delete.{DeleteSnapshotAction, DeleteSnapshotRequest, DeleteSnapshotRequestBuilder, DeleteSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsAction, GetSnapshotsRequest, GetSnapshotsRequestBuilder, GetSnapshotsResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.restore.{RestoreSnapshotAction, RestoreSnapshotRequest, RestoreSnapshotRequestBuilder, RestoreSnapshotResponse}
 import org.elasticsearch.client.Client
 
 import scala.collection.JavaConverters._
@@ -81,8 +80,8 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
   require(name.nonEmpty, "repository name must not be null or empty")
   require(`type`.nonEmpty, "repository name must not be null or empty")
 
-  protected val request = new PutRepositoryRequest(name).`type`(`type`)
-  def build = request
+  protected val request: PutRepositoryRequest = new PutRepositoryRequest(name).`type`(`type`)
+  def build: PutRepositoryRequest = request
   def settings(map: Map[String, AnyRef]): this.type = {
     request.settings(map.asJava)
     this
@@ -91,13 +90,13 @@ class CreateRepositoryDefinition(name: String, `type`: String) {
 
 class DeleteSnapshotDefinition(name: String, repo: String) {
   val request = new DeleteSnapshotRequestBuilder(ProxyClients.cluster, DeleteSnapshotAction.INSTANCE, repo, name)
-  def build = request.request()
+  def build: DeleteSnapshotRequest = request.request()
 }
 
 class GetSnapshotsDefinition(snapshotNames: Array[String], repo: String) {
-  val request = new GetSnapshotsRequestBuilder(ProxyClients.cluster, GetSnapshotsAction.INSTANCE, repo)
+  val request: GetSnapshotsRequestBuilder = new GetSnapshotsRequestBuilder(ProxyClients.cluster, GetSnapshotsAction.INSTANCE, repo)
     .setSnapshots(snapshotNames: _*)
-  def build = request.request()
+  def build: GetSnapshotsRequest = request.request()
 }
 
 class CreateSnapshotDefinition(name: String, repo: String) {
@@ -105,15 +104,15 @@ class CreateSnapshotDefinition(name: String, repo: String) {
   require(repo.nonEmpty, "repo name must not be null or empty")
 
   val request = new CreateSnapshotRequestBuilder(ProxyClients.cluster, CreateSnapshotAction.INSTANCE, repo, name)
-  def build = request.request()
+  def build: CreateSnapshotRequest = request.request()
 
   def partial(p: Boolean): this.type = {
     request.setPartial(p)
     this
   }
 
-  def setIndicesOptions(indicesOptions: IndicesOptions): this.type = {
-    request.setIndicesOptions(indicesOptions)
+  def setIndicesOptions(opts: IndicesOptions): this.type = {
+    request.setIndicesOptions(EnumConversions.indicesopts(opts))
     this
   }
 
@@ -148,7 +147,7 @@ case class RestoreSnapshotDefinition(name: String, repo: String) {
   require(repo.nonEmpty, "repo must not be null or empty")
 
   val request = new RestoreSnapshotRequestBuilder(ProxyClients.cluster, RestoreSnapshotAction.INSTANCE, repo, name)
-  def build = request.request()
+  def build: RestoreSnapshotRequest = request.request()
 
   def restoreGlobalState(global: Boolean): this.type = {
     request.setRestoreGlobalState(global)

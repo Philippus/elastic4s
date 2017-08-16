@@ -21,7 +21,7 @@ trait JsonSugar extends Matchers {
         right should not be null
       }
 
-      val expectedJson = mapper.readTree(left)
+      val expectedJson = mapper.readTree(right)
       val actualJson = mapper.readTree(left)
 
       MatchResult(

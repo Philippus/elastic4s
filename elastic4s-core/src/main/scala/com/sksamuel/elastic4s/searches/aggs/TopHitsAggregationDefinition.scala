@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.FetchSourceContext
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.sort.SortDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class TopHitsAggregationDefinition(name: String,
                                         explain: Option[Boolean] = None,
@@ -23,10 +23,10 @@ case class TopHitsAggregationDefinition(name: String,
   def explain(explain: Boolean): TopHitsAggregationDefinition = copy(explain = explain.some)
 
   def fetchSource(includes: Array[String], excludes: Array[String]): TopHitsAggregationDefinition =
-    copy(fetchSource = new FetchSourceContext(true, includes, excludes).some)
+    copy(fetchSource = FetchSourceContext(true, includes, excludes).some)
 
   def fetchSource(fetchSource: Boolean): TopHitsAggregationDefinition =
-    copy(fetchSource = new FetchSourceContext(true).some)
+    copy(fetchSource = FetchSourceContext(true).some)
 
   def size(size: Int): TopHitsAggregationDefinition = copy(size = size.some)
 

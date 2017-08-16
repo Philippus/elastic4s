@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.queries.matches
 
+import com.sksamuel.elastic4s.Operator
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.index.query.Operator
 
 case class MatchQueryDefinition(field: String,
                                 value: Any,

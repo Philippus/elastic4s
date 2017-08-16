@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
+import com.sksamuel.elastic4s.EnumConversions
 import org.elasticsearch.index.query.{Operator, QueryBuilders, SimpleQueryStringBuilder}
 
 object SimpleStringQueryBuilderFn {
@@ -8,10 +9,9 @@ object SimpleStringQueryBuilderFn {
     q.queryName.foreach(builder.queryName)
     q.analyzer.foreach(builder.analyzer)
     q.analyzeWildcard.foreach(builder.analyzeWildcard)
+
     if (q.flags.nonEmpty)
-      builder.flags(
-        q.flags.map(_.name)
-          .map(org.elasticsearch.index.query.SimpleQueryStringFlag.valueOf): _*)
+      builder.flags(q.flags.map(EnumConversions.simpleQueryStringFlag): _*)
 
     q.fields.foreach {
       case (name, -1D) => builder.field(name)

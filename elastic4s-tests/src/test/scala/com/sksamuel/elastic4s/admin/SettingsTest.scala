@@ -3,15 +3,15 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.analyzers.WhitespaceAnalyzer
 import org.scalatest.WordSpec
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 
-class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl {
+class SettingsTest extends WordSpec with ElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
 
   client.execute {
     createIndex("settings_test").mappings(
       mapping("r").as(
-        stringField("a") stored true analyzer WhitespaceAnalyzer,
-        stringField("b")
+        textField("a") stored true analyzer WhitespaceAnalyzer,
+        longField("b")
       )
     )
   }.await

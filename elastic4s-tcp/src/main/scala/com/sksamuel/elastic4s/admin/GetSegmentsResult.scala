@@ -6,21 +6,6 @@ import scala.collection.JavaConverters._
 
 case class GetSegmentsResult(original: IndicesSegmentResponse) {
 
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getTotalShards() = original.getTotalShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getFailedShards() = original.getFailedShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getSuccessfulShards() = original.getSuccessfulShards
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getShardFailures() = original.getShardFailures
-
-  @deprecated("Use the scala idiomatic methods", "2.0")
-  def getIndices() = original.getIndices
-
   def totalShards: Integer = original.getTotalShards
   def failedShards: Integer = original.getFailedShards
   def successfulShards: Integer = original.getSuccessfulShards

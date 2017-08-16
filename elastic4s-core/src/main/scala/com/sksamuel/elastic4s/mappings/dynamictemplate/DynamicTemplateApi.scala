@@ -36,7 +36,7 @@ trait DynamicTemplateApi {
   def dynamicNestedField(): NestedFieldDefinition = NestedFieldDefinition("")
   def dynamicObjectField(): ObjectFieldDefinition = ObjectFieldDefinition("")
   def dynamicPercolatorField(): BasicFieldDefinition = BasicFieldDefinition("", "percolator")
-  def dynamicScriptField(script: String): ScriptFieldDefinition = ScriptFieldDefinition("", script, None, None)
+  def dynamicScriptField(script: String): ScriptFieldDefinition = ScriptFieldDefinition("", script)
   def dynamicShortField(): BasicFieldDefinition = BasicFieldDefinition("", "short")
   def dynamicTextField(): TextFieldDefinition = TextFieldDefinition("")
   def dynamicTokenCountField(): BasicFieldDefinition = BasicFieldDefinition("", "token_count")

@@ -1,11 +1,21 @@
 package com.sksamuel.elastic4s.search.collapse
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
+import com.sksamuel.elastic4s.ElasticApi
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
-class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeAndAfterAll {
+import scala.util.Try
+
+class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeAndAfterAll with DiscoveryLocalNodeProvider {
 
   override protected def beforeAll(): Unit = {
+
+    Try {
+      client.execute {
+        ElasticApi.deleteIndex("collapse")
+      }.await
+    }
+
     client.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(
@@ -50,7 +60,7 @@ class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeA
       resp.hits.length shouldBe 4
       resp.totalHits shouldBe 7L
 
-      resp.hits.map(_.java.id) shouldBe Array("7", "2", "6", "5")
+      resp.hits.map(_.java.getId) shouldBe Array("7", "2", "6", "5")
     }
 
     "should support inner hits" in {
@@ -62,12 +72,12 @@ class CollapseTest extends FreeSpec with Matchers with ElasticSugar with BeforeA
         } sortByFieldDesc "rating"
       }.await
 
-      resp.hits.map(_.java.id) shouldBe Array("5", "6", "2", "7")
+      resp.hits.map(_.java.getId) shouldBe Array("5", "6", "2", "7")
 
       val inner = resp.hits(0).java.getInnerHits.get("by-price")
-      inner.hits.length shouldBe 1
+      inner.getHits.length shouldBe 1
       inner.totalHits shouldBe 3L
-      inner.getHits.head.id shouldBe "5"
+      inner.getHits.head.getId shouldBe "5"
     }
   }
 }

@@ -1,17 +1,18 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers {
+import scala.util.Try
+
+class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  deleteIndex("rangequerytcptest")
 
   client.execute {
     createIndex("rangequerytcptest").mappings(
       mapping("pieces").fields(
-        textField("name").fielddata(true)
-      ),
-      mapping("openings").fields(
         textField("name").fielddata(true)
       )
     )
@@ -49,7 +50,7 @@ class RangeQueryTcpTest extends WordSpec with ElasticSugar with Matchers {
         "value" -> 1,
         "count" -> 8
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a range query" should {

@@ -9,7 +9,7 @@ elastic4s - Elasticsearch HTTP and TCP Scala Client
 
 Elastic4s is a concise, idiomatic, reactive, type safe Scala client for Elasticsearch. The client can be used over both HTTP and TCP  by choosing either of the `elastic4s-http` or `elastic4s-tcp` submodules. The official Elasticsearch Java client can of course be used in Scala, but due to Java's syntax it is more verbose and it naturally doesn't support classes in the core Scala core library nor Scala idioms.
 
-Elastic4s's DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into an asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying broadly similar to the Java API or Rest API. Each request is an immutable object, so you can create requests and safely reuse them, or further copy them for derived requests. Because each request is strongly typed your IDE or editor can use the type information to show you what operations operations are available for any request type.
+Elastic4s's DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into an asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying broadly similar to the Java API or Rest API. Each request is an immutable object, so you can create requests and safely reuse them, or further copy them for derived requests. Because each request is strongly typed your IDE or editor can use the type information to show you what operations are available for any request type.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index and read classes directly using typeclasses so you don't have to set fields or json documents manually. These typeclasses are generated using your favourite json library - modules exist for Jackson, Circe, Json4s, PlayJson and Spray Json. The client also uses standard Scala durations to avoid the use of strings or primitives for duration lengths.
 
@@ -252,6 +252,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
 | [Multiget]                                | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
 | [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
+| Node Info                                 | `nodeInfo(<optional node list>`           | yes | |
+| Node Stats                                | `nodeStats(<optional node list>).stats(<stats>`| yes | |
 | Open index                                | `openIndex(<name>)`                       | yes | yes |
 | Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
 | Recover Index                             | `recoverIndex(<name>)`                    | yes | yes |
@@ -342,7 +344,7 @@ resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven
 
 ## Embedded Node
 
-A locally configured node and client can be created be including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
+A locally configured node and client can be created by including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
 
 ```scala
 import com.sksamuel.elastic4s.ElasticClient
@@ -536,7 +538,7 @@ case class Character(name: String, location: String)
 
 implicit object CharacterHitReader extends HitReader[Character] {
   override def read(hit: Hit): Either[Throwable, Character] = {
-    Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString)
+    Right(Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString))
   }
 }
 
@@ -544,9 +546,9 @@ val resp = client.execute {
   search("gameofthrones" / "characters").query("kings landing")
 }.await // don't block in real code
 
-// .as[Character] will look for an implicit HitAs[Character] in scope
+// .to[Character] will look for an implicit HitReader[Character] in scope
 // and then convert all the hits into Characters for us.
-val characters :Seq[Character] = resp.as[Character]
+val characters :Seq[Character] = resp.to[Character]
 
 ```
 
@@ -698,6 +700,30 @@ val resp = client.execute {
 }.await
 ```
 
+## Search Iterator
+
+Sometimes you may wish to iterate over all the results in a search, without worrying too much about handling futures, and re-requesting
+via a scroll. The `SearchIterator` will do this for you, although it will block between requests. A search iterator is just an implementation
+of `scala.collection.Iterator` backed by elasticsearch queries.
+
+To create one, use the iterate method on the companion object, passing in the http client, and a search request to execute. The
+search request must specify a keep alive value (which is used by elasticsearch for scrolling).
+
+```scala
+implicit val reader : HitReader[MyType] =  ...
+val iterator = SearchIterator.iterate[MyType](client, search(index).matchAllQuery.keepAlive("1m").size(50))
+iterator.foreach(println)
+```
+
+For instance, in the above we are bringing back all documents in the index, 50 results at a time, marshalled into
+instances of `MyType` using the implicit `HitReader` (see the section on HitReaders). If you want just the raw
+elasticsearch `Hit` object, then use `SearchIterator.hits`
+
+Note: Whenever the results in a particular
+batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query. 
+So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a 
+quick and simple way to iterate over some data without bringing back all the results at once `SearchIterator` is perfect.
+
 ## DSL Completeness
 
 As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations.
@@ -842,6 +868,118 @@ Integration tests run on a local elastic that is created and torn down as part o
 folder. There is no need to configure anything externally.
 
 ## Changelog
+
+###### 6.0.0 - Pre-release
+
+* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients. Notably,
+
+> The Java REST client is the future for Java users of Elasticsearch. Please get involved and try out the high-level client as soon as it becomes available, as your feedback will help us to make it better faster. As soon as the REST client is feature complete and is mature enough to replace the Java API entirely, we will deprecate and finally remove the transport client and the Java API.
+
+* HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
+* Any methods deprecated before version 5.0.0 have been removed.
+* Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
+* Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
+* The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
+* Added doc values to search requests
+* Reworked the HTTP aggregation response API to support better types and subaggs
+* disableCoord has been removed from bool and common term queries
+* Added getIndex request type
+
+###### 5.4.5
+
+* UnmappableCharacterException when operating non-ASCII characters #928. This would cause exceptions if your requests had non-ascii characters and was introduced in 5.4.3.
+
+###### 5.4.4
+
+* TCP Client was not setting types correctly for delete by query #942 
+* HTTP Update was not setting script correctly #930
+* Elasticsearch Client URI now supports SSL for the HTTP client #932
+* IndicesOptions was not being set on search correctly for HTTP #943
+* More like this query now supports routing on items
+* Fixed ScoreMode.TOTAL serialization for HTTP #937
+* Upgraded to Elastic 5.4.1 to fix #939
+
+###### 5.4.3
+
+* Can extract aggregations as a JSON string
+
+###### 5.4.2
+
+* Added http streams implementation; available as `elastic-http-streams` module
+* Bulk items to show full response in http
+
+###### 5.4.1
+
+* Added get mapping to http
+* Added index recovery to http
+* Added force merge to http
+* Terms agg now supports easier custom ordering #440
+
+###### 5.4.0
+
+* Http Client is now considered production ready and no longer marked as experimental.
+* Get all indices with their alias #871
+* added cat shards, plugins, nodes, thread pool, health, alloc, aliases, master and indices  #872
+* Added search template #894
+* FieldsMapper doesn't handle null #899
+* Multisearch now sets from/size properly #901
+* Add simple category contexts for completion suggestions
+* #786 #792 #832 Internal json marshalling now via jackson
+* Added match none query #893
+* Keywords are docvalued by default
+* Implement field collapsing introduced in 5.3.0
+* fix StackOverflowError for GeoBoundingBoxQueryDefinition.corners(GeoPoint, GeoPoint)
+* In exponential decay score the decay is disregarded when offset was not provided #883
+* failureMessageOpt in RichBulkResponse doesn't work as an option #890
+* #884 Added global suggestion text
+
+###### 5.3.2
+
+* Fix spray-json method names
+* Added support of range aggregation for http client
+* Bumped sbt version to 0.13.15
+* Bumped Scala version to 2.12.2
+* Support inner highlight
+* Fixes 'type' and 'matched_fields' for highlight query.
+* Added support of HDR percentiles aggregation (tcp only)
+
+###### 5.3.1
+
+* Updated rich search responses to throw exceptions on bad `to`
+* client should handle integers in range queries #865
+* Added max bucket agg builder for http
+* pipeline aggregation regression #838
+
+###### 5.3.0
+
+* Added top hits aggs support to http #857
+* Added support for {dynamic_type} in dynamic templates? #519
+* Added clearScroll implementation for http client.
+* Removing id property as cannot be send to ES anymore.
+* DateHistogramAggregation support for HttpClient
+* PutMapping implementation in Http client
+* Implemented support for spray-json
+* use utf-8 for http entities instead of system encoding
+* make `RichSearchHit#fieldValueOpt` return an `Option[AnyRef]`
+* Enable parallel tests
+* DateRangeAggregation support for multiple unbounded ranges
+* Added parent support for http client bulk request.
+* Remove deprecation warning for FuzzyQuery
+* Starting embedded node with `http.enabled: false` crashes with NPE #781
+* Object and nested fields broken in 5.2.11 #819
+* npe in terms aggregation #828
+* Adding publishMicrosite to release process
+* Handle http client failures by endpoint
+* #821 Fixed omitted `value` field in RegexQuery serialization
+* Add raw query support for HTTP
+* #565 create index from raw json string
+* Added index template to http
+* Added span within and span containing queries to tcp
+* Added span containing query to http
+* Added span not, span within, and span or queries to http
+* Added parent id query to http
+* Added script query to http
+* added geo bounding box query to http
 
 ###### 5.2.12
 

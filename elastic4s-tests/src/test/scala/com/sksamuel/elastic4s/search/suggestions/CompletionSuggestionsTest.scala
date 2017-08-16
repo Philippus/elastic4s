@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.Indexable
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.common.unit.Fuzziness
+import com.sksamuel.elastic4s.searches.suggestion.Fuzziness
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
+class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
@@ -36,16 +36,16 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
 
   blockUntilCount(7, Index)
 
-  val resp = client.execute {
+  private val resp = client.execute {
     search(indexType).suggestions {
       completionSuggestion("a").on("name").prefix("Ru")
     }
   }.await
 
-  val result = resp.suggestion("a")
+  private val result = resp.suggestion("a")
   println(result)
 
-  val entries = result.entries.toList
+  private val entries = result.entries.toList
   println(entries)
 
   "completion suggestions" should {
@@ -86,7 +86,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
 
       val resp = client.execute {
         search(indexType).suggestions {
-          completionSuggestion("a").on("name").prefix("Rabber", Fuzziness.ONE)
+          completionSuggestion("a").on("name").prefix("Rabber", Fuzziness.One)
         }
       }.await
 

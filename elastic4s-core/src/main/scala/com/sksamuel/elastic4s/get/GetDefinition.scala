@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{FetchSourceContext, IndexAndType, VersionType}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 
 case class GetDefinition(indexAndType: IndexAndType,
                          id: String,
@@ -13,17 +12,17 @@ case class GetDefinition(indexAndType: IndexAndType,
                          refresh: Option[Boolean] = None,
                          routing: Option[String] = None,
                          version: Option[Long] = None,
-                         versionType: Option[String] = None,
+                         versionType: Option[VersionType] = None,
                          fetchSource: Option[FetchSourceContext] = None) {
   require(indexAndType != null, "indexAndType must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   def fetchSourceContext(sourceEnabled: Boolean): GetDefinition =
-    copy(fetchSource = new FetchSourceContext(sourceEnabled).some)
+    copy(fetchSource = FetchSourceContext(sourceEnabled).some)
 
   def fetchSourceContext(include: Iterable[String],
                          exclude: Iterable[String] = Nil): GetDefinition =
-    copy(fetchSource = new FetchSourceContext(true, include.toArray, exclude.toArray).some)
+    copy(fetchSource = FetchSourceContext(true, include.toArray, exclude.toArray).some)
 
   def fetchSourceContext(context: FetchSourceContext): GetDefinition = copy(fetchSource = context.some)
 
@@ -54,5 +53,6 @@ case class GetDefinition(indexAndType: IndexAndType,
   def routing(r: String): GetDefinition = copy(routing = r.some)
   def version(ver: Long): GetDefinition = copy(version = ver.some)
 
-  def versionType(versionType: String): GetDefinition = copy(versionType = versionType.some)
+  def versionType(vtype: String): GetDefinition = versionType(VersionType.valueOf(vtype))
+  def versionType(vtype: VersionType): GetDefinition = copy(versionType = vtype.some)
 }

@@ -1,41 +1,33 @@
 {
-    "aggregations": {
+    "aggs": {
         "top-tags": {
             "terms": {
                 "field": "tags",
                 "size": 3,
-                "shard_size": -1,
-                "min_doc_count": 1,
-                "shard_min_doc_count": 0,
-                "show_term_doc_count_error": false,
                 "order": {
-                    "_count": "asc"
+                    "count": "asc"
                 }
             },
-            "aggregations": {
+            "aggs": {
                 "top_tag_hits": {
                     "top_hits": {
-                        "from": 0,
                         "size": 1,
-                        "version": false,
-                        "explain": false,
-                        "_source": {
-                            "includes": [
-                                "title"
-                            ],
-                            "excludes": []
-                        },
                         "sort": [
                             {
                                 "last_activity_date": {
                                     "order": "desc"
                                 }
                             }
-                        ]
+                        ],
+                        "_source": {
+                            "includes": [
+                                "title"
+                            ],
+                            "excludes": []
+                        }
                     }
                 }
             }
         }
-    },
-    "ext": {}
+    }
 }

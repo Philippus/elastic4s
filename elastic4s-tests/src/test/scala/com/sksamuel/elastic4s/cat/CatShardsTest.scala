@@ -1,14 +1,22 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with ElasticDsl {
+import scala.util.Try
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class CatShardsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("catshards1")
+    }.await
+    http.execute {
+      deleteIndex("catshards2")
+    }.await
+  }
 
   http.execute {
     bulk(
@@ -18,7 +26,7 @@ class CatShardsTest extends FlatSpec with Matchers with SharedElasticSugar with 
       indexInto("catshards2/landmarks").fields("name" -> "blenheim palace"),
       indexInto("catshards2/landmarks").fields("name" -> "london eye"),
       indexInto("catshards2/landmarks").fields("name" -> "tower of london")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cats shards" should "return all shards" in {

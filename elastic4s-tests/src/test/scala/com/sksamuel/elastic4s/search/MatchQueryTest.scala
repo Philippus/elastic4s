@@ -1,18 +1,15 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 class MatchQueryTest
   extends FlatSpec
-    with SharedElasticSugar
+    with DiscoveryLocalNodeProvider
     with Matchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("units")
@@ -21,7 +18,7 @@ class MatchQueryTest
   http.execute {
     bulk(
       indexInto("units/base") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a match query" should "support selecting nested properties" in {

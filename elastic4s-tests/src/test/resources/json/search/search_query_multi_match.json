@@ -1,26 +1,25 @@
 {
-  "query": {
-    "multi_match": {
-      "query": "this is my query",
-      "fields": [
-        "genre^1.0",
-        "location^1.0",
-        "name^1.0"
-      ],
-      "type": "cross_fields",
-      "operator": "AND",
-      "analyzer": "whitespace",
-      "slop": 0,
-      "fuzziness": "SOMETHING",
-      "prefix_length": 4,
-      "max_expansions": 4,
-      "minimum_should_match": "2",
-      "fuzzy_rewrite": "some-rewrite",
-      "tie_breaker": 4.5,
-      "lenient": true,
-      "cutoff_frequency": 1.7,
-      "zero_terms_query": "ALL",
-      "boost": 3.4
+    "query": {
+        "multi_match": {
+            "query": "this is my query",
+            "fields": [
+                "name^-1.0",
+                "location^-1.0",
+                "genre^-1.0"
+            ],
+            "type": "cross_fields",
+            "analyzer": "whitespace",
+            "cutoff_frequency": "1.7",
+            "fuzziness": "something",
+            "fuzzy_rewrite": "some-rewrite",
+            "lenient": "true",
+            "max_expansions": 4,
+            "minimum_should_match": "2",
+            "operator": "And",
+            "prefix_length": "4",
+            "tie_breaker": 4.5,
+            "zero_terms_query": "all",
+            "boost": 3.4
+        }
     }
-  }
 }

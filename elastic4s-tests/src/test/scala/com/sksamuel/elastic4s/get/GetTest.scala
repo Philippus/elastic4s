@@ -1,14 +1,22 @@
 package com.sksamuel.elastic4s.get
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import org.scalatest.{FlatSpec, Matchers}
 
-class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider with DualClientTests {
 
   override protected def beforeRunTests(): Unit = {
+    Try {
+      execute {
+        deleteIndex("beer")
+      }.await
+    }
+
     execute {
       createIndex("beer").mappings {
         mapping("lager").fields(
@@ -31,7 +39,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSug
           "brand" -> "bud",
           "ingredients" -> Seq("hops", "barley", "water", "yeast")
         ) id 8
-      ).refresh(RefreshPolicy.IMMEDIATE)
+      ).refresh(RefreshPolicy.Immediate)
     }.await
   }
 

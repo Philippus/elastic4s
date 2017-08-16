@@ -2,7 +2,23 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.index.query.SimpleQueryStringFlag
+
+sealed trait SimpleQueryStringFlag
+object SimpleQueryStringFlag {
+  case object ALL extends SimpleQueryStringFlag
+  case object NONE extends SimpleQueryStringFlag
+  case object AND extends SimpleQueryStringFlag
+  case object NOT extends SimpleQueryStringFlag
+  case object OR extends SimpleQueryStringFlag
+  case object PREFIX extends SimpleQueryStringFlag
+  case object PHRASE extends SimpleQueryStringFlag
+  case object PRECEDENCE extends SimpleQueryStringFlag
+  case object ESCAPE extends SimpleQueryStringFlag
+  case object WHITESPACE extends SimpleQueryStringFlag
+  case object FUZZY extends SimpleQueryStringFlag
+  case object NEAR extends SimpleQueryStringFlag
+  case object SLOP extends SimpleQueryStringFlag
+}
 
 case class SimpleStringQueryDefinition(query: String,
                                        analyzer: Option[String] = None,

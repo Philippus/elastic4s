@@ -4,18 +4,17 @@ import com.sksamuel.elastic4s.{DocumentRef, ElasticsearchClientUri}
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar, HttpElasticSugar}
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryHttpTest
   extends WordSpec
     with Matchers
-    with ElasticSugar
+    with DiscoveryLocalNodeProvider
+    with HttpElasticSugar
     with ElasticMatchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("mltq").mappings {
@@ -32,7 +31,7 @@ class MoreLikeThisQueryHttpTest
       indexInto("mltq/alcohol") fields ("text" -> "Gordons popular gin UK") id 7,
       indexInto("mltq/alcohol") fields ("text" -> "coors regular is another coors beer by molson") id 8,
       indexInto("mltq/alcohol") fields ("text" -> "Hendricks upmarket gin UK") id 9
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a more like this query" should {

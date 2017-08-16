@@ -1,33 +1,33 @@
 package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.{DocumentRef, HitReader}
-import org.elasticsearch.action.get.{MultiGetItemResponse, MultiGetResponse}
+import org.elasticsearch.action.get.{GetResponse, MultiGetItemResponse, MultiGetResponse}
 
 import scala.util.{Failure, Success, Try}
 
 case class RichMultiGetItemResponse(original: MultiGetItemResponse) {
 
   @deprecated("use id", "5.0.0")
-  def getId = original.getId
+  def getId: String = original.getId
 
   @deprecated("use index", "5.0.0")
-  def getIndex = original.getIndex
+  def getIndex: String = original.getIndex
 
   @deprecated("use `type`lol", "5.0.0")
-  def getType = original.getType
+  def getType: String = original.getType
 
   @deprecated("use failed", "5.0.0")
-  def isFailed = original.isFailed
+  def isFailed: Boolean = original.isFailed
 
   @deprecated("use response or result", "5.0.0")
-  def getResponse = original.getResponse
+  def getResponse: GetResponse = original.getResponse
 
   @deprecated("use failure", "5.0.0")
-  def getFailure = original.getFailure
+  def getFailure: MultiGetResponse.Failure = original.getFailure
 
-  def index = original.getIndex
+  def index: String = original.getIndex
   def `type`: String = original.getType
-  def id = original.getId
+  def id: String = original.getId
   def ref = DocumentRef(index, `type`, id)
 
   def to[T: HitReader]: T = responseTry match {

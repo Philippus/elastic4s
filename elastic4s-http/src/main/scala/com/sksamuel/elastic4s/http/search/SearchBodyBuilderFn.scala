@@ -1,25 +1,30 @@
 package com.sksamuel.elastic4s.http.search
 
+import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
+import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
+import com.sksamuel.elastic4s.http.search.suggs.TermSuggestionBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
-
-import scala.collection.JavaConverters._
 
 object SearchBodyBuilderFn {
 
   def apply(request: SearchDefinition): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
 
-    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", new BytesArray(x.string), XContentType.JSON))
-    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", new BytesArray(x.string), XContentType.JSON))
-    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", new BytesArray(x.string), XContentType.JSON))
+    builder.field("version", true)
+    request.pref.foreach(builder.field("preference", _))
+    request.routing.foreach(builder.field("routing", _))
+    request.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
+    request.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
+    request.version.map(_.toString).foreach(builder.field("version", _))
+
+    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
+    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
+    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
@@ -30,50 +35,59 @@ object SearchBodyBuilderFn {
 
     request.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty) {
-      builder.field("search_after", request.searchAfter.asJava)
+      builder.autoarray("search_after", request.searchAfter)
+    }
+
+    if (request.scriptFields.nonEmpty) {
+      builder.startObject("script_fields")
+      request.scriptFields.foreach { field =>
+        builder.startObject(field.field)
+        builder.rawField("script", ScriptBuilderFn(field.script))
+        builder.endObject()
+      }
+      builder.endObject()
+    }
+
+    if (request.rescorers.nonEmpty) {
+      builder.startArray("rescore")
+      request.rescorers.foreach { rescore =>
+        builder.startObject()
+        rescore.windowSize.foreach(builder.field("window_size", _))
+        builder.startObject("query")
+        builder.rawField("rescore_query", QueryBuilderFn(rescore.query))
+        rescore.rescoreQueryWeight.foreach(builder.field("rescore_query_weight", _))
+        rescore.originalQueryWeight.foreach(builder.field("query_weight", _))
+        rescore.scoreMode.map(EnumConversions.queryRescoreMode).foreach(builder.field("score_mode", _))
+        builder.endObject().endObject()
+      }
+      builder.endArray()
     }
 
     if (request.sorts.nonEmpty) {
 			builder.startArray("sort")
 			// Workaround for bug where separator is not added with rawValues
-			val arrayBody = new BytesArray(request.sorts.map(s => SortContentBuilder(s).string).mkString(","))
-			builder.rawValue(arrayBody, XContentType.JSON)
+      val arrayBody = request.sorts.map(s => SortBuilderFn(s).string).mkString(",")
+      builder.rawValue(arrayBody)
 			builder.endArray()
     }
 
+    request.trackScores.map(builder.field("track_scores", _))
+
     request.highlight.foreach { highlight =>
-      builder.rawField("highlight", HighlightFieldBuilderFn(highlight.fields).bytes(), XContentType.JSON)
+      builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
 
     if (request.suggs.nonEmpty) {
       builder.startObject("suggest")
+      request.globalSuggestionText.foreach(builder.field("text", _))
       request.suggs.foreach {
-        case term: TermSuggestionDefinition =>
-          builder.startObject(term.name)
-          term.text.foreach(builder.field("text", _))
-          builder.startObject("term")
-          builder.field("field", term.fieldname)
-          term.analyzer.foreach(builder.field("analyzer", _))
-          term.lowercaseTerms.foreach(builder.field("lowercase_terms", _))
-          term.maxEdits.foreach(builder.field("max_edits", _))
-          term.minWordLength.foreach(builder.field("min_word_length", _))
-          term.maxInspections.foreach(builder.field("max_inspections", _))
-          term.minDocFreq.foreach(builder.field("min_doc_freq", _))
-          term.maxTermFreq.foreach(builder.field("max_term_freq", _))
-          term.prefixLength.foreach(builder.field("prefix_length", _))
-          term.size.foreach(builder.field("size", _))
-          term.shardSize.foreach(builder.field("shard_size", _))
-          term.sort.map(_.name().toLowerCase).foreach(builder.field("sort", _))
-          term.stringDistance.map(_.name.toLowerCase).foreach(builder.field("string_distance", _))
-          term.suggestMode.map(_.name().toLowerCase).foreach(builder.field("suggest_mode", _))
-          builder.endObject()
-          builder.endObject()
+        case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
       }
       builder.endObject()
     }
 
     if (request.storedFields.nonEmpty) {
-      builder.field("stored_fields", request.storedFields.asJava)
+      builder.array("stored_fields", request.storedFields.toArray)
     }
 
     if (request.indexBoosts.nonEmpty) {
@@ -91,8 +105,8 @@ object SearchBodyBuilderFn {
       if (context.fetchSource) {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
-          builder.field("includes", context.includes.toList.asJava)
-          builder.field("excludes", context.excludes.toList.asJava)
+          builder.array("includes", context.includes)
+          builder.array("excludes", context.excludes)
           builder.endObject()
         }
       } else {
@@ -100,16 +114,18 @@ object SearchBodyBuilderFn {
       }
     }
 
+    if (request.docValues.nonEmpty)
+      builder.array("docvalue_fields", request.docValues.toArray)
+
     // aggregations
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")
       request.aggs.foreach { agg =>
-        builder.rawField(agg.name, AggregationBuilderFn(agg).bytes, XContentType.JSON)
+        builder.rawField(agg.name, AggregationBuilderFn(agg))
       }
       builder.endObject()
     }
 
     builder.endObject()
-    builder
   }
 }

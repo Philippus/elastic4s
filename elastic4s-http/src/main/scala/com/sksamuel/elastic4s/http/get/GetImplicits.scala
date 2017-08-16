@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.http.get
 import cats.Show
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
+import scala.util.{Failure, Try}
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
@@ -26,29 +26,38 @@ trait GetImplicits {
 
   implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetDefinition, MultiGetResponse] with Logging {
 
-    import scala.concurrent.ExecutionContext.Implicits._
-
-    private val endpoint = "/_mget"
-
-    override def execute(client: RestClient, request: MultiGetDefinition): Future[MultiGetResponse] = {
-
-      val body = MultiGetBodyBuilder(request).string()
-      logger.debug(s"Executing multiget $body")
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
-
-      client.async("POST", endpoint, Map.empty, entity, ResponseHandler.failure404).map { response =>
-        response.copy(docs = response.docs.map { doc =>
-          doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
-        })
+    override def responseHandler: ResponseHandler[MultiGetResponse] = new NotFound404ResponseHandler[MultiGetResponse] {
+      override def handle(response: HttpResponse): Try[MultiGetResponse] = {
+        super.handle(response).map { r =>
+          r.copy(docs = r.docs.map { doc =>
+            doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
+          })
+        }
       }
+    }
+
+    override def execute(client: HttpRequestClient, request: MultiGetDefinition): Future[HttpResponse] = {
+      val body = MultiGetBodyBuilder(request).string()
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
+      client.async("POST", "/_mget", Map.empty, entity)
     }
   }
 
   implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
-    import scala.concurrent.ExecutionContext.Implicits._
+    override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
+      override def handle(response: HttpResponse): Try[GetResponse] = {
+        response.statusCode match {
+          case 404 | 200 => Try {
+            val r = ResponseHandler.fromEntity[GetResponse](response.entity.get)
+            r.copy(fields = Option(r.fields).getOrElse(Map.empty))
+          }
+          case _ => Failure(new RuntimeException("Error"))
+        }
+      }
+    }
 
-    override def execute(client: RestClient, request: GetDefinition): Future[GetResponse] = {
+    override def execute(client: HttpRequestClient, request: GetDefinition): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
 
@@ -57,7 +66,7 @@ trait GetImplicits {
         if (!context.fetchSource)
           params.put("_source", "false")
         else {
-          if (context.includes().nonEmpty) {
+          if (context.includes.nonEmpty) {
             params.put("_source_include", context.includes.mkString(","))
           }
           if (context.excludes.nonEmpty) {
@@ -74,11 +83,9 @@ trait GetImplicits {
       request.refresh.map(_.toString).foreach(params.put("refresh", _))
       request.realtime.map(_.toString).foreach(params.put("realtime", _))
       request.version.map(_.toString).foreach(params.put("version", _))
-      request.versionType.foreach(params.put("versionType", _))
+      request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
 
-      client.async("GET", endpoint, params.toMap, ResponseHandler.failure404).map { response =>
-        response.copy(fields = Option(response.fields).getOrElse(Map.empty))
-      }
+      client.async("GET", endpoint, params.toMap)
     }
   }
 }

@@ -1,19 +1,17 @@
 package com.sksamuel.elastic4s.locks
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, SharedElasticSugar}
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
 class LocksTest extends WordSpec
-  with SharedElasticSugar
+  with DiscoveryLocalNodeProvider
   with ElasticMatchers
   with ElasticDsl {
 
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
-
   "global lock" should {
-    "only be acquired once" in {
+    // todo are these going to be included in 6 or removed? Unsure at time of writing
+    "only be acquired once" ignore {
       http.execute {
         acquireGlobalLock()
       }.await shouldBe true
@@ -23,7 +21,8 @@ class LocksTest extends WordSpec
       }.await shouldBe false
     }
 
-    "be releasable" in {
+    // todo are these going to be included in 6 or removed? Unsure at time of writing
+    "be releasable" ignore {
       http.execute {
         releaseGlobalLock()
       }.await shouldBe true

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.pipeline.BucketHelpers.GapPolicy
 
 case class DiffDefinition(name: String,
                           bucketsPath: String,

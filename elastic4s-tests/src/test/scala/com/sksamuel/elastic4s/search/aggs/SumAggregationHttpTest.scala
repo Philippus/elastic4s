@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
-class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("sumagg") mappings {
@@ -27,7 +24,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       indexInto("sumagg/actors") fields("name" -> "nicholas cage"),
       indexInto("sumagg/actors") fields("name" -> "sean connery", "age" -> "32"),
       indexInto("sumagg/actors") fields("name" -> "kevin costner", "age" -> "42")
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "sum aggregation" - {
@@ -40,7 +37,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       }.await
       resp.totalHits shouldBe 6
 
-      val agg = resp.sumAgg("agg1")
+      val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 260.0
     }
     "should support missing" in {
@@ -52,7 +49,7 @@ class SumAggregationHttpTest extends FreeSpec with SharedElasticSugar with Match
       }.await
       resp.totalHits shouldBe 6
 
-      val agg = resp.sumAgg("agg1")
+      val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 360
     }
   }

@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.mappings
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 
-class MappingApiTest extends FlatSpec with MockitoSugar with SharedElasticSugar {
+class MappingApiTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {
@@ -24,25 +25,25 @@ class MappingApiTest extends FlatSpec with MockitoSugar with SharedElasticSugar 
 
   "the get mapping dsl" should "be accepted by the client" in {
     client.execute {
-      get mapping "index" types "type"
+      getMapping("index").types("type")
     }
   }
 
   it should "support multiple indexes" in {
     client.execute {
-      get mapping("index1", "index2")
+      getMapping("index1", "index2")
     }
   }
 
   it should "support multiple types" in {
     client.execute {
-      get mapping "index" types("type1", "type2")
+      getMapping("index").types("type1", "type2")
     }
   }
 
   it should "support multiple indexes and multiple types" in {
     client.execute {
-      get mapping("index1", "index2") types("type1", "type2")
+      getMapping("index1", "index2").types("type1", "type2")
     }
   }
 }

@@ -15,7 +15,7 @@ trait IndexRecoveryExecutables {
       val builder = c.admin().indices().prepareRecoveries(t.indices: _*)
       t.activeOnly.foreach(builder.setActiveOnly)
       t.detailed.foreach(builder.setDetailed)
-      injectFuture(builder.execute)
+      injectFuture(builder.execute(_))
     }
   }
 }

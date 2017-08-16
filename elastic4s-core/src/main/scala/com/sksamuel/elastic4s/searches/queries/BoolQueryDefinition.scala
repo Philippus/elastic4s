@@ -2,16 +2,14 @@ package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.exts.OptionImplicits._
 
-case class BoolQueryDefinition(
-                                adjustPureNegative: Option[Boolean] = None,
-                                boost: Option[Double] = None,
-                                disableCoord: Option[Boolean] = None,
-                                minimumShouldMatch: Option[String] = None,
-                                queryName: Option[String] = None,
-                                filters: Seq[QueryDefinition] = Nil,
-                                must: Seq[QueryDefinition] = Nil,
-                                not: Seq[QueryDefinition] = Nil,
-                                should: Seq[QueryDefinition] = Nil
+case class BoolQueryDefinition(adjustPureNegative: Option[Boolean] = None,
+                               boost: Option[Double] = None,
+                               minimumShouldMatch: Option[String] = None,
+                               queryName: Option[String] = None,
+                               filters: Seq[QueryDefinition] = Nil,
+                               must: Seq[QueryDefinition] = Nil,
+                               not: Seq[QueryDefinition] = Nil,
+                               should: Seq[QueryDefinition] = Nil
                               ) extends QueryDefinition {
 
   def adjustPureNegative(adjustPureNegative: Boolean): BoolQueryDefinition =
@@ -19,9 +17,6 @@ case class BoolQueryDefinition(
 
   def boost(boost: Double): BoolQueryDefinition =
     copy(boost = boost.some)
-
-  def disableCoord(disableCoord: Boolean): BoolQueryDefinition =
-    copy(disableCoord = disableCoord.some)
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
   def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(filters = queries.toSeq)

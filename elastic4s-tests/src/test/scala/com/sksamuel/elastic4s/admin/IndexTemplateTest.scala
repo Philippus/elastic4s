@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s.admin
 
 import java.util
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzerDefinition
-import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers {
+class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers with DiscoveryLocalNodeProvider {
 
   "create template" ignore {
     "be stored" in {
@@ -27,7 +27,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
       }.await
 
       resp.getIndexTemplates.get(0).name shouldBe "brewery_template"
-      resp.getIndexTemplates.get(0).template() shouldBe "brew*"
+      resp.getIndexTemplates.get(0).getPatterns.toArray shouldBe Array("brew*")
 
       val source = resp.getIndexTemplates.get(0).getMappings.valuesIt().next().toString
       source shouldBe """{"brands":{"properties":{"name":{"type":"text"},"year_founded":{"type":"double"}}}}"""
@@ -43,7 +43,7 @@ class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar wit
         indexInto("brewers" / "brands") fields(
           "name" -> "fullers",
           "year_founded" -> 1829
-        ) refresh RefreshPolicy.IMMEDIATE
+        ) refresh RefreshPolicy.Immediate
       }.await
 
       blockUntilCount(1, "brewers")

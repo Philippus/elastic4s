@@ -1,19 +1,19 @@
 package com.sksamuel.elastic4s.http.validate
 
 import cats.Show
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler, Shards}
+import com.sksamuel.elastic4s.http.values.Shards
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
 case class ValidateResponse(valid: Boolean,
-                            private val _shards: Shards,
+                            @JsonProperty("_shards") shards: Shards,
                             explanations: Seq[Explanation]) {
-  def shards: Shards = _shards
   def isValid: Boolean = valid
 }
 
@@ -24,8 +24,7 @@ case class Explanation(index: String,
 object ValidateBodyFn {
   def apply(v: ValidateDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject()
-    builder.rawField("query", QueryBuilderFn(v.query).bytes, XContentType.JSON)
+    builder.rawField("query", QueryBuilderFn(v.query))
     builder.endObject()
   }
 }
@@ -38,10 +37,8 @@ trait ValidateImplicits {
 
   implicit object ValidateHttpExecutable extends HttpExecutable[ValidateDefinition, ValidateResponse] {
 
-    override def execute(client: RestClient,
-                         request: ValidateDefinition): Future[ValidateResponse] = {
+    override def execute(client: HttpRequestClient, request: ValidateDefinition): Future[HttpResponse] = {
 
-      val method = "GET"
       val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
@@ -49,10 +46,9 @@ trait ValidateImplicits {
       request.rewrite.map(_.toString).foreach(params.put("rewrite", _))
 
       val body = ValidateBodyFn(request).string()
-      logger.debug(s"Executing validate query $body")
-      val entity = new StringEntity(body, ContentType.APPLICATION_JSON)
+      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async(method, endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("GET", endpoint, params.toMap, entity)
     }
   }
 }

@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, SharedElasticSugar}
+import com.sksamuel.elastic4s.testkit.{ClassLocalNodeProvider, DiscoveryLocalNodeProvider, HttpElasticSugar}
 import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
@@ -15,17 +13,15 @@ class ScrollPublisherVerificationTest
   extends PublisherVerification[SearchHit](
     new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
     PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
-  ) with SharedElasticSugar with TestNGSuiteLike with ClassLocalNodeProvider with ElasticDsl {
+  ) with HttpElasticSugar with TestNGSuiteLike with DiscoveryLocalNodeProvider with ElasticDsl {
 
   import ElasticJackson.Implicits._
-
-  private val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   implicit val system = ActorSystem()
 
   ensureIndexExists("scrollpubver")
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("scrollpubver" / "empires")source Empire("Parthian", "Persia", "Ctesiphon"),
       indexInto("scrollpubver" / "empires")source Empire("Ptolemaic", "Egypt", "Alexandria"),
@@ -40,7 +36,7 @@ class ScrollPublisherVerificationTest
       indexInto("scrollpubver" / "empires")source Empire("Cardassian", "Space", "Cardassia Prime"),
       indexInto("scrollpubver" / "empires")source Empire("Egyptian", "Egypt", "Memphis"),
       indexInto("scrollpubver" / "empires")source Empire("Babylonian", "Levant", "Babylon")
-    )
+    ).immediateRefresh()
   }
 
   blockUntilCount(13, "scrollpubver")

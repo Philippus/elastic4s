@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.index.admin
 
-import com.sksamuel.elastic4s.http.Shards
+import com.sksamuel.elastic4s.http.values.Shards
 
 case class DeleteIndexResponse(acknowledged: Boolean)
 case class RefreshIndexResponse()

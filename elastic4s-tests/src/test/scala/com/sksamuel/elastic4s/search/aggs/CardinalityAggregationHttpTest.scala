@@ -1,14 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
-class CardinalityAggregationHttpTest extends FreeSpec with SharedElasticSugar with Matchers with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
+class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   http.execute {
     createIndex("cardagg") mappings {
@@ -24,7 +21,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with SharedElasticSugar wi
       indexInto("cardagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("cardagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
       indexInto("cardagg/buildings") fields("name" -> "Tower of London", "height" -> 169)
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "cardinality agg" - {
@@ -35,8 +32,10 @@ class CardinalityAggregationHttpTest extends FreeSpec with SharedElasticSugar wi
           cardinalityAgg("agg1", "name")
         }
       }.await
+
       resp.totalHits shouldBe 3
-      val agg = resp.maxAgg("agg1")
+
+      val agg = resp.aggs.cardinality("agg1")
       // should be 6 unique terms, the 'of' in tower of london will be filtered out by the analyzer
       agg.value shouldBe 6
     }

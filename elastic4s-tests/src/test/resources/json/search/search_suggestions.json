@@ -1,44 +1,24 @@
 {
-  "query": {
-    "term": {
-      "name": {
-        "value": "coldplay",
-        "boost": 1.0
-      }
-    }
-  },
-  "suggest": {
-    "suggestion-2": {
-      "text": "aqualuck by jethro toll",
-      "term": {
-        "field": "name",
-        "suggest_mode": "MISSING",
-        "accuracy": 0.5,
-        "sort": "SCORE",
-        "string_distance": "INTERNAL",
-        "max_edits": 2,
-        "max_inspections": 5,
-        "max_term_freq": 0.01,
-        "prefix_length": 1,
-        "min_word_length": 4,
-        "min_doc_freq": 0.0
-      }
+    "query": {
+        "term": {
+            "name": {
+                "value": "coldplay"
+            }
+        }
     },
-    "suggestion-1": {
-      "text": "clocks by culdpaly",
-      "term": {
-        "field": "name",
-        "suggest_mode": "MISSING",
-        "accuracy": 0.5,
-        "sort": "SCORE",
-        "string_distance": "INTERNAL",
-        "max_edits": 2,
-        "max_inspections": 5,
-        "max_term_freq": 0.01,
-        "prefix_length": 1,
-        "min_word_length": 4,
-        "min_doc_freq": 0.0
-      }
+    "suggest": {
+        "suggestion-1": {
+            "text": "clocks by culdpaly",
+            "term": {
+                "field": "name",
+                "max_edits": 2
+            }
+        },
+        "suggestion-2": {
+            "text": "aqualuck by jethro toll",
+            "term": {
+                "field": "name"
+            }
+        }
     }
-  }
 }

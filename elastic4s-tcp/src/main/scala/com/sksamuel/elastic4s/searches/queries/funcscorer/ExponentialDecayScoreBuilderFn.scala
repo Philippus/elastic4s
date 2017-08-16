@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
+import com.sksamuel.elastic4s.EnumConversions
 import org.elasticsearch.index.query.functionscore.{ExponentialDecayFunctionBuilder, ScoreFunctionBuilders}
 
 object ExponentialDecayScoreBuilderFn {
@@ -11,7 +12,7 @@ object ExponentialDecayScoreBuilderFn {
       case _ => ScoreFunctionBuilders.exponentialDecayFunction(exp.field, exp.origin, exp.scale)
     }
     exp.weight.map(_.toFloat).foreach(builder.setWeight)
-    exp.multiValueMode.foreach(builder.setMultiValueMode)
+    exp.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.setMultiValueMode)
     builder
   }
 }

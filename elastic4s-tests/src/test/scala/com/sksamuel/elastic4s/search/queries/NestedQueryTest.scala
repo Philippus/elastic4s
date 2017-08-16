@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.testkit.SharedElasticSugar
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {
+class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   client.execute {
     createIndex("nested").mappings(
@@ -45,7 +45,7 @@ class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {
           )
         )
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "nested query" should {

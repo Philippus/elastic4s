@@ -1,26 +1,25 @@
 {
-  "highlight": {
-    "pre_tags": [
-      "<b>"
-    ],
-    "post_tags": [
-      "</b>"
-    ],
-    "order": "score",
-    "boundary_max_scan": 4,
-    "boundary_chars": "\\b",
-    "encoder": "html",
-    "fields": {
-      "name": {
-        "fragment_size": 100,
-        "number_of_fragments": 3,
-        "fragment_offset": 4
-      },
-      "type": {
-        "fragment_size": 44,
-        "number_of_fragments": 100,
-        "type": "some-type"
-      }
+    "highlight": {
+        "boundary_chars": "html",
+        "boundary_max_scan": 4,
+        "order": "score",
+        "post_tags": [
+            "</b>"
+        ],
+        "pre_tags": [
+            "<b>"
+        ],
+        "fields": {
+            "name": {
+                "fragment_offset": 4,
+                "fragment_size": 100,
+                "number_of_fragments": 3
+            },
+            "type": {
+                "fragment_size": 44,
+                "type": "some-type",
+                "number_of_fragments": 100
+            }
+        }
     }
-  }
 }

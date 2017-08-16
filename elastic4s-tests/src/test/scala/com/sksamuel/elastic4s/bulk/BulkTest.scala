@@ -1,23 +1,29 @@
 package com.sksamuel.elastic4s.bulk
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import org.scalatest.{FlatSpec, Matchers}
 
-class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
+
+class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests with DiscoveryLocalNodeProvider {
 
   override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("elements")
+      }.await
+    }
+
     execute {
-      createIndex("chemistry").mappings {
+      createIndex(indexname).mappings {
         mapping("elements").fields(
           intField("atomicweight").stored(true),
           textField("name").stored(true)
         )
-        mapping("molecule").fields(
-          textField("name").stored(true)
-        ).parent("elements")
       }
     }.await
   }
@@ -26,33 +32,28 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
 
     execute {
       bulk(
-        indexInto("chemistry/elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
-        indexInto("chemistry/elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4,
-        indexInto("chemistry/molecule") fields("name" -> "LiH") id 1 parent "4"
-      ).refresh(RefreshPolicy.IMMEDIATE)
+        indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
+        indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {
-      get(2).from("chemistry/elements")
+      get(2).from(indexname / "elements")
     }.await.found shouldBe true
 
     execute {
-      get(4).from("chemistry/elements")
-    }.await.found shouldBe true
-
-    execute {
-      get(1).from("chemistry/molecule").parent("4")
+      get(4).from(indexname / "elements")
     }.await.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
     val result = execute {
       bulk(
-        update(2).in("chemistry/elements").doc("atomicweight" -> 2, "name" -> "helium"),
-        indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
-        update(6).in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
-        delete(10).from("chemistry/elements")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+        update(2).in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
+        indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
+        update(6).in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
+        delete(10).from(indexname / "elements")
+      ).refresh(RefreshPolicy.Immediate)
     }.await
 
     result.hasFailures shouldBe true
@@ -67,45 +68,35 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
 
     execute {
       bulk(
-        update(2).in("chemistry/elements") doc("atomicweight" -> 6, "name" -> "carbon"),
-        update(4).in("chemistry/elements") doc("atomicweight" -> 8, "name" -> "oxygen"),
-        update(1).in("chemistry/molecule") parent "4" doc("name" -> "CO")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+        update(2).in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
+        update(4).in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {
-      get(2).from("chemistry/elements").storedFields("name")
+      get(2).from(indexname / "elements").storedFields("name")
     }.await.storedField("name").value shouldBe "carbon"
 
     execute {
-      get(4).from("chemistry/elements").storedFields("name")
+      get(4).from(indexname / "elements").storedFields("name")
     }.await.storedField("name").value shouldBe "oxygen"
-
-    execute {
-      get(1).from("chemistry/molecule").parent("4").storedFields("name")
-    }.await.storedField("name").value shouldBe "CO"
   }
 
   it should "handle multiple delete operations" in {
 
     execute {
       bulk(
-        delete(2).from("chemistry/elements"),
-        delete(4).from("chemistry/elements"),
-        delete(1).from("chemistry/molecule").parent("4")
-      ).refresh(RefreshPolicy.IMMEDIATE)
+        delete(2).from(indexname / "elements"),
+        delete(4).from(indexname / "elements")
+      ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     execute {
-      get(2).from("chemistry/elements")
+      get(2).from(indexname / "elements")
     }.await.found shouldBe false
 
     execute {
-      get(4).from("chemistry/elements")
-    }.await.found shouldBe false
-
-    execute {
-      get(1).from("chemistry/molecule").parent("4")
+      get(4).from(indexname / "elements")
     }.await.found shouldBe false
   }
 }

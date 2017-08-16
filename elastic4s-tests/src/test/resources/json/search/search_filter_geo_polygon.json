@@ -3,27 +3,20 @@
     "geo_polygon": {
       "distance": {
         "points": [
-          [
-            10.0,
-            10.0
-          ],
-          [
-            20.0,
-            20.0
-          ],
-          [
-            30.0,
-            30.0
-          ],
-          [
-            10.0,
-            10.0
-          ]
+            {
+                "lat": 10.0,
+                "lon": 10.0
+            },
+            {
+                "lat": 20.0,
+                "lon": 20.0
+            },
+            {
+                "lat": 30.0,
+                "lon": 30.0
+            }
         ]
-      },
-      "validation_method": "STRICT",
-      "ignore_unmapped": false,
-      "boost": 1.0
+      }
     }
   }
 }

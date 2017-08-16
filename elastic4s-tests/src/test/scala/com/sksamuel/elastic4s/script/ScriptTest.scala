@@ -1,18 +1,17 @@
 package com.sksamuel.elastic4s.script
 
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
-import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.SortOrder
+import com.sksamuel.elastic4s.searches.sort.{ScriptSortType, SortOrder}
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar}
 import org.scalatest.FreeSpec
 
-class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
+class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
   client.execute {
     bulk(
-      index into "script/tubestops" fields("name" -> "south kensington", "line" -> "district"),
-      index into "script/tubestops" fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
-      index into "script/tubestops" fields("name" -> "cockfosters", "line" -> "picadilly"),
-      index into "script/tubestops" fields("name" -> "bank", "line" -> "northern")
+      indexInto("script/tubestops") fields("name" -> "south kensington", "line" -> "district"),
+      indexInto("script/tubestops") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
+      indexInto("script/tubestops") fields("name" -> "cockfosters", "line" -> "picadilly"),
+      indexInto("script/tubestops") fields("name" -> "bank", "line" -> "northern")
     )
   }.await
 
@@ -26,7 +25,9 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
     }
     "can use params" ignore {
       search("script/tubestops") query "earls" scriptfields (
-        scriptField("a") script "'Fare is: ' + doc['zone'].value * fare" params Map("fare" -> 4.50)
+        scriptField("a") script (
+          script("'Fare is: ' + doc['zone'].value * fare") params Map("fare" -> 4.50)
+          )
         ) should haveFieldValue("Fare is: 9.0")
     }
   }
@@ -34,8 +35,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
     "sort by name length" ignore {
       val sorted = client.execute {
         search ("script/tubestops") query matchAllQuery sortBy {
-          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed ScriptSortType
-            .NUMBER order SortOrder.DESC
+          scriptSort("""if (_source.containsKey('name')) _source['name'].size() else 0""") typed ScriptSortType.NUMBER order SortOrder.DESC
         }
       }.await
       sorted.hits(0).sourceAsMap("name") shouldBe "south kensington"

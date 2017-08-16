@@ -57,7 +57,6 @@ class TermsAggregationTest extends AbstractAggregationTest {
       }.await
       resp.totalHits shouldBe 10
 
-
       val agg = resp.aggregations.stringTermsResult("agg1")
       agg.getBuckets.size shouldBe 4
       agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3

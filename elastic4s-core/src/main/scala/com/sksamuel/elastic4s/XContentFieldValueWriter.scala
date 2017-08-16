@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s
 
-import org.elasticsearch.common.xcontent.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 object XContentFieldValueWriter {
   def apply(source: XContentBuilder, value: FieldValue): Unit = value match {
     case NullFieldValue(name) => source.nullField(name)
     case SimpleFieldValue(name, v) =>
       name match {
-        case Some(n) => source.field(n, v)
-        case None => source.value(v)
+        case Some(n) => source.autofield(n, v)
+        case None => source.autovalue(v)
       }
     case ArrayFieldValue(name, values) =>
       source.startArray(name)

@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.ValueType
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.search.aggregations.support.ValueType
 
 case class GeoCentroidAggregationDefinition(name: String,
                                             field: Option[String] = None,

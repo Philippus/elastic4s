@@ -1,25 +1,20 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{ElasticMatchers, ElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
 import org.scalatest.WordSpec
 
 class RangeQueryHttpTest
   extends WordSpec
-    with ElasticSugar
+    with HttpElasticSugar
+    with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
-
-  val http = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   http.execute {
     createIndex("rangequeryhttptest").mappings(
       mapping("pieces").fields(
-        textField("name").fielddata(true)
-      ),
-      mapping("openings").fields(
         textField("name").fielddata(true)
       )
     )
@@ -57,7 +52,7 @@ class RangeQueryHttpTest
         "value" -> 1,
         "count" -> 8
       )
-    ).refresh(RefreshPolicy.IMMEDIATE)
+    ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a range query" should {

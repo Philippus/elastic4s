@@ -1,14 +1,23 @@
 package com.sksamuel.elastic4s.validate
 
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
-class ValidateTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
 
-  override protected def beforeRunTests() = {
+class ValidateTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("food")
+      }.await
+    }
+
     execute {
       createIndex("food").mappings(
         mapping("pasta").fields(
@@ -24,7 +33,7 @@ class ValidateTest extends WordSpec with Matchers with ElasticDsl with DualElast
         "name" -> "maccaroni",
         "color" -> "yellow",
         "sellbydate" -> "2005-01-01"
-      ) refresh RefreshPolicy.WAIT_UNTIL
+      ) refresh RefreshPolicy.WaitFor
     }.await
   }
 

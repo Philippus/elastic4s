@@ -5,15 +5,16 @@ import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, 
 import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.span._
-import com.sksamuel.elastic4s.http.search.queries.specialized.{MoreLikeThisBuilderFn, ScriptQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBodyFn, MoreLikeThisBuilderFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
+import com.sksamuel.elastic4s.json.XContentBuilder
+import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
-import org.elasticsearch.common.xcontent.XContentBuilder
 
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {
@@ -32,7 +33,7 @@ object QueryBuilderFn {
     case q: IdQueryDefinition => IdQueryBodyFn(q)
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
     case q: MatchNoneQueryDefinition => MatchNoneBodyFn(q)
-    case q: MatchQueryDefinition => MatchBodyFn(q)
+    case q: MatchQueryDefinition => MatchQueryBuilderFn(q)
     case q: MatchPhraseDefinition => MatchPhraseQueryBodyFn(q)
     case q: MatchPhrasePrefixDefinition => MatchPhrasePrefixBodyFn(q)
     case q: MoreLikeThisQueryDefinition => MoreLikeThisBuilderFn(q)
@@ -58,5 +59,7 @@ object QueryBuilderFn {
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
+    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBodyFn(q)
+    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
   }
 }

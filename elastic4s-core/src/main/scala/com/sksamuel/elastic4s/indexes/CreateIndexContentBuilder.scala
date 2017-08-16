@@ -1,16 +1,15 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.mappings.MappingContentBuilder
-import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 
 object CreateIndexContentBuilder {
 
   def apply(d: CreateIndexDefinition): XContentBuilder = {
     if (d.rawSource.isDefined) {
-      XContentFactory.jsonBuilder().rawValue(new BytesArray(d.rawSource.get), XContentType.JSON)
+      XContentFactory.parse(d.rawSource.get)
     } else {
-      val source = XContentFactory.jsonBuilder().startObject()
+      val source = XContentFactory.jsonBuilder()
 
       if (d.settings.settings.nonEmpty || d.analysis.nonEmpty) {
         source.startObject("settings")
@@ -20,13 +19,13 @@ object CreateIndexContentBuilder {
 
           d.settings.settings foreach {
             case (key, value) =>
-              source.field(key, value)
+              source.autofield(key, value)
           }
 
           source.endObject()
         }
 
-        d.analysis.foreach(AnalysisContentBuilder.build(_, source))
+        d.analysis.foreach(AnalysisBuilderFn.build(_, source))
 
         source.endObject() // end settings
       }
@@ -35,7 +34,7 @@ object CreateIndexContentBuilder {
         source.startObject("mappings")
         for (mapping <- d.mappings) {
           source.startObject(mapping.`type`)
-          MappingContentBuilder.build(mapping, source)
+          MappingBuilderFn.build(mapping, source)
           source.endObject()
         }
         source.endObject()

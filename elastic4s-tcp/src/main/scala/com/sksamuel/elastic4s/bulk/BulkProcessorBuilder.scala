@@ -12,8 +12,7 @@ object BulkProcessorBuilder {
   def apply() = new BulkProcessorBuilder()
 }
 
-case class BulkProcessorBuilder(name: Option[String] = None,
-                                count: Option[Int] = None,
+case class BulkProcessorBuilder(count: Option[Int] = None,
                                 backoffPolicy: Option[BackoffPolicy] = None,
                                 concurrentRequests: Option[Int] = None,
                                 flushInterval: Option[FiniteDuration] = None,
@@ -37,13 +36,11 @@ case class BulkProcessorBuilder(name: Option[String] = None,
     concurrentRequests.foreach(builder.setConcurrentRequests)
     count.foreach(builder.setBulkActions)
     flushInterval.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setFlushInterval)
-    name.foreach(builder.setName)
     size.foreach(builder.setBulkSize)
 
     new BulkProcessor(client.java, builder.build())
   }
 
-  def name(name: String): BulkProcessorBuilder = copy(name = name.some)
   def backoffPolicy(backoffPolicy: BackoffPolicy): BulkProcessorBuilder = copy(backoffPolicy = backoffPolicy.some)
 
   def concurrentRequests(concurrentRequests: Int): BulkProcessorBuilder =

@@ -1,21 +1,19 @@
 {
-  "size": 5,
-  "query": {
-    "match": {
-      "name": {
-        "query": "coldplay",
-        "operator": "AND",
-        "analyzer": "french",
-        "fuzziness": "2",
-        "prefix_length": 4,
-        "max_expansions": 4,
-        "minimum_should_match": "75%",
-        "fuzzy_transpositions": true,
-        "lenient": false,
-        "zero_terms_query": "ALL",
-        "cutoff_frequency": 3.4,
-        "boost": 1.0
-      }
-    }
-  }
+    "query": {
+        "match": {
+            "name": {
+                "query": "coldplay",
+                "analyzer": "french",
+                "cutoff_frequency": "3.4",
+                "fuzziness": "2",
+                "fuzzy_transpositions": true,
+                "max_expansions": 4,
+                "minimum_should_match": "75%",
+                "operator": "AND",
+                "prefix_length": "4",
+                "zero_terms_query": "all"
+            }
+        }
+    },
+    "size": 5
 }

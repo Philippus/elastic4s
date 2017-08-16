@@ -1,13 +1,22 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DualClientTests
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexExistsTest extends WordSpec with Matchers with ElasticDsl with DualElasticSugar with DualClient {
+import scala.util.Try
 
-  override protected def beforeRunTests() = {
+class IndexExistsTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+
+  override protected def beforeRunTests(): Unit = {
+
+    Try {
+      execute {
+        deleteIndex("indexexists")
+      }.await
+    }
+
     execute {
       createIndex("indexexists").mappings {
         mapping("flowers") fields textField("name")

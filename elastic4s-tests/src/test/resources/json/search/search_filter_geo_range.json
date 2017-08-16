@@ -1,16 +1,8 @@
 {
-  "post_filter": {
-    "geo_distance": {
-      "postcode": [
-        534.4313049316406,
-        267.8919982910156
-      ],
-      "distance": 0.0,
-      "distance_type": "arc",
-      "validation_method": "STRICT",
-      "ignore_unmapped": false,
-      "boost": 1.0,
-      "_name": "myfilter"
+    "post_filter": {
+        "geo_distance": {
+            "postcode": "hash123",
+            "_name": "myfilter"
+        }
     }
-  }
 }
