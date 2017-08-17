@@ -128,7 +128,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       }.await
 
       val agg = resp.aggregations.terms("agg1")
-      agg.buckets.map(_.key) shouldBe List("mild", "medium", "hot")
+      agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")
     }
   }
 }

@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer, JsonMappingException, ObjectMapper}
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
-import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
@@ -15,7 +17,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
   "ElasticJackson implicits" should {
     "index a case class" in {
 
-      client.execute {
+      http.execute {
         bulk(
           indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId(1),
           indexInto("jacksontest" / "characters").source(Character("hank", "breaking bad")).withId(2),
@@ -25,7 +27,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
     }
     "read a case class" in {
 
-      val resp = client.execute {
+      val resp = http.execute {
         search("jacksontest" / "characters").query("breaking")
       }.await
       resp.to[Character] shouldBe List(Character("hank", "breaking bad"))
@@ -33,7 +35,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
     }
     "populate special fields" in {
 
-      val resp = client.execute {
+      val resp = http.execute {
         search("jacksontest" / "characters").query("breaking")
       }.await
 
@@ -43,14 +45,22 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
     }
     "support custom mapper" in {
 
-      implicit val mapper: ObjectMapper = mock[ObjectMapper]
-      Mockito.when(mapper.readTree(org.mockito.Matchers.anyString)).thenReturn(mock[ObjectNode])
+     implicit val custom: ObjectMapper with ScalaObjectMapper = new ObjectMapper with ScalaObjectMapper
 
-      val resp = client.execute {
+      val module = new SimpleModule
+      module.addDeserializer(classOf[String], new JsonDeserializer[String] {
+        override def deserialize(p: JsonParser, ctxt: DeserializationContext): String = sys.error("boom")
+      })
+      custom.registerModule(module)
+
+      val resp = http.execute {
         search("jacksontest" / "characters").query("breaking")
       }.await
-      // our custom mapper will just return null so that should be returned
-      resp.to[Character].toList shouldBe List(null)
+
+      // if our custom mapper has been picked up, then it should throw an exception when deserializing
+      intercept[JsonMappingException] {
+        resp.to[Character].toList
+      }
     }
   }
 }
