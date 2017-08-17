@@ -32,7 +32,7 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
     override def execute(client: HttpRequestClient, req: RemoveSearchTemplateDefinition): Future[HttpResponse] = {
-      val endpoint = "/_search/template/" + req.name
+      val endpoint = "/_scripts/" + req.name
       client.async("DELETE", endpoint, Map.empty)
     }
   }
@@ -41,7 +41,7 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
     override def execute(client: HttpRequestClient, req: PutSearchTemplateDefinition): Future[HttpResponse] = {
-      val endpoint = "/_search/template/" + req.name
+      val endpoint = "/_scripts/" + req.name
       val body = PutSearchTemplateBuilderFn(req).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", endpoint, Map.empty, entity)
@@ -62,7 +62,7 @@ trait SearchTemplateImplicits {
     }
 
     override def execute(client: HttpRequestClient, req: GetSearchTemplateDefinition): Future[HttpResponse] = {
-      val endpoint = "/_search/template/" + req.name
+      val endpoint = "/_scripts/" + req.name
       client.async("GET", endpoint, Map.empty)
     }
   }
