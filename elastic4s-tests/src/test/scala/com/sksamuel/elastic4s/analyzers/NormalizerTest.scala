@@ -28,7 +28,7 @@ class NormalizerTest extends FreeSpec with Matchers with ElasticSugar with Disco
   blockUntilCount(1, "normalizer")
 
   "custom Normalizer" - {
-    "should apply a lowercase filter " in {
+    "should apply a lowercase filter " ignore {
       client.execute {
         // normalizers are applied on search as well
         search("normalizer" / "test") query termQuery("keywordLowercase" -> "VERYMUCHMIXEDCASE")
