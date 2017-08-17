@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.TermBucket
+import com.sksamuel.elastic4s.searches.aggs.TermsOrder
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -108,64 +109,26 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 2, Map.empty))
     }
 
-    //    "should only return included fields" in {
-    //      val resp = client.execute {
-    //        search("aggregations/breakingbad") aggregations {
-    //          termsAggregation("agg1") field "job" includeExclude("lawyer", "")
-    //        }
-    //      }.await
-    //      resp.totalHits shouldBe 10
-    //      val agg = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-    //      agg.getBuckets.size shouldBe 1
-    //      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
-    //    }
-    //
-    //    "should not return excluded fields" in {
-    //      val resp = client.execute {
-    //        search("aggregations/breakingbad") aggregations {
-    //          termsAggregation("agg1") field "job" includeExclude("", "lawyer")
-    //        }
-    //      }.await
-    //      resp.totalHits shouldBe 10
-    //
-    //
-    //      val agg = resp.aggregations.stringTermsResult("agg1")
-    //      agg.getBuckets.size shouldBe 4
-    //      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
-    //      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-    //      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
-    //      agg.getBucketByKey("heavy").getDocCount shouldBe 2
-    //    }
-    //
-    //    "should only return included fields (given a seq)" in {
-    //      val resp = client.execute {
-    //        search("aggregations/breakingbad") aggregations {
-    //          termsAggregation("agg1") field "job" includeExclude(Seq("meth kingpin", "lawyer"), Nil)
-    //        }
-    //      }.await
-    //      resp.totalHits shouldBe 10
-    //      val agg = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-    //      agg.getBuckets.size shouldBe 2
-    //      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-    //      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
-    //    }
-    //
-    //    "should not return excluded fields (given a seq)" in {
-    //      val resp = client.execute {
-    //        search("aggregations/breakingbad") aggregations {
-    //          termsAggregation("agg1") field "job" includeExclude(Nil, Iterable("lawyer"))
-    //        }
-    //      }.await
-    //      resp.totalHits shouldBe 10
-    //
-    //      val agg = resp.aggregations.stringTermsResult("agg1")
-    //      agg.getBuckets.size shouldBe 4
-    //      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
-    //      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-    //      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
-    //      agg.getBucketByKey("heavy").getDocCount shouldBe 2
-    //    }
-    //
+    "should support _count desc terms order" in {
+      val resp = http.execute {
+        search("termsagg/curry").matchAllQuery().aggs {
+          termsAgg("agg1", "strength").order(TermsOrder("_count", false))
+        }
+      }.await
 
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.key) shouldBe List("hot", "medium", "mild")
+    }
+
+    "should support _count asc terms order" in {
+      val resp = http.execute {
+        search("termsagg/curry").matchAllQuery().aggs {
+          termsAgg("agg1", "strength").order(TermsOrder("_count", true))
+        }
+      }.await
+
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.key) shouldBe List("mild", "medium", "hot")
+    }
   }
 }
