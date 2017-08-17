@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 
-object FunctionScoreQueryBodyFn {
+object FunctionScoreQueryBuilderFn {
 
   def apply(q: FunctionScoreQueryDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
@@ -19,6 +19,14 @@ object FunctionScoreQueryBodyFn {
     q.maxBoost.map(builder.field("max_boost", _))
     q.scoreMode.map(sm => builder.field("score_mode", EnumConversions.scoreMode(sm)))
     q.boostMode.map(bm => builder.field("boost_mode", EnumConversions.boostMode(bm)))
+
+    if (q.scorers.nonEmpty) {
+      builder.startArray("functions")
+      q.scorers.foreach { function =>
+        builder.rawValue(ScoreFunctionBuilderFn.apply(function.score))
+      }
+      builder.endArray()
+    }
 
     builder.endObject()
     builder
