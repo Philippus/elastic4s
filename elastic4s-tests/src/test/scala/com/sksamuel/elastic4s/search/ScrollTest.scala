@@ -30,16 +30,16 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
 
     execute {
       bulk(
-        indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "wuthering heights", "year" -> "1979"),
-        indexInto("katebush/songs").fields("name" -> "dream of sheep", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "waking the watch", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "watching you watching me", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "cloudbusting", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985"),
-        indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985")
+        indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
+        indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985").id("2"),
+        indexInto("katebush/songs").fields("name" -> "wuthering heights", "year" -> "1979").id("3"),
+        indexInto("katebush/songs").fields("name" -> "dream of sheep", "year" -> "1985").id("4"),
+        indexInto("katebush/songs").fields("name" -> "waking the watch", "year" -> "1985").id("5"),
+        indexInto("katebush/songs").fields("name" -> "watching you watching me", "year" -> "1985").id("6"),
+        indexInto("katebush/songs").fields("name" -> "cloudbusting", "year" -> "1985").id("7"),
+        indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985").id("8"),
+        indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985").id("9"),
+        indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985").id("0")
       ).refresh(RefreshPolicy.Immediate)
     }.await
   }
@@ -94,6 +94,43 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
       resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
+    }
+  }
+
+  "a 'searchScroll.slice'" should {
+    "return sliced results" in {
+      val resp1 = execute {
+        search("katebush" / "songs")
+          .slice(0, 2)
+          .query("1985")
+          .scroll("1m")
+          .limit(4)
+          .storedFields("name")
+      }.await
+
+      val resp2 = execute {
+        searchScroll(resp1.scrollId.get).keepAlive(1.minute)
+      }.await
+
+      val resp3 = execute {
+        search("katebush" / "songs")
+          .slice(1, 2)
+          .query("1985")
+          .scroll("1m")
+          .limit(4)
+          .storedFields("name")
+      }.await
+
+      val resp4 = execute {
+        searchScroll(resp3.scrollId.get).keepAlive(1.minute)
+      }.await
+
+      (resp1.hits.hits.length + resp2.hits.hits.length) shouldBe 4
+      (resp3.hits.hits.length + resp4.hits.hits.length) shouldBe 5
+      val merged = Seq(resp1, resp2, resp3, resp4).flatMap(resp => resp.hits.hits.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
+      merged.length shouldBe 9
+      merged.max shouldBe "watching you watching me"
+      merged.min shouldBe "cloudbusting"
     }
   }
 
