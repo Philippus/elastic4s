@@ -17,7 +17,7 @@ object FilterFunctionBodyFn {
       case f: FieldValueFactorDefinition =>
         builder.rawField("field_value_factor", FieldValueFactorBodyFn(f).bytes(), XContentType.JSON)
       case g: GaussianDecayScoreDefinition =>
-        builder.rawField("gaussian", GaussianDecayScoreBodyFn(g).bytes(), XContentType.JSON)
+        builder.rawField("gauss", GaussianDecayScoreBodyFn(g).bytes(), XContentType.JSON)
         g.weight.foreach(w => builder.field("weight", w.toFloat))
       case random: RandomScoreFunctionDefinition =>
         builder.rawField("random_score", RandomScoreFunctionBodyFn(random).bytes(), XContentType.JSON)
