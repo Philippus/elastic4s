@@ -41,7 +41,7 @@ class FunctionScoreQueryBodyFnTest extends FunSuite with Matchers {
       )
     )
     FunctionScoreQueryBodyFn(q).string() shouldBe
-      """{"function_score":{"query":{"bool":{"must":[{"match_all":{}}],"filter":[{"term":{"flags":{"value":"ANYSTRING"}}}]}},"functions":[{"gaussian":{"publishedDate":{"origin":"now","scale":"20d","decay":0.5}}},{"field_value_factor":{"field":"boost","modifier":"none"}}]}}"""
+      """{"function_score":{"query":{"bool":{"must":[{"match_all":{}}],"filter":[{"term":{"flags":{"value":"ANYSTRING"}}}]}},"functions":[{"gauss":{"publishedDate":{"origin":"now","scale":"20d","decay":0.5}}},{"field_value_factor":{"field":"boost","modifier":"none"}}]}}"""
   }
 
   test("functionScore query should generate expected json with exponential decay score") {
