@@ -1,4 +1,5 @@
 {
+    "version": true,
     "sort": [
         {
             "singer.weight": {

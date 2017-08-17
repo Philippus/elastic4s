@@ -1,4 +1,5 @@
 {
+    "version": true,
     "highlight": {
         "boundary_chars": "html",
         "boundary_max_scan": 4,

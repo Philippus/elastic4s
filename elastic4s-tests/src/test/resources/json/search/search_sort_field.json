@@ -1,12 +1,13 @@
 {
-  "sort": [
-    {
-      "singer": {
-        "order": "desc",
-        "missing": "no-singer",
-        "mode": "avg",
-        "nested_path": "nest"
-      }
-    }
-  ]
+    "version": true,
+    "sort": [
+        {
+            "singer": {
+                "order": "desc",
+                "missing": "no-singer",
+                "mode": "avg",
+                "nested_path": "nest"
+            }
+        }
+    ]
 }

@@ -1,4 +1,5 @@
 {
+    "version": true,
     "query": {
         "function_score": {
             "query": {
@@ -10,7 +11,35 @@
             "boost": 1.4,
             "max_boost": 1.9,
             "score_mode": "multiply",
-            "boost_mode": "max"
+            "boost_mode": "max",
+            "functions": [
+                {
+                    "random_score": {
+                        "seed": 1234
+                    }
+                },
+                {
+                    "script_score": {
+                        "script": {
+                            "inline": "some script here"
+                        }
+                    }
+                },
+                {
+                    "gaussian": {
+                        "field1": {
+                            "origin": "1m",
+                            "scale": "2m"
+                        }
+                    }
+                },
+                {
+                    "field_value_factor": {
+                        "field": "field2",
+                        "factor": 1.2
+                    }
+                }
+            ]
         }
     }
 }

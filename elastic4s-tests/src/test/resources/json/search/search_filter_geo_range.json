@@ -1,4 +1,5 @@
 {
+    "version": true,
     "post_filter": {
         "geo_distance": {
             "postcode": "hash123",

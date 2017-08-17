@@ -1,8 +1,9 @@
 {
-  "size": 5,
-  "query": {
-    "match_all": {
-      "boost": 4.0
+    "version": true,
+    "size": 5,
+    "query": {
+        "match_all": {
+            "boost": 4.0
+        }
     }
-  }
 }

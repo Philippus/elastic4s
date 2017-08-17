@@ -1,4 +1,5 @@
 {
+    "version": true,
     "query": {
         "nested": {
             "path": "obj1",
@@ -15,6 +16,7 @@
                 }
             },
             "inner_hits": {
+                "name": "obj1",
                 "_source": {
                     "includes": [
                         "incme"

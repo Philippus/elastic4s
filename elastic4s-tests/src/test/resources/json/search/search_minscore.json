@@ -1,8 +1,9 @@
 {
-  "query": {
-    "query_string": {
-      "query": "coldplay"
-    }
-  },
-  "min_score": 0.5
+    "version": true,
+    "query": {
+        "query_string": {
+            "query": "coldplay"
+        }
+    },
+    "min_score": 0.5
 }

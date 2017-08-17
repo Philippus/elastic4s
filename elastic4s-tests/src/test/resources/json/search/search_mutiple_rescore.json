@@ -1,4 +1,5 @@
 {
+    "version": true,
     "rescore": [
         {
             "window_size": 14,

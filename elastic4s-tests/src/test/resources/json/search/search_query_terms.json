@@ -1,13 +1,14 @@
 {
-  "query": {
-    "terms": {
-      "name": [
-        "chris",
-        "will",
-        "johnny",
-        "guy"
-      ],
-      "boost": 1.2
+    "version": true,
+    "query": {
+        "terms": {
+            "name": [
+                "chris",
+                "will",
+                "johnny",
+                "guy"
+            ],
+            "boost": 1.2
+        }
     }
-  }
 }

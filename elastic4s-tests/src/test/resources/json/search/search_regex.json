@@ -1,4 +1,5 @@
 {
+    "version": true,
     "query": {
         "regexp": {
             "drummmer": {

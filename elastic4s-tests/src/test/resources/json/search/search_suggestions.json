@@ -1,4 +1,5 @@
 {
+    "version": true,
     "query": {
         "term": {
             "name": {

@@ -1,13 +1,14 @@
 {
-  "size": 5,
-  "query": {
-    "match_phrase": {
-      "name": {
-        "query": "coldplay",
-        "analyzer": "snowball",
-        "slop": 3,
-        "boost": 15.0
-      }
+    "version": true,
+    "size": 5,
+    "query": {
+        "match_phrase": {
+            "name": {
+                "query": "coldplay",
+                "analyzer": "snowball",
+                "slop": 3,
+                "boost": 15.0
+            }
+        }
     }
-  }
 }

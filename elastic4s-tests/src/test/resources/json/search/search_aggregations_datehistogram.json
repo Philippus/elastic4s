@@ -1,9 +1,10 @@
 {
+    "version": true,
     "aggs": {
         "years": {
             "date_histogram": {
                 "interval": "1y",
-                "min_doc_count": 0.0,
+                "min_doc_count": 0,
                 "field": "date"
             }
         }

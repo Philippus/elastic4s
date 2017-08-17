@@ -1,9 +1,10 @@
 {
-  "from": 9,
-  "size": 6,
-  "query": {
-    "query_string": {
-      "query": "coldplay"
+    "version": true,
+    "from": 9,
+    "size": 6,
+    "query": {
+        "query_string": {
+            "query": "coldplay"
+        }
     }
-  }
 }

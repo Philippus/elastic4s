@@ -1,4 +1,5 @@
 {
+    "version": true,
     "size": 5,
     "query": {
         "prefix": {

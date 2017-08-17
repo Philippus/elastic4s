@@ -1,4 +1,5 @@
 {
+    "version": true,
     "aggs": {
         "range_agg": {
             "range": {

@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.Preference.Shards
-import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.searches.aggs.TermsOrder
-import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.MultiValueMode
 import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, GeoPoint, QueryRescoreMode, ScoreMode, SearchType}

@@ -1,17 +1,18 @@
 {
-  "size": 5,
-  "query": {
-    "ids": {
-      "type": [
-        "a",
-        "b"
-      ],
-      "values": [
-        "1",
-        "2",
-        "3"
-      ],
-      "boost": 1.6
+    "version": true,
+    "size": 5,
+    "query": {
+        "ids": {
+            "type": [
+                "a",
+                "b"
+            ],
+            "values": [
+                "1",
+                "2",
+                "3"
+            ],
+            "boost": 1.6
+        }
     }
-  }
 }

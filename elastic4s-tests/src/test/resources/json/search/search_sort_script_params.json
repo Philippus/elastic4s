@@ -1,18 +1,19 @@
 {
-  "sort": [
-    {
-      "_script": {
-        "script": {
-          "inline": "doc.score",
-          "lang": "painless",
-          "params": {
-            "param1": "value1",
-            "param2": "value2"
-          }
-        },
-        "type": "number",
-        "order": "desc"
-      }
-    }
-  ]
+    "version": true,
+    "sort": [
+        {
+            "_script": {
+                "script": {
+                    "inline": "doc.score",
+                    "lang": "painless",
+                    "params": {
+                        "param1": "value1",
+                        "param2": "value2"
+                    }
+                },
+                "type": "number",
+                "order": "desc"
+            }
+        }
+    ]
 }

@@ -1,4 +1,5 @@
 {
+    "version": true,
     "post_filter": {
         "missing": {
             "field": "producer",

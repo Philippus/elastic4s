@@ -1,4 +1,5 @@
 {
+    "version": true,
     "query": {
         "dis_max": {
             "tie_breaker": 1.2,

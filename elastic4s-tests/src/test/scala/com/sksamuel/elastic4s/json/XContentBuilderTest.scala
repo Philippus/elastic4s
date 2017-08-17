@@ -54,7 +54,7 @@ class XContentBuilderTest extends FunSuite with Matchers {
   }
 
   test("should support long fields") {
-    XContentFactory.obj().field("long", 91118592743568234L).string shouldBe """{"long":9.111859274356824E16}"""
+    XContentFactory.obj().field("long", 91118592743568234L).string shouldBe """{"long":91118592743568234}"""
   }
 
   test("should support boolean fields") {

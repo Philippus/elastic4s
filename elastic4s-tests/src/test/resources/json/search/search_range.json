@@ -1,10 +1,11 @@
 {
+    "version": true,
     "size": 5,
     "query": {
         "range": {
             "coldplay": {
-                "gte": 4.0,
-                "lt": 10.0,
+                "gte": 4,
+                "lt": 10,
                 "boost": 1.2
             }
         }

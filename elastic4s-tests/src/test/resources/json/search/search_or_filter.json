@@ -1,21 +1,22 @@
 {
-   "post_filter":{
-      "or":{
-         "filters":[
-            {
-               "term":{
-                  "singer":"chris"
-               }
-            },
-            {
-               "term":{
-                  "singer":"sammy"
-               }
-            }
-         ],
-         "_name":"my-filter",
-         "_cache":true,
-         "_cache_key":"chris-or-sammy"
-      }
-   }
+    "version": true,
+    "post_filter": {
+        "or": {
+            "filters": [
+                {
+                    "term": {
+                        "singer": "chris"
+                    }
+                },
+                {
+                    "term": {
+                        "singer": "sammy"
+                    }
+                }
+            ],
+            "_name": "my-filter",
+            "_cache": true,
+            "_cache_key": "chris-or-sammy"
+        }
+    }
 }

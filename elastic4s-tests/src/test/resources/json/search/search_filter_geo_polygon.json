@@ -1,22 +1,23 @@
 {
-  "post_filter": {
-    "geo_polygon": {
-      "distance": {
-        "points": [
-            {
-                "lat": 10.0,
-                "lon": 10.0
-            },
-            {
-                "lat": 20.0,
-                "lon": 20.0
-            },
-            {
-                "lat": 30.0,
-                "lon": 30.0
+    "version": true,
+    "post_filter": {
+        "geo_polygon": {
+            "distance": {
+                "points": [
+                    {
+                        "lat": 10.0,
+                        "lon": 10.0
+                    },
+                    {
+                        "lat": 20.0,
+                        "lon": 20.0
+                    },
+                    {
+                        "lat": 30.0,
+                        "lon": 30.0
+                    }
+                ]
             }
-        ]
-      }
+        }
     }
-  }
 }
