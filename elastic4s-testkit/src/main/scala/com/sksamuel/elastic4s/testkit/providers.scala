@@ -63,12 +63,12 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
 
     } catch {
       case NonFatal(e) =>
-        println(s"Creating new local node")
 
-        val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
-        val pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
+        def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
+        def pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
 
         def createLocalNode(timesTried: Int): LocalNode = {
+          println(s"Creating new local node")
           Try(LocalNode("localnode-cluster", pathHome.toAbsolutePath.toString)) match {
             case Failure(_: IllegalStateException) if timesTried < 5 => createLocalNode(timesTried + 1)
             case Success(okNode) => okNode

@@ -12,7 +12,7 @@ case class TermVectorsResult(original: TermVectorsResponse) {
 
   def id: String = original.getId
   def index: String = original.getIndex
-  def took: FiniteDuration = original.getTookInMillis.millis
+  def took: FiniteDuration = original.getTook.millis.millis
   def `type`: String = original.getType
   def version: Long = original.getVersion
   def artifical: Boolean = original.isArtificial

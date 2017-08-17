@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.explain
 
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}

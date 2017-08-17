@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ScriptBuilder
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.range.ip.IpRangeAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.range.IpRangeAggregationBuilder
 
 import scala.collection.JavaConverters._
 

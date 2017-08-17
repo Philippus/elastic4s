@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http
 
 import java.nio.charset.Charset
 
-import org.apache.http.client.config.RequestConfig
-import org.apache.http.entity.{ContentType, StringEntity}
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
+import org.elasticsearch.client.http.client.config.RequestConfig
+import org.elasticsearch.client.http.entity.{ContentType, StringEntity}
+import org.elasticsearch.client.http.impl.nio.client
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
@@ -15,7 +15,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
 
   import scala.collection.JavaConverters._
 
-  private def future(callback: ResponseListener => Unit): Future[HttpResponse] = {
+  private def future(callback: ResponseListener => Any): Future[HttpResponse] = {
     val p = Promise[HttpResponse]()
     callback(new ResponseListener {
 
@@ -52,6 +52,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
                      params: Map[String, Any],
                      entity: HttpEntity): Future[HttpResponse] = {
     logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+
     val callback = client.performRequestAsync(
       method,
       endpoint,
@@ -72,9 +73,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
   *
   */
 object NoOpRequestConfigCallback extends RequestConfigCallback {
-  override def customizeRequestConfig(requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = {
-    requestConfigBuilder
-  }
+  override def customizeRequestConfig(requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = requestConfigBuilder
 }
 
 /**
@@ -85,7 +84,5 @@ object NoOpRequestConfigCallback extends RequestConfigCallback {
   *
   */
 object NoOpHttpClientConfigCallback extends HttpClientConfigCallback {
-  override def customizeHttpClient(httpAsyncClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = {
-    httpAsyncClientBuilder
-  }
+  override def customizeHttpClient(httpClientBuilder: client.HttpAsyncClientBuilder): client.HttpAsyncClientBuilder = httpClientBuilder
 }

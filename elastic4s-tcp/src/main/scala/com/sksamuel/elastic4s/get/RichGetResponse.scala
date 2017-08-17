@@ -4,7 +4,7 @@ import java.util
 
 import com.sksamuel.elastic4s.Hit
 import org.elasticsearch.action.get.GetResponse
-import org.elasticsearch.index.get.GetField
+import org.elasticsearch.common.document.DocumentField
 
 import scala.collection.JavaConverters._
 
@@ -12,10 +12,10 @@ case class RichGetResponse(original: GetResponse) extends Hit {
 
   // java method aliases
   @deprecated("use .java", "5.0.0")
-  def getField(name: String): GetField = original.getField(name)
+  def getField(name: String): DocumentField = original.getField(name)
 
   @deprecated("use sourceAsMap", "5.0.0")
-  def getFields: util.Map[String, GetField] = original.getFields
+  def getFields: util.Map[String, DocumentField] = original.getFields
 
   @deprecated("use .java", "5.0.0")
   def getId: String = id
@@ -39,7 +39,7 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   override def `type`: String = original.getType
   override def version: Long = original.getVersion
 
-  private def getFieldToHitField(f: GetField) = new HitField {
+  private def getFieldToHitField(f: DocumentField) = new HitField {
     override def name: String = f.getName
     override def value: AnyRef = f.getValue
     override def values: Seq[AnyRef] = Option(f.getValues).map(_.asScala).getOrElse(Nil)
@@ -66,7 +66,7 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   override def exists: Boolean = original.isExists
 
   @deprecated("Use the source methods instead", "5.0.0")
-  def iterator: Iterator[GetField] = original.iterator.asScala
+  def iterator: Iterator[DocumentField] = original.iterator.asScala
 }
 
 

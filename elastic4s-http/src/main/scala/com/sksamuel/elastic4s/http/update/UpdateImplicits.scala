@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.Try

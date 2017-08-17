@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Failure, Try}

@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder
-import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
+import org.elasticsearch.search.aggregations.bucket.terms.{IncludeExclude, TermsAggregationBuilder}
 import org.elasticsearch.search.aggregations.{AggregationBuilders, BucketOrder}
 
 import scala.collection.JavaConverters._

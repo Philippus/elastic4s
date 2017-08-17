@@ -12,7 +12,7 @@ import com.sksamuel.elastic4s.searches.sort.{ScriptSortType, SortMode, SortOrder
 import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
 import com.sksamuel.elastic4s.searches.{GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
 import org.elasticsearch.action.support.WriteRequest
-import org.elasticsearch.common.lucene.search.function.{FieldValueFactorFunction, FiltersFunctionScoreQuery}
+import org.elasticsearch.common.lucene.search.function.{FieldValueFactorFunction, FunctionScoreQuery}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.search.aggregations.BucketOrder
 
@@ -100,14 +100,14 @@ object EnumConversions {
     }
   }
 
-  implicit def functionScoreQueryScoreMode(mode: FunctionScoreQueryScoreMode): FiltersFunctionScoreQuery.ScoreMode = {
+  implicit def functionScoreQueryScoreMode(mode: FunctionScoreQueryScoreMode): FunctionScoreQuery.ScoreMode = {
     mode match {
-      case FunctionScoreQueryScoreMode.Avg => FiltersFunctionScoreQuery.ScoreMode.AVG
-      case FunctionScoreQueryScoreMode.First => FiltersFunctionScoreQuery.ScoreMode.FIRST
-      case FunctionScoreQueryScoreMode.Max => FiltersFunctionScoreQuery.ScoreMode.MAX
-      case FunctionScoreQueryScoreMode.Min => FiltersFunctionScoreQuery.ScoreMode.MIN
-      case FunctionScoreQueryScoreMode.Multiply => FiltersFunctionScoreQuery.ScoreMode.MULTIPLY
-      case FunctionScoreQueryScoreMode.Sum => FiltersFunctionScoreQuery.ScoreMode.SUM
+      case FunctionScoreQueryScoreMode.Avg => FunctionScoreQuery.ScoreMode.AVG
+      case FunctionScoreQueryScoreMode.First => FunctionScoreQuery.ScoreMode.FIRST
+      case FunctionScoreQueryScoreMode.Max => FunctionScoreQuery.ScoreMode.MAX
+      case FunctionScoreQueryScoreMode.Min => FunctionScoreQuery.ScoreMode.MIN
+      case FunctionScoreQueryScoreMode.Multiply => FunctionScoreQuery.ScoreMode.MULTIPLY
+      case FunctionScoreQueryScoreMode.Sum => FunctionScoreQuery.ScoreMode.SUM
     }
   }
 

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.aggs
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.significant.SignificantTermsAggregationBuilder
-import org.elasticsearch.search.aggregations.bucket.terms.support.IncludeExclude
+import org.elasticsearch.search.aggregations.bucket.terms.IncludeExclude
 
 import scala.collection.JavaConverters._
 

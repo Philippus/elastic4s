@@ -29,7 +29,6 @@ object CommonFieldBuilder {
 
     field.docValues.foreach(builder.field("doc_values", _))
     field.enabled.foreach(builder.field("enabled", _))
-    field.includeInAll.foreach(builder.field("include_in_all", _))
     field.index.foreach(builder.field("index", _))
     field.normalizer.foreach(builder.field("normalizer", _))
     field.norms.foreach(builder.field("norms", _))

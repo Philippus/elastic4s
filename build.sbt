@@ -21,10 +21,10 @@ lazy val root = Project("elastic4s", file("."))
     jackson,
     json4s,
     playjson,
-    sprayjson,
-    //  streams,
-    //  httpstreams,
-    xpacksecurity
+    sprayjson
+    // streams,
+    // httpstreams,
+    // xpacksecurity
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -74,25 +74,21 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   .settings(
     name := "elastic4s-http",
     libraryDependencies ++= Seq(
-      "org.elasticsearch.client"      % "rest"                    % ElasticsearchVersion,
-      "org.apache.httpcomponents"     % "httpclient"              % "4.2.5",
-      "org.apache.httpcomponents"     % "httpcore-nio"            % "4.2.5",
-      "org.apache.httpcomponents"     % "httpcore"                % "4.2.5",
-      "org.apache.httpcomponents"     % "httpasyncclient"         % "4.1.3",
-      "org.apache.logging.log4j"      % "log4j-api"               % Log4jVersion  % "test",
-      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
-      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala"    % JacksonVersion exclude("org.scala-lang", "scala-library")
+      "org.elasticsearch.client" % "elasticsearch-rest-client" % ElasticsearchVersion,
+      "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test",
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
     )
   )
   .dependsOn(core)
 
-lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
-  .settings(
-    name := "elastic4s-xpack-security",
-    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
-    libraryDependencies += "org.elasticsearch.client" % "x-pack-transport" % ElasticsearchVersion
-  ).dependsOn(tcp)
+//lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
+//  .settings(
+//    name := "elastic4s-xpack-security",
+//    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
+//    libraryDependencies += "org.elasticsearch.client" % "x-pack-transport" % ElasticsearchVersion
+//  ).dependsOn(tcp)
 
 lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
@@ -175,8 +171,10 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.7" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.7" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.8.2" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.8.2" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.8.2" % "test"
+
     ),
     fork in Test := false,
     parallelExecution in Test := false,

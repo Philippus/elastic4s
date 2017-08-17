@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.values.Shards
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 

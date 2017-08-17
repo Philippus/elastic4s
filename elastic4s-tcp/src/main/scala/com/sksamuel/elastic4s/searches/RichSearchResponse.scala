@@ -30,8 +30,8 @@ case class RichSearchResponse(original: SearchResponse) {
   def successfulShards: Int = original.getSuccessfulShards
   def shardFailures: Array[ShardSearchFailure] = Option(original.getShardFailures).getOrElse(Array.empty)
 
-  def tookInMillis: Long = original.getTookInMillis
-  def took: Duration = original.getTookInMillis.millis
+  def tookInMillis: Long = original.getTook.millis
+  def took: Duration = original.getTook.millis.millis
 
   def aggregations: RichAggregations = RichAggregations(original.getAggregations)
 
@@ -66,5 +66,5 @@ case class RichSearchResponse(original: SearchResponse) {
   def getTook: TimeValue = original.getTook
 
   @deprecated("use tookInMillis", "5.0.0")
-  def getTookInMillis: Long = original.getTookInMillis
+  def getTookInMillis: Long = original.getTook.getMillis
 }

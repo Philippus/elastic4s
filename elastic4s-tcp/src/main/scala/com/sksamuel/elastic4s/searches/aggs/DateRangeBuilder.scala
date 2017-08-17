@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ScriptBuilder
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.range.date.DateRangeAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.range.DateRangeAggregationBuilder
 
 object DateRangeBuilder {
 

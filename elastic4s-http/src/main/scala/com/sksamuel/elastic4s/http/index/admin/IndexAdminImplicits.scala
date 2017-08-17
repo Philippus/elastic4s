@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStat
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Success, Try}

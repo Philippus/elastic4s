@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.get.HitField
-import org.elasticsearch.search.SearchHitField
+import org.elasticsearch.common.document.DocumentField
 
 import scala.collection.JavaConverters._
 
-case class RichSearchHitField(java: SearchHitField) extends HitField {
+case class RichSearchHitField(java: DocumentField) extends HitField {
 
   override def name: String = java.getName
   override def value: AnyRef = java.getValue

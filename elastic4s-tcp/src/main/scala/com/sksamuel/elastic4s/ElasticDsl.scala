@@ -34,7 +34,6 @@ import scala.language.implicitConversions
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
   extends ElasticApi
-    with FieldStatsDsl
     with PercolateDsl
     with SettingsDsl
     with SnapshotDsl
@@ -507,12 +506,6 @@ trait ElasticDsl
 
     @deprecated("use fieldSort(field)", "5.0.0")
     def sort(field: String): FieldSortDefinition = FieldSortDefinition(field)
-
-    @deprecated("use fieldStats(fields)", "5.0.0")
-    def stats(fields: String*): FieldStatsDefinition = FieldStatsDefinition(fields = fields)
-
-    @deprecated("use fieldStats(fields)", "5.0.0")
-    def stats(fields: Iterable[String]): FieldStatsDefinition = FieldStatsDefinition(fields = fields.toSeq)
   }
 
   case object validate {

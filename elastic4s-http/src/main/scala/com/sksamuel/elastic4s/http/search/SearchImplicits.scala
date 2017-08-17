@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClien
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.Try

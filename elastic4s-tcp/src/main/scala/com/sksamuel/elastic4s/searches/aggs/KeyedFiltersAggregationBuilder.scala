@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregationBuilder
-import org.elasticsearch.search.aggregations.bucket.filters.FiltersAggregator.KeyedFilter
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregator.KeyedFilter
 
 object KeyedFiltersAggregationBuilder {
 

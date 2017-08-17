@@ -2,46 +2,42 @@ package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DualClientTests
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 
 import scala.util.Try
 
-class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualClientTests {
+class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DiscoveryLocalNodeProvider {
 
-  override protected def beforeRunTests(): Unit = {
-
-    Try {
-      execute {
-        deleteIndex("coldplay")
-      }.await
-    }
-
-    execute {
-      createIndex("coldplay").shards(2).mappings(
-        mapping("albums").fields(
-          textField("name").stored(true),
-          intField("year").stored(true)
-        )
-      )
+  Try {
+    http.execute {
+      deleteIndex("coldplay")
     }.await
-
-    execute(
-      bulk(
-        indexInto("coldplay" / "albums") id 1 fields("name" -> "parachutes", "year" -> 2000),
-        indexInto("coldplay" / "albums") id 3 fields("name" -> "x&y", "year" -> 2005),
-        indexInto("coldplay" / "albums") id 5 fields("name" -> "mylo xyloto", "year" -> 2011),
-        indexInto("coldplay" / "albums") id 7 fields("name" -> "ghost stories", "year" -> 2015)
-      ).refresh(RefreshPolicy.Immediate)
-    ).await
   }
+
+  http.execute {
+    createIndex("coldplay").shards(2).mappings(
+      mapping("albums").fields(
+        textField("name").stored(true),
+        intField("year").stored(true)
+      )
+    )
+  }.await
+
+  http.execute(
+    bulk(
+      indexInto("coldplay" / "albums") id 1 fields("name" -> "parachutes", "year" -> 2000),
+      indexInto("coldplay" / "albums") id 3 fields("name" -> "x&y", "year" -> 2005),
+      indexInto("coldplay" / "albums") id 5 fields("name" -> "mylo xyloto", "year" -> 2011),
+      indexInto("coldplay" / "albums") id 7 fields("name" -> "ghost stories", "year" -> 2015)
+    ).refresh(RefreshPolicy.Immediate)
+  ).await
 
   "a multiget request" should "retrieve documents by id" in {
 
-    val resp = execute(
+    val resp = http.execute(
       multiget(
         get(3).from("coldplay/albums"),
         get(5) from "coldplay/albums",
@@ -63,7 +59,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualC
 
   it should "set exists=false for missing documents" in {
 
-    val resp = execute(
+    val resp = http.execute(
       multiget(
         get(3).from("coldplay/albums"),
         get(711111) from "coldplay/albums"
@@ -77,7 +73,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualC
 
   it should "retrieve documents by id with selected fields" in {
 
-    val resp = execute(
+    val resp = http.execute(
       multiget(
         get(3) from "coldplay/albums" storedFields("name", "year"),
         get(5) from "coldplay/albums" storedFields "name"
@@ -91,7 +87,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DualC
 
   it should "retrieve documents by id with fetchSourceContext" in {
 
-    val resp = execute(
+    val resp = http.execute(
       multiget(
         get(3) from "coldplay/albums" fetchSourceContext Seq("name", "year"),
         get(5) from "coldplay/albums" fetchSourceContext Seq("name")

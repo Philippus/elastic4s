@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import com.sksamuel.exts.collection.Maps
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 

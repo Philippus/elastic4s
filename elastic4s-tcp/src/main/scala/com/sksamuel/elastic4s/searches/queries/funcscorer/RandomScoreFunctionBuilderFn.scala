@@ -4,7 +4,7 @@ import org.elasticsearch.index.query.functionscore.{RandomScoreFunctionBuilder, 
 
 object RandomScoreFunctionBuilderFn {
   def apply(random: RandomScoreFunctionDefinition): RandomScoreFunctionBuilder = {
-    val builder = ScoreFunctionBuilders.randomFunction(random.seed)
+    val builder = ScoreFunctionBuilders.randomFunction().seed(random.seed)
     random.weight.map(_.toFloat).foreach(builder.setWeight)
     builder
   }

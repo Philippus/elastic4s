@@ -16,7 +16,6 @@ trait FieldDefinition {
   def enabled: Option[Boolean]
   def fields: Seq[FieldDefinition]
   def index: Option[String]
-  def includeInAll: Option[Boolean]
   def norms: Option[Boolean]
   def normalizer: Option[String]
   def nullValue: Option[Any]

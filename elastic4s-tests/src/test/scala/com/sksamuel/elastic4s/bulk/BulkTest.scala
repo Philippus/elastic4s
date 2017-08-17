@@ -2,52 +2,50 @@ package com.sksamuel.elastic4s.bulk
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualClientTests with DiscoveryLocalNodeProvider {
+class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
-  override protected def beforeRunTests(): Unit = {
+  private val indexname = "bulkytest"
 
-    Try {
-      execute {
-        deleteIndex("elements")
-      }.await
-    }
-
-    execute {
-      createIndex(indexname).mappings {
-        mapping("elements").fields(
-          intField("atomicweight").stored(true),
-          textField("name").stored(true)
-        )
-      }
+  Try {
+    http.execute {
+      deleteIndex(indexname)
     }.await
   }
 
+  http.execute {
+    createIndex(indexname).mappings {
+      mapping("elements").fields(
+        intField("atomicweight").stored(true),
+        textField("name").stored(true)
+      )
+    }
+  }.await
+
   "bulk request" should "handle multiple index operations" in {
 
-    execute {
+    http.execute {
       bulk(
         indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
         indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
-    execute {
+    http.execute {
       get(2).from(indexname / "elements")
     }.await.found shouldBe true
 
-    execute {
+    http.execute {
       get(4).from(indexname / "elements")
     }.await.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
-    val result = execute {
+    val result = http.execute {
       bulk(
         update(2).in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
         indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
@@ -66,36 +64,36 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualClientTes
 
   it should "handle multiple update operations" in {
 
-    execute {
+    http.execute {
       bulk(
         update(2).in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
         update(4).in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
-    execute {
+    http.execute {
       get(2).from(indexname / "elements").storedFields("name")
     }.await.storedField("name").value shouldBe "carbon"
 
-    execute {
+    http.execute {
       get(4).from(indexname / "elements").storedFields("name")
     }.await.storedField("name").value shouldBe "oxygen"
   }
 
   it should "handle multiple delete operations" in {
 
-    execute {
+    http.execute {
       bulk(
         delete(2).from(indexname / "elements"),
         delete(4).from(indexname / "elements")
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
-    execute {
+    http.execute {
       get(2).from(indexname / "elements")
     }.await.found shouldBe false
 
-    execute {
+    http.execute {
       get(4).from(indexname / "elements")
     }.await.found shouldBe false
   }

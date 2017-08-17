@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.range.geodistance.GeoDistanceAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.range.GeoDistanceAggregationBuilder
 
 import scala.collection.JavaConverters._
 

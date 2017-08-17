@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.exts.Logging
-import org.apache.http.entity.ContentType
+import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 

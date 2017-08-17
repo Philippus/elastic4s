@@ -41,7 +41,7 @@ object Build extends AutoPlugin {
     crossScalaVersions := Seq("2.11.8", "2.12.2"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
-    resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/89f6d17",
+    resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/00142c9",
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     fork := false,

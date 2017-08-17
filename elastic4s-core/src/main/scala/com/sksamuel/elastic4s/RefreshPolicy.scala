@@ -14,12 +14,7 @@ object RefreshPolicy {
   case object Immediate extends RefreshPolicy
   case object WaitFor extends RefreshPolicy
 
-  @deprecated("use Immediate", "6.0.0")
   def IMMEDIATE = Immediate
-
-  @deprecated("use WaitFor", "6.0.0")
   def WAIT_UNTIL = WaitFor
-
-  @deprecated("use None", "6.0.0")
   def NONE = None
 }
