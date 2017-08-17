@@ -28,6 +28,14 @@ object SearchBodyBuilderFn {
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
+    //
+
+    if (request.slice.nonEmpty) {
+      builder.startObject("slice")
+      builder.field("id", request.slice.get._1)
+      builder.field("max", request.slice.get._2)
+      builder.endObject()
+    }
 
     if (request.explain.contains(true)) {
       builder.field("explain", true)
@@ -64,11 +72,11 @@ object SearchBodyBuilderFn {
     }
 
     if (request.sorts.nonEmpty) {
-			builder.startArray("sort")
-			// Workaround for bug where separator is not added with rawValues
+      builder.startArray("sort")
+      // Workaround for bug where separator is not added with rawValues
       val arrayBody = request.sorts.map(s => SortBuilderFn(s).string).mkString(",")
       builder.rawValue(arrayBody)
-			builder.endArray()
+      builder.endArray()
     }
 
     request.trackScores.map(builder.field("track_scores", _))
