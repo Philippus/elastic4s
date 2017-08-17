@@ -90,7 +90,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
   implicit object TypeExistsHttpExecutable extends HttpExecutable[TypesExistsDefinition, TypeExistsResponse] {
 
     override def execute(client: HttpRequestClient, request: TypesExistsDefinition): Future[HttpResponse] = {
-      val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
+      val endpoint = s"/${request.indexes.mkString(",")}/_mapping/${request.types.mkString(",")}"
       client.async("HEAD", endpoint, Map.empty)
     }
 

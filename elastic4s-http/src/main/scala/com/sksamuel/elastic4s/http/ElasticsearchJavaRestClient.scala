@@ -27,6 +27,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
           HttpEntity(body, contentEncoding)
         }
         val headers = r.getHeaders.map { header => header.getName -> header.getValue }.toMap
+        logger.debug(s"Http Response $r")
         HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
       }
 

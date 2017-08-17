@@ -10,7 +10,6 @@ case class IndexResponse(@JsonProperty("_id") id: String,
                          @JsonProperty("_version") version: Long,
                          result: String,
                          @JsonProperty("forced_refresh") forcedRefresh: Boolean,
-                         shards: Shards,
-                         created: Boolean) {
+                         shards: Shards) {
   def ref = DocumentRef(index, `type`, id)
 }

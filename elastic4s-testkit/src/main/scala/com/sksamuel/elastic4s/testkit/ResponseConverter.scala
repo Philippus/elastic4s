@@ -65,8 +65,7 @@ object ResponseConverterImplicits {
         response.version,
         response.original.getResult.getLowercase,
         response.original.forcedRefresh(),
-        Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful),
-        response.created
+        Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful)
       )
     }
   }
