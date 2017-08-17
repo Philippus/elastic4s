@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.Logging
 
@@ -18,7 +18,7 @@ object ElasticJackson {
       }
     }
 
-    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper = JacksonSupport.mapper,
+    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper with ScalaObjectMapper = JacksonSupport.mapper,
                                          manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
       override def read(hit: Hit): Either[Throwable, T] = {
         require(hit.sourceAsString != null)
@@ -32,7 +32,7 @@ object ElasticJackson {
           if (!node.has("_timestamp")) hit.sourceFieldOpt("_timestamp").collect {
             case f => f.toString
           }.foreach(node.put("_timestamp", _))
-          Right(mapper.readValue[T](mapper.writeValueAsBytes(node), manifest.runtimeClass.asInstanceOf[Class[T]]))
+          Right(mapper.readValue[T](mapper.writeValueAsBytes(node)))
         } catch {
           case NonFatal(e) => Left(e)
         }
