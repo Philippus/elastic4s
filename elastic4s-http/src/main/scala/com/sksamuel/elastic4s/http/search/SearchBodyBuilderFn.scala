@@ -24,6 +24,14 @@ object SearchBodyBuilderFn {
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
+    //
+
+    if (request.slice.nonEmpty) {
+      builder.startObject("slice")
+      builder.field("id", request.slice.get._1)
+      builder.field("max", request.slice.get._2)
+      builder.endObject()
+    }
 
     if (request.explain.contains(true)) {
       builder.field("explain", true)

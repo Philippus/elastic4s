@@ -89,6 +89,43 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualElastic
     }
   }
 
+  "a 'searchScroll.slice'" should {
+    "return sliced results" in {
+      val resp1 = execute {
+        search("katebush" / "songs")
+          .slice(0, 2)
+          .query("1985")
+          .scroll("1m")
+          .limit(4)
+          .storedFields("name")
+      }.await
+
+      val resp2 = execute {
+        searchScroll(resp1.scrollId.get).keepAlive(1.minute)
+      }.await
+
+      val resp3 = execute {
+        search("katebush" / "songs")
+          .slice(1, 2)
+          .query("1985")
+          .scroll("1m")
+          .limit(4)
+          .storedFields("name")
+      }.await
+
+      val resp4 = execute {
+        searchScroll(resp3.scrollId.get).keepAlive(1.minute)
+      }.await
+
+      (resp1.hits.hits.length + resp2.hits.hits.length) shouldBe 4
+      (resp3.hits.hits.length + resp4.hits.hits.length) shouldBe 5
+      val merged = Seq(resp1, resp2, resp3, resp4).flatMap(resp => resp.hits.hits.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
+      merged.length shouldBe 9
+      merged.max shouldBe "watching you watching me"
+      merged.min shouldBe "cloudbusting"
+    }
+  }
+
   "a clearScroll" should {
     "clear scrolls" in {
 
