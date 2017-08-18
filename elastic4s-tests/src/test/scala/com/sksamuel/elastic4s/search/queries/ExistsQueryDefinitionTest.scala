@@ -1,12 +1,20 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class ExistsQueryDefinitionTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
-  client.execute(
+  Try {
+    http.execute {
+      deleteIndex("person")
+    }.await
+  }
+
+  http.execute(
     bulk(
       indexInto("person" / "interest") fields(
         "name" -> "reese",
@@ -21,14 +29,14 @@ class ExistsQueryDefinitionTest extends WordSpec with DiscoveryLocalNodeProvider
 
   "exists query" should {
     "match non-null fields" in {
-      client.execute {
+      http.execute {
         search("person" / "interest") postFilter {
           existsQuery("name")
         }
       }.await.totalHits shouldBe 2
     }
     "not match null fields" in {
-      client.execute {
+      http.execute {
         search("person" / "interest") postFilter {
           existsQuery("place")
         }
