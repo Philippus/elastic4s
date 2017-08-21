@@ -109,10 +109,10 @@ object EnumConversions {
 
   def multiValueMode(mode: MultiValueMode): String = {
     mode match {
-      case MultiValueMode.Avg => "AVG"
-      case MultiValueMode.Max => "MAX"
-      case MultiValueMode.Min => "MIN"
-      case MultiValueMode.Sum => "SUM"
+      case MultiValueMode.Avg => "avg"
+      case MultiValueMode.Max => "max"
+      case MultiValueMode.Min => "min"
+      case MultiValueMode.Sum => "sum"
     }
   }
 

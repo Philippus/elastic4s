@@ -37,15 +37,15 @@ class ScoreDslTest extends FlatSpec with JsonSugar {
     actual should matchJsonResource("/json/score/score_random.json")
   }
 
-// note: leaving this commented as it is failing (serializes "some script" value in field "source" instead of "inline").
-//  it should "generate correct json for a script scorer" in {
-//    val req = scriptScore {
-//      script("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
-//    }.weight(0.4)
-//    val builder = ScoreFunctionBuilderFn(req)
-//    val actual = builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).endObject().string()
-//    actual should matchJsonResource("/json/score/score_script.json")
-//  }
+// note: leaving this ignored as it is failing (serializes "some script" value in field "source" instead of "inline").
+  it should "generate correct json for a script scorer" ignore {
+    val req = scriptScore {
+      script("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
+    }.weight(0.4)
+    val builder = ScoreFunctionBuilderFn(req)
+    val actual = builder.toXContent(XContentFactory.jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).endObject().string()
+    actual should matchJsonResource("/json/score/score_script.json")
+  }
 
   it should "generate correct json for a weight function scorer" in {
     val req = weightScore(1.5)

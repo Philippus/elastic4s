@@ -1,0 +1,12 @@
+{
+  "linear": {
+    "myfield": {
+      "origin": "1 2",
+      "scale": "2km",
+      "offset": "200m",
+      "decay": 0.1
+    },
+    "multi_value_mode": "min"
+  },
+  "weight": 0.1
+}

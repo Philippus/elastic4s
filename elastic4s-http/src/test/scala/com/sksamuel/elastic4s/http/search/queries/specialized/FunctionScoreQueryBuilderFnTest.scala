@@ -6,7 +6,7 @@ import org.scalatest.{FunSuite, Matchers}
 
 class FunctionScoreQueryBuilderFnTest extends FunSuite with Matchers with JsonSugar {
 
-  test("guassian scorer") {
+  test("gaussian scorer") {
     val func = FunctionScoreQueryDefinition()
       .boost(1.2)
       .scorers(GaussianDecayScoreDefinition("myfield", "now", "28d").offset(19).decay(1.2))
@@ -14,7 +14,7 @@ class FunctionScoreQueryBuilderFnTest extends FunSuite with Matchers with JsonSu
       .scoreMode(FunctionScoreQueryScoreMode.Max)
       .boostMode(CombineFunction.Multiply)
 
-    FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/guass_scorer.json")
+    FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/gauss_scorer.json")
 
   }
 }
