@@ -113,6 +113,7 @@ object EnumConversions {
       case MultiValueMode.Max => "max"
       case MultiValueMode.Min => "min"
       case MultiValueMode.Sum => "sum"
+      case MultiValueMode.Median => "median"
     }
   }
 

@@ -543,7 +543,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val scorers = Seq(
       randomScore(1234).weight(1.2),
       scriptScore("some script here").weight(0.5),
-      gaussianScore("field1", "1m", "2m").multiValueMode(MultiValueMode.Median),
+      gaussianScore("field1", "1m", "2m").multiValueMode(MultiValueMode.Max),
       fieldFactorScore("field2").factor(1.2)
     )
 

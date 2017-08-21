@@ -23,14 +23,16 @@
                         "script": {
                             "inline": "some script here"
                         }
-                    }
+                    },
+                    "weight": 0.5
                 },
                 {
-                    "gaussian": {
+                    "gauss": {
                         "field1": {
                             "origin": "1m",
                             "scale": "2m"
-                        }
+                        },
+                        "multi_value_mode": "max"
                     }
                 },
                 {
