@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.VersionType
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
-import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode}
+import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode, MultiValueMode}
 import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance.{Arc, Plane}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
 import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
@@ -105,6 +105,16 @@ object EnumConversions {
     case CROSS_FIELDS => "cross_fields"
     case PHRASE => "phrase"
     case PHRASE_PREFIX => "phrase_prefix"
+  }
+
+  def multiValueMode(mode: MultiValueMode): String = {
+    mode match {
+      case MultiValueMode.Avg => "avg"
+      case MultiValueMode.Max => "max"
+      case MultiValueMode.Min => "min"
+      case MultiValueMode.Sum => "sum"
+      case MultiValueMode.Median => "median"
+    }
   }
 
 }

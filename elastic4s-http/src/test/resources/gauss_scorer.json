@@ -6,7 +6,7 @@
         "boost_mode": "multiply",
         "functions": [
             {
-                "gaussian": {
+                "gauss": {
                     "myfield": {
                         "origin": "now",
                         "scale": "28d",

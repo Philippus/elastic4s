@@ -6,7 +6,7 @@
       "offset": "1km",
       "decay": 0.2
     },
-    "multi_value_mode": "MIN"
+    "multi_value_mode": "min"
   },
   "weight": 0.2
 }
