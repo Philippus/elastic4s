@@ -19,8 +19,8 @@ class CatNodesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvide
       catNodes()
     }.await.head
     result.load_1m > 0 shouldBe true
-    result.load_5m > 0 shouldBe true
-    result.load_15m > 0 shouldBe true
+    result.cpu > 0 shouldBe true
+    result.heapPercent > 0 shouldBe true
     result.ramPercent > 0 shouldBe true
   }
 }
