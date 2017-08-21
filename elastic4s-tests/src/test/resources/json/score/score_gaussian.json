@@ -7,5 +7,6 @@
       "decay": 0.2
     },
     "multi_value_mode": "MIN"
-  }
+  },
+  "weight": 0.2
 }

@@ -8,5 +8,6 @@
         "param2": "value2"
       }
     }
-  }
+  },
+  "weight": 0.4
 }
