@@ -8,7 +8,7 @@ case class GeoPolygonQueryDefinition(field: String,
                                      points: Seq[GeoPoint],
                                      ignoreUnmapped: Option[Boolean] = None,
                                      validationMethod: Option[GeoValidationMethod] = None,
-                                     boost: Option[Float] = None,
+                                     boost: Option[Double] = None,
                                      queryName: Option[String] = None) extends QueryDefinition {
 
   def ignoreUnmapped(ignoreUnmapped: Boolean): GeoPolygonQueryDefinition = copy(ignoreUnmapped = ignoreUnmapped.some)
@@ -16,6 +16,6 @@ case class GeoPolygonQueryDefinition(field: String,
   def validationMethod(method: String): GeoPolygonQueryDefinition = validationMethod(GeoValidationMethod.valueOf(method))
   def validationMethod(method: GeoValidationMethod): GeoPolygonQueryDefinition = copy(validationMethod = method.some)
 
-  def boost(boost: Float): GeoPolygonQueryDefinition = copy(boost = Option(boost))
+  def boost(boost: Double): GeoPolygonQueryDefinition = copy(boost = Option(boost))
   def queryName(queryName: String): GeoPolygonQueryDefinition = copy(queryName = Some(queryName))
 }

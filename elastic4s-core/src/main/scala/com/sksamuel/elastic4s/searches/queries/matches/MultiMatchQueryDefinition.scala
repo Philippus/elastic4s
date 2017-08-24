@@ -39,7 +39,7 @@ object ZeroTermsQuery {
 case class MultiMatchQueryDefinition(text: String,
                                      analyzer: Option[String] = None,
                                      cutoffFrequency: Option[Double] = None,
-                                     fields: Seq[(String, Float)] = Nil,
+                                     fields: Seq[(String, Double)] = Nil,
                                      fuzziness: Option[String] = None,
                                      fuzzyRewrite: Option[String] = None,
                                      lenient: Option[Boolean] = None,
@@ -66,9 +66,9 @@ case class MultiMatchQueryDefinition(text: String,
   def boost(boost: Double): MultiMatchQueryDefinition = copy(boost = boost.some)
 
   def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
-  def fields(_fields: Iterable[String]): MultiMatchQueryDefinition = copy(fields = _fields.map(f => (f, -1F)).toSeq)
-  def field(name: String, boost: Float): MultiMatchQueryDefinition = copy(fields = fields :+ (name, boost))
-  def fields(fields: Map[String, Float]): MultiMatchQueryDefinition = copy(fields = fields.toSeq)
+  def fields(_fields: Iterable[String]): MultiMatchQueryDefinition = copy(fields = _fields.map(f => (f, -1D)).toSeq)
+  def field(name: String, boost: Double): MultiMatchQueryDefinition = copy(fields = fields :+ (name, boost))
+  def fields(fields: Map[String, Double]): MultiMatchQueryDefinition = copy(fields = fields.toSeq)
 
   def lenient(l: Boolean): MultiMatchQueryDefinition = copy(lenient = l.some)
   def maxExpansions(max: Int): MultiMatchQueryDefinition = copy(maxExpansions = max.some)

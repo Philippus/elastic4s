@@ -6,7 +6,7 @@
 //case class GeoShapeDefinition(field: String,
 //                              builder: GeoShapeQueryBuilder,
 //                              relation: Option[ShapeRelation] = None,
-//                              boost: Option[Float] = None,
+//                              boost: Option[Double] = None,
 //                              queryName: Option[String] = None,
 //                              strategy: Option[SpatialStrategy] = None,
 //                              indexedShapeIndex: Option[String] = None,
@@ -14,7 +14,7 @@
 //                              ignoreUnmapped: Option[Boolean] = None) extends QueryDefinition {
 //
 //  def relation(relation: ShapeRelation): GeoShapeDefinition = copy(relation = relation.some)
-//  def boost(boost: Float): GeoShapeDefinition = copy(boost = boost.some)
+//  def boost(boost: Double): GeoShapeDefinition = copy(boost = boost.some)
 //  def queryName(queryName: String): GeoShapeDefinition = copy(queryName = queryName.some)
 //  def strategy(strategy: SpatialStrategy): GeoShapeDefinition = copy(strategy = strategy.some)
 //
