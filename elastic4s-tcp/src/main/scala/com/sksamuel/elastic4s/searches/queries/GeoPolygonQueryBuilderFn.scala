@@ -10,7 +10,7 @@ object GeoPolygonQueryBuilderFn {
 
   def apply(q: GeoPolygonQueryDefinition): GeoPolygonQueryBuilder = {
     val builder = QueryBuilders.geoPolygonQuery(q.field, q.points.map(EnumConversions.geo).asJava)
-    q.boost.foreach(builder.boost)
+    q.boost.map(_.toFloat).foreach(builder.boost)
     q.queryName.foreach(builder.queryName)
     q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.setValidationMethod)
     q.ignoreUnmapped.foreach(builder.ignoreUnmapped)

@@ -5,7 +5,7 @@ import org.elasticsearch.index.query.{MatchAllQueryBuilder, MatchNoneQueryBuilde
 object MatchAllQueryBuilder {
   def apply(q: MatchAllQueryDefinition): MatchAllQueryBuilder = {
     val builder = QueryBuilders.matchAllQuery
-    q.boost.foreach(builder.boost)
+    q.boost.map(_.toFloat).foreach(builder.boost)
     q.queryName.foreach(builder.queryName)
     builder
   }
