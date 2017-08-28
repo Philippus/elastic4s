@@ -15,6 +15,7 @@ object HasParentBodyFn {
     if (q.score)
       builder.field("score", true)
     q.boost.foreach(builder.field("boost", _))
+    q.innerHit.foreach(inner => builder.rawField("inner_hits", InnerHitQueryBodyFn(inner)))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()
     builder.endObject()
