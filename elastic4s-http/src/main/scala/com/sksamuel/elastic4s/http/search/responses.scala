@@ -43,7 +43,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
         max_score = v("max_score").asInstanceOf[Double],
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
-            nested = hits("_nested").asInstanceOf[Map[String, AnyRef]],
+            nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             score = hits("_score").asInstanceOf[Double],
             source = hits("_source").asInstanceOf[Map[String, AnyRef]],
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty)
