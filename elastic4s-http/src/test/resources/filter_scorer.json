@@ -1,0 +1,23 @@
+{
+    "function_score": {
+        "functions": [
+            {
+                "gauss": {
+                    "myfield": {
+                        "origin": "now",
+                        "scale": "28d",
+                        "offset": "19",
+                        "decay": 1.2
+                    }
+                },
+                "filter": {
+                    "match_phrase": {
+                        "myfield": {
+                            "query": "foo"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
