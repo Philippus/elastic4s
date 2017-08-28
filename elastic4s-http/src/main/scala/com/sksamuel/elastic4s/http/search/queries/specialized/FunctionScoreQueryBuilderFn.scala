@@ -23,7 +23,11 @@ object FunctionScoreQueryBuilderFn {
     if (q.scorers.nonEmpty) {
       builder.startArray("functions")
       q.scorers.foreach { function =>
-        builder.rawValue(ScoreFunctionBuilderFn.apply(function.score))
+        val scorer = ScoreFunctionBuilderFn.apply(function.score)
+        function.filter.foreach( filter => {
+          scorer.rawField("filter", QueryBuilderFn.apply(filter))
+        })
+        builder.rawValue(scorer)
       }
       builder.endArray()
     }
