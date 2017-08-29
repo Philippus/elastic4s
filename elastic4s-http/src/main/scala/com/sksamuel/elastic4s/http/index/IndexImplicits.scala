@@ -28,6 +28,7 @@ trait IndexImplicits extends IndexShowImplicits {
       request.routing.foreach(params.put("routing", _))
       request.parent.foreach(params.put("parent", _))
       request.timeout.foreach(params.put("timeout", _))
+      request.pipeline.foreach(params.put("pipeline", _))
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
