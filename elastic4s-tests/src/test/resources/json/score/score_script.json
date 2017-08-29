@@ -9,5 +9,10 @@
       }
     }
   },
-  "weight": 0.4
+  "weight": 0.4,
+  "filter": {
+    "match_all": {
+      "boost": 1.0
+    }
+  }
 }

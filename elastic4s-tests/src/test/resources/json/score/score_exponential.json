@@ -8,5 +8,10 @@
     },
     "multi_value_mode": "MIN"
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "filter": {
+    "match_all": {
+      "boost": 1.0
+    }
+  }
 }

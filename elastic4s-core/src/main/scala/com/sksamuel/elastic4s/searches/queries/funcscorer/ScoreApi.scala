@@ -5,11 +5,6 @@ import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 
 trait ScoreApi {
 
-  implicit class RichScorer(scorer: ScoreFunctionDefinition) {
-    def filter(query: QueryDefinition): FilterFunctionDefinition = filterFunction(scorer).filter(query)
-  }
-
-  def filterFunction(scorer: ScoreFunctionDefinition): FilterFunctionDefinition = FilterFunctionDefinition(scorer, None)
 
   def randomScore(seed: Int) = RandomScoreFunctionDefinition(seed)
 

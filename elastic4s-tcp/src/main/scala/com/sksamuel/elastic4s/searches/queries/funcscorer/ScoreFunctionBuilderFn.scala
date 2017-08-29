@@ -11,7 +11,7 @@ object ScoreFunctionBuilderFn {
       case random: RandomScoreFunctionDefinition => RandomScoreFunctionBuilderFn(random)
       case linear: LinearDecayScoreDefinition => LinearDecayScoreBuilderFn(linear)
       case script: ScriptScoreDefinition => ScriptScoreBuilderFn(script)
-      case WeightScoreDefinition(weight) => ScoreFunctionBuilders.weightFactorFunction(weight.toFloat)
+      case WeightScoreDefinition(weight,_) => ScoreFunctionBuilders.weightFactorFunction(weight.toFloat)
     }
   }
 }

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.queries.funcscorer
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 
 case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
-                                        scorers: Seq[FilterFunctionDefinition] = Nil,
+                                        scorers: Seq[ScoreFunctionDefinition] = Nil,
                                         boost: Option[Double] = None,
                                         maxBoost: Option[Double] = None,
                                         minScore: Option[Double] = None,
@@ -29,10 +29,10 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
               rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = scorers(first +: rest)
 
   def scorers(scorers: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition =
-    scoreFuncs(scorers.map(FilterFunctionDefinition(_)))
+    scoreFuncs(scorers)
 
-  def scoreFuncs(first: FilterFunctionDefinition,
-                 rest: FilterFunctionDefinition*): FunctionScoreQueryDefinition = scoreFuncs(first +: rest)
+  def scoreFuncs(first: ScoreFunctionDefinition,
+                 rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = scoreFuncs(first +: rest)
 
-  def scoreFuncs(functions: Iterable[FilterFunctionDefinition]): FunctionScoreQueryDefinition = copy(scorers = functions.toSeq)
+  def scoreFuncs(functions: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition = copy(scorers = functions.toSeq)
 }

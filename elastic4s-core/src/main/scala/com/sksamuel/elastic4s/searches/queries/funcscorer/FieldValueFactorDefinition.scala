@@ -1,14 +1,18 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class FieldValueFactorDefinition(fieldName: String,
                                       factor: Option[Double] = None,
                                       modifier: Option[FieldValueFactorFunctionModifier] = None,
-                                      missing: Option[Double] = None) extends ScoreFunctionDefinition {
+                                      missing: Option[Double] = None,
+                                      override val filter: Option[QueryDefinition] = None) extends ScoreFunctionDefinition {
   def factor(factor: Double): FieldValueFactorDefinition = copy(factor = factor.some)
   def missing(missing: Double): FieldValueFactorDefinition = copy(missing = missing.some)
   def modifier(modifier: FieldValueFactorFunctionModifier): FieldValueFactorDefinition = copy(modifier = modifier.some)
+  def filter(filter: QueryDefinition): FieldValueFactorDefinition = copy(filter = filter.some)
+
 }
 
 sealed trait FieldValueFactorFunctionModifier
