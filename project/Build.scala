@@ -11,8 +11,8 @@ object Build extends AutoPlugin {
   object autoImport {
     val org = "com.sksamuel.elastic4s"
     val AkkaVersion = "2.4.17"
-    val CatsVersion = "0.9.0"
-    val CirceVersion = "0.8.0"
+    val CatsVersion = "1.0.0-MF"
+    val CirceVersion = "0.9.0-M1"
     val CommonsIoVersion = "2.4"
     val ElasticsearchVersion = "6.0.0-beta1"
     val ExtsVersion = "1.51.0"
@@ -54,7 +54,7 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
-      "org.typelevel"                         %% "cats"                     % CatsVersion,
+      "org.typelevel"                         %% "cats-core"                % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion      % "test"
