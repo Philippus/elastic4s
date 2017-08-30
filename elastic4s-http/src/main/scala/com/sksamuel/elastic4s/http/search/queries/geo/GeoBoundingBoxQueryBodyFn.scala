@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition
 object GeoBoundingBoxQueryBodyFn {
 
   def apply(q: GeoBoundingBoxQueryDefinition): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder().startObject().startObject("geo_bounding_box")
+    val builder = XContentFactory.jsonBuilder().startObject("geo_bounding_box")
     builder.startObject(q.field)
 
     q.corners.foreach { corners =>
