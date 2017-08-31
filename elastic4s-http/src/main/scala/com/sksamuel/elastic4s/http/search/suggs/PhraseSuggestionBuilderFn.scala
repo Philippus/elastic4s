@@ -47,7 +47,6 @@ object PhraseSuggestionBuilderFn {
     builder.endObject()
     //end
 
-
     builder
   }
 }

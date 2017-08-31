@@ -1,12 +1,5 @@
 package com.sksamuel.elastic4s.http.search
 
-case class SuggestionEntry(term: String) {
-  def options: Seq[String] = Nil
-  def optionsText: String = ""
-}
-
-
-
 case class SuggestionResult(text: String,
                             offset: Int,
                             length: Int,
@@ -34,7 +27,7 @@ case class CompletionSuggestionOption(private val options: Map[String, Any]) {
   val text: String = options("text").asInstanceOf[String]
   val index: String = options("_index").asInstanceOf[String]
   val `type`: String = options("_type").asInstanceOf[String]
-  val id = options("_id")
+  val id: AnyVal = options("_id").asInstanceOf[AnyVal]
   val score: Double = options("_score").asInstanceOf[Double]
   val source: Option[Map[String, AnyRef]] = options.get("_source").asInstanceOf[Option[Map[String, AnyRef]]]
 }
