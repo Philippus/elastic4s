@@ -29,7 +29,7 @@ case class CompletionSuggestionOption(private val options: Map[String, Any]) {
   val `type`: String = options("_type").asInstanceOf[String]
   val id: AnyVal = options("_id").asInstanceOf[AnyVal]
   val score: Double = options("_score").asInstanceOf[Double]
-  val source: Option[Map[String, AnyRef]] = options.get("_source").asInstanceOf[Option[Map[String, AnyRef]]]
+  val source: Map[String, AnyRef] = options.getOrElse("_source", Map.empty[String, AnyRef]).asInstanceOf[Map[String, AnyRef]]
 }
 
 case class TermSuggestionResult(text: String, offset: Int, length: Int, options: Seq[TermSuggestionOption]) {
