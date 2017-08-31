@@ -11,7 +11,7 @@ import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderTyp
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
-import com.sksamuel.elastic4s.searches.suggestion.{SortBy, StringDistanceImpl, SuggestMode}
+import com.sksamuel.elastic4s.searches.suggestion.{Fuzziness, SortBy, StringDistanceImpl, SuggestMode}
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, QueryRescoreMode, ScoreMode}
 import org.joda.time.DateTimeZone
 
@@ -93,6 +93,8 @@ object EnumConversions {
   def stringDistance(impl: StringDistanceImpl): String = impl.toString
 
   def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = flag.toString.toUpperCase
+
+  def fuzziness(fuzziness: Fuzziness): String = fuzziness.toString
 
   def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
     case ZeroTermsQuery.All => "all"

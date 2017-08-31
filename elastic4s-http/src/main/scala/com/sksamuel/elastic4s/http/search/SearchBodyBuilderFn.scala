@@ -4,10 +4,10 @@ import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
-import com.sksamuel.elastic4s.http.search.suggs.TermSuggestionBuilderFn
+import com.sksamuel.elastic4s.http.search.suggs.{CompletionSuggestionBuilderFn, TermSuggestionBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, TermSuggestionDefinition}
 
 object SearchBodyBuilderFn {
 
@@ -90,6 +90,7 @@ object SearchBodyBuilderFn {
       request.globalSuggestionText.foreach(builder.field("text", _))
       request.suggs.foreach {
         case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
+        case completion: CompletionSuggestionDefinition => builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
       }
       builder.endObject()
     }
