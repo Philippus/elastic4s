@@ -90,4 +90,7 @@ trait AggregationApi {
 
   def valueCountAgg(name: String, field: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name).field(field)
   def valueCountAggregation(name: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name)
+
+  def samplerAgg(name: String): SamplerAggregationDefinition = SamplerAggregationDefinition(name)
+  def samplerAggregation(name: String): SamplerAggregationDefinition = SamplerAggregationDefinition(name)
 }
