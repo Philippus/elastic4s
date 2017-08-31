@@ -33,6 +33,7 @@ object AggregationBuilderFn {
     case agg: PercentilesAggregationDefinition => PercentilesAggregationBuilder(agg).asLeft
     case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg).asLeft
     case agg: ReverseNestedAggregationDefinition => ReverseNestedAggregationBuilder(agg).asLeft
+    case agg: SamplerAggregationDefinition => SamplerAggregationBuilder(agg).asLeft
     case agg: ScriptedMetricAggregationDefinition => ScriptedMetricAggregationBuilder(agg).asLeft
     case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg).asLeft
     case agg: StatsAggregationDefinition => StatsAggregationBuilder(agg).asLeft
