@@ -5,12 +5,20 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
 import org.scalatest.WordSpec
 
+import scala.util.Try
+
 class RangeQueryHttpTest
   extends WordSpec
     with HttpElasticSugar
     with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
+
+  Try {
+    http.execute {
+      ElasticDsl.deleteIndex("rangequeryhttptest")
+    }.await
+  }
 
   http.execute {
     createIndex("rangequeryhttptest").mappings(

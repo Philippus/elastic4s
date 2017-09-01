@@ -1,9 +1,18 @@
 package com.sksamuel.elastic4s.search
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class FieldNamesFieldTest extends FlatSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex("space")
+    }.await
+  }
 
   client.execute {
     createIndex("space")

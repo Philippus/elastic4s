@@ -6,7 +6,13 @@ import com.sksamuel.elastic4s.searches.queries.{ArtificialDocument, MoreLikeThis
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  Try {
+    client.execute(ElasticDsl.deleteIndex("drinks")).await
+  }
 
   client.execute {
     createIndex("drinks").mappings (

@@ -5,7 +5,15 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
+import scala.util.Try
+
 class TopHitsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("tophits")
+    }.await
+  }
 
   http.execute {
     createIndex("tophits") mappings {

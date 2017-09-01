@@ -4,7 +4,15 @@ import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    client.execute {
+      deleteIndex("nested")
+    }.await
+  }
 
   client.execute {
     createIndex("nested").mappings(

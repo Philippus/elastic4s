@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
 
 import scala.concurrent.duration._
+import scala.util.Try
 
 class SearchIteratorTest
   extends WordSpec
@@ -16,6 +17,12 @@ class SearchIteratorTest
     with ElasticDsl {
 
   implicit val duration: FiniteDuration = 10.seconds
+
+  Try {
+    http.execute {
+      ElasticDsl.deleteIndex("searchiterator")
+    }.await
+  }
 
   http.execute {
     createIndex("searchiterator").mappings(

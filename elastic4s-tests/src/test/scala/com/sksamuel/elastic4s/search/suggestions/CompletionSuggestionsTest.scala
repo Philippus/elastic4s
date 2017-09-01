@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.search.suggestions
 
-import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
 import com.sksamuel.elastic4s.searches.suggestion.Fuzziness
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.util.Try
 
 class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider {
 
@@ -13,6 +15,12 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
 
   private val Index = "complsuggest"
   private val indexType = Index / "music"
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex(Index)
+    }.await
+  }
 
   client.execute {
     createIndex(Index).mappings(

@@ -5,7 +5,15 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FunSuite, Matchers}
 
+import scala.util.Try
+
 class AggregationAsStringTest extends FunSuite with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("aggstring")
+    }.await
+  }
 
   http.execute {
     createIndex("aggstring") mappings {

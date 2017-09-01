@@ -4,7 +4,15 @@ import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class MatchQueryTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex("elite")
+    }.await
+  }
 
   client.execute {
     bulk(

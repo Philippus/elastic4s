@@ -4,11 +4,19 @@ import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
 import org.scalatest.WordSpec
 
+import scala.util.Try
+
 class SearchTest
   extends WordSpec
     with DiscoveryLocalNodeProvider
     with ElasticMatchers
     with ElasticDsl {
+
+  Try {
+    client.execute {
+      deleteIndex("musicians")
+    }.await
+  }
 
   client.execute {
     bulk(

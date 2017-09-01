@@ -7,7 +7,15 @@ import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
+import scala.util.Try
+
 class DateHistogramAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("datehistaggs")
+    }.await
+  }
 
   http.execute {
     createIndex("datehistaggs") mappings {

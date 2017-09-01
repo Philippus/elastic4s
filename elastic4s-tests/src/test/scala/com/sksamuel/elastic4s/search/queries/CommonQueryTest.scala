@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class CommonQueryTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
 
   case class Condiment(name: String, desc: String)
@@ -18,6 +20,12 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar with Disc
   // my american wife loves Ranch but I think it's bloody disgusting :)
   val ranch = Condiment("Ranch",
     "Ranch dressing is a type of salad dressing made of some combination of buttermilk, salt, garlic, onion, herbs")
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex("condiments")
+    }.await
+  }
 
   client.execute {
     bulk(

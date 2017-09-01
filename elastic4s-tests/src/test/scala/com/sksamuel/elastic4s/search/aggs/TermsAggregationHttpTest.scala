@@ -7,7 +7,15 @@ import com.sksamuel.elastic4s.searches.aggs.TermsOrder
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
+import scala.util.Try
+
 class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("termsagg")
+    }.await
+  }
 
   http.execute {
     createIndex("termsagg") mappings {

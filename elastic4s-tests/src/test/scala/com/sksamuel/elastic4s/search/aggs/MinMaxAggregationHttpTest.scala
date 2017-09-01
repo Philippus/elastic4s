@@ -5,7 +5,15 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
+import scala.util.Try
+
 class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      deleteIndex("minmaxagg")
+    }.await
+  }
 
   http.execute {
     createIndex("minmaxagg") mappings {

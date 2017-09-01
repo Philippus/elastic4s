@@ -5,7 +5,15 @@ import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FreeSpec, Matchers}
 
+import scala.util.Try
+
 class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+
+  Try {
+    http.execute {
+      ElasticDsl.deleteIndex("valuecount")
+    }.await
+  }
 
   http.execute {
     createIndex("valuecount") mappings {

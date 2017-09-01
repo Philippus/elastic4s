@@ -3,12 +3,20 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.ElasticApi
 import org.scalatest.WordSpec
 
+import scala.util.Try
+
 class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticApi with DiscoveryLocalNodeProvider {
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"
 
   import com.sksamuel.elastic4s.ElasticDsl._
+
+  Try {
+    client.execute {
+      deleteIndex(indexname)
+    }.await
+  }
 
   client.execute {
     createIndex(indexname).mappings(

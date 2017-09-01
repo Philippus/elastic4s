@@ -5,6 +5,8 @@ import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.elasticsearch.search.suggest.phrase.DirectCandidateGeneratorBuilder
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
 
   implicit object SongIndexable extends Indexable[Song] {
@@ -13,6 +15,12 @@ class PhraseSuggestionsTest extends WordSpec with Matchers with ElasticSugar wit
 
   private val Index = "phrasesuggest"
   private val indexType = Index / "music"
+
+  Try {
+    client.execute {
+      ElasticDsl.deleteIndex(Index)
+    }.await
+  }
 
   client.execute {
     createIndex(Index).mappings(
