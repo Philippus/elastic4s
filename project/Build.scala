@@ -37,7 +37,7 @@ object Build extends AutoPlugin {
     ivyConfigurations += config("compileonly").hide,
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
-    scalaVersion := "2.11.8",
+    scalaVersion := "2.12.2",
     crossScalaVersions := Seq("2.11.8", "2.12.2"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,

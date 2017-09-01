@@ -96,6 +96,8 @@ object EnumConversions {
 
   def fuzziness(fuzziness: Fuzziness): String = fuzziness.toString
 
+  def regexpFlag(regexpFlag: RegexpFlag): String = regexpFlag.toString
+
   def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
     case ZeroTermsQuery.All => "all"
     case ZeroTermsQuery.None => "none"
