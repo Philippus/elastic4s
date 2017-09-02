@@ -407,7 +407,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_sort_score.json")
   }
 
-  it should "generate correct json for script sort" ignore {
+  it should "generate correct json for script sort" in {
     val req = search("music") types "bands" sortBy {
       scriptSort(script("document.score").lang("java")) typed "number" order SortOrder
         .DESC nestedPath "a.b.c" sortMode "min"
@@ -415,7 +415,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_sort_script.json")
   }
 
-  it should "generate correct json for script sort with params" ignore {
+  it should "generate correct json for script sort with params" in {
     val req = search("music") types "bands" sortBy {
       scriptSort(script("doc.score")
         .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
