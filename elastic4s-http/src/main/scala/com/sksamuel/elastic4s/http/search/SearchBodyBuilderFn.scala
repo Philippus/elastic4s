@@ -76,16 +76,21 @@ object SearchBodyBuilderFn {
           completion.prefix.foreach(builder.field("prefix", _))
 
           completion.regex.foreach(builder.field("value", _))
+
           builder.startObject("completion")
+
           builder.field("field", completion.fieldname)
+
           completion.analyzer.foreach(builder.field("analyzer", _))
           completion.size.foreach(builder.field("size", _))
           completion.shardSize.foreach(builder.field("shard_size", _))
-          if (completion.regex.isDefined) {
+
+          if(completion.regex.isDefined) {
             builder.startObject("regex")
             completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
             builder.endObject()
           }
+
           builder.startObject("fuzzy")
           completion.fuzziness.map(_.asString()).foreach(builder.field("fuzziness", _))
           completion.fuzzyMinLength.foreach(builder.field("min_length", _))
@@ -93,7 +98,8 @@ object SearchBodyBuilderFn {
           completion.transpositions.foreach(builder.field("transpositions", _))
           completion.unicodeAware.foreach(builder.field("unicode_aware", _))
           builder.endObject()
-          if (completion.contexts.nonEmpty) {
+
+          if(completion.contexts.nonEmpty) {
             builder.startObject("contexts")
             completion.contexts.foreach {
               case (key, value) =>
@@ -138,6 +144,8 @@ object SearchBodyBuilderFn {
           builder.startObject("highlight")
           phrase.preTag.foreach(builder.field("pre_tag", _))
           phrase.postTag.foreach(builder.field("post_tag", _))
+          builder.endObject()
+
           builder.endObject()
       }
     }
