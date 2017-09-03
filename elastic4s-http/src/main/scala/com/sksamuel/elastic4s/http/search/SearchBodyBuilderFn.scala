@@ -72,6 +72,8 @@ object SearchBodyBuilderFn {
           builder.endObject()
           builder.endObject()
         case completion: CompletionSuggestionDefinition =>
+          builder.startObject(completion.name)
+
           completion.text.foreach(builder.field("text", _))
           completion.prefix.foreach(builder.field("prefix", _))
 
@@ -116,10 +118,13 @@ object SearchBodyBuilderFn {
             builder.endObject()
           }
           builder.endObject()
+          builder.endObject()
         case phrase: PhraseSuggestionDefinition =>
+          phrase.text.foreach(builder.field("text", _))
+
+          builder.startObject(phrase.name)
           builder.startObject("phrase")
 
-          phrase.text.foreach(builder.field("text", _))
           builder.field("field", phrase.fieldname)
           phrase.analyzer.foreach(builder.field("analyzer", _))
 
@@ -147,7 +152,9 @@ object SearchBodyBuilderFn {
           builder.endObject()
 
           builder.endObject()
+          builder.endObject()
       }
+      builder.endObject()
     }
 
     if (request.storedFields.nonEmpty) {
