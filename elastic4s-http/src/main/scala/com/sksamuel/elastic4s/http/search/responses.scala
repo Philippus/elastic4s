@@ -70,33 +70,46 @@ case class InnerHit(nested: Map[String, AnyRef],
                     source: Map[String, AnyRef],
                     highlight: Map[String, Seq[String]])
 
-case class SuggestionEntry(term: String) {
-  def options: Seq[String] = Nil
-  def optionsText: String = ""
-}
-
-case class CompletionSuggestionResult(entries: Seq[SuggestionEntry]) {
-  def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
-}
-
-case class PhraseSuggestionResult(entries: Seq[SuggestionEntry]) {
-  def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
-}
-
-case class SuggestionOption(text: String, score: Double, freq: Int)
-
 case class SuggestionResult(text: String,
                             offset: Int,
                             length: Int,
-                            options: Seq[SuggestionOption]) {
-  def toTerm: TermSuggestionResult = TermSuggestionResult(text, offset, length, options)
+                            options: Seq[Map[String, Any]]) {
+  def toCompletion: CompletionSuggestionResult = CompletionSuggestionResult(text, offset, length, options.map(CompletionSuggestionOption))
+  def toTerm: TermSuggestionResult = TermSuggestionResult(text, offset, length, options.map(TermSuggestionOption))
+  def toPhrase: PhraseSuggestionResult = PhraseSuggestionResult(text, offset, length, options.map(PhraseSuggestionOption))
 }
 
-case class TermSuggestionResult(text: String,
-                                offset: Int,
-                                length: Int,
-                                options: Seq[SuggestionOption]) {
+case class PhraseSuggestionResult(text: String, offset: Int, length: Int, options: Seq[PhraseSuggestionOption]) {
   def optionsText: Seq[String] = options.map(_.text)
+}
+
+case class PhraseSuggestionOption(private val options: Map[String, Any]) {
+  val text: String = options("text").asInstanceOf[String]
+  val highlighted: String = options("highlighted").asInstanceOf[String]
+  val score: Double = options("score").asInstanceOf[Double]
+}
+
+case class CompletionSuggestionResult(text: String, offset: Int, length: Int, options: Seq[CompletionSuggestionOption]) {
+  def optionsText: Seq[String] = options.map(_.text)
+}
+
+case class CompletionSuggestionOption(private val options: Map[String, Any]) {
+  val text: String = options("text").asInstanceOf[String]
+  val index: String = options("_index").asInstanceOf[String]
+  val `type`: String = options("_type").asInstanceOf[String]
+  val id: AnyVal = options("_id").asInstanceOf[AnyVal]
+  val score: Double = options("_score").asInstanceOf[Double]
+  val source: Map[String, AnyRef] = options.getOrElse("_source", Map.empty[String, AnyRef]).asInstanceOf[Map[String, AnyRef]]
+}
+
+case class TermSuggestionResult(text: String, offset: Int, length: Int, options: Seq[TermSuggestionOption]) {
+  def optionsText: Seq[String] = options.map(_.text)
+}
+
+case class TermSuggestionOption(private val options: Map[String, Any]) {
+  val text: String = options("text").asInstanceOf[String]
+  val score: Double = options("score").asInstanceOf[Double]
+  val freq: Int = options("freq").asInstanceOf[Int]
 }
 
 case class Bucket(key: String,
@@ -147,8 +160,8 @@ case class SearchResponse(took: Int,
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
-  def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
+  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
 
   def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
