@@ -1,5 +1,6 @@
 {
     "version": true,
+    "preference": "custom-node",
     "sort": [
         {
             "_script": {
