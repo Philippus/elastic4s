@@ -120,9 +120,8 @@ object SearchBodyBuilderFn {
           builder.endObject()
           builder.endObject()
         case phrase: PhraseSuggestionDefinition =>
-          phrase.text.foreach(builder.field("text", _))
-
           builder.startObject(phrase.name)
+          phrase.text.foreach(builder.field("text", _))
           builder.startObject("phrase")
 
           builder.field("field", phrase.fieldname)
