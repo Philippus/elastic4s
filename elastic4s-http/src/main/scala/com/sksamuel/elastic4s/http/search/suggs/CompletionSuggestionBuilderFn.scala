@@ -12,10 +12,7 @@ object CompletionSuggestionBuilderFn {
     completion.text.foreach(builder.field("text", _))
     completion.prefix.foreach(builder.field("prefix", _))
 
-    completion.regex.foreach(builder.field("regex", _))
-    //TODO Can't understand how to format these parameters
-    //completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
-    //completion.regexFlags.map(EnumConversions.regexpFlag).foreach(builder.field("flags", _))
+    completion.regex.foreach(builder.field("value", _))
 
     builder.startObject("completion")
 
@@ -24,6 +21,13 @@ object CompletionSuggestionBuilderFn {
     completion.analyzer.foreach(builder.field("analyzer", _))
     completion.size.foreach(builder.field("size", _))
     completion.shardSize.foreach(builder.field("shard_size", _))
+
+    if(completion.regex.isDefined) {
+      builder.startObject("regex")
+      completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
+      completion.regexFlags.map(EnumConversions.regexpFlag).foreach(builder.field("flags", _))
+      builder.endObject()
+    }
 
     builder.startObject("fuzzy")
     completion.fuzziness.map(EnumConversions.fuzziness).foreach(builder.field("fuzziness", _))
