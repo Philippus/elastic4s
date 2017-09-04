@@ -1,8 +1,31 @@
 package com.sksamuel.elastic4s.searches.suggestion
 
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.common.unit.Fuzziness
 import org.elasticsearch.search.suggest.completion.RegexOptions
+
+sealed trait Fuzziness
+object Fuzziness {
+
+  def fromEdits(edits: Int): Fuzziness = edits match {
+    case 0 => Zero
+    case 1 => One
+    case 2 => Two
+  }
+
+  case object Zero extends Fuzziness {
+    override def toString: String = "0"
+  }
+  case object One extends Fuzziness {
+    override def toString: String = "1"
+  }
+  case object Two extends Fuzziness {
+    override def toString: String = "2"
+  }
+  case object Auto extends Fuzziness {
+    override def toString: String = "AUTO"
+  }
+}
+
 
 case class CompletionSuggestionDefinition(name: String,
                                           fieldname: String,

@@ -94,7 +94,7 @@ object SearchBodyBuilderFn {
           }
 
           builder.startObject("fuzzy")
-          completion.fuzziness.map(_.asString()).foreach(builder.field("fuzziness", _))
+          completion.fuzziness.map(_.toString).foreach(builder.field("fuzziness", _))
           completion.fuzzyMinLength.foreach(builder.field("min_length", _))
           completion.fuzzyPrefixLength.foreach(builder.field("prefix_length", _))
           completion.transpositions.foreach(builder.field("transpositions", _))
