@@ -26,4 +26,14 @@ case class FunctionScoreQueryDefinition(query: Option[QueryDefinition] = None,
                 rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = functions(first +: rest)
 
   def functions(functions: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition = copy(functions = functions.toSeq)
+
+  @deprecated("Use 'functions' instead of this","aaeb522c04733199f4798be9fa26c6c2b1e34d0a")
+  def scorers(first: ScoreFunctionDefinition, rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = functions(first +: rest)
+  @deprecated("Use 'functions' instead of this","aaeb522c04733199f4798be9fa26c6c2b1e34d0a")
+  def scorers(scorers: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition = functions(scorers)
+  @deprecated("Use 'functions' instead of this","aaeb522c04733199f4798be9fa26c6c2b1e34d0a")
+  def scoreFuncs(first: ScoreFunctionDefinition, rest: ScoreFunctionDefinition*): FunctionScoreQueryDefinition = functions(first +: rest)
+  @deprecated("Use 'functions' instead of this","aaeb522c04733199f4798be9fa26c6c2b1e34d0a")
+  def scoreFuncs(functions: Iterable[ScoreFunctionDefinition]): FunctionScoreQueryDefinition = copy(functions = functions.toSeq)
+
 }
