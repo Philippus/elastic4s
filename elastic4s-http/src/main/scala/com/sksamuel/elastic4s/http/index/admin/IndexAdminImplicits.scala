@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.http.index.admin
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.http.index.CreateIndexResponse
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
+import com.sksamuel.elastic4s.http.index.{CreateIndexFailure, CreateIndexResponse}
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -136,7 +137,17 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object CreateIndexHttpExecutable extends HttpExecutable[CreateIndexDefinition, CreateIndexResponse] {
+  implicit object CreateIndexHttpExecutable extends HttpExecutable[CreateIndexDefinition, Either[CreateIndexFailure, CreateIndexResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[CreateIndexFailure, CreateIndexResponse]] {
+      override def doit(response: HttpResponse): Either[CreateIndexFailure, CreateIndexResponse] = response.statusCode match {
+        case 200 | 201 => Right(ResponseHandler.fromEntity[CreateIndexResponse](response.entity.getOrError("Create index responses must have a body")))
+        case 400 | 500 =>
+          val node = ResponseHandler.json(response.entity.get)
+          Left(ResponseHandler.fromNode[CreateIndexFailure](node.get("error")))
+        case _ => sys.error(response.toString)
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: CreateIndexDefinition): Future[HttpResponse] = {
 

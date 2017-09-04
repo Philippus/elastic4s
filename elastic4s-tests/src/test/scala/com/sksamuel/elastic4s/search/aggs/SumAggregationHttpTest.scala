@@ -22,7 +22,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
         intField("age").stored(true)
       )
     }
-  }.await.acknowledged shouldBe true
+  }.await.right.get.acknowledged shouldBe true
 
   http.execute(
     bulk(

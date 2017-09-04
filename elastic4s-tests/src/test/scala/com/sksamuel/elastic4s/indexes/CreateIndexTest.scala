@@ -1,49 +1,46 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
-import com.sksamuel.elastic4s.testkit.DualClientTests
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
+class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
-  override protected def beforeRunTests(): Unit = {
-
-    Try {
-      execute {
-        deleteIndex("foo")
-      }.await
-    }
-
-    Try {
-      execute {
-        deleteIndex("cuisine")
-      }.await
-    }
-
-    Try {
-      execute {
-        deleteIndex("landscape")
-      }.await
-    }
-
-    execute {
-      createIndex("foo").mappings(
-        mapping("bar").fields(
-          textField("baz").fields(
-            textField("inner1") analyzer PatternAnalyzer,
-            textField("inner2")
-          )
-        )
-      )
+  Try {
+    http.execute {
+      deleteIndex("foo")
     }.await
   }
 
+  Try {
+    http.execute {
+      deleteIndex("cuisine")
+    }.await
+  }
+
+  Try {
+    http.execute {
+      deleteIndex("landscape")
+    }.await
+  }
+
+  http.execute {
+    createIndex("foo").mappings(
+      mapping("bar").fields(
+        textField("baz").fields(
+          textField("inner1") analyzer PatternAnalyzer,
+          textField("inner2")
+        )
+      )
+    )
+  }.await
+
   "CreateIndex Http Request" should {
     "return ack" in {
-      val resp = execute {
+      val resp = http.execute {
         createIndex("cuisine").mappings(
           mapping("food").fields(
             textField("name"),
@@ -52,11 +49,26 @@ class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
         ).shards(1).waitForActiveShards(1)
       }.await
 
-      resp.acknowledged shouldBe true
+      resp.right.get.acknowledged shouldBe true
+    }
+
+    "return error object when index already exists" in {
+
+      val resp = http.execute {
+        createIndex("foo").mappings(
+          mapping("a").fields(
+            textField("b")
+          )
+        )
+      }.await
+
+      resp.left.get.`type` shouldBe "resource_already_exists_exception"
+      resp.left.get.index shouldBe "foo"
     }
 
     "create from raw source" in {
-      execute {
+
+      http.execute {
         createIndex("landscape").source(s"""
              {
               "mappings": {
@@ -70,14 +82,7 @@ class CreateIndexTest extends WordSpec with Matchers with DualClientTests  {
               }
              }
            """).shards(1).waitForActiveShards(1)
-      }.await
-
-      val resp = client.execute {
-        getMapping("landscape").types("mountains")
-      }.await
-
-      resp.mappings.keys shouldBe Set("landscape")
-      resp.mappings("landscape").keySet shouldBe Set("mountains")
+      }.await.right.get.acknowledged shouldBe true
     }
   }
 

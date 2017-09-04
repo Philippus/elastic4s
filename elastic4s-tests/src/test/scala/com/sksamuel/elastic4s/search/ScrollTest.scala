@@ -2,52 +2,49 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DualClientTests
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 import scala.util.Try
 
-class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
-  override protected def beforeRunTests(): Unit = {
-
-    Try {
-      execute {
-        deleteIndex("katebush")
-      }.await
-    }
-
-    execute {
-      createIndex("katebush").mappings(
-        mapping("songs").fields(
-          intField("year"),
-          textField("name").fielddata(true).stored(true)
-        )
-      )
-    }.await
-
-    execute {
-      bulk(
-        indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
-        indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985").id("2"),
-        indexInto("katebush/songs").fields("name" -> "wuthering heights", "year" -> "1979").id("3"),
-        indexInto("katebush/songs").fields("name" -> "dream of sheep", "year" -> "1985").id("4"),
-        indexInto("katebush/songs").fields("name" -> "waking the watch", "year" -> "1985").id("5"),
-        indexInto("katebush/songs").fields("name" -> "watching you watching me", "year" -> "1985").id("6"),
-        indexInto("katebush/songs").fields("name" -> "cloudbusting", "year" -> "1985").id("7"),
-        indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985").id("8"),
-        indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985").id("9"),
-        indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985").id("0")
-      ).refresh(RefreshPolicy.Immediate)
+  Try {
+    http.execute {
+      deleteIndex("katebush")
     }.await
   }
+
+  http.execute {
+    createIndex("katebush").mappings(
+      mapping("songs").fields(
+        intField("year"),
+        textField("name").fielddata(true).stored(true)
+      )
+    )
+  }.await
+
+  http.execute {
+    bulk(
+      indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
+      indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985").id("2"),
+      indexInto("katebush/songs").fields("name" -> "wuthering heights", "year" -> "1979").id("3"),
+      indexInto("katebush/songs").fields("name" -> "dream of sheep", "year" -> "1985").id("4"),
+      indexInto("katebush/songs").fields("name" -> "waking the watch", "year" -> "1985").id("5"),
+      indexInto("katebush/songs").fields("name" -> "watching you watching me", "year" -> "1985").id("6"),
+      indexInto("katebush/songs").fields("name" -> "cloudbusting", "year" -> "1985").id("7"),
+      indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985").id("8"),
+      indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985").id("9"),
+      indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985").id("0")
+    ).refresh(RefreshPolicy.Immediate)
+  }.await
 
   "a scroll" should {
     "return all results" in {
 
-      val resp1 = execute {
+      val resp1 = http.execute {
         search("katebush" / "songs")
           .query("1985")
           .scroll("1m")
@@ -57,22 +54,22 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
       }.await
       resp1.hits.hits.map(_.storedField("name").value).toList shouldBe List("top of the city", "cloudbusting")
 
-      val resp2 = execute {
+      val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive("1m")
       }.await
       resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
 
-      val resp3 = execute {
+      val resp3 = http.execute {
         searchScroll(resp2.scrollId.get).keepAlive("1m")
       }.await
       resp3.hits.hits.map(_.storedField("name").value).toList shouldBe List("hounds of love", "under ice")
 
-      val resp4 = execute {
+      val resp4 = http.execute {
         searchScroll(resp3.scrollId.get).keepAlive("1m")
       }.await
       resp4.hits.hits.map(_.storedField("name").value).toList shouldBe List("jig of life", "watching you watching me")
 
-      val resp5 = execute {
+      val resp5 = http.execute {
         searchScroll(resp4.scrollId.get)
       }.await
       resp5.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
@@ -81,7 +78,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
 
   "a 'searchScroll.keepAlive'" should {
     "not interpret FiniteDuration as 'id'" in {
-      val resp1 = execute {
+      val resp1 = http.execute {
         search("katebush" / "songs")
           .query("1985")
           .scroll("1m")
@@ -90,7 +87,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
           .storedFields("name")
       }.await
 
-      val resp2 = execute {
+      val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
       resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
@@ -99,7 +96,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
 
   "a 'searchScroll.slice'" should {
     "return sliced results" in {
-      val resp1 = execute {
+      val resp1 = http.execute {
         search("katebush" / "songs")
           .slice(0, 2)
           .query("1985")
@@ -108,11 +105,11 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
           .storedFields("name")
       }.await
 
-      val resp2 = execute {
+      val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
 
-      val resp3 = execute {
+      val resp3 = http.execute {
         search("katebush" / "songs")
           .slice(1, 2)
           .query("1985")
@@ -121,7 +118,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
           .storedFields("name")
       }.await
 
-      val resp4 = execute {
+      val resp4 = http.execute {
         searchScroll(resp3.scrollId.get).keepAlive(1.minute)
       }.await
 
@@ -144,15 +141,15 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DualClientT
         .sortBy(fieldSort("name"))
         .storedFields("name")
 
-      val resp1 = execute {
+      val resp1 = http.execute {
         searchDefinition
       }.await
 
-      val resp2 = execute {
+      val resp2 = http.execute {
         searchDefinition
       }.await
 
-      val resp = execute {
+      val resp = http.execute {
         clearScroll(resp1.scrollId.get, resp2.scrollId.get)
       }.await
 

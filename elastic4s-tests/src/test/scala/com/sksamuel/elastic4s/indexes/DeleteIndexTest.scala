@@ -1,16 +1,15 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DualClientTests
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualClientTests {
+class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   "delete index request" should {
     "delete index" in {
 
-      execute {
+      http.execute {
         createIndex("languages").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -18,21 +17,21 @@ class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualCl
         ).shards(1).waitForActiveShards(1)
       }.await
 
-      execute {
+      http.execute {
         indexExists("languages")
       }.await.exists shouldBe true
 
-      execute {
+      http.execute {
         ElasticDsl.deleteIndex("languages")
       }.await.acknowledged shouldBe true
 
-      execute {
+      http.execute {
         indexExists("languages")
       }.await.exists shouldBe false
     }
 
     "support multiple indexes" in {
-      execute {
+      http.execute {
         createIndex("languages1").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -40,7 +39,7 @@ class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualCl
         )
       }.await
 
-      execute {
+      http.execute {
         createIndex("languages2").mappings(
           mapping("dialects").fields(
             textField("type")
@@ -48,23 +47,23 @@ class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with DualCl
         )
       }.await
 
-      execute {
+      http.execute {
         indexExists("languages1")
       }.await.exists shouldBe true
 
-      execute {
+      http.execute {
         indexExists("languages2")
       }.await.exists shouldBe true
 
-      execute {
+      http.execute {
         ElasticDsl.deleteIndex("languages1", "languages2")
       }.await.acknowledged shouldBe true
 
-      execute {
+      http.execute {
         indexExists("languages1")
       }.await.exists shouldBe false
 
-      execute {
+      http.execute {
         indexExists("languages2")
       }.await.exists shouldBe false
     }

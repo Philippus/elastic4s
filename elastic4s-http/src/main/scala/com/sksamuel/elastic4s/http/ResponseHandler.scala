@@ -22,6 +22,12 @@ object ResponseHandler extends Logging {
 
   def json(entity: HttpEntity): JsonNode = fromEntity[JsonNode](entity)
 
+  def fromNode[U: Manifest](node: JsonNode): U = {
+    logger.debug(s"Attempting to unmarshall json node to ${manifest.runtimeClass.getName}")
+    implicit val codec = Codec(Charset.defaultCharset)
+    JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
+  }
+
   def fromEntity[U: Manifest](entity: HttpEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
     val charset = entity.contentType.getOrElse("UTF-8")

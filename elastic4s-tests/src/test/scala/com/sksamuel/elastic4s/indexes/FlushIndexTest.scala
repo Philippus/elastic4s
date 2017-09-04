@@ -1,24 +1,32 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.testkit.DualClientTests
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
-class FlushIndexTest extends WordSpec with Matchers with DualClientTests {
+import scala.util.Try
 
-  override protected def beforeRunTests(): Unit = {
-    execute {
-      createIndex(indexname).mappings(
-        mapping("pasta").fields(
-          textField("name")
-        )
-      )
-    }.await
+class FlushIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+
+  private val indexname = "flushindextest"
+
+  Try {
+    http.execute {
+      deleteIndex(indexname)
+    }
   }
+
+  http.execute {
+    createIndex(indexname).mappings(
+      mapping("pasta").fields(
+        textField("name")
+      )
+    )
+  }.await
 
   "flush index" should {
     "acknowledge" in {
-      execute {
+      http.execute {
         flushIndex(indexname)
       }.await.shards.successful > 0 shouldBe true
     }
