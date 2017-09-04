@@ -10,7 +10,7 @@ class FunctionScoreQueryBuilderFnTest extends FunSuite with Matchers with JsonSu
   test("gaussian scorer") {
     val func = FunctionScoreQueryDefinition()
       .boost(1.2)
-      .scorers(GaussianDecayScoreDefinition("myfield", "now", "28d").offset(19).decay(1.2))
+      .functions(GaussianDecayScoreDefinition("myfield", "now", "28d").offset(19).decay(1.2))
       .minScore(12)
       .scoreMode(FunctionScoreQueryScoreMode.Max)
       .boostMode(CombineFunction.Multiply)
@@ -21,7 +21,7 @@ class FunctionScoreQueryBuilderFnTest extends FunSuite with Matchers with JsonSu
 
   test("filter function") {
     val func = FunctionScoreQueryDefinition()
-      .scoreFuncs(
+      .functions(
         GaussianDecayScoreDefinition("myfield", "now", "28d").offset(19).decay(1.2).filter(matchPhraseQuery("myfield", "foo"))
       )
     FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/filter_scorer.json")
