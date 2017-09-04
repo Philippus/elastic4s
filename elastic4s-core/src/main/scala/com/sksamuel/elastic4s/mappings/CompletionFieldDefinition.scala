@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.mappings
 
+import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 case class CompletionFieldDefinition(name: String,
@@ -26,7 +27,8 @@ case class CompletionFieldDefinition(name: String,
                                      searchAnalyzer: Option[String] = None,
                                      similarity: Option[String] = None,
                                      store: Option[Boolean] = None,
-                                     termVector: Option[String] = None
+                                     termVector: Option[String] = None,
+                                     contexts: Seq[ContextField] = Nil
                                     ) extends FieldDefinition {
 
   type T = CompletionFieldDefinition
@@ -64,4 +66,17 @@ case class CompletionFieldDefinition(name: String,
   def preserveSeparators(preserve: Boolean): T = copy(preserveSeparators = preserve.some)
   def preservePositionIncrements(preserve: Boolean): T = copy(preservePositionIncrements = preserve.some)
   def maxInputLength(maxInputLength: Int): T = copy(maxInputLength = maxInputLength.some)
+
+  def contexts(first: ContextField, rest: ContextField*): CompletionFieldDefinition = contexts(first +: rest)
+  def contexts(contexts: Iterable[ContextField]): CompletionFieldDefinition = copy(contexts = this.contexts ++ contexts)
+}
+
+case class ContextField(name: String, `type`: String, path: Option[String] = None, precision: Option[Int] = None) {
+  def path(path: String): ContextField = {
+    copy(path = path.some)
+  }
+
+  def precision(precision: Int): ContextField = {
+    copy(precision = precision.some)
+  }
 }

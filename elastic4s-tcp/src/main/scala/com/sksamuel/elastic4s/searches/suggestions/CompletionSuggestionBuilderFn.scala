@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.suggestions
 
-import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestionDefinition
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, Fuzziness}
+import org.elasticsearch.common.unit
 import org.elasticsearch.common.xcontent.ToXContent
 import org.elasticsearch.search.suggest.SuggestBuilders
 import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext
@@ -22,7 +23,12 @@ object CompletionSuggestionBuilderFn {
     sugg.prefix.foreach { prefix =>
       sugg.fuzziness.fold(builder.prefix(prefix)) { fuzz =>
         val options = new FuzzyOptions.Builder()
-        options.setFuzziness(fuzz)
+        options.setFuzziness(fuzz match {
+          case Fuzziness.Zero => unit.Fuzziness.ZERO
+          case Fuzziness.One => unit.Fuzziness.ONE
+          case Fuzziness.Two => unit.Fuzziness.TWO
+          case Fuzziness.Auto => unit.Fuzziness.AUTO
+        })
         sugg.unicodeAware.foreach(options.setUnicodeAware)
         sugg.fuzzyMinLength.foreach(options.setFuzzyMinLength)
         sugg.fuzzyPrefixLength.foreach(options.setFuzzyPrefixLength)

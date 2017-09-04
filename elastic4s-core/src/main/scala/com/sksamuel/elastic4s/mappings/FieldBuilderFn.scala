@@ -66,6 +66,18 @@ object FieldBuilderFn {
         comp.indexOptions.foreach(builder.field("index_options", _))
         comp.maxInputLength.foreach(builder.field("max_input_length", _))
         comp.coerce.foreach(builder.field("coerce", _))
+        if(comp.contexts.nonEmpty) {
+          builder.startArray("contexts")
+          comp.contexts.foreach { context =>
+            builder.startObject()
+            builder.field("name", context.name)
+            builder.field("type", context.`type`)
+            context.path.foreach(builder.field("path", _))
+            if(context.`type` == "geo") context.precision.foreach(builder.field("precision", _))
+            builder.endObject()
+          }
+          builder.endArray()
+        }
 
       case geo: GeoshapeFieldDefinition =>
         geo.tree.foreach(builder.field("tree", _))
