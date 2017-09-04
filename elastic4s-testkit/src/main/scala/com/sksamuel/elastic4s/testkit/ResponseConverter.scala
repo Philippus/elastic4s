@@ -36,7 +36,7 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, BulkByScrollTask}
 
 import scala.collection.JavaConverters._
 

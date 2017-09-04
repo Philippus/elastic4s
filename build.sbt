@@ -14,6 +14,7 @@ lazy val root = Project("elastic4s", file("."))
     core,
     tcp,
     http,
+  //  tests,
     embedded,
     testkit,
     circe,
