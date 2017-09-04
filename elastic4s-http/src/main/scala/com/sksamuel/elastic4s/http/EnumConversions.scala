@@ -94,9 +94,22 @@ object EnumConversions {
 
   def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = flag.toString.toUpperCase
 
-  def fuzziness(fuzziness: Fuzziness): String = fuzziness.toString
+  def fuzziness(fuzziness: Fuzziness): String = fuzziness match {
+    case Fuzziness.Zero => "0"
+    case Fuzziness.One => "1"
+    case Fuzziness.Two => "2"
+    case Fuzziness.Auto => "AUTO"
+  }
 
-  def regexpFlag(regexpFlag: RegexpFlag): String = regexpFlag.toString
+  def regexpFlag(regexpFlag: RegexpFlag): Int = regexpFlag match {
+    case RegexpFlag.Intersection => 0x0001
+    case RegexpFlag.Complement => 0x0002
+    case RegexpFlag.Empty => 0x0004
+    case RegexpFlag.AnyString => 0x0008
+    case RegexpFlag.Interval => 0x0020
+    case RegexpFlag.All => 0xffff
+    case RegexpFlag.None => 0x0000
+  }
 
   def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
     case ZeroTermsQuery.All => "all"
