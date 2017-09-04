@@ -2,9 +2,11 @@ package com.sksamuel.elastic4s.http.search.suggs
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition}
+import com.sksamuel.elastic4s.searches.queries.RegexpFlag
+import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestionDefinition
 
 object CompletionSuggestionBuilderFn {
+
   def apply(completion: CompletionSuggestionDefinition): XContentBuilder = {
 
     val builder = XContentFactory.obj()
@@ -25,7 +27,9 @@ object CompletionSuggestionBuilderFn {
     if(completion.regex.isDefined) {
       builder.startObject("regex")
       completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
-      completion.regexFlags.map(EnumConversions.regexpFlag).foreach(builder.field("flags", _))
+      if(completion.regexFlags.nonEmpty) {
+        builder.field("flags", completion.regexFlags.map(EnumConversions.regexpFlag).mkString("|"))
+      }
       builder.endObject()
     }
 
