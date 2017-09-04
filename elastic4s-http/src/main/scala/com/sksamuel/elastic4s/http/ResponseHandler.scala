@@ -10,7 +10,8 @@ import scala.io.Codec
 import scala.util.{Failure, Try}
 
 trait ResponseHandler[U] {
-  def handle(response: HttpResponse): Try[U]
+  def handle(response: HttpResponse): Try[U] = Try(doit(response))
+  def doit(response: HttpResponse): U = ???
   protected def handleError(response: HttpResponse): Failure[U] = Failure(new RuntimeException(response.entity.map(_.content).getOrElse("no error message")))
 }
 

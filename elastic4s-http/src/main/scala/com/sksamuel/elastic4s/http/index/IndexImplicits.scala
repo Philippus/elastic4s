@@ -4,16 +4,25 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition, IndexShowImplicits}
+import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.exts.collection.Maps
 import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 
+case class IndexFailure(error: String)
+
 trait IndexImplicits extends IndexShowImplicits {
 
-  implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
+  implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, Either[IndexFailure, IndexResponse]] {
 
-    override def responseHandler: ResponseHandler[IndexResponse] = ResponseHandler.failure404
+    override def responseHandler: ResponseHandler[Either[IndexFailure, IndexResponse]] = new ResponseHandler[Either[IndexFailure, IndexResponse]] {
+      override def doit(response: HttpResponse): Either[IndexFailure, IndexResponse] = response.statusCode match {
+        case 201 => Right(ResponseHandler.fromEntity[IndexResponse](response.entity.getOrError("Index responses must have a body")))
+        case 400 | 500 => Left(IndexFailure(response.entity.get.content))
+        case _ => sys.error(response.toString)
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
 

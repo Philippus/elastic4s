@@ -94,7 +94,13 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       val result = http.execute {
         indexInto("electronics" / "phone").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
-      result.result shouldBe "created"
+      result.right.get.result shouldBe "created"
+    }
+    "return Left when the request has an error" in {
+      val result = http.execute {
+        indexInto("woowo/o_$$$")
+      }.await
+      result.left.get.error should not be null
     }
   }
 }
