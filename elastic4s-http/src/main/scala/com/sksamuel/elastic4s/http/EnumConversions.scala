@@ -101,14 +101,14 @@ object EnumConversions {
     case Fuzziness.Auto => "AUTO"
   }
 
-  def regexpFlag(regexpFlag: RegexpFlag): Int = regexpFlag match {
-    case RegexpFlag.Intersection => 0x0001
-    case RegexpFlag.Complement => 0x0002
-    case RegexpFlag.Empty => 0x0004
-    case RegexpFlag.AnyString => 0x0008
-    case RegexpFlag.Interval => 0x0020
-    case RegexpFlag.All => 0xffff
-    case RegexpFlag.None => 0x0000
+  def regexpFlag(regexpFlag: RegexpFlag): String = regexpFlag match {
+    case RegexpFlag.Intersection => "INTERSECTION"
+    case RegexpFlag.Complement => "COMPLEMENT"
+    case RegexpFlag.Empty => "EMPTY"
+    case RegexpFlag.AnyString => "ANYSTRING"
+    case RegexpFlag.Interval => "INTERVAL"
+    case RegexpFlag.All => "ALL"
+    case RegexpFlag.None => "NONE"
   }
 
   def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
