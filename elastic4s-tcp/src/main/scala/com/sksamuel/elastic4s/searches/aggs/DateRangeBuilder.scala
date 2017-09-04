@@ -15,7 +15,7 @@ object DateRangeBuilder {
     agg.format.foreach(builder.format)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.keyed(builder.keyed)
-    agg.timeZone(builder.timeZone)
+    agg.timeZone.foreach(builder.timeZone)
 
     agg.unboundedFromRanges.foreach {
       case (Some(key), str: String) => builder.addUnboundedFrom(key, str)
