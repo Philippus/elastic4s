@@ -540,7 +540,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for function score query" in {
 
-    val scorers = Seq(
+    val functionDefinitions = Seq(
       randomScore(1234).weight(1.2),
       scriptScore("some script here").weight(0.5),
       gaussianScore("field1", "1m", "2m").multiValueMode(MultiValueMode.Max),
@@ -548,8 +548,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     )
 
     val req = search("music") types "bands" query {
-      functionScoreQuery("coldplay").scoreMode("multiply").minScore(1.2).scorers(
-        scorers
+      functionScoreQuery("coldplay").scoreMode("multiply").minScore(1.2).functions(
+        functionDefinitions
       ).boost(1.4).maxBoost(1.9).boostMode("max")
     }
     req.show should matchJsonResource("/json/search/search_function_score.json")

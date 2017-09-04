@@ -1,5 +1,10 @@
 {
-    "random_score": {
-        "seed": 12345
+  "random_score": {
+    "seed": 12345
+  },
+  "filter": {
+    "match_all": {
+      "boost": 1.0
     }
+  }
 }

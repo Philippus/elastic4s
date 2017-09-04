@@ -1,3 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
-trait ScoreFunctionDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+
+trait ScoreFunctionDefinition {
+  def filter: Option[QueryDefinition]
+}

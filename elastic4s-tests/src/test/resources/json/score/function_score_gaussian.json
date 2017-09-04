@@ -1,0 +1,31 @@
+{
+  "function_score": {
+    "query": {
+      "match_all": {
+        "boost": 1.0
+      }
+    },
+    "functions": [
+      {
+        "filter": {
+          "match_all": {
+            "boost": 1.0
+          }
+        },
+        "weight": 0.2,
+        "gauss": {
+          "myfield": {
+            "origin": "1 2",
+            "scale": "3km",
+            "offset": "1km",
+            "decay": 0.2
+          },
+          "multi_value_mode": "MIN"
+        }
+      }
+    ],
+    "score_mode": "multiply",
+    "max_boost": 1.0,
+    "boost": 1.0
+  }
+}
