@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, PhraseSuggestionDefinition, TermSuggestionDefinition}
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, Fuzziness, PhraseSuggestionDefinition, TermSuggestionDefinition}
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
@@ -94,7 +94,12 @@ object SearchBodyBuilderFn {
           }
 
           builder.startObject("fuzzy")
-          completion.fuzziness.map(_.toString).foreach(builder.field("fuzziness", _))
+          completion.fuzziness.map {
+            case Fuzziness.Zero => "0"
+            case Fuzziness.One => "1"
+            case Fuzziness.Two => "2"
+            case Fuzziness.Auto => "AUTO"
+          }.foreach(builder.field("fuzziness", _))
           completion.fuzzyMinLength.foreach(builder.field("min_length", _))
           completion.fuzzyPrefixLength.foreach(builder.field("prefix_length", _))
           completion.transpositions.foreach(builder.field("transpositions", _))

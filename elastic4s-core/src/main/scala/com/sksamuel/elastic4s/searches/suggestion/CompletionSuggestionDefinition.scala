@@ -12,18 +12,10 @@ object Fuzziness {
     case 2 => Two
   }
 
-  case object Zero extends Fuzziness {
-    override def toString: String = "0"
-  }
-  case object One extends Fuzziness {
-    override def toString: String = "1"
-  }
-  case object Two extends Fuzziness {
-    override def toString: String = "2"
-  }
-  case object Auto extends Fuzziness {
-    override def toString: String = "AUTO"
-  }
+  case object Zero extends Fuzziness
+  case object One extends Fuzziness
+  case object Two extends Fuzziness
+  case object Auto extends Fuzziness
 }
 
 
