@@ -142,9 +142,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def responseHandler = new ResponseHandler[Either[CreateIndexFailure, CreateIndexResponse]] {
       override def doit(response: HttpResponse): Either[CreateIndexFailure, CreateIndexResponse] = response.statusCode match {
         case 200 | 201 => Right(ResponseHandler.fromEntity[CreateIndexResponse](response.entity.getOrError("Create index responses must have a body")))
-        case 400 | 500 =>
-          val node = ResponseHandler.json(response.entity.get)
-          Left(ResponseHandler.fromNode[CreateIndexFailure](node.get("error")))
+        case 400 | 500 => Left(ResponseHandler.fromEntity[CreateIndexFailure](response.entity.get))
         case _ => sys.error(response.toString)
       }
     }

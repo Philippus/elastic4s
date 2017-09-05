@@ -4,7 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 case class CreateIndexResponse(acknowledged: Boolean, shards_acknowledged: Boolean)
 
-case class CreateIndexFailure(`type`: String, reason: String, @JsonProperty("index_uuid") indexUuid: String, index: String)
+case class CreateIndexFailure(error: ElasticError, status: Int)
+
+case class ElasticError(`type`: String,
+                        reason: String,
+                        @JsonProperty("index_uuid") indexUuid: String,
+                        index: String,
+                        shard: Option[String],
+                        @JsonProperty("root_cause") rootCause: Seq[ElasticError])
 
 //{
 //  "error": {

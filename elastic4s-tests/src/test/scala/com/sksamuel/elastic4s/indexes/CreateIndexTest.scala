@@ -62,8 +62,8 @@ class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
         )
       }.await
 
-      resp.left.get.`type` shouldBe "resource_already_exists_exception"
-      resp.left.get.index shouldBe "foo"
+      resp.left.get.error.`type` shouldBe "resource_already_exists_exception"
+      resp.left.get.error.index shouldBe "foo"
     }
 
     "create from raw source" in {

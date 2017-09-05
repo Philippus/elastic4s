@@ -3,14 +3,14 @@ package com.sksamuel.elastic4s.http.update
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.index.ElasticError
 import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.update.UpdateDefinition
-import com.sksamuel.exts.Logging
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
 
 case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("_type") `type`: String,
@@ -22,6 +22,8 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
   def ref = DocumentRef(index, `type`, id)
 }
 
+case class UpdateFailure(error: ElasticError, status: Int)
+
 object UpdateImplicits extends UpdateImplicits
 
 trait UpdateImplicits {
@@ -30,14 +32,12 @@ trait UpdateImplicits {
     override def show(f: UpdateDefinition): String = UpdateBuilderFn(f).string()
   }
 
-  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] with Logging {
+  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, Either[UpdateFailure, UpdateResponse]] {
 
-    override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {
-      override def handle(response: HttpResponse): Try[UpdateResponse] = response.statusCode match {
-        case 404 => sys.error("Error updating")
-        case _ => Try {
-          ResponseHandler.fromEntity[UpdateResponse](response.entity.get)
-        }
+    override def responseHandler = new ResponseHandler[Either[UpdateFailure, UpdateResponse]] {
+      override def doit(response: HttpResponse): Either[UpdateFailure, UpdateResponse] = response.statusCode match {
+        case 200 | 201 => Right(ResponseHandler.fromEntity[UpdateResponse](response.entity.getOrError("Create index responses must have a body")))
+        case _ => Left(ResponseHandler.fromEntity[UpdateFailure](response.entity.get))
       }
     }
 

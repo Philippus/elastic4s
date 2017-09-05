@@ -33,7 +33,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
       update(5).in("hans" / "albums").doc(
         "name" -> "man of steel"
       ).refresh(RefreshPolicy.Immediate)
-    }.await.result shouldBe "updated"
+    }.await.right.get.result shouldBe "updated"
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
@@ -43,7 +43,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
   it should "support string based update" in {
     http.execute {
       update(5).in("hans" / "albums").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.Immediate)
-    }.await.result shouldBe "updated"
+    }.await.right.get.result shouldBe "updated"
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
@@ -56,7 +56,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
       update(5).in("hans/albums").docAsUpsert(
         "name" -> "batman"
       ).refresh(RefreshPolicy.Immediate)
-    }.await.result shouldBe "updated"
+    }.await.right.get.result shouldBe "updated"
 
     http.execute {
       get(5).from("hans" / "albums").storedFields("name")
@@ -66,7 +66,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
   it should "support string based upsert" in {
     http.execute {
       update(44).in("hans" / "albums").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
-    }.await.result shouldBe "created"
+    }.await.right.get.result shouldBe "created"
 
     http.execute {
       get(44).from("hans/albums").storedFields("name")
@@ -79,7 +79,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
       update(5).in("hans/albums").docAsUpsert(
         "length" -> 12.34
       ).refresh(RefreshPolicy.Immediate)
-    }.await.result shouldBe "updated"
+    }.await.right.get.result shouldBe "updated"
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
@@ -91,17 +91,26 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
       update(14).in("hans/albums").docAsUpsert(
         "name" -> "hunt for the red october"
       )
-    }.await.result shouldBe "created"
+    }.await.right.get.result shouldBe "created"
   }
 
-  it should "not insert doc when doc doesn't exist" in {
-    val e = intercept[Exception] {
-      http.execute {
-        update(234234).in("hans/albums").doc(
-          "name" -> "gladiator"
-        )
-      }.await
-    }
-    assert(e != null)
+  it should "return errors when the index does not exist" in {
+    val resp = http.execute {
+      update(5).in("wowooasdsad").doc(
+        "name" -> "gladiator"
+      )
+    }.await
+    resp.left.get.error.`type` shouldBe "document_missing_exception"
+    resp.left.get.error.reason should include("document missing")
+  }
+
+  it should "return errors when the id does not exist" in {
+    val resp = http.execute {
+      update(234234).in("hans/albums").doc(
+        "name" -> "gladiator"
+      )
+    }.await
+    resp.left.get.error.`type` shouldBe "document_missing_exception"
+    resp.left.get.error.reason should include("document missing")
   }
 }
