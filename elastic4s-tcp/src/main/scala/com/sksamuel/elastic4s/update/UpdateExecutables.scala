@@ -20,7 +20,9 @@ trait UpdateExecutables {
 
     override def apply(c: Client, t: UpdateByQueryDefinition): Future[BulkByScrollResponse] = {
       val builder = UpdateByQueryAction.INSTANCE.newRequestBuilder(c)
-      builder.source(t.sourceIndexes.values: _*)
+      builder.source(t.indexesAndTypes.indexes: _*)
+      if (t.indexesAndTypes.types.nonEmpty)
+        builder.source().setTypes(t.indexesAndTypes.types: _*)
       builder.filter(QueryBuilderFn(t.query))
       t.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       t.maxRetries.foreach(builder.setMaxRetries)

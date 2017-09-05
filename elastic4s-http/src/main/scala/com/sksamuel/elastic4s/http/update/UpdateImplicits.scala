@@ -3,10 +3,12 @@ package com.sksamuel.elastic4s.http.update
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.index.ElasticError
 import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import com.sksamuel.elastic4s.update.UpdateDefinition
+import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
 import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.client.http.entity.ContentType
 
@@ -22,6 +24,16 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
   def ref = DocumentRef(index, `type`, id)
 }
 
+object UpdateByQueryBodyFn {
+  def apply(request: UpdateByQueryDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    builder.rawField("query", QueryBuilderFn(request.query))
+    request.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
+    builder.endObject()
+    builder
+  }
+}
+
 case class UpdateFailure(error: ElasticError, status: Int)
 
 object UpdateImplicits extends UpdateImplicits
@@ -30,6 +42,10 @@ trait UpdateImplicits {
 
   implicit object UpdateShow extends Show[UpdateDefinition] {
     override def show(f: UpdateDefinition): String = UpdateBuilderFn(f).string()
+  }
+
+  implicit object UpdateByQueryShow extends Show[UpdateByQueryDefinition] {
+    override def show(req: UpdateByQueryDefinition): String = UpdateByQueryBodyFn(req).string()
   }
 
   implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, Either[UpdateFailure, UpdateResponse]] {
@@ -58,6 +74,31 @@ trait UpdateImplicits {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = UpdateBuilderFn(request)
+      val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
+
+      client.async("POST", endpoint, params.toMap, entity)
+    }
+  }
+
+  implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryDefinition, UpdateByQueryResponse] {
+    override def execute(client: HttpRequestClient, request: UpdateByQueryDefinition): Future[HttpResponse] = {
+
+      val endpoint = if (request.indexesAndTypes.types.isEmpty)
+        s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"
+      else
+        s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
+
+      val params = scala.collection.mutable.Map.empty[String, String]
+      if (request.proceedOnConflicts.contains(true)) {
+        params.put("conflicts", "proceed")
+      }
+      request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
+      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
+      request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
+      request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
+
+      val body = UpdateByQueryBodyFn(request)
+      logger.debug(s"Delete by query ${body.string}")
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("POST", endpoint, params.toMap, entity)
