@@ -96,9 +96,9 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       }.await
       result.right.get.result shouldBe "created"
     }
-    "return Left when the request has an error" in {
+    "return Left when the request has an invalid index name" in {
       val result = http.execute {
-        indexInto("woowo/o_$$$")
+        indexInto("**1w11oowo/!!!!o_$$$")
       }.await
       result.left.get.error should not be null
     }

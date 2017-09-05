@@ -167,22 +167,6 @@ object ResponseConverterImplicits {
     )
   }
 
-  implicit object DeleteResponseConverter extends ResponseConverter[TcpDeleteResponse, DeleteResponse] {
-    override def convert(response: TcpDeleteResponse): DeleteResponse = {
-      val shardInfo = response.getShardInfo
-
-      DeleteResponse(
-        Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful),
-        response.getResult == DocWriteResponse.Result.DELETED,
-        response.getIndex,
-        response.getType,
-        response.getId,
-        response.getVersion,
-        response.getResult.getLowercase
-      )
-    }
-  }
-
   implicit object DeleteByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, DeleteByQueryResponse] {
     override def convert(response: BulkByScrollResponse): DeleteByQueryResponse = {
       val field = classOf[BulkByScrollResponse].getDeclaredField("status")

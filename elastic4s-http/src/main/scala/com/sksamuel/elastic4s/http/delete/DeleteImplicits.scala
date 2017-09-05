@@ -3,13 +3,14 @@ package com.sksamuel.elastic4s.http.delete
 import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.http.update.UpdateFailure
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.{Failure, Try}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryDefinition): XContentBuilder = {
@@ -52,15 +53,19 @@ trait DeleteImplicits {
     }
   }
 
-  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
+  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, Either[UpdateFailure, DeleteResponse]] {
 
-    override def responseHandler: ResponseHandler[DeleteResponse] = new ResponseHandler[DeleteResponse] {
-      override def handle(response: HttpResponse): Try[DeleteResponse] = {
+    override def responseHandler = new ResponseHandler[Either[UpdateFailure, DeleteResponse]] {
+      override def doit(response: HttpResponse): Either[UpdateFailure, DeleteResponse] = {
+        def right = Right(ResponseHandler.fromEntity[DeleteResponse](response.entity.getOrError("Delete responses must have a body")))
+        def left = Left(ResponseHandler.fromEntity[UpdateFailure](response.entity.get))
         response.statusCode match {
-          case 200 | 404 => Try {
-            ResponseHandler.fromEntity[DeleteResponse](response.entity.get)
-          }
-          case _ => Failure(new RuntimeException("Error deleting"))
+          case 200 | 201 => right
+          // annoying, 404s can return different types of data for a delete
+          case 404 =>
+            val node = ResponseHandler.json(response.entity.get)
+            if (node.has("error")) left else right
+          case _ => left
         }
       }
     }

@@ -13,3 +13,5 @@ case class IndexResponse(@JsonProperty("_id") id: String,
                          shards: Shards) {
   def ref = DocumentRef(index, `type`, id)
 }
+
+case class IndexFailure(error: String)

@@ -10,8 +10,6 @@ import org.elasticsearch.client.http.entity.ContentType
 
 import scala.concurrent.Future
 
-case class IndexFailure(error: String)
-
 trait IndexImplicits extends IndexShowImplicits {
 
   implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, Either[IndexFailure, IndexResponse]] {
