@@ -7,7 +7,6 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
-// Are breaking changes OK here?
 case class UpdateByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    query: QueryDefinition,
                                    requestsPerSecond: Option[Float] = None,
