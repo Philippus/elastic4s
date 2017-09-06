@@ -77,7 +77,7 @@ case class SearchResponse(took: Int,
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
-                          @JsonProperty("aggregations") aggregationsAsMap: Map[String, AnyRef],
+                          @JsonProperty("aggregations") aggregationsAsMap: Map[String, Any],
                           hits: SearchHits) {
 
   def totalHits: Int = hits.total

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
-import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, ScriptType, SortBuilderFn}
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.script.SortBuilderFn
 import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.searches.highlighting.HighlightBuilderFn
@@ -10,7 +10,7 @@ import com.sksamuel.elastic4s.searches.suggestions.SuggestionBuilderFn
 import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.script.{Script, ScriptType}
+import org.elasticsearch.script.Script
 import org.elasticsearch.search.slice.SliceBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
@@ -22,23 +22,23 @@ object SearchBuilderFn {
     val builder = client.prepareSearch(search.indexesTypes.indexes: _*)
       .setTypes(search.indexesTypes.types: _*)
 
-    search.explain.foreach(builder.setExplain)
-    search.from.foreach(builder.setFrom)
+    search.meta.explain.foreach(builder.setExplain)
+    search.windowing.from.foreach(builder.setFrom)
     search.indexBoosts.foreach { case (index, boost) => builder.addIndexBoost(index, boost.toFloat) }
     search.indicesOptions.map(EnumConversions.indicesopts).foreach(builder.setIndicesOptions)
-    search.minScore.map(_.toFloat).foreach(builder.setMinScore)
+    search.scoring.minScore.map(_.toFloat).foreach(builder.setMinScore)
     search.query.map(QueryBuilderFn.apply).foreach(builder.setQuery)
-    search.pref.foreach(builder.setPreference)
+    search.control.pref.foreach(builder.setPreference)
     search.postFilter.map(QueryBuilderFn.apply).foreach(builder.setPostFilter)
     search.requestCache.map(java.lang.Boolean.valueOf).foreach(builder.setRequestCache)
-    search.routing.foreach(builder.setRouting)
-    search.size.foreach(builder.setSize)
+    search.control.routing.foreach(builder.setRouting)
+    search.windowing.size.foreach(builder.setSize)
     search.searchType.map(EnumConversions.searchType).foreach(builder.setSearchType)
-    search.trackScores.foreach(builder.setTrackScores)
-    search.terminateAfter.foreach(builder.setTerminateAfter)
-    search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
+    search.scoring.trackScores.foreach(builder.setTrackScores)
+    search.control.terminateAfter.foreach(builder.setTerminateAfter)
+    search.control.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
     search.keepAlive.foreach(builder.setScroll)
-    search.slice.foreach(s => builder.slice(new SliceBuilder(s._1, s._2)))
+    search.windowing.slice.foreach(s => builder.slice(new SliceBuilder(s._1, s._2)))
     search.version.foreach(builder.setVersion)
     search.collapse.foreach(c => builder.setCollapse(CollapseBuilderFn.apply(c)))
 
@@ -51,8 +51,8 @@ object SearchBuilderFn {
       }
     }
 
-    if (search.storedFields.nonEmpty)
-      builder.storedFields(search.storedFields: _*)
+    if (search.fields.storedFields.nonEmpty)
+      builder.storedFields(search.fields.storedFields: _*)
 
     if (search.aggs.nonEmpty) {
       search.aggs.map(AggregationBuilderFn.apply).foreach {
@@ -67,16 +67,16 @@ object SearchBuilderFn {
       // builder.(inner.name, inner.inner)
     }
 
-    def convertSort(sortdef: SortDefinition): SortBuilder[_] = SortBuilderFn(sortdef)
+    def convertSort[T <: SortBuilder[T]](sortdef: SortDefinition): SortBuilder[T] = SortBuilderFn(sortdef)
 
     if (search.sorts.nonEmpty)
       search.sorts.foreach { sort =>
         builder.addSort(convertSort(sort))
       }
 
-    if (search.scriptFields.nonEmpty) {
+    if (search.fields.scriptFields.nonEmpty) {
       import scala.collection.JavaConverters._
-      search.scriptFields.foreach { scriptfield =>
+      search.fields.scriptFields.foreach { scriptfield =>
         builder.addScriptField(scriptfield.field,
           new Script(
             EnumConversions.scriptType(scriptfield.script.scriptType),
@@ -89,10 +89,10 @@ object SearchBuilderFn {
       }
     }
 
-    if (search.suggs.nonEmpty) {
+    if (search.suggestions.suggs.nonEmpty) {
       val suggest = new SuggestBuilder()
-      search.globalSuggestionText.foreach(suggest.setGlobalText)
-      search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
+      search.suggestions.globalSuggestionText.foreach(suggest.setGlobalText)
+      search.suggestions.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
       builder.suggest(suggest)
     }
 
@@ -101,10 +101,10 @@ object SearchBuilderFn {
       builder.highlighter(highlightBuilder)
     }
 
-    search.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
+    search.scoring.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
 
-    if (search.stats.nonEmpty)
-      builder.setStats(search.stats: _*)
+    if (search.meta.stats.nonEmpty)
+      builder.setStats(search.meta.stats: _*)
 
     builder
   }

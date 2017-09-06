@@ -65,8 +65,8 @@ object FieldBuilderFn {
       case comp: CompletionFieldDefinition =>
         comp.preservePositionIncrements.foreach(builder.field("preserve_position_increments", _))
         comp.preserveSeparators.foreach(builder.field("preserve_separators", _))
-        comp.ignoreAbove.foreach(builder.field("ignore_above", _))
-        comp.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+        comp.ignores.ignoreAbove.foreach(builder.field("ignore_above", _))
+        comp.ignores.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         comp.indexOptions.foreach(builder.field("index_options", _))
         comp.maxInputLength.foreach(builder.field("max_input_length", _))
         comp.coerce.foreach(builder.field("coerce", _))
@@ -84,13 +84,13 @@ object FieldBuilderFn {
         }
 
       case geo: GeoshapeFieldDefinition =>
-        geo.tree.foreach(builder.field("tree", _))
-        geo.precision.foreach(builder.field("precision", _))
-        geo.treeLevels.foreach(builder.field("tree_levels", _))
-        geo.strategy.foreach(builder.field("strategy", _))
-        geo.distanceErrorPct.foreach(builder.field("distance_error_pct", _))
-        geo.orientation.foreach(builder.field("orientation", _))
-        geo.pointsOnly.foreach(builder.field("points_only", _))
+        geo.geoFields.tree.foreach(builder.field("tree", _))
+        geo.geoFields.precision.foreach(builder.field("precision", _))
+        geo.geoFields.treeLevels.foreach(builder.field("tree_levels", _))
+        geo.geoFields.strategy.foreach(builder.field("strategy", _))
+        geo.geoFields.distanceErrorPct.foreach(builder.field("distance_error_pct", _))
+        geo.geoFields.orientation.foreach(builder.field("orientation", _))
+        geo.geoFields.pointsOnly.foreach(builder.field("points_only", _))
         geo.coerce.foreach(builder.field("coerce", _))
         geo.format.foreach(builder.field("format", _))
         geo.ignoreMalformed.foreach(builder.field("ignore_malformed", _))

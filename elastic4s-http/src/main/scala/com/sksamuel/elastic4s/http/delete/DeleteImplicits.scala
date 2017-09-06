@@ -2,13 +2,13 @@ package com.sksamuel.elastic4s.http.delete
 
 import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.update.UpdateFailure
+import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -27,7 +27,14 @@ trait DeleteImplicits {
     override def show(req: DeleteByQueryDefinition): String = DeleteByQueryBodyFn(req).string()
   }
 
-  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
+  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, Either[RequestFailure, DeleteByQueryResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, DeleteByQueryResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, DeleteByQueryResponse] = response.statusCode match {
+        case 200 | 201 => Right(ResponseHandler.fromEntity[DeleteByQueryResponse](response.entity.getOrError("Create index responses must have a body")))
+        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: DeleteByQueryDefinition): Future[HttpResponse] = {
 
@@ -37,9 +44,10 @@ trait DeleteImplicits {
         s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      if (request.proceedOnConflicts.contains(true)) {
+      if (request.proceedOnConflicts.getOrElse(false)) {
         params.put("conflicts", "proceed")
       }
+      request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
@@ -53,12 +61,12 @@ trait DeleteImplicits {
     }
   }
 
-  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, Either[UpdateFailure, DeleteResponse]] {
+  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, Either[RequestFailure, DeleteResponse]] {
 
-    override def responseHandler = new ResponseHandler[Either[UpdateFailure, DeleteResponse]] {
-      override def doit(response: HttpResponse): Either[UpdateFailure, DeleteResponse] = {
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, DeleteResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, DeleteResponse] = {
         def right = Right(ResponseHandler.fromEntity[DeleteResponse](response.entity.getOrError("Delete responses must have a body")))
-        def left = Left(ResponseHandler.fromEntity[UpdateFailure](response.entity.get))
+        def left = Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
         response.statusCode match {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete
@@ -73,7 +81,10 @@ trait DeleteImplicits {
     override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
 
       val method = "DELETE"
-      val endpoint = s"/${request.indexType.index}/${request.indexType.`type`}/${request.id}"
+      val endpoint = request.indexType.types.headOption match {
+        case Some(tpe) => s"/${request.indexType.index}/$tpe/${request.id}"
+        case None => s"/${request.indexType.index}/${request.id}"
+      }
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))

@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index.alias
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.index.admin.IndicesAliasResponse
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.Try

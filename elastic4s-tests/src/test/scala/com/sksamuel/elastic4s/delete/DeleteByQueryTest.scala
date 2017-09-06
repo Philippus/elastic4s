@@ -9,44 +9,49 @@ import scala.util.Try
 
 class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
-    Try {
-      http.execute {
-        deleteIndex("charlesd")
-      }.await
-    }
+  private val indexname = "charles_dickens"
+
+  Try {
+    http.execute {
+      deleteIndex(indexname)
+    }.await
+  }
 
   http.execute {
-      createIndex("charlesd").mappings(
-        mapping("characters").fields(
-          textField("name")
-        )
-      ).shards(1).waitForActiveShards(1)
-    }.await
+    createIndex(indexname).mappings(
+      mapping(indexname).fields(
+        textField("name")
+      )
+    ).shards(1).waitForActiveShards(1)
+  }.await
 
   "delete by query" should {
     "delete matched docs" in {
       http.execute {
         bulk(
-          indexInto("charlesd" / "characters").fields("name" -> "mr bumbles").id(1),
-          indexInto("charlesd" / "characters").fields("name" -> "artful dodger").id(2),
-          indexInto("charlesd" / "characters").fields("name" -> "mrs bumbles").id(3),
-          indexInto("charlesd" / "characters").fields("name" -> "fagan").id(4)
+          indexInto(indexname).fields("name" -> "mr bumbles").id(1),
+          indexInto(indexname).fields("name" -> "artful dodger").id(2),
+          indexInto(indexname).fields("name" -> "mrs bumbles").id(3),
+          indexInto(indexname).fields("name" -> "fagan").id(4)
         ).refresh(RefreshPolicy.Immediate)
       }.await
 
       http.execute {
-        search("charlesd" / "characters").matchAllQuery()
+        search(indexname).matchAllQuery()
       }.await.totalHits shouldBe 4
 
       http.execute {
-        deleteIn("charlesd").by(matchQuery("name", "bumbles")).refresh(RefreshPolicy.Immediate)
-      }.await.deleted shouldBe 2
-
-      Thread.sleep(5000)
+        deleteByQuery(indexname, matchQuery("name", "bumbles")).refresh(RefreshPolicy.Immediate)
+      }.await.right.get.deleted shouldBe 2
 
       http.execute {
-        search("charlesd" / "characters").matchAllQuery()
+        search(indexname).matchAllQuery()
       }.await.totalHits shouldBe 2
+    }
+    "return a Left[RequestFailure] when the delete fails" in {
+      http.execute {
+        deleteByQuery(",", matchQuery("name", "bumbles"))
+      }.await.left.get.error.`type` shouldBe "action_request_validation_exception"
     }
   }
 }

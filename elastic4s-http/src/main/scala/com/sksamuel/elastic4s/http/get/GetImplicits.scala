@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Failure, Try}

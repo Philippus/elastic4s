@@ -10,7 +10,7 @@ object PercentileRanksAggregationBuilder {
 
   def apply(agg: PercentileRanksAggregationDefinition): PercentileRanksAggregationBuilder = {
 
-    val builder = AggregationBuilders.percentileRanks(agg.name)
+    val builder = AggregationBuilders.percentileRanks(agg.name, agg.values.toArray)
 
     agg.field.foreach(builder.field)
     agg.missing.foreach(builder.missing)
@@ -19,8 +19,6 @@ object PercentileRanksAggregationBuilder {
     agg.compression.foreach(builder.compression)
     agg.method.map(EnumConversions.percentilesMethod).foreach(builder.method)
     agg.numberOfSignificantValueDigits.foreach(builder.numberOfSignificantValueDigits)
-
-    if (agg.values.nonEmpty) builder.values(agg.values: _*)
 
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     SubAggsFn(builder, agg.subaggs)

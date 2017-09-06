@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.termvectors.TermVectorsDefinition
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 

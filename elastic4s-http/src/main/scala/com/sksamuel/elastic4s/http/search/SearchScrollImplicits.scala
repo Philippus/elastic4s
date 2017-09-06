@@ -4,7 +4,7 @@ import cats.Show
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 

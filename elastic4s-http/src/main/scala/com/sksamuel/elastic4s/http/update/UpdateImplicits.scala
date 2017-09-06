@@ -10,7 +10,7 @@ import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -34,7 +34,7 @@ object UpdateByQueryBodyFn {
   }
 }
 
-case class UpdateFailure(error: ElasticError, status: Int)
+case class RequestFailure(error: ElasticError, status: Int)
 
 object UpdateImplicits extends UpdateImplicits
 
@@ -48,12 +48,12 @@ trait UpdateImplicits {
     override def show(req: UpdateByQueryDefinition): String = UpdateByQueryBodyFn(req).string()
   }
 
-  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, Either[UpdateFailure, UpdateResponse]] {
+  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, Either[RequestFailure, UpdateResponse]] {
 
-    override def responseHandler = new ResponseHandler[Either[UpdateFailure, UpdateResponse]] {
-      override def doit(response: HttpResponse): Either[UpdateFailure, UpdateResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, UpdateResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, UpdateResponse] = response.statusCode match {
         case 200 | 201 => Right(ResponseHandler.fromEntity[UpdateResponse](response.entity.getOrError("Create index responses must have a body")))
-        case _ => Left(ResponseHandler.fromEntity[UpdateFailure](response.entity.get))
+        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
       }
     }
 

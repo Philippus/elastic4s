@@ -16,39 +16,39 @@ object SearchBodyBuilderFn {
     val builder = XContentFactory.jsonBuilder()
 
     builder.field("version", true)
-    request.pref.foreach(builder.field("preference", _))
-    request.routing.foreach(builder.field("routing", _))
-    request.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
-    request.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
+    request.control.pref.foreach(builder.field("preference", _))
+    request.control.routing.foreach(builder.field("routing", _))
+    request.control.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
+    request.control.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
     request.version.map(_.toString).foreach(builder.field("version", _))
 
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
 
-    request.from.foreach(builder.field("from", _))
-    request.size.foreach(builder.field("size", _))
+    request.windowing.from.foreach(builder.field("from", _))
+    request.windowing.size.foreach(builder.field("size", _))
     //
 
-    if (request.slice.nonEmpty) {
+    if (request.windowing.slice.nonEmpty) {
       builder.startObject("slice")
-      builder.field("id", request.slice.get._1)
-      builder.field("max", request.slice.get._2)
+      builder.field("id", request.windowing.slice.get._1)
+      builder.field("max", request.windowing.slice.get._2)
       builder.endObject()
     }
 
-    if (request.explain.contains(true)) {
+    if (request.meta.explain.getOrElse(false)) {
       builder.field("explain", true)
     }
 
-    request.minScore.foreach(builder.field("min_score", _))
+    request.scoring.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty) {
       builder.autoarray("search_after", request.searchAfter)
     }
 
-    if (request.scriptFields.nonEmpty) {
+    if (request.fields.scriptFields.nonEmpty) {
       builder.startObject("script_fields")
-      request.scriptFields.foreach { field =>
+      request.fields.scriptFields.foreach { field =>
         builder.startObject(field.field)
         builder.rawField("script", ScriptBuilderFn(field.script))
         builder.endObject()
@@ -56,9 +56,9 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.rescorers.nonEmpty) {
+    if (request.scoring.rescorers.nonEmpty) {
       builder.startArray("rescore")
-      request.rescorers.foreach { rescore =>
+      request.scoring.rescorers.foreach { rescore =>
         builder.startObject()
         rescore.windowSize.foreach(builder.field("window_size", _))
         builder.startObject("query")
@@ -79,16 +79,16 @@ object SearchBodyBuilderFn {
       builder.endArray()
     }
 
-    request.trackScores.map(builder.field("track_scores", _))
+    request.scoring.trackScores.map(builder.field("track_scores", _))
 
     request.highlight.foreach { highlight =>
       builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
 
-    if (request.suggs.nonEmpty) {
+    if (request.suggestions.suggs.nonEmpty) {
       builder.startObject("suggest")
-      request.globalSuggestionText.foreach(builder.field("text", _))
-      request.suggs.foreach {
+      request.suggestions.globalSuggestionText.foreach(builder.field("text", _))
+      request.suggestions.suggs.foreach {
         case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
         case completion: CompletionSuggestionDefinition => builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
         case phrase: PhraseSuggestionDefinition => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
@@ -96,8 +96,8 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.storedFields.nonEmpty) {
-      builder.array("stored_fields", request.storedFields.toArray)
+    if (request.fields.storedFields.nonEmpty) {
+      builder.array("stored_fields", request.fields.storedFields.toArray)
     }
 
     if (request.indexBoosts.nonEmpty) {
@@ -124,8 +124,8 @@ object SearchBodyBuilderFn {
       }
     }
 
-    if (request.docValues.nonEmpty)
-      builder.array("docvalue_fields", request.docValues.toArray)
+    if (request.fields.docValues.nonEmpty)
+      builder.array("docvalue_fields", request.fields.docValues.toArray)
 
     // aggregations
     if (request.aggs.nonEmpty) {

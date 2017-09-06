@@ -2,8 +2,18 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.exts.OptionImplicits._
 
+case class Analysis(analyzer: Option[String] = None,
+                    searchAnalyzer: Option[String] = None,
+                    normalizer: Option[String] = None)
+
+case class Ignores(ignoreAbove: Option[Int] = None,
+                   ignoreMalformed: Option[Boolean] = None)
+
+case class Nulls(nullable: Option[Boolean] = None,
+                 nullValue: Option[Any] = None)
+
 case class CompletionFieldDefinition(name: String,
-                                     analyzer: Option[String] = None,
+                                     analysis: Analysis = Analysis(),
                                      boost: Option[Double] = None,
                                      coerce: Option[Boolean] = None,
                                      copyTo: Seq[String] = Nil,
@@ -12,18 +22,14 @@ case class CompletionFieldDefinition(name: String,
                                      fields: Seq[FieldDefinition] = Nil,
                                      fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
                                      includeInAll: Option[Boolean] = None,
-                                     ignoreAbove: Option[Int] = None,
-                                     ignoreMalformed: Option[Boolean] = None,
+                                     ignores: Ignores = Ignores(),
                                      index: Option[String] = None,
                                      indexOptions: Option[String] = None,
                                      maxInputLength: Option[Int] = None,
                                      norms: Option[Boolean] = None,
-                                     normalizer: Option[String] = None,
-                                     nullable: Option[Boolean] = None,
-                                     nullValue: Option[Any] = None,
+                                     nulls: Nulls = Nulls(),
                                      preserveSeparators: Option[Boolean] = None,
                                      preservePositionIncrements: Option[Boolean] = None,
-                                     searchAnalyzer: Option[String] = None,
                                      similarity: Option[String] = None,
                                      store: Option[Boolean] = None,
                                      termVector: Option[String] = None,
@@ -33,7 +39,10 @@ case class CompletionFieldDefinition(name: String,
   type T = CompletionFieldDefinition
   override def `type` = "completion"
 
-  override def analyzer(analyzer: String): T = copy(analyzer = analyzer.some)
+  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
+
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
 
@@ -47,18 +56,16 @@ case class CompletionFieldDefinition(name: String,
 
   def similarity(similarity: String): T = copy(similarity = similarity.some)
 
-  def ignoreAbove(ignoreAbove: Int): T = copy(ignoreAbove = ignoreAbove.some)
-  def ignoreMalformed(ignoreMalformed: Boolean): T = copy(ignoreMalformed = ignoreMalformed.some)
+  def ignoreAbove(ignoreAbove: Int): T = copy(ignores = ignores.copy(ignoreAbove = ignoreAbove.some))
+  def ignoreMalformed(ignoreMalformed: Boolean): T = copy(ignores = ignores.copy(ignoreMalformed = ignoreMalformed.some))
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
   override def index(index: Boolean): T = copy(index = index.toString.some)
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
-  override def normalizer(normalizer: String): T = copy(normalizer = normalizer.some)
-  override def nullable(nullable: Boolean): T = copy(nullable = nullable.some)
-  override def nullValue(nullvalue: Any): T = copy(nullValue = nullvalue.some)
+  override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
+  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
   override def store(b: Boolean): T = copy(store = b.some)
-  override def searchAnalyzer(analyzer: String): T = copy(searchAnalyzer = analyzer.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 

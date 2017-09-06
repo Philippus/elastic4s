@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.http
 import cats.Show
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.exts.Logging
+import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
-import org.elasticsearch.client.http.HttpHost
 
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}

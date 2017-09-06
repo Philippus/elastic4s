@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.PutMappingBuilderFn
 import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, PutMappingDefinition}
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.Try

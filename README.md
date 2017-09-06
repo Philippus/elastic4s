@@ -871,7 +871,7 @@ folder. There is no need to configure anything externally.
 
 ###### 6.0.0 - Pre-release
 
-* HTTP Client should now be the first choice client. The TCP Client is likely to be deprecated in a future release - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients. Notably,
+* HTTP Client should now be the first choice client. The TCP Client is deprecated in elastic4s, but not in Elasticsearch itself yet - see https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients. Notably,
 
 > The Java REST client is the future for Java users of Elasticsearch. Please get involved and try out the high-level client as soon as it becomes available, as your feedback will help us to make it better faster. As soon as the REST client is feature complete and is mature enough to replace the Java API entirely, we will deprecate and finally remove the transport client and the Java API.
 
@@ -884,6 +884,7 @@ folder. There is no need to configure anything externally.
 * Reworked the HTTP aggregation response API to support better types and subaggs
 * disableCoord has been removed from bool and common term queries
 * Added getIndex request type
+* Update, Delete, Index and CreateIndex now return Either[RequestFailure, Response] for better error handling. The other request types will be moved over as part of future builds
 
 ###### 5.4.5
 
