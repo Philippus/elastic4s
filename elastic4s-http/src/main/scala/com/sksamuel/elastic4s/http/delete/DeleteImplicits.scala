@@ -39,6 +39,7 @@ trait DeleteImplicits {
       if (request.abortOnVersionConflict.contains(true)) {
         params.put("conflicts", "proceed")
       }
+      request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))

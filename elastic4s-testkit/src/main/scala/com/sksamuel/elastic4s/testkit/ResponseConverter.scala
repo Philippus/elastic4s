@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.testkit
 import java.util
 import java.util.Locale
 
-import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.Shards
@@ -16,21 +15,22 @@ import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.index.admin._
 import com.sksamuel.elastic4s.http.index.mappings.PutMappingResponse
 import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
-import com.sksamuel.elastic4s.http.update.UpdateResponse
+import com.sksamuel.elastic4s.http.update.{UpdateByQueryResponse, UpdateResponse}
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.{ClearScrollResult, RichSearchResponse}
 import com.sksamuel.elastic4s.update.RichUpdateResponse
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.DocWriteResponse
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthResponse => TcpClusterHealthResponse}
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
 import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.{DeleteIndexResponse => TcpDeleteIndexResponse}
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse => TcpPutMappingResponse}
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
+import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse => TcpPutMappingResponse}
 import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
@@ -194,6 +194,28 @@ object ResponseConverterImplicits {
         response.getTook.millis,
         response.isTimedOut,
         status.getTotal,
+        response.getDeleted,
+        response.getBatches,
+        response.getVersionConflicts,
+        response.getNoops,
+        status.getThrottled.millis,
+        if(status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
+        status.getThrottledUntil.millis
+      )
+    }
+  }
+
+  implicit object UpdateByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, UpdateByQueryResponse] {
+    override def convert(response: BulkByScrollResponse): UpdateByQueryResponse = {
+      val field = classOf[BulkByScrollResponse].getDeclaredField("status")
+      field.setAccessible(true)
+      val status = field.get(response).asInstanceOf[BulkByScrollTask.Status]
+
+      UpdateByQueryResponse(
+        response.getTook.millis,
+        response.isTimedOut,
+        status.getTotal,
+        response.getUpdated,
         response.getDeleted,
         response.getBatches,
         response.getVersionConflicts,

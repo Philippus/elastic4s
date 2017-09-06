@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import org.elasticsearch.action.support.ActiveShardCount
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.action.update.{UpdateRequestBuilder, UpdateResponse}
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
@@ -19,11 +20,14 @@ trait UpdateExecutables {
 
     override def apply(c: Client, t: UpdateByQueryDefinition): Future[BulkByScrollResponse] = {
       val builder = UpdateByQueryAction.INSTANCE.newRequestBuilder(c)
-      builder.source(t.sourceIndexes.values: _*)
+      builder.source(t.indexesAndTypes.indexes: _*)
+      if (t.indexesAndTypes.types.nonEmpty)
+        builder.source().setTypes(t.indexesAndTypes.types: _*)
       builder.filter(QueryBuilderFn(t.query))
       t.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       t.maxRetries.foreach(builder.setMaxRetries)
-      t.refresh.foreach(builder.refresh)
+      if (t.refresh.contains(RefreshPolicy.IMMEDIATE))
+        builder.refresh(true)
       t.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       t.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
       t.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)

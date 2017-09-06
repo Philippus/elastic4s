@@ -1,22 +1,24 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 import scala.concurrent.duration.FiniteDuration
 
-case class UpdateByQueryDefinition(sourceIndexes: Indexes,
+case class UpdateByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    query: QueryDefinition,
                                    requestsPerSecond: Option[Float] = None,
                                    maxRetries: Option[Int] = None,
                                    abortOnVersionConflict: Option[Boolean] = None,
                                    pipeline: Option[String] = None,
-                                   refresh: Option[Boolean] = None,
+                                   refresh: Option[RefreshPolicy] = None,
                                    script: Option[ScriptDefinition] = None,
                                    waitForActiveShards: Option[Int] = None,
                                    retryBackoffInitialTime: Option[FiniteDuration] = None,
+                                   scrollSize: Option[Int] = None,
                                    timeout: Option[FiniteDuration] = None,
                                    shouldStoreResult: Option[Boolean] = None,
                                    size: Option[Int] = None) {
@@ -24,7 +26,9 @@ case class UpdateByQueryDefinition(sourceIndexes: Indexes,
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryDefinition =
     copy(abortOnVersionConflict = abortOnVersionConflict.some)
 
-  def refresh(refresh: Boolean): UpdateByQueryDefinition = copy(refresh = refresh.some)
+  def refresh(refresh: RefreshPolicy): UpdateByQueryDefinition = copy(refresh = refresh.some)
+
+  def scrollSize(scrollSize: Int): UpdateByQueryDefinition = copy(scrollSize = scrollSize.some)
 
   def requestsPerSecond(requestsPerSecond: Float): UpdateByQueryDefinition =
     copy(requestsPerSecond = requestsPerSecond.some)
@@ -46,5 +50,9 @@ case class UpdateByQueryDefinition(sourceIndexes: Indexes,
   def shouldStoreResult(shouldStoreResult: Boolean): UpdateByQueryDefinition =
     copy(shouldStoreResult = shouldStoreResult.some)
 
+}
+
+object UpdateByQueryDefinition {
+  def apply(indexes: Indexes, query: QueryDefinition) = new UpdateByQueryDefinition(indexes.toIndexesAndTypes, query)
 }
 
