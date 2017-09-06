@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
@@ -53,5 +53,9 @@ case class UpdateByQueryDefinition(indexesAndTypes: IndexesAndTypes,
   def shouldStoreResult(shouldStoreResult: Boolean): UpdateByQueryDefinition =
     copy(shouldStoreResult = shouldStoreResult.some)
 
+}
+
+object UpdateByQueryDefinition {
+  def apply(indexes: Indexes, query: QueryDefinition) = new UpdateByQueryDefinition(indexes.toIndexesAndTypes, query)
 }
 

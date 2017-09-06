@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.http.update
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.index.ElasticError
-import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.http.index.ElasticError
+import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
 import com.sksamuel.exts.OptionImplicits._
@@ -89,7 +89,7 @@ trait UpdateImplicits {
         s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      if (request.proceedOnConflicts.contains(true)) {
+      if (request.proceedOnConflicts.getOrElse(false)) {
         params.put("conflicts", "proceed")
       }
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
