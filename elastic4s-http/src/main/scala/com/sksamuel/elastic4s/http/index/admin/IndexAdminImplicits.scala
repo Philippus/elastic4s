@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClien
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 import scala.util.{Success, Try}

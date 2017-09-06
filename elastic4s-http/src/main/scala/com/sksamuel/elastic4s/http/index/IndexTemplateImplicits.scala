@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClien
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingBuilderFn
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 

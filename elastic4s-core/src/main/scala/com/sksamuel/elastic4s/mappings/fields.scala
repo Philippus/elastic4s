@@ -9,7 +9,8 @@ trait FieldDefinition {
 
   def name: String
   def `type`: String
-  def analyzer: Option[String]
+  def analysis: Analysis
+  def analyzer: Option[String] = analysis.analyzer
   def boost: Option[Double]
   def copyTo: Seq[String]
   def docValues: Option[Boolean]
@@ -17,10 +18,14 @@ trait FieldDefinition {
   def fields: Seq[FieldDefinition]
   def index: Option[String]
   def norms: Option[Boolean]
-  def normalizer: Option[String]
-  def nullValue: Option[Any]
+  def normalizer: Option[String] = analysis.normalizer
+
+  def nulls: Nulls
+  def nullable: Option[Boolean] = nulls.nullable
+  def nullValue: Option[Any] = nulls.nullValue
+
   def store: Option[Boolean]
-  def searchAnalyzer: Option[String]
+  def searchAnalyzer: Option[String] = analysis.searchAnalyzer
   def termVector: Option[String]
 
   final def analyzer(a: Analyzer): T = analyzer(a.name)
@@ -40,6 +45,7 @@ trait FieldDefinition {
 
   def norms(norms: Boolean): T
   def normalizer(normalizer: String): T
+
   def nullable(nullable: Boolean): T
   def nullValue(nullvalue: Any): T
 
@@ -55,11 +61,9 @@ trait FieldDefinition {
   def searchAnalyzer(analyzer: String): T
 }
 
-
-
 case class BasicFieldDefinition(name: String,
                                 `type`: String,
-                                analyzer: Option[String] = None,
+                                analysis: Analysis = Analysis(),
                                 boost: Option[Double] = None,
                                 coerce: Option[Boolean] = None,
                                 copyTo: Seq[String] = Nil,
@@ -73,11 +77,8 @@ case class BasicFieldDefinition(name: String,
                                 index: Option[String] = None,
                                 indexOptions: Option[String] = None,
                                 norms: Option[Boolean] = None,
-                                normalizer: Option[String] = None,
-                                nullable: Option[Boolean] = None,
-                                nullValue: Option[Any] = None,
+                                nulls: Nulls = Nulls(),
                                 scalingFactor: Option[Double] = None,
-                                searchAnalyzer: Option[String] = None,
                                 similarity: Option[String] = None,
                                 store: Option[Boolean] = None,
                                 termVector: Option[String] = None
@@ -85,7 +86,10 @@ case class BasicFieldDefinition(name: String,
 
   type T = BasicFieldDefinition
 
-  override def analyzer(analyzer: String): T = copy(analyzer = analyzer.some)
+  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
+
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
 
@@ -114,12 +118,10 @@ case class BasicFieldDefinition(name: String,
   }
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
-  override def normalizer(normalizer: String): T = copy(normalizer = normalizer.some)
-  override def nullable(nullable: Boolean): T = copy(nullable = nullable.some)
-  override def nullValue(nullvalue: Any): T = copy(nullValue = nullvalue.some)
+  override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
+  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
   override def store(b: Boolean): T = copy(store = b.some)
-  override def searchAnalyzer(analyzer: String): T = copy(searchAnalyzer = analyzer.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 }

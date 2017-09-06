@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.exts.OptionImplicits._
 
 case class TextFieldDefinition(name: String,
-                               analyzer: Option[String] = None,
+                               analysis: Analysis = Analysis(),
                                boost: Option[Double] = None,
                                copyTo: Seq[String] = Nil,
                                docValues: Option[Boolean] = None,
@@ -18,11 +18,8 @@ case class TextFieldDefinition(name: String,
                                indexOptions: Option[String] = None,
                                maxInputLength: Option[Int] = None,
                                norms: Option[Boolean] = None,
-                               normalizer: Option[String] = None,
-                               nullable: Option[Boolean] = None,
-                               nullValue: Option[Any] = None,
+                               nulls: Nulls = Nulls(),
                                positionIncrementGap: Option[Int] = None,
-                               searchAnalyzer: Option[String] = None,
                                searchQuoteAnalyzer: Option[String] = None,
                                similarity: Option[String] = None,
                                store: Option[Boolean] = None,
@@ -32,9 +29,15 @@ case class TextFieldDefinition(name: String,
   type T = TextFieldDefinition
   override def `type` = "text"
 
-  override def analyzer(analyzer: String): T = copy(analyzer = analyzer.some)
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
+
+  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
+
+  override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
+  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
   override def fields(fields: Iterable[FieldDefinition]): T = copy(fields = fields.toSeq)
 
@@ -57,12 +60,8 @@ case class TextFieldDefinition(name: String,
   def maxInputLength(maxInputLength: Int): T = copy(maxInputLength = maxInputLength.some)
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
-  override def normalizer(normalizer: String): T = copy(normalizer = normalizer.some)
-  override def nullable(nullable: Boolean): T = copy(nullable = nullable.some)
-  override def nullValue(nullvalue: Any): T = copy(nullValue = nullvalue.some)
 
   override def store(b: Boolean): T = copy(store = b.some)
-  override def searchAnalyzer(analyzer: String): T = copy(searchAnalyzer = analyzer.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 }

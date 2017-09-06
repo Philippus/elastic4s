@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.client.http.entity.ContentType
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -37,7 +37,7 @@ trait DeleteImplicits {
         s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      if (request.proceedOnConflicts.contains(true)) {
+      if (request.proceedOnConflicts.getOrElse(false)) {
         params.put("conflicts", "proceed")
       }
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))

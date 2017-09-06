@@ -52,20 +52,20 @@ trait SearchImplicits {
 
       val builder = new SearchSourceBuilder()
       search.query.map(QueryBuilderFn.apply).foreach(builder.query)
-      search.minScore.map(_.toFloat).foreach(builder.minScore)
+      search.scoring.minScore.map(_.toFloat).foreach(builder.minScore)
       search.version.foreach(v => builder.version(v))
       search.postFilter.map(QueryBuilderFn.apply).foreach(builder.postFilter)
-      search.explain.foreach(b => builder.explain(b))
-      search.from.foreach(builder.from)
-      search.size.foreach(builder.size)
-      search.trackScores.foreach(builder.trackScores)
-      search.terminateAfter.foreach(builder.terminateAfter)
-      search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.timeout)
+      search.meta.explain.foreach(b => builder.explain(b))
+      search.windowing.from.foreach(builder.from)
+      search.windowing.size.foreach(builder.size)
+      search.scoring.trackScores.foreach(builder.trackScores)
+      search.control.terminateAfter.foreach(builder.terminateAfter)
+      search.control.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.timeout)
       search.indexBoosts.foreach { case (index, boost) => builder.indexBoost(index, boost.toFloat) }
       search.collapse.foreach(c => builder.collapse(CollapseBuilderFn.apply(c)))
 
-      if (search.storedFields.nonEmpty)
-        builder.storedFields(search.storedFields.asJava)
+      if (search.fields.storedFields.nonEmpty)
+        builder.storedFields(search.fields.storedFields.asJava)
 
       if (search.aggs.nonEmpty)
         search.aggs.map(AggregationBuilderFn.apply).map {
@@ -84,11 +84,11 @@ trait SearchImplicits {
           builder.getClass.getMethod("sort", classOf[SortBuilder[_]]).invoke(builder, SortBuilderFn.apply(sort))
         }
 
-      search.docValues.foreach(builder.docValueField)
+      search.fields.docValues.foreach(builder.docValueField)
 
-      if (search.scriptFields.nonEmpty) {
+      if (search.fields.scriptFields.nonEmpty) {
         import scala.collection.JavaConverters._
-        search.scriptFields.foreach { scriptfield =>
+        search.fields.scriptFields.foreach { scriptfield =>
           builder.scriptField(scriptfield.field,
             new Script(
               EnumConversions.scriptType(scriptfield.script.scriptType): ScriptType,
@@ -101,10 +101,10 @@ trait SearchImplicits {
         }
       }
 
-      if (search.suggs.nonEmpty) {
+      if (search.suggestions.suggs.nonEmpty) {
         val suggest = new SuggestBuilder()
-        search.globalSuggestionText.foreach(suggest.setGlobalText)
-        search.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
+        search.suggestions.globalSuggestionText.foreach(suggest.setGlobalText)
+        search.suggestions.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
         builder.suggest(suggest)
       }
 
@@ -113,10 +113,10 @@ trait SearchImplicits {
         builder.highlighter(highlightBuilder)
       }
 
-      search.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
+      search.scoring.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
 
-      if (search.stats.nonEmpty)
-        builder.stats(search.stats.asJava)
+      if (search.meta.stats.nonEmpty)
+        builder.stats(search.meta.stats.asJava)
 
       builder.toString
     }

@@ -42,7 +42,7 @@ trait DeleteExecutables {
       d.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       d.size.foreach(builder.size)
       d.maxRetries.foreach(builder.setMaxRetries)
-      if (d.refresh.contains(RefreshPolicy.Immediate))
+      if (d.refresh.exists(_ == RefreshPolicy.Immediate))
         builder.refresh(true)
       d.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       d.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)

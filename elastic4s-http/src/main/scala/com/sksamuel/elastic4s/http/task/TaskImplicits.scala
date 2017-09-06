@@ -39,9 +39,9 @@ trait TaskImplicits {
         params.put("nodes", request.nodeIds.mkString(","))
       if (request.actions.nonEmpty)
         params.put("actions", request.actions.mkString(","))
-      if (request.detailed.contains(true))
+      if (request.detailed.getOrElse(false))
         params.put("detailed", "true")
-      if (request.waitForCompletion.contains(true))
+      if (request.waitForCompletion.getOrElse(false))
         params.put("wait_for_completion", "true")
       request.groupBy.foreach(params.put("group_by", _))
 

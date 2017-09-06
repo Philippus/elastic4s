@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http
 
 import java.nio.charset.Charset
 
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.entity.{ContentType, StringEntity}
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
-import org.elasticsearch.client.http.client.config.RequestConfig
-import org.elasticsearch.client.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.http.impl.nio.client
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
@@ -85,5 +85,5 @@ object NoOpRequestConfigCallback extends RequestConfigCallback {
   *
   */
 object NoOpHttpClientConfigCallback extends HttpClientConfigCallback {
-  override def customizeHttpClient(httpClientBuilder: client.HttpAsyncClientBuilder): client.HttpAsyncClientBuilder = httpClientBuilder
+  override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = httpClientBuilder
 }

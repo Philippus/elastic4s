@@ -2,8 +2,16 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.exts.OptionImplicits._
 
+case class GeoFields(tree: Option[String] = None,
+                     precision: Option[String] = None,
+                     strategy: Option[String] = None,
+                     distanceErrorPct: Option[Double] = None,
+                     orientation: Option[String] = None,
+                     pointsOnly: Option[Boolean] = None,
+                     treeLevels: Option[String] = None)
+
 case class GeoshapeFieldDefinition(name: String,
-                                   analyzer: Option[String] = None,
+                                   analysis: Analysis = Analysis(),
                                    boost: Option[Double] = None,
                                    coerce: Option[Boolean] = None,
                                    copyTo: Seq[String] = Nil,
@@ -15,28 +23,23 @@ case class GeoshapeFieldDefinition(name: String,
                                    includeInAll: Option[Boolean] = None,
                                    index: Option[String] = None,
                                    norms: Option[Boolean] = None,
-                                   normalizer: Option[String] = None,
-                                   nullable: Option[Boolean] = None,
-                                   nullValue: Option[Any] = None,
+                                   nulls: Nulls = Nulls(),
                                    similarity: Option[String] = None,
                                    store: Option[Boolean] = None,
-                                   tree: Option[String] = None,
-                                   precision: Option[String] = None,
-                                   strategy: Option[String] = None,
-                                   distanceErrorPct: Option[Double] = None,
-                                   orientation: Option[String] = None,
-                                   pointsOnly: Option[Boolean] = None,
-                                   searchAnalyzer: Option[String] = None,
-                                   termVector: Option[String] = None,
-                                   treeLevels: Option[String] = None) extends FieldDefinition {
+                                   geoFields: GeoFields = GeoFields(),
+                                   termVector: Option[String] = None
+                                  ) extends FieldDefinition {
 
   type T = GeoshapeFieldDefinition
 
   def `type`: String = "geo_shape"
 
-  override def analyzer(analyzer: String): T = copy(analyzer = analyzer.some)
   override def boost(boost: Double): T = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
+
+  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
 
   override def enabled(enabled: Boolean): T = copy(enabled = enabled.some)
   override def fields(fields: Iterable[FieldDefinition]): T = copy(fields = fields.toSeq)
@@ -50,21 +53,19 @@ case class GeoshapeFieldDefinition(name: String,
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
-  override def normalizer(normalizer: String): T = copy(normalizer = normalizer.some)
-  override def nullable(nullable: Boolean): T = copy(nullable = nullable.some)
-  override def nullValue(nullvalue: Any): T = copy(nullValue = nullvalue.some)
+  override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
+  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
-  override def searchAnalyzer(analyzer: String): T = copy(searchAnalyzer = analyzer.some)
   override def store(b: Boolean): T = copy(store = b.some)
    def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 
-  def tree(tree: String): GeoshapeFieldDefinition = copy(tree = tree.some)
-  def precision(precision: String): GeoshapeFieldDefinition = copy(precision = precision.some)
-  def strategy(strategy: String): GeoshapeFieldDefinition = copy(strategy = strategy.some)
-  def distanceErrorPct(distanceErrorPct: Double): GeoshapeFieldDefinition = copy(distanceErrorPct = distanceErrorPct.some)
-  def orientation(orientation: String): GeoshapeFieldDefinition = copy(orientation = orientation.some)
-  def pointsOnly(pointsOnly: Boolean): GeoshapeFieldDefinition = copy(pointsOnly = pointsOnly.some)
-  def treeLevels(treeLevels: String): GeoshapeFieldDefinition = copy(treeLevels = treeLevels.some)
+  def tree(tree: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(tree = tree.some))
+  def precision(precision: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(precision = precision.some))
+  def strategy(strategy: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(strategy = strategy.some))
+  def distanceErrorPct(distanceErrorPct: Double): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(distanceErrorPct = distanceErrorPct.some))
+  def orientation(orientation: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(orientation = orientation.some))
+  def pointsOnly(pointsOnly: Boolean): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(pointsOnly = pointsOnly.some))
+  def treeLevels(treeLevels: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(treeLevels = treeLevels.some))
 }
