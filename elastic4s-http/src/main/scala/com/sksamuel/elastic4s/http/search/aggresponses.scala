@@ -10,7 +10,7 @@ trait AggBucket extends HasAggregations {
 
 case class TermBucket(key: String,
                       override val docCount: Long,
-                      private[elastic4s] val data: Map[String, AnyRef]) extends AggBucket
+                      private[elastic4s] val data: Map[String, Any]) extends AggBucket
 
 case class TermsAggResult(name: String,
                           buckets: Seq[TermBucket],
@@ -28,9 +28,9 @@ case class TermsAggResult(name: String,
 }
 
 object TermsAggResult {
-  def apply(name: String, data: Map[String, AnyRef]): TermsAggResult = TermsAggResult(
+  def apply(name: String, data: Map[String, Any]): TermsAggResult = TermsAggResult(
     name,
-    data("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map { map =>
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       TermBucket(
         map("key").toString,
         map("doc_count").toString.toInt,
@@ -48,9 +48,9 @@ case class DateHistogramAggResult(name: String,
                                   buckets: Seq[DateHistogramBucket]) extends BucketAggregation
 
 object DateHistogramAggResult {
-  def apply(name: String, data: Map[String, AnyRef]): DateHistogramAggResult = DateHistogramAggResult(
+  def apply(name: String, data: Map[String, Any]): DateHistogramAggResult = DateHistogramAggResult(
     name,
-    data("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map { map =>
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       DateHistogramBucket(
         map("key_as_string").toString,
         map("key").toString.toLong,
@@ -64,7 +64,7 @@ object DateHistogramAggResult {
 case class DateHistogramBucket(date: String,
                                timestamp: Long,
                                override val docCount: Long,
-                               private[elastic4s] val data: Map[String, AnyRef]) extends AggBucket
+                               private[elastic4s] val data: Map[String, Any]) extends AggBucket
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
@@ -77,7 +77,7 @@ case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_id") id: String,
                   @JsonProperty("_score") score: Option[Double],
                   sort: Seq[String],
-                  @JsonProperty("_source") source: Map[String, AnyRef]) {
+                  @JsonProperty("_source") source: Map[String, Any]) {
   def ref = DocumentRef(index, `type`, id)
 }
 
@@ -85,11 +85,12 @@ case class TopHitsResult(name: String,
                          total: Long,
                          @JsonProperty("max_score") maxScore: Option[Double],
                          hits: Seq[TopHit]
-                        ) extends MetricAggregation
+                        ) extends MetricAggregation {
+}
 
 object TopHitsResult {
-  def apply(name: String, data: Map[String, AnyRef]): TopHitsResult = {
-    val hits = data("hits").asInstanceOf[Map[String, AnyRef]]
+  def apply(name: String, data: Map[String, Any]): TopHitsResult = {
+    val hits = data("hits").asInstanceOf[Map[String, Any]]
     val result = JacksonSupport.mapper.readValue[TopHitsResult](JacksonSupport.mapper.writeValueAsBytes(hits))
     result.copy(name = name)
   }
@@ -97,24 +98,24 @@ object TopHitsResult {
 
 case class ChildrenAggResult(name: String,
                              docCount: Long,
-                             private[elastic4s] val data: Map[String, AnyRef]) extends HasAggregations
+                             private[elastic4s] val data: Map[String, Any]) extends HasAggregations
 
 object ChildrenAggResult {
-  def apply(name: String, data: Map[String, AnyRef]): ChildrenAggResult = ChildrenAggResult(
+  def apply(name: String, data: Map[String, Any]): ChildrenAggResult = ChildrenAggResult(
     name,
     data("doc_count").toString.toLong,
     data
   )
 }
 
-case class Aggregations(data: Map[String, AnyRef]) extends HasAggregations
+case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
 // in the search result, and any buckets that contain sub aggregations
 trait HasAggregations {
 
-  private[elastic4s] def data: Map[String, AnyRef]
-  private def agg(name: String): Map[String, AnyRef] = data(name).asInstanceOf[Map[String, AnyRef]]
+  private[elastic4s] def data: Map[String, Any]
+  private def agg(name: String): Map[String, Any] = data(name).asInstanceOf[Map[String, Any]]
 
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String] = data.keys
@@ -145,4 +146,4 @@ trait BucketAggregation {
 
 case class FilterAggregationResult(name: String,
                                    docCount: Int,
-                                   private[elastic4s] val data: Map[String, AnyRef]) extends BucketAggregation with HasAggregations
+                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
