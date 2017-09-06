@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.delete
 
-import com.sksamuel.elastic4s.{IndexAndType, RefreshPolicy, VersionType}
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.{IndexAndTypes, RefreshPolicy, VersionType}
 import com.sksamuel.exts.OptionImplicits._
 
-case class DeleteByIdDefinition(indexType: IndexAndType,
+case class DeleteByIdDefinition(indexType: IndexAndTypes,
                                 id: Any,
                                 parent: Option[String] = None,
                                 routing: Option[String] = None,
