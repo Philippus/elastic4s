@@ -113,6 +113,7 @@ object FieldBuilderFn {
         keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
         keyword.ignoreAbove.foreach(builder.field("ignore_above", _))
         keyword.similarity.foreach(builder.field("similarity", _))
+        keyword.indexOptions.foreach(builder.field("index_options", _))
 
     }
     builder.endObject()

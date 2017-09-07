@@ -55,6 +55,8 @@ case class KeywordFieldDefinition(name: String,
   override def store(b: Boolean): T = copy(store = b.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
+
+  def indexOptions(indexOptions: String): T = copy(indexOptions = indexOptions.some)
 }
 
 
