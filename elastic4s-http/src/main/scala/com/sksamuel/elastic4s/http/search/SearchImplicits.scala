@@ -71,6 +71,7 @@ trait SearchImplicits {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.searchType.map(_.toString).foreach(params.put("search_type", _))
+      request.control.routing.map(_.toString).foreach(params.put("routing", _))
       request.keepAlive.foreach(params.put("scroll", _))
 
       request.indicesOptions.foreach { opts =>

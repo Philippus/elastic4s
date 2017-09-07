@@ -14,7 +14,7 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient
 
 import scala.concurrent.Future
 
-@deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+@deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
 trait TcpClient {
 
   def close(): Unit
@@ -42,7 +42,7 @@ trait TcpClient {
 @deprecated("ElasticClient is now TcpClient", "5.2.0")
 trait ElasticClient extends TcpClient
 
-@deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+@deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
 trait TcpClientConstructors extends Logging {
 
     /**
@@ -50,7 +50,7 @@ trait TcpClientConstructors extends Logging {
     *
     * @param client the client to wrap
     */
-  @deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+  @deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
   def fromClient(client: Client): ElasticClient = new ElasticClient {
     def close(): Unit = client.close()
     def java: Client = client
@@ -61,7 +61,7 @@ trait TcpClientConstructors extends Logging {
     *
     * @param node the node a client will connect to
     */
-  @deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+  @deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
   def fromNode(node: Node): ElasticClient = new ElasticClient {
     private val client = node.client()
     def close(): Unit = client.close()
@@ -79,7 +79,7 @@ trait TcpClientConstructors extends Logging {
   @deprecated("use transport", "5.0.0")
   def remote(uri: ElasticsearchClientUri): ElasticClient = transport(uri)
 
-  @deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+  @deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
   def transport(uri: ElasticsearchClientUri): ElasticClient = transport(Settings.EMPTY, uri)
 
   /**
@@ -96,7 +96,7 @@ trait TcpClientConstructors extends Logging {
     * @param uri      the instance(s) to connect to.
     * @param plugins  the plugins to add to the client.
     */
-  @deprecated("Use the http client, it doesn't bring in half the internet in dependencies", "6.0.0")
+  @deprecated("Use the HTTP client, the TCP client will eventually be removed https://www.elastic.co/blog/state-of-the-official-elasticsearch-java-clients", "6.0.0")
   def transport(settings: Settings,
                 uri: ElasticsearchClientUri,
                 plugins: Class[_ <: Plugin]*): ElasticClient = {
