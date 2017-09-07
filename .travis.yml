@@ -1,4 +1,11 @@
 language: scala
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+before_cache:
+  - find $HOME/.sbt -name "*.lock" | xargs rm
+  - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 before_script:
 - sudo chmod +x /usr/local/bin/sbt
 scala:
