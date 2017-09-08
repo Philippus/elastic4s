@@ -11,7 +11,7 @@ import scala.concurrent.Future
 
 trait ReindexImplicits {
 
-  implicit object ReindexDefinitionExecutable extends HttpExecutable[ReindexDefinition, ReindexResponse] {
+  implicit object ReindexDefinitionHttpExecutable extends HttpExecutable[ReindexDefinition, ReindexResponse] {
 
     override def execute(client: RestClient, request: ReindexDefinition): Future[ReindexResponse] = {
       val endpoint = "/_reindex/"
@@ -19,7 +19,7 @@ trait ReindexImplicits {
 
       val body = ReindexContentBuilder(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
-      logger.debug(s"Update Entity: ${body.string}")
+      logger.debug(s"Reindex entity: ${body.string}")
 
       client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
     }
