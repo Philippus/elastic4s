@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.AbstractURLParameterDefinition
+import com.sksamuel.elastic4s.URLParameters
 import org.apache.http.NameValuePair
 import org.apache.http.client.utils.URLEncodedUtils
 import org.apache.http.message.BasicNameValuePair
@@ -12,22 +12,28 @@ object EncodeURLParameters {
 
   import scala.collection.JavaConverters._
 
-  implicit def apply(request: AbstractURLParameterDefinition): String = {
+  implicit def apply(urlParamsOption: Option[URLParameters]): String =
+    urlParamsOption match {
+      case Some(u) => apply(u)
+      case None => ""
+    }
+
+  implicit def apply(urlParams: URLParameters): String = {
     val parameters = ListBuffer.empty[NameValuePair]
 
-    request.timeout.map(_.toMillis)
+    urlParams.timeout.map(_.toMillis)
       .foreach { timeout =>
         parameters += new BasicNameValuePair("timeout", s"${timeout}ms")
       }
-    request.requestsPerSecond
+    urlParams.requestsPerSecond
       .foreach { requestsPerSecond =>
         parameters += new BasicNameValuePair("requests_per_second", requestsPerSecond.toString)
       }
-    request.waitForActiveShards
+    urlParams.waitForActiveShards
       .foreach { waitForActiveShards =>
         parameters += new BasicNameValuePair("wait_for_active_shards", waitForActiveShards.toString)
       }
-    request.waitForCompletion
+    urlParams.waitForCompletion
       .foreach { waitForCompletion =>
         parameters += new BasicNameValuePair("wait_for_completion", waitForCompletion.toString)
       }

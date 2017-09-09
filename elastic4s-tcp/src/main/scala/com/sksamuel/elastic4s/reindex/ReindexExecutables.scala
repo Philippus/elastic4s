@@ -19,19 +19,22 @@ trait ReindexExecutables {
       builder.source(r.sourceIndexes.values: _*)
       r.targetType.fold(builder.destination(r.targetIndex))(builder.destination(r.targetIndex, _))
       r.filter.map(QueryBuilderFn.apply).foreach(builder.filter)
-      r.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
-      r.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       r.maxRetries.foreach(builder.setMaxRetries)
-      r.refresh.foreach(refreshPolicy =>
-        builder.refresh(refreshPolicy match {
-          case RefreshPolicy.NONE => false
-          case _ => true
-        }))
-      r.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       r.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
       r.shouldStoreResult.foreach(builder.setShouldStoreResult)
       r.size.foreach(builder.size)
       r.script.map(ScriptBuilder.apply).foreach(builder.script)
+
+      r.urlParams.foreach(urlParam => {
+        urlParam.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
+        urlParam.requestsPerSecond.foreach(builder.setRequestsPerSecond)
+        urlParam.refresh.foreach(refreshPolicy =>
+          builder.refresh(refreshPolicy match {
+            case RefreshPolicy.NONE => false
+            case _ => true
+          }))
+        urlParam.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
+      })
     }
 
     override def apply(c: Client, r: ReindexDefinition): Future[BulkByScrollResponse] = {
