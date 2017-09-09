@@ -65,6 +65,4 @@ object ReindexContentBuilder {
     builder.endObject()
     builder
   }
-
-  def wrapStringWithDoubleQuotes(s: String): String = "\"" + s + "\""
 }
