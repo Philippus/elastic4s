@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.AbstractURLParameterDefinition
 import org.apache.http.NameValuePair
 import org.apache.http.client.utils.URLEncodedUtils
 import org.apache.http.message.BasicNameValuePair
-import org.elasticsearch.common.unit.TimeValue
 
 import scala.collection.mutable.ListBuffer
 import scala.language.implicitConversions
@@ -16,9 +15,9 @@ object EncodeURLParameters {
   implicit def apply(request: AbstractURLParameterDefinition): String = {
     val parameters = ListBuffer.empty[NameValuePair]
 
-    request.timeout.map(_.toNanos).map(TimeValue.timeValueNanos)
+    request.timeout.map(_.toMillis)
       .foreach { timeout =>
-        parameters += new BasicNameValuePair("timeout", s"${timeout}ns")
+        parameters += new BasicNameValuePair("timeout", s"${timeout}ms")
       }
     request.requestsPerSecond
       .foreach { requestsPerSecond =>
