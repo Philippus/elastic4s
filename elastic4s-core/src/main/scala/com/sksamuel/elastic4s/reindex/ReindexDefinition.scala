@@ -19,6 +19,8 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              urlParams: Option[URLParameters] = None
                             ) {
 
+  def urlParams(urlParams: URLParameters): ReindexDefinition = copy(urlParams = urlParams.some)
+
   def filter(filter: QueryDefinition): ReindexDefinition = copy(filter = filter.some)
 
   def maxRetries(maxRetries: Int): ReindexDefinition = copy(maxRetries = maxRetries.some)
