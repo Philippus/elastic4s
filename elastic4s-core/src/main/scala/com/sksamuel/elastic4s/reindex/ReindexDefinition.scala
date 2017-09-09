@@ -35,7 +35,7 @@ case class ReindexDefinition(sourceIndexes: Indexes,
   def waitForCompletion(waitForCompletion: Boolean): ReindexDefinition =
     copy(urlParams = urlParams.waitForCompletion(waitForCompletion))
 
-  def urlParams(urlParams: URLParameters): ReindexDefinition = copy(urlParams = urlParams.some)
+  def urlParams(urlParams: URLParameters): ReindexDefinition = copy(urlParams = urlParams)
 
   def filter(filter: QueryDefinition): ReindexDefinition = copy(filter = filter.some)
 
