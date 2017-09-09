@@ -22,12 +22,7 @@ trait ReindexImplicits {
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
       logger.debug(s"Reindex entity: ${body.string}")
 
-      request.urlParams match {
-        case Some(u) =>
-          client.asyncTimeout("POST", endpoint, params.toMap, entity, ResponseHandler.default, u.timeout)
-        case None =>
-          client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
-      }
+      client.asyncTimeout("POST", endpoint, params.toMap, entity, ResponseHandler.default, request.urlParams.timeout)
     }
   }
 

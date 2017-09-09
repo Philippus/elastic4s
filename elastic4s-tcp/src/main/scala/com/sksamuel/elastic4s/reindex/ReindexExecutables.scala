@@ -25,16 +25,14 @@ trait ReindexExecutables {
       r.size.foreach(builder.size)
       r.script.map(ScriptBuilder.apply).foreach(builder.script)
 
-      r.urlParams.foreach(urlParam => {
-        urlParam.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
-        urlParam.requestsPerSecond.foreach(builder.setRequestsPerSecond)
-        urlParam.refresh.foreach(refreshPolicy =>
-          builder.refresh(refreshPolicy match {
-            case RefreshPolicy.NONE => false
-            case _ => true
-          }))
-        urlParam.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
-      })
+      r.urlParams.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
+      r.urlParams.requestsPerSecond.foreach(builder.setRequestsPerSecond)
+      r.urlParams.refresh.foreach(refreshPolicy =>
+        builder.refresh(refreshPolicy match {
+          case RefreshPolicy.NONE => false
+          case _ => true
+        }))
+      r.urlParams.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
     }
 
     override def apply(c: Client, r: ReindexDefinition): Future[BulkByScrollResponse] = {
