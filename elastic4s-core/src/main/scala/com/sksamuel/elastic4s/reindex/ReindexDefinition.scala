@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.reindex
 
-import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.{AbstractURLParameterDefinition, Indexes}
 import com.sksamuel.exts.OptionImplicits._
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -11,19 +12,21 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              targetIndex: String,
                              targetType: Option[String] = None,
                              filter: Option[QueryDefinition] = None,
-                             requestsPerSecond: Option[Float] = None,
-                             refresh: Option[Boolean] = None,
+                             override val requestsPerSecond: Option[Float] = None,
+                             override val refresh: Option[RefreshPolicy] = None,
                              maxRetries: Option[Int] = None,
-                             waitForActiveShards: Option[Int] = None,
-                             timeout: Option[FiniteDuration] = None,
+                             override val waitForActiveShards: Option[Int] = None,
+                             override val timeout: Option[FiniteDuration] = None,
                              retryBackoffInitialTime: Option[FiniteDuration] = None,
                              shouldStoreResult: Option[Boolean] = None,
                              size: Option[Int] = None,
-                             script: Option[ScriptDefinition] = None) {
+                             script: Option[ScriptDefinition] = None,
+                             override val waitForCompletion: Option[Boolean] = None)
+  extends AbstractURLParameterDefinition {
 
   def timeout(timeout: FiniteDuration): ReindexDefinition = copy(timeout = timeout.some)
 
-  def refresh(refresh: Boolean): ReindexDefinition = copy(refresh = refresh.some)
+  def refresh(refresh: RefreshPolicy): ReindexDefinition = copy(refresh = refresh.some)
 
   def filter(filter: QueryDefinition): ReindexDefinition = copy(filter = filter.some)
 
@@ -34,6 +37,9 @@ case class ReindexDefinition(sourceIndexes: Indexes,
 
   def waitForActiveShards(waitForActiveShards: Int): ReindexDefinition =
     copy(waitForActiveShards = waitForActiveShards.some)
+
+  def waitForCompletion(waitForCompletion: Boolean): ReindexDefinition =
+    copy(waitForCompletion = waitForCompletion.some)
 
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): ReindexDefinition =
     copy(retryBackoffInitialTime = retryBackoffInitialTime.some)
