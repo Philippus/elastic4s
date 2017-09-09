@@ -17,25 +17,23 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              shouldStoreResult: Option[Boolean] = None,
                              size: Option[Int] = None,
                              script: Option[ScriptDefinition] = None,
-                             urlParams: Option[URLParameters] = None
+                             urlParams: URLParameters = URLParameters()
                             ) {
 
-  private def getURLParams = urlParams.getOrElse(URLParameters())
-
   def timeout(timeout: FiniteDuration): ReindexDefinition =
-    copy(urlParams = getURLParams.timeout(timeout).some)
+    copy(urlParams = urlParams.timeout(timeout))
 
   def refresh(refresh: RefreshPolicy): ReindexDefinition =
-    copy(urlParams = getURLParams.refresh(refresh).some)
+    copy(urlParams = urlParams.refresh(refresh))
 
   def requestsPerSecond(requestsPerSecond: Float): ReindexDefinition =
-    copy(urlParams = getURLParams.requestsPerSecond(requestsPerSecond).some)
+    copy(urlParams = urlParams.requestsPerSecond(requestsPerSecond))
 
   def waitForActiveShards(waitForActiveShards: Int): ReindexDefinition =
-    copy(urlParams = getURLParams.waitForActiveShards(waitForActiveShards).some)
+    copy(urlParams = urlParams.waitForActiveShards(waitForActiveShards))
 
   def waitForCompletion(waitForCompletion: Boolean): ReindexDefinition =
-    copy(urlParams = getURLParams.waitForCompletion(waitForCompletion).some)
+    copy(urlParams = urlParams.waitForCompletion(waitForCompletion))
 
   def urlParams(urlParams: URLParameters): ReindexDefinition = copy(urlParams = urlParams.some)
 
