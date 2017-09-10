@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
+import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
+import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -12,7 +14,7 @@ import scala.util.Try
 
 trait SearchImplicits {
 
-  implicit def BuildableTermsNoOp[T] = new BuildableTermsQuery[T] {
+  implicit def BuildableTermsNoOp[T]: BuildableTermsQuery[T] = new BuildableTermsQuery[T] {
     override def build(q: TermsQueryDefinition[T]): Any = null // not used by the http builders
   }
 
@@ -55,7 +57,14 @@ trait SearchImplicits {
     }
   }
 
-  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
+  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, Either[RequestFailure, SearchResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, SearchResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, SearchResponse] = response.statusCode match {
+        case 200 => Right(ResponseHandler.fromEntity[SearchResponse](response.entity.getOrError("No entity defined")))
+        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
 

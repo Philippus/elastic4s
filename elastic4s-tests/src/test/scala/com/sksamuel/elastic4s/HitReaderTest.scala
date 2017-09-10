@@ -41,7 +41,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
     )
   }.await
 
-  def indexRequest(id: Any, team: Team): IndexDefinition = indexInto(IndexName / "teams").source(team).id(id)
+  def indexRequest(id: Any, team: Team): IndexDefinition = indexInto(IndexName).source(team).id(id)
 
   http.execute(
     bulk(
@@ -53,7 +53,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   "hit reader" should "unmarshall search results" in {
     val teams = http.execute {
       search("football").matchAllQuery()
-    }.await.to[Team]
+    }.await.right.get.to[Team]
 
     teams.toSet shouldBe Set(
       Team("Arsenal", "The Library", 1886),
@@ -64,7 +64,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall safely search results" in {
     val teams = http.execute {
       search("football").matchAllQuery()
-    }.await.safeTo[Team]
+    }.await.right.get.safeTo[Team]
 
     teams.toSet shouldBe Set(
       Right(Team("Arsenal", "The Library", 1886)),
@@ -147,7 +147,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
 
     http.execute {
       search("galaxies").matchAllQuery()
-    }.await.to[Galaxy].head shouldBe milkyway
+    }.await.right.get.to[Galaxy].head shouldBe milkyway
   }
 }
 

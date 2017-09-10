@@ -43,7 +43,7 @@ class MissingAggregationTest extends FreeSpec with DiscoveryLocalNodeProvider wi
             sumAgg("agg2", "floors")
           }
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
       resp.aggs.filter("agg1").docCount shouldBe 2
     //  resp.aggs.filter("agg1").sum("agg2").value shouldBe 11

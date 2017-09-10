@@ -41,7 +41,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvide
 
     http.execute {
       search("places" / "cities").limit(0)
-    }.await.totalHits shouldBe 3
+    }.await.right.get.totalHits shouldBe 3
   }
 
   it should "return an error when the index does not exist" in {
@@ -52,7 +52,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvide
 
     http.execute {
       search("places" / "cities").limit(0)
-    }.await.totalHits shouldBe 3
+    }.await.right.get.totalHits shouldBe 3
   }
 
   it should "remove a document when deleting by id" in {
@@ -62,6 +62,6 @@ class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvide
 
     http.execute {
       search("places" / "cities").limit(0)
-    }.await.totalHits shouldBe 2
+    }.await.right.get.totalHits shouldBe 2
   }
 }

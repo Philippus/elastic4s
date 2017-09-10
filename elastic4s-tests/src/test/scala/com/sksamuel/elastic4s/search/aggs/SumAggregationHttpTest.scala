@@ -42,7 +42,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
         search("sumagg/actors").matchAllQuery().aggs {
           sumAgg("agg1", "age")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.sum("agg1")
@@ -54,7 +54,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
         search("sumagg/actors").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.sum("agg1")

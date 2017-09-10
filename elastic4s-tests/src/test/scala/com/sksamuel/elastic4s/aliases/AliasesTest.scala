@@ -41,7 +41,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProv
   "waterways index" should "return 'River Dee' in England and Wales for search" in {
     val resp = http.execute {
       search("aliases") query "Dee"
-    }.await
+    }.await.right.get
     resp.totalHits shouldBe 2
     resp.ids shouldBe Seq("12", "21")
   }
@@ -63,7 +63,7 @@ class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProv
   "english_waterways" should "be an alias with a filter for country=england" in {
     val resp = http.execute {
       search("english_waterways").query("dee")
-    }.await
+    }.await.right.get
     // 'english_waterways' has a filter for England only, so we only expect to find one River dee
     resp.totalHits shouldBe 1
     resp.hits.hits.head.id shouldBe "12"

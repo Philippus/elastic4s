@@ -39,7 +39,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProv
         search("valuecount").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 3
       val agg = resp.aggs.valueCount("agg1")
       agg.value shouldBe 7

@@ -39,12 +39,13 @@ object SearchIterator {
     def fetchNext(): Iterator[SearchHit] = {
 
       // we're either advancing a scroll id or issuing the first query w/ the keep alive set
-      val future = scrollId match {
-        case Some(id) => client.execute(searchScroll(id, searchdef.keepAlive.get))
-        case None => client.execute(searchdef)
+      val response = scrollId match {
+        case Some(id) =>
+          Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
+        case None =>
+          Await.result(client.execute(searchdef), timeout).right.get
       }
 
-      val response = Await.result(future, timeout)
       // in a search scroll we must always use the last returned scrollId
       scrollId = response.scrollId
       response.hits.hits.iterator

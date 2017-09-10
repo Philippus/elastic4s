@@ -2,8 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
@@ -45,13 +44,13 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
     "return all results" in {
 
       val resp1 = http.execute {
-        search("katebush" / "songs")
+        search("katebush")
           .query("1985")
           .scroll("1m")
           .limit(2)
           .sortBy(fieldSort("name"))
           .storedFields("name")
-      }.await
+      }.await.right.get
       resp1.hits.hits.map(_.storedField("name").value).toList shouldBe List("top of the city", "cloudbusting")
 
       val resp2 = http.execute {
@@ -79,13 +78,13 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
   "a 'searchScroll.keepAlive'" should {
     "not interpret FiniteDuration as 'id'" in {
       val resp1 = http.execute {
-        search("katebush" / "songs")
+        search("katebush")
           .query("1985")
           .scroll("1m")
           .limit(2)
           .sortBy(fieldSort("name"))
           .storedFields("name")
-      }.await
+      }.await.right.get
 
       val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
@@ -97,26 +96,26 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
   "a 'searchScroll.slice'" should {
     "return sliced results" in {
       val resp1 = http.execute {
-        search("katebush" / "songs")
+        search("katebush")
           .slice(0, 2)
           .query("1985")
           .scroll("1m")
           .limit(4)
           .storedFields("name")
-      }.await
+      }.await.right.get
 
       val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
 
       val resp3 = http.execute {
-        search("katebush" / "songs")
+        search("katebush")
           .slice(1, 2)
           .query("1985")
           .scroll("1m")
           .limit(4)
           .storedFields("name")
-      }.await
+      }.await.right.get
 
       val resp4 = http.execute {
         searchScroll(resp3.scrollId.get).keepAlive(1.minute)
@@ -134,7 +133,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
   "a clearScroll" should {
     "clear scrolls" in {
 
-      val searchDefinition = search("katebush" / "songs")
+      val searchDefinition = search("katebush")
         .query("1985")
         .scroll("1m")
         .size(2)
@@ -143,11 +142,11 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
 
       val resp1 = http.execute {
         searchDefinition
-      }.await
+      }.await.right.get
 
       val resp2 = http.execute {
         searchDefinition
-      }.await
+      }.await.right.get
 
       val resp = http.execute {
         clearScroll(resp1.scrollId.get, resp2.scrollId.get)

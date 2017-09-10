@@ -68,88 +68,107 @@ class SearchHttpTest
   "a search query" should {
     "find an indexed document that matches a term query" in {
       http.execute {
-        search("chess" / "pieces") query termQuery("name", "pawn")
-      }.await.totalHits shouldBe 1
+        search("chess") query termQuery("name", "pawn")
+      }.await.right.get.totalHits shouldBe 1
     }
     "find an indexed document in the given type only" in {
       http.execute {
         search("chess" / "pieces") query matchQuery("name", "queen")
-      }.await.totalHits shouldBe 1
+      }.await.right.get.totalHits shouldBe 1
     }
     "support match all query" in {
       http.execute {
         search("chess") query matchAllQuery()
-      }.await.totalHits shouldBe 6
+      }.await.right.get.totalHits shouldBe 6
     }
     "support sorting in a single type" in {
       http.execute {
         search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
-      }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
+      }.await.right.get.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
     }
     "support limits" in {
       http.execute {
         search("chess").matchAllQuery().limit(2)
-      }.await.size shouldBe 2
+      }.await.right.get.size shouldBe 2
     }
     "support unmarshalling through a HitReader" in {
       implicit val reader = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
       http.execute {
-        search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name") size 3
-      }.await.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
+        search("chess") query matchAllQuery() sortBy fieldSort("name") size 3
+      }.await.right.get.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
     }
     "support source includes" in {
       http.execute {
-        search("chess" / "pieces") query matchAllQuery() sourceInclude "count"
-      }.await.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
+        search("chess") query matchAllQuery() sourceInclude "count"
+      }.await.right.get.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
     }
     "support source excludes" in {
       http.execute {
-        search("chess" / "pieces") query matchAllQuery() sourceExclude "count"
-      }.await.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
+        search("chess") query matchAllQuery() sourceExclude "count"
+      }.await.right.get.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
     }
     "support constantScoreQuery" should {
       "work with termQuery" in {
         http.execute {
-          search("chess" / "pieces") query {
+          search("chess") query {
             constantScoreQuery {
               termQuery("name", "pawn")
             }
           }
-        }.await.totalHits shouldBe 1
+        }.await.right.get.totalHits shouldBe 1
       }
       "work with termsQuery" in {
         http.execute {
-          search("chess" / "pieces") query {
+          search("chess") query {
             constantScoreQuery {
               termsQuery("name", List("pawn", "king"))
             }
           }
-        }.await.totalHits shouldBe 2
+        }.await.right.get.totalHits shouldBe 2
       }
       "support boost and queryName" in {
         val resp = http.execute {
-          search("chess" / "pieces") query {
+          search("chess") query {
             constantScoreQuery {
               termQuery("name", "pawn")
             } boost 14.5 queryName "namey"
           }
-        }.await
+        }.await.right.get
         resp.totalHits shouldBe 1
         resp.maxScore shouldBe 14.5
       }
-      "not throw npe on empty hits" in {
+      "not throw npe on empty hits for safeTo" in {
         http.execute {
-          search("chess" / "pieces") query {
+          search("chess") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.safeTo[Piece].size shouldBe 0
+        }.await.right.get.safeTo[Piece].size shouldBe 0
+      }
+      "support search hits without null on no hits" in {
+        http.execute {
+          search("chess") query {
+            matchQuery("name", "werwerewrewrewr")
+          }
+        }.await.right.get.hits.hits.isEmpty shouldBe true
+      }
+      "return Left[RequestFailure] when searching an unknown index" in {
+        http.execute {
+          search("qweqweqwe") query {
+            matchQuery("name", "werwerewrewrewr")
+          }
+        }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+      }
+      "return Left[RequestFailure] when the search is invalid" in {
+        http.execute {
+          search("qweqweqwe").rawQuery("""{"unknown" : "unk" } """)
+        }.await.left.get.error.`type` shouldBe "parsing_exception"
       }
       "not throw npe for max score on empty hits" in {
         http.execute {
-          search("chess" / "pieces") query {
+          search("chess") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.maxScore shouldBe 0
+        }.await.right.get.maxScore shouldBe 0
       }
     }
   }

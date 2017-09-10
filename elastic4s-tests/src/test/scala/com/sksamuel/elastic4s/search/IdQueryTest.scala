@@ -23,7 +23,7 @@ class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with Elas
       search("sodas/zero").query {
         idsQuery(5)
       }
-    }.await
+    }.await.right.get
 
     resp.totalHits shouldBe 1
     resp.hits.hits.head.sourceField("name") shouldBe "sprite zero"
@@ -34,7 +34,7 @@ class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with Elas
       search("sodas/zero").query {
         idsQuery(5, 9)
       }
-    }.await
+    }.await.right.get
 
     resp.totalHits shouldBe 2
     resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("sprite zero", "coke zero")

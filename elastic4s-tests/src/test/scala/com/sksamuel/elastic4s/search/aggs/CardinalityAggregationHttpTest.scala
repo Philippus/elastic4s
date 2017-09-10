@@ -39,7 +39,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
         search("cardagg").matchAllQuery().aggs {
           cardinalityAgg("agg1", "name")
         }
-      }.await
+      }.await.right.get
 
       resp.totalHits shouldBe 3
 

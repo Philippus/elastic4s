@@ -43,7 +43,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
@@ -56,7 +56,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").matchQuery("name", "masala").aggregations {
           termsAgg("agg1", "strength")
         }
-      }.await
+      }.await.right.get
       resp.size shouldBe 2
 
       val agg = resp.aggregations.terms("agg1")
@@ -69,7 +69,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "origin" missing "unknown"
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -82,7 +82,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" minDocCount 2
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -95,7 +95,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" size 1
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -110,7 +110,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
             termsAgg("agg2", "origin")
           )
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
@@ -122,7 +122,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", false))
         }
-      }.await
+      }.await.right.get
 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("hot", "medium", "mild")
@@ -133,7 +133,7 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", true))
         }
-      }.await
+      }.await.right.get
 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")

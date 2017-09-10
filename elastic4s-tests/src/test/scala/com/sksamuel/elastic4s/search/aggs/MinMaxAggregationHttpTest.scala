@@ -39,7 +39,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 3
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe 2456
@@ -53,7 +53,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
-      }.await
+      }.await.right.get
       resp.totalHits shouldBe 3
       val agg = resp.aggs.min("agg1")
       agg.value shouldBe 169

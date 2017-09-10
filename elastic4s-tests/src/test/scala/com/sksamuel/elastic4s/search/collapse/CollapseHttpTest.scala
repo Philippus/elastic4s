@@ -42,7 +42,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with DiscoveryLocalNodePro
         search("collapse" / "hotels") collapse {
           collapseField("board")
         }
-      }.await
+      }.await.right.get
 
       resp.totalHits shouldBe 3
       resp.hits.size shouldBe 2
