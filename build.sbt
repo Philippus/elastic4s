@@ -40,7 +40,7 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
     .settings(libraryDependencies ++= Seq(
-      "io.netty"                              % "netty-all"                 % "4.1.10.Final",
+      "io.netty"                              % "netty-all"                 % "4.1.15.Final",
       "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
       "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
       "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
@@ -61,10 +61,10 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
-      "com.carrotsearch"                      % "hppc"                      % "0.7.1",
+      "com.carrotsearch"                      % "hppc"                      % "0.7.2",
       "joda-time"                             % "joda-time"                 % "2.9.9",
       "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,
-      "com.tdunning"                          % "t-digest"                  % "3.1"
+      "com.tdunning"                          % "t-digest"                  % "3.2"
     ))
   .dependsOn(core)
 
@@ -74,9 +74,9 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"      % "rest"                    % ElasticsearchVersion,
       "org.apache.httpcomponents"     % "httpclient"              % "4.5.3",
-      "org.apache.httpcomponents"     % "httpcore-nio"            % "4.4.5",
-      "org.apache.httpcomponents"     % "httpcore"                % "4.4.5",
-      "org.apache.httpcomponents"     % "httpasyncclient"         % "4.1.2",
+      "org.apache.httpcomponents"     % "httpcore-nio"            % "4.4.6",
+      "org.apache.httpcomponents"     % "httpcore"                % "4.4.6",
+      "org.apache.httpcomponents"     % "httpasyncclient"         % "4.1.3",
       "org.apache.logging.log4j"      % "log4j-api"               % Log4jVersion  % "test",
       "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
       "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
