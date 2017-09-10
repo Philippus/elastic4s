@@ -37,7 +37,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
-    }.await.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
+    }.await.right.get.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
   }
 
   it should "support string based update" in {
@@ -47,7 +47,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
-    }.await.storedFieldsAsMap shouldBe Map("name" -> List("inception"))
+    }.await.right.get.storedFieldsAsMap shouldBe Map("name" -> List("inception"))
   }
 
   it should "support field based upsert" in {
@@ -60,7 +60,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
     http.execute {
       get(5).from("hans" / "albums").storedFields("name")
-    }.await.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
+    }.await.right.get.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "support string based upsert" in {
@@ -70,7 +70,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
     http.execute {
       get(44).from("hans/albums").storedFields("name")
-    }.await.storedFieldsAsMap shouldBe Map("name" -> List("pirates of the caribbean"))
+    }.await.right.get.storedFieldsAsMap shouldBe Map("name" -> List("pirates of the caribbean"))
   }
 
   it should "keep existing fields with partial update" in {
@@ -83,7 +83,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
     http.execute {
       get(5).from("hans/albums").storedFields("name")
-    }.await.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
+    }.await.right.get.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "insert non existent doc when using docAsUpsert" in {

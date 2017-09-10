@@ -1,14 +1,17 @@
 package com.sksamuel.elastic4s.http.get
 
 import cats.Show
+import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
+import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
+import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.{Failure, Try}
+import scala.util.Try
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
@@ -43,16 +46,20 @@ trait GetImplicits {
     }
   }
 
-  implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
+  implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, Either[RequestFailure, GetResponse]] with Logging {
 
-    override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
-      override def handle(response: HttpResponse): Try[GetResponse] = {
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, GetResponse]] {
+
+      override def doit(response: HttpResponse): Either[RequestFailure, GetResponse] = {
+        def bad = Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+        def good = Right(ResponseHandler.fromEntity[GetResponse](response.entity.getOrError("No entity defined")))
         response.statusCode match {
-          case 404 | 200 => Try {
-            val r = ResponseHandler.fromEntity[GetResponse](response.entity.get)
-            r.copy(fields = Option(r.fields).getOrElse(Map.empty))
-          }
-          case _ => Failure(new RuntimeException("Error"))
+          case 200 => good
+          // 404s are odd, can be different document types
+          case 404 =>
+            val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
+            if (node.has("error")) bad else good
+          case _ => bad
         }
       }
     }

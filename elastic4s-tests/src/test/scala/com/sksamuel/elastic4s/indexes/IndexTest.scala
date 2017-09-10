@@ -22,25 +22,25 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
   }
 
   http.execute {
-    createIndex("electronics").mappings(mapping("phone"))
+    createIndex("electronics").mappings(mapping("electronics"))
   }.await
 
   http.execute {
     bulk(
-      indexInto("electronics" / "phone").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A"),
-      indexInto("electronics" / "phone").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
-      indexInto("electronics" / "phone").fields(Map("name" -> "iphone", "colour" -> null)),
-      indexInto("electronics" / "phone").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
-      indexInto("electronics" / "phone").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
-      indexInto("electronics" / "phone").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
-      indexInto("electronics" / "phone").source(Phone("nokia blabble", "4g"))
+      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A"),
+      indexInto("electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
+      indexInto("electronics").fields(Map("name" -> "iphone", "colour" -> null)),
+      indexInto("electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
+      indexInto("electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
+      indexInto("electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
+      indexInto("electronics").source(Phone("nokia blabble", "4g"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "an index request" should {
     "index fields" in {
       http.execute {
-        search("electronics" / "phone").query(matchQuery("name", "galaxy"))
+        search("electronics").query(matchQuery("name", "galaxy"))
       }.await.right.get.totalHits shouldBe 1
     }
     "handle custom id" in {

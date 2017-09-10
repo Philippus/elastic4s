@@ -31,9 +31,15 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
       ))
   }
 
+  Try {
+    http.execute {
+      deleteIndex(IndexName)
+    }.await
+  }
+
   http.execute {
     createIndex(IndexName).mappings(
-      mapping("teams").fields(
+      mapping(IndexName).fields(
         textField("name"),
         textField("stadium"),
         intField("founded")
@@ -75,7 +81,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall safely a get response" in {
     val team = http.execute {
       get(1).from(IndexName)
-    }.await.safeTo[Team]
+    }.await.right.get.safeTo[Team]
 
     team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
   }
@@ -83,7 +89,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall a get response" in {
     val team = http.execute {
       get(1).from(IndexName)
-    }.await.to[Team]
+    }.await.right.get.to[Team]
 
     team shouldBe Team("Middlesbrough", "Fortress Riverside", 1876)
   }

@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.aliases
 
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with Matchers with com.sksamuel.elastic4s.http.ElasticDsl {
+class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
 
   Try {
     http.execute {
@@ -49,14 +50,14 @@ class AliasesTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProv
   "aquatic_locations" should "alias waterways" in {
     val resp1 = http.execute {
       get("21").from("aquatic_locations")
-    }.await
+    }.await.right.get
     resp1.id shouldBe "21"
   }
 
   it should "alias waterways and accept a type" in {
     val resp2 = http.execute {
       get(21).from("aquatic_locations/rivers")
-    }.await
+    }.await.right.get
     resp2.id shouldBe "21"
   }
 

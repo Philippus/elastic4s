@@ -85,18 +85,20 @@ trait HttpElasticSugar extends ElasticDsl {
 
   def blockUntilDocumentExists(id: String, index: String): Unit = {
     blockUntil(s"Expected to find document $id") { () =>
-      http.execute {
+      val resp = http.execute {
         get(id).from(index)
-      }.await.exists
+      }.await
+      resp.isRight && resp.right.get.exists
     }
   }
 
-  @deprecated
+  @deprecated("Use blockUntilDocumentExists(id, string) because types will be removed in elasticsearch 7.0", "6.0")
   def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
     blockUntil(s"Expected to find document $id") { () =>
-      http.execute {
+      val resp = http.execute {
         get(id).from(index / `type`)
-      }.await.exists
+      }.await
+      resp.isRight && resp.right.get.exists
     }
   }
 
@@ -161,9 +163,10 @@ trait HttpElasticSugar extends ElasticDsl {
 
   def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit = {
     blockUntil(s"Expected document $id to have version $version") { () =>
-      http.execute {
+      val resp = http.execute {
         get(id).from(index / `type`)
-      }.await.version == version
+      }.await
+      resp.isRight && resp.right.get.version == version
     }
   }
 }

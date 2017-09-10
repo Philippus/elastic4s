@@ -43,8 +43,8 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   "A Get request" should "retrieve a document by id" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager"
-    }.await
+      get(8) from "beer"
+    }.await.right.get
 
     resp.exists shouldBe true
     resp.id shouldBe "8"
@@ -53,8 +53,8 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "retrieve a document by id with source" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager"
-    }.await
+      get(8) from "beer"
+    }.await.right.get
 
     resp.exists shouldBe true
     resp.id shouldBe "8"
@@ -65,7 +65,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
     val resp = http.execute {
       get(8) from "beer/lager" fetchSourceContext false
-    }.await
+    }.await.right.get
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -77,7 +77,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
     val resp = http.execute {
       get(8) from "beer/lager" fetchSourceInclude "brand"
-    }.await
+    }.await.right.get
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -88,7 +88,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
     val resp = http.execute {
       get(8) from "beer/lager" fetchSourceExclude "brand"
-    }.await
+    }.await.right.get
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -99,7 +99,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
     val resp = http.execute {
       get(8) from "beer/lager" fetchSourceContext(List("name"), List("brand"))
-    }.await
+    }.await.right.get
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -110,29 +110,32 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
     val resp = http.execute {
       get(4) from "beer/lager" storedFields("name", "brand")
-    }.await
+    }.await.right.get
 
     resp.exists should be(true)
     resp.id shouldBe "4"
     resp.storedFieldsAsMap.keySet shouldBe Set("name", "brand")
   }
 
-  it should "not retrieve any documents w/ unknown id" in {
-
-    val resp = http.execute {
-      get(131313) from "beer/lager"
-    }.await
-
-    resp.exists shouldBe false
-  }
-
   it should "retrieve multi value fields" in {
 
     val resp = http.execute {
       get(4) from "beer/lager" storedFields "ingredients"
-    }.await
+    }.await.right.get
 
     val field = resp.storedField("ingredients")
     field.values shouldBe Seq("hops", "barley", "water", "yeast")
+  }
+
+  it should "return Left[RequestFailure] when index does not exist" in {
+    val resp = http.execute {
+      get(4) from "qqqqqqqqqq"
+    }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+  }
+
+  it should "return Right with exists=false when the doc does not exist" in {
+    val resp = http.execute {
+      get(111111) from "beer"
+    }.await.right.get.exists shouldBe false
   }
 }
