@@ -15,18 +15,29 @@ object ReindexContentBuilder {
     builder.startObject("source")
 
     val indexAndTypes = request.sourceIndexes.toIndexesAndTypes
-    builder.startArray("index")
-    indexAndTypes.indexes.foreach { sourceIndex =>
-      builder.rawValue(new BytesArray(sourceIndex), XContentType.JSON)
-    }
-    builder.endArray()
-
-    if (indexAndTypes.types.nonEmpty) {
-      builder.startArray("type")
-      indexAndTypes.types.foreach { sourceType =>
-        builder.rawValue(new BytesArray(sourceType), XContentType.JSON)
+    if (indexAndTypes.indexes.size > 1) {
+      builder.startArray("index")
+      indexAndTypes.indexes.foreach { sourceIndex =>
+        builder.value(sourceIndex)
       }
       builder.endArray()
+    } else {
+      indexAndTypes.indexes.foreach { sourceIndex =>
+        builder.field("index", sourceIndex)
+      }
+    }
+
+    if (indexAndTypes.types.size > 1) {
+      builder.startArray("type")
+      indexAndTypes.types.foreach { sourceType =>
+        builder.value(sourceType)
+      }
+      builder.endArray()
+
+    } else {
+      indexAndTypes.types.foreach { sourceType =>
+        builder.field("type", sourceType)
+      }
     }
 
     if (request.filter.nonEmpty) {
@@ -39,9 +50,9 @@ object ReindexContentBuilder {
     builder.endObject()
 
     builder.startObject("dest")
-    builder.rawField("index", new BytesArray(request.targetIndex), XContentType.JSON)
+    builder.field("index", request.targetIndex)
     request.targetType.foreach { targetType =>
-      builder.rawField("type", new BytesArray(targetType), XContentType.JSON)
+      builder.field("type", targetType)
     }
     builder.endObject()
 

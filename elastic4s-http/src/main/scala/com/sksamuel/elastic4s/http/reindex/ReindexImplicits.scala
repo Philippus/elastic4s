@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.reindex
 
-import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
+import com.sksamuel.elastic4s.http.{EncodeURLParameters, HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
@@ -14,14 +14,15 @@ trait ReindexImplicits {
   implicit object ReindexDefinitionHttpExecutable extends HttpExecutable[ReindexDefinition, ReindexResponse] {
 
     override def execute(client: RestClient, request: ReindexDefinition): Future[ReindexResponse] = {
-      val endpoint = "/_reindex/"
+      val endpoint = s"/_reindex${EncodeURLParameters(request.urlParams)}"
+
       val params = mutable.Map.empty[String, Any]
 
       val body = ReindexContentBuilder(request)
       val entity = new StringEntity(body.string, ContentType.APPLICATION_JSON)
       logger.debug(s"Reindex entity: ${body.string}")
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.asyncTimeout("POST", endpoint, params.toMap, entity, ResponseHandler.default, request.urlParams.timeout)
     }
   }
 

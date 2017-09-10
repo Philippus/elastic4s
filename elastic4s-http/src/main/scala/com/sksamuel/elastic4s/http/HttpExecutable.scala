@@ -4,7 +4,8 @@ import com.sksamuel.exts.Logging
 import org.apache.http.HttpEntity
 import org.elasticsearch.client.{Response, ResponseListener, RestClient}
 
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{Await, Future, Promise}
 import scala.io.{Codec, Source}
 
 /**
@@ -21,33 +22,66 @@ trait HttpExecutable[T, U] extends Logging {
 
     import scala.collection.JavaConverters._
 
-    private def future(callback: ResponseListener => Unit, handler: ResponseHandler[U]): Future[U] = {
+    private def future(
+                        callback: ResponseListener => Unit, handler: ResponseHandler[U],
+                        timeout: Option[FiniteDuration]): Future[U] = {
       val p = Promise[U]()
       callback(new ResponseListener {
         override def onSuccess(r: Response): Unit = p.tryComplete(handler.onResponse(r))
+
         override def onFailure(e: Exception): Unit = p.tryComplete(handler.onError(e))
       })
-      p.future
+      timeout match {
+        case Some(t) => Await.ready(p.future, t)
+        case None => p.future
+      }
     }
 
     def async(method: String,
               endpoint: String,
               params: Map[String, Any],
-              handler: ResponseHandler[U]): Future[U] = {
+              handler: ResponseHandler[U]
+             ): Future[U] = {
       logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, _: ResponseListener)
-      future(callback, handler)
+      future(callback, handler, None)
     }
 
     def async(method: String,
               endpoint: String,
               params: Map[String, Any],
               entity: HttpEntity,
-              handler: ResponseHandler[U]): Future[U] = {
+              handler: ResponseHandler[U]
+             ): Future[U] = {
       logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
       logger.debug(Source.fromInputStream(entity.getContent)(Codec.UTF8).getLines().mkString("\n"))
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
-      future(callback, handler)
+      future(callback, handler, None)
+    }
+
+    def asyncTimeout(method: String,
+                     endpoint: String,
+                     params: Map[String, Any],
+                     handler: ResponseHandler[U],
+                     timeout: Option[FiniteDuration]
+                    ): Future[U] = {
+      logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, _: ResponseListener)
+      future(callback, handler, timeout)
+    }
+
+    def asyncTimeout(method: String,
+                     endpoint: String,
+                     params: Map[String, Any],
+                     entity: HttpEntity,
+                     handler: ResponseHandler[U],
+                     timeout: Option[FiniteDuration]
+                    ): Future[U] = {
+      logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+      logger.debug(Source.fromInputStream(entity.getContent)(Codec.UTF8).getLines().mkString("\n"))
+      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
+      future(callback, handler, timeout)
     }
   }
+
 }
