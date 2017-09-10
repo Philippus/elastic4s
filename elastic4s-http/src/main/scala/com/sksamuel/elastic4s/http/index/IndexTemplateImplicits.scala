@@ -3,18 +3,30 @@ package com.sksamuel.elastic4s.http.index
 import cats.Show
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.{AnalysisContentBuilder, CreateIndexTemplateDefinition, DeleteIndexTemplateDefinition, GetIndexTemplateDefinition}
-import com.sksamuel.elastic4s.mappings.MappingContentBuilder
+import com.sksamuel.elastic4s.indexes._
+import com.sksamuel.elastic4s.mappings.{MappingContentBuilder, MappingDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
+import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.client.{ResponseListener, RestClient}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-case class CreateIndexTemplateResponse()
-case class DeleteIndexTemplateResponse()
-case class GetIndexTemplateResponse()
+case class CreateIndexTemplateResponse(acknowledged: Boolean, shards_acknowledged: Boolean)
+
+case class DeleteIndexTemplateResponse(acknowledged: Boolean, shards_acknowledged: Boolean)
+
+case class IndexTemplate(name: String,
+                         pattern: String,
+                         settings: Map[String, Any] = Map.empty[String, Any],
+                         mappings: Seq[MappingDefinition] = Nil,
+                         analysis: Option[AnalysisDefinition] = None,
+                         order: Option[Int] = None,
+                         version: Option[Int] = None,
+                         create: Option[Boolean] = None,
+                         aliases: Seq[Alias] = Nil,
+                         alias: Seq[TemplateAlias] = Nil)
 
 trait IndexTemplateImplicits {
 
@@ -36,11 +48,13 @@ trait IndexTemplateImplicits {
     }
   }
 
+  type GetIndexTemplateResponse = Map[String, IndexTemplate]
+
   implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplateResponse] {
     override def execute(client: RestClient,
                          request: GetIndexTemplateDefinition): Future[GetIndexTemplateResponse] = {
       val endpoint = s"/_template/" + request.name
-      val fn = client.performRequestAsync("GET", endpoint, _: ResponseListener)
+      client.performRequestAsync("GET", endpoint, _: ResponseListener)
       client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
   }
@@ -48,6 +62,7 @@ trait IndexTemplateImplicits {
   implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateDefinition] {
     override def show(req: CreateIndexTemplateDefinition): String = CreateIndexTemplateBodyFn(req).string()
   }
+
 }
 
 object CreateIndexTemplateBodyFn {
