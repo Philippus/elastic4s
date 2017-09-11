@@ -10,17 +10,18 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org = "com.sksamuel.elastic4s"
+    val projectName = "elastic4s-aws"
     val AkkaVersion = "2.5.4"
     val CatsVersion = "0.9.0"
     val CirceVersion = "0.8.0"
     val CommonsIoVersion = "2.5"
-    val ElasticsearchVersion = "5.5.2"
+    val ElasticsearchVersion = "5.3.3"
     val ExtsVersion = "1.52.0"
     val JacksonVersion = "2.8.9"
     val Json4sVersion = "3.5.3"
     val SprayJsonVersion = "1.3.3"
     val Log4jVersion = "2.9.0"
-    val LuceneVersion = "6.6.1"
+    val LuceneVersion = "6.4.2"
     val MockitoVersion = "1.10.19"
     val PlayJsonVersion = "2.6.3"
     val ReactiveStreamsVersion = "1.0.1"
@@ -40,7 +41,7 @@ object Build extends AutoPlugin {
     scalaVersion := ScalaVersion,
     crossScalaVersions := Seq("2.11.8", scalaVersion.value),
     publishMavenStyle := true,
-    resolvers += Resolver.mavenLocal,
+    resolvers ++= Seq(Resolver.mavenLocal, Resolver.jcenterRepo),
     fork in Test := true,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,

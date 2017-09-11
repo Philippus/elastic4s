@@ -34,9 +34,9 @@ import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse =>
 import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
+import org.elasticsearch.action.bulk.byscroll.{BulkByScrollResponse, BulkByScrollTask}
 import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, BulkByScrollTask}
 
 import scala.collection.JavaConverters._
 
@@ -89,9 +89,9 @@ object ResponseConverterImplicits {
             x.`type`,
             x.id,
             x.version,
-            false,
-            false,
-            true,
+            forcedRefresh = false,
+            found = false,
+            created = true,
             "Created",
             x.original.status.getStatus,
             None,
@@ -126,7 +126,7 @@ object ResponseConverterImplicits {
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
-            inner_hits = Map.empty,// TODO: Set properly
+            inner_hits = Map.empty, // TODO: Set properly
             x.version
           )
         }
@@ -199,7 +199,7 @@ object ResponseConverterImplicits {
         response.getVersionConflicts,
         response.getNoops,
         status.getThrottled.millis,
-        if(status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
+        if (status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
         status.getThrottledUntil.millis
       )
     }
@@ -221,7 +221,7 @@ object ResponseConverterImplicits {
         response.getVersionConflicts,
         response.getNoops,
         status.getThrottled.millis,
-        if(status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
+        if (status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
         status.getThrottledUntil.millis
       )
     }
@@ -246,6 +246,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object ExplainResponseConverter extends ResponseConverter[TcpExplainResponse, ExplainResponse] {
+
     import com.sksamuel.elastic4s.http.explain.Explanation
 
     override def convert(response: TcpExplainResponse) = ExplainResponse(
@@ -262,6 +263,7 @@ object ResponseConverterImplicits {
   }
 
   implicit object ValidateResponseConverter extends ResponseConverter[ValidateQueryResponse, ValidateResponse] {
+
     import com.sksamuel.elastic4s.http.validate.Explanation
 
     override def convert(response: ValidateQueryResponse) = ValidateResponse(

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object SpanNearQueryBodyFn {
   def apply(q: SpanNearQueryDefinition): XContentBuilder = {
@@ -12,7 +12,7 @@ object SpanNearQueryBodyFn {
     builder.startObject("span_or")
     builder.startArray("clauses")
     q.clauses.foreach { clause =>
-      builder.rawValue(QueryBuilderFn(clause).bytes)
+      builder.rawValue(QueryBuilderFn(clause).bytes, XContentType.JSON)
     }
     builder.endArray()
 

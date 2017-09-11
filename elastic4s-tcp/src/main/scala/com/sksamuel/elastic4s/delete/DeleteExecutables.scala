@@ -2,12 +2,13 @@ package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.Executable
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
+import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse
 import org.elasticsearch.action.delete.{DeleteRequestBuilder, DeleteResponse}
 import org.elasticsearch.action.support.ActiveShardCount
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryAction, DeleteByQueryRequestBuilder}
+import org.elasticsearch.index.reindex.{DeleteByQueryAction, DeleteByQueryRequestBuilder}
 
 import scala.concurrent.Future
 
@@ -59,4 +60,5 @@ trait DeleteExecutables {
       injectFuture(builder.execute)
     }
   }
+
 }
