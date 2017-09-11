@@ -96,7 +96,7 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
 
   it should "return errors when the index does not exist" in {
     val resp = http.execute {
-      update(5).in("wowooasdsad").doc(
+      update(5).in("wowooasdsad" / "qweqwe").doc(
         "name" -> "gladiator"
       )
     }.await

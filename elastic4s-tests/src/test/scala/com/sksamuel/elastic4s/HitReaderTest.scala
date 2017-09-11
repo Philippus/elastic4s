@@ -47,7 +47,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
     )
   }.await
 
-  def indexRequest(id: Any, team: Team): IndexDefinition = indexInto(IndexName).source(team).id(id)
+  def indexRequest(id: Any, team: Team): IndexDefinition = indexInto(IndexName / IndexName).source(team).id(id)
 
   http.execute(
     bulk(

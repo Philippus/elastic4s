@@ -27,13 +27,13 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
 
   http.execute {
     bulk(
-      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A"),
-      indexInto("electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
-      indexInto("electronics").fields(Map("name" -> "iphone", "colour" -> null)),
-      indexInto("electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
-      indexInto("electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
-      indexInto("electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
-      indexInto("electronics").source(Phone("nokia blabble", "4g"))
+      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A"),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "iphone", "colour" -> null)),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
+      indexInto("electronics" / "electronics").source(Phone("nokia blabble", "4g"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -92,7 +92,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
     }
     "return created status" in {
       val result = http.execute {
-        indexInto("electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
+        indexInto("electronics" / "electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
       result.right.get.result shouldBe "created"
     }
