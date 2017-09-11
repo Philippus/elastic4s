@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class UpdateDefinition(indexAndTypes: IndexAndTypes,
+case class UpdateDefinition(indexAndType: IndexAndType,
                             id: String,
                             detectNoop: Option[Boolean] = None,
                             docAsUpsert: Option[Boolean] = None,
@@ -26,7 +26,7 @@ case class UpdateDefinition(indexAndTypes: IndexAndTypes,
                             upsertFields: Map[String, Any] = Map.empty,
                             documentFields: Map[String, Any] = Map.empty,
                             documentSource: Option[String] = None) extends BulkCompatibleDefinition {
-  require(indexAndTypes != null, "indexAndTypes must not be null or empty")
+  require(indexAndType != null, "indexAndTypes must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   // detects if a doc has not change and if so will not perform any action

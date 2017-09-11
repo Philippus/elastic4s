@@ -16,8 +16,7 @@ trait DeleteExecutables {
     extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
 
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
-      val builder = c.prepareDelete().setIndex(t.indexType.index).setId(t.id.toString)
-      t.indexType.types.headOption.foreach(builder.setType)
+      val builder = c.prepareDelete().setIndex(t.indexType.index).setId(t.id.toString).setType(t.indexType.`type`)
       t.routing.foreach(builder.setRouting)
       t.refresh.map(EnumConversions.refreshPolicy).foreach(builder.setRefreshPolicy)
       t.parent.foreach(builder.setParent)

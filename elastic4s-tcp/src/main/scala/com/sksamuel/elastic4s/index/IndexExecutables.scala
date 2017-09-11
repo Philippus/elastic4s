@@ -15,7 +15,7 @@ trait IndexExecutables extends IndexShowImplicits {
     extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
 
     def builder(c: Client, t: IndexDefinition): IndexRequestBuilder = {
-      val builder = c.prepareIndex(t.indexAndTypes.index, t.indexAndTypes.types.headOption.getOrElse(t.indexAndTypes.index))
+      val builder = c.prepareIndex(t.indexAndType.index, t.indexAndType.`type`)
       t.id.map(_.toString).foreach(builder.setId)
       t.source match {
         case Some(json) => builder.setSource(json, XContentType.JSON)

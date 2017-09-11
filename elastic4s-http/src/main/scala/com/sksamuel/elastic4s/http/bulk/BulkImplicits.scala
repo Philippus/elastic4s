@@ -22,6 +22,8 @@ trait BulkImplicits {
       val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well
       val entity = HttpEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON.getMimeType)
+      logger.debug("Sending bulk request")
+      logger.debug(rows.mkString("\n"))
 
       val params = scala.collection.mutable.Map.empty[String, String]
       bulk.timeout.foreach(params.put("timeout", _))

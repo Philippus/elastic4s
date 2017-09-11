@@ -50,7 +50,7 @@ trait UpdateExecutables {
 
     def builder(c: Client, t: UpdateDefinition): UpdateRequestBuilder = {
 
-      val builder = c.prepareUpdate(t.indexAndTypes.index, t.indexAndTypes.types.headOption.orNull, t.id)
+      val builder = c.prepareUpdate(t.indexAndType.index, t.indexAndType.`type`, t.id)
 
       t.fetchSource.foreach { context =>
         builder.setFetchSource(context.fetchSource)

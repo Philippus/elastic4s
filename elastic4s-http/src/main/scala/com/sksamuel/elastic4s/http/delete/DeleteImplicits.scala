@@ -39,9 +39,9 @@ trait DeleteImplicits {
     override def execute(client: HttpRequestClient, request: DeleteByQueryDefinition): Future[HttpResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/_delete_by_query"
+        s"/${request.indexesAndTypes.indexes.mkString(",")}/_all/_delete_by_query"
       else
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_delete_by_query"
+        s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false)) {
@@ -81,10 +81,7 @@ trait DeleteImplicits {
     override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
 
       val method = "DELETE"
-      val endpoint = request.indexType.types.headOption match {
-        case Some(tpe) => s"/${request.indexType.index}/$tpe/${request.id}"
-        case None => s"/${request.indexType.index}/${request.id}"
-      }
+      val endpoint = s"/${request.indexType.index}/${request.indexType.`type`}/${request.id}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))

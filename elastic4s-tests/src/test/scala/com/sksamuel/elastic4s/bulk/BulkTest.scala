@@ -84,17 +84,18 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
 
     http.execute {
       bulk(
-        deleteById(indexname, 2),
-        deleteById(indexname, 4)
+        deleteById(indexname, "elements", 2),
+        deleteById(indexname, "elements", 4)
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     http.execute {
-      get(indexname, 2)
+      get(indexname, "elements", 2)
     }.await.right.get.found shouldBe false
 
     http.execute {
-      get(indexname, 4)
+      get(indexname, "elements", 4)
+      get(4).from(indexname)
     }.await.right.get.found shouldBe false
   }
 }

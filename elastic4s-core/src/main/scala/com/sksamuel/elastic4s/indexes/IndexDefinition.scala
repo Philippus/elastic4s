@@ -6,7 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
-case class IndexDefinition(indexAndTypes: IndexAndTypes,
+case class IndexDefinition(indexAndType: IndexAndType,
                            id: Option[Any] = None,
                            createOnly: Option[Boolean] = None,
                            refresh: Option[RefreshPolicy] = None,
@@ -18,7 +18,7 @@ case class IndexDefinition(indexAndTypes: IndexAndTypes,
                            versionType: Option[VersionType] = None,
                            fields: Seq[FieldValue] = Nil,
                            source: Option[String] = None) extends BulkCompatibleDefinition {
-  require(indexAndTypes != null, "index must not be null or empty")
+  require(indexAndType != null, "index must not be null or empty")
 
   def doc(json: String): IndexDefinition = source(json)
   def doc[T: Indexable](t: T): IndexDefinition = source(t)

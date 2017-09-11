@@ -14,7 +14,7 @@ case class GetDefinition(indexAndType: IndexAndType,
                          version: Option[Long] = None,
                          versionType: Option[VersionType] = None,
                          fetchSource: Option[FetchSourceContext] = None) {
-  require(indexAndType != null, "indexAndType must not be null")
+  require(indexAndType != null, "indexAndTypes must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   def fetchSourceContext(sourceEnabled: Boolean): GetDefinition =

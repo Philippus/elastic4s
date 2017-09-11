@@ -24,10 +24,9 @@ trait IndexImplicits extends IndexShowImplicits {
 
     override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
 
-      val `type` = request.indexAndTypes.types.headOption.getOrElse(request.indexAndTypes.index)
       val (method, endpoint) = request.id match {
-        case Some(id) => "PUT" -> s"/${request.indexAndTypes.index}/${`type`}/$id"
-        case None => "POST" -> s"/${request.indexAndTypes.index}/${`type`}"
+        case Some(id) => "PUT" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}/$id"
+        case None => "POST" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]

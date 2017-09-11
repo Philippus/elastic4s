@@ -4,6 +4,7 @@ import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
+import com.sksamuel.elastic4s.http.index.ElasticError
 import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
@@ -51,15 +52,21 @@ trait GetImplicits {
     override def responseHandler = new ResponseHandler[Either[RequestFailure, GetResponse]] {
 
       override def doit(response: HttpResponse): Either[RequestFailure, GetResponse] = {
-        def bad = Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+        def bad(status: Int) = {
+          val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
+          if (node.get("error").isObject)
+            Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+          else
+            Left(RequestFailure(ElasticError(response.entity.get.content, response.entity.get.content, "", "", None, Nil), status))
+        }
         def good = Right(ResponseHandler.fromEntity[GetResponse](response.entity.getOrError("No entity defined")))
         response.statusCode match {
           case 200 => good
           // 404s are odd, can be different document types
           case 404 =>
             val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
-            if (node.has("error")) bad else good
-          case _ => bad
+            if (node.has("error")) bad(404) else good
+          case other => bad(other)
         }
       }
     }
