@@ -41,7 +41,7 @@ object SearchIterator {
       // we're either advancing a scroll id or issuing the first query w/ the keep alive set
       val response = scrollId match {
         case Some(id) =>
-          Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
+          Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout).right.get
         case None =>
           Await.result(client.execute(searchdef), timeout).right.get
       }

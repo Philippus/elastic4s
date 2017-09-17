@@ -56,22 +56,34 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
       val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive("1m")
       }.await
-      resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
+      resp2.right.get.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
 
       val resp3 = http.execute {
-        searchScroll(resp2.scrollId.get).keepAlive("1m")
+        searchScroll(resp2.right.get.scrollId.get).keepAlive("1m")
       }.await
-      resp3.hits.hits.map(_.storedField("name").value).toList shouldBe List("hounds of love", "under ice")
+      resp3.right.get.hits.hits.map(_.storedField("name").value).toList shouldBe List("hounds of love", "under ice")
 
       val resp4 = http.execute {
-        searchScroll(resp3.scrollId.get).keepAlive("1m")
+        searchScroll(resp3.right.get.scrollId.get).keepAlive("1m")
       }.await
-      resp4.hits.hits.map(_.storedField("name").value).toList shouldBe List("jig of life", "watching you watching me")
+      resp4.right.get.hits.hits.map(_.storedField("name").value).toList shouldBe List("jig of life", "watching you watching me")
 
       val resp5 = http.execute {
-        searchScroll(resp4.scrollId.get)
+        searchScroll(resp4.right.get.scrollId.get)
       }.await
-      resp5.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
+      resp5.right.get.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
+    }
+    "return an error if the scroll id doesn't parse" in {
+      val resp = http.execute {
+        searchScroll("wibble").keepAlive("1m")
+      }.await
+      resp.left.get.error.`type` shouldBe "illegal_argument_exception"
+    }
+    "return an error if the scroll doesn't exist" in {
+      val resp = http.execute {
+        searchScroll("DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ==").keepAlive("1m")
+      }.await
+      resp.left.get.error.`type` shouldBe "search_phase_execution_exception"
     }
   }
 
@@ -89,7 +101,7 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
       val resp2 = http.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
-      resp2.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
+      resp2.right.get.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
     }
   }
 
@@ -121,9 +133,9 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
         searchScroll(resp3.scrollId.get).keepAlive(1.minute)
       }.await
 
-      (resp1.hits.hits.length + resp2.hits.hits.length) shouldBe 4
-      (resp3.hits.hits.length + resp4.hits.hits.length) shouldBe 5
-      val merged = Seq(resp1, resp2, resp3, resp4).flatMap(resp => resp.hits.hits.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
+      (resp1.hits.hits.length + resp2.right.get.hits.hits.length) shouldBe 4
+      (resp3.hits.hits.length + resp4.right.get.hits.hits.length) shouldBe 5
+      val merged = Seq(resp1.hits.hits, resp3.hits.hits, resp2.right.get.hits.hits, resp4.right.get.hits.hits).flatMap(resp => resp.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
       merged.length shouldBe 9
       merged.max shouldBe "watching you watching me"
       merged.min shouldBe "cloudbusting"
@@ -152,8 +164,13 @@ class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLo
         clearScroll(resp1.scrollId.get, resp2.scrollId.get)
       }.await
 
-      resp.succeeded should be(true)
-      resp.num_freed should be > 0
+      resp.right.get.succeeded should be(true)
+      resp.right.get.num_freed should be > 0
+    }
+    "return an error if the scroll id doesn't parse" in {
+      val resp = http.execute {
+        clearScroll("wibble")
+      }.await.left.get.error.`type` shouldBe "illegal_argument_exception"
     }
   }
 }

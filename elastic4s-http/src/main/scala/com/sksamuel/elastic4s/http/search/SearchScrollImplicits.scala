@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
 import org.apache.http.entity.ContentType
+import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.Future
 
@@ -16,7 +18,14 @@ trait SearchScrollImplicits {
     override def show(req: SearchScrollDefinition): String = SearchScrollBuilderFn(req).string
   }
 
-  implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
+  implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, Either[RequestFailure, ClearScrollResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, ClearScrollResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, ClearScrollResponse] = response.statusCode match {
+        case 200 => Right(ResponseHandler.fromEntity[ClearScrollResponse](response.entity.getOrError("No entity defined")))
+        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+      }
+    }
 
     override def execute(client: HttpRequestClient, request: ClearScrollDefinition): Future[HttpResponse] = {
 
@@ -30,7 +39,14 @@ trait SearchScrollImplicits {
     }
   }
 
-  implicit object SearchScrollHttpExecutable extends HttpExecutable[SearchScrollDefinition, SearchResponse] {
+  implicit object SearchScrollHttpExecutable extends HttpExecutable[SearchScrollDefinition, Either[RequestFailure, SearchResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, SearchResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, SearchResponse] = response.statusCode match {
+        case 200 => Right(ResponseHandler.fromEntity[SearchResponse](response.entity.getOrError("No entity defined")))
+        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+      }
+    }
 
     override def execute(client: HttpRequestClient, req: SearchScrollDefinition): Future[HttpResponse] = {
 
