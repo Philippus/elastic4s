@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 
 object ElasticsearchClientUri {
 
-  private val Regex = "elasticsearch://(.*?)(\\?.*?)?".r
+  private val Regex = "elasticsearch://(.*?)/?(\\?.*?)?".r
 
   implicit def stringtoUri(str: String): ElasticsearchClientUri = ElasticsearchClientUri(str)
 
