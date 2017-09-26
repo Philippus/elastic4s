@@ -395,30 +395,30 @@ case class WordDelimiterTokenFilter(name: String,
 }
 
 case class ShingleTokenFilter(name: String,
-                              max_shingle_size: Int = 2,
-                              min_shingle_size: Int = 2,
-                              output_unigrams: Boolean = true,
-                              output_unigrams_if_no_shingles: Boolean = false,
-                              token_separator: String = " ",
-                              filler_token: String = "_")
+                              maxShingleSize: Option[Int] = None,
+                              minShingleSize: Option[Int] = None,
+                              outputUnigrams: Option[Boolean] = None,
+                              outputUnigramsIfNoShingles: Option[Boolean] = None,
+                              tokenSeparator: Option[String] = None,
+                              fillerToken: Option[String] = None)
 
   extends TokenFilterDefinition {
 
   val filterType = "shingle"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("max_shingle_size", max_shingle_size)
-    source.field("min_shingle_size", min_shingle_size)
-    source.field("output_unigrams", output_unigrams)
-    source.field("output_unigrams_if_no_shingles", output_unigrams_if_no_shingles)
-    source.field("token_separator", token_separator)
-    source.field("filler_token", filler_token)
+    maxShingleSize.foreach(source.field("max_shingle_size", _))
+    minShingleSize.foreach(source.field("min_shingle_size", _))
+    outputUnigrams.foreach(source.field("output_unigrams", _))
+    outputUnigramsIfNoShingles.foreach(source.field("output_unigrams_if_no_shingles", _))
+    tokenSeparator.foreach(source.field("token_separator", _))
+    fillerToken.foreach(source.field("filler_token", _))
   }
 
-  def maxShingleSize(max: Int): ShingleTokenFilter = copy(max_shingle_size = max)
-  def minShingleSize(min: Int): ShingleTokenFilter = copy(min_shingle_size = min)
-  def outputUnigrams(b: Boolean): ShingleTokenFilter = copy(output_unigrams = b)
-  def outputUnigramsIfNoShingles(b: Boolean): ShingleTokenFilter = copy(output_unigrams_if_no_shingles = b)
-  def tokenSeperator(sep: String): ShingleTokenFilter = copy(token_separator = sep)
-  def fillerToken(filler: String): ShingleTokenFilter = copy(filler_token = filler)
+  def maxShingleSize(max: Int): ShingleTokenFilter = copy(maxShingleSize = max.some)
+  def minShingleSize(min: Int): ShingleTokenFilter = copy(minShingleSize = min.some)
+  def outputUnigrams(b: Boolean): ShingleTokenFilter = copy(outputUnigrams = b.some)
+  def outputUnigramsIfNoShingles(b: Boolean): ShingleTokenFilter = copy(outputUnigramsIfNoShingles = b.some)
+  def tokenSeparator(sep: String): ShingleTokenFilter = copy(tokenSeparator = sep.some)
+  def fillerToken(filler: String): ShingleTokenFilter = copy(fillerToken = filler.some)
 }
