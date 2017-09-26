@@ -422,3 +422,59 @@ case class ShingleTokenFilter(name: String,
   def tokenSeperator(sep: String): ShingleTokenFilter = copy(token_separator = sep)
   def fillerToken(filler: String): ShingleTokenFilter = copy(filler_token = filler)
 }
+
+sealed trait CompoundWordTokenFilterType {
+  def name: String
+}
+case object HyphenationDecompounder extends CompoundWordTokenFilterType {
+  override def name = "hyphenation_decompounder"
+}
+
+case object DictionaryDecompounder extends CompoundWordTokenFilterType {
+  override def name = "dictionary_decompounder"
+}
+
+
+case class CompoundWordTokenFilter(name: String,
+                                   `type`: CompoundWordTokenFilterType,
+                                   wordList: Iterable[String] = Nil,
+                                   wordListPath: Option[String] = None,
+                                   hyphenationPatternsPath: Option[String] = None,
+                                   minWordSize: Option[Int] = None,
+                                   minSubwordSize: Option[Int] = None,
+                                   maxSubwordSize: Option[Int] = None,
+                                   onlyLongestMatch: Option[Boolean] = None)
+  extends TokenFilterDefinition {
+
+  val filterType = `type`.name
+
+  override def build(source: XContentBuilder): Unit = {
+    if (wordList.nonEmpty) {
+      source.array("word_list", wordList.toArray)
+    }
+    wordListPath.foreach(source.field("word_list_path", _))
+    hyphenationPatternsPath.foreach(source.field("hyphenation_patterns_path", _))
+    minWordSize.foreach(source.field("min_word_size", _))
+    minSubwordSize.foreach(source.field("min_subword_size", _))
+    maxSubwordSize.foreach(source.field("max_subword_size", _))
+    onlyLongestMatch.foreach(source.field("only_longest_match", _))
+  }
+
+  def wordList(wordList: Iterable[String]): CompoundWordTokenFilter =
+    copy(wordList = wordList)
+  def wordList(word: String, rest: String*): CompoundWordTokenFilter =
+    copy(wordList = word +: rest)
+  def wordListPath(wordListPath: String): CompoundWordTokenFilter =
+    copy(wordListPath = wordListPath.some)
+  def hyphenationPatternsPath(hyphenationPatternsPath: String): CompoundWordTokenFilter =
+    copy(hyphenationPatternsPath = hyphenationPatternsPath.some)
+  def minWordSize(minWordSize: Int): CompoundWordTokenFilter =
+    copy(minWordSize = minWordSize.some)
+  def minSubwordSize(minSubwordSize: Int): CompoundWordTokenFilter =
+    copy(minSubwordSize = minSubwordSize.some)
+  def maxSubwordSize(maxSubwordSize: Int): CompoundWordTokenFilter =
+    copy(maxSubwordSize = maxSubwordSize.some)
+  def onlyLongestMatch(onlyLongestMatch: Boolean): CompoundWordTokenFilter =
+    copy(onlyLongestMatch = onlyLongestMatch.some)
+}
+
