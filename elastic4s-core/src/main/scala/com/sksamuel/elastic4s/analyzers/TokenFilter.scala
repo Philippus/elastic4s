@@ -105,16 +105,16 @@ case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[
   def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
-case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
+case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "unique"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("only_on_same_position", onlyOnSamePosition)
+    onlyOnSamePosition.foreach(source.field("only_on_same_position", _))
   }
 
-  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition)
+  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition.some)
 }
 
 case class KeywordMarkerTokenFilter(name: String,
