@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.indexes
 
 import java.util.UUID
 
+import com.sksamuel.elastic4s.VersionType.External
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
@@ -107,6 +108,26 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
         indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
       result.right.get.result shouldBe "updated"
+    }
+    "handle update concurrency" in {
+      val id = UUID.randomUUID()
+      http.execute {
+        indexInto("electronics" / "electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .version(2l)
+          .versionType(External)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      val result = http.execute {
+        indexInto("electronics" / "electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .version(2l)
+          .versionType(External)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      result.left.get.error should include ("version_conflict_engine_exception")
     }
     "return Left when the request has an invalid index name" in {
       val result = http.execute {
