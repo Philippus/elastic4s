@@ -91,18 +91,18 @@ case class TruncateTokenFilter(name: String, length: Option[Int] = None)
   def length(length: Int): TruncateTokenFilter = copy(length = length.some)
 }
 
-case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
+case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[Int] = None)
   extends TokenFilterDefinition {
 
   val filterType = "length"
 
   override def build(source: XContentBuilder): Unit = {
-    if (min > 0) source.field("min", min)
-    if (max < Integer.MAX_VALUE) source.field("max", max)
+    min.foreach(source.field("min", _))
+    max.foreach(source.field("max", _))
   }
 
-  def min(min: Int): LengthTokenFilter = copy(min = min)
-  def max(max: Int): LengthTokenFilter = copy(max = max)
+  def min(min: Int): LengthTokenFilter = copy(min = min.some)
+  def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
 case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)

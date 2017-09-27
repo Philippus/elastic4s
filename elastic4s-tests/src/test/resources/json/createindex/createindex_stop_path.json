@@ -94,6 +94,7 @@
       "filter": {
         "myTokenFilter2": {
           "type": "length",
+          "min": 0,
           "max": 10
         },
         "myTokenFilter3": {
