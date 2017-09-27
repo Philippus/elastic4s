@@ -8,5 +8,8 @@ class TruncateTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers
     "not set any defaults" in {
       truncateTokenFilter("testy").json.string shouldBe """{"type":"truncate"}"""
     }
+    "set length" in {
+      truncateTokenFilter("testy").length(5).json.string shouldBe """{"type":"truncate","length":5}"""
+    }
   }
 }

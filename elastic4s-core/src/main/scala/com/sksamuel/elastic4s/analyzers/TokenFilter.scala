@@ -79,16 +79,16 @@ case class SynonymTokenFilter(name: String,
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = Some(expand))
 }
 
-case class TruncateTokenFilter(name: String, length: Int = 10)
+case class TruncateTokenFilter(name: String, length: Option[Int] = None)
   extends TokenFilterDefinition {
 
   val filterType = "truncate"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("length", length)
+    length.foreach(source.field("length", _))
   }
 
-  def length(length: Int): TruncateTokenFilter = copy(length = length)
+  def length(length: Int): TruncateTokenFilter = copy(length = length.some)
 }
 
 case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
