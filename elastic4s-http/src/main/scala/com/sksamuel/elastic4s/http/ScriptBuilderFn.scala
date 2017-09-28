@@ -44,6 +44,7 @@ object ScriptBuilderFn {
         case (key, values: Iterator[_]) => array(key, values.toSeq)
         case (key, values: java.util.Collection[_]) => array(key, values.asScala)
         case (key, values: java.util.Iterator[_]) => array(key, values.asScala.toSeq)
+        case (key, null) => builder.nullField(key)
         case (key, other) => builder.field(key, other.toString)
       }
       builder.endObject()
