@@ -28,6 +28,7 @@ object ScriptBuilderFn {
           case (value: Int) => builder.value(value)
           case (value: Long) => builder.value(value)
           case (value: Boolean) => builder.value(value)
+          case (value, null) => builder.nullValue()
           case other => builder.value(other.toString)
         }
         builder.endArray()

@@ -194,6 +194,11 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def nullValue(): XContentBuilder = {
+    array.addNull()
+    this
+  }
+
   def startArray(): XContentBuilder = {
     // can only start an anoynmous array inside another array
     stack.push(array.addArray())
