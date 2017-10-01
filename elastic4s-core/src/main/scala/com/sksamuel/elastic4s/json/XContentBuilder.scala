@@ -160,10 +160,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Short => obj.put(name, v)
       case v: Byte => obj.put(name, v)
       case v: BigDecimal => obj.put(name, v.bigDecimal)
-      case values: Seq[_] =>
-        startArray(name)
-        values.foreach(autovalue)
-        endArray()
+      case values: Seq[_] => autoarray(name, values)
       case values: Iterator[_] => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
       case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
