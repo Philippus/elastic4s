@@ -106,6 +106,8 @@ class XContentBuilder(root: JsonNode) {
   }
 
   def autovalue(value: Any): XContentBuilder = {
+    import scala.collection.JavaConverters._
+    requireArray()
     value match {
       case v: String => array.add(v)
       case v: Double => array.add(v)
@@ -117,10 +119,22 @@ class XContentBuilder(root: JsonNode) {
       case v: Byte => array.add(v)
       case v: BigDecimal => array.add(v.bigDecimal)
       case null => array.addNull()
+      case values: Seq[_] =>
+        startArray()
+        values.foreach(autovalue)
+        endArray()
+      case values: Iterator[_] => autovalue(values.toSeq)
+      case values: java.util.Collection[_] => autovalue(values.asScala)
+      case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
+      case map: Map[String, Any] =>
+        startObject()
+        map.foreach { case (k, v) => autofield(k, v) }
+        endObject()
       case other => array.add(other.toString)
     }
     this
   }
+
 
   def autoarray(name: String, values: Seq[Any]): XContentBuilder = {
     startArray(name)
@@ -130,6 +144,8 @@ class XContentBuilder(root: JsonNode) {
   }
 
   def autofield(name: String, value: Any): XContentBuilder = {
+    import scala.collection.JavaConverters._
+
     value match {
       case v: String => obj.put(name, v)
       case v: java.lang.Double => obj.put(name, v)
@@ -144,6 +160,17 @@ class XContentBuilder(root: JsonNode) {
       case v: Short => obj.put(name, v)
       case v: Byte => obj.put(name, v)
       case v: BigDecimal => obj.put(name, v.bigDecimal)
+      case values: Seq[_] =>
+        startArray(name)
+        values.foreach(autovalue)
+        endArray()
+      case values: Iterator[_] => autoarray(name, values.toSeq)
+      case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
+      case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
+      case map: Map[String, Any] =>
+        startObject(name)
+        map.foreach { case (k, v) => autofield(k, v) }
+        endObject()
       case null => obj.putNull(name)
       case other => obj.put(name, other.toString)
     }
@@ -226,6 +253,10 @@ class XContentBuilder(root: JsonNode) {
   def startObject(name: String): XContentBuilder = {
     stack.push(current.asInstanceOf[ObjectNode].putObject(name))
     this
+  }
+
+  private def requireArray(): Unit = {
+    require(current.isInstanceOf[ArrayNode])
   }
 
   def endObject(): XContentBuilder = {
