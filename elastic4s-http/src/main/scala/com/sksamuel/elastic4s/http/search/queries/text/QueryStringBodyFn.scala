@@ -27,12 +27,17 @@ object QueryStringBodyFn {
     s.tieBreaker.foreach(builder.field("tie_breaker", _))
     s.rewrite.map(_.toString).foreach(builder.field("rewrite", _))
 
+
     if (s.fields.nonEmpty) {
       val fields = s.fields.map {
         case (name, 0.0D) => name
         case (name, boost) => s"$name^$boost"
       }.toArray
       builder.field("fields", fields)
+    } else {
+      if (s.defaultField == None) {
+        builder.field("all_fields", true)
+      }
     }
 
     builder.field("query", s.query)

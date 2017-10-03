@@ -29,6 +29,7 @@ object QueryStringBuilderFn {
     query.rewrite.foreach(builder.rewrite)
     query.splitOnWhitespace.foreach(builder.splitOnWhitespace)
     query.tieBreaker.map(_.toFloat).foreach(builder.tieBreaker)
+    builder.useAllFields(query.fields.isEmpty && query.defaultField == None)
     builder
   }
 }

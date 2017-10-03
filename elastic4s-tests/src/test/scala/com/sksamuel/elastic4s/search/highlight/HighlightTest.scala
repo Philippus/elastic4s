@@ -104,5 +104,16 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with DualElas
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "out new <em>life</em> and"
     }
+
+    "use highlight query without query fields provided." in {
+      val resp = execute {
+        search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
+          highlight("text") fragmentSize 20 query query("life")
+          )
+      }.await
+      val fragments = resp.hits.hits.head.highlightFragments("text")
+      fragments.size shouldBe 1
+      fragments.head.trim shouldBe "out new <em>life</em> and"
+    }
   }
 }
