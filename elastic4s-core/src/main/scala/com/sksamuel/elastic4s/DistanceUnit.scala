@@ -5,6 +5,17 @@ sealed trait DistanceUnit {
   def toMeters(value: Double): Double = value * meters
 }
 object DistanceUnit {
+
+  val INCH = Inch
+  val YARD = Yard
+  val FEET = Feet
+  val KILOMETERS = Kilometers
+  val NAUTICALMILES = NauticalMiles
+  val MILLIMETERS = Millimeters
+  val CENTIMETERS = Centimeters
+  val MILES = Miles
+  val METERS = Meters
+
   case object Inch extends DistanceUnit { val meters = 0.0254}
   case object Yard extends DistanceUnit { val meters  = 0.9144}
   case object Feet extends DistanceUnit { val meters  = 0.3048}

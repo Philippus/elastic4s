@@ -12,10 +12,10 @@ trait SearchApi {
   def search(indexes: Iterable[String]): SearchDefinition = search(Indexes(indexes.toSeq))
   def search(indexes: Indexes): SearchDefinition = search(indexes.toIndexesAndTypes)
 
-  @deprecated("Elasticsearch 6.0 has deprecated types with the intention of removing them in 7.0. You can continue to use them in existing indexes, but all new indexes must only have a single type. Therefore searching across multiple types is now deprecated because types will no longer work in the next release.", "6.0")
+  @deprecated("Elasticsearch 6.0 has deprecated types with the intention of removing them in 7.0. You can continue to use them in existing indexes, but all new indexes must only have a single type. Therefore searching across multiple types is now deprecated because it will be removed in the next major release.", "6.0")
   def search(indexTypes: IndexAndTypes): SearchDefinition = search(indexTypes.toIndexesAndTypes)
 
-  @deprecated("Elasticsearch 6.0 has deprecated types with the intention of removing them in 7.0. You can continue to use them in existing indexes, but all new indexes must only have a single type. Therefore searching across multiple types is now deprecated because types will no longer work in the next release.", "6.0")
+  @deprecated("Elasticsearch 6.0 has deprecated types with the intention of removing them in 7.0. You can continue to use them in existing indexes, but all new indexes must only have a single type. Therefore searching across multiple types is now deprecated because it will be removed in the next major release.", "6.0")
   def search(indexesAndTypes: IndexesAndTypes): SearchDefinition = SearchDefinition(indexesAndTypes)
 
   def rescore(query: QueryDefinition) = RescoreDefinition(query)
