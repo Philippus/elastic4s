@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
-import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.searches.aggs.pipeline.CumulativeSumDefinition
-import com.sksamuel.elastic4s.searches.aggs.{SumAggregationDefinition, ValueCountAggregationDefinition}
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 
 object CumulativeSumAggregationBuilder {
   def apply(agg: CumulativeSumDefinition): XContentBuilder = {

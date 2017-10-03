@@ -27,7 +27,7 @@ trait SuggestionResult {
   def suggestion: R
   def name: String = suggestion.getName
   def size: Int = suggestion.getEntries.size
-  def `type`: Int = suggestion.getWriteableType
+  def `type`: Int = suggestion.getType
   def entries: Seq[E]
   def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
   def entryTerms: Seq[String] = entries.map(_.term)

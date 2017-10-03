@@ -13,7 +13,7 @@ object NestedQueryBuilderFn {
       q.scoreMode.getOrElse(ScoreMode.Avg)
     )
     q.boost.map(_.toFloat).map(builder.boost)
-    q.inner.map(InnerHitBuilder.apply).foreach(builder.innerHit)
+    q.inner.map(InnerHitBuilder.apply).foreach(builder.innerHit(_, false))
     q.queryName.foreach(builder.queryName)
     q.ignoreUnmapped.foreach(builder.ignoreUnmapped)
     builder

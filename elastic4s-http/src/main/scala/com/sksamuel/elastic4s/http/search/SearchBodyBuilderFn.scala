@@ -144,10 +144,10 @@ object SearchBodyBuilderFn {
 
           builder.startObject("collate")
           builder.startObject("query")
-          phrase.collateQuery.foreach(t => builder.rawField("inline", new BytesArray(t.getIdOrCode)))
+          phrase.collateQuery.foreach(t => builder.rawField("inline", new BytesArray(t.getIdOrCode), XContentType.JSON))
           builder.endObject()
           phrase.collatePrune.foreach(builder.field("prune", _))
-          builder.rawField("params", SourceAsContentBuilder(phrase.collateParams).bytes())
+          builder.rawField("params", SourceAsContentBuilder(phrase.collateParams).bytes(), XContentType.JSON)
           builder.endObject()
 
           builder.startObject("highlight")

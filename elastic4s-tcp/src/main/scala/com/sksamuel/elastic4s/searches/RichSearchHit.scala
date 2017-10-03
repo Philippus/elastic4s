@@ -22,7 +22,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   override def exists = true
 
   override def sourceAsString: String = StringOption(java.getSourceAsString).getOrElse("")
-  override def sourceAsMap: Map[String, AnyRef] = Option(java.getSourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
+  override def sourceAsMap: Map[String, AnyRef] = Option(java.sourceAsMap()).map(_.asScala.toMap).getOrElse(Map.empty)
 
   def explanation: Option[Explanation] = Option(java.getExplanation)
 

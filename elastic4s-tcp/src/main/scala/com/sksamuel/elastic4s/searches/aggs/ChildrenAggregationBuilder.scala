@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import org.elasticsearch.join.aggregations.ChildrenAggregationBuilder
+import org.elasticsearch.search.aggregations.bucket.children.ChildrenAggregationBuilder
 
 import scala.collection.JavaConverters._
 

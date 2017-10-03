@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.queries.compound
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object BoolQueryBuilderFn {
 
@@ -15,28 +15,28 @@ object BoolQueryBuilderFn {
     if (bool.must.nonEmpty) {
       builder.startArray("must")
       val musts = bool.must.map(QueryBuilderFn.apply).map(_.string).mkString(",")
-      builder.rawValue(new BytesArray(musts))
+      builder.rawValue(new BytesArray(musts), XContentType.JSON)
       builder.endArray()
     }
 
     if (bool.should.nonEmpty) {
       builder.startArray("should")
       val should = bool.should.map(QueryBuilderFn.apply).map(_.string).mkString(",")
-      builder.rawValue(new BytesArray(should))
+      builder.rawValue(new BytesArray(should), XContentType.JSON)
       builder.endArray()
     }
 
     if (bool.not.nonEmpty) {
       builder.startArray("must_not")
       val nots = bool.not.map(QueryBuilderFn.apply).map(_.string).mkString(",")
-      builder.rawValue(new BytesArray(nots))
+      builder.rawValue(new BytesArray(nots), XContentType.JSON)
       builder.endArray()
     }
 
     if (bool.filters.nonEmpty) {
       builder.startArray("filter")
       val filters = bool.filters.map(QueryBuilderFn.apply).map(_.string).mkString(",")
-      builder.rawValue(new BytesArray(filters))
+      builder.rawValue(new BytesArray(filters), XContentType.JSON)
       builder.endArray()
     }
 
