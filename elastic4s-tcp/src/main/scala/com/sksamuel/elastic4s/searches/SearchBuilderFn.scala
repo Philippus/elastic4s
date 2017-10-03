@@ -36,6 +36,8 @@ object SearchBuilderFn {
     search.searchType.map(EnumConversions.searchType).foreach(builder.setSearchType)
     search.scoring.trackScores.foreach(builder.setTrackScores)
     search.control.terminateAfter.foreach(builder.setTerminateAfter)
+    if (search.searchAfter.nonEmpty)
+      builder.searchAfter(search.searchAfter.toArray)
     search.control.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
     search.keepAlive.foreach(builder.setScroll)
     search.windowing.slice.foreach(s => builder.slice(new SliceBuilder(s._1, s._2)))
