@@ -14,18 +14,18 @@ object Build extends AutoPlugin {
     val CatsVersion = "1.0.0-MF"
     val CirceVersion = "0.9.0-M1"
     val CommonsIoVersion = "2.4"
-    val ElasticsearchVersion = "6.0.0-beta2"
-    val ExtsVersion = "1.52.0"
-    val JacksonVersion = "2.8.9"
+    val ElasticsearchVersion = "6.0.0-rc1"
+    val ExtsVersion = "1.57.1"
+    val JacksonVersion = "2.9.1"
     val Json4sVersion = "3.5.3"
     val SprayJsonVersion = "1.3.3"
     val Log4jVersion = "2.6.2"
     val LuceneVersion = "7.0.0-snapshot-00142c9"
     val MockitoVersion = "1.9.5"
-    val PlayJsonVersion = "2.6.3"
+    val PlayJsonVersion = "2.6.6"
     val ReactiveStreamsVersion = "1.0.0"
     val ScalatestVersion = "3.0.4"
-    val Slf4jVersion = "1.7.12"
+    val Slf4jVersion = "1.7.25"
   }
 
   import autoImport._
@@ -40,7 +40,7 @@ object Build extends AutoPlugin {
     crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.2"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
-    resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/00142c9",
+  //  resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/00142c9",
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     fork := false,
