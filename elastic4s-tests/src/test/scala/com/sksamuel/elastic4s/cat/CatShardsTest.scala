@@ -29,7 +29,7 @@ class CatShardsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-  "cats shards" should "return all shards" in {
+  "cats shards" should "return all shards" ignore {
     val result = http.execute {
       catShards()
     }.await
