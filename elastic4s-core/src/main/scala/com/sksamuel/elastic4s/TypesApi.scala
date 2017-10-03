@@ -19,6 +19,7 @@ trait TypesApi {
   def geoshapeField(name: String): GeoshapeFieldDefinition = GeoshapeFieldDefinition(name)
   def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
   def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
+  def joinField(name: String): JoinFieldDefinition = JoinFieldDefinition(name)
   def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
   def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
   def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
