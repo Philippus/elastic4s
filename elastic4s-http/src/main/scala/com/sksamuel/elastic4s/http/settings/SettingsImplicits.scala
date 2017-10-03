@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.settings
 
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.http.update.RequestFailure
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
 import com.sksamuel.exts.collection.Maps
@@ -48,8 +48,9 @@ trait SettingsImplicits {
     }
 
     override def execute(client: HttpRequestClient, request: UpdateSettingsDefinition): Future[HttpResponse] = {
-     // val endpoint = "/" + request.indexes.string + "/_settings"
-      client.async("POST", "", Map.empty)
+      val endpoint = "/" + request.indices.string + "/_settings"
+      val body = JacksonSupport.mapper.writeValueAsString(request.settings)
+      client.async("PUT", endpoint, Map.empty, HttpEntity(body))
     }
   }
 }

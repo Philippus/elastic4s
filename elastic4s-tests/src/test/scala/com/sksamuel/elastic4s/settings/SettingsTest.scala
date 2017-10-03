@@ -67,4 +67,20 @@ class SettingsTest extends WordSpec with Matchers with ElasticDsl with Discovery
       }.await.left.get.error.`type` shouldBe "index_not_found_exception"
     }
   }
+
+  "updateSettings" should {
+    "override settings" in {
+
+      http.execute {
+        updateSettings("settingsa", Map("index.refresh_interval" -> "20s"))
+      }.await
+
+      val response = http.execute {
+        getSettings(Seq("settingsa"))
+      }.await.right.get
+
+      val settings = response.settingsForIndex("settingsa")
+      settings("index.refresh_interval") shouldBe "20s"
+    }
+  }
 }

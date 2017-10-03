@@ -11,6 +11,8 @@ trait SettingsApi {
 
   def updateSettings(index: String, indexes: String*): UpdateSettingsDefinition = updateSettings(index +: indexes)
   def updateSettings(indexes: Indexes): UpdateSettingsDefinition = UpdateSettingsDefinition(indexes)
+
+  def updateSettings(indexes: Indexes, settings: Map[String, String]) = UpdateSettingsDefinition(indexes, settings = settings)
 }
 
 case class GetSettingsDefinition(indexes: Indexes,
