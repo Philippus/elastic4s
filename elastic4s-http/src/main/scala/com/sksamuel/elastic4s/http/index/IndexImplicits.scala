@@ -19,7 +19,7 @@ trait IndexImplicits extends IndexShowImplicits {
     override def responseHandler: ResponseHandler[Either[IndexFailure, IndexResponse]] = new ResponseHandler[Either[IndexFailure, IndexResponse]] {
       override def doit(response: HttpResponse): Either[IndexFailure, IndexResponse] = response.statusCode match {
         case 201 | 200 => Right(ResponseHandler.fromEntity[IndexResponse](response.entity.getOrError("Index responses must have a body")))
-        case 400 | 500 => Left(IndexFailure(response.entity.get.content))
+        case 400 | 409 | 500 => Left(IndexFailure(response.entity.get.content))
         case _ => sys.error(response.toString)
       }
     }
