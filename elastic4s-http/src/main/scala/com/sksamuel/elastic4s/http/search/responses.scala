@@ -47,7 +47,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             score = hits("_score").asInstanceOf[Double],
             source = hits("_source").asInstanceOf[Map[String, AnyRef]],
-            highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty)
+            highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty),
+            sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty)
           )
         }
       )
@@ -69,7 +70,8 @@ case class InnerHits(total: Long,
 case class InnerHit(nested: Map[String, AnyRef],
                     score: Double,
                     source: Map[String, AnyRef],
-                    highlight: Map[String, Seq[String]])
+                    highlight: Map[String, Seq[String]],
+                    sort: Seq[AnyRef])
 
 case class SearchResponse(took: Long,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
