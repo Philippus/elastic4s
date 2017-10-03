@@ -11,9 +11,11 @@ class ReindexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryL
 
   delete("reindex")
   delete("reindex2")
+  delete("reindextarget")
 
   create("reindex")
   create("reindex2")
+  create("reindextarget")
 
   def delete(name: String) = Try {
     http.execute {
