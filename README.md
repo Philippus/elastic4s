@@ -871,7 +871,7 @@ folder. There is no need to configure anything externally.
 
 ###### 6.0.0 - Pre-release
 
-* HTTP Client should now be the first choice client. The TCP Client has been deprecated as it will be removed in version 7 of elasticsearch itself. See https://www.elastic.co/blog/elasticsearch-5-6-0-released
+* HTTP Client should now be the first choice client. The TCP Client has been deprecated as it will be removed in version 7 of elasticsearch itself. See https://www.elastic.co/blog/elasticsearch-5-6-0-released. Specifically, _HTTP client will become the official way for Java applications to communicate with Elasticsearch, replacing the Transport Client, which will be removed in Elasticsearch 7.0._.
 * HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
 * Any methods deprecated before version 5.0.0 have been removed.
 * Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
