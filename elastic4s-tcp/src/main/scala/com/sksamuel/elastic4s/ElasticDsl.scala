@@ -8,8 +8,8 @@ import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsD
 import com.sksamuel.elastic4s.delete.DeleteExecutables
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainExecutables}
 import com.sksamuel.elastic4s.get.GetExecutables
-import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables, IndexTemplateExecutables}
 import com.sksamuel.elastic4s.index.admin.ForceMergeExecutables
+import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables, IndexTemplateExecutables}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.IndexRecoveryDefinition
 import com.sksamuel.elastic4s.mappings.FieldType._
@@ -20,13 +20,13 @@ import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchImplicits}
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, ScoreSortDefinition}
+import com.sksamuel.elastic4s.searches.sort.FieldSortDefinition
+import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, SettingsExecutables, UpdateSettingsDefinition}
 import com.sksamuel.elastic4s.task.TaskExecutables
 import com.sksamuel.elastic4s.termvectors.TermVectorsExecutables
 import com.sksamuel.elastic4s.update.UpdateExecutables
 import com.sksamuel.elastic4s.validate.ValidateExecutables
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.search.sort.SortOrder
 
 import scala.language.implicitConversions
 
@@ -35,7 +35,6 @@ import scala.language.implicitConversions
 trait ElasticDsl
   extends ElasticApi
     with PercolateDsl
-    with SettingsDsl
     with SnapshotDsl
     with TokenFilterDsl
     with AliasExecutables
@@ -55,6 +54,7 @@ trait ElasticDsl
     with ReindexExecutables
     with ScrollExecutables
     with SearchImplicits
+    with SettingsExecutables
     with TaskExecutables
     with TermVectorsExecutables
     with UpdateExecutables
