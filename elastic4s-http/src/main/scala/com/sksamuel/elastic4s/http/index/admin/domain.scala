@@ -34,7 +34,7 @@ case class UpdateIndexLevelSettingsResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 
-case class IndicesAliasResponse(acknowledged: Boolean) {
+case class AliasActionResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged
 }
 

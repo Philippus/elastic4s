@@ -34,9 +34,9 @@ object AliasActionBuilders {
 trait AliasExecutables {
 
   implicit object GetAliasDefinitionExecutable
-    extends Executable[GetAliasDefinition, GetAliasesResponse, GetAliasesResponse] {
-    override def apply(c: Client, t: GetAliasDefinition): Future[GetAliasesResponse] = {
-      val _builder = c.admin().indices().prepareGetAliases(t.aliases: _*).addIndices(t.indices: _*)
+    extends Executable[GetAliasesDefinition, GetAliasesResponse, GetAliasesResponse] {
+    override def apply(c: Client, t: GetAliasesDefinition): Future[GetAliasesResponse] = {
+      val _builder = c.admin().indices().prepareGetAliases(t.aliases: _*).addIndices(t.indices.values: _*)
       injectFuture(_builder.execute(_))
     }
   }

@@ -1,74 +1,55 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
-import com.sksamuel.elastic4s.http.index.admin.IndicesAliasResponse
+import com.sksamuel.elastic4s.Index
+import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
+import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
+import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
 
 trait IndexAliasImplicits {
 
-  implicit object GetAliasesDefinition extends HttpExecutable[GetAliasesDefinition, Seq[Alias]] {
+  implicit object GetAliasHttpExecutable extends HttpExecutable[GetAliasesDefinition, Either[RequestFailure, IndexAliases]] {
 
-    override def responseHandler: ResponseHandler[Seq[Alias]] = new ResponseHandler[Seq[Alias]] {
-      override def handle(response: HttpResponse): Try[Seq[Alias]] = Try {
-        ResponseHandler.fromEntity[Map[String, Map[String, Map[String, AnyRef]]]](response.entity.get).map { case (name, map) =>
-          Alias(name, map.getOrElse("aliases", Map.empty).keySet.toSeq)
-        }.toSeq
+    import scala.collection.JavaConverters._
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, IndexAliases]] {
+      override def doit(response: HttpResponse) = response.statusCode match {
+        case 200 =>
+          val root = ResponseHandler.json(response.entity.get)
+          val map = root.fields.asScala.toVector.map { entry =>
+            Index(entry.getKey) -> entry.getValue.get("aliases").fieldNames.asScala.toList.map(Alias.apply)
+          }.toMap
+          Right(IndexAliases(map))
+        case 404 => Right(IndexAliases(Map.empty))
+        case _ => Left(RequestFailure.fromResponse(response))
       }
     }
 
     override def execute(client: HttpRequestClient, request: GetAliasesDefinition): Future[HttpResponse] = {
-      client.async("GET", "/_aliases", Map.empty)
-    }
-  }
-
-  implicit object GetAliasExecutable extends HttpExecutable[GetAliasDefinition, Option[Alias]] {
-
-    override def responseHandler: ResponseHandler[Option[Alias]] = new ResponseHandler[Option[Alias]] {
-
-      import scala.collection.JavaConverters._
-
-      override def handle(response: HttpResponse): Try[Option[Alias]] = {
-        response.statusCode match {
-          case 200 => Try {
-            val root = ResponseHandler.json(response.entity.get)
-            root.fields.asScala.toVector.headOption.map { entry =>
-              val aliases = entry.getValue.findValue("aliases").fieldNames().asScala.toList
-              Alias(entry.getKey, aliases)
-            }
-          }
-          case 404 => Try(None)
-          case _ => super.handleError(response)
-        }
-      }
-    }
-
-    override def execute(client: HttpRequestClient, request: GetAliasDefinition): Future[HttpResponse] = {
-      val indexPathElement = if (request.indices.isEmpty) "" else s"/${request.indices.mkString(",")}"
-      val endpoint = s"$indexPathElement/_alias/${request.aliases.mkString(",")}"
+      val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore => Map("ignore_unavailable" -> ignore) }
       client.async("GET", endpoint, params)
     }
   }
 
-  implicit object RemoveAliasActionExecutable extends HttpExecutable[RemoveAliasActionDefinition, IndicesAliasResponse] {
+  implicit object RemoveAliasActionExecutable extends HttpExecutable[RemoveAliasActionDefinition, AliasActionResponse] {
     override def execute(client: HttpRequestClient, request: RemoveAliasActionDefinition): Future[HttpResponse] = {
       val container = IndicesAliasesRequestDefinition(Seq(request))
       IndexAliasesExecutable.execute(client, container)
     }
   }
 
-  implicit object AddAliasActionExecutable extends HttpExecutable[AddAliasActionDefinition, IndicesAliasResponse] {
+  implicit object AddAliasActionExecutable extends HttpExecutable[AddAliasActionDefinition, AliasActionResponse] {
     override def execute(client: HttpRequestClient, request: AddAliasActionDefinition): Future[HttpResponse] = {
       val container = IndicesAliasesRequestDefinition(Seq(request))
       IndexAliasesExecutable.execute(client, container)
     }
   }
 
-  implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, IndicesAliasResponse] {
+  implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, AliasActionResponse] {
     override def execute(client: HttpRequestClient, request: IndicesAliasesRequestDefinition): Future[HttpResponse] = {
       val body = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
@@ -77,4 +58,9 @@ trait IndexAliasImplicits {
   }
 }
 
-case class Alias(name: String, indexes: Seq[String])
+case class IndexAliases(mappings: Map[Index, Seq[Alias]]) {
+  def aliasesForIndex(index: String): Seq[Alias] = aliasesForIndex(Index(index))
+  def aliasesForIndex(index: Index): Seq[Alias] = mappings.getOrElse(index, Nil)
+}
+
+case class Alias(name: String)

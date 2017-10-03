@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.aliases
 
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.http.index.admin.{AliasExistsResponse, IndicesAliasResponse}
-import com.sksamuel.elastic4s.http.index.alias.Alias
+import com.sksamuel.elastic4s.http.index.admin.{AliasActionResponse, AliasExistsResponse}
+import com.sksamuel.elastic4s.http.index.alias.{Alias, IndexAliases}
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
@@ -16,46 +17,119 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
   addIndex("beaches")
   addIndex("mountains")
 
+  http.execute {
+    indexInto("beaches/a").fields("name" -> "gold").refreshImmediately
+  }.await
+
+  http.execute {
+    indexInto("beaches/a").fields("name" -> "sword").refreshImmediately
+  }.await
+
   "alias actions" should {
-    "be executed" in {
+    "support adding an alias" in {
       http.execute {
         aliases(
-          addAlias("landscapes").on("beaches")
+          addAlias("beaches_alias", "beaches")
         )
-      }.await shouldBe IndicesAliasResponse(true)
+      }.await shouldBe AliasActionResponse(true)
 
+      http.execute {
+        getAliases(Nil, Seq("beaches_alias"))
+      }.await shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")))))
+    }
+    "multiple operations" in {
       http.execute {
         aliases(
-          addAlias("landscapes").on("mountains"),
-          removeAlias("landscapes").on("beaches")
+          removeAlias("beaches_alias").on("beaches"),
+          addAlias("mountains_alias").on("mountains")
         )
-      }.await should be(IndicesAliasResponse(true))
+      }.await should be(AliasActionResponse(true))
 
       http.execute {
-        aliasExists("landscapes")
+        aliasExists("mountains_alias")
       }.await should be(AliasExistsResponse(true))
 
       http.execute {
-        getAlias("landscapes")
-      }.await.get shouldBe Alias("mountains", List("landscapes"))
+        aliasExists("beaches_alias")
+      }.await should be(AliasExistsResponse(false))
 
-    }
-
-    "return empty response when not found" in {
       http.execute {
-        getAlias("does_not_exist")
-      }.await shouldBe None
+        getAliases(Nil, Seq("mountains_alias"))
+      }.await shouldBe Right(IndexAliases(Map(Index("mountains") -> List(Alias("mountains_alias")))))
+
+      http.execute {
+        getAliases(Nil, Seq("beaches_alias"))
+      }.await shouldBe Right(IndexAliases(Map.empty))
+    }
+    "support removing an alias" in {
+      http.execute {
+        aliases(
+          removeAlias("mountains_alias", "mountains")
+        )
+      }.await should be(AliasActionResponse(true))
+
+      http.execute {
+        aliasExists("mountains_alias")
+      }.await should be(AliasExistsResponse(false))
+
+      http.execute {
+        getAliases(Nil, Seq("mountains_alias"))
+      }.await shouldBe Right(IndexAliases(Map.empty))
     }
   }
 
-  "get aliases" should {
-    "return all aliases" in {
-      val aliases = http.execute {
-        getAliases()
-      }.await.toSet
+  "getAliases" should {
+    "return empty response when the index is not found" in {
+      http.execute {
+        getAliases("does_not_exist", Nil)
+      }.await shouldBe Right(IndexAliases(Map.empty))
+    }
+    "return empty response when no index of many is found" in {
+      http.execute {
+        aliases(
+          addAlias("beaches_alias", "beaches")
+        )
+      }.await shouldBe AliasActionResponse(true)
 
-      aliases.contains(Alias("mountains", Vector("landscapes"))) shouldBe true
-      aliases.contains(Alias("beaches", Nil)) shouldBe true
+      http.execute {
+        getAliases(Seq("does_not_exist", "beaches"), Nil)
+      }.await shouldBe Right(IndexAliases(Map()))
+    }
+    "support multiple indexes where many are found" in {
+      http.execute {
+        getAliases(Seq("mountains", "beaches"), Nil)
+      }.await shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")), Index("mountains") -> Nil)))
+    }
+    "return all aliases / all indexes when nothing is specified" in {
+
+      http.execute {
+        aliases(
+          addAlias("sandy_beaches", "beaches"),
+          addAlias("big_mountains", "mountains")
+        )
+      }.await shouldBe AliasActionResponse(true)
+
+      val results = http.execute {
+        getAliases()
+      }.await
+
+      results shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias"), Alias("sandy_beaches")), Index("mountains") -> List(Alias("big_mountains")))))
+    }
+  }
+
+  "alias filters" should {
+    "filter search results" in {
+      http.execute {
+        aliases(
+          addAlias("metal_beaches", "beaches").filter(prefixQuery("name", "g"))
+        )
+      }.await shouldBe AliasActionResponse(true)
+
+      val result = http.execute {
+        search("metal_beaches").matchAllQuery()
+      }.await.right.get
+      result.hits.hits.length shouldBe 1
+      result.hits.hits.head.sourceAsMap("name") shouldBe "gold"
     }
   }
 
@@ -70,8 +144,8 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
   private def addIndex(index: String): Unit = {
     http.execute {
       createIndex(index).mappings(
-        mapping("dday").fields(
-          textField("name")
+        mapping("a").fields(
+          textField("b")
         )
       ).shards(1).replicas(0).waitForActiveShards(1)
     }.await

@@ -63,6 +63,7 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
       "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % Log4jVersion,
       "com.carrotsearch"                      % "hppc"                      % "0.7.1",
       "joda-time"                             % "joda-time"                 % "2.9.9",
       "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,

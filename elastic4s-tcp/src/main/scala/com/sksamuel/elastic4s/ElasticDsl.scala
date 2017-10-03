@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin._
-import com.sksamuel.elastic4s.alias.{AliasExecutables, GetAliasDefinition}
+import com.sksamuel.elastic4s.alias.{AliasExecutables, GetAliasesDefinition}
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.bulk.BulkExecutables
 import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStatsDefinition}
@@ -329,7 +329,7 @@ trait ElasticDsl
     def id(id: Any): GetExpectsFrom = get(id)
 
     @deprecated("use getAlias(alias)", "5.0.0")
-    def alias(aliases: String*): GetAliasDefinition = GetAliasDefinition(aliases)
+    def alias(aliases: String*): GetAliasesDefinition = GetAliasesDefinition(aliases)
 
     @deprecated("use clusterStats()", "5.0.0")
     def cluster(stats: StatsKeyword): ClusterStatsDefinition = ClusterStatsDefinition()

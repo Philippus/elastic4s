@@ -19,8 +19,8 @@ object Build extends AutoPlugin {
     val JacksonVersion = "2.9.1"
     val Json4sVersion = "3.5.3"
     val SprayJsonVersion = "1.3.3"
-    val Log4jVersion = "2.6.2"
-    val LuceneVersion = "7.0.0-snapshot-00142c9"
+    val Log4jVersion = "2.9.1"
+    val LuceneVersion = "7.0.0"
     val MockitoVersion = "1.9.5"
     val PlayJsonVersion = "2.6.6"
     val ReactiveStreamsVersion = "1.0.0"
@@ -37,10 +37,9 @@ object Build extends AutoPlugin {
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := "2.10.6",
-    crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.2"),
+    crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
-  //  resolvers += "Elasticsearch Lucene Snapshots" at "https://download.elasticsearch.org/lucenesnapshots/00142c9",
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
     fork := false,
@@ -54,8 +53,8 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
       "org.typelevel"                         %% "cats-core"                % CatsVersion,
-      "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
-      "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",
+      "org.slf4j"                             %  "slf4j-api"                % Slf4jVersion,
+      "org.mockito"                           %  "mockito-all"              % MockitoVersion        % "test",
       "org.scalatest"                         %% "scalatest"                % ScalatestVersion      % "test"
     ),
     publishTo := {

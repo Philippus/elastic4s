@@ -129,5 +129,5 @@ trait TcpClientConstructors extends Logging {
 @deprecated("Use the HTTP client, the TCP client will be removed in 7.0; see https://www.elastic.co/blog/elasticsearch-5-6-0-released", "6.0.0")
 object TcpClient extends TcpClientConstructors
 
-@deprecated("use the equivalent methods on TcpClient", "5.2.0")
+@deprecated("Use the HTTP client, the TCP client will be removed in 7.0; see https://www.elastic.co/blog/elasticsearch-5-6-0-released", "6.0.0")
 object ElasticClient extends TcpClientConstructors

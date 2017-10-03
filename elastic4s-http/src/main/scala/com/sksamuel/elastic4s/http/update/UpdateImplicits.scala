@@ -36,6 +36,10 @@ object UpdateByQueryBodyFn {
 
 case class RequestFailure(error: ElasticError, status: Int)
 
+object RequestFailure {
+  def fromResponse(response: HttpResponse) = ResponseHandler.fromEntity[RequestFailure](response.entity.getOrError("Entity did not return a body"))
+}
+
 object UpdateImplicits extends UpdateImplicits
 
 trait UpdateImplicits {

@@ -24,9 +24,6 @@ case class MatchQueryDefinition(field: String,
   def analyzer(an: String): MatchQueryDefinition = copy(analyzer = an.some)
   def analyzer(an: Analyzer): MatchQueryDefinition = copy(analyzer = an.name.some)
 
-  @deprecated("for phrase queries use match phrase query", "5.0.0")
-  def slop(s: Int): MatchQueryDefinition = copy(slop = s.some)
-
   def boost(boost: Double): MatchQueryDefinition = copy(boost = boost.some)
   def cutoffFrequency(f: Double): MatchQueryDefinition = copy(cutoffFrequency = f.some)
   def lenient(lenient: Boolean): MatchQueryDefinition = copy(lenient = lenient.some)
