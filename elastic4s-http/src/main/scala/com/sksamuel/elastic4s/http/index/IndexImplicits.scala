@@ -27,7 +27,7 @@ trait IndexImplicits extends IndexShowImplicits {
     override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
 
       val (method, endpoint) = request.id match {
-        case Some(id) => "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/$id"
+        case Some(id) => "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/${URLEncoder.encode(id.toString)}"
         case None => "POST" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}"
       }
 

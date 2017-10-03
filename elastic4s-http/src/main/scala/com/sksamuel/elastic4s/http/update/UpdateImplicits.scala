@@ -4,7 +4,6 @@ import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
-import com.sksamuel.elastic4s.http.index.ElasticError
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -35,6 +34,13 @@ object UpdateByQueryBodyFn {
 }
 
 case class RequestFailure(error: ElasticError, status: Int)
+
+case class ElasticError(`type`: String,
+                        reason: String,
+                        @JsonProperty("index_uuid") indexUuid: String,
+                        index: String,
+                        shard: Option[String],
+                        @JsonProperty("root_cause") rootCause: Seq[ElasticError])
 
 object RequestFailure {
   def fromResponse(response: HttpResponse) = ResponseHandler.fromEntity[RequestFailure](response.entity.getOrError("Entity did not return a body"))

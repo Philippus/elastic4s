@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.http.get
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.index.ElasticError
-import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.update.{ElasticError, RequestFailure}
 import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
@@ -73,7 +74,7 @@ trait GetImplicits {
 
     override def execute(client: HttpRequestClient, request: GetDefinition): Future[HttpResponse] = {
 
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
+      val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>
