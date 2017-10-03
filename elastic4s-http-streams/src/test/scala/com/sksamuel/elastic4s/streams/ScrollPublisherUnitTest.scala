@@ -13,7 +13,7 @@ class ScrollPublisherUnitTest extends WordSpec with Matchers with HttpElasticSug
   "elastic-streams" should {
     "throw exception if search definition has no scroll" in {
       an [IllegalArgumentException] should be thrownBy
-        http.publisher(search("scrollpubint" / "emperors") query "*:*")
+        http.publisher(search("scrollpubint") query "*:*")
     }
   }
 }

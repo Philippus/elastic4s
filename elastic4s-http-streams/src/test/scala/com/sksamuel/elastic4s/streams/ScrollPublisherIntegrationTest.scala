@@ -60,7 +60,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodePro
   "elastic-streams" should {
     "publish all data from the index" in {
 
-      val publisher = http.publisher(search(indexName / indexType) query "*:*" scroll "1m")
+      val publisher = http.publisher(search(indexName) query "*:*" scroll "1m")
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch = new CountDownLatch(emperors.length)
@@ -72,8 +72,8 @@ class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodePro
         override def onNext(t: SearchHit): Unit = documentLatch.countDown()
       })
 
-      completionLatch.await(5, TimeUnit.SECONDS) should be (true)
-      documentLatch.await(5, TimeUnit.SECONDS) should be (true)
+      completionLatch.await(10, TimeUnit.SECONDS) shouldBe true
+      documentLatch.await(10, TimeUnit.SECONDS) shouldBe true
     }
   }
 }
