@@ -10,7 +10,7 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org = "com.sksamuel.elastic4s"
-    val AkkaVersion = "2.3.16"
+    val AkkaVersion = "2.4.20"
     val CatsVersion = "1.0.0-MF"
     val CirceVersion = "0.9.0-M1"
     val CommonsIoVersion = "2.4"
@@ -36,8 +36,8 @@ object Build extends AutoPlugin {
     ivyConfigurations += config("compileonly").hide,
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
-    scalaVersion := "2.10.6",
-    crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3"),
+    scalaVersion := "2.11.11",
+    crossScalaVersions := Seq("2.11.11", "2.12.3"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
