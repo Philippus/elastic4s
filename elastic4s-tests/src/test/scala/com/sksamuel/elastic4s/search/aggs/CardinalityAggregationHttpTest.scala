@@ -24,6 +24,21 @@ class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
     }
   }.await
 
+  Try {
+    http.execute {
+      deleteIndex("cardagg2")
+    }.await
+  }
+
+  http.execute {
+    createIndex("cardagg2") mappings {
+      mapping("buildings") fields(
+        textField("name").fielddata(true),
+        intField("height").stored(true)
+      )
+    }
+  }.await
+
   http.execute(
     bulk(
       indexInto("cardagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
@@ -46,6 +61,19 @@ class CardinalityAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
       val agg = resp.aggs.cardinality("agg1")
       // should be 6 unique terms, the 'of' in tower of london will be filtered out by the analyzer
       agg.value shouldBe 6
+    }
+    "should support when there are no matching doucments" in {
+
+      val resp = http.execute {
+        search("cardagg2").matchAllQuery().aggs {
+          cardinalityAgg("agg1", "name")
+        }
+      }.await.right.get
+
+      resp.totalHits shouldBe 0
+
+      val agg = resp.aggs.cardinality("agg1")
+      agg.value shouldBe 0
     }
   }
 }

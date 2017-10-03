@@ -24,6 +24,21 @@ class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProv
     }
   }.await
 
+  Try {
+    http.execute {
+      ElasticDsl.deleteIndex("valuecount2")
+    }.await
+  }
+
+  http.execute {
+    createIndex("valuecount2") mappings {
+      mapping("buildings") fields(
+        textField("name").fielddata(true),
+        intField("height").stored(true)
+      )
+    }
+  }.await
+
   http.execute(
     bulk(
       indexInto("valuecount/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
@@ -34,7 +49,6 @@ class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProv
 
   "cardinality agg" - {
     "should return the count of distinct values" in {
-
       val resp = http.execute {
         search("valuecount").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
@@ -43,6 +57,16 @@ class ValueCountAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProv
       resp.totalHits shouldBe 3
       val agg = resp.aggs.valueCount("agg1")
       agg.value shouldBe 7
+    }
+    "should support when no documents match" in {
+      val resp = http.execute {
+        search("valuecount2").matchAllQuery().aggs {
+          valueCountAgg("agg1", "name")
+        }
+      }.await.right.get
+      resp.totalHits shouldBe 0
+      val agg = resp.aggs.valueCount("agg1")
+      agg.value shouldBe 0
     }
   }
 }

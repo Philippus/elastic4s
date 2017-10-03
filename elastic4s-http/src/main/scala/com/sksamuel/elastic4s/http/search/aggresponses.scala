@@ -68,8 +68,8 @@ case class DateHistogramBucket(date: String,
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
-case class MinAggResult(name: String, value: Double) extends MetricAggregation
-case class MaxAggResult(name: String, value: Double) extends MetricAggregation
+case class MinAggResult(name: String, value: Option[Double]) extends MetricAggregation
+case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
 case class ValueCountResult(name: String, value: Double) extends MetricAggregation
 
 case class TopHit(@JsonProperty("_index") index: String,
@@ -130,8 +130,8 @@ trait HasAggregations {
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
   def cardinality(name: String): CardinalityAggResult = CardinalityAggResult(name, agg(name)("value").toString.toDouble)
   def sum(name: String): SumAggResult = SumAggResult(name, agg(name)("value").toString.toDouble)
-  def min(name: String): MinAggResult = MinAggResult(name, agg(name)("value").toString.toDouble)
-  def max(name: String): MaxAggResult = MaxAggResult(name, agg(name)("value").toString.toDouble)
+  def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
   def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
 }

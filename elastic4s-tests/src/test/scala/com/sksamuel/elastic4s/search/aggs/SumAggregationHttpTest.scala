@@ -24,6 +24,22 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
     }
   }.await.right.get.acknowledged shouldBe true
 
+
+  Try {
+    http.execute {
+      deleteIndex("sumagg2")
+    }.await
+  }
+
+  http.execute {
+    createIndex("sumagg2") mappings {
+      mapping("actors") fields(
+        textField("name").fielddata(true),
+        intField("age").stored(true)
+      )
+    }
+  }.await.right.get.acknowledged shouldBe true
+
   http.execute(
     bulk(
       indexInto("sumagg/actors") fields("name" -> "clint eastwood", "age" -> "52"),
@@ -39,7 +55,7 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
     "should group by field" in {
 
       val resp = http.execute {
-        search("sumagg/actors").matchAllQuery().aggs {
+        search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age")
         }
       }.await.right.get
@@ -49,9 +65,8 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
       agg.value shouldBe 260.0
     }
     "should support missing" in {
-
       val resp = http.execute {
-        search("sumagg/actors").matchAllQuery().aggs {
+        search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }
       }.await.right.get
@@ -59,6 +74,17 @@ class SumAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
 
       val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 360
+    }
+    "should support when no documents match" in {
+      val resp = http.execute {
+        search("sumagg2").matchAllQuery().aggs {
+          sumAgg("agg1", "age").missing("100")
+        }
+      }.await.right.get
+      resp.totalHits shouldBe 0
+
+      val agg = resp.aggs.sum("agg1")
+      agg.value shouldBe 0
     }
   }
 }
