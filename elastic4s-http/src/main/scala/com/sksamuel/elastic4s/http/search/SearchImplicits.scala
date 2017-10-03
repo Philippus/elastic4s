@@ -6,7 +6,6 @@ import cats.Show
 import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
-import com.sksamuel.elastic4s.reindex.ReindexDefinition
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import com.sksamuel.exts.OptionImplicits._

@@ -113,7 +113,9 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
         getAliases()
       }.await
 
-      results shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias"), Alias("sandy_beaches")), Index("mountains") -> List(Alias("big_mountains")))))
+      val map = results.right.get.mappings
+      map(Index("beaches")) shouldBe List(Alias("beaches_alias"), Alias("sandy_beaches"))
+      map(Index("mountains")) shouldBe List(Alias("big_mountains"))
     }
   }
 
