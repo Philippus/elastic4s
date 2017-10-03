@@ -12,8 +12,8 @@ class CreateIndexTemplateDefinitionShowTest extends WordSpec with Matchers with 
       val req =
         createTemplate("matchme.*").pattern("matchme.*").mappings(
           mapping("characters").fields(
-            stringField("name"),
-            stringField("location")
+            textField("name"),
+            textField("location")
           )
         ).analysis(
           CustomAnalyzerDefinition(

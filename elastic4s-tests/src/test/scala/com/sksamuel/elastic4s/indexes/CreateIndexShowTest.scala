@@ -13,12 +13,12 @@ class CreateIndexShowTest extends WordSpec with Matchers with JsonSugar with Ela
       val req = {
         createIndex("gameofthrones").mappings(
           mapping("characters").fields(
-            stringField("name"),
-            stringField("location")
+            textField("name"),
+            textField("location")
           ),
           mapping("locations").fields(
-            stringField("name"),
-            stringField("continent"),
+            textField("name"),
+            textField("continent"),
             intField("iswinter")
             ) all true source true numericDetection false
         ) refreshInterval 10.seconds shards 4 replicas 2
