@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http.search.suggs
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.RegexpFlag
 import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestionDefinition
 
 object CompletionSuggestionBuilderFn {

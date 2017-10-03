@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.reindex
 import com.sksamuel.elastic4s.searches.QueryBuilderFn
 import com.sksamuel.elastic4s.{Executable, ScriptBuilder}
 import org.elasticsearch.action.support.ActiveShardCount
+import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.reindex.{BulkByScrollResponse, ReindexAction, ReindexRequestBuilder}
@@ -15,12 +16,12 @@ trait ReindexExecutables {
 
     def populate(builder: ReindexRequestBuilder, r: ReindexDefinition): Unit = {
       builder.source(r.sourceIndexes.values: _*)
-      r.targetType.fold(builder.destination(r.targetIndex))(builder.destination(r.targetIndex, _))
+      r.targetType.fold(builder.destination(r.targetIndex.name))(builder.destination(r.targetIndex.name, _))
       r.filter.map(QueryBuilderFn.apply).foreach(builder.filter)
       r.timeout.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.timeout)
       r.requestsPerSecond.foreach(builder.setRequestsPerSecond)
       r.maxRetries.foreach(builder.setMaxRetries)
-      r.refresh.foreach(builder.refresh)
+      r.refresh.filter(_ == RefreshPolicy.IMMEDIATE).foreach(_ => builder.refresh(true))
       r.waitForActiveShards.map(ActiveShardCount.from).foreach(builder.waitForActiveShards)
       r.retryBackoffInitialTime.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setRetryBackoffInitialTime)
       r.shouldStoreResult.foreach(builder.setShouldStoreResult)

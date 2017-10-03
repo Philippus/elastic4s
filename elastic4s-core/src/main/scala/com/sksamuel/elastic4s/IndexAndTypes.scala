@@ -4,7 +4,13 @@ import java.net.URLEncoder
 
 import scala.language.implicitConversions
 
-case class Index(name: String)
+case class Index(name: String) {
+  def toIndexes: Indexes = Indexes(Seq(name))
+}
+
+object Index {
+  implicit def toIndex(str: String): Index = Index(str)
+}
 
 /**
 * Models one or more indexes, eg
@@ -20,6 +26,7 @@ case class Indexes(values: Seq[String]) {
   def isEmpty: Boolean = values.isEmpty
   def isNonEmpty: Boolean = values.nonEmpty
   def string = if (values.isEmpty) "_all" else values.map(URLEncoder.encode).mkString(",")
+  def array: Array[String] = values.toArray
 }
 
 object Indexes {

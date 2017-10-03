@@ -53,6 +53,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
                      params: Map[String, Any],
                      entity: HttpEntity): Future[HttpResponse] = {
     logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+    logger.debug(entity.content)
 
     val callback = client.performRequestAsync(
       method,

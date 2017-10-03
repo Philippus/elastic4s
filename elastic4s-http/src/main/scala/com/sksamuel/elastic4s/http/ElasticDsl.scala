@@ -14,6 +14,7 @@ import com.sksamuel.elastic4s.http.index.mappings.MappingExecutables
 import com.sksamuel.elastic4s.http.index.{IndexImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.locks.LocksImplicits
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
+import com.sksamuel.elastic4s.http.reindex.ReindexImplicits
 import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}
 import com.sksamuel.elastic4s.http.task.TaskImplicits
@@ -38,6 +39,7 @@ trait ElasticDsl
     with LocksImplicits
     with MappingExecutables
     with NodesImplicits
+    with ReindexImplicits
     with SearchImplicits
     with SearchTemplateImplicits
     with SearchScrollImplicits
