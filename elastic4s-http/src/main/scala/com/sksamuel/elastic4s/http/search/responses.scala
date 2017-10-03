@@ -40,7 +40,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
   def innerHits: Map[String, InnerHits] = Option(inner_hits).getOrElse(Map.empty).mapValues { hits =>
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
-        total = v("total").asInstanceOf[Int],
+        total = v("total").toString.toLong,
         max_score = v("max_score").asInstanceOf[Double],
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
@@ -54,15 +54,15 @@ case class SearchHit(@JsonProperty("_id") id: String,
   }
 }
 
-case class SearchHits(total: Int,
+case class SearchHits(total: Long,
                       @JsonProperty("max_score") maxScore: Double,
                       hits: Array[SearchHit]) {
-  def size: Int = hits.length
+  def size: Long = hits.length
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 }
 
-case class InnerHits(total: Int,
+case class InnerHits(total: Long,
                      max_score: Double,
                      hits: Seq[InnerHit])
 
@@ -71,7 +71,7 @@ case class InnerHit(nested: Map[String, AnyRef],
                     source: Map[String, AnyRef],
                     highlight: Map[String, Seq[String]])
 
-case class SearchResponse(took: Int,
+case class SearchResponse(took: Long,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
                           @JsonProperty("terminated_early") isTerminatedEarly: Boolean,
                           private val suggest: Map[String, Seq[SuggestionResult]],
@@ -80,8 +80,8 @@ case class SearchResponse(took: Int,
                           @JsonProperty("aggregations") aggregationsAsMap: Map[String, Any],
                           hits: SearchHits) {
 
-  def totalHits: Int = hits.total
-  def size: Int = hits.size
+  def totalHits: Long = hits.total
+  def size: Long = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
   def maxScore: Double = hits.maxScore
 
