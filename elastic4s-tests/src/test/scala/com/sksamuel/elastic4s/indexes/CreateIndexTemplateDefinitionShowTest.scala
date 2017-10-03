@@ -25,7 +25,7 @@ class CreateIndexTemplateDefinitionShowTest extends WordSpec with Matchers with 
         .order(1)
         .settings(Map("number_of_shards" -> 4))
 
-      CreateIndexTemplateShow.show(req) should matchJson("""{"template":"matchme.*","order":1,"settings":{"number_of_shards":4,"analysis":{"analyzer":{"default":{"type":"custom","tokenizer":"keyword","filter":["lowercase"]}}}},"mappings":{"characters":{"properties":{"name":{"type":"string"},"location":{"type":"string"}}}}}""")
+      CreateIndexTemplateShow.show(req) should matchJson("""{"template":"matchme.*","order":1,"settings":{"number_of_shards":4,"analysis":{"analyzer":{"default":{"type":"custom","tokenizer":"keyword","filter":["lowercase"]}}}},"mappings":{"characters":{"properties":{"name":{"type":"text"},"location":{"type":"text"}}}}}""")
     }
   }
 }
