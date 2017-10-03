@@ -19,7 +19,6 @@ object MatchQueryBuilder {
     q.operator.map(EnumConversions.operator).foreach(builder.operator)
     q.prefixLength.foreach(builder.prefixLength)
     q.queryName.foreach(builder.queryName)
-    q.slop.foreach(builder.slop)
     q.zeroTerms.map(_.toUpperCase).map(MatchQuery.ZeroTermsQuery.valueOf).foreach(builder.zeroTermsQuery)
     builder
   }

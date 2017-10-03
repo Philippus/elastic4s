@@ -19,7 +19,6 @@ case class MatchQueryDefinition(field: String,
                                 operator: Option[Operator] = None,
                                 prefixLength: Option[Int] = None,
                                 queryName: Option[String] = None,
-                                slop: Option[Int] = None,
                                 zeroTerms: Option[String] = None) extends QueryDefinition {
 
   def analyzer(an: String): MatchQueryDefinition = copy(analyzer = an.some)
