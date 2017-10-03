@@ -36,6 +36,8 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def refresh(refresh: String): IndexDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): IndexDefinition = copy(refresh = refresh.some)
 
+  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
+
   def routing(routing: String): IndexDefinition = copy(routing = routing.some)
 
   def version(version: Long): IndexDefinition = copy(version = version.some)

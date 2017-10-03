@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
@@ -71,11 +73,11 @@ trait SearchImplicits {
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
       else if (request.indexesTypes.indexes.isEmpty)
-        "/_all/" + request.indexesTypes.types.mkString(",") + "/_search"
+        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
       else if (request.indexesTypes.types.isEmpty)
-        "/" + request.indexesTypes.indexes.mkString(",") + "/_search"
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/_search"
       else
-        "/" + request.indexesTypes.indexes.mkString(",") + "/" + request.indexesTypes.types.mkString(",") + "/_search"
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))

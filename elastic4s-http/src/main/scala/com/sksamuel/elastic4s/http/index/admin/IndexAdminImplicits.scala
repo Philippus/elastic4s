@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.index.admin
 
+import java.net.URLEncoder
+
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.index.{CreateIndexFailure, CreateIndexResponse}
@@ -7,6 +9,7 @@ import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClien
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.exts.OptionImplicits._
+import org.apache.http.client.utils.URLEncodedUtils
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -149,7 +152,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
     override def execute(client: HttpRequestClient, request: CreateIndexDefinition): Future[HttpResponse] = {
 
-      val endpoint = "/" + request.name
+      val endpoint = "/" + URLEncoder.encode(request.name)
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))

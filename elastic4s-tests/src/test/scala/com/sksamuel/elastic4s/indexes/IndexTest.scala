@@ -45,6 +45,17 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
         search("electronics").query(matchQuery("name", "galaxy"))
       }.await.right.get.totalHits shouldBe 1
     }
+    "support index names with +" in {
+      http.execute {
+        createIndex("hello+world").mappings(mapping("wobble"))
+      }.await
+      http.execute {
+        indexInto("hello+world/wobble").fields(Map("foo" -> "bar")).withId("a").refreshImmediately
+      }.await
+      http.execute {
+        search("hello+world").matchAllQuery()
+      }.await.right.get.totalHits shouldBe 1
+    }
     "handle custom id" in {
       http.execute {
         search("electronics").query(idsQuery("55A"))
