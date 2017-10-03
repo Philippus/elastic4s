@@ -61,6 +61,17 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
     HighlightFieldBuilderFn(Iterable(highlight)).string() shouldBe
       """{"fields":{"text":{"highlight_query":{"match":{"body":{"query":"foo"}}}}}}"""
   }
+
+  test("'query' generates 'highlight_query' field without providing the query field (search for value in all fields.).") {
+    // Given
+    val highlight =
+      HighlightFieldDefinition("text")
+        .query(query("foo"))
+    // Then
+    HighlightFieldBuilderFn(Iterable(highlight)).string() shouldBe
+      """{"fields":{"text":{"highlight_query":{"query_string":{"all_fields":true,"query":"foo"}}}}}"""
+  }
+
   test("'matchedFields' generates proper 'matched_fields' field as array field.") {
     // Given
     val highlight =
