@@ -14,17 +14,18 @@ trait TypesApi {
   def doubleField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "double")
   def floatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "float")
   def halfFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "half_float")
-  def scaledFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "scaled_float")
   def geopointField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "geo_point")
   def geoshapeField(name: String): GeoshapeFieldDefinition = GeoshapeFieldDefinition(name)
   def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
   def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
+  def joinField(name: String): JoinFieldDefinition = JoinFieldDefinition(name)
   def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
   def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
   def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
   def objectField(name: String): ObjectFieldDefinition = ObjectFieldDefinition(name)
   def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
 
+  def scaledFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "scaled_float")
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   def scriptField(name: String, script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   def scriptField(name: String): ExpectsScript = ExpectsScript(name)
@@ -94,9 +95,6 @@ trait TypesApi {
   @deprecated("use tokenCountField(name)", "5.2.11")
   def field(name: String, ft: TokenCountType.type): BasicFieldDefinition = tokenCountField(name)
 
-  @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-  def stringField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "string")
-
   @deprecated("use field(name, type)", "5.0.0")
   def field(name: String) = new {
 
@@ -144,9 +142,6 @@ trait TypesApi {
 
     @deprecated("use byteField(name)", "5.2.11")
     def withType(ft: ShortType.type): BasicFieldDefinition = shortField(name)
-
-    @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-    def withType(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
     @deprecated("use textField(name)", "5.2.11")
     def withType(ft: TextType.type): TextFieldDefinition = textField(name)
@@ -201,9 +196,6 @@ trait TypesApi {
 
     @deprecated("use shortField(name)", "5.2.11")
     def typed(ft: ShortType.type): BasicFieldDefinition = shortField(name)
-
-    @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-    def typed(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
     @deprecated("use textField(name)", "5.2.11")
     def typed(ft: TextType.type): TextFieldDefinition = textField(name)

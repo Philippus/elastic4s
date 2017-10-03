@@ -95,6 +95,13 @@ object FieldBuilderFn {
         geo.format.foreach(builder.field("format", _))
         geo.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
 
+      case join: JoinFieldDefinition =>
+        builder.startObject("relations")
+        join.relations.foreach { case (parent, child) =>
+          builder.field(parent, child)
+        }
+        builder.endObject()
+
       case obj: ObjectFieldDefinition =>
         obj.dynamic.foreach(builder.field("dynamic", _))
 

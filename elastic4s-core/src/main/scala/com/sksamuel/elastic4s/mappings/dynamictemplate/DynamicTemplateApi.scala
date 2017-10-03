@@ -58,7 +58,6 @@ trait DynamicTemplateApi {
     case NestedType => nestedField("")
     case ObjectType => objectField("")
     case ShortType => shortField("")
-    case StringType => stringField("")
     case TextType => textField("")
     case TokenCountType => tokenCountField("")
   }

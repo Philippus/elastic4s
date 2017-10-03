@@ -437,9 +437,6 @@ trait ElasticDsl
       @deprecated("use byteField(name)", "5.2.11")
       def withType(ft: ShortType.type): BasicFieldDefinition = shortField(name)
 
-      @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-      def withType(ft: StringType.type): BasicFieldDefinition = stringField(name)
-
       @deprecated("use textField(name)", "5.2.11")
       def withType(ft: TextType.type): TextFieldDefinition = textField(name)
 
@@ -493,9 +490,6 @@ trait ElasticDsl
 
       @deprecated("use shortField(name)", "5.2.11")
       def typed(ft: ShortType.type): BasicFieldDefinition = shortField(name)
-
-      @deprecated("string type is deprecated in ES 5, use text or keyword types", "5.0.0")
-      def typed(ft: StringType.type): BasicFieldDefinition = stringField(name)
 
       @deprecated("use textField(name)", "5.2.11")
       def typed(ft: TextType.type): TextFieldDefinition = textField(name)
