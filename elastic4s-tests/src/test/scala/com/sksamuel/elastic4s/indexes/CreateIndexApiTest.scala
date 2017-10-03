@@ -49,8 +49,8 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       CustomAnalyzerDefinition(
         "myAnalyzer2",
         StandardTokenizer("myTokenizer1", 900),
-        LengthTokenFilter("myTokenFilter2", 0, max = 10),
-        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        lengthTokenFilter("myTokenFilter2").min(0).max(10),
+        uniqueTokenFilter("myTokenFilter3").onlyOnSamePosition(true),
         stemmerTokenFilter("myFrenchStemmerTokenFilter").lang("french"),
         PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
         WordDelimiterTokenFilter("myWordDelimiterTokenFilter")
@@ -99,8 +99,8 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       CustomAnalyzerDefinition(
         "myAnalyzer2",
         StandardTokenizer("myTokenizer1", 900),
-        LengthTokenFilter("myTokenFilter2", 0, max = 10),
-        UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+        lengthTokenFilter("myTokenFilter2").min(0).max(10),
+        uniqueTokenFilter("myTokenFilter3").onlyOnSamePosition(true),
         StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
         PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
         WordDelimiterTokenFilter("myWordDelimiterTokenFilter")

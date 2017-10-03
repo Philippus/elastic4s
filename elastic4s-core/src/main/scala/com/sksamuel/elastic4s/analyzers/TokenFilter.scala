@@ -79,58 +79,67 @@ case class SynonymTokenFilter(name: String,
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = Some(expand))
 }
 
-case class TruncateTokenFilter(name: String, length: Int = 10)
+case class TruncateTokenFilter(name: String, length: Option[Int] = None)
   extends TokenFilterDefinition {
 
   val filterType = "truncate"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("length", length)
+    length.foreach(source.field("length", _))
   }
 
-  def length(length: Int): TruncateTokenFilter = copy(length = length)
+  def length(length: Int): TruncateTokenFilter = copy(length = length.some)
 }
 
-case class LengthTokenFilter(name: String, min: Int = 0, max: Int = Integer.MAX_VALUE)
+case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[Int] = None)
   extends TokenFilterDefinition {
 
   val filterType = "length"
 
   override def build(source: XContentBuilder): Unit = {
-    if (min > 0) source.field("min", min)
-    if (max < Integer.MAX_VALUE) source.field("max", max)
+    min.foreach(source.field("min", _))
+    max.foreach(source.field("max", _))
   }
 
-  def min(min: Int): LengthTokenFilter = copy(min = min)
-  def max(max: Int): LengthTokenFilter = copy(max = max)
+  def min(min: Int): LengthTokenFilter = copy(min = min.some)
+  def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
-case class UniqueTokenFilter(name: String, onlyOnSamePosition: Boolean = false)
+case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "unique"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("only_on_same_position", onlyOnSamePosition)
+    onlyOnSamePosition.foreach(source.field("only_on_same_position", _))
   }
 
-  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition)
+  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition.some)
 }
 
 case class KeywordMarkerTokenFilter(name: String,
                                     keywords: Seq[String] = Nil,
-                                    ignoreCase: Boolean = false)
+                                    keywordsPath: Option[String] = None,
+                                    keywordsPattern: Option[String] = None,
+                                    ignoreCase: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "keyword_marker"
 
   override def build(source: XContentBuilder): Unit = {
-    if (keywords.nonEmpty) source.array("keywords", keywords.toArray)
-    if (ignoreCase) source.field("ignore_case", ignoreCase)
+    if (keywords.nonEmpty)
+      source.array("keywords", keywords.toArray)
+
+    keywordsPath.foreach(source.field("keywords_path", _))
+    keywordsPattern.foreach(source.field("keywords_pattern", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
   }
 
   def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter = copy(keywords = keywords)
   def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest)
+  def keywordsPath(path: String): KeywordMarkerTokenFilter = copy(keywordsPath = path.some)
+  def keywordsPattern(pattern: String): KeywordMarkerTokenFilter = copy(keywordsPattern = pattern.some)
+  def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter = copy(ignoreCase = ignoreCase.some)
 }
 
 case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
