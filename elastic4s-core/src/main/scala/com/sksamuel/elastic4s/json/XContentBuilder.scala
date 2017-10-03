@@ -130,6 +130,7 @@ class XContentBuilder(root: JsonNode) {
         startObject()
         map.foreach { case (k, v) => autofield(k, v) }
         endObject()
+      case map: java.util.Map[String, Any] => autovalue(map.asScala)
       case other => array.add(other.toString)
     }
     this
@@ -168,6 +169,7 @@ class XContentBuilder(root: JsonNode) {
         startObject(name)
         map.foreach { case (k, v) => autofield(k, v) }
         endObject()
+      case map: java.util.Map[String, Any] => autofield(name, map.asScala)
       case null => obj.putNull(name)
       case other => obj.put(name, other.toString)
     }
