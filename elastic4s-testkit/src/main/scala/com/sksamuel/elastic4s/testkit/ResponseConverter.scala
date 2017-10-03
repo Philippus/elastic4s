@@ -3,12 +3,11 @@ package com.sksamuel.elastic4s.testkit
 import java.util
 import java.util.Locale
 
-import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.elastic4s.bulk.RichBulkResponse
 import com.sksamuel.elastic4s.get.{RichGetResponse, RichMultiGetResponse}
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem, BulkResponseItems}
 import com.sksamuel.elastic4s.http.cluster.ClusterHealthResponse
-import com.sksamuel.elastic4s.http.delete.{DeleteByQueryResponse, DeleteResponse}
+import com.sksamuel.elastic4s.http.delete.DeleteByQueryResponse
 import com.sksamuel.elastic4s.http.explain.ExplainResponse
 import com.sksamuel.elastic4s.http.get.{GetResponse, MultiGetResponse}
 import com.sksamuel.elastic4s.http.index._
@@ -21,16 +20,16 @@ import com.sksamuel.elastic4s.http.values.Shards
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.{ClearScrollResult, RichSearchResponse}
 import com.sksamuel.elastic4s.update.RichUpdateResponse
-import org.elasticsearch.action.DocWriteResponse
+import com.sksamuel.exts.OptionImplicits._
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthResponse => TcpClusterHealthResponse}
 import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse
 import org.elasticsearch.action.admin.indices.close.{CloseIndexResponse => TcpCloseIndexResponse}
 import org.elasticsearch.action.admin.indices.create.{CreateIndexResponse => TcpCreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.{DeleteIndexResponse => TcpDeleteIndexResponse}
-import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse => TcpPutMappingResponse}
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse
 import org.elasticsearch.action.admin.indices.exists.types.TypesExistsResponse
 import org.elasticsearch.action.admin.indices.flush.FlushResponse
+import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse => TcpPutMappingResponse}
 import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
@@ -129,7 +128,8 @@ object ResponseConverterImplicits {
             x.version
           )
         }
-      )
+      ),
+      ""
     )
   }
 

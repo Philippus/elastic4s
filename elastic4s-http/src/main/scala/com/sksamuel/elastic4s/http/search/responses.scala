@@ -78,7 +78,9 @@ case class SearchResponse(took: Long,
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
                           @JsonProperty("aggregations") aggregationsAsMap: Map[String, Any],
-                          hits: SearchHits) {
+                          hits: SearchHits,
+                          json: String // the underlying json used to generate this search response
+                         ) {
 
   def totalHits: Long = hits.total
   def size: Long = hits.size

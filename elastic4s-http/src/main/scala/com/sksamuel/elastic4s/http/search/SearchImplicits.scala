@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
-import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
+import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
@@ -65,7 +65,9 @@ trait SearchImplicits {
 
     override def responseHandler = new ResponseHandler[Either[RequestFailure, SearchResponse]] {
       override def doit(response: HttpResponse): Either[RequestFailure, SearchResponse] = response.statusCode match {
-        case 200 => Right(ResponseHandler.fromEntity[SearchResponse](response.entity.getOrError("No entity defined")))
+        case 200 =>
+          val entity = response.entity.getOrError("No entity defined")
+          Right(ResponseHandler.fromEntity[SearchResponse](entity).copy(json = entity.content))
         case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
       }
     }
@@ -83,7 +85,7 @@ trait SearchImplicits {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
-      request.searchType.map(_.toString).foreach(params.put("search_type", _))
+      request.searchType.filter(_ != SearchType.DEFAULT).map(SearchTypeHttpParameters.convert).foreach(params.put("search_type", _))
       request.control.routing.map(_.toString).foreach(params.put("routing", _))
       request.keepAlive.foreach(params.put("scroll", _))
 
