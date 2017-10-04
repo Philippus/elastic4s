@@ -24,11 +24,11 @@ trait TokenFilterDsl {
 
   def shingleTokenFilter(name: String): ShingleTokenFilter = ShingleTokenFilter(name)
 
-  def snowballTokenFilter(name: String): SnowballTokenFilter = SnowballTokenFilter(name)
+  def snowballTokenFilter(name: String, language: String): SnowballTokenFilter = SnowballTokenFilter(name, language)
 
   def stemmerOverrideTokenFilter(name: String): StemmerOverrideTokenFilter = StemmerOverrideTokenFilter(name)
 
-  def stemmerTokenFilter(name: String): StemmerTokenFilter = StemmerTokenFilter(name)
+  def stemmerTokenFilter(name: String, language: String): StemmerTokenFilter = StemmerTokenFilter(name, language)
 
   def stopTokenFilter(name: String): StopTokenFilter = StopTokenFilter(name)
 

@@ -264,9 +264,10 @@ case class PatternReplaceTokenFilter(name: String, pattern: String, replacement:
 }
 
 case class CommonGramsTokenFilter(name: String,
-                                  commonWords: Iterable[String] = Set.empty,
-                                  ignoreCase: Boolean = false,
-                                  queryMode: Boolean = false)
+                                  commonWords: Iterable[String] = Nil,
+                                  commonWordsPath: Option[String] = None,
+                                  ignoreCase: Option[Boolean] = None,
+                                  queryMode: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
   val filterType = "common_grams"
@@ -274,49 +275,55 @@ case class CommonGramsTokenFilter(name: String,
   override def build(source: XContentBuilder): Unit = {
     if (commonWords.nonEmpty)
       source.array("common_words", commonWords.toArray)
-    source.field("ignore_case", ignoreCase)
-    source.field("query_mode", queryMode)
+
+    commonWordsPath.foreach(source.field("common_words_path", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
+    queryMode.foreach(source.field("query_mode", _))
   }
 
   def commonWords(words: Iterable[String]): CommonGramsTokenFilter = copy(commonWords = words)
   def commonWords(first: String, rest: String*): CommonGramsTokenFilter = copy(commonWords = first +: rest)
-  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase)
-  def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode)
+  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase.some)
+  def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode.some)
+  def commonWordsPath(path: String): CommonGramsTokenFilter = copy(commonWordsPath = path.some)
 }
 
-case class EdgeNGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2, side: String = "front")
+case class EdgeNGramTokenFilter(name: String,
+                                minGram: Option[Int] = None,
+                                maxGram: Option[Int] = None,
+                                side: Option[String] = None)
   extends TokenFilterDefinition {
 
   val filterType = "edgeNGram"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("min_gram", minGram)
-    source.field("max_gram", maxGram)
-    source.field("side", side)
+    minGram.foreach(source.field("min_gram", _))
+    maxGram.foreach(source.field("max_gram", _))
+    side.foreach(source.field("side", _))
   }
 
-  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter = copy(minGram = min, maxGram = max)
-  def minGram(min: Int): EdgeNGramTokenFilter = copy(minGram = min)
-  def maxGram(max: Int): EdgeNGramTokenFilter = copy(maxGram = max)
-  def side(side: String): EdgeNGramTokenFilter = copy(side = side)
+  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
+  def minGram(min: Int): EdgeNGramTokenFilter = copy(minGram = min.some)
+  def maxGram(max: Int): EdgeNGramTokenFilter = copy(maxGram = max.some)
+  def side(side: String): EdgeNGramTokenFilter = copy(side = side.some)
 }
 
-case class NGramTokenFilter(name: String, minGram: Int = 1, maxGram: Int = 2)
+case class NGramTokenFilter(name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)
   extends TokenFilterDefinition {
 
   val filterType = "nGram"
 
   override def build(source: XContentBuilder): Unit = {
-    source.field("min_gram", minGram)
-    source.field("max_gram", maxGram)
+    minGram.foreach(source.field("min_gram", _))
+    maxGram.foreach(source.field("max_gram", _))
   }
 
-  def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min, maxGram = max)
-  def minGram(min: Int): NGramTokenFilter = copy(minGram = min)
-  def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max)
+  def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
+  def minGram(min: Int): NGramTokenFilter = copy(minGram = min.some)
+  def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max.some)
 }
 
-case class SnowballTokenFilter(name: String, language: String = "English")
+case class SnowballTokenFilter(name: String, language: String)
   extends TokenFilterDefinition {
 
   val filterType = "snowball"
@@ -328,7 +335,7 @@ case class SnowballTokenFilter(name: String, language: String = "English")
   def lang(l: String): SnowballTokenFilter = copy(language = l)
 }
 
-case class StemmerTokenFilter(name: String, lang: String = "English")
+case class StemmerTokenFilter(name: String, lang: String)
   extends TokenFilterDefinition {
 
   val filterType = "stemmer"
@@ -340,16 +347,23 @@ case class StemmerTokenFilter(name: String, lang: String = "English")
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
-case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil)
+case class StemmerOverrideTokenFilter(
+                                      name: String,
+                                      rules: Seq[String] = Nil,
+                                      rulesPath: Option[String] = None)
   extends TokenFilterDefinition {
 
   val filterType = "stemmer_override"
 
   override def build(source: XContentBuilder): Unit = {
-    source.array("rules", rules.toArray)
+    if (rules.nonEmpty)
+      source.array("rules", rules.toArray)
+
+    rulesPath.foreach(source.field("rules_path", _))
   }
 
   def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)
+  def rulesPath(path: String): StemmerOverrideTokenFilter = copy(rulesPath = path.some)
 }
 
 case class WordDelimiterTokenFilter(name: String,
