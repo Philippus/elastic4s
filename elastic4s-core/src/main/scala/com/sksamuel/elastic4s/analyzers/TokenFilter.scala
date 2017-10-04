@@ -198,6 +198,7 @@ case class StopTokenFilter(name: String,
   def language(language: String): StopTokenFilter = copy(language = language.some)
   def stopwords(stopwords: Iterable[String]): StopTokenFilter = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
+  def stopwordsPath(path: String): StopTokenFilter = copy(stopwordsPath = path.some)
 }
 
 object NamedStopTokenFilter {
@@ -228,21 +229,6 @@ object NamedStopTokenFilter {
   val Spanish = "_spanish_"
   val Swedish = "_swedish_"
   val Turkish = "_turkish_"
-}
-
-case class StopTokenFilterPath(name: String,
-                               stopwords_path: String,
-                               enablePositionIncrements: Boolean = false,
-                               ignoreCase: Boolean = false)
-  extends TokenFilterDefinition {
-
-  val filterType = "stop"
-
-  override def build(source: XContentBuilder): Unit = {
-    source.field("stopwords_path", stopwords_path)
-    if (enablePositionIncrements) source.field("enable_position_increments", enablePositionIncrements)
-    if (ignoreCase) source.field("ignore_case", ignoreCase)
-  }
 }
 
 case class PatternCaptureTokenFilter(name: String,
