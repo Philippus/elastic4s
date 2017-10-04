@@ -133,8 +133,9 @@
           "ignore_case": true
         },
         "myTokenFilter5": {
-          "type": "stop",
-          "max_token_count": 5
+          "type": "limit",
+          "max_token_count": 5,
+          "consume_all_tokens": false
         },
         "myEdgeNGramTokenFilter": {
           "type": "edgeNGram",
