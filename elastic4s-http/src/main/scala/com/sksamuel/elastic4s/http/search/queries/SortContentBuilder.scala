@@ -45,7 +45,9 @@ object ScoreSortContentBuilder {
 object GeoDistanceSortContentBuilder {
   def apply(fs: GeoDistanceSortDefinition): XContentBuilder = {
 
-    val builder = XContentFactory.jsonBuilder().startObject("_geo_distance")
+    val builder = XContentFactory.jsonBuilder()
+    builder.startObject()
+    builder.startObject("_geo_distance")
 
     if (fs.points.nonEmpty) {
       val point = fs.points.head
