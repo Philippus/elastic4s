@@ -10,7 +10,7 @@ trait TokenFilterDsl {
 
   def keywordMarkerTokenFilter(name: String): KeywordMarkerTokenFilter = KeywordMarkerTokenFilter(name)
 
-  def limitTokenFilter(name: String): LimitTokenFilter = LimitTokenFilter(name)
+  def limitTokenCountTokenFilter(name: String): LimitTokenCountTokenFilter = LimitTokenCountTokenFilter(name)
 
   def lengthTokenFilter(name: String): LengthTokenFilter = LengthTokenFilter(name)
 

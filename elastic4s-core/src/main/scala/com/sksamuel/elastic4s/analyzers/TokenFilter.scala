@@ -155,20 +155,20 @@ case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
   def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
 }
 
-case class LimitTokenFilter(name: String,
-                            maxTokenCount: Int = 1,
-                            consumeAllTokens: Boolean = false)
+case class LimitTokenCountTokenFilter(name: String,
+                                      maxTokenCount: Option[Int] = None,
+                                      consumeAllTokens: Option[Boolean] = None)
   extends TokenFilterDefinition {
 
-  val filterType = "stop"
+  val filterType = "limit"
 
   override def build(source: XContentBuilder): Unit = {
-    if (maxTokenCount > 1) source.field("max_token_count", maxTokenCount)
-    if (consumeAllTokens) source.field("consume_all_tokens", consumeAllTokens)
+    maxTokenCount.foreach(source.field("max_token_count", _))
+    consumeAllTokens.foreach(source.field("consume_all_tokens", _))
   }
 
-  def maxTokenCount(maxTokenCount: Int): LimitTokenFilter = copy(maxTokenCount = maxTokenCount)
-  def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenFilter = copy(consumeAllTokens = consumeAllTokens)
+  def maxTokenCount(maxTokenCount: Int): LimitTokenCountTokenFilter = copy(maxTokenCount = maxTokenCount.some)
+  def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenCountTokenFilter = copy(consumeAllTokens = consumeAllTokens.some)
 }
 
 case class StopTokenFilter(name: String,
