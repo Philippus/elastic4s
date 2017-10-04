@@ -67,7 +67,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
       CustomAnalyzerDefinition(
         "myAnalyzer3",
         LowercaseTokenizer,
-        StopTokenFilterPath("myTokenFilter0", "stoplist.txt", enablePositionIncrements = true, ignoreCase = true),
+        stopTokenFilter("myTokenFilter0").stopwordsPath("stoplist.txt").enablePositionIncrements(true).ignoreCase(true),
         stopTokenFilter("myTokenFilter1").enablePositionIncrements(true).ignoreCase(true),
         ReverseTokenFilter,
         LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
