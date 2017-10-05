@@ -4,7 +4,7 @@ import scala.language.implicitConversions
 
 case class ScriptDefinition(script: String,
                             lang: Option[String] = None,
-                            scriptType: ScriptType = ScriptType.Inline,
+                            scriptType: ScriptType = ScriptType.Source,
                             params: Map[String, Any] = Map.empty,
                             options: Map[String, String] = Map.empty) {
 

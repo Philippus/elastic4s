@@ -12,7 +12,8 @@ object ScriptBuilderFn {
     script.lang.foreach(builder.field("lang", _))
 
     script.scriptType match {
-      case ScriptType.Inline => builder.field("source", script.script)
+      case ScriptType.Source => builder.field("source", script.script)
+      case ScriptType.Inline => builder.field("inline", script.script)
     }
 
     if (script.params.nonEmpty) {
