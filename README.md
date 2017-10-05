@@ -884,6 +884,74 @@ folder. There is no need to configure anything externally.
 * The common operations now return Either[RequestFailure, Response] for better error handling. The other request types will be changed to this style as part of future releases.
 * `getAliases` is now overloaded to accept seq of Index and Alias objects to make it clearer how it works. The existing `getAlias` is deprecated.
 * date_range, and extended_stats aggregations have been implemented for the http client
+* Added aliases when creating indexes
+* Removed hard coded defaults from all token filters
+* Added suport for new Join Type fields (used by parent / child mappings)
+* Http client now url encodes index names and ids
+* Added reindex request type
+* Added compound word token filter
+* Loads of bugs fixes
+
+###### 5.5.4
+
+* Fixed json error when using sort in GeoDistance
+
+###### 5.5.3
+
+* Added Reindex for http
+
+###### 5.5.2
+
+* Added routing and refresh param for update by query in http
+
+###### 5.5.1
+
+* Create UpdateByQuery for http
+
+###### 5.5.0
+
+* First release of 5.5.x
+
+###### 5.4.12
+
+* Timezone in date range fix
+* Fixed completion suggestion option
+* Completion context mapping
+* Moved text for phrase suggestion
+* fix inner hits for HasChild (backport of PR 1017)
+* Completion suggestion
+* include pipeline in index definition for http client
+* make nested field optional
+* propagate inner hits in has parent query definition
+* Add bulk requests '_version' and '_version_type' fields support to elastic4s-http
+
+###### 5.4.11
+
+* Gauss function scorer not working in HTTP Client [5.4.10] #1026
+
+###### 5.4.10
+
+* #1013 elastic4s-http: Fixes handling or TermsOrder in TermsAggregationBuilder
+
+###### 5.4.9
+
+* Adding missing StatsAggregationBuilder to elastic4s-http 5.4.x
+* Making HasChildQueryDefinition min/max params each independantly optional in 5.4.x (same as 6.x)
+* Add '_parent' to SearchHit
+
+###### 5.4.8
+
+* NestedAggregationBuilder to 5.4.x, fixes #999
+* support for CumulativeSum and DateRange in HTTP aggs #996
+
+###### 5.4.7
+
+* Make ParentIdQueryDefinition extend QueryDefinition
+* Add analyzers to createTemplate settings object #977
+
+###### 5.4.6
+
+* bulk api should include _routing field #963
 
 ###### 5.4.5
 
