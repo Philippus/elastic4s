@@ -47,7 +47,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             trackScores: Option[Boolean] = None,
                             terminateAfter: Option[Int] = None,
                             timeout: Option[Duration] = None,
-                            version: Option[Boolean] = None
+                            version: Option[Boolean] = None,
+                            slice: Option[(Int, Int)] = None
                            ) {
 
   /** Adds a single string query to this search
@@ -236,6 +237,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   // alias for scroll
   def keepAlive(keepAlive: String): SearchDefinition = scroll(keepAlive)
   def scroll(keepAlive: String): SearchDefinition = copy(keepAlive = keepAlive.some)
+
+  def slice(id: Int, max: Int): SearchDefinition = copy(slice = Some(id, max))
 
   def searchType(searchType: SearchType): SearchDefinition = copy(searchType = searchType.some)
 

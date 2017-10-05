@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.script.{Script, ScriptType}
+import org.elasticsearch.search.slice.SliceBuilder
 import org.elasticsearch.search.suggest.SuggestBuilder
 
 import scala.collection.JavaConverters._
@@ -36,6 +37,7 @@ object SearchBuilderFn {
     search.terminateAfter.foreach(builder.setTerminateAfter)
     search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
     search.keepAlive.foreach(builder.setScroll)
+    search.slice.foreach(s => builder.slice(new SliceBuilder(s._1, s._2)))
     search.version.foreach(builder.setVersion)
     search.collapse.foreach(c => builder.setCollapse(CollapseBuilderFn.apply(c)))
 
