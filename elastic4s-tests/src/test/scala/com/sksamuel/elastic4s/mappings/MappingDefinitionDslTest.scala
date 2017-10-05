@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
 import com.sksamuel.elastic4s.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
-import com.sksamuel.elastic4s.indexes.CreateIndexContentBuilder
+import com.sksamuel.elastic4s.http.index.CreateIndexContentBuilder
 import org.scalatest.{Matchers, WordSpec}
 
 class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar with ElasticApi {

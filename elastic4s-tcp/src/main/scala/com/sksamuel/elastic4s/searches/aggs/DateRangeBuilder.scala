@@ -17,7 +17,7 @@ object DateRangeBuilder {
     agg.keyed(builder.keyed)
     agg.timeZone.foreach(builder.timeZone)
 
-    agg.unboundedFromRanges.foreach {
+    agg.unboundedFrom.foreach {
       case (Some(key), str: String) => builder.addUnboundedFrom(key, str)
       case (Some(key), double: Double) => builder.addUnboundedFrom(key, double)
       case (Some(key), long: Long) => builder.addUnboundedFrom(key, long)
@@ -30,7 +30,7 @@ object DateRangeBuilder {
       case (None, float: Float) => builder.addUnboundedFrom(float)
     }
 
-    agg.unboundedToRanges.foreach {
+    agg.unboundedTo.foreach {
       case (Some(key), str: String) => builder.addUnboundedTo(key, str)
       case (Some(key), double: Double) => builder.addUnboundedTo(key, double)
       case (Some(key), long: Long) => builder.addUnboundedTo(key, long)

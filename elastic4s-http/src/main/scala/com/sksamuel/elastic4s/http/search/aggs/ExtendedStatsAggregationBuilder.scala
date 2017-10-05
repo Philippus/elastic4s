@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregationDefinition
+
 object ExtendedStatsAggregationBuilder {
   def apply(agg: ExtendedStatsAggregationDefinition): XContentBuilder = {
 

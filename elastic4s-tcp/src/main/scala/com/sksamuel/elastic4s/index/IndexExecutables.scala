@@ -9,7 +9,7 @@ import org.elasticsearch.common.xcontent.XContentType
 
 import scala.concurrent.Future
 
-trait IndexExecutables extends IndexShowImplicits {
+trait IndexExecutables extends IndexShowImplicitsTcp {
 
   implicit object IndexDefinitionExecutable
     extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
@@ -43,6 +43,6 @@ trait IndexExecutables extends IndexShowImplicits {
   }
 
   implicit class IndexDefinitionShowOps(f: IndexDefinition) {
-    def show: String = IndexShow.show(f)
+    def show: String = IndexShowTcp.show(f)
   }
 }

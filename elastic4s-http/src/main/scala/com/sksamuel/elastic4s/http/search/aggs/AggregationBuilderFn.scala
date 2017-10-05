@@ -26,6 +26,7 @@ object AggregationBuilderFn {
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
 
       case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
+      case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)

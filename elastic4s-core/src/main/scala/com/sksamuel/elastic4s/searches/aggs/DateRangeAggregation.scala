@@ -12,8 +12,8 @@ case class DateRangeAggregation(name: String,
                                 timeZone: Option[DateTimeZone] = None,
                                 keyed: Option[Boolean] = None,
                                 ranges: Seq[(Option[String], Any, Any)] = Nil,
-                                unboundedFromRanges: Seq[(Option[String], Any)] = Nil,
-                                unboundedToRanges: Seq[(Option[String], Any)] = Nil,
+                                unboundedFrom: Option[(Option[String], Any)] = None,
+                                unboundedTo: Option[(Option[String], Any)] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
@@ -31,15 +31,15 @@ case class DateRangeAggregation(name: String,
   def range(from: Long, to: Long): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))
   def range(key: String, from: Long, to: Long): DateRangeAggregation = copy(ranges = ranges :+ (key.some, from, to))
 
-  def unboundedFrom(from: String): DateRangeAggregation = copy(unboundedFromRanges = unboundedFromRanges :+ (None, from))
-  def unboundedFrom(key: String, from: String): DateRangeAggregation = copy(unboundedFromRanges = unboundedFromRanges :+ (key.some, from))
-  def unboundedFrom(from: Long): DateRangeAggregation = copy(unboundedFromRanges = unboundedFromRanges :+ (None, from))
-  def unboundedFrom(key: String, from: Long): DateRangeAggregation = copy(unboundedFromRanges = unboundedFromRanges :+ (key.some, from))
+  def unboundedFrom(from: String): DateRangeAggregation = copy(unboundedFrom = Some(None, from))
+  def unboundedFrom(key: String, from: String): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
+  def unboundedFrom(from: Long): DateRangeAggregation = copy(unboundedFrom = Some(None, from))
+  def unboundedFrom(key: String, from: Long): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
 
-  def unboundedTo(from: String): DateRangeAggregation = copy(unboundedToRanges = unboundedToRanges :+ (None, from))
-  def unboundedTo(key: String, from: String): DateRangeAggregation = copy(unboundedToRanges = unboundedToRanges :+ (key.some, from))
-  def unboundedTo(from: Long): DateRangeAggregation = copy(unboundedToRanges = unboundedToRanges :+ (None, from))
-  def unboundedTo(key: String, from: Long): DateRangeAggregation = copy(unboundedToRanges = unboundedToRanges :+ (key.some, from))
+  def unboundedTo(from: String): DateRangeAggregation = copy(unboundedTo = Some(None, from))
+  def unboundedTo(key: String, from: String): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
+  def unboundedTo(from: Long): DateRangeAggregation = copy(unboundedTo = Some(None, from))
+  def unboundedTo(key: String, from: Long): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
 
   def format(fmt: String): DateRangeAggregation = copy(format = fmt.some)
 

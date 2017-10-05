@@ -61,10 +61,36 @@ object DateHistogramAggResult {
   )
 }
 
+case class DateRangeAggResult(name: String,
+                              buckets: Seq[DateRangeBucket]) extends BucketAggregation
+
+object DateRangeAggResult {
+  def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
+      DateRangeBucket(
+        map.get("from").map(_.toString.toLong),
+        map.get("from_as_string").map(_.toString),
+        map.get("to").map(_.toString.toLong),
+        map.get("to_as_string").map(_.toString),
+        map("doc_count").toString.toLong,
+        map
+      )
+    }
+  )
+}
+
 case class DateHistogramBucket(date: String,
                                timestamp: Long,
                                override val docCount: Long,
                                private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+case class DateRangeBucket(from: Option[Long],
+                           fromAsString: Option[String],
+                           to: Option[Long],
+                           toAsString: Option[String],
+                           override val docCount: Long,
+                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
@@ -133,6 +159,7 @@ trait HasAggregations {
   // bucket aggs
   def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
+  def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
   def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
 
@@ -149,7 +176,7 @@ trait HasAggregations {
       sum = agg(name)("sum").toString.toLong,
       sumOfSquares = agg(name)("sum_of_squares").toString.toLong,
       variance = agg(name)("variance").toString.toDouble,
-      stdDeviation = agg(name)("std_deviation").toString.toDouble,
+      stdDeviation = agg(name)("std_deviation").toString.toDouble
     )
   }
 

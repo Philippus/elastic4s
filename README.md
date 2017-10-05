@@ -883,6 +883,7 @@ folder. There is no need to configure anything externally.
 * Added getIndex request type
 * The common operations now return Either[RequestFailure, Response] for better error handling. The other request types will be changed to this style as part of future releases.
 * `getAliases` is now overloaded to accept seq of Index and Alias objects to make it clearer how it works. The existing `getAlias` is deprecated.
+* date_range, and extended_stats aggregations have been implemented for the http client
 
 ###### 5.4.5
 

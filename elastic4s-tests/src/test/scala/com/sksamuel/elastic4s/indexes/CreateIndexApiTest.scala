@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.indexes
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.analyzers._
+import com.sksamuel.elastic4s.http.index.CreateIndexContentBuilder
 import com.sksamuel.elastic4s.mappings.PrefixTree
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
 import org.scalatest.mockito.MockitoSugar
