@@ -7,26 +7,26 @@ class ScriptBuilderFnTest extends FunSuite with Matchers {
 
   test("should handle recursive maps") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe
-      """{"inline":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
+      """{"source":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
   }
 
   test("should handle lists of maps") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe
-      """{"inline":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
+      """{"source":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
   }
 
   test("should handle recursive lists") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> List(List(List("foo")))))).string shouldBe
-      """{"inline":"myscript","params":{"a":[[["foo"]]]}}"""
+      """{"source":"myscript","params":{"a":[[["foo"]]]}}"""
   }
 
   test("should handle maps of lists") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> List(3, 2, 1)))).string shouldBe
-      """{"inline":"myscript","params":{"a":[3,2,1]}}"""
+      """{"source":"myscript","params":{"a":[3,2,1]}}"""
   }
 
   test("should handle mixed lists") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> List(List(true, 1.2, List("foo"), Map("w" -> "wibble")))))).string shouldBe
-      """{"inline":"myscript","params":{"a":[[true,1.2,["foo"],{"w":"wibble"}]]}}"""
+      """{"source":"myscript","params":{"a":[[true,1.2,["foo"],{"w":"wibble"}]]}}"""
   }
 }

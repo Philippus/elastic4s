@@ -1,7 +1,7 @@
 {
   "script_score": {
     "script": {
-      "inline": "some script",
+      "source": "some script",
       "lang": "java",
       "params": {
         "param1": "value1",

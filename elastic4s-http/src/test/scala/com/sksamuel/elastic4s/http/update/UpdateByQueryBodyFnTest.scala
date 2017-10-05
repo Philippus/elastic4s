@@ -13,7 +13,7 @@ class UpdateByQueryBodyFnTest extends WordSpec with JsonSugar {
       "script is specified" in {
         val q = updateIn("test" / "type").query(matchQuery("field", 123)).script(ScriptDefinition("script", Some("painless")))
         UpdateByQueryBodyFn(q).string() should matchJson(
-          """{"query":{"match":{"field":{"query":123}}},"script":{"lang":"painless","inline":"script"}}"""
+          """{"query":{"match":{"field":{"query":123}}},"script":{"lang":"painless","source":"script"}}"""
         )
       }
       "script is not specified" in {

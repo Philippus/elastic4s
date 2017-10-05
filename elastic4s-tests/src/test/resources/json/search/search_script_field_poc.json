@@ -7,7 +7,7 @@
         "balance": {
             "script": {
                 "lang": "native",
-                "inline": "portfolioscript",
+                "source": "portfolioscript",
                 "params": {
                     "fieldName": "rate_of_return"
                 }
@@ -16,7 +16,7 @@
         "date": {
             "script": {
                 "lang": "groovy",
-                "inline": "doc['date'].value"
+                "source": "doc['date'].value"
             }
         }
     }

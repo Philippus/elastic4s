@@ -21,7 +21,7 @@
                 {
                     "script_score": {
                         "script": {
-                            "inline": "some script here"
+                            "source": "some script here"
                         }
                     },
                     "weight": 0.5
