@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.index
 
-import com.sksamuel.elastic4s.indexes.{IndexDefinition, IndexShowImplicits}
+import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.{EnumConversions, Executable, XContentFieldValueWriter}
 import org.elasticsearch.action.index.{IndexRequestBuilder, IndexResponse}

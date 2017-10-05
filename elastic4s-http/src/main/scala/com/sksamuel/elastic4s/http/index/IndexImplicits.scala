@@ -5,7 +5,7 @@ import java.net.URLEncoder
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition, IndexShowImplicits}
+import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition}
 import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType

@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.indexes
+package com.sksamuel.elastic4s.index
 
 import cats.Show
+import com.sksamuel.elastic4s.indexes.{CreateIndexDefinition, IndexContentBuilder, IndexDefinition}
 
 trait IndexShowImplicits {
 

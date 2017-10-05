@@ -2,18 +2,25 @@ package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.mappings.MappingDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration._
+
+case class IndexAliasDefinition(name: String, filter: Option[QueryDefinition] = None, routing: Option[String] = None)
 
 case class CreateIndexDefinition(name: String,
                                  analysis: Option[AnalysisDefinition] = None,
                                  mappings: Seq[MappingDefinition] = Nil,
                                  rawSource: Option[String] = None,
                                  waitForActiveShards: Option[Int] = None,
+                                 aliases: Set[IndexAliasDefinition] = Set.empty,
                                  settings: IndexSettings = new IndexSettings) {
-
   require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
+
+  def alias(name: String): CreateIndexDefinition = alias(IndexAliasDefinition(name, None))
+  def alias(name: String, filter: QueryDefinition): CreateIndexDefinition = alias(IndexAliasDefinition(name, Option(filter)))
+  def alias(definition: IndexAliasDefinition): CreateIndexDefinition = copy(aliases = aliases + definition)
 
   def singleShard(): CreateIndexDefinition = shards(1)
   def singleReplica(): CreateIndexDefinition = replicas(1)
