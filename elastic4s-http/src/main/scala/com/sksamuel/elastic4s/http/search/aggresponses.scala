@@ -72,6 +72,16 @@ case class MinAggResult(name: String, value: Option[Double]) extends MetricAggre
 case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
 case class ValueCountResult(name: String, value: Double) extends MetricAggregation
 
+case class ExtendedStatsAggResult(name: String,
+                                  count: Long,
+                                  min: Long,
+                                  max: Long,
+                                  avg: Long,
+                                  sum: Long,
+                                  sumOfSquares: Long,
+                                  variance: Double,
+                                  stdDeviation: Double)
+
 case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_type") `type`: String,
                   @JsonProperty("_id") id: String,
@@ -128,6 +138,21 @@ trait HasAggregations {
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
+
+  def extendedStats(name: String): ExtendedStatsAggResult = {
+    ExtendedStatsAggResult(
+      name,
+      count = agg(name)("count").toString.toLong,
+      min = agg(name)("min").toString.toLong,
+      max = agg(name)("max").toString.toLong,
+      avg = agg(name)("avg").toString.toLong,
+      sum = agg(name)("sum").toString.toLong,
+      sumOfSquares = agg(name)("sum_of_squares").toString.toLong,
+      variance = agg(name)("variance").toString.toDouble,
+      stdDeviation = agg(name)("std_deviation").toString.toDouble,
+    )
+  }
+
   def cardinality(name: String): CardinalityAggResult = CardinalityAggResult(name, agg(name)("value").toString.toDouble)
   def sum(name: String): SumAggResult = SumAggResult(name, agg(name)("value").toString.toDouble)
   def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))

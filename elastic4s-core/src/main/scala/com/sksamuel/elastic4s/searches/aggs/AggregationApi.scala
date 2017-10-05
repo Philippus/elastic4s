@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.searches.GeoPoint
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.exts.OptionImplicits._
 
 trait AggregationApi {
 
@@ -18,8 +19,11 @@ trait AggregationApi {
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
 
   def dateRangeAggregation(name: String): DateRangeAggregation = DateRangeAggregation(name)
-  def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition = ExtendedStatsAggregationDefinition(
-    name)
+
+  def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition =
+    ExtendedStatsAggregationDefinition(name)
+
+  def extendedStatsAgg(name: String, field: String) = ExtendedStatsAggregationDefinition(name, field = field.some)
 
   def filterAgg(name: String, query: QueryDefinition) = FilterAggregationDefinition(name, query)
   def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
