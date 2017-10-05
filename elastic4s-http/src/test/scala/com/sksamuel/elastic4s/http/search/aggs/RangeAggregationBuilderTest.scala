@@ -47,7 +47,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
       .range(50, 1000)
 
     RangeAggregationBuilder(agg).string() shouldBe
-      """{"range":{"field":"price","script":{"lang":"painless","inline":"doc['price'].value"},"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
+      """{"range":{"field":"price","script":{"lang":"painless","source":"doc['price'].value"},"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 
   test("range aggregation with a keyed parameter setted to true should generate expected json") {

@@ -6,7 +6,7 @@
                 "field": "grade",
                 "script": {
                     "lang": "lua",
-                    "inline": "doc['grade'].value",
+                    "source": "doc['grade'].value",
                     "params": {
                         "apple": "bad"
                     }
