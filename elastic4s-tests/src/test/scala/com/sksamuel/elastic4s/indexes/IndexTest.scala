@@ -118,6 +118,20 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
         search("electronics").query(termQuery("speed", "4g"))
       }.await.right.get.totalHits shouldBe 1
     }
+    "create aliases with index" in {
+      val id = UUID.randomUUID()
+      val indexName = s"electronics-$id"
+      http.execute {
+        createIndex(indexName).mappings(mapping("electronics"))
+          .alias("alias_1")
+          .alias("alias_2")
+      }.await
+      val index = http.execute {
+        getIndex(indexName)
+      }.await.apply(indexName)
+      index.aliases should contain key "alias_1"
+      index.aliases should contain key "alias_2"
+    }
     "return created status" in {
       val result = http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
