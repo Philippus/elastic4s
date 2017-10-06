@@ -64,6 +64,11 @@ object DateHistogramAggResult {
 case class DateRangeAggResult(name: String,
                               buckets: Seq[DateRangeBucket]) extends BucketAggregation
 
+case class DateHistogramBucket(date: String,
+                               timestamp: Long,
+                               override val docCount: Long,
+                               private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
 object DateRangeAggResult {
   def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
     name,
@@ -80,10 +85,27 @@ object DateRangeAggResult {
   )
 }
 
-case class DateHistogramBucket(date: String,
-                               timestamp: Long,
-                               override val docCount: Long,
-                               private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+case class GeoHashGridAggResult(name: String,
+                                buckets: Seq[GeoHashGridBucket]) extends BucketAggregation
+
+case class GeoHashGridBucket(key: String,
+                             override val docCount: Long,
+                             private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+object GeoHashGridAggResult {
+  def apply(name: String, data: Map[String, Any]): GeoHashGridAggResult = GeoHashGridAggResult(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
+      GeoHashGridBucket(
+        map.get("key").toString,
+        map("doc_count").toString.toLong,
+        map
+      )
+    }
+  )
+}
+
 
 case class DateRangeBucket(from: Option[Long],
                            fromAsString: Option[String],
@@ -162,6 +184,7 @@ trait HasAggregations {
   def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
   def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
+  def geoHashGrid(name: String): GeoHashGridAggResult = GeoHashGridAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
