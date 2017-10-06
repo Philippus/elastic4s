@@ -20,7 +20,7 @@ object Build extends AutoPlugin {
     val Json4sVersion = "3.5.1"
     val SprayJsonVersion = "1.3.3"
     val Log4jVersion = "2.6.2"
-    val LuceneVersion = "6.5.1"
+    val LuceneVersion = "6.6.0"
     val MockitoVersion = "1.9.5"
     val PlayJsonVersion = "2.6.0-M6"
     val ReactiveStreamsVersion = "1.0.0"
