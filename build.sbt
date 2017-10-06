@@ -72,7 +72,7 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   .settings(
     name := "elastic4s-http",
     libraryDependencies ++= Seq(
-      "org.elasticsearch.client"      % "rest"                    % ElasticsearchVersion,
+      "org.elasticsearch.client"      % "elasticsearch-rest-client" % ElasticsearchVersion,
       "org.apache.httpcomponents"     % "httpclient"              % "4.5.3",
       "org.apache.httpcomponents"     % "httpcore-nio"            % "4.4.5",
       "org.apache.httpcomponents"     % "httpcore"                % "4.4.5",
