@@ -9,7 +9,6 @@ import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQuer
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.json.XContentBuilder
-import com.sksamuel.elastic4s.mappings.GeoshapeFieldDefinition
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition, GeoShapeQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._

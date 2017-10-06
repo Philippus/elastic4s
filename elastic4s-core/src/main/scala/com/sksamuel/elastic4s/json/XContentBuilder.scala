@@ -33,7 +33,7 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def array(field: String, doubles: Seq[Seq[Double]]): XContentBuilder = {
+  def array(field: String, doubles: Array[Array[Double]]): XContentBuilder = {
     startArray(field)
     doubles.foreach { nested =>
       val value = array.addArray()
@@ -43,7 +43,7 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def array(field: String, doubles: Seq[Double]): XContentBuilder = {
+  def array(field: String, doubles: Array[Double]): XContentBuilder = {
     startArray(field)
     doubles.foreach(array.add)
     endArray()
