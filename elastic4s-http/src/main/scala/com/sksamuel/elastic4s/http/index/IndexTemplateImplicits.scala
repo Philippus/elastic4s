@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s.http.index
 
 import cats.Show
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingBuilderFn
@@ -10,13 +12,35 @@ import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
-case class CreateIndexTemplateResponse()
+case class CreateIndexTemplateResponse(acknowledged: Boolean)
 case class DeleteIndexTemplateResponse()
-case class GetIndexTemplateResponse()
+case class IndexTemplateExists()
+
+case class GetIndexTemplates(templates: Map[String, IndexTemplate]) {
+  def templateFor(name: String): IndexTemplate = templates(name)
+}
+
+case class IndexTemplate(order: Int,
+                         @JsonProperty("index_patterns") indexPatterns: Seq[String],
+                         settings: Map[String, String],
+                         mappings: Map[String, Any],
+                         aliases: Map[String, Any])
 
 trait IndexTemplateImplicits {
 
-  implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
+  implicit object IndexTemplateExistsHttpExecutable extends HttpExecutable[IndexTemplateExistsDefinition, IndexTemplateExists] {
+    override def execute(client: HttpRequestClient, request: IndexTemplateExistsDefinition): Future[HttpResponse] = ???
+  }
+
+  implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, Either[RequestFailure, CreateIndexTemplateResponse]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, CreateIndexTemplateResponse]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, CreateIndexTemplateResponse] = response.statusCode match {
+        case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
+        case _ => Left(RequestFailure.fromResponse(response))
+      }
+    }
+
     override def execute(client: HttpRequestClient,
                          request: CreateIndexTemplateDefinition): Future[HttpResponse] = {
       val endpoint = s"/_template/" + request.name
@@ -34,10 +58,19 @@ trait IndexTemplateImplicits {
     }
   }
 
-  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplateResponse] {
-    override def execute(client: HttpRequestClient,
-                         request: GetIndexTemplateDefinition): Future[HttpResponse] = {
-      val endpoint = s"/_template/" + request.name
+  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, Either[RequestFailure, GetIndexTemplates]] {
+
+    override def responseHandler = new ResponseHandler[Either[RequestFailure, GetIndexTemplates]] {
+      override def doit(response: HttpResponse): Either[RequestFailure, GetIndexTemplates] = response.statusCode match {
+        case 200 =>
+          val templates = ResponseHandler.fromResponse[Map[String, IndexTemplate]](response)
+          Right(GetIndexTemplates(templates))
+        case _ => Left(RequestFailure.fromResponse(response))
+      }
+    }
+
+    override def execute(client: HttpRequestClient, request: GetIndexTemplateDefinition): Future[HttpResponse] = {
+      val endpoint = s"/_template/" + request.indexes.string
       client.async("GET", endpoint, Map.empty)
     }
   }

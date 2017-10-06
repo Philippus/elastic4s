@@ -32,7 +32,7 @@ trait IndexTemplateExecutables {
   implicit object GetTemplateExecutable
     extends Executable[GetIndexTemplateDefinition, GetIndexTemplatesResponse, GetIndexTemplatesResponse] {
     override def apply(c: Client, t: GetIndexTemplateDefinition): Future[GetIndexTemplatesResponse] = {
-      val builder = c.admin().indices().prepareGetTemplates(t.name)
+      val builder = c.admin().indices().prepareGetTemplates(t.indexes.array: _*)
       injectFuture(builder.execute(_))
     }
   }

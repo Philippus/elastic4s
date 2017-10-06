@@ -1,3 +1,5 @@
 package com.sksamuel.elastic4s.indexes
 
-case class GetIndexTemplateDefinition(name: String)
+import com.sksamuel.elastic4s.Indexes
+
+case class GetIndexTemplateDefinition(indexes: Indexes)

@@ -28,6 +28,8 @@ object ResponseHandler extends Logging {
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
 
+  def fromResponse[U: Manifest](response: HttpResponse): U = fromEntity(response.entity.get)
+
   def fromEntity[U: Manifest](entity: HttpEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
     val charset = entity.contentType.getOrElse("UTF-8")

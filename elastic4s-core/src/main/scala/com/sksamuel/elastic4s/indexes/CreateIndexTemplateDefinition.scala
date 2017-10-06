@@ -12,6 +12,8 @@ case class TemplateAlias(name: String,
   def routing(routing: String): TemplateAlias = copy(routing = routing.some)
 }
 
+case class IndexTemplateExistsDefinition()
+
 case class CreateIndexTemplateDefinition(name: String,
                                          pattern: String,
                                          settings: Map[String, Any] = Map.empty,
