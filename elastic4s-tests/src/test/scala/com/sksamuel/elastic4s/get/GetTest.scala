@@ -115,6 +115,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
     resp.exists should be(true)
     resp.id shouldBe "4"
     resp.storedFieldsAsMap.keySet shouldBe Set("name", "brand")
+    resp.storedField("name").value shouldBe "coors light"
   }
 
   it should "retrieve multi value fields" in {
@@ -128,13 +129,13 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   }
 
   it should "return Left[RequestFailure] when index does not exist" in {
-    val resp = http.execute {
+    http.execute {
       get(4) from "qqqqqqqqqq"
     }.await.left.get.error.`type` shouldBe "index_not_found_exception"
   }
 
   it should "return Right with exists=false when the doc does not exist" in {
-    val resp = http.execute {
+    http.execute {
       get(111111) from "beer"
     }.await.right.get.exists shouldBe false
   }
