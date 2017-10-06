@@ -37,7 +37,6 @@ case class BulkProcessorBuilder(name: Option[String] = None,
     concurrentRequests.foreach(builder.setConcurrentRequests)
     count.foreach(builder.setBulkActions)
     flushInterval.map(_.toNanos).map(TimeValue.timeValueNanos).foreach(builder.setFlushInterval)
-    name.foreach(builder.setName)
     size.foreach(builder.setBulkSize)
 
     new BulkProcessor(client.java, builder.build())
