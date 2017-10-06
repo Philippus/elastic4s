@@ -33,7 +33,17 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def array(field: String, doubles: Array[Double]): XContentBuilder = {
+  def array(field: String, doubles: Seq[Seq[Double]]): XContentBuilder = {
+    startArray(field)
+    doubles.foreach { nested =>
+      val value = array.addArray()
+      nested.foreach(value.add)
+    }
+    endArray()
+    this
+  }
+
+  def array(field: String, doubles: Seq[Double]): XContentBuilder = {
     startArray(field)
     doubles.foreach(array.add)
     endArray()

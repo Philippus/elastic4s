@@ -2,15 +2,16 @@ package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.search.RawQueryBodyFn
 import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
-import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn, GeoShapeQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.span._
 import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBuilderFn, MoreLikeThisBuilderFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.json.XContentBuilder
+import com.sksamuel.elastic4s.mappings.GeoshapeFieldDefinition
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
-import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition, GeoShapeQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
@@ -28,6 +29,7 @@ object QueryBuilderFn {
     case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBodyFn(q)
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBodyFn(q)
     case q: GeoPolygonQueryDefinition => GeoPolyonQueryBodyFn(q)
+    case q: GeoShapeQueryDefinition => GeoShapeQueryBodyFn(q)
     case q: HasChildQueryDefinition => HasChildBodyFn(q)
     case q: HasParentQueryDefinition => HasParentBodyFn(q)
     case q: IdQueryDefinition => IdQueryBodyFn(q)

@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.queries._
-import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
 import com.sksamuel.elastic4s.searches.queries.geo._
+import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.{DistanceUnit, DocumentRef, Indexable}
@@ -91,14 +91,7 @@ trait QueryApi {
                       points: Iterable[GeoPoint]): GeoPolygonQueryDefinition =
     GeoPolygonQueryDefinition(field, points.toSeq)
 
-  //  def geoShapeQuery(field: String,
-  //                    shape: ShapeBuilder): GeoShapeDefinition =
-  //    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, shape))
-  //
-  //  def geoShapeQuery(field: String,
-  //                    indexedShapeId: String,
-  //                    indexedShapeType: String): GeoShapeDefinition =
-  //    GeoShapeDefinition(field, QueryBuilders.geoShapeQuery(field, indexedShapeId, indexedShapeType))
+  def geoShapeQuery(field: String, shape: Shape): GeoShapeQueryDefinition = GeoShapeQueryDefinition(field, shape)
 
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
