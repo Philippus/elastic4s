@@ -15,6 +15,7 @@ object AggregationBuilderFn {
       case agg: ExtendedStatsAggregationDefinition => ExtendedStatsAggregationBuilder(agg)
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
       case agg: FiltersAggregationDefinition => FiltersAggregationBuilder(agg)
+      case agg: KeyedFiltersAggregationDefinition => KeyedFiltersAggregationBuilder(agg)
       case agg: GeoHashGridAggregationDefinition => GeoHashGridAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
