@@ -8,7 +8,14 @@ import org.apache.http.HttpRequest
 
 import com.sksamuel.elastic4s.aws.Crypto._
 
-
+/**
+  * AWS request signer (version 4) that follows the documentation given by amazon
+  * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html">request signing documentation</a>
+  *
+  * @param awsCredentialProvider - capable of providing credentials
+  * @param region - amazon region (i.e. eu-west-1)
+  * @param service - service requested, in this context, should always be elastic search, identified by the string "es"
+  */
 class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: String, service: String = "es") {
 
   require(awsCredentialProvider.getCredentials != null, "AWS Credentials are mandatory. AWSCredentialsProvider provided none.")

@@ -31,45 +31,45 @@ lazy val root = Project("elastic4s", file("."))
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .settings(libraryDependencies ++= Seq(
-    "joda-time" % "joda-time" % "2.9.9",
-    "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    "joda-time"                     % "joda-time"               % "2.9.9",
+    "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
+    "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
+    "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion
   ))
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
   .settings(name := "elastic4s-tcp")
-  .settings(libraryDependencies ++= Seq(
-    "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
-    "org.locationtech.spatial4j" % "spatial4j" % "0.6",
-    "com.vividsolutions" % "jts" % "1.13",
-    "io.netty" % "netty-all" % "4.1.10.Final",
-    "org.apache.lucene" % "lucene-core" % LuceneVersion,
-    "org.apache.lucene" % "lucene-analyzers-common" % LuceneVersion,
-    "org.apache.lucene" % "lucene-backward-codecs" % LuceneVersion,
-    "org.apache.lucene" % "lucene-grouping" % LuceneVersion,
-    "org.apache.lucene" % "lucene-highlighter" % LuceneVersion,
-    "org.apache.lucene" % "lucene-join" % LuceneVersion,
-    "org.apache.lucene" % "lucene-memory" % LuceneVersion,
-    "org.apache.lucene" % "lucene-misc" % LuceneVersion,
-    "org.apache.lucene" % "lucene-queries" % LuceneVersion,
-    "org.apache.lucene" % "lucene-queryparser" % LuceneVersion,
-    "org.apache.lucene" % "lucene-sandbox" % LuceneVersion,
-    "org.apache.lucene" % "lucene-spatial" % LuceneVersion,
-    "org.apache.lucene" % "lucene-spatial-extras" % LuceneVersion,
-    "org.apache.lucene" % "lucene-spatial3d" % LuceneVersion,
-    "org.apache.lucene" % "lucene-suggest" % LuceneVersion,
-    "org.elasticsearch.client" % "transport" % ElasticsearchVersion,
-    "org.apache.lucene" % "lucene-join" % LuceneVersion,
-    "org.apache.logging.log4j" % "log4j-api" % Log4jVersion,
-    "org.apache.logging.log4j" % "log4j-core" % Log4jVersion,
-    "org.apache.logging.log4j" % "log4j-1.2-api" % Log4jVersion,
-    "org.apache.logging.log4j" % "log4j-slf4j-impl" % Log4jVersion,
-    "com.carrotsearch" % "hppc" % "0.7.1",
-    "joda-time" % "joda-time" % "2.9.9",
-    "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    "com.tdunning" % "t-digest" % "3.1"
-  ))
+    .settings(libraryDependencies ++= Seq(
+      "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
+      "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6",
+      "com.vividsolutions"                    % "jts"                       % "1.13",
+      "io.netty"                              % "netty-all"                 % "4.1.10.Final",
+      "org.apache.lucene"                     % "lucene-core"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-analyzers-common"   % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-backward-codecs"    % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-grouping"           % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-highlighter"        % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-memory"             % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-misc"               % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-queries"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-queryparser"        % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-sandbox"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial"            % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial-extras"     % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-spatial3d"          % LuceneVersion,
+      "org.apache.lucene"                     % "lucene-suggest"            % LuceneVersion,
+      "org.elasticsearch.client"              % "transport"                 % ElasticsearchVersion,
+      "org.apache.lucene"                     % "lucene-join"               % LuceneVersion,
+      "org.apache.logging.log4j"              % "log4j-api"                 % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-core"                % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-1.2-api"             % Log4jVersion,
+      "org.apache.logging.log4j"              % "log4j-slf4j-impl"          % Log4jVersion,
+      "com.carrotsearch"                      % "hppc"                      % "0.7.1",
+      "joda-time"                             % "joda-time"                 % "2.9.9",
+      "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,
+      "com.tdunning"                          % "t-digest"                  % "3.1"
+    ))
   .dependsOn(core)
 
 lazy val http = Project("elastic4s-http", file("elastic4s-http"))
@@ -96,9 +96,9 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
     name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % JacksonVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % JacksonVersion
+      "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-smile"  % JacksonVersion,
+      "com.fasterxml.jackson.dataformat"      % "jackson-dataformat-cbor"   % JacksonVersion
     )
   )
   .dependsOn(tcp, http)
@@ -131,24 +131,24 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
 lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   .settings(
     name := "elastic4s-jackson",
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
-    libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % JacksonVersion
+    libraryDependencies += "com.fasterxml.jackson.core"       % "jackson-core" % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.core"       % "jackson-databind" % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.module"     %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
+    libraryDependencies += "com.fasterxml.jackson.datatype"   % "jackson-datatype-joda" % JacksonVersion
   ).dependsOn(core)
 
 lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
   .settings(
     name := "elastic4s-circe",
-    libraryDependencies += "io.circe" %% "circe-core" % CirceVersion,
-    libraryDependencies += "io.circe" %% "circe-generic" % CirceVersion,
-    libraryDependencies += "io.circe" %% "circe-parser" % CirceVersion
+    libraryDependencies += "io.circe" %% "circe-core"     % CirceVersion,
+    libraryDependencies += "io.circe" %% "circe-generic"  % CirceVersion,
+    libraryDependencies += "io.circe" %% "circe-parser"   % CirceVersion
   ).dependsOn(core)
 
 lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
   .settings(
     name := "elastic4s-json4s",
-    libraryDependencies += "org.json4s" %% "json4s-core" % Json4sVersion,
+    libraryDependencies += "org.json4s" %% "json4s-core"    % Json4sVersion,
     libraryDependencies += "org.json4s" %% "json4s-jackson" % Json4sVersion
   ).dependsOn(core)
 
@@ -222,10 +222,10 @@ lazy val docs = project
     git.remoteRepo := "git@github.com:sksamuel/elastic4s.git",
     autoAPIMappings := true,
     docsMappingsAPIDir := "api",
-    addMappingsToSiteDir(mappings in(ScalaUnidoc, packageDoc), docsMappingsAPIDir),
+    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
     ghpagesNoJekyll := false,
     fork in tut := false,
-    fork in(ScalaUnidoc, unidoc) := false,
+    fork in (ScalaUnidoc, unidoc) := false,
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
     // push microsite on release
     releaseProcess += releaseStepTask(publishMicrosite)

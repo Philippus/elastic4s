@@ -68,6 +68,7 @@ object CanonicalRequest {
       sorted.mkString(";")
 
   private def hashedPayload(httpRequest: HttpRequest): String = {
+
     def hashPayloadString(str: String) = {
       val hashedPayload = hash(str)
       hexOf(hashedPayload).toLowerCase()
