@@ -21,5 +21,3 @@ case class SpanFirstQueryDefinition(query: SpanQueryDefinition,
   def boost(boost: Double): SpanFirstQueryDefinition = copy(boost = boost.some)
   def queryName(queryName: String): SpanFirstQueryDefinition = copy(queryName = queryName.some)
 }
-
-
