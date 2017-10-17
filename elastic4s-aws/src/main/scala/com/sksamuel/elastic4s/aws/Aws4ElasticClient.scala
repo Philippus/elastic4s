@@ -47,6 +47,11 @@ private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends Http
 
 }
 
+/**
+  * Default Request Interceptor for convenience. Uses the default environment variable names defined in
+  * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variable documentation</a>
+  *
+  */
 private class DefaultAws4HttpRequestInterceptor extends HttpRequestInterceptor {
   private val defaultChainProvider = new DefaultAWSCredentialsProviderChain
   private val region = sys.env("AWS_DEFAULT_REGION")

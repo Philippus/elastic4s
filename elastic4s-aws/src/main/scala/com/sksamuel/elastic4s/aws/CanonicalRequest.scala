@@ -12,6 +12,21 @@ import scala.collection.JavaConverters._
 
 import com.sksamuel.elastic4s.aws.Crypto._
 
+/**
+  * Canonical Request is described as the first task when signing aws requests (version 4)
+  * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html">canonical request documentation</a>
+  *
+  * In summary, the canonical request is a string formed by the concatenation of the result of several steps.
+  *
+  * <ul>
+  * <li> Request method, upper case;
+  * <li> Uri in a canonical format (absolute path component of the URI);
+  * <li> Query string in a canonical format;
+  * <li> Headers to sign in a canonical format;
+  * <li> Concatenation of the headers to sign;
+  * <li> Hash of the request payload (empty string if none is found);
+  * </ul>
+  */
 object CanonicalRequest {
 
   private val ignoredHeaders = List("connection", "content-length")
@@ -83,7 +98,12 @@ case class CanonicalRequest(
                              hashedPayload: String) {
 
   override def toString() =
-    s"$method\n$canonicalUri\n$canonicalQueryString\n$canonicalHeaders\n\n$signedHeaders\n$hashedPayload"
+      s"$method\n" +
+      s"$canonicalUri\n" +
+      s"$canonicalQueryString\n" +
+      s"$canonicalHeaders\n\n" +
+      s"$signedHeaders\n" +
+      s"$hashedPayload"
 
   def toHashString() = {
     val canonicalRequestHash = hash(toString)
