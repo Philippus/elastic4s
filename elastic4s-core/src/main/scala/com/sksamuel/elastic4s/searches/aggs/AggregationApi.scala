@@ -36,6 +36,7 @@ trait AggregationApi {
     def queries(first: QueryDefinition, rest: QueryDefinition*): FiltersAggregationDefinition = queries(first +: rest)
     def queries(queries: Iterable[QueryDefinition]): FiltersAggregationDefinition =
       FiltersAggregationDefinition(name, queries)
+
     def queries(first: (String, QueryDefinition), rest: (String, QueryDefinition)*): KeyedFiltersAggregationDefinition = queries(first +: rest)
     def queries(queries: Iterable[(String, QueryDefinition)]): KeyedFiltersAggregationDefinition =
       KeyedFiltersAggregationDefinition(name, queries)

@@ -180,6 +180,15 @@ trait HasAggregations {
 
   // bucket aggs
   def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+
+  // TODO: WIP
+  def filters(name: String): FiltersAggregationResult =
+    FiltersAggregationResult(
+      name,
+      agg(name)("buckets").asInstanceOf[Seq[Map[String, Any]]].map(m => UnnamedFilterAggregationResult(m("doc_count").toString.toLong, data = m)),
+      agg(name)
+  )
+
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
   def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
@@ -221,4 +230,13 @@ trait BucketAggregation {
 
 case class FilterAggregationResult(name: String,
                                    docCount: Int,
+                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+
+case class UnnamedFilterAggregationResult(docCount: Long,
+                                          private[elastic4s] val data: Map[String, Any]) extends HasAggregations
+
+// TODO: WIP
+case class FiltersAggregationResult(
+                                   name: String,
+                                   aggResults: Seq[UnnamedFilterAggregationResult],
                                    private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
