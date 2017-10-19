@@ -55,15 +55,10 @@ class CountTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl
   }.await
 
   "a count query" should {
-    "count all docs" in {
-      http.execute {
-        count("_all")
-      }.await.right.get.count shouldBe 11
-    }
     "count all docs in a specified index" in {
       http.execute {
-        count("stads3")
-      }.await.right.get.count shouldBe 1
+        count("stads")
+      }.await.right.get.count shouldBe 9
     }
     "count all docs across multiple specified indexes" in {
       http.execute {
@@ -72,7 +67,7 @@ class CountTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl
     }
     "count with a filter" in {
       http.execute {
-        count("_all").filter(prefixQuery("name", "river"))
+        count("stads").filter(prefixQuery("name", "river"))
       }.await.right.get.count shouldBe 1
     }
     "count with type set" in {
