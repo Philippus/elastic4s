@@ -1,11 +1,14 @@
 package com.sksamuel.elastic4s.searches
 
+import java.util
+
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.searches.aggs.RichAggregations
 import com.sksamuel.elastic4s.searches.suggestions._
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.search.SearchHits
+import org.elasticsearch.search.aggregations.InternalAggregations
 import org.elasticsearch.search.suggest.Suggest
 
 import scala.concurrent.duration._
@@ -32,7 +35,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def tookInMillis: Long = original.getTookInMillis
   def took: Duration = original.getTookInMillis.millis
 
-  def aggregations: RichAggregations = RichAggregations(original.getAggregations)
+  def aggregations: RichAggregations = RichAggregations(Option(original.getAggregations).getOrElse(new InternalAggregations(new util.ArrayList)))
 
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
