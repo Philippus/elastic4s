@@ -22,7 +22,7 @@ case class RichAggregations(aggregations: Aggregations) {
 
   def map: Map[String, Aggregation] = aggregations.getAsMap.asScala.toMap
 
-  def getAs[T](name: String): T = aggregations.getAsMap.get(name).asInstanceOf[T]
+  def getAs[T](name: String): T = map(name).asInstanceOf[T]
 
   def missingResult(name: String): InternalMissing = getAs[InternalMissing](name)
   def cardinalityResult(name: String): InternalCardinality = getAs[InternalCardinality](name)
