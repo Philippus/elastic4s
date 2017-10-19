@@ -3,16 +3,12 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
-import org.scalatest.WordSpec
+import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class SearchHttpTest
-  extends WordSpec
-    with DiscoveryLocalNodeProvider
-    with ElasticMatchers
-    with ElasticDsl {
+class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl with Matchers {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
@@ -85,6 +81,11 @@ class SearchHttpTest
       http.execute {
         search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
       }.await.right.get.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
+    }
+    "support explain" in {
+      http.execute {
+        search("chess").explain(true).matchAllQuery().limit(2)
+      }.await.right.get.hits.hits.head.explanation.isDefined shouldBe true
     }
     "support limits" in {
       http.execute {

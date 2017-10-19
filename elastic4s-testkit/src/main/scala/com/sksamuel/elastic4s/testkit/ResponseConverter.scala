@@ -33,7 +33,6 @@ import org.elasticsearch.action.admin.indices.mapping.put.{PutMappingResponse =>
 import org.elasticsearch.action.admin.indices.open.{OpenIndexResponse => TcpOpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.validate.query.ValidateQueryResponse
-import org.elasticsearch.action.delete.{DeleteResponse => TcpDeleteResponse}
 import org.elasticsearch.action.explain.{ExplainResponse => TcpExplainResponse}
 import org.elasticsearch.index.reindex.{BulkByScrollResponse, BulkByScrollTask}
 
@@ -120,6 +119,7 @@ object ResponseConverterImplicits {
             x.index,
             x.`type`,
             x.score,
+            None,
             None, // TODO
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
