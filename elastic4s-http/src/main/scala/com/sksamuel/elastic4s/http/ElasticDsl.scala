@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.http.index.alias.IndexAliasImplicits
 import com.sksamuel.elastic4s.http.bulk.BulkImplicits
 import com.sksamuel.elastic4s.http.cat.CatImplicits
 import com.sksamuel.elastic4s.http.cluster.ClusterImplicits
+import com.sksamuel.elastic4s.http.count.CountImplicits
 import com.sksamuel.elastic4s.http.delete.DeleteImplicits
 import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
@@ -29,6 +30,7 @@ trait ElasticDsl
     with Logging
     with BulkImplicits
     with CatImplicits
+    with CountImplicits
     with ClusterImplicits
     with DeleteImplicits
     with ExplainImplicits

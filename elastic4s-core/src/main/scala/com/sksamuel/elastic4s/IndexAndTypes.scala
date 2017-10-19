@@ -9,6 +9,8 @@ case class Index(name: String) {
 }
 
 object Index {
+  val _all = Index("_all")
+  val All = _all
   implicit def toIndex(str: String): Index = Index(str)
 }
 

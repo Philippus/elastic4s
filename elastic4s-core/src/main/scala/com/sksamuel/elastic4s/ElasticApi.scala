@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, NormalizerApi, TokenizerAp
 import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.cat.CatsApi
 import com.sksamuel.elastic4s.cluster.ClusterApi
+import com.sksamuel.elastic4s.count.CountApi
 import com.sksamuel.elastic4s.delete.DeleteApi
 import com.sksamuel.elastic4s.explain.ExplainApi
 import com.sksamuel.elastic4s.get.GetApi
@@ -44,6 +45,7 @@ trait ElasticApi
     with CreateIndexApi
     with ClusterApi
     with CollapseApi
+    with CountApi
     with DeleteApi
     with DeleteIndexApi
     with DynamicTemplateApi
