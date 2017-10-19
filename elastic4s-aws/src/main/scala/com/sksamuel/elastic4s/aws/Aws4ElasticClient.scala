@@ -25,7 +25,6 @@ object Aws4ElasticClient {
   /**
     * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables
     *
-    * @see [[com.sksamuel.elastic4s.aws.DefaultAws4HttpRequestInterceptor]]
     */
   def apply(endpoint: String): HttpClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)

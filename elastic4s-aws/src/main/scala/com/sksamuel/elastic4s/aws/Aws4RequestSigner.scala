@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.aws
 
-import java.net.URI
 import java.time.format.DateTimeFormatter
 import java.time.{ZoneOffset, ZonedDateTime}
 
