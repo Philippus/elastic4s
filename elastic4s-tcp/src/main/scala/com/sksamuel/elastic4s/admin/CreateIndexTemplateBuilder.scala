@@ -24,7 +24,7 @@ object CreateIndexTemplateBuilder {
     }
 
     req.mappings.foreach { mapping =>
-      builder.addMapping(mapping.`type`, MappingBuilderFn.buildWithName(mapping, mapping.`type`))
+      builder.addMapping(mapping.`type`, MappingBuilderFn.buildWithName(mapping, mapping.`type`).string, XContentType.JSON)
     }
 
     if (req.settings.nonEmpty || req.analysis.nonEmpty) {
