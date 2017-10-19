@@ -66,8 +66,8 @@ trait AggregationApi {
   def nestedAggregation(name: String, path: String): NestedAggregationDefinition =
     NestedAggregationDefinition(name, path)
 
-  def percentilesAggregation(name: String): PercentilesAggregationDefinition =
-    PercentilesAggregationDefinition(name)
+  def percentilesAgg(name: String, field: String) = PercentilesAggregationDefinition(name).field(field)
+  def percentilesAggregation(name: String) = PercentilesAggregationDefinition(name)
 
   def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition =
     PercentileRanksAggregationDefinition(name)

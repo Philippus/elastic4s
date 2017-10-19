@@ -130,6 +130,9 @@ case class ExtendedStatsAggResult(name: String,
                                   variance: Double,
                                   stdDeviation: Double)
 
+case class PercentilesAggResult(name: String,
+                                values: Map[String, Double]) extends MetricAggregation
+
 case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_type") `type`: String,
                   @JsonProperty("_id") id: String,
@@ -142,9 +145,7 @@ case class TopHit(@JsonProperty("_index") index: String,
 case class TopHitsResult(name: String,
                          total: Long,
                          @JsonProperty("max_score") maxScore: Option[Double],
-                         hits: Seq[TopHit]
-                        ) extends MetricAggregation {
-}
+                         hits: Seq[TopHit]) extends MetricAggregation
 
 object TopHitsResult {
   def apply(name: String, data: Map[String, Any]): TopHitsResult = {
@@ -224,6 +225,10 @@ trait HasAggregations {
   def sum(name: String): SumAggResult = SumAggResult(name, agg(name)("value").toString.toDouble)
   def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
   def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def percentiles(name: String): PercentilesAggResult = {
+    val values = agg(name)("values").asInstanceOf[Map[String, Double]]
+    PercentilesAggResult(name, values)
+  }
   def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
 }

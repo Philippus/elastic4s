@@ -21,6 +21,7 @@ object AggregationBuilderFn {
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
       case agg: NestedAggregationDefinition => NestedAggregationBuilder(agg)
+      case agg: PercentilesAggregationDefinition => PercentilesAggregationBuilder(agg)
       case agg: SamplerAggregationDefinition => SamplerAggregationBuilder(agg)
       case agg: StatsAggregationDefinition => StatsAggregationBuilder(agg)
       case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
