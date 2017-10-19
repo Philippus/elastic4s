@@ -27,7 +27,8 @@ case class CatIndices(health: String,
                       rep: Int,
                       @JsonProperty("docs.count") count: Long,
                       @JsonProperty("docs.deleted") deleted: Long,
-                      @JsonProperty("store.size") storeSize: Long)
+                      @JsonProperty("store.size") storeSize: Long,
+                      @JsonProperty("pri.store.size") priStoreSize: Long)
 
 case class CatAllocation(shards: Int,
                          @JsonProperty("disk.indices") diskIndices: Long,

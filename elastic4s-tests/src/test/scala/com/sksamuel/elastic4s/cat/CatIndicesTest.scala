@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{HealthStatus, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatIndexesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CatIndicesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   http.execute {
     bulk(
@@ -26,9 +26,15 @@ class CatIndexesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvi
   }
 
   it should "use health param" in {
-    val result = http.execute {
+    http.execute {
       catIndices(HealthStatus.Red)
     }.await.isEmpty shouldBe true
+  }
+
+  it should "include pri.store.size" in {
+    http.execute {
+      catIndices()
+    }.await.head.priStoreSize > 0 shouldBe true
   }
 
 }
