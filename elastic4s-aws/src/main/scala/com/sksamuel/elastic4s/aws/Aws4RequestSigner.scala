@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.aws
 
+import java.net.URI
 import java.time.format.DateTimeFormatter
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.amazonaws.auth.{AWSCredentialsProvider, AWSSessionCredentials}
-import org.apache.http.HttpRequest
-
+import org.apache.http.{Header, HttpRequest}
 import com.sksamuel.elastic4s.aws.Crypto._
 
 /**
@@ -13,8 +13,8 @@ import com.sksamuel.elastic4s.aws.Crypto._
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html">request signing documentation</a>
   *
   * @param awsCredentialProvider - capable of providing credentials
-  * @param region - amazon region (i.e. eu-west-1)
-  * @param service - service requested, in this context, should always be elastic search, identified by the string "es"
+  * @param region                - amazon region (i.e. eu-west-1)
+  * @param service               - service requested, in this context, should always be elastic search, identified by the string "es"
   */
 class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: String, service: String = "es") {
 
@@ -27,18 +27,16 @@ class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: S
 
   def withAws4Headers(request: HttpRequest): HttpRequest = {
 
-    val now = ZonedDateTime.now(ZoneOffset.UTC)
-    val dateTime = now.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"))
-    val date = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+    val (date, dateTime) = buildDateAndDateTime()
 
-    request.addHeader(dateHeader, dateTime)
-    cleanHostHeader(request)
+    val setHeadersBeforeSigning = setDateTimeHeader(dateTime) andThen setHostHeader
+    setHeadersBeforeSigning(request)
 
     val canonicalRequest = CanonicalRequest(request)
     val stringToSign = StringToSign(service, region, canonicalRequest, date, dateTime)
 
-    val headerValue = buildAuthenticationHeader(canonicalRequest, stringToSign)
-    request.addHeader(authHeader, headerValue)
+    val authHeaderValue = buildAuthenticationHeader(canonicalRequest, stringToSign)
+    request.addHeader(authHeader, authHeaderValue)
 
     /* If the credentials are temporary (session credentials), add an additional security header */
     credentials match {
@@ -47,6 +45,14 @@ class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: S
     }
 
     request
+  }
+
+  /* Build date and dateTime in a protected method so it is possible to override it in tests */
+  protected def buildDateAndDateTime(): (String, String) = {
+    val now = ZonedDateTime.now(ZoneOffset.UTC)
+    val dateTime = now.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"))
+    val date = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+    (date, dateTime)
   }
 
   private def buildAuthenticationHeader(canonicalRequest: CanonicalRequest, stringToSign: StringToSign) = {
@@ -70,12 +76,20 @@ class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: S
     sign("aws4_request", serviceKey)
   }
 
-  private def cleanHostHeader(req: HttpRequest): Unit = {
-    req.getAllHeaders.find(_.getName == "Host") match {
-      case Some(header) ⇒
-        val value = header.getValue.replaceFirst(":[0-9]+", "")
-        req.setHeader("Host", value)
-      case _            ⇒
+  /* If host header is not found, should insert into. Could not retrieve host from Apache HttpRequest. */
+  private def setHostHeader: HttpRequest => HttpRequest = {
+    val found = (header: Header) => header.getValue.replaceFirst(":[0-9]+", "")
+    setHeader("Host", found)
+  }
+
+  private def setDateTimeHeader: String => HttpRequest => HttpRequest =
+    dateTime => setHeader(dateHeader, _ => dateTime)
+
+  private def setHeader(h: String, f: Header => String)(request: HttpRequest): HttpRequest = {
+    request.getAllHeaders.find(_.getName == h) match {
+      case Some(header) ⇒ request.setHeader(h, f(header))
+      case _ ⇒
     }
+    request
   }
 }

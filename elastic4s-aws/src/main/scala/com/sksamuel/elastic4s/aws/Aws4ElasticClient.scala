@@ -14,12 +14,19 @@ case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, regi
 
 object Aws4ElasticClient {
 
+  /**
+    * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service)
+    */
   def apply(config: Aws4ElasticConfig): HttpClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
     HttpClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
   }
 
-
+  /**
+    * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables
+    *
+    * @see [[com.sksamuel.elastic4s.aws.DefaultAws4HttpRequestInterceptor]]
+    */
   def apply(endpoint: String): HttpClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)
     HttpClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
