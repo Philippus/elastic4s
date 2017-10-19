@@ -10,47 +10,47 @@ class CountTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl
 
   Try {
     http.execute {
-      deleteIndex("stadiums")
+      deleteIndex("stads")
     }.await
   }
 
   Try {
     http.execute {
-      deleteIndex("teams")
+      deleteIndex("stads2")
     }.await
   }
 
   Try {
     http.execute {
-      deleteIndex("players")
+      deleteIndex("stads3")
     }.await
   }
 
   http.execute {
-    createIndex("stadiums")
+    createIndex("stads")
   }.await
 
   http.execute {
-    createIndex("teams")
+    createIndex("stads2")
   }.await
 
   http.execute {
-    createIndex("players")
+    createIndex("stads3")
   }.await
 
   http.execute {
     bulk(
-      indexInto("stadiums/stadiums").fields("name" -> "riverside stadium"),
-      indexInto("stadiums/stadiums").fields("name" -> "stadium of shite"),
-      indexInto("stadiums/stadiums").fields("name" -> "sports arena dot com ashley stadium"),
-      indexInto("stadiums/stadiums").fields("name" -> "macron"),
-      indexInto("stadiums/stadiums").fields("name" -> "old trafford"),
-      indexInto("stadiums/stadiums").fields("name" -> "pride park"),
-      indexInto("stadiums/stadiums").fields("name" -> "hillsborough"),
-      indexInto("stadiums/stadiums").fields("name" -> "KCom Stadium"),
-      indexInto("stadiums/stadiums").fields("name" -> "Anfield"),
-      indexInto("teams/teams").fields("name" -> "Boro"),
-      indexInto("players/players").fields("name" -> "Assombalonga")
+      indexInto("stads/stads").fields("name" -> "riverside stadium"),
+      indexInto("stads/stads").fields("name" -> "stadium of shite"),
+      indexInto("stads/stads").fields("name" -> "sports arena dot com ashley stadium"),
+      indexInto("stads/stads").fields("name" -> "macron"),
+      indexInto("stads/stads").fields("name" -> "old trafford"),
+      indexInto("stads/stads").fields("name" -> "pride park"),
+      indexInto("stads/stads").fields("name" -> "hillsborough"),
+      indexInto("stads/stads").fields("name" -> "KCom Stadium"),
+      indexInto("stads/stads").fields("name" -> "Anfield"),
+      indexInto("stads2/stads2").fields("name" -> "Stamford Bridge"),
+      indexInto("stads3/stads3").fields("name" -> "AMEX Stadium")
     ).immediateRefresh()
   }.await
 
@@ -62,12 +62,12 @@ class CountTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl
     }
     "count all docs in a specified index" in {
       http.execute {
-        count("teams")
+        count("stads3")
       }.await.right.get.count shouldBe 1
     }
     "count all docs across multiple specified indexes" in {
       http.execute {
-        count(Seq("teams", "players"))
+        count(Seq("stads2", "stads3"))
       }.await.right.get.count shouldBe 2
     }
     "count with a filter" in {
@@ -77,10 +77,10 @@ class CountTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl
     }
     "count with type set" in {
       http.execute {
-        count("stadiums", "stadiums")
+        count("stads", "stads")
       }.await.right.get.count shouldBe 9
       http.execute {
-        count("stadiums", "nonexisting")
+        count("stads", "nonexisting")
       }.await.right.get.count shouldBe 0
     }
   }
