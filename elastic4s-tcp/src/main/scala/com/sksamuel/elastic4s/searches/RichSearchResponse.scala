@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.searches.suggestions._
 import org.elasticsearch.action.search.{SearchResponse, ShardSearchFailure}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.search.SearchHits
-import org.elasticsearch.search.aggregations.Aggregations
+import org.elasticsearch.search.aggregations.InternalAggregations
 import org.elasticsearch.search.suggest.Suggest
 
 import scala.concurrent.duration._
@@ -35,7 +35,7 @@ case class RichSearchResponse(original: SearchResponse) {
   def tookInMillis: Long = original.getTookInMillis
   def took: Duration = original.getTookInMillis.millis
 
-  def aggregations: RichAggregations = RichAggregations(Option(original.getAggregations).getOrElse(new Aggregations(new util.ArrayList)))
+  def aggregations: RichAggregations = RichAggregations(Option(original.getAggregations).getOrElse(new InternalAggregations(new util.ArrayList)))
 
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
