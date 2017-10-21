@@ -4,8 +4,10 @@ import java.time.format.DateTimeFormatter
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.amazonaws.auth.{AWSCredentialsProvider, AWSSessionCredentials}
-import org.apache.http.{Header, HttpRequest}
 import com.sksamuel.elastic4s.aws.Crypto._
+
+import org.apache.http.{Header, HttpRequest}
+
 
 /**
   * AWS request signer (version 4) that follows the documentation given by amazon

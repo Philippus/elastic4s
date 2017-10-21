@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.aws
 
 import com.amazonaws.auth._
-import org.apache.http.client.methods.HttpPost
 import org.scalatest.{Matchers, WordSpec}
 
 class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {

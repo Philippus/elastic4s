@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.aws
 
+import com.sksamuel.elastic4s.aws.Crypto._
+
 import java.net.{ URI, URLEncoder }
 import java.nio.charset.Charset
 
@@ -10,7 +12,6 @@ import org.apache.http.util.EntityUtils
 
 import scala.collection.JavaConverters._
 
-import com.sksamuel.elastic4s.aws.Crypto._
 
 /**
   * Canonical Request is described as the first task when signing aws requests (version 4)
@@ -89,8 +90,7 @@ object CanonicalRequest {
   }
 }
 
-case class CanonicalRequest(
-                             method: String,
+case class CanonicalRequest( method: String,
                              canonicalUri: String,
                              canonicalQueryString: String,
                              canonicalHeaders: String,
