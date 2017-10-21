@@ -15,7 +15,7 @@ case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, regi
 object Aws4ElasticClient {
 
   /**
-    * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service)
+    * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service).
     */
   def apply(config: Aws4ElasticConfig): HttpClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
@@ -23,8 +23,8 @@ object Aws4ElasticClient {
   }
 
   /**
-    * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables
-    *
+    * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables.
+    * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variables documentation</a>
     */
   def apply(endpoint: String): HttpClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)
@@ -54,7 +54,7 @@ private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends Http
 }
 
 /**
-  * Default Request Interceptor for convenience. Uses the default environment variable names defined in
+  * Default Request Interceptor for convenience. Uses the default environment variable names.
   * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variable documentation</a>
   *
   */

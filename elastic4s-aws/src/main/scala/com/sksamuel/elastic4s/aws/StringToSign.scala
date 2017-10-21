@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.aws
 import com.sksamuel.elastic4s.aws.Crypto._
 
 /**
-  * String to sign is described as the second task when signing aws requests (version 4)
+  * String to sign is described as the second task when signing aws requests (version 4).
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4-create-string-to-sign.html">String to sign documentation</a>
   */
 case class StringToSign(

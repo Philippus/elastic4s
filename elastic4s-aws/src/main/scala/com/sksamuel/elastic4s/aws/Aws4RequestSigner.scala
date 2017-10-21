@@ -11,7 +11,7 @@ import com.sksamuel.elastic4s.aws.Crypto._
   * AWS request signer (version 4) that follows the documentation given by amazon
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html">request signing documentation</a>
   *
-  * @param awsCredentialProvider - capable of providing credentials
+  * @param awsCredentialProvider - capable of providing aws user credentials
   * @param region                - amazon region (i.e. eu-west-1)
   * @param service               - service requested, in this context, should always be elastic search, identified by the string "es"
   */
@@ -28,8 +28,10 @@ class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: S
 
     val (date, dateTime) = buildDateAndDateTime()
 
-    val setHeadersBeforeSigning = setDateTimeHeader(dateTime) andThen setHostHeader
-    setHeadersBeforeSigning(request)
+    setHostHeader(request)
+
+    /* Insert aws date time header*/
+    request.setHeader(dateHeader, dateTime)
 
     val canonicalRequest = CanonicalRequest(request)
     val stringToSign = StringToSign(service, region, canonicalRequest, date, dateTime)
@@ -75,14 +77,11 @@ class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: S
     sign("aws4_request", serviceKey)
   }
 
-  /* If host header is not found, should insert into. Could not retrieve host from Apache HttpRequest. */
+  /* If host header is not found: should create new  Host header. Currently could not retrieve host from Apache HttpRequest.*/
   private def setHostHeader: HttpRequest => HttpRequest = {
     val found = (header: Header) => header.getValue.replaceFirst(":[0-9]+", "")
     setHeader("Host", found)
   }
-
-  private def setDateTimeHeader: String => HttpRequest => HttpRequest =
-    dateTime => setHeader(dateHeader, _ => dateTime)
 
   private def setHeader(h: String, f: Header => String)(request: HttpRequest): HttpRequest = {
     request.getAllHeaders.find(_.getName == h) match {

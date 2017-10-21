@@ -17,22 +17,44 @@ trait SharedTestData {
   val awsSecret = "YNexysRYkuJmLzyNKfotrkEEWWwTEiOgXPEHHGsp"
   val awsSessionToken = "ThisIsASessionToken"
 
-  val httpGetRequest = {
+  def httpGetRequest = {
     val request = new HttpGet("https://es.amazonaws.com/path/to/resource?Action=ListUsers&Version=2010-05-08")
     request.addHeader("x-amz-date", dateTime)
-    request.addHeader("host", host)
+    request.addHeader("Host", host)
     request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
     request
   }
 
-  val httpPostRequest = {
+  def httpPostRequest = {
     val entity = new BasicHttpEntity()
     entity.setContent(new ByteArrayInputStream("This is the content".getBytes(StandardCharsets.UTF_8.name())))
     val request = new HttpPost("https://es.amazonaws.com/path/to/resource?Action=ListUsers&Version=2010-05-08")
 
     request.setEntity(entity)
     request.addHeader("x-amz-date", dateTime)
-    request.addHeader("host", host)
+    request.addHeader("Host", host)
+    request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
+    request
+  }
+
+  def httpPostRequestWithoutDate = {
+    val entity = new BasicHttpEntity()
+    entity.setContent(new ByteArrayInputStream("This is the content".getBytes(StandardCharsets.UTF_8.name())))
+    val request = new HttpPost("https://es.amazonaws.com/path/to/resource?Action=ListUsers&Version=2010-05-08")
+
+    request.setEntity(entity)
+    request.addHeader("Host", host)
+    request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
+    request
+  }
+
+  def httpPostRequestWithBadHost = {
+    val entity = new BasicHttpEntity()
+    entity.setContent(new ByteArrayInputStream("This is the content".getBytes(StandardCharsets.UTF_8.name())))
+    val request = new HttpPost("https://es.amazonaws.com:443/path/to/resource?Action=ListUsers&Version=2010-05-08")
+
+    request.setEntity(entity)
+    request.addHeader("Host", host)
     request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
     request
   }

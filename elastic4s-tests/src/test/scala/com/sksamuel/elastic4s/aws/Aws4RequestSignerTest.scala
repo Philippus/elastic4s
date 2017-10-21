@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.aws
 
 import com.amazonaws.auth._
+import org.apache.http.client.methods.HttpPost
 import org.scalatest.{Matchers, WordSpec}
 
 class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
@@ -28,6 +29,30 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
       val withHeaders = signer.withAws4Headers(httpPostRequest)
       withHeaders.getAllHeaders find (_.getName == "X-Amz-Security-Token") match {
         case Some(header) ⇒ header.getValue shouldBe (awsSessionToken)
+        case _            ⇒ 1 shouldBe (0)
+      }
+    }
+
+    "be able to add date time header when none is found" in {
+      val credentials = new BasicSessionCredentials(awsKey, awsSecret, awsSessionToken)
+      val chainProvider = new AWSStaticCredentialsProvider(credentials)
+      val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
+
+      val withHeaders = signer.withAws4Headers(httpPostRequestWithoutDate)
+      withHeaders.getAllHeaders find (_.getName == "Authorization") match {
+        case Some(header) ⇒ header.getValue shouldBe (result)
+        case _            ⇒ 1 shouldBe (0)
+      }
+    }
+
+    "be able to clean bad Host headers" in {
+      val credentials = new BasicSessionCredentials(awsKey, awsSecret, awsSessionToken)
+      val chainProvider = new AWSStaticCredentialsProvider(credentials)
+      val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
+
+      val withHeaders = signer.withAws4Headers(httpPostRequestWithBadHost)
+      withHeaders.getAllHeaders find (_.getName == "Authorization") match {
+        case Some(header) ⇒ header.getValue shouldBe (result)
         case _            ⇒ 1 shouldBe (0)
       }
     }
