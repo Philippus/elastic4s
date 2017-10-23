@@ -9,9 +9,10 @@ object ReindexBuilderFn {
   def apply(request: ReindexDefinition): XContentBuilder = {
     val builder = XContentFactory.obj()
 
-    request.size.foreach(builder.field("size", _))
-
     builder.startObject("source")
+
+
+    request.size.foreach(builder.field("size", _))
 
     request.remoteHost.foreach { host =>
       builder.startObject("remote")
