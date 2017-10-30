@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.reindex
 
-import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
 
@@ -19,6 +19,7 @@ object ReindexBuilderFn {
       builder.field("host", host)
       request.remoteUser.foreach(builder.field("username", _))
       request.remotePass.foreach(builder.field("password", _))
+      request.remoteSocketTimeout.foreach(builder.field("socket_timeout", _))
       builder.endObject()
     }
 

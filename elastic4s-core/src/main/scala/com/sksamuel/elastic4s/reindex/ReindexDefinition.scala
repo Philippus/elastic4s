@@ -22,6 +22,7 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              remoteHost: Option[String] = None,
                              remoteUser: Option[String] = None,
                              remotePass: Option[String] = None,
+                             remoteSocketTimeout: Option[String] = None,
                              size: Option[Int] = None,
                              script: Option[ScriptDefinition] = None) {
 
