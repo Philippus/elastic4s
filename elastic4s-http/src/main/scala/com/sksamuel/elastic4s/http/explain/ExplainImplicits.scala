@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.explain
 
+import java.net.URLEncoder
+
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import org.apache.http.entity.StringEntity
@@ -15,7 +17,7 @@ trait ExplainImplicits {
                          request: ExplainDefinition): Future[ExplainResponse] = {
 
       val method = "GET"
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
+      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id.toString)}/_explain"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.routing.map(_.toString).foreach(params.put("routing", _))

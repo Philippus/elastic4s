@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.termvectors
 
+import java.net.URLEncoder
+
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
@@ -15,7 +17,7 @@ trait TermVectorsExecutables {
   implicit object TermVectorHttpExecutable extends HttpExecutable[TermVectorsDefinition, TermVectorsResponse] {
     override def execute(client: RestClient, request: TermVectorsDefinition): Future[TermVectorsResponse] = {
 
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
+      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id.toString)}/_termvectors"
 
       val builder = XContentFactory.jsonBuilder().startObject()
 

@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.get
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
@@ -50,7 +52,7 @@ trait GetImplicits {
 
     override def execute(client: RestClient, request: GetDefinition): Future[GetResponse] = {
 
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}"
+      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id.toString)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>

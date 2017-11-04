@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.validate
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler, Shards}
@@ -42,7 +44,7 @@ trait ValidateImplicits {
                          request: ValidateDefinition): Future[ValidateResponse] = {
 
       val method = "GET"
-      val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
+      val endpoint = s"${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.explain.map(_.toString).foreach(params.put("explain", _))
