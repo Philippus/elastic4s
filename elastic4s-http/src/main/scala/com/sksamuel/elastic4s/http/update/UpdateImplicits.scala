@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.update
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
