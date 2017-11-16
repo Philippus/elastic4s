@@ -5,7 +5,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.VersionType.External
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy, VersionType}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -30,7 +30,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
 
   http.execute {
     bulk(
-      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A"),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
       indexInto("electronics" / "electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
       indexInto("electronics" / "electronics").fields(Map("name" -> "iphone", "colour" -> null)),
       indexInto("electronics" / "electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
@@ -70,6 +70,13 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       http.execute {
         get("indexidtest", "wobble", "a/b")
       }.await.right.get.exists shouldBe true
+    }
+    "support external versions" in {
+      val found = http.execute {
+        search("electronics").query(matchQuery("name", "galaxy"))
+      }.await.right.get.hits.hits(0)
+      found.id shouldBe "55A"
+      found.version shouldBe 42l
     }
     "handle custom id" in {
       http.execute {

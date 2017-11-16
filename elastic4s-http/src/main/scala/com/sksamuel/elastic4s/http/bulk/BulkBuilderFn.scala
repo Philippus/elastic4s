@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.http.bulk
 
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
+import com.sksamuel.elastic4s.http.index.VersionTypeHttpString
 import com.sksamuel.elastic4s.http.update.UpdateBuilderFn
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition}
 import com.sksamuel.elastic4s.json.XContentFactory
@@ -21,6 +22,8 @@ object BulkBuilderFn {
         index.id.foreach(id => builder.field("_id", id.toString))
         index.parent.foreach(builder.field("_parent", _))
         index.routing.foreach(builder.field("_routing", _))
+        index.version.foreach(builder.field("_version", _))
+        index.versionType.foreach(versionType ⇒ builder.field("_version_type", VersionTypeHttpString(versionType)))
         builder.endObject()
         builder.endObject()
 
@@ -50,6 +53,8 @@ object BulkBuilderFn {
         builder.field("_id", update.id)
         update.parent.foreach(builder.field("_parent", _))
         update.routing.foreach(builder.field("_routing", _))
+        update.version.foreach(builder.field("_version", _))
+        update.versionType.foreach(builder.field("_version_type", _))
         builder.endObject()
         builder.endObject()
 
