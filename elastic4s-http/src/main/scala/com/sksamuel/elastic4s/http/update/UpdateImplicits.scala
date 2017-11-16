@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.update
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
@@ -49,7 +51,7 @@ trait UpdateImplicits {
                          request: UpdateDefinition): Future[UpdateResponse] = {
 
       val method = "POST"
-      val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${request.id}/_update"
+      val endpoint = s"/${request.indexAndTypes.index}/${request.indexAndTypes.types.mkString(",")}/${URLEncoder.encode(request.id.toString)}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
@@ -75,9 +77,9 @@ trait UpdateImplicits {
     override def execute(client: RestClient, request: UpdateByQueryDefinition): Future[UpdateByQueryResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"
+        s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_update_by_query"
       else
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
+        s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.abortOnVersionConflict.contains(true)) {
