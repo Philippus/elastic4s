@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.termvectors
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{Index, IndexAndType}
 
 trait TermVectorApi {
-  def termVectors(index: String, `type`: String, id: Any): TermVectorsDefinition =
-    TermVectorsDefinition(IndexAndType(index, `type`), id.toString)
+  def termVectors(index: Index, `type`: String, id: String): TermVectorsDefinition =
+    TermVectorsDefinition(IndexAndType(index.name, `type`), id.toString)
 }

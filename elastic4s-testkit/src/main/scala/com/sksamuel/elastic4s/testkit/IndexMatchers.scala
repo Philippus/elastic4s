@@ -29,7 +29,7 @@ trait IndexMatchers extends Matchers {
                  timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
-      val exists = client.execute(get(expectedId).from(left)).await(timeout).exists
+      val exists = client.execute(get(expectedId.toString).from(left)).await(timeout).exists
       MatchResult(
         exists,
         s"Index $left did not contain expected document $expectedId",

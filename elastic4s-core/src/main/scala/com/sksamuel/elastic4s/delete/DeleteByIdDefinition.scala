@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.{IndexAndType, RefreshPolicy, VersionType}
 import com.sksamuel.exts.OptionImplicits._
 
 case class DeleteByIdDefinition(indexType: IndexAndType,
-                                id: Any,
+                                id: String,
                                 parent: Option[String] = None,
                                 routing: Option[String] = None,
                                 refresh: Option[RefreshPolicy] = None,

@@ -30,27 +30,27 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
 
     http.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id 2,
-        indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id 4
+        indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id "2",
+        indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     http.execute {
-      get(2).from(indexname)
+      get("2").from(indexname)
     }.await.right.get.found shouldBe true
 
     http.execute {
-      get(4).from(indexname)
+      get("4").from(indexname)
     }.await.right.get.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
     val result = http.execute {
       bulk(
-        update(2).in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
-        indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
-        update(6).in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
-        delete(10).from(indexname / "elements")
+        update("2").in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
+        indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id "8",
+        update("6").in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
+        delete("10").from(indexname / "elements")
       ).refresh(RefreshPolicy.Immediate)
     }.await
 
@@ -66,17 +66,17 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
 
     http.execute {
       bulk(
-        update(2).in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
-        update(4).in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
+        update("2").in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
+        update("4").in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     http.execute {
-      get(2).from(indexname).storedFields("name")
+      get("2").from(indexname).storedFields("name")
     }.await.right.get.storedField("name").value shouldBe "carbon"
 
     http.execute {
-      get(4).from(indexname).storedFields("name")
+      get("4").from(indexname).storedFields("name")
     }.await.right.get.storedField("name").value shouldBe "oxygen"
   }
 
@@ -84,18 +84,18 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
 
     http.execute {
       bulk(
-        deleteById(indexname, "elements", 2),
-        deleteById(indexname, "elements", 4)
+        deleteById(indexname, "elements", "2"),
+        deleteById(indexname, "elements", "4")
       ).refresh(RefreshPolicy.Immediate)
     }.await.errors shouldBe false
 
     http.execute {
-      get(indexname, "elements", 2)
+      get(indexname, "elements", "2")
     }.await.right.get.found shouldBe false
 
     http.execute {
-      get(indexname, "elements", 4)
-      get(4).from(indexname)
+      get(indexname, "elements", "4")
+      get("4").from(indexname)
     }.await.right.get.found shouldBe false
   }
 }

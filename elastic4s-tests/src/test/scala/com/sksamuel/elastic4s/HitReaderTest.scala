@@ -47,12 +47,12 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
     )
   }.await
 
-  def indexRequest(id: Any, team: Team): IndexDefinition = indexInto(IndexName / IndexName).source(team).id(id)
+  def indexRequest(id: String, team: Team): IndexDefinition = indexInto(Index(IndexName), IndexName).source(team).id(id)
 
   http.execute(
     bulk(
-      indexRequest(1, Team("Middlesbrough", "Fortress Riverside", 1876)),
-      indexRequest(2, Team("Arsenal", "The Library", 1886))
+      indexRequest("1", Team("Middlesbrough", "Fortress Riverside", 1876)),
+      indexRequest("2", Team("Arsenal", "The Library", 1886))
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -80,7 +80,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
 
   it should "unmarshall safely a get response" in {
     val team = http.execute {
-      get(1).from(IndexName)
+      get("1").from(IndexName)
     }.await.right.get.safeTo[Team]
 
     team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
@@ -88,7 +88,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
 
   it should "unmarshall a get response" in {
     val team = http.execute {
-      get(1).from(IndexName)
+      get("1").from(IndexName)
     }.await.right.get.to[Team]
 
     team shouldBe Team("Middlesbrough", "Fortress Riverside", 1876)
@@ -97,8 +97,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall safely multi get results" in {
     val teams = http.execute {
       multiget(
-        get(1).from(IndexName),
-        get(2).from(IndexName)
+        get("1").from(IndexName),
+        get("2").from(IndexName)
       )
     }.await.safeTo[Team]
 
@@ -111,8 +111,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall multi get results" in {
     val teams = http.execute {
       multiget(
-        get(1).from(IndexName),
-        get(2).from(IndexName)
+        get("1").from(IndexName),
+        get("2").from(IndexName)
       )
     }.await.to[Team]
 

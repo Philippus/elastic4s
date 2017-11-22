@@ -1,16 +1,16 @@
 package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
-import com.sksamuel.elastic4s.{IndexAndType, Indexes, IndexesAndTypes}
+import com.sksamuel.elastic4s.{Index, IndexAndType, Indexes, IndexesAndTypes}
 
 trait UpdateApi {
 
-  def updateById(indexname: String, `type`: String, id: Any) = UpdateDefinition(indexname, id.toString)
-  def updateByQuery(indexname: String, `type`: String, query: QueryDefinition) = UpdateByQueryDefinition(indexname, query)
+  def updateById(index: Index, `type`: String, id: String) = UpdateDefinition(index.name, id)
+  def updateByQuery(index: Index, `type`: String, query: QueryDefinition) = UpdateByQueryDefinition(index.name, query)
 
-  def update(id: Any): UpdateExpectsIn = new UpdateExpectsIn(id)
-  class UpdateExpectsIn(id: Any) {
-    def in(indexType: IndexAndType): UpdateDefinition = UpdateDefinition(indexType, id.toString)
+  def update(id: String): UpdateExpectsIn = new UpdateExpectsIn(id)
+  class UpdateExpectsIn(id: String) {
+    def in(indexType: IndexAndType): UpdateDefinition = UpdateDefinition(indexType, id)
   }
 
   def updateIn(indexes: Indexes): UpdateExpectsQuery = new UpdateExpectsQuery(indexes.toIndexesAndTypes)

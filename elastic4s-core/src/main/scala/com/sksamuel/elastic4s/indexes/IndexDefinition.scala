@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 import scala.concurrent.duration.FiniteDuration
 
 case class IndexDefinition(indexAndType: IndexAndType,
-                           id: Option[Any] = None,
+                           id: Option[String] = None,
                            createOnly: Option[Boolean] = None,
                            refresh: Option[RefreshPolicy] = None,
                            parent: Option[String] = None,
@@ -26,8 +26,8 @@ case class IndexDefinition(indexAndType: IndexAndType,
   def source(json: String): IndexDefinition = copy(source = json.some)
   def source[T](t: T)(implicit indexable: Indexable[T]): IndexDefinition = copy(source = indexable.json(t).some)
 
-  def id(id: Any): IndexDefinition = withId(id)
-  def withId(id: Any): IndexDefinition = copy(id = id.some)
+  def id(id: String): IndexDefinition = withId(id)
+  def withId(id: String): IndexDefinition = copy(id = id.some)
 
   def pipeline(pipeline: String): IndexDefinition = copy(pipeline = pipeline.some)
   def parent(parent: String): IndexDefinition = copy(parent = parent.some)
