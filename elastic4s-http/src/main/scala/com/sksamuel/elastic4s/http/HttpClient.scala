@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http
 
+import java.io.{InputStream, File}
+
 import cats.Show
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.exts.Logging
@@ -68,11 +70,15 @@ trait HttpRequestClient extends Logging {
   def close(): Unit
 }
 
-case class HttpResponse(statusCode: Int, entity: Option[HttpEntity], headers: Map[String, String])
-case class HttpEntity(content: String, contentType: Option[String])
+case class HttpResponse(statusCode: Int, entity: Option[HttpEntity.StringEntity], headers: Map[String, String])
+sealed trait HttpEntity
 object HttpEntity {
   def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
-  def apply(content: String, contentType: String): HttpEntity = HttpEntity(content, Some(contentType))
+  def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
+
+  case class StringEntity(content: String, contentType: Option[String]) extends HttpEntity
+  case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity
+  case class FileEntity(content: File, contentType: Option[String]) extends HttpEntity
 }
 
 object HttpClient extends Logging {

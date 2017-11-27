@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http
 import java.nio.charset.Charset
 
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.entity.{ContentType, StringEntity}
+import org.apache.http.entity.{ContentType, StringEntity, InputStreamEntity, FileEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
@@ -24,7 +24,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
           val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
           implicit val codec = Codec(Charset.forName(contentEncoding))
           val body = Source.fromInputStream(entity.getContent).mkString
-          HttpEntity(body, contentEncoding)
+          HttpEntity.StringEntity(body, Some(contentEncoding))
         }
         val headers = r.getHeaders.map { header => header.getName -> header.getValue }.toMap
         logger.debug(s"Http Response $r")
@@ -53,13 +53,24 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
                      params: Map[String, Any],
                      entity: HttpEntity): Future[HttpResponse] = {
     logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
-    logger.debug(entity.content)
+
+    val apacheEntity = entity match {
+      case e: HttpEntity.StringEntity =>
+        logger.debug(e.content)
+        new StringEntity(e.content, ContentType.APPLICATION_JSON)
+      case e: HttpEntity.InputStreamEntity =>
+        logger.debug(e.content.toString)
+        new InputStreamEntity(e.content, ContentType.APPLICATION_JSON)
+      case e: HttpEntity.FileEntity =>
+        logger.debug(e.content.toString)
+        new FileEntity(e.content, ContentType.APPLICATION_JSON)
+    }
 
     val callback = client.performRequestAsync(
       method,
       endpoint,
       params.mapValues(_.toString).asJava,
-      new StringEntity(entity.content, ContentType.APPLICATION_JSON),
+      apacheEntity,
       _: ResponseListener)
     future(callback)
   }

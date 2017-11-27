@@ -20,7 +20,7 @@ trait ResponseHandler[U] {
 // if the content encoding header is null, then UTF-8 is assumed
 object ResponseHandler extends Logging {
 
-  def json(entity: HttpEntity): JsonNode = fromEntity[JsonNode](entity)
+  def json(entity: HttpEntity.StringEntity): JsonNode = fromEntity[JsonNode](entity)
 
   def fromNode[U: Manifest](node: JsonNode): U = {
     logger.debug(s"Attempting to unmarshall json node to ${manifest.runtimeClass.getName}")
@@ -30,7 +30,7 @@ object ResponseHandler extends Logging {
 
   def fromResponse[U: Manifest](response: HttpResponse): U = fromEntity(response.entity.get)
 
-  def fromEntity[U: Manifest](entity: HttpEntity): U = {
+  def fromEntity[U: Manifest](entity: HttpEntity.StringEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
     val charset = entity.contentType.getOrElse("UTF-8")
     implicit val codec = Codec(Charset.forName(charset))
