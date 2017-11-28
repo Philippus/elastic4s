@@ -27,11 +27,11 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
     "delete matched docs" in {
 
       http.execute {
-        indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id(2).refresh(RefreshPolicy.Immediate)
+        indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id("2").refresh(RefreshPolicy.Immediate)
       }.await
 
       http.execute {
-        indexInto("lecarre" / "characters").fields("name" -> "george smiley").id(4).refresh(RefreshPolicy.Immediate)
+        indexInto("lecarre" / "characters").fields("name" -> "george smiley").id("4").refresh(RefreshPolicy.Immediate)
       }.await
 
       http.execute {
@@ -39,7 +39,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
       }.await.right.get.totalHits shouldBe 2
 
       http.execute {
-        delete(2).from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
+        delete("2").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
       http.execute {
@@ -47,7 +47,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
       }.await.right.get.totalHits shouldBe 1
 
       http.execute {
-        delete(4).from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
+        delete("4").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
       http.execute {

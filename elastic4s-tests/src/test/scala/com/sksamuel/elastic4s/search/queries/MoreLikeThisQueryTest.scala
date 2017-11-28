@@ -24,11 +24,11 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar wit
 
   client.execute {
     bulk(
-      indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id 4 parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id 6 parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id 7 parent "1",
-      indexInto("drinks/drink") fields ("text" -> "coors regular is another coors beer by molson") id 8 parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Hendricks upmarket gin UK") id 9 parent "1"
+      indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id "4" parent "1",
+      indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" parent "1",
+      indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id "7" parent "1",
+      indexInto("drinks/drink") fields ("text" -> "coors regular is another coors beer by molson") id "8" parent "1",
+      indexInto("drinks/drink") fields ("text" -> "Hendricks upmarket gin UK") id "9" parent "1"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

@@ -9,15 +9,15 @@ import scala.util.Try
 
 class ReindexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
-  delete("reindex")
-  delete("reindex2")
-  delete("reindextarget")
+  deleteIdx("reindex")
+  deleteIdx("reindex2")
+  deleteIdx("reindextarget")
 
   create("reindex")
   create("reindex2")
   create("reindextarget")
 
-  def delete(name: String) = Try {
+  def deleteIdx(name: String) = Try {
     http.execute {
       deleteIndex(name)
     }.await
