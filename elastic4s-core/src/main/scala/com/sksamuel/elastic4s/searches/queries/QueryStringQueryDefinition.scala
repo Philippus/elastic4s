@@ -37,7 +37,7 @@ case class QueryStringQueryDefinition(query: String,
   def defaultOperator(op: String): QueryStringQueryDefinition = copy(defaultOperator = op.some)
   def operator(op: String): QueryStringQueryDefinition = defaultOperator(op)
 
-  def asfields(fields: String*): QueryStringQueryDefinition = copy(fields = fields.map(f => (f, -1D)))
+  def asfields(fields: String*): QueryStringQueryDefinition = copy(fields = fields.map(f => (f, 1D)))
 
   def splitOnWhitespace(splitOnWhitespace: Boolean): QueryStringQueryDefinition =
     copy(splitOnWhitespace = splitOnWhitespace.some)
@@ -76,7 +76,7 @@ case class QueryStringQueryDefinition(query: String,
     copy(quoteFieldSuffix = quoteFieldSuffix.some)
 
   def field(name: String): QueryStringQueryDefinition =
-    copy(fields = fields :+ (name, -1D))
+    copy(fields = fields :+ (name, 1D))
 
   def field(name: String, boost: Double): QueryStringQueryDefinition =
     copy(fields = fields :+ (name, boost.toDouble))
