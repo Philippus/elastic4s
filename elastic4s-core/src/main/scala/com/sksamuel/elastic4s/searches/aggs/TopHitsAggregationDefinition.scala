@@ -26,7 +26,7 @@ case class TopHitsAggregationDefinition(name: String,
     copy(fetchSource = FetchSourceContext(true, includes, excludes).some)
 
   def fetchSource(fetchSource: Boolean): TopHitsAggregationDefinition =
-    copy(fetchSource = FetchSourceContext(true).some)
+    copy(fetchSource = FetchSourceContext(fetchSource).some)
 
   def size(size: Int): TopHitsAggregationDefinition = copy(size = size.some)
 
