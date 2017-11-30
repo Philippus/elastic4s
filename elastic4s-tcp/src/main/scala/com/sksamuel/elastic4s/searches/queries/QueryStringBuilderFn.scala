@@ -15,7 +15,7 @@ object QueryStringBuilderFn {
     query.defaultField.foreach(builder.defaultField)
     query.enablePositionIncrements.foreach(builder.enablePositionIncrements)
     query.fields.foreach {
-      case (name, -1) => builder.field(name)
+      case (name, 1D) => builder.field(name)
       case (name, boost) => builder.field(name, boost.toFloat)
     }
     query.fuzzyMaxExpansions.foreach(builder.fuzzyMaxExpansions)

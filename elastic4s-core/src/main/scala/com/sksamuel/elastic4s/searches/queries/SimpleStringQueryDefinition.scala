@@ -47,7 +47,7 @@ case class SimpleStringQueryDefinition(query: String,
   def analyzeWildcard(analyzeWildcard: Boolean): SimpleStringQueryDefinition =
     copy(analyzeWildcard = analyzeWildcard.some)
 
-  def asfields(fields: String*): SimpleStringQueryDefinition = copy(fields = this.fields ++ fields.map(f => (f, -1D)))
-  def field(name: String): SimpleStringQueryDefinition = copy(fields = fields :+ (name, -1D))
+  def asfields(fields: String*): SimpleStringQueryDefinition = copy(fields = this.fields ++ fields.map(f => (f, 1D)))
+  def field(name: String): SimpleStringQueryDefinition = copy(fields = fields :+ (name, 1D))
   def field(name: String, boost: Double): SimpleStringQueryDefinition = copy(fields = fields :+ (name, boost))
 }
