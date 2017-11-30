@@ -31,19 +31,19 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
         "name" -> "coors light",
         "brand" -> "coors",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
-      ) id 4,
+      ) id "4",
       indexInto("beer/lager") fields(
         "name" -> "bud lite",
         "brand" -> "bud",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
-      ) id 8
+      ) id "8"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "A Get request" should "retrieve a document by id" in {
 
     val resp = http.execute {
-      get(8) from "beer"
+      get("8") from "beer"
     }.await.right.get
 
     resp.exists shouldBe true
@@ -53,7 +53,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "retrieve a document by id with source" in {
 
     val resp = http.execute {
-      get(8) from "beer"
+      get("8") from "beer"
     }.await.right.get
 
     resp.exists shouldBe true
@@ -64,7 +64,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "retrieve a document by id without source" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager" fetchSourceContext false
+      get("8") from "beer/lager" fetchSourceContext false
     }.await.right.get
 
     resp.exists should be(true)
@@ -76,7 +76,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "support source includes" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager" fetchSourceInclude "brand"
+      get("8") from "beer/lager" fetchSourceInclude "brand"
     }.await.right.get
 
     resp.exists should be(true)
@@ -87,7 +87,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "support source excludes" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager" fetchSourceExclude "brand"
+      get("8") from "beer/lager" fetchSourceExclude "brand"
     }.await.right.get
 
     resp.exists should be(true)
@@ -98,7 +98,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "support source includes and excludes" in {
 
     val resp = http.execute {
-      get(8) from "beer/lager" fetchSourceContext(List("name"), List("brand"))
+      get("8") from "beer/lager" fetchSourceContext(List("name"), List("brand"))
     }.await.right.get
 
     resp.exists should be(true)
@@ -109,7 +109,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "retrieve a document supporting stored fields" in {
 
     val resp = http.execute {
-      get(4) from "beer/lager" storedFields("name", "brand")
+      get("4") from "beer/lager" storedFields("name", "brand")
     }.await.right.get
 
     resp.exists should be(true)
@@ -121,7 +121,7 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
   it should "retrieve multi value fields" in {
 
     val resp = http.execute {
-      get(4) from "beer/lager" storedFields "ingredients"
+      get("4") from "beer/lager" storedFields "ingredients"
     }.await.right.get
 
     val field = resp.storedField("ingredients")
@@ -130,13 +130,13 @@ class GetTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocal
 
   it should "return Left[RequestFailure] when index does not exist" in {
     http.execute {
-      get(4) from "qqqqqqqqqq"
+      get("4") from "qqqqqqqqqq"
     }.await.left.get.error.`type` shouldBe "index_not_found_exception"
   }
 
   it should "return Right with exists=false when the doc does not exist" in {
     http.execute {
-      get(111111) from "beer"
+      get("111111") from "beer"
     }.await.right.get.exists shouldBe false
   }
 }

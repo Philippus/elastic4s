@@ -25,8 +25,8 @@ class MultiSearchHttpTest
 
   http.execute {
     bulk(
-      indexInto("jtull" / "albums") fields ("name" -> "aqualung") id 14,
-      indexInto("jtull" / "albums") fields ("name" -> "passion play") id 51
+      indexInto("jtull" / "albums") fields ("name" -> "aqualung") id "14",
+      indexInto("jtull" / "albums") fields ("name" -> "passion play") id "51"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

@@ -165,7 +165,7 @@ trait ElasticDsl
 
   case object update {
     @deprecated("use update(id)", "5.0.0")
-    def id(id: Any) = update(id)
+    def id(id: String) = update(id)
 
     @deprecated("use updateSettings(index)", "5.0.0")
     def settings(index: String): UpdateSettingsDefinition = updateSettings(index)
@@ -264,7 +264,7 @@ trait ElasticDsl
 
   case object delete {
     @deprecated("use delete(id)", "5.0.0")
-    def id(id: Any): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
+    def id(id: String): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
     @deprecated("use deleteIndex(indexes)", "5.0.0")
     def index(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
@@ -326,7 +326,7 @@ trait ElasticDsl
   case object get {
 
     @deprecated("use get(id)", "5.0.0")
-    def id(id: Any): GetExpectsFrom = get(id)
+    def id(id: String): GetExpectsFrom = get(id)
 
     @deprecated("use getAlias(alias)", "5.0.0")
     def alias(aliases: String*): GetAliasesDefinition = GetAliasesDefinition(aliases)

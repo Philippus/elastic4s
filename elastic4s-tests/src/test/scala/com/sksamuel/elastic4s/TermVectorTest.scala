@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.SpanSugar._
 import org.scalatest.{Matchers, WordSpec}
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 
 class TermVectorTest
   extends WordSpec
@@ -17,11 +16,11 @@ class TermVectorTest
 
   client.execute {
     bulk(
-      index into "termvectortest/startrek" fields("name" -> "james kirk", "rank" -> "captain") id 1,
-      index into "termvectortest/startrek" fields("name" -> "jean luc picard", "rank" -> "captain") id 2,
-      index into "termvectortest/startrek" fields("name" -> "will riker", "rank" -> "cmdr") id 3,
-      index into "termvectortest/startrek" fields("name" -> "data", "rank" -> "ltr cmdr") id 4,
-      index into "termvectortest/startrek" fields("name" -> "geordie la forge", "rank" -> "ltr cmdr") id 5
+      index into "termvectortest/startrek" fields("name" -> "james kirk", "rank" -> "captain") id "1",
+      index into "termvectortest/startrek" fields("name" -> "jean luc picard", "rank" -> "captain") id "2",
+      index into "termvectortest/startrek" fields("name" -> "will riker", "rank" -> "cmdr") id "3",
+      index into "termvectortest/startrek" fields("name" -> "data", "rank" -> "ltr cmdr") id "4",
+      index into "termvectortest/startrek" fields("name" -> "geordie la forge", "rank" -> "ltr cmdr") id "5"
     )
   }.await
 

@@ -1,14 +1,16 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.{Index, IndexAndType}
 
 import scala.language.implicitConversions
 
 trait GetApi {
 
-  def get(indexname: String, `type`: String, id: Any) = GetDefinition(IndexAndType(indexname, `type`), id.toString)
-  def get(id: Any): GetExpectsFrom = new GetExpectsFrom(id)
-  class GetExpectsFrom(id: Any) {
+  // prefered syntax as of 6.0
+  def get(index: Index, `type`: String, id: String) = GetDefinition(IndexAndType(index.name, `type`), id)
+
+  def get(id: String): GetExpectsFrom = new GetExpectsFrom(id)
+  class GetExpectsFrom(id: String) {
 
     def from(str: String): GetDefinition = {
       if (str.contains('/')) from(IndexAndType(str)) else from(IndexAndType(str, "_all"))
@@ -16,7 +18,7 @@ trait GetApi {
 
     def from(index: (String, String)): GetDefinition = from(IndexAndType(index._1, index._2))
     def from(index: String, `type`: String): GetDefinition = from(IndexAndType(index, `type`))
-    def from(index: IndexAndType): GetDefinition = GetDefinition(index, id.toString)
+    def from(index: IndexAndType): GetDefinition = GetDefinition(index, id)
   }
 
   def multiget(first: GetDefinition, rest: GetDefinition*): MultiGetDefinition = multiget(first +: rest)

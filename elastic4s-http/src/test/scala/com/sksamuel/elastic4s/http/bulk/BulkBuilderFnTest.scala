@@ -9,10 +9,10 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
 
   test("bulk content builder should support mixed requests") {
     val req = bulk(
-      update(2).in("chemistry/elements").doc("atomicweight" -> 2, "name" -> "helium"),
-      indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen") id 8,
-      update(6).in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
-      delete(10).from("chemistry/elements")
+      update("2").in("chemistry/elements").doc("atomicweight" -> 2, "name" -> "helium"),
+      indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen").withId("8"),
+      update("6").in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
+      delete("10").from("chemistry/elements")
     ).refresh(RefreshPolicy.Immediate)
 
     BulkBuilderFn(req).mkString("\n") shouldBe

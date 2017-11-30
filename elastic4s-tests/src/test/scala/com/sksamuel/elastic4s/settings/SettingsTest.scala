@@ -9,12 +9,12 @@ import scala.util.Try
 
 class SettingsTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
-  delete("settingsa")
-  delete("settingsb")
+  deleteIdx("settingsa")
+  deleteIdx("settingsb")
   create("settingsa")
   create("settingsb")
 
-  def delete(name: String) = Try {
+  def deleteIdx(name: String) = Try {
     http.execute {
       deleteIndex(name)
     }.await

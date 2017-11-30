@@ -29,10 +29,10 @@ class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with Disc
     "delete matched docs" in {
       http.execute {
         bulk(
-          indexInto(indexname / indexname).fields("name" -> "mr bumbles").id(1),
-          indexInto(indexname / indexname).fields("name" -> "artful dodger").id(2),
-          indexInto(indexname / indexname).fields("name" -> "mrs bumbles").id(3),
-          indexInto(indexname / indexname).fields("name" -> "fagan").id(4)
+          indexInto(indexname / indexname).fields("name" -> "mr bumbles").id("1"),
+          indexInto(indexname / indexname).fields("name" -> "artful dodger").id("2"),
+          indexInto(indexname / indexname).fields("name" -> "mrs bumbles").id("3"),
+          indexInto(indexname / indexname).fields("name" -> "fagan").id("4")
         ).refresh(RefreshPolicy.Immediate)
       }.await
 

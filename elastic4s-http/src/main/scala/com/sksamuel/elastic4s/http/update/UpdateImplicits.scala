@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.http.update
 
+import java.net.URLEncoder
+
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
@@ -69,7 +71,7 @@ trait UpdateImplicits {
 
     override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
 
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_update"
+      val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>

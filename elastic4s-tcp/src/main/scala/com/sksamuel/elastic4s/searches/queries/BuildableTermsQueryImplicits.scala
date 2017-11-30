@@ -22,8 +22,8 @@ trait BuildableTermsQueryImplicits {
       QueryBuilders.termsQuery(q.field, q.values.toSeq: _*)
   }
 
-  implicit object FloatBuildableTermsQuery extends BuildableTermsQuery[Double] {
-    override def build(q: TermsQueryDefinition[Double]): TermsQueryBuilder =
+  implicit object FloatBuildableTermsQuery extends BuildableTermsQuery[Float] {
+    override def build(q: TermsQueryDefinition[Float]): TermsQueryBuilder =
       QueryBuilders.termsQuery(q.field, q.values.toSeq: _*)
   }
 
