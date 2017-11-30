@@ -59,7 +59,7 @@ object EnumConversions {
     builder.endObject()
   }
 
-  def timeZone(zone: DateTimeZone): String = ???
+  def timeZone(zone: DateTimeZone): String = zone.getID
 
   def interval(interval: DateHistogramInterval): String = interval.interval
 
