@@ -16,7 +16,10 @@ case class BulkDefinition(requests: Seq[BulkCompatibleDefinition],
   def refresh(refresh: String): BulkDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): BulkDefinition = copy(refresh = refresh.some)
 
+  @deprecated("use refreshImmediately", "6.0.0")
   def immediateRefresh(): BulkDefinition = refresh(RefreshPolicy.Immediate)
+
+  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
   def waitForRefresh(): BulkDefinition = refresh(RefreshPolicy.WaitFor)
 }
 

@@ -13,8 +13,8 @@ class IdQueryTest extends FlatSpec with HttpElasticSugar with Matchers with Elas
 
   http.execute {
     bulk(
-      indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id 5,
-      indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id 9
+      indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id "5",
+      indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id "9"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

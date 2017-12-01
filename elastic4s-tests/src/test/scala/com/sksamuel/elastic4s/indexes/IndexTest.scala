@@ -150,7 +150,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       result.right.get.result shouldBe "created"
     }
     "return OK status if the document already exists" in {
-      val id = UUID.randomUUID()
+      val id = UUID.randomUUID().toString
       http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
@@ -160,7 +160,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       result.right.get.result shouldBe "updated"
     }
     "handle update concurrency" in {
-      val id = UUID.randomUUID()
+      val id = UUID.randomUUID.toString
       http.execute {
         indexInto("electronics" / "electronics")
           .fields("name" -> "super phone")

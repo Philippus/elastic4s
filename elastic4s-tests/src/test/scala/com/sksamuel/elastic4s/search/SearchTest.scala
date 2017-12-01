@@ -31,7 +31,7 @@ class SearchTest
         "singer" -> "ian anderson",
         "guitar" -> "martin barre",
         "keyboards" -> "johnny smith"
-      ) id 45
+      ) id "45"
     ).immediateRefresh()
   }.await
 

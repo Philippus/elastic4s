@@ -20,8 +20,8 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DualClient
 
     execute {
       bulk(
-        indexInto("explain/kings") fields ("name" -> "richard") id 4,
-        indexInto("explain/kings") fields ("name" -> "edward") id 5
+        indexInto("explain/kings") fields ("name" -> "richard") id "4",
+        indexInto("explain/kings") fields ("name" -> "edward") id "5"
       ).refresh(RefreshPolicy.Immediate)
     }.await
   }

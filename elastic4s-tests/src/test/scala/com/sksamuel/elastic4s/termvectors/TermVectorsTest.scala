@@ -19,14 +19,14 @@ class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with Discov
 
   http.execute(
     bulk(
-      indexInto("hansz/albums").fields("name" -> "interstellar", "rating" -> 10) id 1,
-      indexInto("hansz/albums").fields("name" -> "lion king", "rating" -> 8) id 2
+      indexInto("hansz/albums").fields("name" -> "interstellar", "rating" -> 10) id "1",
+      indexInto("hansz/albums").fields("name" -> "lion king", "rating" -> 8) id "2"
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "term vectors" should "return full stats" in {
     val response = http.execute {
-      termVectors("hansz", "albums", 1)
+      termVectors("hansz", "albums", "1")
     }.await
 
     response.index shouldBe "hansz"

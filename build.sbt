@@ -23,9 +23,9 @@ lazy val root = Project("elastic4s", file("."))
     playjson,
     sprayjson,
     aws,
-    httpstreams
-    // streams,
-    //  xpacksecurity
+    httpstreams,
+    streams,
+    xpacksecurity
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -85,12 +85,12 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   )
   .dependsOn(core)
 
-//lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
-//  .settings(
-//    name := "elastic4s-xpack-security",
-//    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
-//    libraryDependencies += "org.elasticsearch.client" % "x-pack-transport" % ElasticsearchVersion
-//  ).dependsOn(tcp)
+lazy val xpacksecurity = Project("elastic4s-xpack-security", file("elastic4s-xpack-security"))
+  .settings(
+    name := "elastic4s-xpack-security",
+    resolvers += "elastic" at "https://artifacts.elastic.co/maven",
+    libraryDependencies += "org.elasticsearch.client" % "x-pack-transport" % ElasticsearchVersion
+  ).dependsOn(tcp)
 
 lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
@@ -112,13 +112,13 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   )
   .dependsOn(core, embedded, http)
 
-//lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
-//  .settings(
-//    name := "elastic4s-streams",
-//    libraryDependencies += "com.typesafe.akka"        %% "akka-actor"           % AkkaVersion,
-//    libraryDependencies += "org.reactivestreams"      % "reactive-streams"      % ReactiveStreamsVersion,
-//    libraryDependencies += "org.reactivestreams"      % "reactive-streams-tck"  % ReactiveStreamsVersion % "test"
-//  ).dependsOn(tcp, testkit % "test", jackson % "test")
+lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
+  .settings(
+    name := "elastic4s-streams",
+    libraryDependencies += "com.typesafe.akka"        %% "akka-actor"           % AkkaVersion,
+    libraryDependencies += "org.reactivestreams"      % "reactive-streams"      % ReactiveStreamsVersion,
+    libraryDependencies += "org.reactivestreams"      % "reactive-streams-tck"  % ReactiveStreamsVersion % "test"
+  ).dependsOn(tcp, testkit % "test", jackson % "test")
 
 lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-streams"))
   .settings(

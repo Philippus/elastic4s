@@ -32,9 +32,9 @@ class ChildrenAggregationHttpTest extends FlatSpec with Matchers with ElasticDsl
 
     http.execute {
       bulk(
-        indexInto("childrenaggs/question").doc("""{ "question":"in quantum leap, why is sam leaping", "date":"10/09/2017" }""").id(1),
-        indexInto("childrenaggs/question").doc("""{ "question":"who is the best star trek character", "date":"28/11/2017" }""").id(2),
-        indexInto("childrenaggs/question").doc("""{ "question":"will GRRRRMartin ever finish book 6?", "date":"05/12/2017" }""").id(3),
+        indexInto("childrenaggs/question").doc("""{ "question":"in quantum leap, why is sam leaping", "date":"10/09/2017" }""").id("1"),
+        indexInto("childrenaggs/question").doc("""{ "question":"who is the best star trek character", "date":"28/11/2017" }""").id("2"),
+        indexInto("childrenaggs/question").doc("""{ "question":"will GRRRRMartin ever finish book 6?", "date":"05/12/2017" }""").id("3"),
         indexInto("childrenaggs/answer").doc("""{ "text":"in the last episode he meets God" }""").parent("1"),
         indexInto("childrenaggs/answer").doc("""{ "text":"God indicates he's doing the leaping himself" }""").parent("1"),
         indexInto("childrenaggs/answer").doc("""{ "text":"It's clear that God is involved somehow" }""").parent("1"),

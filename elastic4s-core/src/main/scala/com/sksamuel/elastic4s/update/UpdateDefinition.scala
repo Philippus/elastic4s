@@ -78,6 +78,7 @@ case class UpdateDefinition(indexAndType: IndexAndType,
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): UpdateDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): UpdateDefinition = copy(refresh = refresh.some)
+  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
 
   def retryOnConflict(retryOnConflict: Int): UpdateDefinition = copy(retryOnConflict = retryOnConflict.some)
 
