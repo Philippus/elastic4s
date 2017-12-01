@@ -13,15 +13,14 @@ import org.apache.http.{Header, HttpRequest}
   * AWS request signer (version 4) that follows the documentation given by amazon
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html">request signing documentation</a>
   *
-  * @param awsCredentialProvider - capable of providing aws user credentials
-  * @param region                - amazon region (i.e. eu-west-1)
-  * @param service               - service requested, in this context, should always be elastic search, identified by the string "es"
+  * @param provider - an implementation of com.amazonaws.auth.AWSCredentialsProvider capable of providing aws user credentials
+  * @param region   - amazon region (i.e. eu-west-1)
+  * @param service  - service requested, in this context, should always be elastic search, identified by the string "es"
   */
-class Aws4RequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: String, service: String = "es") {
+class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, service: String = "es") {
+  require(provider.getCredentials != null, "AWS Credentials are mandatory. AWSCredentialsProvider provided none.")
 
-  require(awsCredentialProvider.getCredentials != null, "AWS Credentials are mandatory. AWSCredentialsProvider provided none.")
-
-  val credentials = awsCredentialProvider.getCredentials
+  val credentials = provider.getCredentials
   val dateHeader = "X-Amz-Date"
   val authHeader = "Authorization"
   val securityTokenHeader = "X-Amz-Security-Token"

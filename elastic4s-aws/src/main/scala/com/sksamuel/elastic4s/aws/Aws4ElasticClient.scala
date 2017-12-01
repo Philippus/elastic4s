@@ -11,7 +11,7 @@ import org.apache.http.protocol.HttpContext
 import org.apache.http.{HttpRequest, HttpRequestInterceptor}
 
 case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, region: String, service: String = "es") {
-  require(key.length > 16 && key.length < 128 && key.matches("[\\w]+"), "Key id must have between 16 and 128 characters.")
+  require(key.length > 16 && key.length < 128 && key.matches("[\\w]+"), "Key id must be between 16 and 128 characters.")
 }
 
 object Aws4ElasticClient {
