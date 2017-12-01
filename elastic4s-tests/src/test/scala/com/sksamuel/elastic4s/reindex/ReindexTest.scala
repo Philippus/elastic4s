@@ -50,7 +50,7 @@ class ReindexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryL
     }
     "support size parameter" in {
 
-      delete("reindextarget")
+      deleteIdx("reindextarget")
       create("reindextarget")
 
       http.execute {
@@ -63,7 +63,7 @@ class ReindexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryL
     }
     "support multiple sources" in {
 
-      delete("reindextarget")
+      deleteIdx("reindextarget")
       create("reindextarget")
 
       http.execute {
