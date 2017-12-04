@@ -10,8 +10,8 @@ object MultiMatchQueryBuilderFn {
     q.fuzzyRewrite.foreach(_builder.fuzzyRewrite)
     q.analyzer.foreach(_builder.analyzer)
     q.fields.foreach {
-      case (name, -1D) => _builder.field(name)
-      case (name, boost) => _builder.field(name, boost.toFloat)
+      case FieldWithOptionalBoost(name, Some(boost)) => _builder.field(name, boost.toFloat)
+      case FieldWithOptionalBoost(name, _) => _builder.field(name)
     }
     q.cutoffFrequency.map(_.toFloat).foreach(_builder.cutoffFrequency)
     q.fuzziness.foreach(_builder.fuzziness)

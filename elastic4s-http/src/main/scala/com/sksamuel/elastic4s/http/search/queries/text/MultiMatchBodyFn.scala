@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries.text
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.matches.{FieldWithOptionalBoost, MultiMatchQueryDefinition}
 
 object MultiMatchBodyFn {
   def apply(q: MultiMatchQueryDefinition): XContentBuilder = {
@@ -10,8 +10,8 @@ object MultiMatchBodyFn {
     builder.startObject("multi_match")
     builder.field("query", q.text)
     builder.array("fields", q.fields.map {
-      case (field, 0) => field
-      case (field, boost) => s"$field^$boost"
+      case FieldWithOptionalBoost(field, Some(boost)) => s"$field^$boost"
+      case FieldWithOptionalBoost(field, _) => field
     }.toArray)
     q.`type`.map(EnumConversions.multiMatchQueryBuilderType).foreach(builder.field("type", _))
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
