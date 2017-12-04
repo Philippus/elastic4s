@@ -17,7 +17,7 @@ class CatNodesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvide
   "cats nodes" should "return all nodes" in {
     val result = http.execute {
       catNodes()
-    }.await.head
+    }.await.get.head
     result.load_1m > 0 shouldBe true
     result.cpu > 0 shouldBe true
     result.heapPercent > 0 shouldBe true

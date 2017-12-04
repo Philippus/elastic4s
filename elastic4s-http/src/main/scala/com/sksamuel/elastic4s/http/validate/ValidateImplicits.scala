@@ -3,8 +3,7 @@ package com.sksamuel.elastic4s.http.validate
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.values.Shards
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.validate.ValidateDefinition
 import org.apache.http.entity.ContentType

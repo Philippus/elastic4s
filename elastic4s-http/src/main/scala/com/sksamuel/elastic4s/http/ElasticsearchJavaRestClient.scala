@@ -3,14 +3,15 @@ package com.sksamuel.elastic4s.http
 import java.nio.charset.Charset
 
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.entity.{ContentType, StringEntity, InputStreamEntity, FileEntity}
+import org.apache.http.entity.{ContentType, FileEntity, InputStreamEntity, StringEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
-import org.elasticsearch.client.{Response, ResponseException, ResponseListener, RestClient}
+import org.elasticsearch.client.{ResponseException, ResponseListener, RestClient}
 
 import scala.concurrent.{Future, Promise}
 import scala.io.{Codec, Source}
 
+// an implementation of the elastic4s HttpRequestClient that wraps the elasticsearch java client
 class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient {
 
   import scala.collection.JavaConverters._
@@ -19,7 +20,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
     val p = Promise[HttpResponse]()
     callback(new ResponseListener {
 
-      def fromResponse(r: Response): HttpResponse = {
+      def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
         val entity = Option(r.getEntity).map { entity =>
           val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
           implicit val codec = Codec(Charset.forName(contentEncoding))
@@ -31,7 +32,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
         HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
       }
 
-      override def onSuccess(r: Response): Unit = p.trySuccess(fromResponse(r))
+      override def onSuccess(r: org.elasticsearch.client.Response): Unit = p.trySuccess(fromResponse(r))
       override def onFailure(e: Exception): Unit = e match {
         case re: ResponseException => p.trySuccess(fromResponse(re.getResponse))
         case t => p.tryFailure(t)

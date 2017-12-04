@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.delete
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.values.Shards
+import com.sksamuel.elastic4s.http.Shards
 
 case class DeleteResponse(@JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_index") index: String,

@@ -36,7 +36,7 @@ class SettingsTest extends WordSpec with Matchers with ElasticDsl with Discovery
     "return settings from one index" in {
       val response = http.execute {
         getSettings("settingsa")
-      }.await.right.get
+      }.await.get
       val settings = response.settingsForIndex("settingsa")
       settings("index.provided_name") shouldBe "settingsa"
       settings("index.number_of_replicas") shouldBe "1"
@@ -47,7 +47,7 @@ class SettingsTest extends WordSpec with Matchers with ElasticDsl with Discovery
 
       val response = http.execute {
         getSettings(Seq("settingsa", "settingsb"))
-      }.await.right.get
+      }.await.get
 
       val settingsa = response.settingsForIndex("settingsa")
       settingsa("index.provided_name") shouldBe "settingsa"
@@ -64,7 +64,7 @@ class SettingsTest extends WordSpec with Matchers with ElasticDsl with Discovery
     "return error if index does not exist" in {
       http.execute {
         getSettings("wibble")
-      }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+      }.await.error.`type` shouldBe "index_not_found_exception"
     }
   }
 
@@ -77,7 +77,7 @@ class SettingsTest extends WordSpec with Matchers with ElasticDsl with Discovery
 
       val response = http.execute {
         getSettings(Seq("settingsa"))
-      }.await.right.get
+      }.await.get
 
       val settings = response.settingsForIndex("settingsa")
       settings("index.refresh_interval") shouldBe "20s"

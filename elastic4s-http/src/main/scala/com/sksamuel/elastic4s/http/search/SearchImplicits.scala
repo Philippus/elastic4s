@@ -3,16 +3,13 @@ package com.sksamuel.elastic4s.http.search
 import java.net.URLEncoder
 
 import cats.Show
-import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
 
 
 
@@ -35,7 +32,7 @@ trait SearchImplicits {
     import scala.collection.JavaConverters._
 
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
-      override def handle(response: HttpResponse): Try[MultiSearchResponse] = Try {
+      override def handle(response: HttpResponse) = {
         val json = JacksonSupport.mapper.readTree(response.entity.get.content)
         val items = json.get("responses").elements.asScala.zipWithIndex.map { case (element, index) =>
           val status = element.get("status").intValue()
@@ -45,7 +42,7 @@ trait SearchImplicits {
             Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
           MultisearchResponseItem(index, status, either)
         }.toSeq
-        MultiSearchResponse(items)
+        Right(MultiSearchResponse(items))
       }
     }
 
@@ -61,16 +58,7 @@ trait SearchImplicits {
     }
   }
 
-  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, Either[RequestFailure, SearchResponse]] {
-
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, SearchResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, SearchResponse] = response.statusCode match {
-        case 200 =>
-          val entity = response.entity.getOrError("No entity defined")
-          Right(ResponseHandler.fromEntity[SearchResponse](entity).copy(json = entity.content))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
-      }
-    }
+  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
     override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
 

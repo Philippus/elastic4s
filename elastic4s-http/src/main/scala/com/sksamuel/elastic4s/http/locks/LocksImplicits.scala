@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpRespo
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLockDefinition, ReleaseGlobalLockDefinition}
 
 import scala.concurrent.Future
-import scala.util.{Success, Try}
 
 trait LocksImplicits {
 
@@ -13,9 +12,7 @@ trait LocksImplicits {
     val endpoint = "/fs/lock/global/_create"
 
     override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse): Try[Boolean] = {
-        Success(response.statusCode == 201)
-      }
+      override def handle(response: HttpResponse) = Right(response.statusCode == 201)
     }
 
     override def execute(client: HttpRequestClient, request: AcquireGlobalLockDefinition): Future[HttpResponse] = {
@@ -26,9 +23,7 @@ trait LocksImplicits {
   implicit object ReleaseGlobalLockHttpExecutable extends HttpExecutable[ReleaseGlobalLockDefinition, Boolean] {
 
     override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse): Try[Boolean] = {
-        Success(response.statusCode == 200)
-      }
+      override def handle(response: HttpResponse) = Right(response.statusCode == 200)
     }
 
     override def execute(client: HttpRequestClient, request: ReleaseGlobalLockDefinition): Future[HttpResponse] = {

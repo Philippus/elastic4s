@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.http.search
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
-import com.sksamuel.elastic4s.http.SourceAsContentBuilder
+import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.http.explain.Explanation
-import com.sksamuel.elastic4s.http.values.Shards
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -87,8 +86,7 @@ case class SearchResponse(took: Long,
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
                           @JsonProperty("aggregations") aggregationsAsMap: Map[String, Any],
-                          hits: SearchHits,
-                          json: String // the underlying json used to generate this search response
+                          hits: SearchHits
                          ) {
 
   def totalHits: Long = hits.total

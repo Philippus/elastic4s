@@ -39,7 +39,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros").matchQuery("text", "frontier").highlighting(
           highlight("text")
         )
-      }.await.right.get
+      }.await.get
 
       resp.size shouldBe 1
 
@@ -53,7 +53,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros") query "new" highlighting (
           highlight("text").requireFieldMatch(false) fragmentSize 15
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 3
       fragments.head shouldBe "explore strange <em>new</em>"
@@ -65,7 +65,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros") query "text:new" highlighting (
           highlight("text") fragmentSize 5 numberOfFragments 2
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 2
     }
@@ -74,7 +74,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros") query "trek" highlighting (
           highlight("text") noMatchSize 50
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head shouldBe "Space, the final frontier. These are the voyages of"
@@ -84,7 +84,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 preTag "<picard>"
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "Space, the final <picard>frontier</em>"
@@ -94,7 +94,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 postTag "<riker>"
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "Space, the final <em>frontier<riker>"
@@ -104,7 +104,7 @@ class HighlightTest extends WordSpec with Matchers with ElasticDsl with Discover
         search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 query matchQuery("text", "life")
           )
-      }.await.right.get
+      }.await.get
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "worlds, to seek out new <em>life</em>"

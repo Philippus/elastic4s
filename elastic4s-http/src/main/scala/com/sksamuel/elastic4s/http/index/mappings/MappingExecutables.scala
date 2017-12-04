@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, PutMappingDefiniti
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
 
 case class IndexMappings(index: String, mappings: Map[String, Map[String, Any]])
 
@@ -16,14 +15,15 @@ trait MappingExecutables {
   implicit object GetMappingHttpExecutable extends HttpExecutable[GetMappingDefinition, Seq[IndexMappings]] {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
-      override def handle(response: HttpResponse): Try[Seq[IndexMappings]] = Try {
+      override def handle(response: HttpResponse) = {
         val raw = ResponseHandler.fromEntity[Map[String, Map[String, Map[String, Map[String, Any]]]]](response.entity.get)
-        raw.map { case (index, types) =>
+        val raw2 = raw.map { case (index, types) =>
           val mappings = types("mappings").map { case (tpe, properties) =>
             tpe -> properties("properties").asInstanceOf[Map[String, Any]]
           }
           IndexMappings(index, mappings)
         }.toSeq
+        Right(raw2)
       }
     }
 

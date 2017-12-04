@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.values.Shards
+import com.sksamuel.elastic4s.http.Shards
 
 case class IndexResponse(@JsonProperty("_id") id: String,
                          @JsonProperty("_index") index: String,
@@ -13,5 +13,3 @@ case class IndexResponse(@JsonProperty("_id") id: String,
                          shards: Shards) {
   def ref = DocumentRef(index, `type`, id)
 }
-
-case class IndexFailure(error: String)

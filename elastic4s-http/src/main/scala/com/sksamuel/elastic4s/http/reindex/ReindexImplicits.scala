@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.update.RequestFailure
-import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.update.ElasticError
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
@@ -36,12 +35,12 @@ case class ReindexResponse(took: Long,
 
 trait ReindexImplicits {
 
-  implicit object ReindexHttpExecutable extends HttpExecutable[ReindexDefinition, Either[RequestFailure, ReindexResponse]] {
+  implicit object ReindexHttpExecutable extends HttpExecutable[ReindexDefinition, ReindexResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, ReindexResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, ReindexResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[ReindexResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromEntity[ReindexResponse](response.entity.getOrError("No entity defined")))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 

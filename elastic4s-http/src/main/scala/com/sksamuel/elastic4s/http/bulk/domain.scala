@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.bulk
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.values.Shards
+import com.sksamuel.elastic4s.http.Shards
 
 case class BulkResponseItem(itemId: Int,
                             @JsonProperty("_id") id: String,

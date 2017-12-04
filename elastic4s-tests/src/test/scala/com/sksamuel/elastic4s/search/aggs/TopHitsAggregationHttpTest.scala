@@ -43,7 +43,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvide
             topHitsAgg("agg2").sortBy(fieldSort("name"))
           )
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 5
 
       val agg = resp.aggs.terms("agg1")

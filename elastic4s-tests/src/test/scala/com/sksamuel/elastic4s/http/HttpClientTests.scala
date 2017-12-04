@@ -14,6 +14,6 @@ class HttpClientTests extends FlatSpec with Matchers with DiscoveryLocalNodeProv
   }
 
   "DefaultHttpClient" should "support utf8" in {
-    http.execute(indexInto("testindex" / "testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")).await.right.get.result shouldBe "created"
+    http.execute(indexInto("testindex" / "testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")).await.get.result shouldBe "created"
   }
 }

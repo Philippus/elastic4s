@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TermsQueryTest
@@ -32,7 +32,7 @@ class TermsQueryTest
 
     val resp = http.execute {
       search("lords") query termsQuery("name", "nelson", "byron")
-    }.await.right.get
+    }.await.get
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"byron"}""")
   }

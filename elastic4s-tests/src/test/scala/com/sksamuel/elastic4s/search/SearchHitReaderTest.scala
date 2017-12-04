@@ -31,7 +31,7 @@ class SearchHitReaderTest extends FlatSpec with Matchers with DiscoveryLocalNode
 
     http.execute {
       search("cars").matchAllQuery().limit(1)
-    }.await.right.get.safeTo[Car] shouldBe Seq(Right(focus))
+    }.await.get.safeTo[Car] shouldBe Seq(Right(focus))
   }
 }
 

@@ -31,11 +31,11 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
         aliases(
           addAlias("beaches_alias", "beaches")
         )
-      }.await shouldBe AliasActionResponse(true)
+      }.await.get shouldBe AliasActionResponse(true)
 
       http.execute {
         getAliases(Nil, Seq("beaches_alias"))
-      }.await shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")))))
+      }.await.get shouldBe Right(IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")))))
     }
     "multiple operations" in {
       http.execute {
@@ -43,38 +43,38 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
           removeAlias("beaches_alias").on("beaches"),
           addAlias("mountains_alias").on("mountains")
         )
-      }.await should be(AliasActionResponse(true))
+      }.await.get should be(AliasActionResponse(true))
 
       http.execute {
         aliasExists("mountains_alias")
-      }.await should be(AliasExistsResponse(true))
+      }.await.get should be(AliasExistsResponse(true))
 
       http.execute {
         aliasExists("beaches_alias")
-      }.await should be(AliasExistsResponse(false))
+      }.await.get should be(AliasExistsResponse(false))
 
       http.execute {
         getAliases(Nil, Seq("mountains_alias"))
-      }.await shouldBe Right(IndexAliases(Map(Index("mountains") -> List(Alias("mountains_alias")))))
+      }.await.get shouldBe Right(IndexAliases(Map(Index("mountains") -> List(Alias("mountains_alias")))))
 
       http.execute {
         getAliases(Nil, Seq("beaches_alias"))
-      }.await shouldBe Right(IndexAliases(Map.empty))
+      }.await.get shouldBe Right(IndexAliases(Map.empty))
     }
     "support removing an alias" in {
       http.execute {
         aliases(
           removeAlias("mountains_alias", "mountains")
         )
-      }.await should be(AliasActionResponse(true))
+      }.await.get should be(AliasActionResponse(true))
 
       http.execute {
         aliasExists("mountains_alias")
-      }.await should be(AliasExistsResponse(false))
+      }.await.get should be(AliasExistsResponse(false))
 
       http.execute {
         getAliases(Nil, Seq("mountains_alias"))
-      }.await shouldBe Right(IndexAliases(Map.empty))
+      }.await.get shouldBe Right(IndexAliases(Map.empty))
     }
   }
 
@@ -89,7 +89,7 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
         aliases(
           addAlias("beaches_alias", "beaches")
         )
-      }.await shouldBe AliasActionResponse(true)
+      }.await.get shouldBe AliasActionResponse(true)
 
       http.execute {
         getAliases(Seq("does_not_exist", "beaches"), Nil)
@@ -113,7 +113,7 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
         getAliases()
       }.await
 
-      val map = results.right.get.mappings
+      val map = results.get.mappings
       map(Index("beaches")) shouldBe List(Alias("beaches_alias"), Alias("sandy_beaches"))
       map(Index("mountains")) shouldBe List(Alias("big_mountains"))
     }
@@ -129,7 +129,7 @@ class AliasesHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
 
       val result = http.execute {
         search("metal_beaches").matchAllQuery()
-      }.await.right.get
+      }.await.get
       result.hits.hits.length shouldBe 1
       result.hits.hits.head.sourceAsMap("name") shouldBe "gold"
     }

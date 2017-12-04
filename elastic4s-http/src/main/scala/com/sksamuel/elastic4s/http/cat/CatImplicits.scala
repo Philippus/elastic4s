@@ -38,10 +38,8 @@ trait CatImplicits {
 
   implicit object CatHealthExecutable extends HttpExecutable[CatHealthDefinition, CatHealth] {
 
-    override def responseHandler: ResponseHandler[CatHealth] = new DefaultResponseHandler[CatHealth] {
-      override def handle(response: HttpResponse): Try[CatHealth] = Try {
-        ResponseHandler.fromEntity[Seq[CatHealth]](response.entity.get).head
-      }
+    override def responseHandler: ResponseHandler[CatHealth] = new ResponseHandler[CatHealth] {
+      override def handle(response: HttpResponse) = Right(ResponseHandler.fromResponse[Seq[CatHealth]](response).head)
     }
 
     override def execute(client: HttpRequestClient, request: CatHealthDefinition): Future[HttpResponse] = {
@@ -51,10 +49,8 @@ trait CatImplicits {
 
   implicit object CatCountExecutable extends HttpExecutable[CatCountDefinition, CatCount] {
 
-    override def responseHandler: ResponseHandler[CatCount] = new DefaultResponseHandler[CatCount] {
-      override def handle(response: HttpResponse): Try[CatCount] = Try {
-        ResponseHandler.fromEntity[Seq[CatCount]](response.entity.get).head
-      }
+    override def responseHandler: ResponseHandler[CatCount] = new ResponseHandler[CatCount] {
+      override def handle(response: HttpResponse) = Right(ResponseHandler.fromResponse[Seq[CatCount]](response).head)
     }
 
     override def execute(client: HttpRequestClient, request: CatCountDefinition): Future[HttpResponse] = {
@@ -68,10 +64,8 @@ trait CatImplicits {
 
   implicit object CatMasterExecutable extends HttpExecutable[CatMasterDefinition, CatMaster] {
 
-    override def responseHandler: ResponseHandler[CatMaster] = new DefaultResponseHandler[CatMaster] {
-      override def handle(response: HttpResponse): Try[CatMaster] = Try {
-        ResponseHandler.fromEntity[Seq[CatMaster]](response.entity.get).head
-      }
+    override def responseHandler: ResponseHandler[CatMaster] = new ResponseHandler[CatMaster] {
+      override def handle(response: HttpResponse) = Right(ResponseHandler.fromResponse[Seq[CatMaster]](response).head)
     }
 
     override def execute(client: HttpRequestClient, request: CatMasterDefinition): Future[HttpResponse] = {

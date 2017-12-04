@@ -9,6 +9,6 @@ class CatPluginsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvi
   "cats plugins" should "return all plugins" in {
     http.execute {
       catPlugins()
-    }.await.exists(_.component == "org.elasticsearch.index.reindex.ReindexPlugin") shouldBe true
+    }.await.get.exists(_.component == "org.elasticsearch.index.reindex.ReindexPlugin") shouldBe true
   }
 }

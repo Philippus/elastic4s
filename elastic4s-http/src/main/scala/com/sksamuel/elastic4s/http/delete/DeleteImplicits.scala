@@ -6,8 +6,7 @@ import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.update.RequestFailure
-import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
@@ -29,12 +28,12 @@ trait DeleteImplicits {
     override def show(req: DeleteByQueryDefinition): String = DeleteByQueryBodyFn(req).string()
   }
 
-  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, Either[RequestFailure, DeleteByQueryResponse]] {
+  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, DeleteByQueryResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, DeleteByQueryResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] = response.statusCode match {
         case 200 | 201 => Right(ResponseHandler.fromEntity[DeleteByQueryResponse](response.entity.getOrError("Create index responses must have a body")))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 
@@ -63,12 +62,15 @@ trait DeleteImplicits {
     }
   }
 
-  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, Either[RequestFailure, DeleteResponse]] {
+  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, DeleteResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, DeleteResponse] = {
+    override def responseHandler = new ResponseHandler[DeleteResponse] {
+
+      override def handle(response: HttpResponse): Either[ElasticError, DeleteResponse] = {
+
         def right = Right(ResponseHandler.fromEntity[DeleteResponse](response.entity.getOrError("Delete responses must have a body")))
-        def left = Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+
+        def left = Left(ElasticError.fromResponse(response))
         response.statusCode match {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete

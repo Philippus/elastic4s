@@ -2,8 +2,7 @@ package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
 import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 

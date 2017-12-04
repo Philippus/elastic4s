@@ -33,8 +33,8 @@ class CatShardsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
     val result = http.execute {
       catShards()
     }.await
-    result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
-    result.map(_.index).contains("catshards1") shouldBe true
-    result.map(_.index).contains("catshards2") shouldBe true
+    result.get.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
+    result.get.map(_.index).contains("catshards1") shouldBe true
+    result.get.map(_.index).contains("catshards2") shouldBe true
   }
 }

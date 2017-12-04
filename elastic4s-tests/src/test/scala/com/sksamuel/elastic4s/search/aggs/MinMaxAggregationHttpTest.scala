@@ -63,7 +63,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 3
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe Some(2456)
@@ -73,7 +73,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg2").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 1
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe None
@@ -83,7 +83,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg3").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 0
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe None
@@ -96,7 +96,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 3
       val agg = resp.aggs.min("agg1")
       agg.value shouldBe Some(169)
@@ -106,7 +106,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg2").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 1
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe None
@@ -116,7 +116,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider
         search("minmaxagg3").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 0
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe None

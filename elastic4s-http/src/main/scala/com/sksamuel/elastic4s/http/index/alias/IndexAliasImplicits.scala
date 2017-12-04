@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index.alias
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
-import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import org.apache.http.entity.ContentType
 
@@ -11,12 +11,12 @@ import scala.concurrent.Future
 
 trait IndexAliasImplicits {
 
-  implicit object GetAliasHttpExecutable extends HttpExecutable[GetAliasesDefinition, Either[RequestFailure, IndexAliases]] {
+  implicit object GetAliasHttpExecutable extends HttpExecutable[GetAliasesDefinition, IndexAliases] {
 
     import scala.collection.JavaConverters._
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, IndexAliases]] {
-      override def doit(response: HttpResponse) = response.statusCode match {
+    override def responseHandler = new ResponseHandler[IndexAliases] {
+      override def handle(response: HttpResponse): Either[ElasticError, IndexAliases] = response.statusCode match {
         case 200 =>
           val root = ResponseHandler.json(response.entity.get)
           val map = root.fields.asScala.toVector.map { entry =>
@@ -24,7 +24,7 @@ trait IndexAliasImplicits {
           }.toMap
           Right(IndexAliases(map))
         case 404 => Right(IndexAliases(Map.empty))
-        case _ => Left(RequestFailure.fromResponse(response))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 

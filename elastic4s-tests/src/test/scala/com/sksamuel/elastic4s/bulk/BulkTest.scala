@@ -33,15 +33,15 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
         indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id "2",
         indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
-    }.await.errors shouldBe false
+    }.await.get.errors shouldBe false
 
     http.execute {
       get("2").from(indexname)
-    }.await.right.get.found shouldBe true
+    }.await.get.found shouldBe true
 
     http.execute {
       get("4").from(indexname)
-    }.await.right.get.found shouldBe true
+    }.await.get.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
@@ -52,7 +52,7 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
         update("6").in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
         delete("10").from(indexname / "elements")
       ).refresh(RefreshPolicy.Immediate)
-    }.await
+    }.await.get
 
     result.hasFailures shouldBe true
     result.hasSuccesses shouldBe true
@@ -69,15 +69,15 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
         update("2").in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
         update("4").in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
-    }.await.errors shouldBe false
+    }.await.get.errors shouldBe false
 
     http.execute {
       get("2").from(indexname).storedFields("name")
-    }.await.right.get.storedField("name").value shouldBe "carbon"
+    }.await.get.storedField("name").value shouldBe "carbon"
 
     http.execute {
       get("4").from(indexname).storedFields("name")
-    }.await.right.get.storedField("name").value shouldBe "oxygen"
+    }.await.get.storedField("name").value shouldBe "oxygen"
   }
 
   it should "handle multiple delete operations" in {
@@ -87,15 +87,15 @@ class BulkTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider wi
         deleteById(indexname, "elements", "2"),
         deleteById(indexname, "elements", "4")
       ).refresh(RefreshPolicy.Immediate)
-    }.await.errors shouldBe false
+    }.await.get.errors shouldBe false
 
     http.execute {
       get(indexname, "elements", "2")
-    }.await.right.get.found shouldBe false
+    }.await.get.found shouldBe false
 
     http.execute {
       get(indexname, "elements", "4")
       get("4").from(indexname)
-    }.await.right.get.found shouldBe false
+    }.await.get.found shouldBe false
   }
 }

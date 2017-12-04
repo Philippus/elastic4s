@@ -51,7 +51,7 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
       // assume the local node is running on 9200
       val client = HttpClient("elasticsearch://localhost:9200")
       import com.sksamuel.elastic4s.http.ElasticDsl._
-      val nodeinfo = client.execute(nodeInfo()).await
+      val nodeinfo = client.execute(nodeInfo()).await.get
       val (id, node) = nodeinfo.nodes.head
       println(s"Found local node $id")
 

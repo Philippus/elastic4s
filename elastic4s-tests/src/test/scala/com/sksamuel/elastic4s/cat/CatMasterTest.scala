@@ -17,7 +17,7 @@ class CatMasterTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
   "cat master" should "return master node info" in {
     http.execute {
       catMaster()
-    }.await.host shouldBe "127.0.0.1"
+    }.await.get.host shouldBe "127.0.0.1"
   }
 
 }

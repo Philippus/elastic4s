@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.http.values
+package com.sksamuel.elastic4s.http
 
 case class Shards(total: Int,
                   failed: Int,

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.values.{RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
 import com.sksamuel.exts.OptionImplicits._
@@ -24,11 +23,11 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           result: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
-                          private val get: UpdateGet,
-                          json: String // the underlying json used to generate this search response
+                          private val get: Option[UpdateGet]
                          ) {
   def ref = DocumentRef(index, `type`, id)
-  def source: Map[String, Any] = Option(get).flatMap(get => Option(get._source)).getOrElse(Map.empty)
+  def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
+  def found: Boolean = get.forall(_.found)
 }
 
 object UpdateByQueryBodyFn {
@@ -41,7 +40,10 @@ object UpdateByQueryBodyFn {
   }
 }
 
-case class RequestFailure(error: ElasticError, status: Int)
+object ElasticError {
+  def fromResponse(r: HttpResponse): ElasticError =
+    ResponseHandler.fromEntity[ElasticError](r.entity.getOrError("Responses must have a body to return a failure"))
+}
 
 case class ElasticError(`type`: String,
                         reason: String,
@@ -49,10 +51,6 @@ case class ElasticError(`type`: String,
                         index: String,
                         shard: Option[String],
                         @JsonProperty("root_cause") rootCause: Seq[ElasticError])
-
-object RequestFailure {
-  def fromResponse(response: HttpResponse) = ResponseHandler.fromEntity[RequestFailure](response.entity.getOrError("Entity did not return a body"))
-}
 
 object UpdateImplicits extends UpdateImplicits
 
@@ -66,15 +64,14 @@ trait UpdateImplicits {
     override def show(req: UpdateByQueryDefinition): String = UpdateByQueryBodyFn(req).string()
   }
 
-  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, Either[RequestFailure, UpdateResponse]] {
+  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, UpdateResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, UpdateResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[UpdateResponse] {
+      override def handle(response: HttpResponse) = response.statusCode match {
         case 200 | 201 =>
-          val json = response.entity.getOrError("Create index responses must have a body")
-          val resp = ResponseHandler.fromEntity[UpdateResponse](json)
-          Right(resp.copy(json = json.content))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+          val json = response.entity.getOrError("Update responses must include a body")
+          Right(ResponseHandler.fromEntity[UpdateResponse](json))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 

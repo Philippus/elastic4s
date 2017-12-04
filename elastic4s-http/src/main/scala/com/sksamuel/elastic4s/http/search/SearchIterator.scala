@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.searches.SearchDefinition
 
 import scala.concurrent.Await
@@ -39,17 +39,17 @@ object SearchIterator {
     def fetchNext(): Iterator[SearchHit] = {
 
       // we're either advancing a scroll id or issuing the first query w/ the keep alive set
-      val either = scrollId match {
-        case Some(id) =>Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
-        case None =>Await.result(client.execute(searchdef), timeout)
-      }
-
-      val response = either match {
-        case Right(result) => result
-        case Left(error) => sys.error(error.toString)
+      val resp = scrollId match {
+        case Some(id) => Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
+        case None => Await.result(client.execute(searchdef), timeout)
       }
 
       // in a search scroll we must always use the last returned scrollId
+      val response = resp match {
+        case RequestSuccess(_, _, _, r) => r
+        case RequestFailure(_, _, _, error) => sys.error(error.toString)
+      }
+
       scrollId = response.scrollId
       response.hits.hits.iterator
     }

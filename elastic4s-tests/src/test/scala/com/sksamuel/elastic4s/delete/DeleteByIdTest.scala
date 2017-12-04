@@ -36,7 +36,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.totalHits shouldBe 2
+      }.await.get.totalHits shouldBe 2
 
       http.execute {
         delete("2").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
@@ -44,7 +44,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.totalHits shouldBe 1
+      }.await.get.totalHits shouldBe 1
 
       http.execute {
         delete("4").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
@@ -52,7 +52,7 @@ class DeleteByIdTest extends WordSpec with Matchers with ElasticDsl with Discove
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.totalHits shouldBe 0
+      }.await.get.totalHits shouldBe 0
     }
   }
 }

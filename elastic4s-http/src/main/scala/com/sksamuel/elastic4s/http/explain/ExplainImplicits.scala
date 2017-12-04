@@ -5,17 +5,16 @@ import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClien
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 trait ExplainImplicits {
 
   implicit object ExplainHttpExec extends HttpExecutable[ExplainDefinition, ExplainResponse] {
 
     override def responseHandler: ResponseHandler[ExplainResponse] = new ResponseHandler[ExplainResponse] {
-      override def handle(response: HttpResponse): Try[ExplainResponse] =  {
+      override def handle(response: HttpResponse) = {
         response.statusCode match {
-          case 404 | 200 => Success(ResponseHandler.fromEntity[ExplainResponse](response.entity.get))
-          case _=> Failure(new RuntimeException("Invalid response"))
+          case 404 | 200 => Right(ResponseHandler.fromEntity[ExplainResponse](response.entity.get))
+          case _ => sys.error("Invalid response")
         }
       }
     }

@@ -37,7 +37,7 @@ class ValidateTest extends WordSpec with Matchers with ElasticDsl with Discovery
     "return valid when the query is valid for a string query" in {
       val resp = http.execute {
         validateIn("food/pasta") query "maccaroni"
-      }.await
+      }.await.get
       resp.valid shouldBe true
     }
     "return valid when the query is valid for a dsl query" in {
@@ -45,7 +45,7 @@ class ValidateTest extends WordSpec with Matchers with ElasticDsl with Discovery
         validateIn("food/pasta") query {
           matchQuery("name", "maccaroni")
         }
-      }.await
+      }.await.get
       resp.isValid shouldBe true
     }
     "return invalid when the query is nonsense" in {
@@ -53,7 +53,7 @@ class ValidateTest extends WordSpec with Matchers with ElasticDsl with Discovery
         validateIn("food/pasta") query {
           matchQuery("sellbydate", "qweqwe")
         }
-      }.await
+      }.await.get
       resp.isValid shouldBe false
     }
   }

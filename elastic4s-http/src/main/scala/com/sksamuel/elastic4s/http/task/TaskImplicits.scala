@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.task.{CancelTasksDefinition, ListTasksDefinition}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Success, Try}
 
 case class ListTaskResponse(nodes: Map[String, Node])
 
@@ -52,9 +51,7 @@ trait TaskImplicits {
   implicit object CancelTaskHttpExecutable extends HttpExecutable[CancelTasksDefinition, Boolean] {
 
     override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse): Try[Boolean] = {
-        Success(response.statusCode >= 200 && response.statusCode < 300)
-      }
+      override def handle(response: HttpResponse) = Right(response.statusCode >= 200 && response.statusCode < 300)
     }
 
     override def execute(client: HttpRequestClient, request: CancelTasksDefinition): Future[HttpResponse] = {

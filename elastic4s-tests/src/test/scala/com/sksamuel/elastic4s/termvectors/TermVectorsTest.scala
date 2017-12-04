@@ -27,7 +27,7 @@ class TermVectorsTest extends FlatSpec with Matchers with ElasticDsl with Discov
   "term vectors" should "return full stats" in {
     val response = http.execute {
       termVectors("hansz", "albums", "1")
-    }.await
+    }.await.get
 
     response.index shouldBe "hansz"
     response.`type` shouldBe "albums"

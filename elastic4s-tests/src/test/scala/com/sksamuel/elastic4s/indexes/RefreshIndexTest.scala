@@ -33,7 +33,7 @@ class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with Disco
       // no data because the refresh is 10 minutes
       http.execute {
         search("beaches" / "dday").matchAllQuery()
-      }.await.right.get.totalHits shouldBe 0
+      }.await.get.totalHits shouldBe 0
 
       http.execute {
         refreshIndex("beaches")
@@ -41,7 +41,7 @@ class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with Disco
 
       http.execute {
         search("beaches" / "dday").matchAllQuery()
-      }.await.right.get.totalHits shouldBe 1
+      }.await.get.totalHits shouldBe 1
     }
   }
 }

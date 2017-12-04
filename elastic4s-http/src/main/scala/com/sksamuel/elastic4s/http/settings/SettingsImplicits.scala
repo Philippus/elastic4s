@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.settings
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
@@ -16,10 +16,11 @@ case class IndexSettingsResponse(settings: Map[Index, Map[String, String]]) {
 
 trait SettingsImplicits {
 
-  implicit object GetSettingsHttpExecutable extends HttpExecutable[GetSettingsDefinition, Either[RequestFailure, IndexSettingsResponse]] {
+  implicit object GetSettingsHttpExecutable extends HttpExecutable[GetSettingsDefinition, IndexSettingsResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, IndexSettingsResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, IndexSettingsResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
+
+      override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] = response.statusCode match {
         case 200 =>
           val root = JacksonSupport.mapper.readTree(response.entity.get.content)
           val settings = root.fields.asScala.map { entry =>
@@ -28,7 +29,8 @@ trait SettingsImplicits {
             Index(entry.getKey) -> Maps.flatten(indexSettings).map { case (key, value) => key.stripPrefix("settings.") -> value.toString }
           }.toMap
           Right(IndexSettingsResponse(settings))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+        case _ =>
+          Left(ElasticError.fromResponse(response))
       }
     }
 
@@ -38,12 +40,14 @@ trait SettingsImplicits {
     }
   }
 
-  implicit object UpdateSettingsHttpExecutable extends HttpExecutable[UpdateSettingsDefinition, Either[RequestFailure, IndexSettingsResponse]] {
+  implicit object UpdateSettingsHttpExecutable extends HttpExecutable[UpdateSettingsDefinition, IndexSettingsResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, IndexSettingsResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, IndexSettingsResponse] = response.statusCode match {
-        case 200 => Right(ResponseHandler.fromEntity[IndexSettingsResponse](response.entity.get))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+    override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] = response.statusCode match {
+        case 200 =>
+          Right(ResponseHandler.fromEntity[IndexSettingsResponse](response.entity.get))
+        case _ =>
+          Left(ElasticError.fromResponse(response))
       }
     }
 

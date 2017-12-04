@@ -59,7 +59,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   "hit reader" should "unmarshall search results" in {
     val teams = http.execute {
       search("football").matchAllQuery()
-    }.await.right.get.to[Team]
+    }.await.get.to[Team]
 
     teams.toSet shouldBe Set(
       Team("Arsenal", "The Library", 1886),
@@ -70,7 +70,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall safely search results" in {
     val teams = http.execute {
       search("football").matchAllQuery()
-    }.await.right.get.safeTo[Team]
+    }.await.get.safeTo[Team]
 
     teams.toSet shouldBe Set(
       Right(Team("Arsenal", "The Library", 1886)),
@@ -81,7 +81,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall safely a get response" in {
     val team = http.execute {
       get("1").from(IndexName)
-    }.await.right.get.safeTo[Team]
+    }.await.get.safeTo[Team]
 
     team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
   }
@@ -89,7 +89,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
   it should "unmarshall a get response" in {
     val team = http.execute {
       get("1").from(IndexName)
-    }.await.right.get.to[Team]
+    }.await.get.to[Team]
 
     team shouldBe Team("Middlesbrough", "Fortress Riverside", 1876)
   }
@@ -100,7 +100,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
         get("1").from(IndexName),
         get("2").from(IndexName)
       )
-    }.await.safeTo[Team]
+    }.await.get.safeTo[Team]
 
     teams.toSet shouldBe Set(
       Right(Team("Arsenal", "The Library", 1886)),
@@ -114,7 +114,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
         get("1").from(IndexName),
         get("2").from(IndexName)
       )
-    }.await.to[Team]
+    }.await.get.to[Team]
 
     teams.toSet shouldBe Set(
       Team("Arsenal", "The Library", 1886),
@@ -153,7 +153,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodePr
 
     http.execute {
       search("galaxies").matchAllQuery()
-    }.await.right.get.to[Galaxy].head shouldBe milkyway
+    }.await.get.to[Galaxy].head shouldBe milkyway
   }
 }
 

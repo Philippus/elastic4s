@@ -6,14 +6,12 @@ import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.update.{ElasticError, RequestFailure}
-import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
+import com.sksamuel.elastic4s.http.update.ElasticError
+import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.Try
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
@@ -31,13 +29,15 @@ trait GetImplicits {
 
   implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetDefinition, MultiGetResponse] with Logging {
 
-    override def responseHandler: ResponseHandler[MultiGetResponse] = new NotFound404ResponseHandler[MultiGetResponse] {
-      override def handle(response: HttpResponse): Try[MultiGetResponse] = {
-        super.handle(response).map { r =>
-          r.copy(docs = r.docs.map { doc =>
+    override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
+        case 404 | 500 => sys.error(response.toString)
+        case _ =>
+          val r = ResponseHandler.fromResponse[MultiGetResponse](response)
+          val r2 = r.copy(docs = r.docs.map { doc =>
             doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
           })
-        }
+          Right(r2)
       }
     }
 
@@ -48,19 +48,22 @@ trait GetImplicits {
     }
   }
 
-  implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, Either[RequestFailure, GetResponse]] with Logging {
+  implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, GetResponse]] {
+    override def responseHandler = new ResponseHandler[GetResponse] {
 
-      override def doit(response: HttpResponse): Either[RequestFailure, GetResponse] = {
-        def bad(status: Int) = {
+      override def handle(response: HttpResponse): Either[ElasticError, GetResponse] = {
+
+        def bad(status: Int): Left[ElasticError, GetResponse] = {
           val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
           if (node.get("error").isObject)
-            Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
+            Left(ElasticError.fromResponse(response))
           else
-            Left(RequestFailure(ElasticError(response.entity.get.content, response.entity.get.content, "", "", None, Nil), status))
+            Left(ElasticError(response.entity.get.content, response.entity.get.content, "", "", None, Nil))
         }
-        def good = Right(ResponseHandler.fromEntity[GetResponse](response.entity.getOrError("No entity defined")))
+
+        def good = Right(ResponseHandler.fromResponse[GetResponse](response))
+
         response.statusCode match {
           case 200 => good
           // 404s are odd, can be different document types

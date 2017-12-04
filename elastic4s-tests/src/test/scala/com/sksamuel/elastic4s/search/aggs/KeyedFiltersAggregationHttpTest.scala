@@ -42,7 +42,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePr
             sumAgg("agg2", "height")
           }
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 4
       resp.aggs.keyedFilters("agg1").aggResults("first").docCount shouldBe 2
       resp.aggs.keyedFilters("agg1").aggResults("first").sum("agg2").value shouldBe 232

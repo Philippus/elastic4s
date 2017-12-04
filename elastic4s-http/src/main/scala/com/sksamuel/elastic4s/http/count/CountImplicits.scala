@@ -3,9 +3,7 @@ package com.sksamuel.elastic4s.http.count
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.count.CountDefinition
-import com.sksamuel.elastic4s.http.update.RequestFailure
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -14,16 +12,7 @@ case class CountResponse(count: Long)
 
 trait CountImplicits {
 
-  implicit object CountHttpExecutable extends HttpExecutable[CountDefinition, Either[RequestFailure, CountResponse]] {
-
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, CountResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, CountResponse] = response.statusCode match {
-        case 200 =>
-          val entity = response.entity.getOrError("No entity defined")
-          Right(ResponseHandler.fromEntity[CountResponse](entity))
-        case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
-      }
-    }
+  implicit object CountHttpExecutable extends HttpExecutable[CountDefinition, CountResponse] {
 
     override def execute(client: HttpRequestClient, request: CountDefinition): Future[HttpResponse] = {
 

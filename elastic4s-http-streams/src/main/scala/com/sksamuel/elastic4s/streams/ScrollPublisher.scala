@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchResponse}
-import com.sksamuel.elastic4s.http.update.RequestFailure
 import com.sksamuel.elastic4s.searches.SearchDefinition
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.exts.Logging
@@ -148,12 +147,12 @@ class PublishActor(client: HttpClient,
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
       s.onError(t)
       context.stop(self)
-    case Success(resp: Left[RequestFailure, _]) =>
-      logger.warn("Request errored, will terminate the subscription", resp.left.get.error.toString)
-      s.onError(new RuntimeException(resp.left.get.error.toString))
+    case Success(resp: RequestFailure) =>
+      logger.warn("Request errored, will terminate the subscription", resp.error.toString)
+      s.onError(new RuntimeException(resp.error.toString))
       context.stop(self)
     // handle when the es request times out
-    case Success(resp: Right[_, SearchResponse]) if resp.right.get.isTimedOut =>
+    case Success(resp: RequestSuccess[SearchResponse]) if resp.get.isTimedOut =>
       logger.warn("Elasticsearch request timed out; will terminate the subscription")
       s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)

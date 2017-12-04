@@ -28,7 +28,7 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeP
 
       val indexInfo = http.execute {
         indexShardStores("beaches") status "green"
-      }.await.indices.getOrElse("beaches", IndexStoreStatus(Map.empty))
+      }.await.get.indices.getOrElse("beaches", IndexStoreStatus(Map.empty))
 
       val shardInfo: ShardStoreStatus = indexInfo.shards.getOrElse("0", ShardStoreStatus(Seq.empty))
       shardInfo.stores.size should be(1)

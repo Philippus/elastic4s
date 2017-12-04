@@ -32,7 +32,7 @@ trait DualClientTests
                                         tcpConv: ResponseConverter[Q1, Q2]): Future[Q2] = {
     if (useHttpClient) {
       logger.debug("Using HTTP client...")
-      http.execute(request)
+      http.execute(request).map(_.get)
     } else {
       try {
         logger.debug("Using TCP client...")

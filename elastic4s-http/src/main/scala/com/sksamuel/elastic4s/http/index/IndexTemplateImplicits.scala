@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.update.RequestFailure
+import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -32,12 +32,12 @@ trait IndexTemplateImplicits {
     override def execute(client: HttpRequestClient, request: IndexTemplateExistsDefinition): Future[HttpResponse] = ???
   }
 
-  implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, Either[RequestFailure, CreateIndexTemplateResponse]] {
+  implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, CreateIndexTemplateResponse]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, CreateIndexTemplateResponse] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[CreateIndexTemplateResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
-        case _ => Left(RequestFailure.fromResponse(response))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 
@@ -58,14 +58,14 @@ trait IndexTemplateImplicits {
     }
   }
 
-  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, Either[RequestFailure, GetIndexTemplates]] {
+  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplates] {
 
-    override def responseHandler = new ResponseHandler[Either[RequestFailure, GetIndexTemplates]] {
-      override def doit(response: HttpResponse): Either[RequestFailure, GetIndexTemplates] = response.statusCode match {
+    override def responseHandler = new ResponseHandler[GetIndexTemplates] {
+      override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplates] = response.statusCode match {
         case 200 =>
           val templates = ResponseHandler.fromResponse[Map[String, IndexTemplate]](response)
           Right(GetIndexTemplates(templates))
-        case _ => Left(RequestFailure.fromResponse(response))
+        case _ => Left(ElasticError.fromResponse(response))
       }
     }
 

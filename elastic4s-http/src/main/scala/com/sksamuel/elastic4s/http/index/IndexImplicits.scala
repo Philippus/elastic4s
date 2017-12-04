@@ -3,10 +3,9 @@ package com.sksamuel.elastic4s.http.index
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.values.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.update.ElasticError
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition}
-import com.sksamuel.exts.OptionImplicits._
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType
 
@@ -14,12 +13,12 @@ import scala.concurrent.Future
 
 trait IndexImplicits extends IndexShowImplicits {
 
-  implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, Either[IndexFailure, IndexResponse]] {
+  implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
 
-    override def responseHandler: ResponseHandler[Either[IndexFailure, IndexResponse]] = new ResponseHandler[Either[IndexFailure, IndexResponse]] {
-      override def doit(response: HttpResponse): Either[IndexFailure, IndexResponse] = response.statusCode match {
-        case 201 | 200 => Right(ResponseHandler.fromEntity[IndexResponse](response.entity.getOrError("Index responses must have a body")))
-        case 400 | 409 | 500 => Left(IndexFailure(response.entity.get.content))
+    override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
+      override def handle(response: HttpResponse) = response.statusCode match {
+        case 201 | 200 => Right(ResponseHandler.fromResponse[IndexResponse](response))
+        case 400 | 409 | 500 => Left(ElasticError.fromResponse(response))
         case _ => sys.error(response.toString)
       }
     }

@@ -43,7 +43,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
         search("percentilesagg").matchAllQuery().aggs {
           percentilesAgg("agg1", "height")
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
       agg.values shouldBe Map("99.0" -> 2671.9199999999996, "25.0" -> 955.5, "95.0" -> 2491.5999999999995, "50.0" -> 1707.5, "75.0" -> 1996.5, "1.0" -> 211.14, "5.0" -> 379.7)
@@ -53,7 +53,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DiscoveryLocalNodePro
         search("percentilesagg").matchAllQuery().aggs {
           percentilesAgg("agg1", "height").percents(50, 80)
         }
-      }.await.right.get
+      }.await.get
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
       agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2032.2)

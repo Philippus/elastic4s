@@ -35,7 +35,7 @@ class MappingHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Matc
 
       val mappings = http.execute {
         getMapping("index" / "mapping1")
-      }.await
+      }.await.get
 
       val properties = mappings.find(_.index == "index").get.mappings("mapping1")
       val a = properties("a").asInstanceOf[Map[String, Any]]

@@ -14,10 +14,9 @@ import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.index.admin._
 import com.sksamuel.elastic4s.http.index.mappings.PutMappingResponse
 import com.sksamuel.elastic4s.http.search.{ClearScrollResponse, SearchHit, SearchHits}
-import com.sksamuel.elastic4s.http.update
-import com.sksamuel.elastic4s.http.update.{UpdateByQueryResponse, UpdateResponse}
+import com.sksamuel.elastic4s.http.{Shards, update}
+import com.sksamuel.elastic4s.http.update.{UpdateByQueryResponse, UpdateGet, UpdateResponse}
 import com.sksamuel.elastic4s.http.validate.ValidateResponse
-import com.sksamuel.elastic4s.http.values.Shards
 import com.sksamuel.elastic4s.index.RichIndexResponse
 import com.sksamuel.elastic4s.searches.{ClearScrollResult, RichSearchResponse}
 import com.sksamuel.elastic4s.update.RichUpdateResponse
@@ -129,8 +128,7 @@ object ResponseConverterImplicits {
             x.version
           )
         }
-      ),
-      ""
+      )
     )
   }
 
@@ -271,8 +269,7 @@ object ResponseConverterImplicits {
         response.result.getLowercase,
         response.original.forcedRefresh(),
         Shards(shardInfo.getTotal, shardInfo.getFailed, shardInfo.getSuccessful),
-        update.UpdateGet(true, Map.empty),
-        ""
+        Option(UpdateGet(true, Map.empty))
       )
     }
   }

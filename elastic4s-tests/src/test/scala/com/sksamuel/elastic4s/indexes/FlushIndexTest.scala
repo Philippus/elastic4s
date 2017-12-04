@@ -28,7 +28,7 @@ class FlushIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProvi
     "acknowledge" in {
       http.execute {
         flushIndex(indexname)
-      }.await.shards.successful > 0 shouldBe true
+      }.await.get.shards.successful > 0 shouldBe true
     }
   }
 }

@@ -9,7 +9,6 @@ import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 trait SearchTemplateImplicits {
 
@@ -52,11 +51,15 @@ trait SearchTemplateImplicits {
     extends HttpExecutable[GetSearchTemplateDefinition, Option[GetSearchTemplateResponse]] {
 
     override def responseHandler: ResponseHandler[Option[GetSearchTemplateResponse]] = new ResponseHandler[Option[GetSearchTemplateResponse]] {
-      override def handle(response: HttpResponse): Try[Option[GetSearchTemplateResponse]] =  {
+      /**
+        * Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request
+        * as determined by the instance of this handler.
+        */
+      override def handle(response: HttpResponse) = {
         response.statusCode match {
-          case 200 => Try { ResponseHandler.fromEntity[GetSearchTemplateResponse](response.entity.get).some }
-          case 404 => Success(None)
-          case _ => Failure(new RuntimeException(response.entity.map(_.content).getOrElse("")))
+          case 200 => Right(ResponseHandler.fromEntity[GetSearchTemplateResponse](response.entity.get).some)
+          case 404 => Right(None)
+          case _ => sys.error(response.entity.map(_.content).getOrElse(""))
         }
       }
     }
