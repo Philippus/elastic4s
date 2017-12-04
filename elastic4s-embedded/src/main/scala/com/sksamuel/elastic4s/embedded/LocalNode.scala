@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.{Path, Paths}
 
 import com.sksamuel.elastic4s.TcpClient
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.{HttpClient, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
@@ -16,6 +16,7 @@ import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty4Plugin
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 import scala.util.Try
 
 trait LocalNode {
@@ -130,7 +131,16 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * If shutdownNodeOnClose is true, then the local node will be shutdown once this
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
-  override def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port")
+  override def http(shutdownNodeOnClose: Boolean): HttpClient = new HttpClient {
+    private val delegate = HttpClient(s"elasticsearch://$host:$port")
+    override def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[U] = delegate.execute(request)(exec)
+    override def executeRaw[T](request: T)(implicit exec: HttpExecutable[T, _]): Future[HttpResponse] = delegate.executeRaw(request)(exec)
+    override def client: HttpRequestClient = delegate.client
+    override def close(): Unit = {
+      if (shutdownNodeOnClose)
+        stop()
+    }
+  }
 }
 
 class LocalNodeTcpClient(node: InternalLocalNode, shutdownNodeOnClose: Boolean) extends TcpClient {
