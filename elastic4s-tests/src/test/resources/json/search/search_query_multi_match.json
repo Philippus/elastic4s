@@ -4,9 +4,9 @@
         "multi_match": {
             "query": "this is my query",
             "fields": [
-                "name^-1.0",
-                "location^-1.0",
-                "genre^-1.0"
+                "name",
+                "location",
+                "genre"
             ],
             "type": "cross_fields",
             "analyzer": "whitespace",

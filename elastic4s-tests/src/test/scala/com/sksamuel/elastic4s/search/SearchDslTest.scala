@@ -503,6 +503,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_query_multi_match.json")
   }
 
+    it should "generate correct json for multi match query with boosts" in {
+    val req = search("music") types "bands" query {
+      multiMatchQuery("this is my query") field("name", 0.5)
+    }
+    req.show should matchJsonResource("/json/search/search_query_multi_match_boost.json")
+  }
+
   it should "generate correct json for multi match query with minimum should match text clause" in {
     val req = search("music") types "bands" query {
       multiMatchQuery("this is my query") fields("name", "location", "genre") minimumShouldMatch "2<-1 5<80%" matchType "best_fields"
