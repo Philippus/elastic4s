@@ -13,6 +13,8 @@ object FetchSourceContextBuilderFn {
         builder.array("includes", context.includes)
         builder.array("excludes", context.excludes)
         builder.endObject()
+      } else {
+        builder.field("_source", true)
       }
     } else {
       builder.field("_source", false)
@@ -23,8 +25,8 @@ object FetchSourceContextBuilderFn {
 
 object FetchSourceContextQueryParameterFn {
   def apply(context: FetchSourceContext): Map[String, String] = {
+    val map = scala.collection.mutable.Map.empty[String, String]
     if (context.fetchSource) {
-      val map = scala.collection.mutable.Map.empty[String, String]
       map.put("_source", "true")
       if (context.includes.nonEmpty) {
         map.put("_source_include", context.includes.mkString(","))
@@ -32,9 +34,9 @@ object FetchSourceContextQueryParameterFn {
       if (context.excludes.nonEmpty) {
         map.put("_source_exclude", context.excludes.mkString(","))
       }
-      map.toMap
     } else {
-      Map.empty
+      map.put("_source", "false")
     }
+    map.toMap
   }
 }

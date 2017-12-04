@@ -17,8 +17,7 @@ case class GetDefinition(indexAndType: IndexAndType,
   require(indexAndType != null, "indexAndTypes must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
-  def fetchSourceContext(sourceEnabled: Boolean): GetDefinition =
-    copy(fetchSource = FetchSourceContext(sourceEnabled).some)
+  def fetchSourceContext(fetch: Boolean): GetDefinition = copy(fetchSource = FetchSourceContext(fetch).some)
 
   def fetchSourceContext(include: Iterable[String],
                          exclude: Iterable[String] = Nil): GetDefinition =
