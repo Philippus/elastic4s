@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
+import com.sksamuel.elastic4s.http.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -16,18 +17,7 @@ object InnerHitQueryBodyFn {
     d.explain.foreach(builder.field("explain", _))
 
     // source filtering
-    d.fetchSource foreach { context =>
-      if (context.fetchSource) {
-        if (context.includes.nonEmpty || context.excludes.nonEmpty) {
-          builder.startObject("_source")
-          builder.array("includes", context.includes)
-          builder.array("excludes", context.excludes)
-          builder.endObject()
-        }
-      } else {
-        builder.field("_source", false)
-      }
-    }
+    d.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
 
     d.trackScores.foreach(builder.field("track_scores", _))
     d.version.foreach(builder.field("version", _))

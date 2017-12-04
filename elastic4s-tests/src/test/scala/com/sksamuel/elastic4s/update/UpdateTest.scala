@@ -113,4 +113,31 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
     resp.left.get.error.`type` shouldBe "document_missing_exception"
     resp.left.get.error.reason should include("document missing")
   }
+
+  it should "not return source by default" in {
+    val resp = http.execute {
+      update("666").in("hans/albums").docAsUpsert(
+        "name" -> "dunkirk"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await
+    resp.right.get.source shouldBe Map.empty
+  }
+
+  it should "return source when specified" in {
+    val resp = http.execute {
+      update("667").in("hans/albums").docAsUpsert(
+        "name" -> "thin red line"
+      ).refresh(RefreshPolicy.Immediate).fetchSource(true)
+    }.await
+    resp.right.get.source shouldBe Map("name" -> "thin red line")
+  }
+
+  it should "include the original json" in {
+    val resp = http.execute {
+      update("555").in("hans/albums").docAsUpsert(
+        "name" -> "spider man"
+      ).refresh(RefreshPolicy.Immediate).fetchSource(true)
+    }.await
+    resp.right.get.json shouldBe """{"_index":"hans","_type":"albums","_id":"555","_version":1,"result":"created","forced_refresh":true,"_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"get":{"found":true,"_source":{"name":"spider man"}}}"""
+  }
 }

@@ -15,14 +15,20 @@ import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
+case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
+
 case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("_type") `type`: String,
                           @JsonProperty("_id") id: String,
                           @JsonProperty("_version") version: Long,
                           result: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
-                          @JsonProperty("_shards") shards: Shards) {
+                          @JsonProperty("_shards") shards: Shards,
+                          private val get: UpdateGet,
+                          json: String // the underlying json used to generate this search response
+                         ) {
   def ref = DocumentRef(index, `type`, id)
+  def source: Map[String, Any] = Option(get).flatMap(get => Option(get._source)).getOrElse(Map.empty)
 }
 
 object UpdateByQueryBodyFn {
@@ -64,7 +70,10 @@ trait UpdateImplicits {
 
     override def responseHandler = new ResponseHandler[Either[RequestFailure, UpdateResponse]] {
       override def doit(response: HttpResponse): Either[RequestFailure, UpdateResponse] = response.statusCode match {
-        case 200 | 201 => Right(ResponseHandler.fromEntity[UpdateResponse](response.entity.getOrError("Create index responses must have a body")))
+        case 200 | 201 =>
+          val json = response.entity.getOrError("Create index responses must have a body")
+          val resp = ResponseHandler.fromEntity[UpdateResponse](json)
+          Right(resp.copy(json = json.content))
         case _ => Left(ResponseHandler.fromEntity[RequestFailure](response.entity.get))
       }
     }
@@ -75,7 +84,7 @@ trait UpdateImplicits {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
-        if (!context.fetchSource) params.put("_source", "false")
+        FetchSourceContextQueryParameterFn(context).foreach { case (key, value) => params.put(key, value) }
       }
       request.retryOnConflict.foreach(params.put("retry_on_conflict", _))
       request.parent.foreach(params.put("parent", _))

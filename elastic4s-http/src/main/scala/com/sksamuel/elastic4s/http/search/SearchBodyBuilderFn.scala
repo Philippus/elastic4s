@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search
 
-import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
+import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextBuilderFn, ScriptBuilderFn}
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
@@ -110,18 +110,7 @@ object SearchBodyBuilderFn {
     }
 
     // source filtering
-    request.fetchContext foreach { context =>
-      if (context.fetchSource) {
-        if (context.includes.nonEmpty || context.excludes.nonEmpty) {
-          builder.startObject("_source")
-          builder.array("includes", context.includes)
-          builder.array("excludes", context.excludes)
-          builder.endObject()
-        }
-      } else {
-        builder.field("_source", false)
-      }
-    }
+    request.fetchContext.foreach(FetchSourceContextBuilderFn(builder, _))
 
     if (request.fields.docValues.nonEmpty)
       builder.array("docvalue_fields", request.fields.docValues.toArray)

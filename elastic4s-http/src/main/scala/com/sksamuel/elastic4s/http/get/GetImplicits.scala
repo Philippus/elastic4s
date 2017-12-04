@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
 import com.sksamuel.elastic4s.http.update.{ElasticError, RequestFailure}
-import com.sksamuel.elastic4s.http.{EnumConversions, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
+import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, NotFound404ResponseHandler, ResponseHandler}
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
@@ -78,16 +78,7 @@ trait GetImplicits {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>
-        if (!context.fetchSource)
-          params.put("_source", "false")
-        else {
-          if (context.includes.nonEmpty) {
-            params.put("_source_include", context.includes.mkString(","))
-          }
-          if (context.excludes.nonEmpty) {
-            params.put("_source_exclude", context.excludes.mkString(","))
-          }
-        }
+        FetchSourceContextQueryParameterFn(context).foreach { case (key, value) => params.put(key, value) }
       }
       if (request.storedFields.nonEmpty) {
         params.put("stored_fields", request.storedFields.mkString(","))
