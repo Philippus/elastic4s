@@ -54,6 +54,6 @@ class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNod
 
     http.execute {
       getSearchTemplate("testy")
-    }.await shouldBe None
+    }.await.get shouldBe None
   }
 }
