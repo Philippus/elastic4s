@@ -147,24 +147,24 @@ class PublishActor(client: HttpClient,
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
       s.onError(t)
       context.stop(self)
-    case Success(resp: RequestFailure) =>
+    case Success(Left(resp: RequestFailure)) =>
       logger.warn("Request errored, will terminate the subscription", resp.error.toString)
       s.onError(new RuntimeException(resp.error.toString))
       context.stop(self)
     // handle when the es request times out
-    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isTimedOut =>
+    case Success(Right(resp: RequestSuccess[SearchResponse])) if resp.result.isTimedOut =>
       logger.warn("Elasticsearch request timed out; will terminate the subscription")
       s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)
     // if we had no results from ES then we have nothing left to publish and our work here is done
-    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isEmpty =>
+    case Success(Right(resp: RequestSuccess[SearchResponse])) if resp.result.isEmpty =>
       logger.debug("Response from ES came back empty; this means no more items upstream so will complete subscription")
       s.onComplete()
       client.execute(clearScroll(scrollId))
       logger.debug("Stopping publisher actor")
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
-    case Success(resp: RequestSuccess[SearchResponse]) =>
+    case Success(Right(resp: RequestSuccess[SearchResponse])) =>
       scrollId = resp.result.scrollId.getOrError("Response did not include a scroll id")
       queue.enqueue(resp.result.hits.hits: _*)
       context become ready
