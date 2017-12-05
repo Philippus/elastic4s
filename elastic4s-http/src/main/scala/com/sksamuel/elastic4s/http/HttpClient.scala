@@ -6,7 +6,6 @@ import cats.Show
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
@@ -21,7 +20,7 @@ trait Response[+U] {
   def get: U // returns the marshalled response U or throws an exception
   def error: ElasticError // returns the error or throw an exception
   def isError: Boolean // returns true if this is an error response
-  final def isSuccess: Boolean  = !isError
+  final def isSuccess: Boolean  = !isError // returns true if this is a success
   final def map[V](f: U => V): Option[V] = if (isError) None else Some(f(get))
   final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(get)
   final def foreach[V](f: U => V) = if (!isError) f(get)
@@ -44,10 +43,6 @@ case class RequestFailure(override val status: Int, // the http status code of t
   override def isError = true
 }
 
-object RequestFailure {
-  def fromResponse(response: HttpResponse) = ResponseHandler.fromEntity[RequestFailure](response.entity.getOrError("Entity did not return a body"))
-}
-
 trait HttpClient extends Logging {
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -65,7 +60,7 @@ trait HttpClient extends Logging {
 
   // Executes the given request type T, and returns a Future of Response[U] where U is particular to the request type.
   // For example a search request will return a Future[Response[SearchResponse]].
-  // The returned Response is itself an ADT
+  // The returned Response is an ADT
   def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[Response[U]] = {
     val p = Promise[Response[U]]()
     val f = exec.execute(client, request)
