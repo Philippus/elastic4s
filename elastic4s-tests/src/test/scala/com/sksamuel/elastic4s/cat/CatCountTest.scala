@@ -29,19 +29,19 @@ class CatCountTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvide
   "cats count" should "return count for all cluster" in {
     http.execute {
       catCount()
-    }.await.get.count >= 3 shouldBe true
+    }.await.right.get.result.count >= 3 shouldBe true
   }
 
   it should "support counting for a single index" in {
     http.execute {
       catCount("catcount1")
-    }.await.get.count shouldBe 2
+    }.await.right.get.result.count shouldBe 2
   }
 
   it should "support counting for multiple indices" in {
     http.execute {
       catCount("catcount1", "catcount2")
-    }.await.get.count shouldBe 3
+    }.await.right.get.result.count shouldBe 3
   }
 
 }

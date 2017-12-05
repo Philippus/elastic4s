@@ -44,7 +44,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
     "index fields" in {
       http.execute {
         search("electronics").query(matchQuery("name", "galaxy"))
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
     "support index names with +" in {
       http.execute {
@@ -55,7 +55,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       }.await
       http.execute {
         search("hello+world").matchAllQuery()
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
     "support / in ids" in {
       http.execute {
@@ -66,43 +66,43 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       }.await
       http.execute {
         search("indexidtest").matchAllQuery()
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
       http.execute {
         get("indexidtest", "wobble", "a/b")
-      }.await.get.exists shouldBe true
+      }.await.right.get.result.exists shouldBe true
     }
     "support external versions" in {
       val found = http.execute {
         search("electronics").query(matchQuery("name", "galaxy"))
-      }.await.get.hits.hits(0)
+      }.await.right.get.result.hits.hits(0)
       found.id shouldBe "55A"
       found.version shouldBe 42l
     }
     "handle custom id" in {
       http.execute {
         search("electronics").query(idsQuery("55A"))
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
     "handle numbers" in {
       http.execute {
         search("electronics").query(termQuery("screensize", 5))
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
     "handle arrays" in {
       http.execute {
         search("electronics").query(matchQuery("name", "razor"))
-      }.await.get.hits.hits.head.sourceAsMap shouldBe Map("name" -> "razor", "colours" -> List("white", "blue"))
+      }.await.right.get.result.hits.hits.head.sourceAsMap shouldBe Map("name" -> "razor", "colours" -> List("white", "blue"))
     }
     "handle nested arrays" in {
       val hit = http.execute {
         search("electronics").query(matchQuery("name", "iphone2"))
-      }.await.get.hits.hits.head
+      }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("models") shouldBe Map("5s" -> List("standard", "retina"))
     }
     "handle arrays of maps" in {
       val hit = http.execute {
         search("electronics").query(matchQuery("name", "m9"))
-      }.await.get.hits.hits.head
+      }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("locations") shouldBe
         Seq(
           Map("id" -> "11", "name" -> "manchester"),
@@ -112,18 +112,18 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
     "handle null fields" in {
       http.execute {
         search("electronics").query(matchQuery("name", "iphone"))
-      }.await.get.hits.hits.head.sourceAsMap shouldBe Map("colour" -> null, "name" -> "iphone")
+      }.await.right.get.result.hits.hits.head.sourceAsMap shouldBe Map("colour" -> null, "name" -> "iphone")
     }
     "handle nested null fields" in {
       val hit = http.execute {
         search("electronics").query(matchQuery("name", "pixel"))
-      }.await.get.hits.hits.head
+      }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("apps") shouldBe Map("maps" -> "google maps", "email" -> null)
     }
     "index from indexable typeclass" in {
       http.execute {
         search("electronics").query(termQuery("speed", "4g"))
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
     "create aliases with index" in {
       val id = UUID.randomUUID()
@@ -135,7 +135,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       }.await
       val index = http.execute {
         getIndex(indexName)
-      }.await.get.apply(indexName)
+      }.await.right.get.result.apply(indexName)
       index.aliases should contain key "alias_1"
       index.aliases should contain key "alias_2"
 
@@ -147,7 +147,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       val result = http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
-      result.get.result shouldBe "created"
+      result.right.get.result.result shouldBe "created"
     }
     "return OK status if the document already exists" in {
       val id = UUID.randomUUID().toString
@@ -157,7 +157,7 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
       val result = http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
-      result.get.result shouldBe "updated"
+      result.right.get.result.result shouldBe "updated"
     }
     "handle update concurrency" in {
       val id = UUID.randomUUID.toString
@@ -177,13 +177,13 @@ class IndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLoc
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      result.error.toString should include ("version_conflict_engine_exception")
+      result.left.get.error.toString should include ("version_conflict_engine_exception")
     }
     "return Left when the request has an invalid index name" in {
       val result = http.execute {
         indexInto("**1w11oowo/!!!!o_$$$")
       }.await
-      result.error should not be null
+      result.left.get.error should not be null
     }
   }
 }

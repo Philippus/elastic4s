@@ -3,8 +3,7 @@ package com.sksamuel.elastic4s.http.index.alias
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -24,7 +23,7 @@ trait IndexAliasImplicits {
           }.toMap
           Right(IndexAliases(map))
         case 404 => Right(IndexAliases(Map.empty))
-        case _ => Left(ElasticError.fromResponse(response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 

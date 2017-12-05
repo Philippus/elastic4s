@@ -42,7 +42,7 @@ class FiltersAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvide
             sumAgg("agg2", "height")
           }
         }
-      }.await.get
+      }.await.right.get.result
       resp.totalHits shouldBe 4
       resp.aggs.filters("agg1").aggResults.map(_.docCount).sum shouldBe 4
       resp.aggs.filters("agg1").aggResults.head.sum("agg2").value shouldBe 232

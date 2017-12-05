@@ -30,14 +30,14 @@ class GetIndexTest extends WordSpec with Matchers with ElasticDsl with Discovery
     "return mapping info" in {
       val resp = http.execute {
         getIndex("getindextest")
-      }.await.get
+      }.await.right.get.result
       resp("getindextest").mappings shouldBe Map("mytype" -> Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long"))))
     }
 
     "return settings" in {
       val resp = http.execute {
         getIndex("getindextest")
-      }.await.get
+      }.await.right.get.result
 
       resp("getindextest").settings("index.number_of_shards") shouldBe "5"
       resp("getindextest").settings("index.number_of_replicas") shouldBe "2"
@@ -56,7 +56,7 @@ class GetIndexTest extends WordSpec with Matchers with ElasticDsl with Discovery
 
       val resp = http.execute {
         getIndex("getindextest")
-      }.await.get
+      }.await.right.get.result
 
       resp("getindextest").aliases.keySet shouldBe Set("myalias1", "myalias2")
     }

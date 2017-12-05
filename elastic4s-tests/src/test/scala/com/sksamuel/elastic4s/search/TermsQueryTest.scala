@@ -32,7 +32,7 @@ class TermsQueryTest
 
     val resp = http.execute {
       search("lords") query termsQuery("name", "nelson", "byron")
-    }.await.get
+    }.await.right.get.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"byron"}""")
   }

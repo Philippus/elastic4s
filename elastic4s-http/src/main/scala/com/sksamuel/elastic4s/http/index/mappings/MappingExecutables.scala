@@ -16,7 +16,7 @@ trait MappingExecutables {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
       override def handle(response: HttpResponse) = {
-        val raw = ResponseHandler.fromEntity[Map[String, Map[String, Map[String, Map[String, Any]]]]](response.entity.get)
+        val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
         val raw2 = raw.map { case (index, types) =>
           val mappings = types("mappings").map { case (tpe, properties) =>
             tpe -> properties("properties").asInstanceOf[Map[String, Any]]

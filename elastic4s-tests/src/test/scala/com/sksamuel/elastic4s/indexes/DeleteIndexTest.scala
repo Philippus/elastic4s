@@ -19,15 +19,15 @@ class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with Discov
 
       http.execute {
         indexExists("languages")
-      }.await.get.exists shouldBe true
+      }.await.right.get.result.exists shouldBe true
 
       http.execute {
         ElasticDsl.deleteIndex("languages")
-      }.await.get.acknowledged shouldBe true
+      }.await.right.get.result.acknowledged shouldBe true
 
       http.execute {
         indexExists("languages")
-      }.await.get.exists shouldBe false
+      }.await.right.get.result.exists shouldBe false
     }
 
     "support multiple indexes" in {
@@ -49,23 +49,23 @@ class DeleteIndexTest extends WordSpec with Matchers with ElasticDsl with Discov
 
       http.execute {
         indexExists("languages1")
-      }.await.get.exists shouldBe true
+      }.await.right.get.result.exists shouldBe true
 
       http.execute {
         indexExists("languages2")
-      }.await.get.exists shouldBe true
+      }.await.right.get.result.exists shouldBe true
 
       http.execute {
         ElasticDsl.deleteIndex("languages1", "languages2")
-      }.await.get.acknowledged shouldBe true
+      }.await.right.get.result.acknowledged shouldBe true
 
       http.execute {
         indexExists("languages1")
-      }.await.get.exists shouldBe false
+      }.await.right.get.result.exists shouldBe false
 
       http.execute {
         indexExists("languages2")
-      }.await.get.exists shouldBe false
+      }.await.right.get.result.exists shouldBe false
     }
   }
 }

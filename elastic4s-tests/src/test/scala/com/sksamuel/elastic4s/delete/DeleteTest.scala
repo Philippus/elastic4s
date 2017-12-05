@@ -37,31 +37,31 @@ class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvide
 
     http.execute {
       delete("141212") from "places" / "cities" refresh RefreshPolicy.Immediate
-    }.await.get.result shouldBe "not_found"
+    }.await.right.get.result.result shouldBe "not_found"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.get.totalHits shouldBe 3
+    }.await.right.get.result.totalHits shouldBe 3
   }
 
   it should "return an error when the index does not exist" in {
 
     http.execute {
       delete("141212") from "wooop/la" refresh RefreshPolicy.Immediate
-    }.await.error.`type` shouldBe "index_not_found_exception"
+    }.await.left.get.error.`type` shouldBe "index_not_found_exception"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.get.totalHits shouldBe 3
+    }.await.right.get.result.totalHits shouldBe 3
   }
 
   it should "remove a document when deleting by id" in {
     http.execute {
       delete("99") from "places/cities" refresh RefreshPolicy.Immediate
-    }.await.get.result shouldBe "deleted"
+    }.await.right.get.result.result shouldBe "deleted"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.get.totalHits shouldBe 2
+    }.await.right.get.result.totalHits shouldBe 2
   }
 }

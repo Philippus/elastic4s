@@ -6,8 +6,7 @@ import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
@@ -55,11 +54,11 @@ trait GetImplicits {
       override def handle(response: HttpResponse): Either[ElasticError, GetResponse] = {
 
         def bad(status: Int): Left[ElasticError, GetResponse] = {
-          val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
+          val node = ResponseHandler.fromResponse[JsonNode](response)
           if (node.get("error").isObject)
-            Left(ElasticError.fromResponse(response))
+            Left(ElasticError.parse(response))
           else
-            Left(ElasticError(response.entity.get.content, response.entity.get.content, "", "", None, Nil))
+            Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil))
         }
 
         def good = Right(ResponseHandler.fromResponse[GetResponse](response))
@@ -68,7 +67,7 @@ trait GetImplicits {
           case 200 => good
           // 404s are odd, can be different document types
           case 404 =>
-            val node = ResponseHandler.fromEntity[JsonNode](response.entity.get)
+            val node = ResponseHandler.fromResponse[JsonNode](response)
             if (node.has("error")) bad(404) else good
           case other => bad(other)
         }

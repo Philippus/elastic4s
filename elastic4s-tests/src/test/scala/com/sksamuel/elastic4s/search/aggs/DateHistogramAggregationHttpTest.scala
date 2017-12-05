@@ -44,7 +44,7 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeP
         search("datehistaggs").matchAllQuery().aggs {
           dateHistogramAgg("agg1", "premiere_date").interval(DateHistogramInterval.Month)
         }
-      }.await.get
+      }.await.right.get.result
 
       resp.totalHits shouldBe 6
 

@@ -24,21 +24,21 @@ class CountTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvider
   "a search request of size 0" should "return total count when no query is specified" in {
     val resp = http.execute {
       search("london").size(0)
-    }.await.get
+    }.await.right.get.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count for the correct type" in {
     val resp = http.execute {
       search("london" / "landmarks").size(0)
-    }.await.get
+    }.await.right.get.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count based on the specified query" in {
     val resp = http.execute {
       search("london" / "landmarks").size(0).query("tower")
-    }.await.get
+    }.await.right.get.result
     assert(1 === resp.totalHits)
   }
 }

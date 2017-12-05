@@ -1,14 +1,9 @@
 package com.sksamuel.elastic4s.http
 
-import java.nio.charset.Charset
-
 import com.fasterxml.jackson.databind.JsonNode
-import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
-
-import scala.io.Codec
 
 trait ResponseHandler[U] {
 
@@ -28,16 +23,13 @@ object ResponseHandler extends Logging {
 
   def fromNode[U: Manifest](node: JsonNode): U = {
     logger.debug(s"Attempting to unmarshall json node to ${manifest.runtimeClass.getName}")
-    implicit val codec = Codec(Charset.defaultCharset)
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
 
-  def fromResponse[U: Manifest](response: HttpResponse): U = fromEntity(response.entity.getOrError("No entity defined"))
+  def fromResponse[U: Manifest](response: HttpResponse): U = fromEntity(response.entity.getOrError("No entity defined but was expected"))
 
   def fromEntity[U: Manifest](entity: HttpEntity.StringEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
-    val charset = entity.contentType.getOrElse("UTF-8")
-    implicit val codec = Codec(Charset.forName(charset))
     logger.debug(entity.content)
     JacksonSupport.mapper.readValue[U](entity.content)
   }
@@ -53,7 +45,7 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
       val entity = response.entity.getOrError("No entity defined")
       Right(ResponseHandler.fromEntity[U](entity))
     case _ =>
-      Left(ElasticError.fromResponse(response))
+      Left(ElasticError.parse(response))
   }
 }
 

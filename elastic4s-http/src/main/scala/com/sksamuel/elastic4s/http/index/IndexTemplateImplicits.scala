@@ -3,8 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingBuilderFn
@@ -37,7 +36,7 @@ trait IndexTemplateImplicits {
     override def responseHandler = new ResponseHandler[CreateIndexTemplateResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
-        case _ => Left(ElasticError.fromResponse(response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 
@@ -65,7 +64,7 @@ trait IndexTemplateImplicits {
         case 200 =>
           val templates = ResponseHandler.fromResponse[Map[String, IndexTemplate]](response)
           Right(GetIndexTemplates(templates))
-        case _ => Left(ElasticError.fromResponse(response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 

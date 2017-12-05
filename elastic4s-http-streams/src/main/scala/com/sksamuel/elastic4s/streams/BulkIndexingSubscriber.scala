@@ -226,19 +226,19 @@ class BulkActor[T](client: HttpClient,
       case Success(resp: RequestFailure) => self ! new RuntimeException(resp.error.toString)
       case Success(resp: RequestSuccess[BulkResponse]) =>
 
-        if (resp.get.errors) {
+        if (resp.result.errors) {
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
           if (attempts > 0) {
-            val (retryDef, originals) = getRetryDef(resp.get)
+            val (retryDef, originals) = getRetryDef(resp.result)
             system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
           } else {
-            self ! BulkActor.FailedResult(resp.get.failures, resp.get.failures.map(getOriginalForResponse))
+            self ! BulkActor.FailedResult(resp.result.failures, resp.result.failures.map(getOriginalForResponse))
           }
         }
 
-        if (resp.get.hasSuccesses)
-          self ! BulkActor.Result(resp.get.successes, resp.get.successes.map(getOriginalForResponse))
+        if (resp.result.hasSuccesses)
+          self ! BulkActor.Result(resp.result.successes, resp.result.successes.map(getOriginalForResponse))
     }
   }
 

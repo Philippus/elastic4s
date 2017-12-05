@@ -12,8 +12,8 @@ class NodesStatsHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeP
         nodeStats()
       }.await
 
-      stats.get.clusterName should be("localnode-cluster")
-      stats.get.nodes.size > 0 shouldBe true
+      stats.right.get.result.clusterName should be("localnode-cluster")
+      stats.right.get.result.nodes.nonEmpty shouldBe true
     }
   }
 }

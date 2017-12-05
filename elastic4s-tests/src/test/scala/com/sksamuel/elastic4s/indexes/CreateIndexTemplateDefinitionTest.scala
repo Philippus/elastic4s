@@ -41,7 +41,7 @@ class CreateIndexTemplateDefinitionTest extends WordSpec
 
       val resp = http.execute {
         getMapping("matchme.template")
-      }.await.get
+      }.await.right.get.result
 
       resp.map(_.index) shouldBe Seq("matchme.template")
       resp.head.mappings.keySet shouldBe Set("sometype1")

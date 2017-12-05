@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
@@ -39,8 +38,8 @@ trait ReindexImplicits {
 
     override def responseHandler = new ResponseHandler[ReindexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
-        case 200 => Right(ResponseHandler.fromEntity[ReindexResponse](response.entity.getOrError("No entity defined")))
-        case _ => Left(ElasticError.fromResponse(response))
+        case 200 => Right(ResponseHandler.fromResponse[ReindexResponse](response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 

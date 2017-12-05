@@ -33,14 +33,14 @@ class ExistsQueryDefinitionTest extends WordSpec with DiscoveryLocalNodeProvider
         search("person" / "interest") postFilter {
           existsQuery("name")
         }
-      }.await.get.totalHits shouldBe 2
+      }.await.right.get.result.totalHits shouldBe 2
     }
     "not match null fields" in {
       http.execute {
         search("person" / "interest") postFilter {
           existsQuery("place")
         }
-      }.await.get.totalHits shouldBe 0
+      }.await.right.get.result.totalHits shouldBe 0
     }
   }
 }

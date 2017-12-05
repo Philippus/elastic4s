@@ -13,7 +13,7 @@ trait ExplainImplicits {
     override def responseHandler: ResponseHandler[ExplainResponse] = new ResponseHandler[ExplainResponse] {
       override def handle(response: HttpResponse) = {
         response.statusCode match {
-          case 404 | 200 => Right(ResponseHandler.fromEntity[ExplainResponse](response.entity.get))
+          case 404 | 200 => Right(ResponseHandler.fromResponse[ExplainResponse](response))
           case _ => sys.error("Invalid response")
         }
       }

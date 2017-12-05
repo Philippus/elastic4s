@@ -4,7 +4,6 @@ import java.io.{File, InputStream}
 
 import cats.Show
 import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
@@ -13,33 +12,32 @@ import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, Req
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
 
-trait Response[+U] {
+sealed trait Response[+U] {
   def status: Int // the http status code of the response
   def body: Option[String] // the http response body if the response included one
   def headers: Map[String, String] // any http headers included in the response
-  def get: U // returns the marshalled response U or throws an exception
+  def result: U // returns the marshalled response U or throws an exception
   def error: ElasticError // returns the error or throw an exception
   def isError: Boolean // returns true if this is an error response
   final def isSuccess: Boolean  = !isError // returns true if this is a success
-  final def map[V](f: U => V): Option[V] = if (isError) None else Some(f(get))
-  final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(get)
-  final def foreach[V](f: U => V) = if (!isError) f(get)
+  final def map[V](f: U => V): Option[V] = if (isError) None else Some(f(result))
+  final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(result)
+  final def foreach[V](f: U => V) = if (!isError) f(result)
 }
 
 case class RequestSuccess[U](override val status: Int, // the http status code of the response
                              override val body: Option[String], // the http response body if the response included one
                              override val headers: Map[String, String], // any http headers included in the response
-                             u: U) extends Response[U] {
-  override def get = u
+                             override val result: U) extends Response[U] {
   override def isError = false
-  override def error = throw new NoSuchElementException(s"Request success $u")
+  override def error = throw new NoSuchElementException(s"Request success $result")
 }
 
 case class RequestFailure(override val status: Int, // the http status code of the response
                           override val body: Option[String], // the http response body if the response included one
                           override val headers: Map[String, String], // any http headers included in the response
                           override val error: ElasticError) extends Response[Nothing] {
-  override def get = throw new NoSuchElementException(s"Request Failure $error")
+  override def result = throw new NoSuchElementException(s"Request Failure $error")
   override def isError = true
 }
 
@@ -61,18 +59,18 @@ trait HttpClient extends Logging {
   // Executes the given request type T, and returns a Future of Response[U] where U is particular to the request type.
   // For example a search request will return a Future[Response[SearchResponse]].
   // The returned Response is an ADT
-  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[Response[U]] = {
-    val p = Promise[Response[U]]()
+  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[Either[RequestFailure, RequestSuccess[U]]] = {
+    val p = Promise[Either[RequestFailure, RequestSuccess[U]]]()
     val f = exec.execute(client, request)
     f.onComplete {
       case Success(r) =>
         try exec.responseHandler.handle(r) match {
           case Right(u) =>
-            val resp = RequestSuccess(r.statusCode, r.entity.map(_.content), r.headers, u)
-            p.trySuccess(resp)
+            val success = RequestSuccess(r.statusCode, r.entity.map(_.content), r.headers, u)
+            p.trySuccess(Right(success))
           case Left(error) =>
-            val resp = RequestFailure(r.statusCode, r.entity.map(_.content), r.headers, error)
-            p.trySuccess(resp)
+            val failure = RequestFailure(r.statusCode, r.entity.map(_.content), r.headers, error)
+            p.trySuccess(Left(failure))
         } catch {
           case t: Throwable => p.tryFailure(t)
         }

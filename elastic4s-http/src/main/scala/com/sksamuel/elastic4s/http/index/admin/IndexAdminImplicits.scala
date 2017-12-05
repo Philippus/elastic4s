@@ -5,8 +5,7 @@ import java.net.URLEncoder
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.index.{CreateIndexContentBuilder, CreateIndexResponse, IndexShowImplicits}
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.exts.OptionImplicits._
@@ -141,8 +140,8 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
     override def responseHandler = new ResponseHandler[CreateIndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexResponse] = response.statusCode match {
-        case 200 | 201 => Right(ResponseHandler.fromEntity[CreateIndexResponse](response.entity.getOrError("Create index responses must have a body")))
-        case 400 | 500 => Left(ElasticError.fromResponse(response))
+        case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
+        case 400 | 500 => Left(ElasticError.parse(response))
         case _ => sys.error(response.toString)
       }
     }

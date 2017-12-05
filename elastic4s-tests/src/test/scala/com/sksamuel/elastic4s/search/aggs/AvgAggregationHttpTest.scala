@@ -39,7 +39,7 @@ class AvgAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider wi
         search("avgagg").matchAllQuery().aggs {
           avgAgg("agg1", "height")
         }
-      }.await.get
+      }.await.right.get.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.avg("agg1")
       agg.value > 1289 shouldBe true

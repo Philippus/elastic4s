@@ -57,7 +57,7 @@ trait SearchTemplateImplicits {
         */
       override def handle(response: HttpResponse) = {
         response.statusCode match {
-          case 200 => Right(ResponseHandler.fromEntity[GetSearchTemplateResponse](response.entity.get).some)
+          case 200 => Right(ResponseHandler.fromResponse[GetSearchTemplateResponse](response).some)
           case 404 => Right(None)
           case _ => sys.error(response.entity.map(_.content).getOrElse(""))
         }

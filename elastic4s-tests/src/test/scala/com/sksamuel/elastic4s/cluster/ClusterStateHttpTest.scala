@@ -29,7 +29,7 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DiscoveryLocalNod
 
       val state = http.execute {
         clusterState()
-      }.await.get
+      }.await.right.get.result
 
       state.clusterName should be("localnode-cluster")
 

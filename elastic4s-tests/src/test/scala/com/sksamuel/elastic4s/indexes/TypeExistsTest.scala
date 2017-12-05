@@ -24,12 +24,12 @@ class TypeExistsTest extends WordSpec with Matchers with ElasticDsl with Discove
     "return true for an existing type" in {
       http.execute {
         typesExist("typeexists" / "flowers")
-      }.await.get.isExists shouldBe true
+      }.await.right.get.result.isExists shouldBe true
     }
     "return false for non existing type" in {
       http.execute {
         typesExist("typeexists" / "qeqweqew")
-      }.await.get.isExists shouldBe false
+      }.await.right.get.result.isExists shouldBe false
     }
   }
 }

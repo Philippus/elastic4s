@@ -16,7 +16,7 @@ class CatHealthTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
   "cat health" should "return cluster health" in {
     http.execute {
       catHealth()
-    }.await.get.cluster shouldBe "localnode-cluster"
+    }.await.right.get.result.cluster shouldBe "localnode-cluster"
   }
 
 }

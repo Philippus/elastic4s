@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.http.settings
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
 import com.sksamuel.exts.collection.Maps
@@ -30,7 +29,7 @@ trait SettingsImplicits {
           }.toMap
           Right(IndexSettingsResponse(settings))
         case _ =>
-          Left(ElasticError.fromResponse(response))
+          Left(ElasticError.parse(response))
       }
     }
 
@@ -45,9 +44,9 @@ trait SettingsImplicits {
     override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] = response.statusCode match {
         case 200 =>
-          Right(ResponseHandler.fromEntity[IndexSettingsResponse](response.entity.get))
+          Right(ResponseHandler.fromResponse[IndexSettingsResponse](response))
         case _ =>
-          Left(ElasticError.fromResponse(response))
+          Left(ElasticError.parse(response))
       }
     }
 

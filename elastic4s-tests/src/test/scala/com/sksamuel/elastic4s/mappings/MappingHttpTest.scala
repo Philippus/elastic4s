@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.analyzers._
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
@@ -35,7 +34,7 @@ class MappingHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Matc
 
       val mappings = http.execute {
         getMapping("index" / "mapping1")
-      }.await.get
+      }.await.right.get.result
 
       val properties = mappings.find(_.index == "index").get.mappings("mapping1")
       val a = properties("a").asInstanceOf[Map[String, Any]]

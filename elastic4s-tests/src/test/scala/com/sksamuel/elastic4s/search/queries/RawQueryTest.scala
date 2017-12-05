@@ -27,7 +27,7 @@ class RawQueryTest extends WordSpec with Matchers with ElasticDsl with Discovery
         search("*").types("paris") limit 5 rawQuery {
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }
-      }.await.get.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
   }
 }

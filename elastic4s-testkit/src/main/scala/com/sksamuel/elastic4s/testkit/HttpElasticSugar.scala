@@ -22,14 +22,14 @@ trait HttpElasticSugar extends ElasticDsl {
   def refresh(indexes: Indexes): RefreshIndexResponse = {
     http.execute {
       refreshIndex(indexes)
-    }.await.get
+    }.await.right.get.result
   }
 
   def blockUntilGreen(): Unit = {
     blockUntil("Expected cluster to have green status") { () =>
       http.execute {
         clusterHealth()
-      }.await.get.status.toUpperCase == "GREEN"
+      }.await.right.get.result.status.toUpperCase == "GREEN"
     }
   }
 
@@ -66,7 +66,7 @@ trait HttpElasticSugar extends ElasticDsl {
   def doesIndexExists(name: String): Boolean = {
     http.execute {
       indexExists(name)
-    }.await.get.isExists
+    }.await.right.get.result.isExists
   }
 
   def deleteIndex(name: String): Unit = {
@@ -87,8 +87,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected to find document $id") { () =>
       val resp = http.execute {
         get(id).from(index)
-      }.await
-      resp.isSuccess && resp.get.exists
+      }.await.right.get
+      resp.isSuccess && resp.result.exists
     }
   }
 
@@ -97,8 +97,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected to find document $id") { () =>
       val resp = http.execute {
         get(id).from(index / `type`)
-      }.await
-      resp.isSuccess && resp.get.exists
+      }.await.right.get
+      resp.isSuccess && resp.result.exists
     }
   }
 
@@ -106,8 +106,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = http.execute {
         search(index).matchAllQuery().size(0)
-      }.await
-      expected <= result.get.totalHits
+      }.await.right.get
+      expected <= result.result.totalHits
     }
   }
 
@@ -116,8 +116,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = http.execute {
         search(indexAndTypes).matchAllQuery().size(0)
-      }.await
-      expected <= result.get.totalHits
+      }.await.right.get
+      expected <= result.result.totalHits
     }
   }
 
@@ -128,8 +128,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = http.execute {
         search(index / types).matchAllQuery().size(0)
-      }.await
-      expected <= result.get.totalHits
+      }.await.right.get
+      expected <= result.result.totalHits
     }
   }
 
@@ -137,7 +137,7 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       expected == http.execute {
         search(index / types).size(0)
-      }.await.get.totalHits
+      }.await.right.get.result.totalHits
     }
   }
 
@@ -145,7 +145,7 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected empty index $index") { () =>
       http.execute {
         search(Indexes(index)).size(0)
-      }.await.get.totalHits == 0
+      }.await.right.get.result.totalHits == 0
     }
   }
 
@@ -165,8 +165,8 @@ trait HttpElasticSugar extends ElasticDsl {
     blockUntil(s"Expected document $id to have version $version") { () =>
       val resp = http.execute {
         get(id).from(index / `type`)
-      }.await
-      resp.isSuccess && resp.get.version == version
+      }.await.right.get
+      resp.isSuccess && resp.result.version == version
     }
   }
 }

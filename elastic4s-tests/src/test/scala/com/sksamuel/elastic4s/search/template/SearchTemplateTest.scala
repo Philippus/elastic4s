@@ -28,17 +28,17 @@ class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNod
 
     http.execute {
       putSearchTemplate("testy", matchQuery("{{field}}", "{{text}}"))
-    }.await.get.acknowledged shouldBe true
+    }.await.right.get.result.acknowledged shouldBe true
 
     http.execute {
       getSearchTemplate("testy")
-    }.await.get.get.id shouldBe "testy"
+    }.await.right.get.result.get.id shouldBe "testy"
   }
 
   it should "be usable in a search" in {
     val result = http.execute {
       templateSearch("searchtemplate").name("testy").params(Map("field" -> "name", "text" -> "tower"))
-    }.await.get
+    }.await.right.get.result
     result.totalHits shouldBe 2
     result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
       """{"name":"tower bridge"}""",
@@ -50,10 +50,10 @@ class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNod
 
     http.execute {
       removeSearchTemplate("testy")
-    }.await.get.acknowledged shouldBe true
+    }.await.right.get.result.acknowledged shouldBe true
 
     http.execute {
       getSearchTemplate("testy")
-    }.await.get shouldBe None
+    }.await.right.get.result shouldBe None
   }
 }

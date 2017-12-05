@@ -40,21 +40,6 @@ object UpdateByQueryBodyFn {
   }
 }
 
-case class ErrorResult(error: ElasticError)
-
-object ElasticError {
-
-  def fromResponse(r: HttpResponse): ElasticError =
-    ResponseHandler.fromEntity[ErrorResult](r.entity.getOrError("Responses must have a body to return a failure")).error
-}
-
-case class ElasticError(`type`: String,
-                        reason: String,
-                        @JsonProperty("index_uuid") indexUuid: String,
-                        index: String,
-                        shard: Option[String],
-                        @JsonProperty("root_cause") rootCause: Seq[ElasticError])
-
 object UpdateImplicits extends UpdateImplicits
 
 trait UpdateImplicits {
@@ -74,7 +59,7 @@ trait UpdateImplicits {
         case 200 | 201 =>
           val json = response.entity.getOrError("Update responses must include a body")
           Right(ResponseHandler.fromEntity[UpdateResponse](json))
-        case _ => Left(ElasticError.fromResponse(response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 

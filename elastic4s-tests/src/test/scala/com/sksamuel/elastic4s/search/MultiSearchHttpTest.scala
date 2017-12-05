@@ -38,7 +38,7 @@ class MultiSearchHttpTest
         search("jtull") query "passion",
         search("jtull" / "albums") query matchAllQuery()
       )
-    }.await.get
+    }.await.right.get.result
 
     resp.successes.size shouldBe 3
     resp.size shouldBe 3
@@ -57,7 +57,7 @@ class MultiSearchHttpTest
         search("jtull") query matchQuery("name", "aqualung"),
         search("unknown") query matchAllQuery()
       )
-    }.await.get
+    }.await.right.get.result
 
     resp.successes.size shouldBe 1
     resp.failures.size shouldBe 1

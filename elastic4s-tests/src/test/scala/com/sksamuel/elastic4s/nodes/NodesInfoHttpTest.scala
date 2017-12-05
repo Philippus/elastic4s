@@ -10,7 +10,7 @@ class NodesInfoHttpTest extends WordSpec with Matchers with DiscoveryLocalNodePr
     "return node information" in {
       val nodes = http.execute {
         nodeInfo()
-      }.await.get
+      }.await.right.get.result
 
       nodes.clusterName should be("localnode-cluster")
       nodes.nodes.values.toSeq.head.os.availableProcessors > 0 shouldBe true

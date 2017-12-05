@@ -6,9 +6,7 @@ import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.update.ElasticError
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -32,8 +30,8 @@ trait DeleteImplicits {
 
     override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] = response.statusCode match {
-        case 200 | 201 => Right(ResponseHandler.fromEntity[DeleteByQueryResponse](response.entity.getOrError("Create index responses must have a body")))
-        case _ => Left(ElasticError.fromResponse(response))
+        case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 
@@ -68,9 +66,9 @@ trait DeleteImplicits {
 
       override def handle(response: HttpResponse): Either[ElasticError, DeleteResponse] = {
 
-        def right = Right(ResponseHandler.fromEntity[DeleteResponse](response.entity.getOrError("Delete responses must have a body")))
+        def right = Right(ResponseHandler.fromResponse[DeleteResponse](response))
 
-        def left = Left(ElasticError.fromResponse(response))
+        def left = Left(ElasticError.parse(response))
         response.statusCode match {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete

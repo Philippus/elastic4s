@@ -10,7 +10,7 @@ class TasksTest extends FlatSpec with DiscoveryLocalNodeProvider with Matchers w
 
     val resp = http.execute {
       listTasks()
-    }.await.get
+    }.await.right.get.result
 
     resp.nodes.head._2.host shouldBe "127.0.0.1"
     resp.nodes.head._2.roles shouldBe Seq("master", "data", "ingest")

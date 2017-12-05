@@ -41,14 +41,14 @@ class ClearCacheTest extends WordSpec with Matchers with ElasticDsl with Discove
       val resp = http.execute {
         clearCache("clearcache1")
       }.await
-      resp.get.shards.successful should be > 0
+      resp.right.get.result.shards.successful should be > 0
     }
 
     "support multiple types" in {
       val resp = http.execute {
         clearCache("clearcache1", "clearcache2")
       }.await
-      resp.get.shards.successful should be > 0
+      resp.right.get.result.shards.successful should be > 0
     }
   }
 }

@@ -27,7 +27,7 @@ class OpenCloseIndexTest extends WordSpec with Matchers with ElasticDsl with Dis
     "acknowledge" in {
       http.execute {
         closeIndex("pasta")
-      }.await.get.acknowledged shouldBe true
+      }.await.right.get.result.acknowledged shouldBe true
     }
   }
 
@@ -35,7 +35,7 @@ class OpenCloseIndexTest extends WordSpec with Matchers with ElasticDsl with Dis
     "acknowledge" in {
       http.execute {
         openIndex("pasta")
-      }.await.get.acknowledged shouldBe true
+      }.await.right.get.result.acknowledged shouldBe true
     }
   }
 }

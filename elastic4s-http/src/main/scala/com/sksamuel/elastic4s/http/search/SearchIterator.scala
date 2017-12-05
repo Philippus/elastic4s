@@ -46,8 +46,8 @@ object SearchIterator {
 
       // in a search scroll we must always use the last returned scrollId
       val response = resp match {
-        case RequestSuccess(_, _, _, r) => r
-        case RequestFailure(_, _, _, error) => sys.error(error.toString)
+        case Right(success) => success.result
+        case Left(failure) => sys.error(failure.toString)
       }
 
       scrollId = response.scrollId

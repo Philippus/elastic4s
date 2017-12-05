@@ -3,8 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.update.ElasticError
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition}
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType
@@ -18,7 +17,7 @@ trait IndexImplicits extends IndexShowImplicits {
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
       override def handle(response: HttpResponse) = response.statusCode match {
         case 201 | 200 => Right(ResponseHandler.fromResponse[IndexResponse](response))
-        case 400 | 409 | 500 => Left(ElasticError.fromResponse(response))
+        case 400 | 409 | 500 => Left(ElasticError.parse(response))
         case _ => sys.error(response.toString)
       }
     }
