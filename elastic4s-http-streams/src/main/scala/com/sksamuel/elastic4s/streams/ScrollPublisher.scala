@@ -157,7 +157,7 @@ class PublishActor(client: HttpClient,
       s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)
     // if we had no results from ES then we have nothing left to publish and our work here is done
-    case Success(resp: Right[_, SearchResponse]) if resp.right.get.isEmpty =>
+    case Success(resp: RequestSuccess[SearchResponse]) if resp.get.isEmpty =>
       logger.debug("Response from ES came back empty; this means no more items upstream so will complete subscription")
       s.onComplete()
       client.execute(clearScroll(scrollId))
