@@ -40,9 +40,12 @@ object UpdateByQueryBodyFn {
   }
 }
 
+case class ErrorResult(error: ElasticError)
+
 object ElasticError {
+
   def fromResponse(r: HttpResponse): ElasticError =
-    ResponseHandler.fromEntity[ElasticError](r.entity.getOrError("Responses must have a body to return a failure"))
+    ResponseHandler.fromEntity[ErrorResult](r.entity.getOrError("Responses must have a body to return a failure")).error
 }
 
 case class ElasticError(`type`: String,
