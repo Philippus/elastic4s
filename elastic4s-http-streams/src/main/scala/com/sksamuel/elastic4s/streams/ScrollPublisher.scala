@@ -164,9 +164,9 @@ class PublishActor(client: HttpClient,
       logger.debug("Stopping publisher actor")
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
-    case Success(resp: Right[_, SearchResponse]) =>
-      scrollId = resp.right.get.scrollId.getOrError("Response did not include a scroll id")
-      queue.enqueue(resp.right.get.hits.hits: _*)
+    case Success(resp: RequestSuccess[SearchResponse]) =>
+      scrollId = resp.get.scrollId.getOrError("Response did not include a scroll id")
+      queue.enqueue(resp.get.hits.hits: _*)
       context become ready
       unstashAll()
   }
