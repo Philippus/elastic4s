@@ -47,7 +47,10 @@ The second issue is that it uses Netty 4.1. However some popular projects such a
 
 | Elasticsearch Version | Http Client Version | Tcp Client Version |
 |-------|---------------------|--|
-|5.4.x|5.4.x|5.4.0|
+|6.0.x|6.0.x|6.0.0|
+|5.6.x|5.6.x|5.6.0|
+|5.5.x|5.5.x|5.5.5|
+|5.4.x|5.4.x|5.4.13|
 |5.3.x|5.4.x|5.3.2|
 |5.2.x|5.4.x|5.2.11|
 |5.1.x|5.4.x|5.1.5|
@@ -869,10 +872,11 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
-###### 6.0.0 - Pre-release
+###### 6.0.0
 
 * HTTP Client should now be the first choice client. The TCP Client has been deprecated as it will be removed in version 7 of elasticsearch itself. See https://www.elastic.co/blog/elasticsearch-5-6-0-released. Specifically, _HTTP client will become the official way for Java applications to communicate with Elasticsearch, replacing the Transport Client, which will be removed in Elasticsearch 7.0._.
 * HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
+* HTTP operations now return Either[RequestFailure, RequestSuccess[U]] for better error handling. Each of `RequestFailure` and `RequestSuccess` contain the http status code, the full json response body, and any http headers, in addition to either the error details or the request resposne type.
 * Any methods deprecated before version 5.0.0 have been removed.
 * Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
@@ -881,7 +885,6 @@ folder. There is no need to configure anything externally.
 * Reworked the HTTP aggregation response API to support better types and subaggs
 * disableCoord has been removed from bool and common term queries
 * Added getIndex request type
-* The common operations now return Either[RequestFailure, Response] for better error handling. The other request types will be changed to this style as part of future releases.
 * `getAliases` is now overloaded to accept seq of Index and Alias objects to make it clearer how it works. The existing `getAlias` is deprecated.
 * date_range, and extended_stats aggregations have been implemented for the http client
 * Added aliases when creating indexes
