@@ -24,8 +24,10 @@ object TermsAggregationBuilder {
         builder.array("exclude", incexc.include.toArray)
     }
     agg.includePartition.foreach { incpart =>
-      builder.field("partition", incpart.partition)
-      builder.field("num_partitions", incpart.numPartitions)
+      val includeBuilder = builder.startObject("include")
+      includeBuilder.field("partition", incpart.partition)
+      includeBuilder.field("num_partitions", incpart.numPartitions)
+      includeBuilder.endObject()
     }
     agg.minDocCount.foreach(builder.field("min_doc_count", _))
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))

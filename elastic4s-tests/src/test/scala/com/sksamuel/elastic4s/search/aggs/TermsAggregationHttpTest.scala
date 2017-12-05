@@ -138,5 +138,20 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")
     }
+
+    "should support partitioning" in {
+      val numPartitions = 20
+      val responses = (0 until numPartitions).map { i =>
+        http.execute {
+          search("termsagg/curry").matchAllQuery().aggs {
+            termsAgg("agg1", "strength").includePartition(i, numPartitions)
+          }
+        }.await.right.get.result
+      }
+      responses.map(_.totalHits) should contain only (4)
+
+      val aggs = responses.map(_.aggregations.terms("agg1"))
+      aggs.flatMap(_.buckets).map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty), TermBucket("medium", 1, Map.empty), TermBucket("mild", 1, Map.empty))
+    }
   }
 }
