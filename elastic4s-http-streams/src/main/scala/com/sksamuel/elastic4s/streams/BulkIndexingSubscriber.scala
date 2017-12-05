@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.streams
 import akka.actor._
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition}
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem}
 import org.reactivestreams.{Subscriber, Subscription}
 
@@ -223,21 +223,22 @@ class BulkActor[T](client: HttpClient,
     val f = client.execute(req)
     f.onComplete {
       case Failure(e) => self ! e
-      case Success(resp: BulkResponse) =>
+      case Success(resp: RequestFailure) => self ! new RuntimeException(resp.error.toString)
+      case Success(resp: RequestSuccess[BulkResponse]) =>
 
-        if (resp.errors) {
+        if (resp.get.errors) {
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
           if (attempts > 0) {
-            val (retryDef, originals) = getRetryDef(resp)
+            val (retryDef, originals) = getRetryDef(resp.get)
             system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
           } else {
-            self ! BulkActor.FailedResult(resp.failures, resp.failures.map(getOriginalForResponse))
+            self ! BulkActor.FailedResult(resp.get.failures, resp.get.failures.map(getOriginalForResponse))
           }
         }
 
-        if (resp.hasSuccesses)
-          self ! BulkActor.Result(resp.successes, resp.successes.map(getOriginalForResponse))
+        if (resp.get.hasSuccesses)
+          self ! BulkActor.Result(resp.get.successes, resp.get.successes.map(getOriginalForResponse))
     }
   }
 
