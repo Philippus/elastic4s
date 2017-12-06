@@ -49,6 +49,7 @@ trait ElasticApi
     with DeleteApi
     with DeleteIndexApi
     with DynamicTemplateApi
+    with ExistsApi
     with ExplainApi
     with ForceMergeApi
     with GetApi
