@@ -1,9 +1,9 @@
-package com.sksamuel.elastic4s.repository
+package com.sksamuel.elastic4s.snapshots
 
 import com.sksamuel.exts.OptionImplicits._
 
-case class GetSnapshotsDefinition(snapshots: Seq[String],
-                                  repo: String,
+case class GetSnapshotsDefinition(snapshotNames: Seq[String],
+                                  repositoryName: String,
                                   ignoreUnavailable: Option[Boolean] = None,
                                   verbose: Option[Boolean] = None) {
   def ignoreUnavailable(ignore: Boolean): GetSnapshotsDefinition = copy(ignoreUnavailable = ignore.some)

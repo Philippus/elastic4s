@@ -15,7 +15,7 @@ import com.sksamuel.elastic4s.indexes.admin.IndexRecoveryDefinition
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
-import com.sksamuel.elastic4s.repository.SnapshotApi
+import com.sksamuel.elastic4s.snapshots.SnapshotApi
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchImplicits}
 import com.sksamuel.elastic4s.searches._

@@ -214,13 +214,13 @@ through to the readme page. For options that are not yet documented, refer to th
 | Cluster health                            | `clusterHealth()`                         | yes | yes |
 | Cluster stats                             | `clusterStats()`                          | yes | yes |
 | [Create Index]                            | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
-| [Create Repository]                       | `createRepository(<repo>).type(<type>)`   |   | yes |
-| [Create Snapshot]                         | `createSnapshot(<name>).in(<repo>)`       |   | yes |
+| [Create Repository]                       | `createRepository(name, type)`            | yes | yes |
+| [Create Snapshot]                         | `createSnapshot(name, repo)`              | yes | yes |
 | Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
 | [Delete by id]                            | `delete(<id>).from(<index> / <type>)`     | yes | yes |
 | Delete by query                           | `deleteIn(<index>).by(<query>)`           | yes | yes |
 | [Delete index]                            | `deleteIndex(<index>) [settings]`         | yes | yes |
-| [Delete Snapshot]                         | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
+| [Delete Snapshot]                         | `deleteSnapshot(name, repo)`              | yes | yes |
 | Delete Template                           | `deleteTemplate(<name>)`                  |       | yes |
 | Document Exists                           | `exists(id, index, type)`                 | yes | |
 | [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
@@ -232,7 +232,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)`            | yes | yes |
 | Get Segments                              | `getSegments(<indexes>)`                  |   | yes |
-| Get Snapshot                              | `getSnapshot <name> from <repo>`          |   | yes |
+| Get Snapshot                              | `getSnapshot(name, repo)`                 | yes | yes |
 | Get Template                              | `getTemplate(<name>)`                     |   | yes |
 | [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
@@ -250,8 +250,8 @@ through to the readme page. For options that are not yet documented, refer to th
 | Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
 | [Remove Alias]                            | `removeAlias(<alias>).on(<index>)`        | yes | yes |
-| [Restore Snapshot]                        | `restoreSnapshot(<name>).from(<repo>)`    |   | yes |
-| [Search]                                  | `search(<index> / <type>).query(<query>)` | yes | yes |
+| [Restore Snapshot]                        | `restoreSnapshot(name, repo)`             | yes | yes |
+| [Search]                                  | `search(index).query(<query>)`            | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
 | Term Vectors                              | `termVectors(<index>, <type>, <id>)`      | yes | yes |
 | Type Exists                               | `typesExists(<types>) in <index>`         | yes | yes |

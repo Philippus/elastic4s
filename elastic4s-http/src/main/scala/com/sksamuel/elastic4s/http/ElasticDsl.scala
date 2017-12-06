@@ -19,6 +19,7 @@ import com.sksamuel.elastic4s.http.reindex.ReindexImplicits
 import com.sksamuel.elastic4s.http.search.template.SearchTemplateImplicits
 import com.sksamuel.elastic4s.http.search.{SearchImplicits, SearchScrollImplicits}
 import com.sksamuel.elastic4s.http.settings.SettingsImplicits
+import com.sksamuel.elastic4s.http.snapshots.SnapshotHttpImplicits
 import com.sksamuel.elastic4s.http.task.TaskImplicits
 import com.sksamuel.elastic4s.http.termvectors.TermVectorsExecutables
 import com.sksamuel.elastic4s.http.update.UpdateImplicits
@@ -48,6 +49,7 @@ trait ElasticDsl
     with SearchTemplateImplicits
     with SearchScrollImplicits
     with SettingsImplicits
+    with SnapshotHttpImplicits
     with UpdateImplicits
     with TaskImplicits
     with TermVectorsExecutables

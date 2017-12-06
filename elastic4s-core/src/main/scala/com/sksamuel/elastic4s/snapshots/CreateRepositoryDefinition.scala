@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.repository
+package com.sksamuel.elastic4s.snapshots
 
 import com.sksamuel.exts.OptionImplicits._
 
