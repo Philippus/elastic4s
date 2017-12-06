@@ -112,8 +112,6 @@ client you are using.
 val elastic4sVersion = "x.x.x"
 libraryDependencies ++= Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
-  // for the tcp client
-  "com.sksamuel.elastic4s" %% "elastic4s-tcp" % elastic4sVersion,
   
   // for the http client
   "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
@@ -132,75 +130,63 @@ libraryDependencies ++= Seq(
 An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create and
 index and index a one field document. Then we will search for that document using a simple text query.
 
-For this example we will use the HTTP client and the `elastic4s-circe` json serializer for converting our case classes
-into json requests. Circe support is optional, and you can use Jackson, or Json4s for example.
-
 ```scala
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, TcpClient}
-import com.sksamuel.elastic4s.searches.RichSearchResponse
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.common.settings.Settings
-
-// circe
-import com.sksamuel.elastic4s.circe._
-import io.circe.generic.auto._ 
-
-case class Artist(name: String)
-
 object ArtistIndex extends App {
 
-    // spawn an embedded node for testing
-    val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
-    
-    // in this example we connect to the local node to get a client object
-    // in your real code you must create a client using HttpClient or TcpClient
-    // see the section on "Connecting to a cluster"
-    val client = localNode.elastic4sclient()
-    
-    // we must import the dsl
-    import com.sksamuel.elastic4s.ElasticDsl._
+  // spawn an embedded node for testing
+  val localNode = LocalNode("mycluster", "/tmp/datapath")
+
+  // in this example we create a client attached to the embedded node, but
+  // in a real application you would provide the HTTP address to the HttpClient constructor.
+  val client = localNode.http(true)
+
+  // we must import the dsl
+  import com.sksamuel.elastic4s.http.ElasticDsl._
 
   // Next we create an index in advance ready to receive documents.
   // await is a helper method to make this operation synchronous instead of async
-  // You would normally avoid doing this in a real program as it will block the calling thread
-  // but is useful when testing
+  // You would normally avoid doing this in a real program as it will block
+  // the calling thread but is useful when testing
   client.execute {
-    createIndex("bands").mappings(
-       mapping("artist") as(
-          textField("name")
-       )
+    createIndex("artists").mappings(
+      mapping("modern").fields(
+        textField("name")
+      )
     )
   }.await
 
-  // next we index a single document. Notice we can pass in the case class directly
-  // and elastic4s will marshall this for us using the circe marshaller we imported earlier.
-  // the refresh policy means that we want this document to flush to the disk immmediately.
+  // Next we index a single document which is just the name of an Artist.
+  // The RefreshPolicy.IMMEDIATE means that we want this document to flush to the disk immmediately.
   // see the section on Eventual Consistency.
-  client.execute { 
-  	indexInto("bands" / "artists") doc Artist("Coldplay") refresh(RefreshPolicy.IMMEDIATE)
+  client.execute {
+    indexInto("artists" / "modern").doc("name" -> "L.S. Lowry").refresh(RefreshPolicy.IMMEDIATE)
   }.await
 
   // now we can search for the document we just indexed
-  val resp = client.execute { 
-    search("bands" / "artists") query "coldplay" 
+  val resp = client.execute {
+    search("artists") query "lowry"
   }.await
-  
-  println("---- Search Hit Parsed ----")
-  resp.to[Artist].foreach(println)
-  
-  // pretty print the complete response
-  import io.circe.Json
-  import io.circe.parser._
-  println("---- Response as JSON ----")
-  println(decode[Json](resp.original.toString).right.get.spaces2)
-  
+
+  // resp is an Either of a RequestFailure instance containing the elasticsearch error details,
+  // or a RequestSuccess instance that depends on the type of request.
+  // In this case it is a RequestSuccess[SearchResponse]
+
+  println("---- Search Results ----")
+  resp match {
+    case Left(failure) => println("We failed " + failure.error)
+    case Right(results) => println(results.result.hits)
+  }
+
   client.close()
 }
 ```
 
 ## Eventual Consistency
 
-Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
+Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, 
+but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. 
+Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
+You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with elastic constantly flushing to disk.
 
 For more in depth examples keep reading.
 
@@ -236,6 +222,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Delete index]                            | `deleteIndex(<index>) [settings]`         | yes | yes |
 | [Delete Snapshot]                         | `deleteSnapshot(<name>).in(<repo>)`       |     | yes |
 | Delete Template                           | `deleteTemplate(<name>)`                  |       | yes |
+| Document Exists                           | `exists(id, index, type)`                 | yes | |
 | [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
 | Field stats                               | `fieldStats(<indexes>)`                   |   | yes |
 | Flush Index                               | `flushIndex(<index>)`                     | yes | yes |

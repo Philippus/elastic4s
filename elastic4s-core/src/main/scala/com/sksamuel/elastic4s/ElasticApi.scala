@@ -17,6 +17,7 @@ import com.sksamuel.elastic4s.mappings.MappingApi
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicTemplateApi
 import com.sksamuel.elastic4s.nodes.NodesApi
 import com.sksamuel.elastic4s.reindex.ReindexApi
+import com.sksamuel.elastic4s.repository.SnapshotApi
 import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
@@ -71,6 +72,7 @@ trait ElasticApi
     with SearchApi
     with SearchTemplateApi
     with SettingsApi
+    with SnapshotApi
     with SortApi
     with SuggestionApi
     with TaskApi

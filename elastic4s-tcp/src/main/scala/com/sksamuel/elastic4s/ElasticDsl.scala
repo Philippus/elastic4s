@@ -15,6 +15,7 @@ import com.sksamuel.elastic4s.indexes.admin.IndexRecoveryDefinition
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
 import com.sksamuel.elastic4s.reindex.ReindexExecutables
+import com.sksamuel.elastic4s.repository.SnapshotApi
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.search.{ScrollExecutables, SearchImplicits}
 import com.sksamuel.elastic4s.searches._
@@ -35,7 +36,6 @@ import scala.language.implicitConversions
 trait ElasticDsl
   extends ElasticApi
     with PercolateDsl
-    with SnapshotDsl
     with TokenFilterDsl
     with AliasExecutables
     with BulkExecutables
@@ -55,6 +55,7 @@ trait ElasticDsl
     with ScrollExecutables
     with SearchImplicits
     with SettingsExecutables
+    with SnapshotImplicits
     with TaskExecutables
     with TermVectorsExecutables
     with UpdateExecutables
