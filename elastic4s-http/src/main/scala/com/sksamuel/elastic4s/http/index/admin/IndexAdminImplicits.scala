@@ -8,7 +8,6 @@ import com.sksamuel.elastic4s.http.index.{CreateIndexContentBuilder, CreateIndex
 import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -86,6 +85,13 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: HttpRequestClient, request: IndexExistsDefinition): Future[HttpResponse] = {
       val endpoint = s"/${request.index}"
       client.async("HEAD", endpoint, Map.empty)
+    }
+  }
+
+  implicit object GetSegmentHttpExecutable extends HttpExecutable[GetSegmentsDefinition, GetSegmentsResponse] {
+    override def execute(client: HttpRequestClient, request: GetSegmentsDefinition): Future[HttpResponse] = {
+      val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string}/_segments"
+      client.async("GET", endpoint, Map("verbose" -> "true"))
     }
   }
 

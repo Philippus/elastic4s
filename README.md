@@ -231,7 +231,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Get All Aliases                           | `getAliases()`                            | yes | yes |
 | Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
 | Get Mapping                               | `getMapping(<index> / <type>)`            | yes | yes |
-| Get Segments                              | `getSegments(<indexes>)`                  |   | yes |
+| Get Segments                              | `getSegments(<indexes>)`                  | yes | yes |
 | Get Snapshot                              | `getSnapshot(name, repo)`                 | yes | yes |
 | Get Template                              | `getTemplate(<name>)`                     |   | yes |
 | [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
