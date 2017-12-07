@@ -31,6 +31,7 @@ object SearchBuilderFn {
     search.control.pref.foreach(builder.setPreference)
     search.postFilter.map(QueryBuilderFn.apply).foreach(builder.setPostFilter)
     search.requestCache.map(java.lang.Boolean.valueOf).foreach(builder.setRequestCache)
+    search.trackHits.map(builder.setTrackTotalHits)
     search.control.routing.foreach(builder.setRouting)
     search.windowing.size.foreach(builder.setSize)
     search.searchType.map(EnumConversions.searchType).foreach(builder.setSearchType)

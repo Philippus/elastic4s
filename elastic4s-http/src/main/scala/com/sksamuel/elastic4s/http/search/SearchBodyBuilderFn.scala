@@ -124,6 +124,8 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
+    request.trackHits.map(builder.field("track_total_hits", _))
+
     builder.endObject()
   }
 }
