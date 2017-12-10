@@ -18,7 +18,7 @@ object ElasticError {
     r.entity match {
       case Some(entity) =>
         val node = JacksonSupport.mapper.readTree(entity.content)
-        if (node.has("error")) {
+        if (node != null && node.has("error")) {
           val errorNode = node.get("error")
           JacksonSupport.mapper.readValue[ElasticError](JacksonSupport.mapper.writeValueAsBytes(errorNode))
         } else {
