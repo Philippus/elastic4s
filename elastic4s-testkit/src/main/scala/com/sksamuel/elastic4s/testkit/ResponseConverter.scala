@@ -122,6 +122,7 @@ object ResponseConverterImplicits {
             x.index,
             x.`type`,
             x.score,
+            None,
             None, // TODO
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
