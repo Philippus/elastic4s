@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 import com.sksamuel.elastic4s.json.JacksonSupport
+import com.sksamuel.elastic4s.{AggReader, DocumentRef}
 
 trait AggBucket extends HasAggregations {
   def docCount: Long
@@ -175,6 +176,12 @@ trait HasAggregations {
 
   private[elastic4s] def data: Map[String, Any]
   private def agg(name: String): Map[String, Any] = data(name).asInstanceOf[Map[String, Any]]
+
+  def to[T: AggReader]: T = safeTo[T].fold(e => throw e, t => t)
+  def safeTo[T: AggReader]: Either[Throwable, T] = {
+    val json = SourceAsContentBuilder(data).string()
+    implicitly[AggReader[T]].read(json)
+  }
 
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String] = data.keys

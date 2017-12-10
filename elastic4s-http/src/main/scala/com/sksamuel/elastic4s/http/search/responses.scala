@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.http.search
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
-import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.http.explain.Explanation
-import com.sksamuel.elastic4s.{Hit, HitReader}
+import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
+import com.sksamuel.elastic4s.{AggReader, Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
@@ -100,7 +100,8 @@ case class SearchResponse(took: Long,
   def isEmpty: Boolean = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  def aggregationsAsString: String = SourceAsContentBuilder(aggregationsAsMap).string()
+  lazy val aggsAsContentBuilder = SourceAsContentBuilder(aggregationsAsMap)
+  lazy val aggregationsAsString: String = aggsAsContentBuilder.string()
   def aggs: Aggregations = aggregations
   def aggregations: Aggregations = Aggregations(aggregationsAsMap)
 
