@@ -69,7 +69,7 @@ class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Elast
     }
     "find an indexed document in the given type only" in {
       http.execute {
-        search("chess" / "pieces") query matchQuery("name", "queen")
+        search("chess") query matchQuery("name", "queen")
       }.await.right.get.result.totalHits shouldBe 1
     }
     "support match all query" in {
@@ -79,7 +79,7 @@ class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Elast
     }
     "support sorting in a single type" in {
       http.execute {
-        search("chess" / "pieces") query matchAllQuery() sortBy fieldSort("name")
+        search("chess") query matchAllQuery() sortBy fieldSort("name")
       }.await.right.get.result.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
     }
     "support explain" in {
@@ -174,9 +174,9 @@ class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Elast
     }
     "include _routing in response" in {
       val resp = http.execute {
-        search("chess").matchAllQuery().limit(2).routing("wibble")
+        search("chess").termQuery("name", "queen").limit(1).routing("wibble")
       }.await.right.get
-      resp.result.routing shouldBe "wibble"
+      resp.result.hits.hits.forall(_.routing.contains("wibble")) shouldBe true
     }
   }
 }
