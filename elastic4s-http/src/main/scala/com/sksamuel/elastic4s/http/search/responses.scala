@@ -9,14 +9,17 @@ import com.sksamuel.elastic4s.{Hit, HitReader}
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
                      @JsonProperty("_type") `type`: String,
+                     @JsonProperty("_version") version: Long,
                      @JsonProperty("_score") score: Float,
                      @JsonProperty("_parent") parent: Option[String],
+                     @JsonProperty("_shard") shard: Option[String],
+                     @JsonProperty("_node") node: Option[String],
+                     @JsonProperty("_routing") routing: Option[String],
                      @JsonProperty("_explanation") explanation: Option[Explanation],
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],
-                     private val inner_hits: Map[String, Map[String, Any]],
-                     @JsonProperty("_version") version: Long) extends Hit {
+                     private val inner_hits: Map[String, Map[String, Any]]) extends Hit {
 
   def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
 

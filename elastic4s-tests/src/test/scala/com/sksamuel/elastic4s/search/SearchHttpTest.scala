@@ -32,7 +32,7 @@ class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Elast
         "name" -> "queen",
         "value" -> 10,
         "count" -> 1
-      ),
+      ).routing("wibble"),
       indexInto("chess/pieces").fields(
         "name" -> "king",
         "value" -> 0,
@@ -171,6 +171,12 @@ class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with Elast
           }
         }.await.right.get.result.maxScore shouldBe 0
       }
+    }
+    "include _routing in response" in {
+      val resp = http.execute {
+        search("chess").matchAllQuery().limit(2).routing("wibble")
+      }.await.right.get
+      resp.result.routing shouldBe "wibble"
     }
   }
 }
