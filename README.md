@@ -860,6 +860,26 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 6.0.4
+
+* Added to[T] and safeTo[T] on aggregations #1156
+* Added _shard, _node, and _routing to search hit #1160
+* java.lang.NullPointerException in ElasticError.parse #1159
+ 
+###### 6.0.3
+
+* Added track_total_hits option to searches
+* Added get segment to http api
+
+###### 6.0.2
+
+* Added snapshots and repositories to the http api
+
+###### 6.0.1
+
+* Added document exists api #1155
+* Fix partitioned terms aggregation (fixes  #1153)
+
 ###### 6.0.0
 
 * HTTP Client should now be the first choice client. The TCP Client has been deprecated as it will be removed in version 7 of elasticsearch itself. See https://www.elastic.co/blog/elasticsearch-5-6-0-released. Specifically, _HTTP client will become the official way for Java applications to communicate with Elasticsearch, replacing the Transport Client, which will be removed in Elasticsearch 7.0._.
