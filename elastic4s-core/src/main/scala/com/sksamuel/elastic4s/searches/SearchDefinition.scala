@@ -59,7 +59,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             meta: Meta = Meta(),
                             searchType: Option[SearchType] = None,
                             searchAfter: Seq[AnyRef] = Nil,
-                            version: Option[Boolean] = None) {
+                            version: Option[Boolean] = None,
+                            trackHits: Option[Boolean] = None) {
 
   /** Adds a single string query to this search
     *
@@ -110,6 +111,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def sortByFieldAsc(name: String): SearchDefinition = sortBy(FieldSortDefinition(name))
 
   def sortByFieldDesc(name: String): SearchDefinition = sortBy(FieldSortDefinition(name).desc())
+
+  def trackTotalHits(value: Boolean): SearchDefinition = copy(trackHits = Some(value))
 
   /** This method introduces zero or more script field definitions into the search construction
     *
