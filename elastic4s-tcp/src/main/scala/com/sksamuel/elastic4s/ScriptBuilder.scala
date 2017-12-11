@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptType}
 import org.elasticsearch.script.Script
 
 import scala.collection.JavaConverters._
@@ -14,10 +14,11 @@ object ScriptBuilder {
     if (script.scriptType != com.sksamuel.elastic4s.script.ScriptType.Inline) {
       options = null
     }
+    val lang = if (script.scriptType == ScriptType.Stored) null else script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG)
     if (script.params.isEmpty) {
       new Script(
         script.scriptType,
-        script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG),
+        lang,
         script.script,
         options,
         new java.util.HashMap[String, Object]()
@@ -26,7 +27,7 @@ object ScriptBuilder {
       val mappedParams = FieldsMapper.mapper(script.params).asJava
       new Script(
         script.scriptType,
-        script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG),
+        lang,
         script.script,
         options,
         mappedParams
