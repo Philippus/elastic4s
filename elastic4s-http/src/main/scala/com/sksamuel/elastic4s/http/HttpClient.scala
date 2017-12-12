@@ -9,8 +9,7 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
 
 sealed trait Response[+U] {
   def status: Int // the http status code of the response
@@ -43,8 +42,6 @@ case class RequestFailure(override val status: Int, // the http status code of t
 
 trait HttpClient extends Logging {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
   // the underlying client that performs the requests
   def client: HttpRequestClient
 
@@ -59,24 +56,15 @@ trait HttpClient extends Logging {
   // Executes the given request type T, and returns a Future of Response[U] where U is particular to the request type.
   // For example a search request will return a Future[Response[SearchResponse]].
   // The returned Response is an ADT
-  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U]): Future[Either[RequestFailure, RequestSuccess[U]]] = {
-    val p = Promise[Either[RequestFailure, RequestSuccess[U]]]()
-    val f = exec.execute(client, request)
-    f.onComplete {
-      case Success(r) =>
-        try exec.responseHandler.handle(r) match {
-          case Right(u) =>
-            val success = RequestSuccess(r.statusCode, r.entity.map(_.content), r.headers, u)
-            p.trySuccess(Right(success))
-          case Left(error) =>
-            val failure = RequestFailure(r.statusCode, r.entity.map(_.content), r.headers, error)
-            p.trySuccess(Left(failure))
-        } catch {
-          case t: Throwable => p.tryFailure(t)
-        }
-      case Failure(t) => p.tryFailure(t)
-    }
-    p.future
+  def execute[T, U](request: T)(implicit exec: HttpExecutable[T, U],
+                                executionContext: ExecutionContext = ExecutionContext.Implicits.global): Future[Either[RequestFailure, RequestSuccess[U]]] = {
+    exec.execute(client, request)
+      .map(r => exec.responseHandler.handle(r) match {
+        case Right(u) =>
+          Right(RequestSuccess(r.statusCode, r.entity.map(_.content), r.headers, u))
+        case Left(error) =>
+          Left(RequestFailure(r.statusCode, r.entity.map(_.content), r.headers, error))
+      })
   }
 
   def close(): Unit
