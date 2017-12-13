@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketSelectorDefinition, MaxBucketDefinition}
+import com.sksamuel.elastic4s.http.search.aggs.pipeline.BucketSelectorPipelineBuilder
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -34,6 +35,7 @@ object AggregationBuilderFn {
 
       // pipeline aggs
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
+      case agg: BucketSelectorDefinition => BucketSelectorPipelineBuilder(agg)
     }
     builder
   }

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.script.ScriptDefinition
 
 case class BucketSelectorDefinition(name: String,
                                     script: ScriptDefinition,
-                                    bucketsPaths: Seq[String],
+                                    bucketsPathMap: Map[String,String],
                                     gapPolicy: Option[GapPolicy] = None,
                                     metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
 
