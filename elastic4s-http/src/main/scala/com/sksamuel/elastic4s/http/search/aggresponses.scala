@@ -75,10 +75,11 @@ object DateRangeAggResult {
     name,
     data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       DateRangeBucket(
-        map.get("from").map(_.toString.toLong),
+        map.get("from").map(_.toString),
         map.get("from_as_string").map(_.toString),
-        map.get("to").map(_.toString.toLong),
+        map.get("to").map(_.toString),
         map.get("to_as_string").map(_.toString),
+        map.get("key").map(_.toString),
         map("doc_count").toString.toLong,
         map
       )
@@ -108,10 +109,11 @@ object GeoHashGridAggResult {
 }
 
 
-case class DateRangeBucket(from: Option[Long],
+case class DateRangeBucket(from: Option[String],
                            fromAsString: Option[String],
-                           to: Option[Long],
+                           to: Option[String],
                            toAsString: Option[String],
+                           key: Option[String],
                            override val docCount: Long,
                            private[elastic4s] val data: Map[String, Any]) extends AggBucket
 

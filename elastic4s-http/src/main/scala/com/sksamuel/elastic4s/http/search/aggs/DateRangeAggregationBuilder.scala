@@ -23,22 +23,22 @@ object DateRangeAggregationBuilder {
       case (keyOpt, to) =>
         builder.startObject()
         keyOpt.foreach(builder.field("key", _))
-        builder.field("to", to.toString)
+        builder.field("to", to.show)
         builder.endObject()
     }
     agg.ranges.foreach {
       case (keyOpt, from, to) =>
         builder.startObject()
         keyOpt.foreach(builder.field("key", _))
-        builder.field("from", from.toString)
-        builder.field("to", to.toString)
+        builder.field("from", from.show)
+        builder.field("to", to.show)
         builder.endObject()
     }
     agg.unboundedFrom.foreach {
       case (keyOpt, from) =>
         builder.startObject()
         keyOpt.foreach(builder.field("key", _))
-        builder.field("from", from.toString)
+        builder.field("from", from.show)
         builder.endObject()
     }
     builder.endArray()

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.ScriptBuilder
+import com.sksamuel.elastic4s.{ElasticDate, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
 import org.elasticsearch.search.aggregations.bucket.range.DateRangeAggregationBuilder
 
@@ -18,42 +18,18 @@ object DateRangeBuilder {
     agg.timeZone.foreach(builder.timeZone)
 
     agg.unboundedFrom.foreach {
-      case (Some(key), str: String) => builder.addUnboundedFrom(key, str)
-      case (Some(key), double: Double) => builder.addUnboundedFrom(key, double)
-      case (Some(key), long: Long) => builder.addUnboundedFrom(key, long)
-      case (Some(key), int: Int) => builder.addUnboundedFrom(key, int)
-      case (Some(key), float: Float) => builder.addUnboundedFrom(key, float)
-      case (None, str: String) => builder.addUnboundedFrom(str)
-      case (None, double: Double) => builder.addUnboundedFrom(double)
-      case (None, long: Long) => builder.addUnboundedFrom(long)
-      case (None, int: Int) => builder.addUnboundedFrom(int)
-      case (None, float: Float) => builder.addUnboundedFrom(float)
+      case (Some(key), date) => builder.addUnboundedFrom(key, date.show)
+      case (None, date) => builder.addUnboundedFrom(date.show)
     }
 
     agg.unboundedTo.foreach {
-      case (Some(key), str: String) => builder.addUnboundedTo(key, str)
-      case (Some(key), double: Double) => builder.addUnboundedTo(key, double)
-      case (Some(key), long: Long) => builder.addUnboundedTo(key, long)
-      case (Some(key), int: Int) => builder.addUnboundedTo(key, int)
-      case (Some(key), float: Float) => builder.addUnboundedTo(key, float)
-      case (None, str: String) => builder.addUnboundedTo(str)
-      case (None, double: Double) => builder.addUnboundedTo(double)
-      case (None, long: Long) => builder.addUnboundedTo(long)
-      case (None, int: Int) => builder.addUnboundedTo(int)
-      case (None, float: Float) => builder.addUnboundedTo(float)
+      case (Some(key), date) => builder.addUnboundedTo(key, date.show)
+      case (None, date) => builder.addUnboundedTo(date.show)
     }
 
     agg.ranges.foreach {
-      case (Some(key), from: String, to: String) => builder.addRange(key, from, to)
-      case (Some(key), from: Double, to: Double) => builder.addRange(key, from, to)
-      case (Some(key), from: Long, to: Long) => builder.addRange(key, from, to)
-      case (Some(key), from: Int, to: Int) => builder.addRange(key, from, to)
-      case (Some(key), from: Float, to: Float) => builder.addRange(key, from, to)
-      case (None, from: String, to: String) => builder.addRange(from, to)
-      case (None, from: Double, to: Double) => builder.addRange(from, to)
-      case (None, from: Long, to: Long) => builder.addRange(from, to)
-      case (None, from: Int, to: Int) => builder.addRange(from, to)
-      case (None, from: Float, to: Float) => builder.addRange(from, to)
+      case (Some(key), from: ElasticDate, to: ElasticDate) => builder.addRange(key, from.show, to.show)
+      case (None, from: ElasticDate, to: ElasticDate) => builder.addRange(from.show, to.show)
     }
 
 
