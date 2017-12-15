@@ -25,11 +25,11 @@ case class CompletionSuggestionResult(text: String, offset: Int, length: Int, op
 
 case class CompletionSuggestionOption(private val options: Map[String, Any]) {
   val text: String = options("text").asInstanceOf[String]
-  val index: String = options("_index").asInstanceOf[String]
-  val `type`: String = options("_type").asInstanceOf[String]
-  val id: AnyVal = options("_id").asInstanceOf[AnyVal]
   val score: Double = options("_score").asInstanceOf[Double]
-  val source: Map[String, AnyRef] = options.getOrElse("_source", Map.empty[String, AnyRef]).asInstanceOf[Map[String, AnyRef]]
+  val source: Map[String, AnyRef] = options.get("_source").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty)
+  val index: Option[String] = options.get("_index").map(_.asInstanceOf[String])
+  val `type`: Option[String] = options.get("_type").map(_.asInstanceOf[String])
+  val id: Option[Any] = options.get("_id")
 }
 
 case class TermSuggestionResult(text: String, offset: Int, length: Int, options: Seq[TermSuggestionOption]) {
