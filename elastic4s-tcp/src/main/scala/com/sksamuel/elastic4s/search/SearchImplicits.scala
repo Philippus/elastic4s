@@ -113,8 +113,6 @@ trait SearchImplicits {
         builder.highlighter(highlightBuilder)
       }
 
-      search.scoring.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
-
       if (search.meta.stats.nonEmpty)
         builder.stats(search.meta.stats.asJava)
 

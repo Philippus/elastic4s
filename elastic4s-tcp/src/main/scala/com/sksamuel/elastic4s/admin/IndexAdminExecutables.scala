@@ -10,21 +10,12 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.rollover.RolloverResponse
 import org.elasticsearch.action.admin.indices.segments.IndicesSegmentResponse
-import org.elasticsearch.action.admin.indices.shrink.ShrinkResponse
 import org.elasticsearch.action.admin.indices.stats.IndicesStatsResponse
 import org.elasticsearch.client.Client
 
 import scala.concurrent.Future
 
 trait IndexAdminExecutables {
-
-  implicit object ShrinkDefinitionExecutable
-    extends Executable[ShrinkDefinition, ShrinkResponse, ShrinkResponse] {
-    override def apply(c: Client, t: ShrinkDefinition): Future[ShrinkResponse] = {
-      val builder = ShrinkBuilderFn(c, t)
-      injectFuture(builder.execute(_))
-    }
-  }
 
   implicit object OpenIndexDefinitionExecutable
     extends Executable[OpenIndexDefinition, OpenIndexResponse, OpenIndexResponse] {
