@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.MaxBucketDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{MaxBucketDefinition, SumBucketDefinition}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -34,6 +34,7 @@ object AggregationBuilderFn {
 
       // pipeline aggs
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
+      case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
     }
     builder
   }
@@ -42,6 +43,14 @@ object AggregationBuilderFn {
 object MaxBucketPipelineAggBuilder {
   def apply(agg: MaxBucketDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("max_bucket")
+    builder.field("buckets_path", agg.bucketsPath)
+    builder.endObject().endObject()
+  }
+}
+
+object SumBucketPipelineAggBuilder {
+  def apply(agg: SumBucketDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject("sum_bucket")
     builder.field("buckets_path", agg.bucketsPath)
     builder.endObject().endObject()
   }
