@@ -139,6 +139,17 @@ class TermsAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider 
       agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")
     }
 
+    "sould support multi criteria order" in {
+      val resp = http.execute {
+        search("termsagg/curry").matchAllQuery().aggs {
+          termsAgg("agg1", "strength").order(TermsOrder("_count", true), TermsOrder("_key", false))
+        }
+      }.await.right.get.result
+
+      val agg = resp.aggregations.terms("agg1")
+      agg.buckets.map(_.key) shouldBe List("mild", "medium", "hot")
+    }
+
     "should support partitioning" in {
       val numPartitions = 20
       val responses = (0 until numPartitions).map { i =>
