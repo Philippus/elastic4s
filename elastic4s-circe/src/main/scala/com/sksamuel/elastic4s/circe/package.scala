@@ -41,4 +41,10 @@ package object circe {
   implicit def indexableWithCirce[T](implicit encoder: Encoder[T], printer: Json => String = Printer.noSpaces.pretty): Indexable[T] = new Indexable[T] {
     override def json(t: T): String = printer(encoder(t))
   }
+
+  @implicitNotFound(
+    "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance ")
+  implicit def aggReaderWithCirce[T](implicit encoder: Decoder[T]): AggReader[T] = new AggReader[T] {
+    override def read(json: String): Either[Throwable, T] = decode[T](json)
+  }
 }

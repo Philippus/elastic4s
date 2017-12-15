@@ -9,7 +9,7 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
 
   "A derived HitReader instance" should {
 
-    "be implicitly found if circe.generic.auto is in imported" ignore {
+    "be implicitly found if circe.generic.auto is in imported" in {
       """
         import io.circe.generic.auto._
         import com.sksamuel.elastic4s.HitReader
@@ -25,8 +25,25 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
     }
   }
 
+  "A derived AggReader instance" should {
+    "be implicitly found if circe.generic.auto is in imported" in {
+      """
+        import io.circe.generic.auto._
+        import com.sksamuel.elastic4s.AggReader
+        implicitly[AggReader[Cafe]]
+      """ should compile
+    }
+
+    "not compile if no decoder is in scope" in {
+      """
+        import com.sksamuel.elastic4s.AggReader
+        implicitly[AggReader[Cafe]]
+      """ shouldNot compile
+    }
+  }
+
   "A derived Indexable instance" should {
-    "be implicitly found if circe.generic.auto is in imported" ignore {
+    "be implicitly found if circe.generic.auto is in imported" in {
       """
         import io.circe.generic.auto._
         import com.sksamuel.elastic4s.Indexable
