@@ -14,6 +14,8 @@ import scala.io.{Codec, Source}
 // an implementation of the elastic4s HttpRequestClient that wraps the elasticsearch java client
 class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient {
 
+  case class JavaRestClientExceptionWrapper(t: Throwable) extends RuntimeException
+
   import scala.collection.JavaConverters._
 
   private def future(callback: ResponseListener => Any): Future[HttpResponse] = {
@@ -35,7 +37,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
       override def onSuccess(r: org.elasticsearch.client.Response): Unit = p.trySuccess(fromResponse(r))
       override def onFailure(e: Exception): Unit = e match {
         case re: ResponseException => p.trySuccess(fromResponse(re.getResponse))
-        case t => p.tryFailure(t)
+        case t => p.tryFailure(JavaRestClientExceptionWrapper(t))
       }
     })
     p.future
