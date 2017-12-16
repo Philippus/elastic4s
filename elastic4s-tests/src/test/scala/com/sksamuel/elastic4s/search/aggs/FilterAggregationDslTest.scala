@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.searches.aggs
+package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
@@ -11,7 +11,6 @@ class FilterAggregationDslTest extends FlatSpec with Matchers with ElasticApi {
       filter(
         rangeQuery("some_date_field")
           .gte("now-1y")
-          .to("now")
       )
     ).addSubAggregation(
       dateHistogramAggregation("per_month")

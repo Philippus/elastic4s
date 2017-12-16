@@ -66,7 +66,7 @@ class RangeQueryHttpTest
   "a range query" should {
     "support using gte" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           // bishop, rook, castle, queen
           rangeQuery("value").gte("3")
         }
@@ -75,7 +75,7 @@ class RangeQueryHttpTest
     }
     "support lte" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           // pawns, king, bisho
           rangeQuery("value").lte("3")
         }
@@ -84,7 +84,7 @@ class RangeQueryHttpTest
     }
     "support using both lte & gte" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           rangeQuery("value").gte("5").lte("7")
         }
       }.await.right.get.result
@@ -92,7 +92,7 @@ class RangeQueryHttpTest
     }
     "support integers" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           rangeQuery("value").gte(5).lte(7)
         }
       }.await.right.get.result
@@ -100,7 +100,7 @@ class RangeQueryHttpTest
     }
     "support doubles" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           rangeQuery("value").gte(5.0).lte(7.0)
         }
       }.await.right.get.result
@@ -108,7 +108,7 @@ class RangeQueryHttpTest
     }
     "support boost" in {
       val resp = http.execute {
-        search("rangequeryhttptest" / "pieces") query {
+        search("rangequeryhttptest") query {
           rangeQuery("value").lte("3").boost(14.5)
         }
       }.await.right.get.result

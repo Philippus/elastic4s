@@ -77,9 +77,6 @@ trait QueryApi {
   def geoHashCell(field: String, point: GeoPoint): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field).point(point)
 
-  @deprecated("use geoPolygonQuery", "5.2.0")
-  def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
-
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQueryDefinition = points(first +: rest)

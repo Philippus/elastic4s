@@ -76,8 +76,7 @@ object ElasticDate {
       }) + t.adjustments.map { adj =>
           val plus = if (adj.value < 0) "" else "+"
           s"$plus${adj.value}${adj.unit.symbol}"
-        } +
-        t.rounding.fold("")(unit => s"/${unit.symbol}")
+      }.mkString("") + t.rounding.fold("")(unit => s"/${unit.symbol}")
     }
   }
 
