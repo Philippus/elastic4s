@@ -87,6 +87,48 @@ object DateRangeAggResult {
   )
 }
 
+case class RangeAggResult(
+  name: String,
+  buckets: Seq[RangeBucket],
+  private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+
+object RangeAggResult {
+  def apply(name: String, data: Map[String, Any]): RangeAggResult = RangeAggResult(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map(RangeBucket(_)),
+    data
+  )
+}
+
+case class KeyedRangeAggResult(
+  name: String,
+  buckets: Map[String, RangeBucket],
+  private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+
+object KeyedRangeAggResult {
+  def apply(name: String, data: Map[String, Any]): KeyedRangeAggResult = KeyedRangeAggResult(
+    name,
+    data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(RangeBucket(_)),
+    data
+  )
+}
+
+case class RangeBucket(key: Option[String],
+                       from: Option[Double],
+                       to: Option[Double],
+                       override val docCount: Long,
+                       private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+object RangeBucket {
+  private[elastic4s] def apply(data: Map[String, Any]): RangeBucket = RangeBucket(
+      data.get("key").map(_.toString),
+      data.get("from").map(_.asInstanceOf[java.lang.Number].doubleValue()),
+      data.get("to").map(_.asInstanceOf[java.lang.Number].doubleValue()),
+      data("doc_count").asInstanceOf[java.lang.Number].longValue(),
+      data
+    )
+}
+
 
 case class GeoHashGridAggResult(name: String,
                                 buckets: Seq[GeoHashGridBucket]) extends BucketAggregation
@@ -212,6 +254,9 @@ trait HasAggregations {
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
   def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
   def geoHashGrid(name: String): GeoHashGridAggResult = GeoHashGridAggResult(name, agg(name))
+
+  def range(name: String): RangeAggResult = RangeAggResult(name, agg(name))
+  def keyedRange(name: String): KeyedRangeAggResult  = KeyedRangeAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
