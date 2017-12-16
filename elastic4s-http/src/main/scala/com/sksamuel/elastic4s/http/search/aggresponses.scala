@@ -62,28 +62,50 @@ object DateHistogramAggResult {
   )
 }
 
-case class DateRangeAggResult(name: String,
-                              buckets: Seq[DateRangeBucket]) extends BucketAggregation
-
 case class DateHistogramBucket(date: String,
                                timestamp: Long,
                                override val docCount: Long,
                                private[elastic4s] val data: Map[String, Any]) extends AggBucket
 
+case class DateRangeAggResult(name: String,
+                              buckets: Seq[DateRangeBucket]) extends BucketAggregation
+
 object DateRangeAggResult {
-  def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
+   private[elastic4s]  def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
     name,
-    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
-      DateRangeBucket(
-        map.get("from").map(_.toString),
-        map.get("from_as_string").map(_.toString),
-        map.get("to").map(_.toString),
-        map.get("to_as_string").map(_.toString),
-        map.get("key").map(_.toString),
-        map("doc_count").toString.toLong,
-        map
-      )
-    }
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map(DateRangeBucket(_))
+  )
+}
+
+case class KeyedDateRangeAggResult(name: String,
+                              buckets: Map[String, DateRangeBucket]) extends BucketAggregation
+
+object KeyedDateRangeAggResult {
+  // type clash with `buckets` on apply method
+  private[elastic4s] def fromData(name: String, data: Map[String, Any]): KeyedDateRangeAggResult = KeyedDateRangeAggResult(
+    name,
+    data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(DateRangeBucket(_))
+  )
+}
+
+
+case class DateRangeBucket(from: Option[String],
+                           fromAsString: Option[String],
+                           to: Option[String],
+                           toAsString: Option[String],
+                           key: Option[String],
+                           override val docCount: Long,
+                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+object DateRangeBucket {
+  private[elastic4s] def apply(map: Map[String, Any]): DateRangeBucket = DateRangeBucket(
+    map.get("from").map(_.toString),
+    map.get("from_as_string").map(_.toString),
+    map.get("to").map(_.toString),
+    map.get("to_as_string").map(_.toString),
+    map.get("key").map(_.toString),
+    map("doc_count").toString.toLong,
+    map
   )
 }
 
@@ -150,14 +172,6 @@ object GeoHashGridAggResult {
   )
 }
 
-
-case class DateRangeBucket(from: Option[String],
-                           fromAsString: Option[String],
-                           to: Option[String],
-                           toAsString: Option[String],
-                           key: Option[String],
-                           override val docCount: Long,
-                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
@@ -251,6 +265,7 @@ trait HasAggregations {
 
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
   def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
+  def keyedDateRange(name: String): KeyedDateRangeAggResult = KeyedDateRangeAggResult.fromData(name, agg(name))
   def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
   def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
   def geoHashGrid(name: String): GeoHashGridAggResult = GeoHashGridAggResult(name, agg(name))
