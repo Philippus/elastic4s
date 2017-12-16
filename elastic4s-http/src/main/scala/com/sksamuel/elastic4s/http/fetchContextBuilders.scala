@@ -12,12 +12,10 @@ object FetchSourceContextBuilderFn {
         builder.startObject("_source")
         context.includes.toList match {
           case Nil =>
-          case include :: Nil => builder.field("includes", include)
           case includes => builder.array("includes", includes.toArray)
         }
         context.excludes.toList match {
           case Nil =>
-          case exclude :: Nil => builder.field("excludes", exclude)
           case excludes => builder.array("excludes", excludes.toArray)
         }
         builder.endObject()

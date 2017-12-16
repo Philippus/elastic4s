@@ -23,8 +23,7 @@
                         "_source": {
                             "includes": [
                                 "title"
-                            ],
-                            "excludes": []
+                            ]
                         }
                     }
                 }
