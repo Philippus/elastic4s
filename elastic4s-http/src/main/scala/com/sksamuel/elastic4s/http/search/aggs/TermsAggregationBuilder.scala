@@ -18,10 +18,16 @@ object TermsAggregationBuilder {
       builder.rawField("script", ScriptBuilderFn(script))
     }
     agg.includeExclude.foreach { incexc =>
-      if (incexc.include.nonEmpty)
-        builder.array("include", incexc.include.toArray)
-      if (incexc.exclude.nonEmpty)
-        builder.array("exclude", incexc.include.toArray)
+      incexc.include.toList match {
+        case Nil =>
+        case include :: Nil => builder.field("include", include)
+        case more => builder.array("include", more.toArray)
+      }
+      incexc.exclude.toList match {
+        case Nil =>
+        case exclude :: Nil => builder.field("exclude", exclude)
+        case more => builder.array("exclude", more.toArray)
+      }
     }
     agg.includePartition.foreach { incpart =>
       val includeBuilder = builder.startObject("include")
