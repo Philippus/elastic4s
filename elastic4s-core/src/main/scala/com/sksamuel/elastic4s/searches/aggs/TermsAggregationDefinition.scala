@@ -49,6 +49,15 @@ case class TermsAggregationDefinition(name: String,
 
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
 
+  def includes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.include)
+  def excludes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.exclude)
+
+  def include(include: String): TermsAggregationDefinition = includeExclude(Seq(include), excludes)
+  def exclude(exclude: String): TermsAggregationDefinition = includeExclude(includes, Seq(exclude))
+
+  def include(includes: Seq[String]): TermsAggregationDefinition = includeExclude(includes, excludes)
+  def exclude(excludes: Seq[String]): TermsAggregationDefinition = includeExclude(includes, excludes)
+
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
     copy(includeExclude = IncludeExclude(StringOption(include).toSeq, StringOption(exclude).toSeq).some)
 
