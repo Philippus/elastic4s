@@ -11,10 +11,10 @@ import org.elasticsearch.client.{ResponseException, ResponseListener, RestClient
 import scala.concurrent.{Future, Promise}
 import scala.io.{Codec, Source}
 
+case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException
+
 // an implementation of the elastic4s HttpRequestClient that wraps the elasticsearch java client
 class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient {
-
-  case class JavaRestClientExceptionWrapper(t: Throwable) extends RuntimeException
 
   import scala.collection.JavaConverters._
 
@@ -37,7 +37,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
       override def onSuccess(r: org.elasticsearch.client.Response): Unit = p.trySuccess(fromResponse(r))
       override def onFailure(e: Exception): Unit = e match {
         case re: ResponseException => p.trySuccess(fromResponse(re.getResponse))
-        case t => p.tryFailure(JavaRestClientExceptionWrapper(t))
+        case t => p.tryFailure(JavaClientExceptionWrapper(t))
       }
     })
     p.future
