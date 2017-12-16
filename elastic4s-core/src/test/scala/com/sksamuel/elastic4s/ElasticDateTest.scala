@@ -24,6 +24,10 @@ class ElasticDateTest extends org.scalatest.FlatSpec with Matchers {
     ElasticDate(LocalDate.of(2014, 12, 3)).subtract(3, Seconds).show shouldBe "2014-12-03||-3s"
   }
 
+  it should "support multiple adjustments" in {
+    ElasticDate.now.subtract(3, Minutes).add(1, Weeks).show shouldBe "now-3m+1w"
+  }
+
   it should "support rounding" in {
     ElasticDate.now.rounding(Days).show shouldBe "now/d"
     ElasticDate(LocalDate.of(2014, 12, 11)).rounding(Days).show shouldBe "2014-12-11||/d"

@@ -34,10 +34,12 @@ trait QueryApi {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
+  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
   def fieldNamesQuery(first: String, rest: String*)
                      (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
     fieldNamesQuery(first +: rest)
 
+  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
   def fieldNamesQuery(names: Iterable[String])
                      (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
     termsQuery("_field_names", names)

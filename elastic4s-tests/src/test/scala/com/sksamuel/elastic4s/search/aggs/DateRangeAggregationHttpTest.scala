@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{ElasticDate, Years}
+import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -42,8 +42,8 @@ class DateRangeAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvi
       val resp = http.execute {
         search("daterangeaggs").matchAllQuery().aggs {
           dateRangeAgg("agg1", "premiere_date")
-            .range(ElasticDate("15/12/2017").minus(10, Years), ElasticDate("15/12/2017").minus(5, Years))
-            .range(ElasticDate("15/12/2017").minus(5, Years), ElasticDate("15/12/2017"))
+            .range(ElasticDateMath("15/12/2017").minus(10, Years), ElasticDate("15/12/2017").minus(5, Years))
+            .range(ElasticDateMath("15/12/2017").minus(5, Years), ElasticDate("15/12/2017"))
         }
       }.await.right.get.result
 
@@ -60,8 +60,8 @@ class DateRangeAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvi
       val resp = http.execute {
         search("daterangeaggs").matchAllQuery().aggs {
           dateRangeAgg("agg1", "premiere_date")
-            .range("15/12/2017-10y", "15/12/2017-5y")
-            .range("15/12/2017-5y", "15/12/2017")
+            .range("15/12/2017||-10y", "15/12/2017||-5y")
+            .range("15/12/2017||-5y", "15/12/2017||")
         }
       }.await.right.get.result
 
