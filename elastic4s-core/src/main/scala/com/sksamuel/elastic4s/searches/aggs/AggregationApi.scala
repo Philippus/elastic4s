@@ -73,6 +73,7 @@ trait AggregationApi {
   def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition =
     PercentileRanksAggregationDefinition(name)
 
+  def rangeAgg(name: String, field: String): RangeAggregationDefinition = RangeAggregationDefinition(name).field(field)
   def rangeAggregation(name: String): RangeAggregationDefinition = RangeAggregationDefinition(name)
 
   def reverseNestedAggregation(name: String): ReverseNestedAggregationDefinition =
