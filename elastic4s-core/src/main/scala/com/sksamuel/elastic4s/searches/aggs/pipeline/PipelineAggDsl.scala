@@ -11,7 +11,7 @@ trait PipelineAggregationApi {
 
   def bucketScriptAggregation(name: String,
                               script: ScriptDefinition,
-                              bucketsPath: Seq[String]): BucketScriptDefinition =
+                              bucketsPath: Map[String,String]): BucketScriptDefinition =
     BucketScriptDefinition(name, script, bucketsPath)
 
   def cumulativeSumAggregation(name: String,
