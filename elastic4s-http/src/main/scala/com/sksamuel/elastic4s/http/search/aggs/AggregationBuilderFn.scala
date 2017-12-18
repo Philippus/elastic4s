@@ -36,6 +36,9 @@ object AggregationBuilderFn {
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
       case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
+
+      // Not implemented
+      case ni => throw new NotImplementedError(s"Aggregation ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
     }
     builder
   }

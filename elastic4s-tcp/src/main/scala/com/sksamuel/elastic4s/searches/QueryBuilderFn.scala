@@ -53,5 +53,8 @@ object QueryBuilderFn {
     case q: TermsLookupQueryDefinition => TermsLookupQueryBuilderFn(q)
     case q: TypeQueryDefinition => QueryBuilders.typeQuery(q.`type`)
     case q: WildcardQueryDefinition => WildcardQueryBuilderFn(q)
+
+    // Not implemented
+    case ni => throw new NotImplementedError(s"Query ${ni.getClass.getName} has not yet been implemented for the TCP client.")
   }
 }

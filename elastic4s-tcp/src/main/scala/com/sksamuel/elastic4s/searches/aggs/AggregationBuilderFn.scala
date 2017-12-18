@@ -54,5 +54,8 @@ object AggregationBuilderFn {
     case p: PercentilesBucketDefinition => PercentilesBucketPipelineBuilder(p).asRight
     case p: StatsBucketDefinition => StatsBucketPipelineBuilder(p).asRight
     case p: SumBucketDefinition => SumBucketPipelineBuilder(p).asRight
+
+    // Not implemented
+    case ni => throw new NotImplementedError(s"Aggregation ${ni.getClass.getName} has not yet been implemented for the TCP client.")
   }
 }
