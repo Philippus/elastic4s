@@ -12,14 +12,18 @@ object TermsQueryBodyFn {
       builder.startArray(t.field)
       t.values.foreach(builder.autovalue)
       builder.endArray()
+    } else {
+      builder.startObject(t.field)
+      t.ref.foreach { ref =>
+        builder.field("index", ref.index)
+        builder.field("type", ref.`type`)
+        builder.field("id", ref.id)
+      }
+      t.path.foreach(builder.field("path", _))
+      t.routing.foreach(builder.field("routing", _))
+      builder.endObject()
     }
-    t.ref.foreach { ref =>
-      builder.field("index", ref.index)
-      builder.field("type", ref.`type`)
-      builder.field("id", ref.id)
-    }
-    t.path.foreach(builder.field("path", _))
-    t.routing.foreach(builder.field("routing", _))
+
     t.boost.foreach(builder.field("boost", _))
     t.queryName.foreach(builder.field("_name", _))
 
