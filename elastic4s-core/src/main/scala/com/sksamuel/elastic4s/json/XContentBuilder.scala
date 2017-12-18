@@ -136,11 +136,11 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_] => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
       case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
-      case map: Map[String, Any] =>
+      case map: Map[_, _] =>
         startObject()
-        map.foreach { case (k, v) => autofield(k, v) }
+        map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[String, Any] => autovalue(map.asScala)
+      case map: java.util.Map[_, _] => autovalue(map.asScala)
       case other => array.add(other.toString)
     }
     this
@@ -175,11 +175,11 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_] => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
       case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
-      case map: Map[String, Any] =>
+      case map: Map[_, _] =>
         startObject(name)
-        map.foreach { case (k, v) => autofield(k, v) }
+        map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[String, Any] => autofield(name, map.asScala)
+      case map: java.util.Map[_, _] => autofield(name, map.asScala)
       case null => obj.putNull(name)
       case other => obj.put(name, other.toString)
     }
