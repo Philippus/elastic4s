@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketScriptDefinition, MaxBucketDefinition, SumBucketDefinition}
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketScriptDefinition, DerivativeDefinition, MaxBucketDefinition, SumBucketDefinition}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -33,11 +34,25 @@ object AggregationBuilderFn {
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
+      case agg: DerivativeDefinition => DerivativePipelineAggBuilder(agg)
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
       case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
     }
     builder
+  }
+}
+
+object DerivativePipelineAggBuilder {
+  def apply(agg: DerivativeDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject("derivative")
+    builder.field("buckets_path", agg.bucketsPath)
+    agg.unit.map(_.toSeconds).map(DateHistogramInterval.seconds).foreach(i=>builder.field("unit", i.interval))
+    agg.gapPolicy.foreach(policy=> builder.field("gap_policy", policy.toString.toLowerCase))
+    agg.format.foreach(f=>builder.field("format", f))
+    builder.endObject()
+    AggMetaDataFn(agg, builder)
+    builder.endObject()
   }
 }
 
@@ -58,7 +73,7 @@ object SumBucketPipelineAggBuilder {
 }
 
 object AggMetaDataFn {
-  def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit = {
+  def apply(agg: AbstractAggregation, builder: XContentBuilder): Unit = {
     if (agg.metadata.nonEmpty) {
       builder.startObject("meta")
       agg.metadata.foreach { case (key, value) => builder.autofield(key, value) }
