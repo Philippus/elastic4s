@@ -24,6 +24,7 @@ object QueryBuilderFn {
     case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
     case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
+    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBuilderFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBodyFn(q)
     case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBodyFn(q)
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBodyFn(q)
@@ -47,6 +48,7 @@ object QueryBuilderFn {
     case q: RawQueryDefinition => RawQueryBodyFn(q)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
     case q: ScriptQueryDefinition => ScriptQueryBodyFn(q)
+    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case s: SpanContainingQueryDefinition => SpanContainingQueryBodyFn(s)
     case s: SpanFirstQueryDefinition => SpanFirstQueryBodyFn(s)
@@ -60,7 +62,8 @@ object QueryBuilderFn {
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
-    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBuilderFn(q)
-    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
+
+    // Not implemented
+    case ni => throw new NotImplementedError(s"Query ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
   }
 }
