@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import java.net.URLEncoder
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
@@ -20,7 +20,13 @@ trait SearchImplicits {
   }
 
   implicit object SearchShow extends Show[SearchDefinition] {
-    override def show(req: SearchDefinition): String = SearchBodyBuilderFn(req).string()
+    override def show(req: SearchDefinition): String = SearchHttpExecutable.body(req)
+  }
+
+  implicit object SearchPrintableRequest extends PrintableRequest[SearchDefinition] {
+    override def body(req: SearchDefinition): Option[String] = Some(SearchHttpExecutable.body(req))
+
+    override def endpoint(req: SearchDefinition): String = SearchHttpExecutable.endpoint(req)
   }
 
   implicit object MultiSearchShow extends Show[MultiSearchDefinition] {
@@ -62,15 +68,6 @@ trait SearchImplicits {
 
     override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
-        "/_search"
-      else if (request.indexesTypes.indexes.isEmpty)
-        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
-      else if (request.indexesTypes.types.isEmpty)
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/_search"
-      else
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
-
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.searchType.filter(_ != SearchType.DEFAULT).map(SearchTypeHttpParameters.convert).foreach(params.put("search_type", _))
@@ -81,10 +78,22 @@ trait SearchImplicits {
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }
 
-      val builder = SearchBodyBuilderFn(request)
-      val body = builder.string()
+      client.async("POST", endpoint(request), params.toMap, HttpEntity(body(request), ContentType.APPLICATION_JSON.getMimeType))
+    }
 
-      client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+    def endpoint(request: SearchDefinition): String = {
+      if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
+        "/_search"
+      else if (request.indexesTypes.indexes.isEmpty)
+        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
+      else if (request.indexesTypes.types.isEmpty)
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/_search"
+      else
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
+    }
+
+    def body(request: SearchDefinition): String = {
+      SearchBodyBuilderFn(request).string()
     }
   }
 }

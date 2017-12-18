@@ -912,4 +912,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.show should matchJsonResource("/json/search/search_doc_values.json")
   }
 
+  it should "be printable" in {
+    val req = search("twitter", "other") types "*" limit 5 query "coldplay"
+    val printedLines = req.print.lines.toSeq
+
+    printedLines.head shouldEqual "/twitter,other/*/_search"
+    printedLines.tail.mkString should matchJsonResource("/json/search/search_test2.json")
+  }
 }

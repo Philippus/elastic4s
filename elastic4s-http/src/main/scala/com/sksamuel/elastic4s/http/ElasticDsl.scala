@@ -56,6 +56,8 @@ trait ElasticDsl
     with ValidateImplicits {
   implicit class RichRequest[T](req: T) {
     def show(implicit show: Show[T]): String = show.show(req)
+
+    def print(implicit print: PrintableRequest[T]): String = print.print(req)
   }
 }
 
