@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptType}
 import org.scalatest.{FunSuite, Matchers}
 
 class ScriptBuilderFnTest extends FunSuite with Matchers {
@@ -28,5 +28,10 @@ class ScriptBuilderFnTest extends FunSuite with Matchers {
   test("should handle mixed lists") {
     ScriptBuilderFn(ScriptDefinition("myscript", params = Map("a" -> List(List(true, 1.2, List("foo"), Map("w" -> "wibble")))))).string shouldBe
       """{"source":"myscript","params":{"a":[[true,1.2,["foo"],{"w":"wibble"}]]}}"""
+  }
+
+  test("should handle stored scripts") {
+    ScriptBuilderFn(ScriptDefinition("convert_currency", scriptType = ScriptType.Stored, params = Map("field" -> "price", "conversion_rate" -> 0.835526591))).string shouldBe
+      """{"id":"convert_currency","params":{"field":"price","conversion_rate":0.835526591}}"""
   }
 }
