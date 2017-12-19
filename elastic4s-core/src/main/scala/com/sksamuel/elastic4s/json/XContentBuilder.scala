@@ -33,6 +33,35 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def array(field: String, doubles: Array[Array[Array[Array[Double]]]]): XContentBuilder = {
+    startArray(field)
+    doubles.foreach { second =>
+      val secondArray = array.addArray()
+      second.foreach { third =>
+        val thirdArray = secondArray.addArray()
+        third.foreach { inner =>
+          val value = thirdArray.addArray()
+          inner.foreach(value.add)
+        }
+      }
+    }
+    endArray()
+    this
+  }
+
+  def array(field: String, doubles: Array[Array[Array[Double]]]): XContentBuilder = {
+    startArray(field)
+    doubles.foreach { nested =>
+      val outer = array.addArray()
+      nested.foreach { inner =>
+        val value = outer.addArray()
+        inner.foreach(value.add)
+      }
+    }
+    endArray()
+    this
+  }
+
   def array(field: String, doubles: Array[Array[Double]]): XContentBuilder = {
     startArray(field)
     doubles.foreach { nested =>
@@ -78,13 +107,23 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def rawField(name: String, builder: XContentBuilder): XContentBuilder = rawField(name, builder.string)
+  def array(field: String, builder: Array[XContentBuilder]): XContentBuilder = {
+    startArray(field)
+    builder.foreach { b =>
+      val raw = new RawValue(b.string())
+      array.addRawValue(raw)
+    }
+    endArray()
+    this
+  }
+
+  def rawField(name: String, builder: XContentBuilder): XContentBuilder = rawField(name, builder.string())
   def rawField(name: String, content: String): XContentBuilder = {
     obj.putRawValue(name, new RawValue(content))
     this
   }
 
-  def rawValue(value: XContentBuilder): this.type = rawValue(value.string)
+  def rawValue(value: XContentBuilder): this.type = rawValue(value.string())
   def rawValue(value: String): this.type = {
     array.addRawValue(new RawValue(value))
     this
