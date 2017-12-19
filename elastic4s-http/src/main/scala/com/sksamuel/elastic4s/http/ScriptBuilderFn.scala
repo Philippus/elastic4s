@@ -14,6 +14,7 @@ object ScriptBuilderFn {
     script.scriptType match {
       case ScriptType.Source => builder.field("source", script.script)
       case ScriptType.Inline => builder.field("inline", script.script)
+      case ScriptType.Stored => builder.field("id", script.script)
     }
 
     if (script.params.nonEmpty) {
