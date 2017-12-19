@@ -8,6 +8,17 @@ import scala.collection.JavaConverters._
 
 object TermsAggregationBuilder {
 
+  private def toBucketOrder(termsOrder: TermsOrder): BucketOrder = {
+    termsOrder match {
+      case TermsOrder("_count", asc) => BucketOrder.count(asc)
+      case TermsOrder("_term", asc) => BucketOrder.key(asc)
+      case TermsOrder(field, asc) if field.contains(".") =>
+        val parts = field.split('.')
+        BucketOrder.aggregation(parts(0), parts(1), asc)
+      case TermsOrder(field, asc) => BucketOrder.aggregation(field, asc)
+    }
+  }
+
   def apply(agg: TermsAggregationDefinition): TermsAggregationBuilder = {
 
     val builder = AggregationBuilders.terms(agg.name)
@@ -23,13 +34,10 @@ object TermsAggregationBuilder {
     agg.includePartition.foreach { it => builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions)) }
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
-    agg.order.foreach {
-      case TermsOrder("_count", asc) => builder.order(BucketOrder.count(asc))
-      case TermsOrder("_term", asc) => builder.order(BucketOrder.key(asc))
-      case TermsOrder(field, asc) if field.contains(".") =>
-        val parts = field.split('.')
-        builder.order(BucketOrder.aggregation(parts(0), parts(1), asc))
-      case TermsOrder(field, asc) => builder.order(BucketOrder.aggregation(field, asc))
+    agg.orders match {
+      case order if order.isEmpty =>
+      case Seq(order) => builder.order(toBucketOrder(order))
+      case _ => builder.order(BucketOrder.compound(agg.orders.map(toBucketOrder): _*))
     }
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.shardSize.foreach(builder.shardSize)

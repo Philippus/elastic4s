@@ -14,8 +14,8 @@ object Build extends AutoPlugin {
     val CatsVersion = "1.0.0-RC1"
     val CirceVersion = "0.9.0-M2"
     val CommonsIoVersion = "2.4"
-    val ElasticsearchVersion = "6.0.0"
-    val ExtsVersion = "1.57.1"
+    val ElasticsearchVersion = "6.1.0"
+    val ExtsVersion = "1.60.0"
     val JacksonVersion = "2.9.2"
     val Json4sVersion = "3.5.3"
     val SprayJsonVersion = "1.3.4"
@@ -37,7 +37,7 @@ object Build extends AutoPlugin {
     ivyConfigurations += config("compileonly").hide,
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
-    scalaVersion := "2.11.11",
+    scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12", "2.12.4"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,

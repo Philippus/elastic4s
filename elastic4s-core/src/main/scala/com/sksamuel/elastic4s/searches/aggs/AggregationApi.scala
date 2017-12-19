@@ -18,6 +18,7 @@ trait AggregationApi {
   def dateHistogramAgg(name: String, field: String): DateHistogramAggregation = dateHistogramAggregation(name).field(field)
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
 
+  def dateRangeAgg(name: String, field: String): DateRangeAggregation = dateRangeAggregation(name).field(field)
   def dateRangeAggregation(name: String): DateRangeAggregation = DateRangeAggregation(name)
 
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition =
@@ -72,6 +73,7 @@ trait AggregationApi {
   def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition =
     PercentileRanksAggregationDefinition(name)
 
+  def rangeAgg(name: String, field: String): RangeAggregationDefinition = RangeAggregationDefinition(name).field(field)
   def rangeAggregation(name: String): RangeAggregationDefinition = RangeAggregationDefinition(name)
 
   def reverseNestedAggregation(name: String): ReverseNestedAggregationDefinition =

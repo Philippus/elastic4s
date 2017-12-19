@@ -12,10 +12,6 @@ object RangeQueryBuilderFn {
     q.gte.foreach(builder.gte)
     q.lte.foreach(builder.lte)
     q.format.foreach(builder.format)
-
-    q.includeLower.foreach(builder.includeLower)
-    q.includeUpper.foreach(builder.includeUpper)
-
     q.timeZone.foreach(builder.timeZone)
     builder
   }

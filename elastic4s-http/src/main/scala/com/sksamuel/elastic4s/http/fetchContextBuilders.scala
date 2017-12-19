@@ -10,8 +10,14 @@ object FetchSourceContextBuilderFn {
     if (context.fetchSource) {
       if (context.includes.nonEmpty || context.excludes.nonEmpty) {
         builder.startObject("_source")
-        builder.array("includes", context.includes)
-        builder.array("excludes", context.excludes)
+        context.includes.toList match {
+          case Nil =>
+          case includes => builder.array("includes", includes.toArray)
+        }
+        context.excludes.toList match {
+          case Nil =>
+          case excludes => builder.array("excludes", excludes.toArray)
+        }
         builder.endObject()
       } else {
         builder.field("_source", true)

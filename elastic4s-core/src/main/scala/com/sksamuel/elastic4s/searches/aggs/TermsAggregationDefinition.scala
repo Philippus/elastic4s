@@ -23,7 +23,7 @@ case class TermsAggregationDefinition(name: String,
                                       executionHint: Option[String] = None,
                                       shardMinDocCount: Option[Long] = None,
                                       collectMode: Option[SubAggCollectionMode] = None,
-                                      order: Option[TermsOrder] = None,
+                                      orders: Seq[TermsOrder] = Nil,
                                       shardSize: Option[Int] = None,
                                       includeExclude: Option[IncludeExclude] = None,
                                       includePartition: Option[IncludePartition] = None,
@@ -44,9 +44,19 @@ case class TermsAggregationDefinition(name: String,
   def shardMinDocCount(min: Long): TermsAggregationDefinition = copy(shardMinDocCount = min.some)
   def collectMode(mode: SubAggCollectionMode): TermsAggregationDefinition = copy(collectMode = mode.some)
 
-  def order(order: TermsOrder): TermsAggregationDefinition = copy(order = order.some)
+  def order(orders: Iterable[TermsOrder]): TermsAggregationDefinition = copy(orders = orders.toSeq)
+  def order(firstOrder: TermsOrder, restOrder: TermsOrder*): TermsAggregationDefinition = copy(orders = firstOrder +: restOrder)
 
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
+
+  def includes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.include)
+  def excludes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.exclude)
+
+  def include(include: String): TermsAggregationDefinition = includeExclude(Seq(include), excludes)
+  def exclude(exclude: String): TermsAggregationDefinition = includeExclude(includes, Seq(exclude))
+
+  def include(includes: Seq[String]): TermsAggregationDefinition = includeExclude(includes, excludes)
+  def exclude(excludes: Seq[String]): TermsAggregationDefinition = includeExclude(includes, excludes)
 
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
     copy(includeExclude = IncludeExclude(StringOption(include).toSeq, StringOption(exclude).toSeq).some)

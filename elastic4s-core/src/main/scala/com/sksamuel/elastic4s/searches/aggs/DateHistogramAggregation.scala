@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
@@ -16,7 +17,6 @@ object HistogramOrder {
   val COUNT_DESC = HistogramOrder("_count", false)
 }
 
-case class ExtendedBounds(min: Long, max: Long)
 
 case class DateHistogramAggregation(name: String,
                                     interval: Option[DateHistogramInterval] = None,
@@ -37,6 +37,7 @@ case class DateHistogramAggregation(name: String,
   type T = DateHistogramAggregation
 
   def extendedBounds(bounds: ExtendedBounds): DateHistogramAggregation = copy(extendedBounds = bounds.some)
+  def extendedBounds(min: ElasticDate, max: ElasticDate): DateHistogramAggregation = copy(extendedBounds = ExtendedBounds(min, max).some)
 
   def interval(seconds: Long): DateHistogramAggregation = interval(seconds.seconds)
   def interval(dur: FiniteDuration): DateHistogramAggregation = interval(DateHistogramInterval.seconds(dur.toSeconds))

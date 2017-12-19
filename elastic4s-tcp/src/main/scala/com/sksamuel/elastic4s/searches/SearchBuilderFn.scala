@@ -104,8 +104,6 @@ object SearchBuilderFn {
       builder.highlighter(highlightBuilder)
     }
 
-    search.scoring.rescorers.map(RescoreBuilderFn.apply).foreach(builder.addRescorer)
-
     if (search.meta.stats.nonEmpty)
       builder.setStats(search.meta.stats: _*)
 

@@ -34,10 +34,12 @@ trait QueryApi {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
+  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
   def fieldNamesQuery(first: String, rest: String*)
                      (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
     fieldNamesQuery(first +: rest)
 
+  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
   def fieldNamesQuery(names: Iterable[String])
                      (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
     termsQuery("_field_names", names)
@@ -74,9 +76,6 @@ trait QueryApi {
 
   def geoHashCell(field: String, point: GeoPoint): GeoHashCellQueryDefinition =
     GeoHashCellQueryDefinition(field).point(point)
-
-  @deprecated("use geoPolygonQuery", "5.2.0")
-  def geoPolyonQuery(field: String) = new GeoPolygonExpectsPoints(field)
 
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {

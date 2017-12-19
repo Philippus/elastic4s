@@ -25,7 +25,7 @@ case class RangeAggregationDefinition(name: String,
   def unboundedFrom(from: Double): T = copy(unboundedFrom = (None, from).some)
   def unboundedFrom(key: String, from: Double): T = copy(unboundedFrom = (Some(key), from).some)
 
-  def unboundedTo(from: Double): T = copy(unboundedTo = (None, from).some)
+  def unboundedTo(to: Double): T = copy(unboundedTo = (None, to).some)
   def unboundedTo(key: String, to: Double): T = copy(unboundedTo = (Some(key), to).some)
 
   def field(field: String): T = copy(field = field.some)

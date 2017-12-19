@@ -18,10 +18,16 @@ object TermsAggregationBuilder {
       builder.rawField("script", ScriptBuilderFn(script))
     }
     agg.includeExclude.foreach { incexc =>
-      if (incexc.include.nonEmpty)
-        builder.array("include", incexc.include.toArray)
-      if (incexc.exclude.nonEmpty)
-        builder.array("exclude", incexc.include.toArray)
+      incexc.include.toList match {
+        case Nil =>
+        case include :: Nil => builder.field("include", include)
+        case more => builder.array("include", more.toArray)
+      }
+      incexc.exclude.toList match {
+        case Nil =>
+        case exclude :: Nil => builder.field("exclude", exclude)
+        case more => builder.array("exclude", more.toArray)
+      }
     }
     agg.includePartition.foreach { incpart =>
       val includeBuilder = builder.startObject("include")
@@ -33,7 +39,14 @@ object TermsAggregationBuilder {
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))
     agg.shardSize.foreach(builder.field("shard_size", _))
     agg.showTermDocCountError.foreach(builder.field("show_term_doc_count_error", _))
-    agg.order.map(EnumConversions.order).foreach(builder.rawField("order", _))
+    agg.orders match {
+      case order if order.isEmpty =>
+      case Seq(order) => builder.rawField("order", EnumConversions.order(order))
+      case _ =>
+        builder.startArray("order")
+        agg.orders.map(EnumConversions.order).foreach(builder.rawValue)
+        builder.endArray()
+    }
 
     builder.endObject()
 

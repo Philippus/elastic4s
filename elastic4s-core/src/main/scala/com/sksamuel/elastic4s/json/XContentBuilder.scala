@@ -33,6 +33,35 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def array(field: String, doubles: Array[Array[Array[Array[Double]]]]): XContentBuilder = {
+    startArray(field)
+    doubles.foreach { second =>
+      val secondArray = array.addArray()
+      second.foreach { third =>
+        val thirdArray = secondArray.addArray()
+        third.foreach { inner =>
+          val value = thirdArray.addArray()
+          inner.foreach(value.add)
+        }
+      }
+    }
+    endArray()
+    this
+  }
+
+  def array(field: String, doubles: Array[Array[Array[Double]]]): XContentBuilder = {
+    startArray(field)
+    doubles.foreach { nested =>
+      val outer = array.addArray()
+      nested.foreach { inner =>
+        val value = outer.addArray()
+        inner.foreach(value.add)
+      }
+    }
+    endArray()
+    this
+  }
+
   def array(field: String, doubles: Array[Array[Double]]): XContentBuilder = {
     startArray(field)
     doubles.foreach { nested =>
@@ -78,13 +107,23 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
-  def rawField(name: String, builder: XContentBuilder): XContentBuilder = rawField(name, builder.string)
+  def array(field: String, builder: Array[XContentBuilder]): XContentBuilder = {
+    startArray(field)
+    builder.foreach { b =>
+      val raw = new RawValue(b.string())
+      array.addRawValue(raw)
+    }
+    endArray()
+    this
+  }
+
+  def rawField(name: String, builder: XContentBuilder): XContentBuilder = rawField(name, builder.string())
   def rawField(name: String, content: String): XContentBuilder = {
     obj.putRawValue(name, new RawValue(content))
     this
   }
 
-  def rawValue(value: XContentBuilder): this.type = rawValue(value.string)
+  def rawValue(value: XContentBuilder): this.type = rawValue(value.string())
   def rawValue(value: String): this.type = {
     array.addRawValue(new RawValue(value))
     this
@@ -136,11 +175,11 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_] => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
       case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
-      case map: Map[String, Any] =>
+      case map: Map[_, _] =>
         startObject()
-        map.foreach { case (k, v) => autofield(k, v) }
+        map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[String, Any] => autovalue(map.asScala)
+      case map: java.util.Map[_, _] => autovalue(map.asScala)
       case other => array.add(other.toString)
     }
     this
@@ -175,11 +214,11 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_] => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
       case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
-      case map: Map[String, Any] =>
+      case map: Map[_, _] =>
         startObject(name)
-        map.foreach { case (k, v) => autofield(k, v) }
+        map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[String, Any] => autofield(name, map.asScala)
+      case map: java.util.Map[_, _] => autofield(name, map.asScala)
       case null => obj.putNull(name)
       case other => obj.put(name, other.toString)
     }

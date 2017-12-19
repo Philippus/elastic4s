@@ -159,10 +159,10 @@ object LocalNode {
   // creates a LocalNode with all settings provided by the user
   // and using default plugins
   def apply(settings: Settings): InternalLocalNode = {
-    require(settings.getAsMap.containsKey("cluster.name"))
-    require(settings.getAsMap.containsKey("path.home"))
-    require(settings.getAsMap.containsKey("path.data"))
-    require(settings.getAsMap.containsKey("path.repo"))
+    require(settings.get("cluster.name") != null)
+    require(settings.get("path.home") != null)
+    require(settings.get("path.data") != null)
+    require(settings.get("path.repo") != null)
 
     val plugins = List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
 
@@ -176,7 +176,10 @@ object LocalNode {
   }
 
   // creates a LocalNode with all settings provided by the user
-  def apply(settings: Map[String, String]): InternalLocalNode = apply(Settings.builder().put(settings.asJava).build)
+  def apply(map: Map[String, String]): InternalLocalNode = {
+    val settings = map.foldLeft(Settings.builder) { case (builder, (key, value)) => builder.put(key, value) }.build()
+    apply(settings)
+  }
 
   // returns the minimum required settings to create a local node
   def requiredSettings(clusterName: String, homePath: String): Map[String, String] = {

@@ -13,7 +13,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDef
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition, GeoShapeQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
 
 object QueryBuilderFn {
@@ -24,6 +24,7 @@ object QueryBuilderFn {
     case q: ConstantScoreDefinition => ConstantScoreBodyFn(q)
     case q: DisMaxQueryDefinition => DisMaxQueryBodyFn(q)
     case q: ExistsQueryDefinition => ExistsQueryBodyFn(q)
+    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBuilderFn(q)
     case q: FuzzyQueryDefinition => FuzzyQueryBodyFn(q)
     case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBodyFn(q)
     case q: GeoDistanceQueryDefinition => GeoDistanceQueryBodyFn(q)
@@ -47,6 +48,7 @@ object QueryBuilderFn {
     case q: RawQueryDefinition => RawQueryBodyFn(q)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
     case q: ScriptQueryDefinition => ScriptQueryBodyFn(q)
+    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
     case s: SimpleStringQueryDefinition => SimpleStringBodyFn(s)
     case s: SpanContainingQueryDefinition => SpanContainingQueryBodyFn(s)
     case s: SpanFirstQueryDefinition => SpanFirstQueryBodyFn(s)
@@ -58,9 +60,11 @@ object QueryBuilderFn {
     case s: SpanWithinQueryDefinition => SpanWithinQueryBodyFn(s)
     case t: TermQueryDefinition => TermQueryBodyFn(t)
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
+    case t: TermsLookupQueryDefinition => TermsLookupQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
-    case q: FunctionScoreQueryDefinition => FunctionScoreQueryBuilderFn(q)
-    case q: ScriptScoreDefinition => ScriptScoreQueryBodyFn(q)
+
+    // Not implemented
+    case ni => throw new NotImplementedError(s"Query ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
   }
 }

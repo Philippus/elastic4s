@@ -112,7 +112,7 @@ trait TcpClientConstructors extends Logging {
       builder
     }.build()
 
-    if (!combinedSettings.getAsMap.containsKey("cluster.name")) {
+    if (combinedSettings.get("cluster.name") == null) {
       logger.warn(
         """No cluster.name was specified in the settings for the client." +
         "This will still work if your cluster has the default name, but it is recommended you always set the cluster.name to avoid issues""")

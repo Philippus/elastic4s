@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches.aggs
 
+import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.joda.time.DateTimeZone
@@ -11,9 +12,9 @@ case class DateRangeAggregation(name: String,
                                 format: Option[String] = None,
                                 timeZone: Option[DateTimeZone] = None,
                                 keyed: Option[Boolean] = None,
-                                ranges: Seq[(Option[String], Any, Any)] = Nil,
-                                unboundedFrom: Option[(Option[String], Any)] = None,
-                                unboundedTo: Option[(Option[String], Any)] = None,
+                                ranges: Seq[(Option[String], ElasticDate, ElasticDate)] = Nil,
+                                unboundedFrom: Option[(Option[String], ElasticDate)] = None,
+                                unboundedTo: Option[(Option[String], ElasticDate)] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty)
   extends AggregationDefinition {
@@ -26,20 +27,14 @@ case class DateRangeAggregation(name: String,
   def script(script: ScriptDefinition): DateRangeAggregation = copy(script = script.some)
   def missing(missing: AnyRef): DateRangeAggregation = copy(missing = missing.some)
 
-  def range(from: String, to: String): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))
-  def range(key: String, from: String, to: String): DateRangeAggregation = copy(ranges = ranges :+ (key.some, from, to))
-  def range(from: Long, to: Long): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))
-  def range(key: String, from: Long, to: Long): DateRangeAggregation = copy(ranges = ranges :+ (key.some, from, to))
+  def range(from: ElasticDate, to: ElasticDate): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))
+  def range(key: String, from: ElasticDate, to: ElasticDate): DateRangeAggregation = copy(ranges = ranges :+ (key.some, from, to))
 
-  def unboundedFrom(from: String): DateRangeAggregation = copy(unboundedFrom = Some(None, from))
-  def unboundedFrom(key: String, from: String): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
-  def unboundedFrom(from: Long): DateRangeAggregation = copy(unboundedFrom = Some(None, from))
-  def unboundedFrom(key: String, from: Long): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
+  def unboundedFrom(from: ElasticDate): DateRangeAggregation = copy(unboundedFrom = Some(None, from))
+  def unboundedFrom(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
 
-  def unboundedTo(from: String): DateRangeAggregation = copy(unboundedTo = Some(None, from))
-  def unboundedTo(key: String, from: String): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
-  def unboundedTo(from: Long): DateRangeAggregation = copy(unboundedTo = Some(None, from))
-  def unboundedTo(key: String, from: Long): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
+  def unboundedTo(from: ElasticDate): DateRangeAggregation = copy(unboundedTo = Some(None, from))
+  def unboundedTo(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
 
   def format(fmt: String): DateRangeAggregation = copy(format = fmt.some)
 
