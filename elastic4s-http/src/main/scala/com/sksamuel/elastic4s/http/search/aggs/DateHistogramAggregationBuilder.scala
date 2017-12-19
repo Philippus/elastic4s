@@ -22,10 +22,7 @@ object DateHistogramAggregationBuilder {
     }
     agg.missing.map(_.toString).foreach(builder.field("missing", _))
     agg.extendedBounds.foreach { bounds =>
-      builder.startObject("extended_bounds")
-      builder.field("min", bounds.min)
-      builder.field("min", bounds.max)
-      builder.endObject()
+      builder.rawField("extended_bounds", ExtendedBoundsBuilderFn(bounds))
     }
     builder.endObject()
 

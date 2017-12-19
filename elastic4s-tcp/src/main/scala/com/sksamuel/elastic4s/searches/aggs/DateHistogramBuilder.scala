@@ -2,14 +2,19 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.{EnumConversions, ScriptBuilder}
 import org.elasticsearch.search.aggregations.AggregationBuilders
-import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramAggregationBuilder, DateHistogramInterval}
+import org.elasticsearch.search.aggregations.bucket.histogram.{DateHistogramAggregationBuilder, DateHistogramInterval, ExtendedBounds => ESExtendedBounds}
 
 import scala.collection.JavaConverters._
 
 object DateHistogramBuilder {
   def apply(agg: DateHistogramAggregation): DateHistogramAggregationBuilder = {
     val builder = AggregationBuilders.dateHistogram(agg.name)
-    agg.extendedBounds.foreach(bounds => builder.extendedBounds(new org.elasticsearch.search.aggregations.bucket.histogram.ExtendedBounds(bounds.min, bounds.max)))
+    agg.extendedBounds.foreach{
+      case LongExtendedBounds(min, max)   => new ESExtendedBounds(min, max)
+      case DoubleExtendedBounds(min, max) => new ESExtendedBounds(min.toLong, max.toLong)
+      case StringExtendedBounds(min, max) => new ESExtendedBounds(min, max)
+      case DateExtendedBounds(min, max)   => new ESExtendedBounds(min.show, max.show)
+    }
     agg.field.foreach(builder.field)
     agg.format.foreach(builder.format)
     agg.interval.map(_.interval).map(new DateHistogramInterval(_)).foreach(builder.dateHistogramInterval)
