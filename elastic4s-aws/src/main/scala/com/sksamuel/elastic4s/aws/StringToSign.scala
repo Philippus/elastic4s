@@ -15,8 +15,8 @@ case class StringToSign(service: String,
   val credentialsScope = s"$date/$region/$service/aws4_request"
 
   override def toString(): String =
-    s"$Algorithm\n" +
-      s"$dateTime\n" +
-      s"$credentialsScope\n" +
-      s"${canonicalRequest.toHashString.toLowerCase}"
+    s"""$Algorithm
+       |$dateTime
+       |$credentialsScope
+       |${canonicalRequest.toHashString.toLowerCase}""".stripMargin
 }

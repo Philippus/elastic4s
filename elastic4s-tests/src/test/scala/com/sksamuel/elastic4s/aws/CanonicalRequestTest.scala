@@ -17,6 +17,17 @@ class CanonicalRequestTest extends WordSpec with Matchers with SharedTestData{
         |content-type;host;x-amz-date
         |e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855""".stripMargin
 
+    val resultWithForbiddenCharacters =
+      s"""GET
+        |/path/to/resource$encodedForbiddenCharactersAndMore
+        |Action=ListUsers&Version=2010-05-08
+        |content-type:application/x-www-form-urlencoded; charset=utf-8
+        |host:es.amazonaws.com
+        |x-amz-date:20150830T123600Z
+        |
+        |content-type;host;x-amz-date
+        |e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855""".stripMargin
+
     val resultWithPayload =
       """POST
         |/path/to/resource
@@ -37,5 +48,11 @@ class CanonicalRequestTest extends WordSpec with Matchers with SharedTestData{
       val canonicalRequest = CanonicalRequest(httpPostRequest)
       canonicalRequest.toString shouldBe(resultWithPayload)
     }
+
+    "be able to be encode a url with forbidden characters making sure it follows RFC 3986" in {
+      val canonicalRequest = CanonicalRequest(httpWithForbiddenCharacters)
+      canonicalRequest.toString shouldBe(resultWithForbiddenCharacters)
+    }
+
   }
 }
