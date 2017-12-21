@@ -60,6 +60,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             searchType: Option[SearchType] = None,
                             searchAfter: Seq[AnyRef] = Nil,
                             version: Option[Boolean] = None,
+                            profile: Option[Boolean] = None,
                             trackHits: Option[Boolean] = None) {
 
   /** Adds a single string query to this search

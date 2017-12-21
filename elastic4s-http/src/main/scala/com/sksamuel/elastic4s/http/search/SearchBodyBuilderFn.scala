@@ -27,7 +27,8 @@ object SearchBodyBuilderFn {
 
     request.windowing.from.foreach(builder.field("from", _))
     request.windowing.size.foreach(builder.field("size", _))
-    //
+
+    request.profile.foreach(builder.field("profile", _))
 
     if (request.windowing.slice.nonEmpty) {
       builder.startObject("slice")
