@@ -65,11 +65,11 @@ trait SearchImplicits {
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
       else if (request.indexesTypes.indexes.isEmpty)
-        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
+        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
       else if (request.indexesTypes.types.isEmpty)
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/_search"
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
       else
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode).mkString(",") + "/_search"
+        "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
@@ -81,9 +81,7 @@ trait SearchImplicits {
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }
 
-      val builder = SearchBodyBuilderFn(request)
-      val body = builder.string()
-
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
       client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
