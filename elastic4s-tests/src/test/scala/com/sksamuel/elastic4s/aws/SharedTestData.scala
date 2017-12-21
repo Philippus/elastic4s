@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.aws
 
 import java.io.ByteArrayInputStream
+import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 import org.apache.http.client.methods.{HttpGet, HttpPost}
@@ -16,6 +17,16 @@ trait SharedTestData {
   val awsKey = "AKIDEXAMPLE"
   val awsSecret = "YNexysRYkuJmLzyNKfotrkEEWWwTEiOgXPEHHGsp"
   val awsSessionToken = "ThisIsASessionToken"
+  val forbiddenCharactersAndMore =  URLEncoder.encode("!@#$%ˆ&*()/to[]{};'", "UTF-8")
+  val encodedForbiddenCharactersAndMore = "%2521%2540%2523%2524%2525%25CB%2586%2526%2A%2528%2529%252Fto%255B%255D%257B%257D%253B%2527"
+
+  def httpWithForbiddenCharacters = {
+    val request = new HttpGet(s"https://es.amazonaws.com/path/to/resource${forbiddenCharactersAndMore}?Action=ListUsers&Version=2010-05-08")
+    request.addHeader("x-amz-date", dateTime)
+    request.addHeader("Host", host)
+    request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
+    request
+  }
 
   def httpGetRequest = {
     val request = new HttpGet("https://es.amazonaws.com/path/to/resource?Action=ListUsers&Version=2010-05-08")

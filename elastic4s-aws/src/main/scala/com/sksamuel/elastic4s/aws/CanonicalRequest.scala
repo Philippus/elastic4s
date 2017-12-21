@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.aws
 
 import com.sksamuel.elastic4s.aws.Crypto._
+import java.net.{URI, URLEncoder}
 
-import java.net.{ URI, URLEncoder }
-import java.nio.charset.Charset
-
-import org.apache.http.{ HttpEntityEnclosingRequest, HttpRequest }
+import org.apache.http.{HttpEntityEnclosingRequest, HttpRequest}
 import org.apache.http.client.methods.HttpRequestWrapper
-import org.apache.http.client.utils.URLEncodedUtils
+import org.apache.http.client.utils.{URIBuilder, URLEncodedUtils}
 import org.apache.http.util.EntityUtils
 
 import scala.collection.JavaConverters._
@@ -43,15 +41,21 @@ object CanonicalRequest {
   }
 
   private def canonicalUri(httpRequest: HttpRequest): String = {
-    val uri = new URI(httpRequest.getRequestLine.getUri)
-    val path = uri.getPath
-    val segments = path.split("/")
-    segments.filter(_ != "").map(URLEncoder.encode(_, "utf-8")).mkString(start = "/", sep = "/", end = "")
+
+    val uri = new URIBuilder()
+      .setPath(httpRequest.getRequestLine.getUri)
+      .build()
+      .getPath
+
+    val path = uri.split("\\?")(0) //using URIBuilder to normalize uri but need to split manually
+    path.split("(?<!/)/(?!/)", -1)
+      .map(URLEncoder.encode(_, "utf-8"))
+      .mkString(start = "", sep = "/", end = "")
+      .replace("*", "%2A")
   }
 
   private def canonicalQueryString(httpRequest: HttpRequest): String = {
-    val uri  = new URI(httpRequest.getRequestLine.getUri)
-    val charset : Charset = Charset.forName("utf-8")
+    val uri = new URI(httpRequest.getRequestLine.getUri)
     val parameters = URLEncodedUtils.parse(uri, "utf-8")
     parameters.asScala.map(h ⇒ s"${h.getName}=${h.getValue}").mkString("&")
   }
@@ -76,7 +80,7 @@ object CanonicalRequest {
 
     getPayload(httpRequest) match {
       case Some(payload) ⇒ hashPayloadString(payload)
-      case None          ⇒ hashPayloadString("")
+      case None ⇒ hashPayloadString("")
     }
   }
 
@@ -90,20 +94,23 @@ object CanonicalRequest {
   }
 }
 
-case class CanonicalRequest( method: String,
-                             canonicalUri: String,
-                             canonicalQueryString: String,
-                             canonicalHeaders: String,
-                             signedHeaders: String,
-                             hashedPayload: String) {
+case class CanonicalRequest(method: String,
+                            canonicalUri: String,
+                            canonicalQueryString: String,
+                            canonicalHeaders: String,
+                            signedHeaders: String,
+                            hashedPayload: String) {
+
 
   override def toString() =
-      s"$method\n" +
-      s"$canonicalUri\n" +
-      s"$canonicalQueryString\n" +
-      s"$canonicalHeaders\n\n" +
-      s"$signedHeaders\n" +
-      s"$hashedPayload"
+    s"""$method
+       |$canonicalUri
+       |$canonicalQueryString
+       |$canonicalHeaders
+       |
+       |$signedHeaders
+       |$hashedPayload""".stripMargin
+
 
   def toHashString() = {
     val canonicalRequestHash = hash(toString)
