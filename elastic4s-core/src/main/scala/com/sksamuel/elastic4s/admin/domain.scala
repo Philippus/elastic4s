@@ -9,7 +9,7 @@ case class GetSegmentsDefinition(indexes: Indexes)
 case class IndexExistsDefinition(index: String)
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
 case class AliasExistsDefinition(alias: String)
-case class IndicesStatsDefinition(indexes: Indexes)
+case class IndexStatsRequest(indices: Indexes)
 
 case class IndicesOptions(allowNoIndices: Boolean = false,
                           ignoreUnavailable: Boolean = false,

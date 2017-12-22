@@ -17,7 +17,6 @@ import com.sksamuel.elastic4s.mappings.MappingApi
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicTemplateApi
 import com.sksamuel.elastic4s.nodes.NodesApi
 import com.sksamuel.elastic4s.reindex.ReindexApi
-import com.sksamuel.elastic4s.snapshots.SnapshotApi
 import com.sksamuel.elastic4s.script.ScriptApi
 import com.sksamuel.elastic4s.searches._
 import com.sksamuel.elastic4s.searches.aggs.AggregationApi
@@ -27,6 +26,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.searches.sort.SortApi
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
 import com.sksamuel.elastic4s.settings.SettingsApi
+import com.sksamuel.elastic4s.snapshots.SnapshotApi
 import com.sksamuel.elastic4s.task.TaskApi
 import com.sksamuel.elastic4s.termvectors.TermVectorApi
 import com.sksamuel.elastic4s.update.UpdateApi

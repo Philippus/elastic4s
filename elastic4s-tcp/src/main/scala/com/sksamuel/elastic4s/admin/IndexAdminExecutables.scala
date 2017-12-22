@@ -61,9 +61,9 @@ trait IndexAdminExecutables {
   }
 
   implicit object IndicesStatsDefinitionExecutable
-    extends Executable[IndicesStatsDefinition, IndicesStatsResponse, IndicesStatsResult] {
-    override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResult] = {
-      injectFutureAndMap(c.admin.indices.prepareStats(t.indexes.values: _*).execute)(IndicesStatsResult.apply)
+    extends Executable[IndexStatsRequest, IndicesStatsResponse, IndicesStatsResult] {
+    override def apply(c: Client, t: IndexStatsRequest): Future[IndicesStatsResult] = {
+      injectFutureAndMap(c.admin.indices.prepareStats(t.indices.values: _*).execute)(IndicesStatsResult.apply)
     }
   }
 

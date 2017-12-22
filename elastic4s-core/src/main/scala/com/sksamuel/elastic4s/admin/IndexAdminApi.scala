@@ -8,8 +8,8 @@ trait IndexAdminApi {
   def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refreshIndex(Indexes(indexes))
   def refreshIndex(indexes: Indexes): RefreshIndexDefinition = RefreshIndexDefinition(indexes.values)
 
-  def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
-  def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
+  def indexStats(indexes: Indexes = Indexes.All): IndexStatsRequest = IndexStatsRequest(indexes)
+  def indexStats(first: String, rest: String*): IndexStatsRequest = indexStats(first +: rest)
 
   def typesExist(indexesAndTypes: IndexesAndTypes) = TypesExistsDefinition(indexesAndTypes.indexes, indexesAndTypes.types)
   def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)

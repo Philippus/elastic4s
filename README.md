@@ -236,7 +236,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Get Template                              | `getTemplate(<name>)`                     | yes | yes |
 | [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
-| Index Status                              | `indexStatus(<index>)`                    |   | yes |
+| Index stats                               | `indexStats(indices)`                     | yes | |
 | List Tasks                                | `listTasks(nodeIds)`                      | yes | yes |
 | Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
 | Lock Release                              | `releaseGlobalLock()`                     | yes | |
