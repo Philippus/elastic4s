@@ -860,6 +860,27 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 6.1.1
+
+* Added index stats API
+* Added cats segments API
+* Added full support for elasticsearch date math operations, eg now+1d/m
+* Fix: support update of sequences and nested fields #1193
+* Fix: Address aws normalized uri encoding #1188
+* Added raw source in search requests
+* Added profile option to search requests
+* Add GeoBoundsAggregationBuilder #1189
+* Add support for stored scripts #1183
+* Refactored geo shape query model to support multiple shapes #1187
+* Fix: unchecked matches in XContentBuilder #1184
+* Add derivative aggregation builder #1179
+* Added explicit 'not implemented' errors to aggregation and query builder functions #1181
+* Added terms lookup query support in http client #1182
+* Range aggregation support #1175
+* Added Bucket script pipeline aggs #1177
+
+###### 6.1.0
+
 ###### 6.0.4
 
 * Added to[T] and safeTo[T] on aggregations #1156
