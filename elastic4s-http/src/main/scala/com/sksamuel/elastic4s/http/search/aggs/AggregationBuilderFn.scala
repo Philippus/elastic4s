@@ -3,7 +3,8 @@ package com.sksamuel.elastic4s.http.search.aggs
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketScriptDefinition, DerivativeDefinition, MaxBucketDefinition, SumBucketDefinition}
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketSelectorDefinition, BucketScriptDefinition, DerivativeDefinition, MaxBucketDefinition, SumBucketDefinition}
+import com.sksamuel.elastic4s.http.search.aggs.pipeline.BucketSelectorPipelineBuilder
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -35,6 +36,7 @@ object AggregationBuilderFn {
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
+      case agg: BucketSelectorDefinition => BucketSelectorPipelineBuilder(agg)
       case agg: DerivativeDefinition => DerivativePipelineAggBuilder(agg)
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
