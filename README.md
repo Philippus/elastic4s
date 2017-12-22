@@ -864,7 +864,6 @@ folder. There is no need to configure anything externally.
 
 * Added index stats API
 * Added cats segments API
-* Added full support for elasticsearch date math operations, eg now+1d/m
 * Fix: support update of sequences and nested fields #1193
 * Fix: Address aws normalized uri encoding #1188
 * Added raw source in search requests
@@ -880,6 +879,17 @@ folder. There is no need to configure anything externally.
 * Added Bucket script pipeline aggs #1177
 
 ###### 6.1.0
+
+* Bumped wire version to elasticseach 6.1.0
+* Updated terms agg to support regex  #1174
+* Updated range and date queries to use elastic date math #1170
+* Wrapping apache client errors in JavaRestClientExceptionWrapper so we know which client caused them #1165
+* Added AggReader derivation for Circe module
+* Fixed completion suggestion option #1173
+* Add multi criteria order in term aggregation #1172
+* Added sum bucket agg for http. #1164
+* Add ExecutionContext param to execute (with default value) #1167
+* Stored scripts fix #1162
 
 ###### 6.0.4
 
