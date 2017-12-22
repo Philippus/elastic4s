@@ -216,12 +216,12 @@ through to the readme page. For options that are not yet documented, refer to th
 | [Create Index]                            | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
 | [Create Repository]                       | `createRepository(name, type)`            | yes | yes |
 | [Create Snapshot]                         | `createSnapshot(name, repo)`              | yes | yes |
-| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`|   | yes |
+| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`| yes | yes |
 | [Delete by id]                            | `deleteById(index, type, id)`             | yes | yes |
 | Delete by query                           | `deleteByQuery(index, type, query)`       | yes | yes |
 | [Delete index]                            | `deleteIndex(index) [settings]`           | yes | yes |
 | [Delete Snapshot]                         | `deleteSnapshot(name, repo)`              | yes | yes |
-| Delete Template                           | `deleteTemplate(<name>)`                  |     | yes |
+| Delete Template                           | `deleteTemplate(<name>)`                  | yes | yes |
 | Document Exists                           | `exists(id, index, type)`                 | yes | |
 | [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
 | Field stats                               | `fieldStats(<indexes>)`                   |     | yes |
@@ -233,7 +233,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Get Mapping                               | `getMapping(<index> / <type>)`            | yes | yes |
 | Get Segments                              | `getSegments(<indexes>)`                  | yes | yes |
 | Get Snapshot                              | `getSnapshot(name, repo)`                 | yes | yes |
-| Get Template                              | `getTemplate(<name>)`                     |   | yes |
+| Get Template                              | `getTemplate(<name>)`                     | yes | yes |
 | [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
 | Index exists                              | `indexExists(<name>)`                     | yes | yes |
 | Index Status                              | `indexStatus(<index>)`                    |   | yes |
