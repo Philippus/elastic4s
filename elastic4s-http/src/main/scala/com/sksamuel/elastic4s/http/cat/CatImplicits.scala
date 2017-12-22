@@ -1,12 +1,18 @@
 package com.sksamuel.elastic4s.http.cat
 
 import com.sksamuel.elastic4s.cat._
-import com.sksamuel.elastic4s.http.{DefaultResponseHandler, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 
 import scala.concurrent.Future
-import scala.util.Try
 
 trait CatImplicits {
+
+  implicit object CatSegmentsExecutable extends HttpExecutable[CatSegments, Seq[CatSegmentsResponse]] {
+    override def execute(client: HttpRequestClient, request: CatSegments): Future[HttpResponse] = {
+      val endpoint = if (request.indices.isAll) "/_cat/segments" else "/_cat/segments/" + request.indices.string
+      client.async("GET", s"$endpoint?v&format=json&bytes=b", Map.empty)
+    }
+  }
 
   implicit object CatShardsExecutable extends HttpExecutable[CatShardsDefinition, Seq[CatShards]] {
     override def execute(client: HttpRequestClient, request: CatShardsDefinition): Future[HttpResponse] = {

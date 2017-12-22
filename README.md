@@ -206,6 +206,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Cat Master                                | `catMaster()`                             | yes | |
 | Cat Nodes                                 | `catNodes()`                              | yes | |
 | Cat Plugins                               | `catPlugins()`                            | yes | |
+| Cat Segments                              | `catSegments(indices)`                    | yes | |
 | Cat Shards                                | `catShards()`                             | yes | |
 | Cat Thread Pools                          | `catThreadPool()`                         | yes | |
 | Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
