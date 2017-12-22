@@ -36,7 +36,7 @@ class CatSegmentsTest
 
     segments.map(_.size).sum > 0 shouldBe true
     segments.map(_.sizeMemory).sum > 0 shouldBe true
-    segments.map(_.docsCount).sum shouldBe 3
+    segments.map(_.docsCount).sum  > 0 shouldBe true
   }
 
 }
