@@ -41,7 +41,7 @@ object AggregationBuilderFn {
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
       case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
-      case agg: CumulativeSumDefinition => CumulativeSumAggBuilder(agg)
+      case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
 
       // Not implemented
       case ni => throw new NotImplementedError(s"Aggregation ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
@@ -64,7 +64,7 @@ object DerivativePipelineAggBuilder {
 }
 
 
-object CumulativeSumAggBuilder {
+object CumulativeSumPipelineAggBuilder {
   def apply(agg: CumulativeSumDefinition): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("cumulative_sum")
     builder.field("buckets_path", agg.bucketsPath)
