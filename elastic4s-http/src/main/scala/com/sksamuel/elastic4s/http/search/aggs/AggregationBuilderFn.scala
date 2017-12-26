@@ -18,6 +18,7 @@ object AggregationBuilderFn {
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
       case agg: FiltersAggregationDefinition => FiltersAggregationBuilder(agg)
       case agg: KeyedFiltersAggregationDefinition => KeyedFiltersAggregationBuilder(agg)
+      case agg: GeoCentroidAggregationDefinition => GeoCentroidAggregationBuilder(agg)
       case agg: GeoBoundsAggregationDefinition => GeoBoundsAggregationBuilder(agg)
       case agg: GeoHashGridAggregationDefinition => GeoHashGridAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
