@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.term.TermsLookupQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.term.{TermsLookupQueryDefinition, TermsSetQuery}
 
 object TermsLookupQueryBodyFn {
   def apply(t: TermsLookupQueryDefinition): XContentBuilder = {
@@ -19,6 +19,16 @@ object TermsLookupQueryBodyFn {
 
     t.queryName.foreach(builder.field("_name", _))
 
+    builder.endObject().endObject()
+  }
+}
+
+object TermsSetQueryBodyFn {
+  def apply(t: TermsSetQuery): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject("terms_set")
+    builder.startObject(t.field)
+    builder.array("terms", t.terms.map(_.toString).toArray[String])
+    t.minimumShouldMatchField.foreach(builder.field("minimum_should_match_field", _))
     builder.endObject().endObject()
   }
 }

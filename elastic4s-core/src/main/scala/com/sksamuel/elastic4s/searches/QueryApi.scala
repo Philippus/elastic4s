@@ -200,9 +200,11 @@ trait QueryApi {
 
   def rawQuery(json: String): RawQueryDefinition = RawQueryDefinition(json)
 
+  @deprecated("use the non-tupled version regexQuery(field,value)", "6.1.2")
   def regexQuery(tuple: (String, String)): RegexQueryDefinition = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: String): RegexQueryDefinition = RegexQueryDefinition(field, value)
 
+  @deprecated("use the non-tupled version prefixQuery(field,value)", "6.1.2")
   def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)
 
@@ -236,6 +238,7 @@ trait QueryApi {
 
   def spanMultiTermQuery(query: MultiTermQueryDefinition) = SpanMultiTermQueryDefinition(query)
 
+  @deprecated("use the non-tupled version termQuery(field,value)", "6.1.2")
   def termQuery(tuple: (String, Any)): TermQueryDefinition = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQueryDefinition = TermQueryDefinition(field, value)
 

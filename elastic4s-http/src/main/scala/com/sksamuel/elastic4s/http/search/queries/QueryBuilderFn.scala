@@ -13,7 +13,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDef
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinition, GeoDistanceQueryDefinition, GeoPolygonQueryDefinition, GeoShapeQueryDefinition}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition, TermsSetQuery}
 import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
 
 object QueryBuilderFn {
@@ -61,6 +61,7 @@ object QueryBuilderFn {
     case t: TermQueryDefinition => TermQueryBodyFn(t)
     case t: TermsQueryDefinition[_] => TermsQueryBodyFn(t)
     case t: TermsLookupQueryDefinition => TermsLookupQueryBodyFn(t)
+    case t: TermsSetQuery => TermsSetQueryBodyFn(t)
     case q: TypeQueryDefinition => TypeQueryBodyFn(q)
     case q: WildcardQueryDefinition => WildcardQueryBodyFn(q)
 
