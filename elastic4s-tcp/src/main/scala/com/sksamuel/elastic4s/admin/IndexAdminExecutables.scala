@@ -41,7 +41,7 @@ trait IndexAdminExecutables {
   implicit object IndexExistsDefinitionExecutable
     extends Executable[IndicesExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
     override def apply(c: Client, t: IndicesExistsDefinition): Future[IndicesExistsResponse] = {
-      injectFuture(c.admin.indices.prepareExists(t.index).execute(_))
+      injectFuture(c.admin.indices.prepareExists(t.indexes.values: _*).execute(_))
     }
   }
 
