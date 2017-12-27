@@ -305,7 +305,8 @@ trait ElasticDsl
 
   case object index {
 
-    def exists(index: String): IndexExistsDefinition = IndexExistsDefinition(index)
+    @deprecated("use indexExists(index) or indicesExists(indices)", "6.1.2")
+    def exists(index: String): IndicesExistsDefinition = IndicesExistsDefinition(index)
 
     @deprecated("use indexInto(index / type)", "5.0.0")
     def into(indexType: IndexAndTypes): IndexDefinition = IndexDefinition(IndexAndType(indexType.index, indexType.types.head))

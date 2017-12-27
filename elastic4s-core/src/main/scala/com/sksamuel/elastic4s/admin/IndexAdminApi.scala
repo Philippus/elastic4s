@@ -27,7 +27,8 @@ trait IndexAdminApi {
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
   def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
 
-  def indexExists(index: String): IndexExistsDefinition = IndexExistsDefinition(index)
+  def indexExists(index: String): IndicesExistsDefinition = IndicesExistsDefinition(index)
+  def indicesExists(indices: Indexes): IndicesExistsDefinition = IndicesExistsDefinition(indices)
 
   def aliasExists(alias: String): AliasExistsDefinition = AliasExistsDefinition(alias)
 
