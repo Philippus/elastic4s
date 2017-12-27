@@ -16,9 +16,9 @@ object GeoCentroidAggregationBuilder {
       builder.rawField("script", ScriptBuilderFn(script))
     }
 
-    SubAggsBuilderFn(agg, builder)
-    AggMetaDataFn(agg, builder)
+    builder.endObject()
 
-    builder
+    AggMetaDataFn(agg, builder)
+    builder.endObject()
   }
 }
