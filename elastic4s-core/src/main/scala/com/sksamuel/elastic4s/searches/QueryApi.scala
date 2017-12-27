@@ -251,7 +251,8 @@ trait QueryApi {
   def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
     TermsLookupQueryDefinition(field, TermsLookup(ref, path))
 
-  def termsSetQuery(field: String, terms: Set[Any]): TermsSetQuery = TermsSetQuery(field, terms)
+  def termsSetQuery(field: String, terms: Set[Any]): com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery =
+    com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery(field, terms)
 
   @deprecated("use the non-tupled version wildcardQuery(field,value)", "6.1.2")
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
