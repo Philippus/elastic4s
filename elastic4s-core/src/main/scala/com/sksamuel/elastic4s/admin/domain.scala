@@ -46,7 +46,5 @@ case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
 }
 
 case class IndexShardStoreDefinition(indexes: Indexes, status: Option[String] = None) {
-
   def status(status: String): IndexShardStoreDefinition = copy(status = status.some)
-
 }

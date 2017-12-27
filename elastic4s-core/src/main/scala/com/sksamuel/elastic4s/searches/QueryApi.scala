@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefi
 import com.sksamuel.elastic4s.searches.queries.geo._
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.term._
 import com.sksamuel.elastic4s.{DistanceUnit, DocumentRef, Indexable}
 
 import scala.language.{implicitConversions, reflectiveCalls}
@@ -19,13 +19,18 @@ trait QueryApi {
   def boostingQuery(positiveQuery: QueryDefinition,
                     negativeQuery: QueryDefinition): BoostingQueryDefinition = BoostingQueryDefinition(positiveQuery, negativeQuery)
 
+  @deprecated("use commonTermsQuery", "6.1.2")
   def commonQuery(field: String) = new CommonQueryExpectsText(field)
+  def commonTermsQuery(field: String) = new CommonQueryExpectsText(field)
+
   class CommonQueryExpectsText(name: String) {
     def text(q: String): CommonTermsQueryDefinition = CommonTermsQueryDefinition(name, q)
     def query(q: String): CommonTermsQueryDefinition = text(q)
   }
 
+  @deprecated("use commonTermsQuery", "6.1.2")
   def commonQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
+  def commonTermsQuery(field: String, text: String) = CommonTermsQueryDefinition(field, text)
 
   def constantScoreQuery(query: QueryDefinition): ConstantScoreDefinition = ConstantScoreDefinition(query)
 
@@ -60,6 +65,10 @@ trait QueryApi {
     GeoBoundingBoxQueryDefinition(field).withGeohash(topleft, bottomright)
 
   def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
+  def geoDistanceQuery(field: String, geohash: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field).geohash(geohash)
+  def geoDistanceQuery(field: String, lat: Double, long: Double): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field).point(lat, long)
+
+  @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "6.1.2")
   class GeoDistanceExpectsPoint(field: String) {
     def geohash(geohash: String): GeoDistanceQueryDefinition = GeoDistanceQueryDefinition(field).geohash(geohash)
     def point(lat: Double, long: Double): GeoDistanceQueryDefinition =
@@ -214,6 +223,12 @@ trait QueryApi {
   def spanOrQuery(iterable: Iterable[SpanQueryDefinition]): SpanOrQueryDefinition = SpanOrQueryDefinition(iterable.toSeq)
   def spanOrQuery(first: SpanQueryDefinition, rest: SpanQueryDefinition*): SpanOrQueryDefinition = spanOrQuery(first +: rest)
 
+  def spanContainingQuery(big: SpanQueryDefinition, little: SpanQueryDefinition): SpanContainingQueryDefinition =
+    SpanContainingQueryDefinition(big, little)
+
+  def spanWithinQuery(big: SpanQueryDefinition, little: SpanQueryDefinition): SpanWithinQueryDefinition =
+    SpanWithinQueryDefinition(big, little)
+
   def spanTermQuery(field: String, value: Any): SpanTermQueryDefinition = SpanTermQueryDefinition(field, value)
 
   def spanNotQuery(include: SpanQueryDefinition, exclude: SpanQueryDefinition): SpanNotQueryDefinition =
@@ -233,6 +248,9 @@ trait QueryApi {
   def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
     TermsLookupQueryDefinition(field, TermsLookup(ref, path))
 
+  def termsSetQuery(field: String, terms: Set[Any]): TermsSetQuery = TermsSetQuery(field, terms)
+
+  @deprecated("use the non-tupled version wildcardQuery(field,value)", "6.1.2")
   def wildcardQuery(tuple: (String, Any)): WildcardQueryDefinition = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQueryDefinition = WildcardQueryDefinition(field, value)
 
