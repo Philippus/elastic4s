@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.HealthStatus
+import com.sksamuel.elastic4s.{HealthStatus, Indexes}
 import com.sksamuel.exts.OptionImplicits._
 
 trait CatsApi {
@@ -22,10 +22,13 @@ trait CatsApi {
 
   def catPlugins(): CatPluginsDefinition = CatPluginsDefinition()
 
+  def catSegments(indices: Indexes = Indexes.All): CatSegments = CatSegments(indices)
   def catShards(): CatShardsDefinition = CatShardsDefinition()
 
   def catThreadPool(): CatThreadPoolDefinition = CatThreadPoolDefinition()
 }
+
+case class CatSegments(indices: Indexes)
 
 case class CatPluginsDefinition()
 case class CatShardsDefinition()

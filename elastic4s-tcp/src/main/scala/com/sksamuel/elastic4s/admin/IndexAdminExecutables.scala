@@ -39,15 +39,15 @@ trait IndexAdminExecutables {
   }
 
   implicit object IndexExistsDefinitionExecutable
-    extends Executable[IndexExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
-    override def apply(c: Client, t: IndexExistsDefinition): Future[IndicesExistsResponse] = {
-      injectFuture(c.admin.indices.prepareExists(t.index).execute(_))
+    extends Executable[IndicesExistsDefinition, IndicesExistsResponse, IndicesExistsResponse] {
+    override def apply(c: Client, t: IndicesExistsDefinition): Future[IndicesExistsResponse] = {
+      injectFuture(c.admin.indices.prepareExists(t.indexes.values: _*).execute(_))
     }
   }
 
   implicit object RolloverDefinitionExecutable
-    extends Executable[RolloverDefinition, RolloverResponse, RolloverResponse] {
-    override def apply(c: Client, r: RolloverDefinition): Future[RolloverResponse] = {
+    extends Executable[Rollover, RolloverResponse, RolloverResponse] {
+    override def apply(c: Client, r: Rollover): Future[RolloverResponse] = {
       val req = RolloverBuilderFn(c, r)
       injectFuture(req.execute(_))
     }
@@ -61,9 +61,9 @@ trait IndexAdminExecutables {
   }
 
   implicit object IndicesStatsDefinitionExecutable
-    extends Executable[IndicesStatsDefinition, IndicesStatsResponse, IndicesStatsResult] {
-    override def apply(c: Client, t: IndicesStatsDefinition): Future[IndicesStatsResult] = {
-      injectFutureAndMap(c.admin.indices.prepareStats(t.indexes.values: _*).execute)(IndicesStatsResult.apply)
+    extends Executable[IndexStatsRequest, IndicesStatsResponse, IndicesStatsResult] {
+    override def apply(c: Client, t: IndexStatsRequest): Future[IndicesStatsResult] = {
+      injectFutureAndMap(c.admin.indices.prepareStats(t.indices.values: _*).execute)(IndicesStatsResult.apply)
     }
   }
 

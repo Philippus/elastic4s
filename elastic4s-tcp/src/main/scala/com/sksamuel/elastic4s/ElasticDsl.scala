@@ -305,16 +305,17 @@ trait ElasticDsl
 
   case object index {
 
-    def exists(index: String): IndexExistsDefinition = IndexExistsDefinition(index)
+    @deprecated("use indexExists(index) or indicesExists(indices)", "6.1.2")
+    def exists(index: String): IndicesExistsDefinition = IndicesExistsDefinition(index)
 
     @deprecated("use indexInto(index / type)", "5.0.0")
     def into(indexType: IndexAndTypes): IndexDefinition = IndexDefinition(IndexAndType(indexType.index, indexType.types.head))
 
     @deprecated("use indexStats(indexes)", "5.0.0")
-    def stats(indexes: Indexes): IndicesStatsDefinition = indexStats(indexes)
+    def stats(indexes: Indexes): IndexStatsRequest = indexStats(indexes)
 
     @deprecated("use indexStats(indexes)", "5.0.0")
-    def stats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
+    def stats(first: String, rest: String*): IndexStatsRequest = indexStats(first +: rest)
   }
 
   case object flush {

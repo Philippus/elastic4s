@@ -8,8 +8,8 @@ trait IndexAdminApi {
   def refreshIndex(indexes: Iterable[String]): RefreshIndexDefinition = refreshIndex(Indexes(indexes))
   def refreshIndex(indexes: Indexes): RefreshIndexDefinition = RefreshIndexDefinition(indexes.values)
 
-  def indexStats(indexes: Indexes): IndicesStatsDefinition = IndicesStatsDefinition(indexes)
-  def indexStats(first: String, rest: String*): IndicesStatsDefinition = indexStats(first +: rest)
+  def indexStats(indexes: Indexes = Indexes.All): IndexStatsRequest = IndexStatsRequest(indexes)
+  def indexStats(first: String, rest: String*): IndexStatsRequest = indexStats(first +: rest)
 
   def typesExist(indexesAndTypes: IndexesAndTypes) = TypesExistsDefinition(indexesAndTypes.indexes, indexesAndTypes.types)
   def typesExist(types: String*): TypesExistExpectsIn = typesExist(types)
@@ -27,7 +27,8 @@ trait IndexAdminApi {
   def flushIndex(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
   def flushIndex(indexes: String*): FlushIndexDefinition = flushIndex(indexes)
 
-  def indexExists(index: String): IndexExistsDefinition = IndexExistsDefinition(index)
+  def indexExists(index: String): IndicesExistsDefinition = IndicesExistsDefinition(index)
+  def indicesExists(indices: Indexes): IndicesExistsDefinition = IndicesExistsDefinition(indices)
 
   def aliasExists(alias: String): AliasExistsDefinition = AliasExistsDefinition(alias)
 
@@ -37,7 +38,7 @@ trait IndexAdminApi {
   def clearIndex(first: String, rest: String*): ClearCacheDefinition = clearIndex(first +: rest)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
 
-  def rollover(alias: String): RolloverDefinition = RolloverDefinition(alias)
+  def rollover(alias: String): Rollover = Rollover(alias)
 
   def shrink(source: String, target: String): ShrinkDefinition = ShrinkDefinition(source, target)
 

@@ -6,7 +6,12 @@ import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTemplateHttpTest extends WordSpec with MockitoSugar with ElasticDsl with Matchers with DiscoveryLocalNodeProvider {
+class IndexTemplateHttpTest
+  extends WordSpec
+    with MockitoSugar
+    with ElasticDsl
+    with Matchers
+    with DiscoveryLocalNodeProvider {
 
   "create template" should {
     "be stored" in {

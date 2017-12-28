@@ -6,10 +6,10 @@ import com.sksamuel.exts.OptionImplicits._
 case class OpenIndexDefinition(indexes: Indexes)
 case class CloseIndexDefinition(indexes: Indexes)
 case class GetSegmentsDefinition(indexes: Indexes)
-case class IndexExistsDefinition(index: String)
+case class IndicesExistsDefinition(indexes: Indexes)
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
 case class AliasExistsDefinition(alias: String)
-case class IndicesStatsDefinition(indexes: Indexes)
+case class IndexStatsRequest(indices: Indexes)
 
 case class IndicesOptions(allowNoIndices: Boolean = false,
                           ignoreUnavailable: Boolean = false,
@@ -46,7 +46,5 @@ case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
 }
 
 case class IndexShardStoreDefinition(indexes: Indexes, status: Option[String] = None) {
-
   def status(status: String): IndexShardStoreDefinition = copy(status = status.some)
-
 }

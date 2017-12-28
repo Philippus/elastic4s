@@ -63,6 +63,7 @@ trait SearchImplicits {
       search.control.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.timeout)
       search.indexBoosts.foreach { case (index, boost) => builder.indexBoost(index, boost.toFloat) }
       search.collapse.foreach(c => builder.collapse(CollapseBuilderFn.apply(c)))
+      search.profile.foreach(builder.profile)
 
       if (search.fields.storedFields.nonEmpty)
         builder.storedFields(search.fields.storedFields.asJava)

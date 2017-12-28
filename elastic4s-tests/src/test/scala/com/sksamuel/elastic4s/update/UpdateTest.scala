@@ -3,32 +3,40 @@ package com.sksamuel.elastic4s.update
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{FlatSpec, Matchers, OptionValues}
 
-import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class UpdateTest extends FlatSpec
+  with Matchers
+  with ElasticDsl
+  with DiscoveryLocalNodeProvider
+  with OptionValues {
 
-  Try {
-    http.execute {
-      ElasticApi.deleteIndex("hans")
-    }.await
-  }
-
-  http.execute {
-    createIndex("hans").mappings(
-      mapping("albums").fields(
-        textField("name").stored(true)
-      )
+  val createMapping = createIndex("hans").mappings(
+    mapping("albums").fields(
+      textField("name").stored(true)
     )
-  }.await
+  )
+  val simpleIndex = indexInto("hans/albums") fields "name" -> "intersteller" id "5" refresh RefreshPolicy.Immediate
+  val nestedIndex = indexInto("hans/albums").fields(
+    "recording_location" ->
+      Map(
+        "city" -> "London",
+        "country" -> "United Kingdom",
+        "position" -> List(-0.127413,51.506907)
+      )
+  ) id "5" refresh RefreshPolicy.Immediate
 
-  http.execute(
-    indexInto("hans/albums") fields "name" -> "intersteller" id "5" refresh RefreshPolicy.Immediate
-  ).await
+  val idxRequests = for {
+    _ <- http.execute(ElasticApi.deleteIndex("hans"))
+    _ <- http.execute(createMapping)
+    _ <- http.execute(simpleIndex)
+    _ <- http.execute(nestedIndex)
+  } yield ()
+  idxRequests.await
 
   "an update request" should "support field based update" in {
-
     http.execute {
       update("5").in("hans" / "albums").doc(
         "name" -> "man of steel"
@@ -38,6 +46,25 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
     http.execute {
       get("5").from("hans/albums").storedFields("name")
     }.await.right.get.result.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
+  }
+
+  it should "support nested field based update" in {
+    val fieldName = "recording_location"
+    val document = Map(
+      fieldName ->
+        Map(
+          "city" -> "London!",
+          "country" -> "United Kingdom!",
+          "position" -> List(-0.110146,51.513176)
+        )
+    )
+    http.execute {
+      update("5").in("hans" / "albums").doc(document).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result.result shouldBe "updated"
+
+    http.execute {
+      get("5").from("hans/albums")
+    }.await.right.get.result.sourceAsMap.get(fieldName).value shouldBe document.get(fieldName).value
   }
 
   it should "support string based update" in {
@@ -51,7 +78,6 @@ class UpdateTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLo
   }
 
   it should "support field based upsert" in {
-
     http.execute {
       update("5").in("hans/albums").docAsUpsert(
         "name" -> "batman"

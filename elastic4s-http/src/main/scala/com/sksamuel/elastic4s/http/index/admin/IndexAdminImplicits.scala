@@ -74,7 +74,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object IndexExistsHttpExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
+  implicit object IndexExistsHttpExecutable extends HttpExecutable[IndicesExistsDefinition, IndexExistsResponse] {
 
     override def responseHandler: ResponseHandler[IndexExistsResponse] = new ResponseHandler[IndexExistsResponse] {
       override def handle(resp: HttpResponse) = {
@@ -82,8 +82,8 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: IndexExistsDefinition): Future[HttpResponse] = {
-      val endpoint = s"/${request.index}"
+    override def execute(client: HttpRequestClient, request: IndicesExistsDefinition): Future[HttpResponse] = {
+      val endpoint = s"/${request.indexes.string}"
       client.async("HEAD", endpoint, Map.empty)
     }
   }

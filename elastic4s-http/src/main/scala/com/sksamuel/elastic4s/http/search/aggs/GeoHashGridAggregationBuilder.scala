@@ -13,9 +13,10 @@ object GeoHashGridAggregationBuilder {
     agg.size.foreach(builder.field("size", _))
     agg.shardSize.foreach(builder.field("shard_size", _))
 
+    builder.endObject()
+
     SubAggsBuilderFn(agg, builder)
     AggMetaDataFn(agg, builder)
-
-    builder
+    builder.endObject()
   }
 }

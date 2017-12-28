@@ -5,6 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
 case class CatAlias(alias: String, index: String, filter: String, routing: Routing)
 case class Routing(index: String, search: String)
 
+case class CatSegmentsResponse(
+                                index: String,
+                                shard: String,
+                                prirep: String,
+                                ip: String,
+                                segment: String,
+                                generation: String,
+                                @JsonProperty("docs.count") docsCount: Long,
+                                @JsonProperty("docs.deleted") docsDeleted: Long,
+                                size: Long,
+                                @JsonProperty("size.memory") sizeMemory: Long,
+                                committed: Boolean,
+                                searchable: Boolean,
+                                version: String,
+                                compound: Boolean
+                              )
+
 case class CatShards(index: String,
                      shard: String,
                      prirep: String,

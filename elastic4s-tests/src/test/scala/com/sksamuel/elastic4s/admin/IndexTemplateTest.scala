@@ -8,7 +8,12 @@ import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 
-class IndexTemplateTest extends WordSpec with MockitoSugar with ElasticSugar with Matchers with DiscoveryLocalNodeProvider {
+class IndexTemplateTest
+  extends WordSpec
+    with MockitoSugar
+    with ElasticSugar
+    with Matchers
+    with DiscoveryLocalNodeProvider {
 
   "create template" ignore {
     "be stored" in {

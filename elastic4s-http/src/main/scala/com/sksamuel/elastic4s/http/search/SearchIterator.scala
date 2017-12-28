@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.searches.SearchDefinition
 
 import scala.concurrent.Await

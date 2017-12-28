@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.aggs
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketSelectorDefinition, BucketScriptDefinition, DerivativeDefinition, MaxBucketDefinition, SumBucketDefinition}
+import com.sksamuel.elastic4s.searches.aggs.pipeline._
 import com.sksamuel.elastic4s.http.search.aggs.pipeline.BucketSelectorPipelineBuilder
 
 object AggregationBuilderFn {
@@ -18,6 +18,7 @@ object AggregationBuilderFn {
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
       case agg: FiltersAggregationDefinition => FiltersAggregationBuilder(agg)
       case agg: KeyedFiltersAggregationDefinition => KeyedFiltersAggregationBuilder(agg)
+      case agg: GeoCentroidAggregationDefinition => GeoCentroidAggregationBuilder(agg)
       case agg: GeoBoundsAggregationDefinition => GeoBoundsAggregationBuilder(agg)
       case agg: GeoHashGridAggregationDefinition => GeoHashGridAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
@@ -41,6 +42,7 @@ object AggregationBuilderFn {
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
       case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
+      case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
 
       // Not implemented
       case ni => throw new NotImplementedError(s"Aggregation ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
@@ -55,6 +57,18 @@ object DerivativePipelineAggBuilder {
     builder.field("buckets_path", agg.bucketsPath)
     agg.unit.map(_.toSeconds).map(DateHistogramInterval.seconds).foreach(i=>builder.field("unit", i.interval))
     agg.gapPolicy.foreach(policy=> builder.field("gap_policy", policy.toString.toLowerCase))
+    agg.format.foreach(f=>builder.field("format", f))
+    builder.endObject()
+    AggMetaDataFn(agg, builder)
+    builder.endObject()
+  }
+}
+
+
+object CumulativeSumPipelineAggBuilder {
+  def apply(agg: CumulativeSumDefinition): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject("cumulative_sum")
+    builder.field("buckets_path", agg.bucketsPath)
     agg.format.foreach(f=>builder.field("format", f))
     builder.endObject()
     AggMetaDataFn(agg, builder)
