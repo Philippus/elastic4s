@@ -251,6 +251,7 @@ through to the readme page. For options that are not yet documented, refer to th
 | Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
 | [Remove Alias]                            | `removeAlias(<alias>).on(<index>)`        | yes | yes |
 | [Restore Snapshot]                        | `restoreSnapshot(name, repo)`             | yes | yes |
+| Rollover                                  | `rollover(alias)`                         | yes | |
 | [Search]                                  | `search(index).query(<query>)`            | yes | yes |
 | Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
 | Term Vectors                              | `termVectors(<index>, <type>, <id>)`      | yes | yes |
