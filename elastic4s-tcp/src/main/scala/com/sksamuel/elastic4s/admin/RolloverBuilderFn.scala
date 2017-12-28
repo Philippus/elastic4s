@@ -9,7 +9,7 @@ object RolloverBuilderFn {
 
   import com.sksamuel.elastic4s.EnumConversions._
 
-  def apply(client: Client, req: Rollover): RolloverRequestBuilder = {
+  def apply(client: Client, req: RolloverIndex): RolloverRequestBuilder = {
     val builder = client.admin().indices().prepareRolloverIndex(req.sourceAlias)
     req.maxAge.map(TimeValue.parseTimeValue(_, "maxAge")).foreach(builder.addMaxIndexAgeCondition)
     req.maxDocs.foreach(builder.addMaxIndexDocsCondition)

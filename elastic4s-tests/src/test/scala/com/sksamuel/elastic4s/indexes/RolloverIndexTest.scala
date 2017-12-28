@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class RolloverTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class RolloverIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   Try {
     http.execute {
@@ -33,19 +33,19 @@ class RolloverTest extends WordSpec with Matchers with ElasticDsl with Discovery
   "Rollover" should {
     "be created with padded index name" in {
       http.execute {
-        rollover("roll_write")
+        rolloverIndex("roll_write")
       }.await.right.get.result.newIndex shouldBe "rolltest-000002"
     }
     "support dry run" in {
       val resp = http.execute {
-        rollover("roll_write").maxAge("1d").dryRun(true)
+        rolloverIndex("roll_write").maxAge("1d").dryRun(true)
       }.await.right.get.result
       resp.dryRun shouldBe true
       resp.rolledOver shouldBe false
     }
     "return conditions in response" in {
       http.execute {
-        rollover("roll_write").maxDocs(10).maxSize("5g")
+        rolloverIndex("roll_write").maxDocs(10).maxSize("5g")
       }.await.right.get.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
     }
     "support max docs" in {
@@ -68,7 +68,7 @@ class RolloverTest extends WordSpec with Matchers with ElasticDsl with Discovery
       }.await.right.get.result.totalHits shouldBe 10
 
       val resp = http.execute {
-        rollover("roll_write").maxDocs(10)
+        rolloverIndex("roll_write").maxDocs(10)
       }.await.right.get.result
       resp.conditions shouldBe Map("[max_docs: 10]" -> true)
       resp.rolledOver shouldBe true

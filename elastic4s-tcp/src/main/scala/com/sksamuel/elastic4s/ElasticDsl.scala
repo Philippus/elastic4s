@@ -221,9 +221,9 @@ trait ElasticDsl
   @deprecated("use refreshIndex(index)", "5.0.0")
   case object refresh {
     @deprecated("use refreshIndex(index)", "5.0.0")
-    def index(indexes: Iterable[String]): RefreshIndexDefinition = RefreshIndexDefinition(indexes.toSeq)
+    def index(indexes: Iterable[String]): RefreshIndex = RefreshIndex(indexes.toSeq)
     @deprecated("use refreshIndex(index)", "5.0.0")
-    def index(indexes: String*): RefreshIndexDefinition = RefreshIndexDefinition(indexes)
+    def index(indexes: String*): RefreshIndex = RefreshIndex(indexes)
   }
 
   case object mapping {
@@ -236,7 +236,7 @@ trait ElasticDsl
 
   @deprecated("use openIndex(index)", "5.0.0")
   case object open {
-    def index(index: String): OpenIndexDefinition = OpenIndexDefinition(index)
+    def index(index: String): OpenIndex = OpenIndex(index)
   }
 
   @deprecated("use commonQuery(field", "5.0.0")
@@ -268,10 +268,10 @@ trait ElasticDsl
     def id(id: String): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
 
     @deprecated("use deleteIndex(indexes)", "5.0.0")
-    def index(indexes: String*): DeleteIndexDefinition = deleteIndex(indexes)
+    def index(indexes: String*): DeleteIndex = deleteIndex(indexes)
 
     @deprecated("use deleteIndex(indexes)", "5.0.0")
-    def index(indexes: Iterable[String]): DeleteIndexDefinition = DeleteIndexDefinition(indexes.toSeq)
+    def index(indexes: Iterable[String]): DeleteIndex = DeleteIndex(indexes.toSeq)
 
     @deprecated("use deleteSnapshot(name)", "5.0.0")
     def snapshot(name: String): DeleteSnapshotExpectsIn = deleteSnapshot(name)
@@ -306,23 +306,23 @@ trait ElasticDsl
   case object index {
 
     @deprecated("use indexExists(index) or indicesExists(indices)", "6.1.2")
-    def exists(index: String): IndicesExistsDefinition = IndicesExistsDefinition(index)
+    def exists(index: String): IndicesExists = IndicesExists(index)
 
     @deprecated("use indexInto(index / type)", "5.0.0")
     def into(indexType: IndexAndTypes): IndexDefinition = IndexDefinition(IndexAndType(indexType.index, indexType.types.head))
 
     @deprecated("use indexStats(indexes)", "5.0.0")
-    def stats(indexes: Indexes): IndexStatsRequest = indexStats(indexes)
+    def stats(indexes: Indexes): IndexStats = indexStats(indexes)
 
     @deprecated("use indexStats(indexes)", "5.0.0")
-    def stats(first: String, rest: String*): IndexStatsRequest = indexStats(first +: rest)
+    def stats(first: String, rest: String*): IndexStats = indexStats(first +: rest)
   }
 
   case object flush {
     @deprecated("use flushIndex(indexes)", "5.0.0")
-    def index(indexes: Iterable[String]): FlushIndexDefinition = FlushIndexDefinition(indexes.toSeq)
+    def index(indexes: Iterable[String]): FlushIndex = FlushIndex(indexes.toSeq)
     @deprecated("use flushIndex(indexes)", "5.0.0")
-    def index(indexes: String*): FlushIndexDefinition = FlushIndexDefinition(indexes)
+    def index(indexes: String*): FlushIndex = FlushIndex(indexes)
   }
 
   case object get {
@@ -343,10 +343,10 @@ trait ElasticDsl
     def mapping(it: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(it)
 
     @deprecated("use getSegments(indexes)", "5.0.0")
-    def segments(indexes: Indexes): GetSegmentsDefinition = getSegments(indexes)
+    def segments(indexes: Indexes): GetSegments = getSegments(indexes)
 
     @deprecated("use getSegments(indexes)", "5.0.0")
-    def segments(first: String, rest: String*): GetSegmentsDefinition = getSegments(first +: rest)
+    def segments(first: String, rest: String*): GetSegments = getSegments(first +: rest)
 
     @deprecated("use getSettings(indexes)", "5.0.0")
     def settings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
@@ -363,14 +363,14 @@ trait ElasticDsl
 
   case object close {
     @deprecated("use closeIndex(index)", "5.0.0")
-    def index(index: String): CloseIndexDefinition = CloseIndexDefinition(index)
+    def index(index: String): CloseIndex = CloseIndex(index)
   }
 
   case object clear {
     @deprecated("use clearCache(indexes)", "5.0.0")
-    def cache(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
+    def cache(indexes: Iterable[String]): ClearCache = ClearCache(indexes.toSeq)
     @deprecated("use clearCache(indexes)", "5.0.0")
-    def cache(first: String, rest: String*): ClearCacheDefinition = clearCache(first +: rest)
+    def cache(first: String, rest: String*): ClearCache = clearCache(first +: rest)
     @deprecated("use clearScroll(ids)", "5.0.0")
     def scroll(id: String, ids: String*): ClearScrollDefinition = clearScroll(id +: ids)
     @deprecated("use clearScroll(ids)", "5.0.0")

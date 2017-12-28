@@ -18,7 +18,7 @@ case class DeleteByIdDefinition(indexType: IndexAndType,
   def refresh(_refresh: String): DeleteByIdDefinition = refresh(RefreshPolicy.valueOf(_refresh))
   def refresh(refresh: RefreshPolicy): DeleteByIdDefinition = copy(refresh = refresh.some)
 
-  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: DeleteByIdDefinition = refresh(RefreshPolicy.IMMEDIATE)
 
   def waitForActiveShards(waitForActiveShards: Int): DeleteByIdDefinition = copy(waitForActiveShards = waitForActiveShards.some)
   def version(version: Long): DeleteByIdDefinition = copy(version = version.some)

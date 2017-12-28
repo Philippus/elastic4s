@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.locks
 
 trait LocksApi {
-  def acquireGlobalLock() = AcquireGlobalLockDefinition()
-  def releaseGlobalLock() = ReleaseGlobalLockDefinition()
+  def acquireGlobalLock() = AcquireGlobalLock()
+  def releaseGlobalLock() = ReleaseGlobalLock()
 }
 
-case class AcquireGlobalLockDefinition()
-case class ReleaseGlobalLockDefinition()
+case class AcquireGlobalLock()
+case class ReleaseGlobalLock()
