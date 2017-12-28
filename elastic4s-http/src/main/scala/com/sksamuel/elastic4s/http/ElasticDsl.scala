@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http
 
 import cats.Show
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.http.index.alias.IndexAliasImplicits
 import com.sksamuel.elastic4s.http.bulk.BulkImplicits
 import com.sksamuel.elastic4s.http.cat.CatImplicits
 import com.sksamuel.elastic4s.http.cluster.ClusterImplicits
@@ -10,9 +9,10 @@ import com.sksamuel.elastic4s.http.count.CountImplicits
 import com.sksamuel.elastic4s.http.delete.DeleteImplicits
 import com.sksamuel.elastic4s.http.explain.ExplainImplicits
 import com.sksamuel.elastic4s.http.get.GetImplicits
+import com.sksamuel.elastic4s.http.index._
 import com.sksamuel.elastic4s.http.index.admin.IndexAdminImplicits
+import com.sksamuel.elastic4s.http.index.alias.IndexAliasImplicits
 import com.sksamuel.elastic4s.http.index.mappings.MappingExecutables
-import com.sksamuel.elastic4s.http.index.{ExistsImplicits, IndexImplicits, IndexStatsImplicits, IndexTemplateImplicits}
 import com.sksamuel.elastic4s.http.locks.LocksImplicits
 import com.sksamuel.elastic4s.http.nodes.NodesImplicits
 import com.sksamuel.elastic4s.http.reindex.ReindexImplicits
@@ -46,6 +46,7 @@ trait ElasticDsl
     with MappingExecutables
     with NodesImplicits
     with ReindexImplicits
+    with RolloverImplicits
     with SearchImplicits
     with SearchTemplateImplicits
     with SearchScrollImplicits

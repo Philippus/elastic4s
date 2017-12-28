@@ -38,7 +38,7 @@ trait IndexAdminApi {
   def clearIndex(first: String, rest: String*): ClearCacheDefinition = clearIndex(first +: rest)
   def clearIndex(indexes: Iterable[String]): ClearCacheDefinition = ClearCacheDefinition(indexes.toSeq)
 
-  def rollover(alias: String): RolloverDefinition = RolloverDefinition(alias)
+  def rollover(alias: String): Rollover = Rollover(alias)
 
   def shrink(source: String, target: String): ShrinkDefinition = ShrinkDefinition(source, target)
 

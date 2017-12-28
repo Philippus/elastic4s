@@ -46,8 +46,8 @@ trait IndexAdminExecutables {
   }
 
   implicit object RolloverDefinitionExecutable
-    extends Executable[RolloverDefinition, RolloverResponse, RolloverResponse] {
-    override def apply(c: Client, r: RolloverDefinition): Future[RolloverResponse] = {
+    extends Executable[Rollover, RolloverResponse, RolloverResponse] {
+    override def apply(c: Client, r: Rollover): Future[RolloverResponse] = {
       val req = RolloverBuilderFn(c, r)
       injectFuture(req.execute(_))
     }

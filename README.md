@@ -79,7 +79,7 @@ https://github.com/sksamuel/elastic4s/tree/master/samples
 To get started you will need to add a dependency to either
 
 * [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http)
-* [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) 
+* [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp)
 
 depending on which client you intend you use (or both).
 
@@ -88,9 +88,9 @@ want to perform. The execute method is asynchronous and will return a standard S
 type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse`
 which contains the results of the search.
 
-To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the 
+To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the
 TCP client, use the `TcpClient` companion object methods. Requests are the same for either client, but response classes
-may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java 
+may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java
 client classes.
 
 Requests are created using the elastic4s DSL. For example to create a search request, you would do:
@@ -99,7 +99,7 @@ Requests are created using the elastic4s DSL. For example to create a search req
 search("index" / "type").query("findthistext")`
 ```
 
-The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is 
+The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is
 identical whether you use the HTTP or TCP client, you must import the appropriate trait
 (`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which
 client you are using.
@@ -111,13 +111,13 @@ client you are using.
 val elastic4sVersion = "x.x.x"
 libraryDependencies ++= Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
-  
+
   // for the http client
   "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
-  
+
   // if you want to use reactive streams
   "com.sksamuel.elastic4s" %% "elastic4s-streams" % elastic4sVersion,
-  
+
   // testing
   "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
   "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion % "test"
@@ -182,8 +182,8 @@ object ArtistIndex extends App {
 
 ## Eventual Consistency
 
-Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched, 
-but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts. 
+Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched,
+but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts.
 Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
 You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with elastic constantly flushing to disk.
 
@@ -266,7 +266,7 @@ Please also note [some java interoperability notes](https://sksamuel.github.io/e
 
 To connect to a stand alone elasticsearch cluster we use the methods on the HttpClient or TcpClient companion objects.
 For example, `TcpClient.transport` or `HttpClient.apply`. These methods accept an instance of `ElasticsearchClientUri`
-which specifies the host, port and cluster name of the cluster. The cluster name does not need to be specified if it is the 
+which specifies the host, port and cluster name of the cluster. The cluster name does not need to be specified if it is the
 default, which is "elasticsearch" but if you changed it you must specify it in the uri.
 
 Please note that the TCP interface uses port 9300 and HTTP uses 9200 (unless of course you have changed these in your cluster).
@@ -277,7 +277,7 @@ Here is an example of connecting to a TCP cluster with the standard settings.
 val client = TcpClient.transport(ElasticsearchClientUri("host1", 9300))
 ```
 
-For multiple nodes it's better to use the elasticsearch client uri connection string. 
+For multiple nodes it's better to use the elasticsearch client uri connection string.
 This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
 
 ```scala
@@ -711,8 +711,8 @@ instances of `MyType` using the implicit `HitReader` (see the section on HitRead
 elasticsearch `Hit` object, then use `SearchIterator.hits`
 
 Note: Whenever the results in a particular
-batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query. 
-So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a 
+batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query.
+So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a
 quick and simple way to iterate over some data without bringing back all the results at once `SearchIterator` is perfect.
 
 ## DSL Completeness
@@ -860,6 +860,12 @@ folder. There is no need to configure anything externally.
 
 ## Changelog
 
+###### 6.1.2
+
+* Added rollover API to HTTP
+* Added terms set query
+* Added DSL aliases for span within and span containing
+
 ###### 6.1.1
 
 * Added index stats API
@@ -896,7 +902,7 @@ folder. There is no need to configure anything externally.
 * Added to[T] and safeTo[T] on aggregations #1156
 * Added _shard, _node, and _routing to search hit #1160
 * java.lang.NullPointerException in ElasticError.parse #1159
- 
+
 ###### 6.0.3
 
 * Added track_total_hits option to searches
@@ -917,7 +923,7 @@ folder. There is no need to configure anything externally.
 * HTTP Client no longer has a dependency on the main elasticsearch jars - no more version clashes (netty!) and a hugely reduced footprint.
 * HTTP operations now return Either[RequestFailure, RequestSuccess[U]] for better error handling. Each of `RequestFailure` and `RequestSuccess` contain the http status code, the full json response body, and any http headers, in addition to either the error details or the request resposne type.
 * Any methods deprecated before version 5.0.0 have been removed.
-* Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released 
+* Operations that accept an index and a type have been deprecated in favour of index only operations. This is because Elasticsearch plan to remove types in version 7, and in version 6 you are limited to a single type per index. See - https://www.elastic.co/blog/elasticsearch-6-0-0-alpha1-released
 * Deprecated implicit conversion of a tuple to an index/type has been removed. So instead of "index" -> "type", you should use "index" / "type", which has been the default since 2.4.0. Or even better, don't use the type at all anymore, see point above.
 * The String field type has been removed, which has been deprecated since 5.0.0. Use textField or keywordField.
 * Added doc values to search requests
@@ -1001,7 +1007,7 @@ folder. There is no need to configure anything externally.
 
 ###### 5.4.4
 
-* TCP Client was not setting types correctly for delete by query #942 
+* TCP Client was not setting types correctly for delete by query #942
 * HTTP Update was not setting script correctly #930
 * Elasticsearch Client URI now supports SSL for the HTTP client #932
 * IndicesOptions was not being set on search correctly for HTTP #943
