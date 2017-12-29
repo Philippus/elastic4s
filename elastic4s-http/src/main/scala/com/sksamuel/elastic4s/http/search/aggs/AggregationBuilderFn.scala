@@ -21,6 +21,7 @@ object AggregationBuilderFn {
       case agg: GeoCentroidAggregationDefinition => GeoCentroidAggregationBuilder(agg)
       case agg: GeoBoundsAggregationDefinition => GeoBoundsAggregationBuilder(agg)
       case agg: GeoHashGridAggregationDefinition => GeoHashGridAggregationBuilder(agg)
+      case agg: HistogramAggregation => HistogramAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
