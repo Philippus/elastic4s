@@ -11,7 +11,7 @@ case class HistogramAggregation(name: String,
                                 interval: Option[Double] = None,
                                 keyed: Option[Boolean] = None,
                                 offset: Option[Double] = None,
-                                extendedBounds: Option[(Double, Double)] = None,
+                                extendedBounds: Option[ExtendedBounds] = None,
                                 order: Option[HistogramOrder] = None,
                                 script: Option[ScriptDefinition] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
@@ -33,5 +33,5 @@ case class HistogramAggregation(name: String,
 
   def order(order: HistogramOrder): HistogramAggregation = copy(order = order.some)
   def offset(offset: Double): HistogramAggregation = copy(offset = offset.some)
-  def extendedBounds(min: Double, max: Double): HistogramAggregation = copy(extendedBounds = (min, max).some)
+  def extendedBounds(min: Double, max: Double): HistogramAggregation = copy(extendedBounds = ExtendedBounds(min, max).some)
 }

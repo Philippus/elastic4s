@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.snapshots
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.snapshots.{CreateRepositoryDefinition, CreateSnapshotDefinition, DeleteSnapshotDefinition, GetSnapshotsDefinition, RestoreSnapshotDefinition}
+import com.sksamuel.elastic4s.snapshots.{CreateRepository, CreateSnapshot, DeleteSnapshot, GetSnapshots, RestoreSnapshot}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.duration._
@@ -31,9 +31,9 @@ case class RestoreSnapshotResponse(acknowledged: Boolean)
 
 trait SnapshotHttpImplicits {
 
-  implicit object CreateRepositoryHttpExecutable extends HttpExecutable[CreateRepositoryDefinition, CreateRepositoryResponse] {
+  implicit object CreateRepositoryHttpExecutable extends HttpExecutable[CreateRepository, CreateRepositoryResponse] {
 
-    override def execute(client: HttpRequestClient, request: CreateRepositoryDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: CreateRepository): Future[HttpResponse] = {
 
       val endpoint = s"/_snapshot/" + request.name
 
@@ -53,9 +53,9 @@ trait SnapshotHttpImplicits {
     }
   }
 
-  implicit object CreateSnapshotHttpExecutable extends HttpExecutable[CreateSnapshotDefinition, CreateSnapshotResponse] {
+  implicit object CreateSnapshotHttpExecutable extends HttpExecutable[CreateSnapshot, CreateSnapshotResponse] {
 
-    override def execute(client: HttpRequestClient, request: CreateSnapshotDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: CreateSnapshot): Future[HttpResponse] = {
 
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
 
@@ -75,15 +75,15 @@ trait SnapshotHttpImplicits {
     }
   }
 
-  implicit object DeleteSnapshotHttpExecutable extends HttpExecutable[DeleteSnapshotDefinition, DeleteSnapshotResponse] {
-    override def execute(client: HttpRequestClient, request: DeleteSnapshotDefinition): Future[HttpResponse] = {
+  implicit object DeleteSnapshotHttpExecutable extends HttpExecutable[DeleteSnapshot, DeleteSnapshotResponse] {
+    override def execute(client: HttpRequestClient, request: DeleteSnapshot): Future[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
       client.async("DELETE", endpoint, Map.empty)
     }
   }
 
-  implicit object GetSnapshotHttpExecutable extends HttpExecutable[GetSnapshotsDefinition, GetSnapshotResponse] {
-    override def execute(client: HttpRequestClient, request: GetSnapshotsDefinition): Future[HttpResponse] = {
+  implicit object GetSnapshotHttpExecutable extends HttpExecutable[GetSnapshots, GetSnapshotResponse] {
+    override def execute(client: HttpRequestClient, request: GetSnapshots): Future[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
       val params = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
@@ -92,8 +92,8 @@ trait SnapshotHttpImplicits {
     }
   }
 
-  implicit object RestoreSnapshotDefinitionHttpExecutable extends HttpExecutable[RestoreSnapshotDefinition, RestoreSnapshotResponse] {
-    override def execute(client: HttpRequestClient, request: RestoreSnapshotDefinition): Future[HttpResponse] = {
+  implicit object RestoreSnapshotDefinitionHttpExecutable extends HttpExecutable[RestoreSnapshot, RestoreSnapshotResponse] {
+    override def execute(client: HttpRequestClient, request: RestoreSnapshot): Future[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 
       val body = XContentFactory.jsonBuilder()

@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.http.index
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
-import com.sksamuel.elastic4s.indexes.{GetIndexDefinition, IndexContentBuilder, IndexDefinition}
+import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.indexes.{GetIndex, IndexContentBuilder, IndexDefinition}
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType
 
@@ -15,7 +15,7 @@ trait IndexImplicits extends IndexShowImplicits {
   implicit object IndexHttpExecutable extends HttpExecutable[IndexDefinition, IndexResponse] {
 
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
-      override def handle(response: HttpResponse) = response.statusCode match {
+      override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
         case 201 | 200 => Right(ResponseHandler.fromResponse[IndexResponse](response))
         case 400 | 409 | 500 => Left(ElasticError.parse(response))
         case _ => sys.error(response.toString)
@@ -51,9 +51,9 @@ trait IndexImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndexDefinition, Map[String, GetIndex]] {
+  implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndex, Map[String, GetIndexResponse]] {
 
-    override def execute(client: HttpRequestClient, request: GetIndexDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: GetIndex): Future[HttpResponse] = {
       val endpoint = "/" + request.index
       val method = "GET"
       client.async(method, endpoint, Map.empty)
@@ -65,8 +65,8 @@ case class Mapping(properties: Map[String, Field])
 
 case class Field(`type`: String)
 
-case class GetIndex(aliases: Map[String, Map[String, Any]],
-                    mappings: Map[String, Mapping],
-                    @JsonProperty("settings") private val _settings: Map[String, Any]) {
+case class GetIndexResponse(aliases: Map[String, Map[String, Any]],
+                            mappings: Map[String, Mapping],
+                            @JsonProperty("settings") private val _settings: Map[String, Any]) {
   def settings: Map[String, Any] = Maps.flatten(_settings, ".")
 }

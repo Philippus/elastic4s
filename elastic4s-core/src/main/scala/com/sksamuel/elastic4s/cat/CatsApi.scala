@@ -5,38 +5,37 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait CatsApi {
 
-  def catAliases(): CatAliasesDefinition = CatAliasesDefinition()
-  def catAllocation(): CatAllocationDefinition = CatAllocationDefinition()
+  def catAliases(): CatAliases = CatAliases()
+  def catAllocation(): CatAllocation = CatAllocation()
 
-  def catCount(): CatCountDefinition = CatCountDefinition()
-  def catCount(first: String, rest: String*): CatCountDefinition = CatCountDefinition(first +: rest)
+  def catCount(): CatCount = CatCount()
+  def catCount(first: String, rest: String*): CatCount = CatCount(first +: rest)
 
-  def catHealth(): CatHealthDefinition = CatHealthDefinition()
+  def catHealth(): CatHealth = CatHealth()
 
-  def catIndices(): CatIndexesDefinition = CatIndexesDefinition(None)
-  def catIndices(health: HealthStatus): CatIndexesDefinition = CatIndexesDefinition(health.some)
+  def catIndices(): CatIndexes = CatIndexes(None)
+  def catIndices(health: HealthStatus): CatIndexes = CatIndexes(health.some)
 
-  def catMaster(): CatMasterDefinition = CatMasterDefinition()
+  def catMaster(): CatMaster = CatMaster()
 
-  def catNodes(): CatNodesDefinition = CatNodesDefinition()
+  def catNodes(): CatNodes = CatNodes()
 
-  def catPlugins(): CatPluginsDefinition = CatPluginsDefinition()
+  def catPlugins(): CatPlugins = CatPlugins()
 
   def catSegments(indices: Indexes = Indexes.All): CatSegments = CatSegments(indices)
-  def catShards(): CatShardsDefinition = CatShardsDefinition()
+  def catShards(): CatShards = CatShards()
 
-  def catThreadPool(): CatThreadPoolDefinition = CatThreadPoolDefinition()
+  def catThreadPool(): CatThreadPool = CatThreadPool()
 }
 
 case class CatSegments(indices: Indexes)
-
-case class CatPluginsDefinition()
-case class CatShardsDefinition()
-case class CatCountDefinition(indices: Seq[String] = Nil)
-case class CatNodesDefinition()
-case class CatHealthDefinition()
-case class CatThreadPoolDefinition()
-case class CatAllocationDefinition()
-case class CatAliasesDefinition()
-case class CatMasterDefinition()
-case class CatIndexesDefinition(health: Option[HealthStatus])
+case class CatPlugins()
+case class CatShards()
+case class CatCount(indices: Seq[String] = Nil)
+case class CatNodes()
+case class CatHealth()
+case class CatThreadPool()
+case class CatAllocation()
+case class CatAliases()
+case class CatMaster()
+case class CatIndexes(health: Option[HealthStatus])

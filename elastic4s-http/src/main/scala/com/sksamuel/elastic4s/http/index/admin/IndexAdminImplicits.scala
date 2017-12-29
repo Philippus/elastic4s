@@ -3,16 +3,41 @@ package com.sksamuel.elastic4s.http.index.admin
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.admin._
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.index.{CreateIndexContentBuilder, CreateIndexResponse, IndexShowImplicits}
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
+import com.sksamuel.elastic4s.json.XContentFactory
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
+case class ShrinkIndexResponse()
+
 trait IndexAdminImplicits extends IndexShowImplicits {
+
+  implicit object ShrinkIndexHttpExecutable extends HttpExecutable[ShrinkIndex, ShrinkIndexResponse] {
+
+    override def execute(client: HttpRequestClient, request: ShrinkIndex): Future[HttpResponse] = {
+
+      val endpoint = s"/${request.source}/_shrink/${request.target}"
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+
+      val builder = XContentFactory.jsonBuilder()
+      if (request.settings.nonEmpty) {
+        builder.startObject("settings")
+        for ((key, value) <- request.settings) {
+          builder.field(key, value)
+        }
+        builder.endObject()
+      }
+
+      val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
+      client.async("GET", endpoint, params.toMap, entity)
+    }
+  }
 
   implicit object IndexRecoveryHttpExecutable extends HttpExecutable[IndexRecoveryDefinition, IndexRecoveryResponse] {
 
@@ -45,9 +70,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object FlushIndexHttpExecutable extends HttpExecutable[FlushIndexDefinition, FlushIndexResponse] {
+  implicit object FlushIndexHttpExecutable extends HttpExecutable[FlushIndex, FlushIndexResponse] {
 
-    override def execute(client: HttpRequestClient, request: FlushIndexDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: FlushIndex): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexes.mkString(",")}/_flush"
 
@@ -59,9 +84,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object ClearCacheHttpExecutable extends HttpExecutable[ClearCacheDefinition, ClearCacheResponse] {
+  implicit object ClearCacheHttpExecutable extends HttpExecutable[ClearCache, ClearCacheResponse] {
 
-    override def execute(client: HttpRequestClient, request: ClearCacheDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: ClearCache): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexes.mkString(",")}/_cache/clear"
 
@@ -74,7 +99,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object IndexExistsHttpExecutable extends HttpExecutable[IndicesExistsDefinition, IndexExistsResponse] {
+  implicit object IndexExistsHttpExecutable extends HttpExecutable[IndicesExists, IndexExistsResponse] {
 
     override def responseHandler: ResponseHandler[IndexExistsResponse] = new ResponseHandler[IndexExistsResponse] {
       override def handle(resp: HttpResponse) = {
@@ -82,26 +107,26 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: IndicesExistsDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: IndicesExists): Future[HttpResponse] = {
       val endpoint = s"/${request.indexes.string}"
       client.async("HEAD", endpoint, Map.empty)
     }
   }
 
-  implicit object GetSegmentHttpExecutable extends HttpExecutable[GetSegmentsDefinition, GetSegmentsResponse] {
-    override def execute(client: HttpRequestClient, request: GetSegmentsDefinition): Future[HttpResponse] = {
+  implicit object GetSegmentHttpExecutable extends HttpExecutable[GetSegments, GetSegmentsResponse] {
+    override def execute(client: HttpRequestClient, request: GetSegments): Future[HttpResponse] = {
       val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string}/_segments"
       client.async("GET", endpoint, Map("verbose" -> "true"))
     }
   }
 
-  implicit object TypeExistsHttpExecutable extends HttpExecutable[TypesExistsDefinition, TypeExistsResponse] {
+  implicit object TypeExistsHttpExecutable extends HttpExecutable[TypesExists, TypeExistsResponse] {
 
     override def responseHandler: ResponseHandler[TypeExistsResponse] = new ResponseHandler[TypeExistsResponse] {
       override def handle(response: HttpResponse) = Right(TypeExistsResponse(response.statusCode == 200))
     }
 
-    override def execute(client: HttpRequestClient, request: TypesExistsDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: TypesExists): Future[HttpResponse] = {
       val endpoint = s"/${request.indexes.mkString(",")}/_mapping/${request.types.mkString(",")}"
       client.async("HEAD", endpoint, Map.empty)
     }
@@ -121,22 +146,22 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object OpenIndexHttpExecutable extends HttpExecutable[OpenIndexDefinition, OpenIndexResponse] {
-    override def execute(client: HttpRequestClient, request: OpenIndexDefinition): Future[HttpResponse] = {
+  implicit object OpenIndexHttpExecutable extends HttpExecutable[OpenIndex, OpenIndexResponse] {
+    override def execute(client: HttpRequestClient, request: OpenIndex): Future[HttpResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
       client.async("POST", endpoint, Map.empty)
     }
   }
 
-  implicit object CloseIndexHttpExecutable extends HttpExecutable[CloseIndexDefinition, CloseIndexResponse] {
-    override def execute(client: HttpRequestClient, request: CloseIndexDefinition): Future[HttpResponse] = {
+  implicit object CloseIndexHttpExecutable extends HttpExecutable[CloseIndex, CloseIndexResponse] {
+    override def execute(client: HttpRequestClient, request: CloseIndex): Future[HttpResponse] = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
       client.async("POST", endpoint, Map.empty)
     }
   }
 
-  implicit object RefreshIndexHttpExecutable extends HttpExecutable[RefreshIndexDefinition, RefreshIndexResponse] {
-    override def execute(client: HttpRequestClient, request: RefreshIndexDefinition): Future[HttpResponse] = {
+  implicit object RefreshIndexHttpExecutable extends HttpExecutable[RefreshIndex, RefreshIndexResponse] {
+    override def execute(client: HttpRequestClient, request: RefreshIndex): Future[HttpResponse] = {
       val endpoint = "/" + request.indexes.mkString(",") + "/_refresh"
       client.async("POST", endpoint, Map.empty)
     }
@@ -166,9 +191,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object DeleteIndexHttpExecutable extends HttpExecutable[DeleteIndexDefinition, DeleteIndexResponse] {
+  implicit object DeleteIndexHttpExecutable extends HttpExecutable[DeleteIndex, DeleteIndexResponse] {
 
-    override def execute(client: HttpRequestClient, request: DeleteIndexDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: DeleteIndex): Future[HttpResponse] = {
       val endpoint = "/" + request.indexes.mkString(",")
       client.async("DELETE", endpoint, Map.empty)
     }

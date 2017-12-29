@@ -3,34 +3,34 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
 
-case class OpenIndexDefinition(indexes: Indexes)
-case class CloseIndexDefinition(indexes: Indexes)
-case class GetSegmentsDefinition(indexes: Indexes)
-case class IndicesExistsDefinition(indexes: Indexes)
-case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
+case class OpenIndex(indexes: Indexes)
+case class CloseIndex(indexes: Indexes)
+case class GetSegments(indexes: Indexes)
+case class IndicesExists(indexes: Indexes)
+case class TypesExists(indexes: Seq[String], types: Seq[String])
 case class AliasExistsDefinition(alias: String)
-case class IndexStatsRequest(indices: Indexes)
+case class IndexStats(indices: Indexes)
 
 case class IndicesOptions(allowNoIndices: Boolean = false,
                           ignoreUnavailable: Boolean = false,
                           expandWildcardsOpen: Boolean = false,
                           expandWildcardClosed: Boolean = false)
 
-case class ClearCacheDefinition(indexes: Seq[String],
-                                fieldDataCache: Option[Boolean] = None,
-                                requestCache: Option[Boolean] = None,
-                                indicesOptions: Option[IndicesOptions] = None,
-                                queryCache: Option[Boolean] = None,
-                                fields: Seq[String] = Nil)
+case class ClearCache(indexes: Seq[String],
+                      fieldDataCache: Option[Boolean] = None,
+                      requestCache: Option[Boolean] = None,
+                      indicesOptions: Option[IndicesOptions] = None,
+                      queryCache: Option[Boolean] = None,
+                      fields: Seq[String] = Nil)
 
-case class FlushIndexDefinition(indexes: Seq[String],
-                                waitIfOngoing: Option[Boolean] = None,
-                                force: Option[Boolean] = None) {
-  def force(force: Boolean): FlushIndexDefinition = copy(force = force.some)
-  def waitIfOngoing(waitIfOngoing: Boolean): FlushIndexDefinition = copy(waitIfOngoing = waitIfOngoing.some)
+case class FlushIndex(indexes: Seq[String],
+                      waitIfOngoing: Option[Boolean] = None,
+                      force: Option[Boolean] = None) {
+  def force(force: Boolean): FlushIndex = copy(force = force.some)
+  def waitIfOngoing(waitIfOngoing: Boolean): FlushIndex = copy(waitIfOngoing = waitIfOngoing.some)
 }
 
-case class RefreshIndexDefinition(indexes: Seq[String])
+case class RefreshIndex(indexes: Seq[String])
 
 case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
                                               numberOfReplicas: Option[Int] = None,
