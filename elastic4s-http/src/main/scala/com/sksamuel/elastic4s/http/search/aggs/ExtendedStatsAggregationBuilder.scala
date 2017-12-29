@@ -8,7 +8,7 @@ object ExtendedStatsAggregationBuilder {
 
     val builder = XContentFactory.jsonBuilder()
 
-    builder.startObject("ext")
+    builder.startObject("extended_stats")
     agg.field.foreach(builder.field("field", _))
     agg.sigma.foreach(builder.field("sigma", _))
     agg.missing.foreach(builder.field("missing", _))

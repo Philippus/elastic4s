@@ -181,11 +181,11 @@ case class ValueCountResult(name: String, value: Double) extends MetricAggregati
 
 case class ExtendedStatsAggResult(name: String,
                                   count: Long,
-                                  min: Long,
-                                  max: Long,
-                                  avg: Long,
-                                  sum: Long,
-                                  sumOfSquares: Long,
+                                  min: Double,
+                                  max: Double,
+                                  avg: Double,
+                                  sum: Double,
+                                  sumOfSquares: Double,
                                   variance: Double,
                                   stdDeviation: Double)
 
@@ -280,11 +280,11 @@ trait HasAggregations {
     ExtendedStatsAggResult(
       name,
       count = agg(name)("count").toString.toLong,
-      min = agg(name)("min").toString.toLong,
-      max = agg(name)("max").toString.toLong,
-      avg = agg(name)("avg").toString.toLong,
-      sum = agg(name)("sum").toString.toLong,
-      sumOfSquares = agg(name)("sum_of_squares").toString.toLong,
+      min = agg(name)("min").toString.toDouble,
+      max = agg(name)("max").toString.toDouble,
+      avg = agg(name)("avg").toString.toDouble,
+      sum = agg(name)("sum").toString.toDouble,
+      sumOfSquares = agg(name)("sum_of_squares").toString.toDouble,
       variance = agg(name)("variance").toString.toDouble,
       stdDeviation = agg(name)("std_deviation").toString.toDouble
     )
