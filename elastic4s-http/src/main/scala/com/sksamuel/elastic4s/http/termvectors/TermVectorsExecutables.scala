@@ -1,19 +1,18 @@
 package com.sksamuel.elastic4s.http.termvectors
 
+import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.termvectors.TermVectorsDefinition
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 trait TermVectorsExecutables {
 
   implicit object TermVectorHttpExecutable extends HttpExecutable[TermVectorsDefinition, TermVectorsResponse] {
 
-    override def execute(client: HttpRequestClient, request: TermVectorsDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: TermVectorsDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 

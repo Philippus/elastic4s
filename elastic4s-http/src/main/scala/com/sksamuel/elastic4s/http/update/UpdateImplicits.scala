@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.update
 
 import java.net.URLEncoder
 
-import cats.Show
+import cats.{Functor, Show}
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
@@ -11,8 +11,6 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
 
@@ -63,7 +61,7 @@ trait UpdateImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: UpdateDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
 
@@ -87,7 +85,7 @@ trait UpdateImplicits {
   }
 
   implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryDefinition, UpdateByQueryResponse] {
-    override def execute(client: HttpRequestClient, request: UpdateByQueryDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: UpdateByQueryDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
         s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"

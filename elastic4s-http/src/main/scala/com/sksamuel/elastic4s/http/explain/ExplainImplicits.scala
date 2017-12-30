@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.http.explain
 
+import cats.Functor
 import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 trait ExplainImplicits {
 
@@ -19,8 +18,8 @@ trait ExplainImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient,
-                         request: ExplainDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient,
+                         request: ExplainDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
 

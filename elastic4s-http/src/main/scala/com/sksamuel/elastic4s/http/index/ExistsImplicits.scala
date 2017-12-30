@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.http.index
 
+import cats.Functor
 import com.sksamuel.elastic4s.ExistsDefinition
-import com.sksamuel.elastic4s.http.{ElasticError, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-
-import scala.concurrent.Future
+import com.sksamuel.elastic4s.http._
 
 trait ExistsImplicits {
 
@@ -13,7 +12,7 @@ trait ExistsImplicits {
       override def handle(response: HttpResponse): Either[ElasticError, Boolean] = Right(response.statusCode == 200)
     }
 
-    override def execute(client: HttpRequestClient, request: ExistsDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ExistsDefinition): F[HttpResponse] = {
       val endpoint = "/" + request.index.name + "/" + request.`type` + "/" + request.id
       val method = "HEAD"
       client.async(method, endpoint, Map.empty)

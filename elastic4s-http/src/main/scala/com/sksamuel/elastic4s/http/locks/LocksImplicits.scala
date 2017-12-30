@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.http.locks
 
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import cats.Functor
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLock, ReleaseGlobalLock}
-
-import scala.concurrent.Future
 
 trait LocksImplicits {
 
@@ -15,7 +14,7 @@ trait LocksImplicits {
       override def handle(response: HttpResponse) = Right(response.statusCode == 201)
     }
 
-    override def execute(client: HttpRequestClient, request: AcquireGlobalLock): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: AcquireGlobalLock): F[HttpResponse] = {
       client.async("PUT", endpoint, Map.empty)
     }
   }
@@ -26,7 +25,7 @@ trait LocksImplicits {
       override def handle(response: HttpResponse) = Right(response.statusCode == 200)
     }
 
-    override def execute(client: HttpRequestClient, request: ReleaseGlobalLock): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ReleaseGlobalLock): F[HttpResponse] = {
       client.async("DELETE", "/fs/lock/global", Map.empty)
     }
   }

@@ -2,16 +2,12 @@ package com.sksamuel.elastic4s.http.search
 
 import java.net.URLEncoder
 
-import cats.Show
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
+import cats.{Functor, Show}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
-
-
 
 trait SearchImplicits {
 
@@ -46,7 +42,7 @@ trait SearchImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: MultiSearchDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: MultiSearchDefinition): F[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -60,7 +56,7 @@ trait SearchImplicits {
 
   implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
-    override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: SearchDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"

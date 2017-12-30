@@ -6,6 +6,9 @@ import com.sksamuel.elastic4s.{ElasticDateMath, Years}
 import org.scalatest.WordSpec
 
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
+import cats.instances.future._
+import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
 
 class DateRangeQueryHttpTest
   extends WordSpec

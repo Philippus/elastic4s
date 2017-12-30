@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.http.settings
 
+import cats.Functor
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
 import com.sksamuel.exts.collection.Maps
 
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
 
 case class IndexSettingsResponse(settings: Map[Index, Map[String, String]]) {
   def settingsForIndex(index: Index) = settings(index)
@@ -33,7 +33,7 @@ trait SettingsImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: GetSettingsDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: GetSettingsDefinition): F[HttpResponse] = {
       val endpoint = "/" + request.indexes.string + "/_settings"
       client.async("GET", endpoint, Map.empty)
     }
@@ -50,7 +50,7 @@ trait SettingsImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: UpdateSettingsDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: UpdateSettingsDefinition): F[HttpResponse] = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body = JacksonSupport.mapper.writeValueAsString(request.settings)
       client.async("PUT", endpoint, Map.empty, HttpEntity(body))

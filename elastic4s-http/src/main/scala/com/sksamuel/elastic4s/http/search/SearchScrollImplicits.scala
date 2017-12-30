@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.http.search
 
-import cats.Show
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import cats.{Functor, Show}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 
@@ -28,7 +26,7 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: ClearScrollDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ClearScrollDefinition): F[HttpResponse] = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -49,7 +47,7 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, req: SearchScrollDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, req: SearchScrollDefinition): F[HttpResponse] = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)

@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.http.search
 
+import cats.Functor
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.{Awaitable, FromListener, HttpClient}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 /**
   * A SearchIterator is used to create standard library iterator's from a search request.
@@ -19,9 +17,9 @@ object SearchIterator {
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: HttpClient,
-           searchdef: SearchDefinition)
-          (implicit timeout: Duration): Iterator[SearchHit] = new Iterator[SearchHit] {
+  def hits[F[_]: FromListener : Awaitable : Functor](client: HttpClient,
+                              searchdef: SearchDefinition)
+                             : Iterator[SearchHit] = new Iterator[SearchHit] {
     require(searchdef.keepAlive.isDefined, "Search request must define keep alive value")
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
@@ -40,8 +38,8 @@ object SearchIterator {
 
       // we're either advancing a scroll id or issuing the first query w/ the keep alive set
       val resp = scrollId match {
-        case Some(id) => Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
-        case None => Await.result(client.execute(searchdef), timeout)
+        case Some(id) => implicitly[Awaitable[F]].await(client.execute(searchScroll(id, searchdef.keepAlive.get)))
+        case None => implicitly[Awaitable[F]].await(client.execute(searchdef))
       }
 
       // in a search scroll we must always use the last returned scrollId
@@ -60,8 +58,8 @@ object SearchIterator {
     * A typeclass HitReader[T] must be provided for marshalling of the search
     * responses into instances of type T.
     */
-  def iterate[T](client: HttpClient,
+  def iterate[F[_]: FromListener: Awaitable : Functor, T](client: HttpClient,
                  search: SearchDefinition)
-                (implicit reader: HitReader[T], timeout: Duration): Iterator[T] =
-    hits(client, search)(timeout).map(_.to[T])
+                (implicit reader: HitReader[T]): Iterator[T] =
+    hits(client, search).map(_.to[T])
 }

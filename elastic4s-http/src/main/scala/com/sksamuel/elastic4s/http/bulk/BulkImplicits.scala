@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import cats.Show
+import cats.{Functor, Show}
 import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
@@ -16,7 +16,7 @@ trait BulkImplicits {
 
   implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
 
-    override def execute(client: HttpRequestClient, bulk: BulkDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener : Functor](client: HttpRequestClient, bulk: BulkDefinition): F[HttpResponse] = {
 
       val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well
@@ -28,7 +28,7 @@ trait BulkImplicits {
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.async("POST", "/_bulk", params.toMap, entity)
+      client.async[F]("POST", "/_bulk", params.toMap, entity)
     }
   }
 }

@@ -2,13 +2,12 @@ package com.sksamuel.elastic4s.http.index
 
 import java.net.URLEncoder
 
+import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.indexes.{GetIndex, IndexContentBuilder, IndexDefinition}
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 trait IndexImplicits extends IndexShowImplicits {
 
@@ -22,7 +21,7 @@ trait IndexImplicits extends IndexShowImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: IndexDefinition): F[HttpResponse] = {
 
       val (method, endpoint) = request.id match {
         case Some(id) => "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/${URLEncoder.encode(id.toString)}"
@@ -53,7 +52,7 @@ trait IndexImplicits extends IndexShowImplicits {
 
   implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndex, Map[String, GetIndexResponse]] {
 
-    override def execute(client: HttpRequestClient, request: GetIndex): Future[HttpResponse] = {
+    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: GetIndex): F[HttpResponse] = {
       val endpoint = "/" + request.index
       val method = "GET"
       client.async(method, endpoint, Map.empty)
