@@ -17,7 +17,7 @@ object SearchIterator {
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits[F[_]: FromListener : Awaitable : Functor](client: HttpClient,
+  def hits[F[_]: FromListener : Awaitable](client: HttpClient,
                               searchdef: SearchDefinition)
                              : Iterator[SearchHit] = new Iterator[SearchHit] {
     require(searchdef.keepAlive.isDefined, "Search request must define keep alive value")

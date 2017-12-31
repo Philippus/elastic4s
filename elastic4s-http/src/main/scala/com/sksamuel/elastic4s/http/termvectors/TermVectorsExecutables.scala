@@ -12,7 +12,7 @@ trait TermVectorsExecutables {
 
   implicit object TermVectorHttpExecutable extends HttpExecutable[TermVectorsDefinition, TermVectorsResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: TermVectorsDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: TermVectorsDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 

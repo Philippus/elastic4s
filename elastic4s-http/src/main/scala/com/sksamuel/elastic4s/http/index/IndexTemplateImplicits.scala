@@ -26,7 +26,7 @@ case class IndexTemplate(order: Int,
 trait IndexTemplateImplicits {
 
   implicit object IndexTemplateExistsHttpExecutable extends HttpExecutable[IndexTemplateExistsDefinition, IndexTemplateExists] {
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: IndexTemplateExistsDefinition): F[HttpResponse] = ???
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: IndexTemplateExistsDefinition): F[HttpResponse] = ???
   }
 
   implicit object CreateIndexTemplateHttpExecutable extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
@@ -38,7 +38,7 @@ trait IndexTemplateImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient,
+    override def execute[F[_]: FromListener](client: HttpRequestClient,
                          request: CreateIndexTemplateDefinition): F[HttpResponse] = {
       val endpoint = s"/_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
@@ -48,7 +48,7 @@ trait IndexTemplateImplicits {
   }
 
   implicit object DeleteIndexTemplateHttpExecutable extends HttpExecutable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient,
+    override def execute[F[_]: FromListener](client: HttpRequestClient,
                          request: DeleteIndexTemplateDefinition): F[HttpResponse] = {
       val endpoint = s"/_template/" + request.name
       client.async("DELETE", endpoint, Map.empty)
@@ -66,7 +66,7 @@ trait IndexTemplateImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: GetIndexTemplateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetIndexTemplateDefinition): F[HttpResponse] = {
       val endpoint = s"/_template/" + request.indexes.string
       client.async("GET", endpoint, Map.empty)
     }

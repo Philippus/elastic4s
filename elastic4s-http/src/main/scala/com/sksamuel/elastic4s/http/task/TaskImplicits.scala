@@ -31,7 +31,7 @@ trait TaskImplicits {
 
   implicit object ListTaskHttpExecutable extends HttpExecutable[ListTasksDefinition, ListTaskResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ListTasksDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ListTasksDefinition): F[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)
@@ -54,7 +54,7 @@ trait TaskImplicits {
       override def handle(response: HttpResponse) = Right(response.statusCode >= 200 && response.statusCode < 300)
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: CancelTasksDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: CancelTasksDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.nodeIds.isEmpty) s"/_tasks/cancel"
       else s"/_tasks/task_id:${request.nodeIds.mkString(",")}/_cancel"

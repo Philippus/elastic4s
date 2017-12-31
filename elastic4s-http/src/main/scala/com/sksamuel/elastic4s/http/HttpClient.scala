@@ -60,7 +60,7 @@ trait HttpClient extends Logging {
   // Executes the given request type T, and returns a Future of Response[U] where U is particular to the request type.
   // For example a search request will return a Future[Response[SearchResponse]].
   // The returned Response is an ADT
-  def execute[F[_]: FromListener: Functor, T, U](request: T)(
+  def execute[F[_]: FromListener, T, U](request: T)(
       implicit exec: HttpExecutable[T, U]): F[Either[RequestFailure, RequestSuccess[U]]] = {
     Functor[F].map(exec.execute(client, request))(r =>
       exec.responseHandler.handle(r) match {

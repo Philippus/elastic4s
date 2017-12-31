@@ -33,7 +33,7 @@ trait SettingsImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: GetSettingsDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetSettingsDefinition): F[HttpResponse] = {
       val endpoint = "/" + request.indexes.string + "/_settings"
       client.async("GET", endpoint, Map.empty)
     }
@@ -50,7 +50,7 @@ trait SettingsImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: UpdateSettingsDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: UpdateSettingsDefinition): F[HttpResponse] = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body = JacksonSupport.mapper.writeValueAsString(request.settings)
       client.async("PUT", endpoint, Map.empty, HttpEntity(body))

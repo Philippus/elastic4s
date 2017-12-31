@@ -7,8 +7,6 @@ import org.elasticsearch.ResourceAlreadyExistsException
 import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
 import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
-import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
 /**
   * Provides helper methods for things like refreshing an index, and blocking until an
   * index has a certain count of documents. These methods are very useful when writing

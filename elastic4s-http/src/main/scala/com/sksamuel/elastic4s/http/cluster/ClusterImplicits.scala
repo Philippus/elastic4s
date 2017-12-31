@@ -9,7 +9,7 @@ trait ClusterImplicits {
 
   implicit object ClusterStateHttpExecutable extends HttpExecutable[ClusterStateDefinition, ClusterStateResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ClusterStateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ClusterStateDefinition): F[HttpResponse] = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
       client.async("GET", endpoint, Map.empty)
     }
@@ -33,7 +33,7 @@ trait ClusterImplicits {
 
   implicit object ClusterHealthHttpExecutable extends HttpExecutable[ClusterHealthDefinition, ClusterHealthResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ClusterHealthDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ClusterHealthDefinition): F[HttpResponse] = {
       val endpoint = "/_cluster/health" + indicesUrl(request.indices)
 
       val params = scala.collection.mutable.Map.empty[String, String]

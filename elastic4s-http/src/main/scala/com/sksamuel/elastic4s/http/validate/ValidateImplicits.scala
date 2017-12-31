@@ -34,7 +34,7 @@ trait ValidateImplicits {
 
   implicit object ValidateHttpExecutable extends HttpExecutable[ValidateDefinition, ValidateResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: ValidateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ValidateDefinition): F[HttpResponse] = {
 
       val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
 

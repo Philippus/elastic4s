@@ -14,7 +14,7 @@ trait SearchTemplateImplicits {
   implicit object TemplateSearchExecutable
     extends HttpExecutable[TemplateSearchDefinition, SearchResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, req: TemplateSearchDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, req: TemplateSearchDefinition): F[HttpResponse] = {
       val endpoint = req.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil) => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
@@ -29,7 +29,7 @@ trait SearchTemplateImplicits {
   implicit object RemoveSearchTemplateExecutable
     extends HttpExecutable[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, req: RemoveSearchTemplateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, req: RemoveSearchTemplateDefinition): F[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       client.async("DELETE", endpoint, Map.empty)
     }
@@ -38,7 +38,7 @@ trait SearchTemplateImplicits {
   implicit object PutSearchTemplateExecutable
     extends HttpExecutable[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, req: PutSearchTemplateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, req: PutSearchTemplateDefinition): F[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       val body = PutSearchTemplateBuilderFn(req).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
@@ -63,7 +63,7 @@ trait SearchTemplateImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, req: GetSearchTemplateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, req: GetSearchTemplateDefinition): F[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       client.async("GET", endpoint, Map.empty)
     }

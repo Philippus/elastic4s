@@ -5,7 +5,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
 import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
 
 class HttpClientTest extends FlatSpec with Matchers with ElasticDsl {

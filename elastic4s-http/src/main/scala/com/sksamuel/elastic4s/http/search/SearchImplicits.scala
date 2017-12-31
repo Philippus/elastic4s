@@ -42,7 +42,7 @@ trait SearchImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: MultiSearchDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: MultiSearchDefinition): F[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -56,7 +56,7 @@ trait SearchImplicits {
 
   implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
 
-    override def execute[F[_]: FromListener: Functor](client: HttpRequestClient, request: SearchDefinition): F[HttpResponse] = {
+    override def execute[F[_]: FromListener](client: HttpRequestClient, request: SearchDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"

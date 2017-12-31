@@ -12,6 +12,9 @@ import scala.io.{Codec, Source}
 object ScalaFutureFromListener {
   implicit def scalaFutureFromListenerInstance(
       implicit ec: ExecutionContext): FromListener[Future] = new FromListener[Future] {
+
+    override def map[A, B](fa: Future[A])(f: A => B): Future[B] = fa.map(f)
+
     override def fromListener(callback: ResponseListener => Unit): Future[HttpResponse] = {
 
       val p = Promise[HttpResponse]()
