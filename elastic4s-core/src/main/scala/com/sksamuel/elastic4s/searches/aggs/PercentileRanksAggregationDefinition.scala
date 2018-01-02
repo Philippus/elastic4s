@@ -32,7 +32,7 @@ case class PercentileRanksAggregationDefinition(name: String,
   def numberOfSignificantValueDigits(digits: Int): T = copy(numberOfSignificantValueDigits = digits.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 
   def values(first: Double, rest: Double*): PercentileRanksAggregationDefinition = values(first +: rest)
   def values(values: Iterable[Double]): PercentileRanksAggregationDefinition = copy(values = values.toSeq)
