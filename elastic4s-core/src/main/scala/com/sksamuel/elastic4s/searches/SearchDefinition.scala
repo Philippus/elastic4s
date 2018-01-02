@@ -139,7 +139,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
   def globalSuggestionText(text: String): SearchDefinition = copy(suggestions = suggestions.copy(globalSuggestionText = text.some))
 
   // Adds a single prefix query to this search
-  def prefix(name: String, value: Any): SearchDefinition = query(PrefixQueryDefinition(name, value))
+  def prefix(name: String, value: Any): SearchDefinition = query(PrefixQuery(name, value))
 
   @deprecated("use regexQuery(...)", "5.0.0")
   def regex(tuple: (String, String)): SearchDefinition = regexQuery(tuple)

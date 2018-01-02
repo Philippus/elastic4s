@@ -14,7 +14,7 @@ import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQueryDefinitio
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQueryDefinition, TermsLookupQueryDefinition, TermsQueryDefinition, TermsSetQuery}
-import com.sksamuel.elastic4s.searches.queries.{IdQueryDefinition, _}
+import com.sksamuel.elastic4s.searches.queries.{IdQuery, _}
 
 object QueryBuilderFn {
   def apply(q: QueryDefinition): XContentBuilder = q match {
@@ -32,7 +32,7 @@ object QueryBuilderFn {
     case q: GeoShapeQueryDefinition => GeoShapeQueryBodyFn(q)
     case q: HasChildQueryDefinition => HasChildBodyFn(q)
     case q: HasParentQueryDefinition => HasParentBodyFn(q)
-    case q: IdQueryDefinition => IdQueryBodyFn(q)
+    case q: IdQuery => IdQueryBodyFn(q)
     case q: MatchAllQueryDefinition => MatchAllBodyFn(q)
     case q: MatchNoneQueryDefinition => MatchNoneBodyFn(q)
     case q: MatchQueryDefinition => MatchQueryBuilderFn(q)
@@ -42,7 +42,7 @@ object QueryBuilderFn {
     case q: MultiMatchQueryDefinition => MultiMatchBodyFn(q)
     case q: NestedQueryDefinition => NestedQueryBodyFn(q)
     case q: ParentIdQueryDefinition => ParentIdQueryBodyFn(q)
-    case q: PrefixQueryDefinition => PrefixQueryBodyFn(q)
+    case q: PrefixQuery => PrefixQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
     case r: RangeQuery => RangeQueryBodyFn(r)
     case q: RawQueryDefinition => RawQueryBodyFn(q)

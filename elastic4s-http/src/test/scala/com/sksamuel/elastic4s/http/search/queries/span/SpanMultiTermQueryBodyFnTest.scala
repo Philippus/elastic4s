@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
-import com.sksamuel.elastic4s.searches.queries.PrefixQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.PrefixQuery
 import com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQueryDefinition
 import org.scalatest.FunSuite
 
@@ -10,7 +10,7 @@ class SpanMultiTermQueryBodyFnTest extends FunSuite {
 
   test("SpanMultiTermQueryBodyFn apply should return appropriate XContentBuilder") {
     val builder = SpanMultiTermQueryBodyFn.apply(SpanMultiTermQueryDefinition(
-      PrefixQueryDefinition("user", "ki"),
+      PrefixQuery("user", "ki"),
       boost = Some(2.0),
       queryName = Some("rootName")
     ))

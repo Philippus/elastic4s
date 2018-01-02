@@ -22,6 +22,7 @@ object CompletionSuggestionBuilderFn {
     completion.analyzer.foreach(builder.field("analyzer", _))
     completion.size.foreach(builder.field("size", _))
     completion.shardSize.foreach(builder.field("shard_size", _))
+    completion.skipDuplicates.foreach(builder.field("skip_duplicates", _))
 
     completion.regex.foreach { regex =>
       builder.field("regex", regex)

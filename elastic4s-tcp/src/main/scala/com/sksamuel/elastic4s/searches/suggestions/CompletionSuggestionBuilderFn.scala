@@ -20,6 +20,7 @@ object CompletionSuggestionBuilderFn {
     sugg.shardSize.foreach(builder.shardSize(_))
     sugg.size.foreach(builder.size)
     sugg.text.foreach(builder.text)
+    sugg.skipDuplicates.foreach(builder.skipDuplicates)
 
     sugg.prefix.foreach { prefix =>
       sugg.fuzziness.fold(builder.prefix(prefix)) { fuzz =>

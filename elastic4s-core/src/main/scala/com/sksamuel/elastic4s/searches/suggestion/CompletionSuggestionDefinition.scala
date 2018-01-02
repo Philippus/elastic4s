@@ -32,6 +32,7 @@ case class CompletionSuggestionDefinition(name: String,
                                           size: Option[Int] = None,
                                           transpositions: Option[Boolean] = None,
                                           unicodeAware: Option[Boolean] = None,
+                                          skipDuplicates: Option[Boolean] = None,
                                           text: Option[String] = None,
                                           contexts: Map[String, Seq[CategoryContext]] = Map.empty) extends SuggestionDefinition {
 
@@ -43,6 +44,7 @@ case class CompletionSuggestionDefinition(name: String,
   def fuzziness(fuzziness: Fuzziness): CompletionSuggestionDefinition = copy(fuzziness = fuzziness.some)
   def transpositions(transpositions: Boolean): CompletionSuggestionDefinition = copy(transpositions = transpositions.some)
   def unicodeAware(unicodeAware: Boolean): CompletionSuggestionDefinition = copy(unicodeAware = unicodeAware.some)
+  def skipDuplicates(skipDuplicates: Boolean): CompletionSuggestionDefinition = copy(skipDuplicates = skipDuplicates.some)
 
   def context(name: String, context: CategoryContext): CompletionSuggestionDefinition = contexts(name, Seq(context))
   def contexts(name: String, contexts: Seq[CategoryContext]): CompletionSuggestionDefinition = {
