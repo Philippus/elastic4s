@@ -196,7 +196,7 @@ trait QueryApi {
       PercolateQueryDefinition(field, `type`, source = Some(indexable.json(t)))
   }
 
-  def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
+  def rangeQuery(field: String): RangeQuery = RangeQuery(field)
 
   def rawQuery(json: String): RawQueryDefinition = RawQueryDefinition(json)
 

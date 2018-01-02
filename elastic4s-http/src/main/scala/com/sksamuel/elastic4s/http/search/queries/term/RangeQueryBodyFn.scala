@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.RangeQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.RangeQuery
 
 object RangeQueryBodyFn {
 
-  def apply(range: RangeQueryDefinition): XContentBuilder = {
+  def apply(range: RangeQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("range").startObject(range.field)
 
@@ -42,6 +42,7 @@ object RangeQueryBodyFn {
     range.boost.foreach(builder.field("boost", _))
     range.timeZone.foreach(builder.field("time_zone", _))
     range.queryName.foreach(builder.field("_name", _))
+    range.relation.map(_.getClass.getSimpleName.toUpperCase).foreach(builder.field("relation", _))
 
     builder.endObject().endObject().endObject()
   }

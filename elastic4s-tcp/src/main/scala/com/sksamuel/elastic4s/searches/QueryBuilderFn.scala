@@ -37,7 +37,7 @@ object QueryBuilderFn {
     case q: QueryStringQueryDefinition => QueryStringBuilderFn.builder(q)
     case q: RawQueryDefinition => RawQueryBuilderFn(q)
     case q: RegexQueryDefinition => RegexQueryBuilderFn(q)
-    case q: RangeQueryDefinition => RangeQueryBuilderFn(q)
+    case q: RangeQuery => RangeQueryBuilderFn(q)
     case q: ScriptQueryDefinition => ScriptQueryBuilderFn(q)
     case q: SimpleStringQueryDefinition => SimpleStringQueryBuilderFn(q)
     case q: SpanContainingQueryDefinition => SpanContainingQueryBuilder(q)

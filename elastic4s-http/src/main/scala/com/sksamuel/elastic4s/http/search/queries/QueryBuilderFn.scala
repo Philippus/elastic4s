@@ -44,7 +44,7 @@ object QueryBuilderFn {
     case q: ParentIdQueryDefinition => ParentIdQueryBodyFn(q)
     case q: PrefixQueryDefinition => PrefixQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
-    case r: RangeQueryDefinition => RangeQueryBodyFn(r)
+    case r: RangeQuery => RangeQueryBodyFn(r)
     case q: RawQueryDefinition => RawQueryBodyFn(q)
     case q: RegexQueryDefinition => RegexQueryBodyFn(q)
     case q: ScriptQueryDefinition => ScriptQueryBodyFn(q)
