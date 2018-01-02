@@ -20,5 +20,5 @@ case class MinAggregationDefinition(name: String,
   def script(script: ScriptDefinition): T = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }
