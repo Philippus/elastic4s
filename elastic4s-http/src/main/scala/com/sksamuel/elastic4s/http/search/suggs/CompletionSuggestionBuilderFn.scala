@@ -23,24 +23,25 @@ object CompletionSuggestionBuilderFn {
     completion.size.foreach(builder.field("size", _))
     completion.shardSize.foreach(builder.field("shard_size", _))
 
-    if(completion.regex.isDefined) {
-      builder.startObject("regex")
+    completion.regex.foreach { regex =>
+      builder.field("regex", regex)
       completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
       if(completion.regexFlags.nonEmpty) {
         builder.field("flags", completion.regexFlags.map(EnumConversions.regexpFlag).mkString("|"))
       }
+    }
+
+    if (completion.isFuzzy) {
+      builder.startObject("fuzzy")
+      completion.fuzziness.map(EnumConversions.fuzziness).foreach(builder.field("fuzziness", _))
+      completion.fuzzyMinLength.foreach(builder.field("min_length", _))
+      completion.fuzzyPrefixLength.foreach(builder.field("prefix_length", _))
+      completion.transpositions.foreach(builder.field("transpositions", _))
+      completion.unicodeAware.foreach(builder.field("unicode_aware", _))
       builder.endObject()
     }
 
-    builder.startObject("fuzzy")
-    completion.fuzziness.map(EnumConversions.fuzziness).foreach(builder.field("fuzziness", _))
-    completion.fuzzyMinLength.foreach(builder.field("min_length", _))
-    completion.fuzzyPrefixLength.foreach(builder.field("prefix_length", _))
-    completion.transpositions.foreach(builder.field("transpositions", _))
-    completion.unicodeAware.foreach(builder.field("unicode_aware", _))
-    builder.endObject()
-
-    if(completion.contexts.nonEmpty) {
+    if (completion.contexts.nonEmpty) {
       builder.startObject("contexts")
       completion.contexts.foreach {
         case (key, value) =>

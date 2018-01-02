@@ -61,6 +61,14 @@ case class CompletionSuggestionDefinition(name: String,
   override def text(text: String): CompletionSuggestionDefinition = copy(text = text.some)
   override def shardSize(shardSize: Int): CompletionSuggestionDefinition = copy(shardSize = shardSize.some)
   override def size(size: Int): CompletionSuggestionDefinition = copy(size = size.some)
+
+  def isFuzzy: Boolean = {
+    fuzziness.isDefined ||
+      fuzzyMinLength.isDefined ||
+      fuzzyPrefixLength.isDefined ||
+      transpositions.isDefined ||
+      unicodeAware.isDefined
+  }
 }
 
 case class CategoryContext(name: String, boost: Double = 1, prefix: Boolean = false)
