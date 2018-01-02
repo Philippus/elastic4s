@@ -29,6 +29,7 @@ object AggregationBuilderFn {
       case agg: PercentilesAggregationDefinition => PercentilesAggregationBuilder(agg)
       case agg: SamplerAggregationDefinition => SamplerAggregationBuilder(agg)
       case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
+      case agg: SigTextAggregationDefinition => SigTextAggregationBuilder(agg)
       case agg: StatsAggregationDefinition => StatsAggregationBuilder(agg)
       case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
       case agg: TopHitsAggregationDefinition => TopHitsAggregationBuilder(agg)
