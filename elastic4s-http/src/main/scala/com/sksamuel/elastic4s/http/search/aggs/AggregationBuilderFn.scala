@@ -22,6 +22,7 @@ object AggregationBuilderFn {
       case agg: TopHitsAggregationDefinition => TopHitsAggregationBuilder(agg)
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
+      case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
 
       case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
 
