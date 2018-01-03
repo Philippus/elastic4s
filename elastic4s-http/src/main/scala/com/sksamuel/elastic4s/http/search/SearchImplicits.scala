@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search
 
 import java.net.URLEncoder
 
-import cats.{Functor, Show}
+import cats.Show
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}

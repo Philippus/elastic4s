@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.search.template
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.search.SearchResponse

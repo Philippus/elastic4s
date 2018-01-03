@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search
 
-import cats.{Functor, Show}
+import cats.{Show}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}

@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.nodes
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.nodes.{NodeInfoDefinition, NodeStatsDefinition}

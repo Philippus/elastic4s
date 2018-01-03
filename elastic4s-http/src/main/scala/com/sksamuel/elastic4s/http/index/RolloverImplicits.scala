@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.index
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.admin.RolloverIndex
 import com.sksamuel.elastic4s.http._

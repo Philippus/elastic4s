@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.locks
 
-import cats.Functor
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.locks.{AcquireGlobalLock, ReleaseGlobalLock}
 

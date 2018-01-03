@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.settings
 
-import cats.Functor
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport

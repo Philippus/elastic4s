@@ -13,6 +13,8 @@ trait Awaitable[F[_]] {
 }
 
 object Awaitable {
+  def apply[F[_]: Awaitable]: Awaitable[F] = implicitly[Awaitable[F]]
+
   implicit object AwaitableFuture extends Awaitable[Future] {
     override def await[A](effect: Future[A], duration: Duration = Duration.Inf): A = Await.result(effect, duration)
   }

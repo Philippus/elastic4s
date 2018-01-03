@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import cats.Functor
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse

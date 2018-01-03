@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.reindex
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.reindex.ReindexDefinition

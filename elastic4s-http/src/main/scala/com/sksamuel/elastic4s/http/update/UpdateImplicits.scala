@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.update
 
 import java.net.URLEncoder
 
-import cats.{Functor, Show}
+import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._

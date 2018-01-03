@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.termvectors
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._

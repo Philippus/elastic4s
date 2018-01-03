@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.index
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.admin.IndexStats
 import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}
