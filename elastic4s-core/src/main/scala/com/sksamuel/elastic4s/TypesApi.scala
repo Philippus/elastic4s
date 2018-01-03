@@ -6,26 +6,52 @@ import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
 
 trait TypesApi {
 
-  def binaryField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "binary")
-  def booleanField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "boolean")
+  // string datatypes
+  def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
+  def textField(name: String): TextFieldDefinition = TextFieldDefinition(name)
+
+  // numeric datatypes
   def byteField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "byte")
-  def completionField(name: String): CompletionFieldDefinition = CompletionFieldDefinition(name)
-  def dateField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "date")
   def doubleField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "double")
   def floatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "float")
   def halfFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "half_float")
+  def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
+  def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
+  def scaledFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "scaled_float")
+  def shortField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "short")
+
+  // booleans
+  def booleanField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "boolean")
+
+  // binaries
+  def binaryField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "binary")
+
+  // dates
+  def dateField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "date")
+
+  // geo
   def geopointField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "geo_point")
   def geoshapeField(name: String): GeoshapeFieldDefinition = GeoshapeFieldDefinition(name)
-  def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
-  def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
-  def joinField(name: String): JoinFieldDefinition = JoinFieldDefinition(name)
-  def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
-  def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
+
+  // range
+  def integerRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "integer_range")
+  def floatRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "float_range")
+  def longRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "long_range")
+  def doubleRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "double_range")
+  def dataeRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "date_range")
+  def ipRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "ip_range")
+
+  // complex datatypes
   def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
   def objectField(name: String): ObjectFieldDefinition = ObjectFieldDefinition(name)
-  def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
 
-  def scaledFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "scaled_float")
+  // specialized
+  def completionField(name: String): CompletionFieldDefinition = CompletionFieldDefinition(name)
+  def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
+  def tokenCountField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "token_count")
+  def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
+  def joinField(name: String): JoinFieldDefinition = JoinFieldDefinition(name)
+
   def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   def scriptField(name: String, script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   def scriptField(name: String): ExpectsScript = ExpectsScript(name)
@@ -33,10 +59,6 @@ trait TypesApi {
     def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
     def script(script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   }
-
-  def shortField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "short")
-  def textField(name: String): TextFieldDefinition = TextFieldDefinition(name)
-  def tokenCountField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "token_count")
 
   @deprecated("use binaryField(name)", "5.2.11")
   def field(name: String, ft: BinaryType.type): BasicFieldDefinition = binaryField(name)
