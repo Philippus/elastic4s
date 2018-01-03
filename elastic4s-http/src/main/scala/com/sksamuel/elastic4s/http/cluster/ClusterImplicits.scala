@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.cluster
 
-import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterStateDefinition}
 import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}

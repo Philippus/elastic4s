@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.delete
 
 import java.net.URLEncoder
 
-import cats.{Functor, Show}
+import cats.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn

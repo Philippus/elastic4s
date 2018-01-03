@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http.count
 
 import java.net.URLEncoder
 
-import cats.Functor
 import com.sksamuel.elastic4s.count.CountDefinition
 import com.sksamuel.elastic4s.http._
 import org.apache.http.entity.ContentType

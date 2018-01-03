@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import cats.{Functor, Show}
+import cats.Show
 import com.sksamuel.elastic4s.bulk.BulkDefinition
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 trait BulkImplicits {
 

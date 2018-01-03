@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.explain
 
-import cats.Functor
 import com.sksamuel.elastic4s.explain.ExplainDefinition
 import com.sksamuel.elastic4s.http._
 import org.apache.http.entity.ContentType

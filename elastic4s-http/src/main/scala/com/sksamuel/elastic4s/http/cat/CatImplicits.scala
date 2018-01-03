@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.cat
 
-import cats.Functor
 import com.sksamuel.elastic4s.cat._
 import com.sksamuel.elastic4s.http._
 

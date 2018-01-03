@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.get
 
 import java.net.URLEncoder
 
-import cats.{Functor, Show}
+import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}

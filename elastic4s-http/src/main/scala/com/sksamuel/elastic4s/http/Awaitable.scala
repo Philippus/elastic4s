@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.http
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-/*
-  An awaitable typeclass so that the SearchScroll API can Await scroll requests. Different effect types. Unsure
-  yet if the various `execute` methods will need to be constrained over this typeclass to make scroll work.
-  TODO: Verify this.
+/**
+  * An converts an asynchronous computation into a synchronous computation, used by the SearchIterator.
+  * An instance of this must be available for `F` * in order to use the SearchIterator, however
+  * implementation is trivial for basically all `F's`
  */
 trait Awaitable[F[_]] {
   def await[A](effect: F[A], duration: Duration = Duration.Inf): A

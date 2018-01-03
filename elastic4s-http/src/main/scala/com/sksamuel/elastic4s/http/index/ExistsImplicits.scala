@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.index
 
-import cats.Functor
 import com.sksamuel.elastic4s.ExistsDefinition
 import com.sksamuel.elastic4s.http._
 
