@@ -23,6 +23,7 @@ object AggregationBuilderFn {
       case agg: GeoDistanceAggregationDefinition => GeoDistanceAggregationBuilder(agg)
       case agg: GeoHashGridAggregationDefinition => GeoHashGridAggregationBuilder(agg)
       case agg: HistogramAggregation => HistogramAggregationBuilder(agg)
+      case agg: IpRangeAggregationDefinition => IpRangeAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)

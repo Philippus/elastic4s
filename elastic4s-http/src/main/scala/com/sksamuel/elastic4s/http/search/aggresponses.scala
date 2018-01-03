@@ -205,6 +205,39 @@ object GeoHashGridAggResult {
   )
 }
 
+case class IpRangeAggResult(name: String,
+                            buckets: Seq[IpRangeBucket]) extends BucketAggregation
+
+case class IpRangeBucket(key: Option[String],
+                         override val docCount: Long,
+                         from: Option[String],
+                         to: Option[String],
+                         private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
+object IpRangeAggResult {
+  def apply(name: String, data: Map[String, Any]): IpRangeAggResult = IpRangeAggResult(
+    name,
+    data("buckets") match {
+      case buckets: Seq[_] => buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
+        mkBucket(map.get("key").map(_.toString), map)
+      }
+
+      //keyed results
+      case buckets: Map[_,_] => buckets.asInstanceOf[Map[String, Any]].map { case (key,values) =>
+        mkBucket(Some(key), values.asInstanceOf[Map[String,Any]])
+      }.toSeq
+    }
+  )
+
+  private def mkBucket(key: Option[String], map: Map[String,Any]) : IpRangeBucket =
+    IpRangeBucket(
+      key,
+      map("doc_count").toString.toLong,
+      map.get("from").map(_.toString),
+      map.get("to").map(_.toString),
+      map
+    )
+}
 
 case class AvgAggResult(name: String, value: Double) extends MetricAggregation
 case class SumAggResult(name: String, value: Double) extends MetricAggregation
@@ -303,6 +336,7 @@ trait HasAggregations {
   def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
   def geoDistance(name: String): GeoDistanceAggResult = GeoDistanceAggResult(name, agg(name))
   def geoHashGrid(name: String): GeoHashGridAggResult = GeoHashGridAggResult(name, agg(name))
+  def ipRange(name: String): IpRangeAggResult = IpRangeAggResult(name, agg(name))
 
   def range(name: String): RangeAggResult = RangeAggResult(name, agg(name))
   def keyedRange(name: String): KeyedRangeAggResult  = KeyedRangeAggResult(name, agg(name))
