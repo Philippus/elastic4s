@@ -28,7 +28,7 @@ case class HistogramAggregation(name: String,
   def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 
   def interval(interval: Double): HistogramAggregation = copy(interval = interval.some)
   def minDocCount(min: Long): HistogramAggregation = copy(minDocCount = min.some)
