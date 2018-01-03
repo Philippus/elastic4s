@@ -30,6 +30,6 @@ case class PercentilesAggregationDefinition(name: String,
   def hdr(numberOfSignificantValueDigits: Int): T = copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): PercentilesAggregationDefinition = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): PercentilesAggregationDefinition = copy(metadata = map)
 
 }
