@@ -9,5 +9,5 @@ case class ChildrenAggregationDefinition(name: String,
   type T = ChildrenAggregationDefinition
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): ChildrenAggregationDefinition = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): ChildrenAggregationDefinition = copy(metadata = map)
 }

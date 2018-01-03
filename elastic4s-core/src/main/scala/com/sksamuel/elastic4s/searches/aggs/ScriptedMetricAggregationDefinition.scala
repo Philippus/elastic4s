@@ -23,5 +23,5 @@ case class ScriptedMetricAggregationDefinition(name: String,
   def params(params: Map[String, AnyRef]): ScriptedMetricAggregationDefinition = copy(params = params)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }
