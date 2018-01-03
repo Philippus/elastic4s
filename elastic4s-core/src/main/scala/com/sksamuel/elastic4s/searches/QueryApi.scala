@@ -196,7 +196,7 @@ trait QueryApi {
       PercolateQueryDefinition(field, `type`, source = Some(indexable.json(t)))
   }
 
-  def rangeQuery(field: String): RangeQueryDefinition = RangeQueryDefinition(field)
+  def rangeQuery(field: String): RangeQuery = RangeQuery(field)
 
   def rawQuery(json: String): RawQueryDefinition = RawQueryDefinition(json)
 
@@ -205,8 +205,8 @@ trait QueryApi {
   def regexQuery(field: String, value: String): RegexQueryDefinition = RegexQueryDefinition(field, value)
 
   @deprecated("use the non-tupled version prefixQuery(field,value)", "6.1.2")
-  def prefixQuery(tuple: (String, Any)): PrefixQueryDefinition = prefixQuery(tuple._1, tuple._2)
-  def prefixQuery(field: String, value: Any): PrefixQueryDefinition = PrefixQueryDefinition(field, value)
+  def prefixQuery(tuple: (String, Any)): PrefixQuery = prefixQuery(tuple._1, tuple._2)
+  def prefixQuery(field: String, value: Any): PrefixQuery = PrefixQuery(field, value)
 
   def scriptQuery(script: ScriptDefinition): ScriptQueryDefinition = ScriptQueryDefinition(script)
   def scriptQuery(script: String): ScriptQueryDefinition = ScriptQueryDefinition(script)
@@ -260,8 +260,8 @@ trait QueryApi {
 
   def typeQuery(`type`: String) = TypeQueryDefinition(`type`)
 
-  def idsQuery(ids: Iterable[Any]): IdQueryDefinition = IdQueryDefinition(ids.toSeq)
-  def idsQuery(id: Any, rest: Any*): IdQueryDefinition = IdQueryDefinition(id +: rest)
+  def idsQuery(ids: Iterable[Any]): IdQuery = IdQuery(ids.toSeq)
+  def idsQuery(id: Any, rest: Any*): IdQuery = IdQuery(id +: rest)
 
   // -- bool query dsl ---
   @deprecated("this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)", "5.0.0")

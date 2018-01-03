@@ -70,7 +70,7 @@ case class TermsAggregationDefinition(name: String,
   }
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }
 
 case class TermsOrder(name: String, asc: Boolean = true)

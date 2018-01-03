@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.searches.aggs
 
-import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.exts.OptionImplicits._
 
-case class SigTermsAggregationDefinition(name: String,
+case class SigTextAggregationDefinition(name: String,
                                          minDocCount: Option[Long] = None,
                                          executionHint: Option[String] = None,
                                          size: Option[Int] = None,
@@ -19,11 +19,11 @@ case class SigTermsAggregationDefinition(name: String,
                                          heuristic: Option[String] = None)
   extends AggregationDefinition {
 
-  type T = SigTermsAggregationDefinition
+  type T = SigTextAggregationDefinition
 
-  def minDocCount(min: Long): SigTermsAggregationDefinition = copy(minDocCount = min.some)
-  def executionHint(hint: String): SigTermsAggregationDefinition = copy(executionHint = hint.some)
-  def size(size: Int): SigTermsAggregationDefinition = copy(size = size.some)
+  def minDocCount(min: Long): SigTextAggregationDefinition = copy(minDocCount = min.some)
+  def executionHint(hint: String): SigTextAggregationDefinition = copy(executionHint = hint.some)
+  def size(size: Int): SigTextAggregationDefinition = copy(size = size.some)
 
   def includeExclude(include: String, exclude: String): T =
     copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
@@ -36,14 +36,14 @@ case class SigTermsAggregationDefinition(name: String,
     copy(includePartition = IncludePartition(partition, numPartitions).some)
   }
 
-  def significanceHeuristic(heuristic: String): SigTermsAggregationDefinition = copy(heuristic = heuristic.some)
+  def significanceHeuristic(heuristic: String): SigTextAggregationDefinition = copy(heuristic = heuristic.some)
 
-  def field(field: String): SigTermsAggregationDefinition = copy(field = field.some)
-  def shardMinDocCount(min: Long): SigTermsAggregationDefinition = copy(shardMinDocCount = min.some)
-  def backgroundFilter(filter: QueryDefinition): SigTermsAggregationDefinition = copy(backgroundFilter = filter.some)
+  def field(field: String): SigTextAggregationDefinition = copy(field = field.some)
+  def shardMinDocCount(min: Long): SigTextAggregationDefinition = copy(shardMinDocCount = min.some)
+  def backgroundFilter(filter: QueryDefinition): SigTextAggregationDefinition = copy(backgroundFilter = filter.some)
 
-  def shardSize(shardSize: Int): SigTermsAggregationDefinition = copy(shardSize = shardSize.some)
+  def shardSize(shardSize: Int): SigTextAggregationDefinition = copy(shardSize = shardSize.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
 }
