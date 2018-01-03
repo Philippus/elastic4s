@@ -18,7 +18,7 @@ object HistogramAggregationBuilder {
     agg.interval.foreach(builder.interval)
     agg.minDocCount.foreach(builder.minDocCount)
     agg.offset.foreach(builder.offset)
-    agg.extendedBounds.foreach { case (min, max) => builder.extendedBounds(min, max) }
+    agg.extendedBounds.foreach { case DoubleExtendedBounds(min, max) => builder.extendedBounds(min, max) }
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)
