@@ -43,5 +43,5 @@ case class TopHitsAggregationDefinition(name: String,
   def script(name: String, script: ScriptDefinition): T = copy(scripts = scripts + (name -> script))
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = sys.error("Top Hits does not support sub aggregations")
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = metadata)
+  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }
