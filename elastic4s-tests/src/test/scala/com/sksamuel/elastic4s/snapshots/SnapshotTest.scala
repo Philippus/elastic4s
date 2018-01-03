@@ -3,9 +3,7 @@ package com.sksamuel.elastic4s.snapshots
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
-import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
-import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
+
 class SnapshotTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 
   "createRepository" should "create a new repo" in {

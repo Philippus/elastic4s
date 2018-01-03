@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.index
 import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.admin.IndexStats
-import com.sksamuel.elastic4s.http.{FromListener, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}
 
 case class Docs(count: Long, deleted: Long)
 case class Store(@JsonProperty("size_in_bytes") sizeInBytes: Long)
@@ -123,7 +123,7 @@ trait IndexStatsImplicits {
 
   implicit object IndicesStatsExecutable extends HttpExecutable[IndexStats, IndexStatsResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: IndexStats): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: IndexStats): F[HttpResponse] = {
       val endpoint = if (request.indices.isAll) "/_stats" else s"/${request.indices.string}/_stats"
       client.async("GET", endpoint, Map.empty)
     }

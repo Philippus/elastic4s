@@ -9,8 +9,6 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 sealed trait Response[+U] {
   def status: Int                  // the http status code of the response
   def body: Option[String]         // the http response body if the response included one
@@ -60,7 +58,7 @@ trait HttpClient extends Logging {
   // Executes the given request type T, and returns a Future of Response[U] where U is particular to the request type.
   // For example a search request will return a Future[Response[SearchResponse]].
   // The returned Response is an ADT
-  def execute[F[_]: FromListener, T, U](request: T)(
+  def execute[F[_]: AsyncExecutor, T, U](request: T)(
       implicit exec: HttpExecutable[T, U]): F[Either[RequestFailure, RequestSuccess[U]]] = {
     Functor[F].map(exec.execute(client, request))(r =>
       exec.responseHandler.handle(r) match {
@@ -84,12 +82,12 @@ trait HttpClient extends Logging {
   */
 trait HttpRequestClient extends Logging {
 
-  def async[F[_]: FromListener : Functor](method: String, endpoint: String): F[HttpResponse] =
+  def async[F[_]: AsyncExecutor](method: String, endpoint: String): F[HttpResponse] =
     async(method, endpoint, Map.empty)
 
-  def async[F[_]: FromListener : Functor](method: String, endpoint: String, params: Map[String, Any]): F[HttpResponse]
+  def async[F[_]: AsyncExecutor](method: String, endpoint: String, params: Map[String, Any]): F[HttpResponse]
 
-  def async[F[_]: FromListener : Functor](method: String,
+  def async[F[_]: AsyncExecutor](method: String,
             endpoint: String,
             params: Map[String, Any],
             entity: HttpEntity): F[HttpResponse]

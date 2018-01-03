@@ -1,14 +1,10 @@
 package com.sksamuel.elastic4s.search.suggestions
 
-import cats.instances.future._
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class TermSuggestionsTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
 

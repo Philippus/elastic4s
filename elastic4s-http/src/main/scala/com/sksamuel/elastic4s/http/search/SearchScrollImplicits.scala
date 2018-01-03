@@ -26,7 +26,7 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ClearScrollDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: ClearScrollDefinition): F[HttpResponse] = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -47,7 +47,7 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, req: SearchScrollDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, req: SearchScrollDefinition): F[HttpResponse] = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)

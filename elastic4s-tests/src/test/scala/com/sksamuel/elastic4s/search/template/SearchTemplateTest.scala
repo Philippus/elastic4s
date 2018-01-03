@@ -6,9 +6,6 @@ import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
-import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
-import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
 
 class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvider with Matchers {
 

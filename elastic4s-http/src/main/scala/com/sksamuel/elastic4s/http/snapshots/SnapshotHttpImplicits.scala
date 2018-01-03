@@ -33,7 +33,7 @@ trait SnapshotHttpImplicits {
 
   implicit object CreateRepositoryHttpExecutable extends HttpExecutable[CreateRepository, CreateRepositoryResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: CreateRepository): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: CreateRepository): F[HttpResponse] = {
 
       val endpoint = s"/_snapshot/" + request.name
 
@@ -55,7 +55,7 @@ trait SnapshotHttpImplicits {
 
   implicit object CreateSnapshotHttpExecutable extends HttpExecutable[CreateSnapshot, CreateSnapshotResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: CreateSnapshot): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: CreateSnapshot): F[HttpResponse] = {
 
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
 
@@ -76,14 +76,14 @@ trait SnapshotHttpImplicits {
   }
 
   implicit object DeleteSnapshotHttpExecutable extends HttpExecutable[DeleteSnapshot, DeleteSnapshotResponse] {
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: DeleteSnapshot): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: DeleteSnapshot): F[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
       client.async("DELETE", endpoint, Map.empty)
     }
   }
 
   implicit object GetSnapshotHttpExecutable extends HttpExecutable[GetSnapshots, GetSnapshotResponse] {
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetSnapshots): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetSnapshots): F[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
       val params = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
@@ -93,7 +93,7 @@ trait SnapshotHttpImplicits {
   }
 
   implicit object RestoreSnapshotDefinitionHttpExecutable extends HttpExecutable[RestoreSnapshot, RestoreSnapshotResponse] {
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: RestoreSnapshot): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: RestoreSnapshot): F[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 
       val body = XContentFactory.jsonBuilder()

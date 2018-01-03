@@ -21,7 +21,7 @@ trait IndexImplicits extends IndexShowImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: IndexDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: IndexDefinition): F[HttpResponse] = {
 
       val (method, endpoint) = request.id match {
         case Some(id) => "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/${URLEncoder.encode(id.toString)}"
@@ -52,7 +52,7 @@ trait IndexImplicits extends IndexShowImplicits {
 
   implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndex, Map[String, GetIndexResponse]] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetIndex): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetIndex): F[HttpResponse] = {
       val endpoint = "/" + request.index
       val method = "GET"
       client.async(method, endpoint, Map.empty)

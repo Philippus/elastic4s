@@ -16,7 +16,7 @@ trait BulkImplicits {
 
   implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, bulk: BulkDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, bulk: BulkDefinition): F[HttpResponse] = {
 
       val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well

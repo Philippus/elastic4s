@@ -38,7 +38,7 @@ trait GetImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: MultiGetDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: MultiGetDefinition): F[HttpResponse] = {
       val body = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_mget", Map.empty, entity)
@@ -72,7 +72,7 @@ trait GetImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"
 

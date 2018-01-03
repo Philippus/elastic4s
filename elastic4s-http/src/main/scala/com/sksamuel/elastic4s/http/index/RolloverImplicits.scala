@@ -20,7 +20,7 @@ trait RolloverImplicits {
 
   implicit object RolloverHttpExecutable extends HttpExecutable[RolloverIndex, RolloverResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: RolloverIndex): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: RolloverIndex): F[HttpResponse] = {
 
       val endpoint = s"/${request.sourceAlias}/_rollover"
       val endpoint2 = request.newIndexName.fold(endpoint)(endpoint + "/" + _)

@@ -33,7 +33,7 @@ trait DeleteImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: DeleteByQueryDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: DeleteByQueryDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.indexesAndTypes.types.isEmpty)
         s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_all/_delete_by_query"
@@ -78,7 +78,7 @@ trait DeleteImplicits {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: DeleteByIdDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: DeleteByIdDefinition): F[HttpResponse] = {
 
       val method = "DELETE"
       val endpoint = s"/${URLEncoder.encode(request.indexType.index)}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString)}"

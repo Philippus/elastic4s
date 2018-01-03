@@ -13,7 +13,7 @@ trait CountImplicits {
 
   implicit object CountHttpExecutable extends HttpExecutable[CountDefinition, CountResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: CountDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: CountDefinition): F[HttpResponse] = {
 
       val endpoint = if (request.indexes.isEmpty && request.types.isEmpty)
         "/_count"

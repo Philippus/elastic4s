@@ -25,7 +25,7 @@ trait MappingExecutables {
       }
     }
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: GetMappingDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetMappingDefinition): F[HttpResponse] = {
       val endpoint = request.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil) => "/_mapping"
         case IndexesAndTypes(indexes, Nil) => s"/${indexes.mkString(",")}/_mapping"
@@ -37,7 +37,7 @@ trait MappingExecutables {
 
   implicit object PutMappingHttpExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: PutMappingDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: PutMappingDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
 

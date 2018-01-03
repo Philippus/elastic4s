@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http
 
-import cats.Functor
 import com.sksamuel.exts.Logging
 
 /**
@@ -25,5 +24,5 @@ abstract class HttpExecutable[T, U: Manifest] extends Logging {
     * @param request
     * @return
     */
-  def execute[F[_]: FromListener](client: HttpRequestClient, request: T): F[HttpResponse]
+  def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: T): F[HttpResponse]
 }

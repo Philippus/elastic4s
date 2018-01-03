@@ -3,13 +3,13 @@ package com.sksamuel.elastic4s.http.cluster
 import cats.Functor
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterStateDefinition}
-import com.sksamuel.elastic4s.http.{FromListener, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}
 
 trait ClusterImplicits {
 
   implicit object ClusterStateHttpExecutable extends HttpExecutable[ClusterStateDefinition, ClusterStateResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ClusterStateDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: ClusterStateDefinition): F[HttpResponse] = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
       client.async("GET", endpoint, Map.empty)
     }
@@ -33,7 +33,7 @@ trait ClusterImplicits {
 
   implicit object ClusterHealthHttpExecutable extends HttpExecutable[ClusterHealthDefinition, ClusterHealthResponse] {
 
-    override def execute[F[_]: FromListener](client: HttpRequestClient, request: ClusterHealthDefinition): F[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: ClusterHealthDefinition): F[HttpResponse] = {
       val endpoint = "/_cluster/health" + indicesUrl(request.indices)
 
       val params = scala.collection.mutable.Map.empty[String, String]

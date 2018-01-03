@@ -10,9 +10,6 @@ import com.sksamuel.elastic4s.http.HttpClient
 
 import scala.util.{Failure, Random, Success, Try}
 import scala.util.control.NonFatal
-import com.sksamuel.elastic4s.http.ScalaFutureFromListener._
-import scala.concurrent.ExecutionContext.Implicits.global
-import cats.instances.future._
 
 // LocalNodeProvider provides helper methods to create a local (embedded) node
 trait LocalNodeProvider {
