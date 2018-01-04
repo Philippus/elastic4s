@@ -292,6 +292,8 @@ object ChildrenAggResult {
   )
 }
 
+case class AvgBucketAggResult(name: String, value: Double) extends PipelineAggregation
+
 case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
@@ -368,6 +370,9 @@ trait HasAggregations {
   }
   def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
+
+  // pipeline aggs
+  def avgBucket(name: String): AvgBucketAggResult = AvgBucketAggResult(name, agg(name)("value").toString.toDouble)
 }
 
 trait MetricAggregation {
@@ -375,6 +380,10 @@ trait MetricAggregation {
 }
 
 trait BucketAggregation {
+  def name: String
+}
+
+trait PipelineAggregation {
   def name: String
 }
 
