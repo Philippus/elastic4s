@@ -293,6 +293,7 @@ object ChildrenAggResult {
 }
 
 case class AvgBucketAggResult(name: String, value: Double) extends PipelineAggregation
+case class MinBucketAggResult(name: String, value: Double) extends PipelineAggregation
 
 case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
@@ -373,6 +374,7 @@ trait HasAggregations {
 
   // pipeline aggs
   def avgBucket(name: String): AvgBucketAggResult = AvgBucketAggResult(name, agg(name)("value").toString.toDouble)
+  def minBucket(name: String): MinBucketAggResult = MinBucketAggResult(name, agg(name)("value").toString.toDouble)
 }
 
 trait MetricAggregation {
