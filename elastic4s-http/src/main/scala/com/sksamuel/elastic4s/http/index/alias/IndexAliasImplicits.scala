@@ -3,10 +3,8 @@ package com.sksamuel.elastic4s.http.index.alias
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 trait IndexAliasImplicits {
 
@@ -27,7 +25,7 @@ trait IndexAliasImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: GetAliasesDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetAliasesDefinition): F[HttpResponse] = {
       val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore => Map("ignore_unavailable" -> ignore) }
       client.async("GET", endpoint, params)
@@ -35,21 +33,21 @@ trait IndexAliasImplicits {
   }
 
   implicit object RemoveAliasActionExecutable extends HttpExecutable[RemoveAliasActionDefinition, AliasActionResponse] {
-    override def execute(client: HttpRequestClient, request: RemoveAliasActionDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: RemoveAliasActionDefinition): F[HttpResponse] = {
       val container = IndicesAliasesRequestDefinition(Seq(request))
-      IndexAliasesExecutable.execute(client, container)
+      IndexAliasesExecutable.execute[F](client, container)
     }
   }
 
   implicit object AddAliasActionExecutable extends HttpExecutable[AddAliasActionDefinition, AliasActionResponse] {
-    override def execute(client: HttpRequestClient, request: AddAliasActionDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: AddAliasActionDefinition): F[HttpResponse] = {
       val container = IndicesAliasesRequestDefinition(Seq(request))
-      IndexAliasesExecutable.execute(client, container)
+      IndexAliasesExecutable.execute[F](client, container)
     }
   }
 
   implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, AliasActionResponse] {
-    override def execute(client: HttpRequestClient, request: IndicesAliasesRequestDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: IndicesAliasesRequestDefinition): F[HttpResponse] = {
       val body = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_aliases", Map.empty, entity)

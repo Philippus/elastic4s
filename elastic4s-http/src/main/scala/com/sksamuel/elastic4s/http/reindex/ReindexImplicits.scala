@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 case class Retries(bulk: Long,
@@ -43,7 +41,7 @@ trait ReindexImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: ReindexDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: ReindexDefinition): F[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))

@@ -2,11 +2,9 @@ package com.sksamuel.elastic4s.http.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.admin.RolloverIndex
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.XContentFactory
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class RolloverResponse(
                              @JsonProperty("old_index") oldIndex: String,
@@ -21,7 +19,7 @@ trait RolloverImplicits {
 
   implicit object RolloverHttpExecutable extends HttpExecutable[RolloverIndex, RolloverResponse] {
 
-    override def execute(client: HttpRequestClient, request: RolloverIndex): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: RolloverIndex): F[HttpResponse] = {
 
       val endpoint = s"/${request.sourceAlias}/_rollover"
       val endpoint2 = request.newIndexName.fold(endpoint)(endpoint + "/" + _)

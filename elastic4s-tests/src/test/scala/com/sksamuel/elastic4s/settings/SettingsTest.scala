@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
-
 class SettingsTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
 
   deleteIdx("settingsa")

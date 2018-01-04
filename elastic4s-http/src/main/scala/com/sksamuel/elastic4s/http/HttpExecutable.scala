@@ -2,8 +2,6 @@ package com.sksamuel.elastic4s.http
 
 import com.sksamuel.exts.Logging
 
-import scala.concurrent.Future
-
 /**
   * @tparam T the type of the request object handled by this handler
   * @tparam U the type of the response object returned by this handler
@@ -26,5 +24,5 @@ abstract class HttpExecutable[T, U: Manifest] extends Logging {
     * @param request
     * @return
     */
-  def execute(client: HttpRequestClient, request: T): Future[HttpResponse]
+  def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: T): F[HttpResponse]
 }

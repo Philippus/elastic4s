@@ -8,7 +8,6 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.{ResponseException, ResponseListener, RestClient}
 
-import scala.concurrent.{Future, Promise}
 import scala.io.{Codec, Source}
 
 case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
@@ -18,44 +17,51 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
 
   import scala.collection.JavaConverters._
 
-  private def future(callback: ResponseListener => Any): Future[HttpResponse] = {
-    val p = Promise[HttpResponse]()
-    callback(new ResponseListener {
+  private def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
+    val entity = Option(r.getEntity).map { entity =>
+      val contentEncoding =
+        Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
+      implicit val codec = Codec(Charset.forName(contentEncoding))
+      val body           = Source.fromInputStream(entity.getContent).mkString
+      HttpEntity.StringEntity(body, Some(contentEncoding))
+    }
+    val headers = r.getHeaders.map { header =>
+      header.getName -> header.getValue
+    }.toMap
+    HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
+  }
 
-      def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
-        val entity = Option(r.getEntity).map { entity =>
-          val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-          implicit val codec = Codec(Charset.forName(contentEncoding))
-          val body = Source.fromInputStream(entity.getContent).mkString
-          HttpEntity.StringEntity(body, Some(contentEncoding))
+  private def doAsync[F[_]: AsyncExecutor](f: ResponseListener => Unit): F[HttpResponse] = {
+    AsyncExecutor[F].async { cb =>
+      f(new ResponseListener {
+        override def onFailure(exception: Exception): Unit = exception match {
+          case exc: ResponseException => cb(Right(fromResponse(exc.getResponse)))
+          case exc                    => cb(Left(JavaClientExceptionWrapper(exc)))
         }
-        val headers = r.getHeaders.map { header => header.getName -> header.getValue }.toMap
-        logger.debug(s"Http Response $r")
-        HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
-      }
-
-      override def onSuccess(r: org.elasticsearch.client.Response): Unit = p.trySuccess(fromResponse(r))
-      override def onFailure(e: Exception): Unit = e match {
-        case re: ResponseException => p.trySuccess(fromResponse(re.getResponse))
-        case t => p.tryFailure(JavaClientExceptionWrapper(t))
-      }
-    })
-    p.future
+        override def onSuccess(response: org.elasticsearch.client.Response): Unit =
+          cb(Right(fromResponse(response)))
+      })
+    }
   }
 
-  override def async(method: String,
-                     endpoint: String,
-                     params: Map[String, Any]): Future[HttpResponse] = {
-    logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
-    val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, _: ResponseListener)
-    future(callback)
+  override def async[F[_]: AsyncExecutor](method: String,
+                                          endpoint: String,
+                                          params: Map[String, Any]): F[HttpResponse] = {
+    logger.debug(
+      s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+    val callback = client.performRequestAsync(method,
+                                              endpoint,
+                                              params.mapValues(_.toString).asJava,
+                                              _: ResponseListener)
+    doAsync(callback)
   }
 
-  override def async(method: String,
-                     endpoint: String,
-                     params: Map[String, Any],
-                     entity: HttpEntity): Future[HttpResponse] = {
-    logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+  override def async[F[_]: AsyncExecutor](method: String,
+                                          endpoint: String,
+                                          params: Map[String, Any],
+                                          entity: HttpEntity): F[HttpResponse] = {
+    logger.debug(
+      s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
 
     val apacheEntity = entity match {
       case e: HttpEntity.StringEntity =>
@@ -69,13 +75,12 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
         new FileEntity(e.content, ContentType.APPLICATION_JSON)
     }
 
-    val callback = client.performRequestAsync(
-      method,
-      endpoint,
-      params.mapValues(_.toString).asJava,
-      apacheEntity,
-      _: ResponseListener)
-    future(callback)
+    val callback = client.performRequestAsync(method,
+                                              endpoint,
+                                              params.mapValues(_.toString).asJava,
+                                              apacheEntity,
+                                              _: ResponseListener)
+    doAsync(callback)
   }
 
   override def close(): Unit = client.close()
@@ -89,7 +94,8 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpRequestClient 
   *
   */
 object NoOpRequestConfigCallback extends RequestConfigCallback {
-  override def customizeRequestConfig(requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = requestConfigBuilder
+  override def customizeRequestConfig(
+      requestConfigBuilder: RequestConfig.Builder): RequestConfig.Builder = requestConfigBuilder
 }
 
 /**
@@ -100,5 +106,6 @@ object NoOpRequestConfigCallback extends RequestConfigCallback {
   *
   */
 object NoOpHttpClientConfigCallback extends HttpClientConfigCallback {
-  override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = httpClientBuilder
+  override def customizeHttpClient(
+      httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = httpClientBuilder
 }

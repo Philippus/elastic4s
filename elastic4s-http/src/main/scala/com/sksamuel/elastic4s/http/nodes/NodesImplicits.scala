@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.http.nodes
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{AsyncExecutor, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.nodes.{NodeInfoDefinition, NodeStatsDefinition}
 import com.sksamuel.exts.collection.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 case class SwapStats(@JsonProperty("total_in_bytes") totalInBytes: Long,
@@ -84,7 +83,7 @@ case class OsInfo(@JsonProperty("refresh_interval_in_millis") refreshIntervalInM
 trait NodesImplicits {
 
   implicit object NodeInfoExecutable extends HttpExecutable[NodeInfoDefinition, NodeInfoResponse] {
-    override def execute(client: HttpRequestClient, request: NodeInfoDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: NodeInfoDefinition): F[HttpResponse] = {
       val endpoint = if (request.nodes.isEmpty) {
         "/_nodes/"
       } else {
@@ -95,7 +94,7 @@ trait NodesImplicits {
   }
 
   implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
-    override def execute(client: HttpRequestClient, request: NodeStatsDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: NodeStatsDefinition): F[HttpResponse] = {
       val endpoint = if (request.nodes.nonEmpty) {
         "/_nodes/" + request.nodes.mkString(",") + "/stats/" + request.stats.mkString(",")
       } else {

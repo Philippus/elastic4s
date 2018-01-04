@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.http.index.mappings
 
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.indexes.PutMappingBuilderFn
 import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, PutMappingDefinition}
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class IndexMappings(index: String, mappings: Map[String, Map[String, Any]])
 
@@ -27,7 +25,7 @@ trait MappingExecutables {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: GetMappingDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: GetMappingDefinition): F[HttpResponse] = {
       val endpoint = request.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil) => "/_mapping"
         case IndexesAndTypes(indexes, Nil) => s"/${indexes.mkString(",")}/_mapping"
@@ -39,7 +37,7 @@ trait MappingExecutables {
 
   implicit object PutMappingHttpExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
 
-    override def execute(client: HttpRequestClient, request: PutMappingDefinition): Future[HttpResponse] = {
+    override def execute[F[_]: AsyncExecutor](client: HttpRequestClient, request: PutMappingDefinition): F[HttpResponse] = {
 
       val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
 
