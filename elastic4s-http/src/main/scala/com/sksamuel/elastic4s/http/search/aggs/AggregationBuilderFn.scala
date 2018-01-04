@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs._
 import com.sksamuel.elastic4s.searches.aggs.pipeline._
-import com.sksamuel.elastic4s.http.search.aggs.pipeline.{AvgBucketPipelineAggBuilder, BucketSelectorPipelineBuilder, MinBucketPipelineAggBuilder}
+import com.sksamuel.elastic4s.http.search.aggs.pipeline.{AvgBucketPipelineAggBuilder, BucketSelectorPipelineBuilder, MinBucketPipelineAggBuilder, StatsBucketPipelineAggBuilder}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
@@ -43,13 +43,14 @@ object AggregationBuilderFn {
 
       // pipeline aggs
       case agg: AvgBucketDefinition => AvgBucketPipelineAggBuilder(agg)
+      case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
       case agg: BucketSelectorDefinition => BucketSelectorPipelineBuilder(agg)
+      case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
       case agg: DerivativeDefinition => DerivativePipelineAggBuilder(agg)
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketDefinition => MinBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
-      case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
-      case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
+      case agg: StatsBucketDefinition => StatsBucketPipelineAggBuilder(agg)
 
       // Not implemented
       case ni => throw new NotImplementedError(s"Aggregation ${ni.getClass.getName} has not yet been implemented for the HTTP client.")
