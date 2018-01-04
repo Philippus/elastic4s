@@ -44,30 +44,32 @@ Starting from version 5.0.0, the underlying Elasticsearch TCP Java client has de
 
 The second issue is that it uses Netty 4.1. However some popular projects such as Spark and Play currently use 4.0 and there is a breaking change between the two versions. Therefore if you bring in elastic4s tcp (or even just the elasticsearch Java TCP client) you will get `NoSuchMethodException`s if you try to use it with Play or Spark. I am unaware of a workaround at present, until Spark and Play update to the latest version, other than switching to the HTTP client.
 
-| Elasticsearch Version | Http Client Version | Tcp Client Version |
-|-------|---------------------|--|
-|6.0.x|6.0.x|6.0.0|
-|5.6.x|5.6.x|5.6.0|
-|5.5.x|5.5.x|5.5.5|
-|5.4.x|5.4.x|5.4.13|
-|5.3.x|5.4.x|5.3.2|
-|5.2.x|5.4.x|5.2.11|
-|5.1.x|5.4.x|5.1.5|
-|5.0.x|5.4.x|5.0.4|
-|2.4.x|no support|2.4.X|
-|2.3.x|no support|2.3.X|
-|2.2.x|no support|2.2.X|
-|2.1.x|no support|2.1.X|
-|2.0.x|no support|2.0.X|
-|1.7.x|no support|1.7.5|
-|1.6.x|no support|1.6.6|
-|1.5.x|no support|1.5.17|
-|1.4.x|no support|1.4.14|
-|1.3.x|no support|1.3.3|
-|1.2.x|no support|1.2.3.0|
-|1.1.x|no support|1.1.2.0|
-|1.0.x|no support|1.0.3.0|
-|0.90.x|no support|0.90.13.2|
+| Elasticsearch Version | Scala 2.10 | Scala 2.11 | Scala 2.12 |
+|-------|---------|---------|-----------|
+|6.1.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.1.svg?label=latest%206.1.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.1.svg?label=latest%206.1.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.6.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.6.svg?label=latest%205.6.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.6.svg?label=latest%205.6.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.5.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.5.svg?label=latest%205.5.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.5.svg?label=latest%205.5.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.4.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.4.svg?label=latest%205.4.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.4.svg?label=latest%205.4.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.3.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.3.svg?label=latest%205.3.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.3.svg?label=latest%205.3.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.2.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.2.svg?label=latest%205.2.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.2.svg?label=latest%205.2.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.1.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.1.svg?label=latest%205.1.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.1.svg?label=latest%205.1.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|5.0.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/5.0.svg?label=latest%205.0.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/5.0.svg?label=latest%205.0.x%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
+|2.4.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.4.svg?label=latest%202.4.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|2.3.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.3.svg?label=latest%202.3.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.3.svg?label=latest%202.3.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|2.2.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.2.svg?label=latest%202.2.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.2.svg?label=latest%202.2.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|2.1.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.1.svg?label=latest%202.1.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.1.svg?label=latest%202.1.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|2.0.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.0.svg?label=latest%202.0.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.0.svg?label=latest%202.0.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|1.7.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/1.7.svg?label=latest%201.7.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/1.7.svg?label=latest%201.7.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|1.6.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/1.6.svg?label=latest%201.6.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/1.6.svg?label=latest%201.6.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|1.5.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/1.5.svg?label=latest%201.5.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/1.5.svg?label=latest%201.5.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|1.4.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/1.4.svg?label=latest%201.4.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.11/1.4.svg?label=latest%201.4.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.11%22)||
+|1.3.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/1.3.svg?label=latest%201.3.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.11/1.3.svg?label=latest%201.3.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.11%22)||
+|1.2.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/1.2.svg?label=latest%201.2.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.11/1.2.svg?label=latest%201.2.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.11%22)||
+|1.1.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/1.1.svg?label=latest%201.1.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.11/1.1.svg?label=latest%201.1.x%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.11%22)||
+|1.0.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/1.0.svg?label=latest%201.0.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|||
+|0.90.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s_2.10/0.90.svg?label=latest%200.90.x%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s_2.10%22)|||
+
+
 
 See full [changelog](#changelog).
 
