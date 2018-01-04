@@ -300,6 +300,17 @@ case class StatsBucketAggResult(name: String,
                                 max: Double,
                                 avg: Double,
                                 sum: Double) extends PipelineAggregation
+case class ExtendedStatsBucketAggResult(name: String,
+                                count: Long,
+                                min: Double,
+                                max: Double,
+                                avg: Double,
+                                sum: Double,
+                                sumOfSquares: Double,
+                                variance: Double,
+                                stdDeviation: Double,
+                                stdDeviationBoundsUpper: Double,
+                                stdDeviationBoundsLower: Double) extends PipelineAggregation
 
 case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
@@ -389,6 +400,22 @@ trait HasAggregations {
       max = agg(name)("max").toString.toDouble,
       avg = agg(name)("avg").toString.toDouble,
       sum = agg(name)("sum").toString.toDouble
+    )
+  }
+  def extendedStatsBucket(name: String): ExtendedStatsBucketAggResult = {
+    val stdDevBounds = agg(name)("std_deviation_bounds").asInstanceOf[Map[String,Double]]
+    ExtendedStatsBucketAggResult(
+      name,
+      count = agg(name)("count").toString.toLong,
+      min = agg(name)("min").toString.toDouble,
+      max = agg(name)("max").toString.toDouble,
+      avg = agg(name)("avg").toString.toDouble,
+      sum = agg(name)("sum").toString.toDouble,
+      sumOfSquares = agg(name)("sum_of_squares").toString.toDouble,
+      variance = agg(name)("variance").toString.toDouble,
+      stdDeviation = agg(name)("std_deviation").toString.toDouble,
+      stdDeviationBoundsUpper = stdDevBounds("upper"),
+      stdDeviationBoundsLower = stdDevBounds("lower")
     )
   }
 }
