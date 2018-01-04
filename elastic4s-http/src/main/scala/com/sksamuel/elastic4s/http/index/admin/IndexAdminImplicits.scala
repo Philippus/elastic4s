@@ -35,7 +35,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       }
 
       val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
-      client.async("GET", endpoint, params.toMap, entity)
+      client.async("POST", endpoint, params.toMap, entity)
     }
   }
 
