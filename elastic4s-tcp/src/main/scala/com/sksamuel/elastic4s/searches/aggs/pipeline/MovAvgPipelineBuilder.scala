@@ -13,7 +13,7 @@ object MovAvgPipelineBuilder {
     if (p.metadata.nonEmpty) builder.setMetaData(p.metadata.asJava)
     p.format.foreach(builder.format)
     p.gapPolicy.map(EnumConversions.gapPolicy).foreach(builder.gapPolicy)
-    p.minimise.foreach(builder.minimize)
+    p.minimize.foreach(builder.minimize)
     // p.modelBuilder.map(EnumConversions.modelBuilder).foreach(builder.modelBuilder)
     p.numPredictions.foreach(num => builder.predict(num))
     p.window.foreach(win => builder.window(win))

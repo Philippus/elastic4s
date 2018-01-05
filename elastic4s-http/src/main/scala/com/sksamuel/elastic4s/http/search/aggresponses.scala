@@ -305,6 +305,7 @@ case class ExtendedStatsBucketAggResult(name: String,
                                         stdDeviationBoundsUpper: Double,
                                         stdDeviationBoundsLower: Double) extends PipelineAggregation
 case class MinBucketAggResult(name: String, value: Double) extends PipelineAggregation
+case class MovAvgAggResult(name: String, value: Double) extends PipelineAggregation
 case class PercentilesBucketAggResult(name: String, values: Map[String,Double]) extends PipelineAggregation
 case class StatsBucketAggResult(name: String,
                                 count: Long,
@@ -409,6 +410,7 @@ trait HasAggregations {
     )
   }
   def minBucket(name: String): MinBucketAggResult = MinBucketAggResult(name, agg(name)("value").toString.toDouble)
+  def movAvg(name: String): MovAvgAggResult = MovAvgAggResult(name, agg(name)("value").toString.toDouble)
   def percentilesBucket(name: String): PercentilesBucketAggResult = {
     PercentilesBucketAggResult(name, agg(name)("values").asInstanceOf[Map[String,Double]])
   }
