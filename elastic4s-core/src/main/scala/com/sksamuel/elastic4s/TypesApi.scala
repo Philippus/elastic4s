@@ -38,7 +38,7 @@ trait TypesApi {
   def floatRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "float_range")
   def longRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "long_range")
   def doubleRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "double_range")
-  def dataeRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "date_range")
+  def dateRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "date_range")
   def ipRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "ip_range")
 
   // complex datatypes

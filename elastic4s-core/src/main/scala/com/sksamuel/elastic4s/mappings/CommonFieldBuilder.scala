@@ -122,6 +122,14 @@ object FieldBuilderFn {
         keyword.similarity.foreach(builder.field("similarity", _))
         keyword.indexOptions.foreach(builder.field("index_options", _))
 
+      case range: RangeFieldDefinition =>
+        range.ignoreAbove.foreach(builder.field("ignore_above", _))
+        range.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+        range.indexOptions.foreach(builder.field("index_options", _))
+        range.scalingFactor.foreach(builder.field("scaling_factor", _))
+        range.coerce.foreach(builder.field("coerce", _))
+        range.format.foreach(builder.field("format", _))
+        range.similarity.foreach(builder.field("similarity", _))
     }
     builder.endObject()
     builder
