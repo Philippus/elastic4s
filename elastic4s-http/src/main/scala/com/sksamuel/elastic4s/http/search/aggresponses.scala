@@ -292,6 +292,28 @@ object ChildrenAggResult {
   )
 }
 
+case class AvgBucketAggResult(name: String, value: Double) extends PipelineAggregation
+case class ExtendedStatsBucketAggResult(name: String,
+                                        count: Long,
+                                        min: Double,
+                                        max: Double,
+                                        avg: Double,
+                                        sum: Double,
+                                        sumOfSquares: Double,
+                                        variance: Double,
+                                        stdDeviation: Double,
+                                        stdDeviationBoundsUpper: Double,
+                                        stdDeviationBoundsLower: Double) extends PipelineAggregation
+case class MinBucketAggResult(name: String, value: Double) extends PipelineAggregation
+case class MovAvgAggResult(name: String, value: Double) extends PipelineAggregation
+case class PercentilesBucketAggResult(name: String, values: Map[String,Double]) extends PipelineAggregation
+case class StatsBucketAggResult(name: String,
+                                count: Long,
+                                min: Double,
+                                max: Double,
+                                avg: Double,
+                                sum: Double) extends PipelineAggregation
+
 case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
@@ -368,6 +390,40 @@ trait HasAggregations {
   }
   def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
+
+  // pipeline aggs
+  def avgBucket(name: String): AvgBucketAggResult = AvgBucketAggResult(name, agg(name)("value").toString.toDouble)
+  def extendedStatsBucket(name: String): ExtendedStatsBucketAggResult = {
+    val stdDevBounds = agg(name)("std_deviation_bounds").asInstanceOf[Map[String,Double]]
+    ExtendedStatsBucketAggResult(
+      name,
+      count = agg(name)("count").toString.toLong,
+      min = agg(name)("min").toString.toDouble,
+      max = agg(name)("max").toString.toDouble,
+      avg = agg(name)("avg").toString.toDouble,
+      sum = agg(name)("sum").toString.toDouble,
+      sumOfSquares = agg(name)("sum_of_squares").toString.toDouble,
+      variance = agg(name)("variance").toString.toDouble,
+      stdDeviation = agg(name)("std_deviation").toString.toDouble,
+      stdDeviationBoundsUpper = stdDevBounds("upper"),
+      stdDeviationBoundsLower = stdDevBounds("lower")
+    )
+  }
+  def minBucket(name: String): MinBucketAggResult = MinBucketAggResult(name, agg(name)("value").toString.toDouble)
+  def movAvg(name: String): MovAvgAggResult = MovAvgAggResult(name, agg(name)("value").toString.toDouble)
+  def percentilesBucket(name: String): PercentilesBucketAggResult = {
+    PercentilesBucketAggResult(name, agg(name)("values").asInstanceOf[Map[String,Double]])
+  }
+  def statsBucket(name: String): StatsBucketAggResult = {
+    StatsBucketAggResult(
+      name,
+      count = agg(name)("count").toString.toLong,
+      min = agg(name)("min").toString.toDouble,
+      max = agg(name)("max").toString.toDouble,
+      avg = agg(name)("avg").toString.toDouble,
+      sum = agg(name)("sum").toString.toDouble
+    )
+  }
 }
 
 trait MetricAggregation {
@@ -375,6 +431,10 @@ trait MetricAggregation {
 }
 
 trait BucketAggregation {
+  def name: String
+}
+
+trait PipelineAggregation {
   def name: String
 }
 
