@@ -50,6 +50,7 @@ object AggregationBuilderFn {
       case agg: ExtendedStatsBucketDefinition => ExtendedStatsBucketPipelineAggBuilder(agg)
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketDefinition => MinBucketPipelineAggBuilder(agg)
+      case agg: PercentilesBucketDefinition => PercentilesBucketPipelineAggBuilder(agg)
       case agg: SumBucketDefinition => SumBucketPipelineAggBuilder(agg)
       case agg: StatsBucketDefinition => StatsBucketPipelineAggBuilder(agg)
 
