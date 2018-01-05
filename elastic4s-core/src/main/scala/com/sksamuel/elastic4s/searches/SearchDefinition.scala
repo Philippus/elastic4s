@@ -10,7 +10,6 @@ import com.sksamuel.elastic4s.searches.queries.term.TermQueryDefinition
 import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortDefinition}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestionDefinition
 import com.sksamuel.exts.OptionImplicits._
-import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.action.support.IndicesOptions
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext

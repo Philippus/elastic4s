@@ -57,7 +57,7 @@ trait SearchImplicits {
       request.pref.foreach(params.put("preference", _))
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.routing.foreach(params.put("routing", _))
-      request.searchType.map(_.toString).foreach(params.put("search_type", _))
+      request.searchType.foreach(sType => params.put("search_type", SearchTypeHttpParameters.convert(sType)))
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.version.map(_.toString).foreach(params.put("version", _))

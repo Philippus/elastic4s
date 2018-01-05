@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.script.{ScriptFieldDefinition, SortBuilderFn}
 import com.sksamuel.elastic4s.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.searches.collapse.CollapseBuilderFn
@@ -31,7 +32,7 @@ object SearchBuilderFn {
     search.requestCache.map(java.lang.Boolean.valueOf).foreach(builder.setRequestCache)
     search.routing.foreach(builder.setRouting)
     search.size.foreach(builder.setSize)
-    search.searchType.foreach(builder.setSearchType)
+    search.searchType.foreach(EnumConversions.searchType)
     search.trackScores.foreach(builder.setTrackScores)
     search.terminateAfter.foreach(builder.setTerminateAfter)
     search.timeout.map(dur => TimeValue.timeValueNanos(dur.toNanos)).foreach(builder.setTimeout)
