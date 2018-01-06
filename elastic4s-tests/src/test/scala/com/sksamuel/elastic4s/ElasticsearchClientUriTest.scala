@@ -49,4 +49,8 @@ class ElasticsearchClientUriTest extends FlatSpec with Matchers {
       ElasticsearchClientUri("elasticsearch://host1:1234,,host2:9999")
     } should not be null
   }
+
+  it should "support http protocol" in {
+    testString("http://host1:1234,host2:2345", List("host1" -> 1234, "host2" -> 2345))
+  }
 }
