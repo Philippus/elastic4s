@@ -29,6 +29,7 @@ object AggregationBuilderFn {
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
       case agg: NestedAggregationDefinition => NestedAggregationBuilder(agg)
       case agg: PercentilesAggregationDefinition => PercentilesAggregationBuilder(agg)
+      case agg: ReverseNestedAggregationDefinition => ReverseNestedAggregationBuilder(agg)
       case agg: SamplerAggregationDefinition => SamplerAggregationBuilder(agg)
       case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
       case agg: SigTextAggregationDefinition => SigTextAggregationBuilder(agg)
