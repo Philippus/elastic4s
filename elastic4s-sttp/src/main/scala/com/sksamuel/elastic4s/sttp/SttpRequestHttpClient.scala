@@ -15,6 +15,7 @@ import scala.io.Source
 
 class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpRequestClient {
 
+  import scala.concurrent.ExecutionContext.Implicits._
   implicit val sttpBackend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend()
 
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
@@ -39,7 +40,8 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpReque
   }
 
   override def async(method: String, endpoint: String, params: Map[String, Any]): Future[HttpResponse] = {
-    processResponse(request(method, endpoint, params).send)
+    val resp = request(method, endpoint, params).send()
+    processResponse(resp)
   }
 
   override def async(method: String, endpoint: String, params: Map[String, Any], entity: HttpEntity): Future[HttpResponse] = {
