@@ -23,6 +23,7 @@ lazy val root = Project("elastic4s", file("."))
     playjson,
     sprayjson,
     aws,
+    sttp,
     httpstreams,
 //    streams,
     xpacksecurity
@@ -163,6 +164,13 @@ lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"
     name := "elastic4s-spray-json",
     libraryDependencies += "io.spray" %% "spray-json" % SprayJsonVersion
   ).dependsOn(core)
+
+lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
+  .settings(
+    name := "elastic4s-sttp",
+    libraryDependencies += "com.softwaremill.sttp" %% "core" % "1.1.3",
+    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.1.3"
+  ).dependsOn(core, http)
 
 lazy val aws = Project("elastic4s-aws", file("elastic4s-aws"))
   .settings(

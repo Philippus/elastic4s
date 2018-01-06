@@ -21,7 +21,7 @@ sealed trait Response[+U] {
   final def isSuccess: Boolean  = !isError // returns true if this is a success
   final def map[V](f: U => V): Option[V] = if (isError) None else Some(f(result))
   final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(result)
-  final def foreach[V](f: U => V) = if (!isError) f(result)
+  final def foreach[V](f: U => V): Unit = if (!isError) f(result)
 }
 
 case class RequestSuccess[U](override val status: Int, // the http status code of the response
@@ -95,7 +95,9 @@ trait HttpRequestClient extends Logging {
 }
 
 case class HttpResponse(statusCode: Int, entity: Option[HttpEntity.StringEntity], headers: Map[String, String])
-sealed trait HttpEntity
+sealed trait HttpEntity {
+  def contentType: Option[String]
+}
 object HttpEntity {
   def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
