@@ -48,6 +48,7 @@ object AggregationBuilderFn {
       case agg: BucketSelectorDefinition => BucketSelectorPipelineBuilder(agg)
       case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
       case agg: DerivativeDefinition => DerivativePipelineAggBuilder(agg)
+      case agg: DiffDefinition => SerialDiffPipelineAggBuilder(agg)
       case agg: ExtendedStatsBucketDefinition => ExtendedStatsBucketPipelineAggBuilder(agg)
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketDefinition => MinBucketPipelineAggBuilder(agg)
