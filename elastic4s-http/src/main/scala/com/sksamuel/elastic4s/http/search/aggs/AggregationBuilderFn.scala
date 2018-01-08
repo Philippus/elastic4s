@@ -46,6 +46,7 @@ object AggregationBuilderFn {
       case agg: AvgBucketDefinition => AvgBucketPipelineAggBuilder(agg)
       case agg: BucketScriptDefinition => BucketScriptPipelineAggBuilder(agg)
       case agg: BucketSelectorDefinition => BucketSelectorPipelineBuilder(agg)
+      case agg: BucketSortDefinition => BucketSortPipelineAggBuilder(agg)
       case agg: CumulativeSumDefinition => CumulativeSumPipelineAggBuilder(agg)
       case agg: DerivativeDefinition => DerivativePipelineAggBuilder(agg)
       case agg: DiffDefinition => SerialDiffPipelineAggBuilder(agg)
