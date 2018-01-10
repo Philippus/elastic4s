@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 
 object ElasticsearchClientUri {
 
-  private val Regex = "(?:elasticsearch|http)://(.*?)/?(\\?.*?)?".r
+  private val Regex = "(?:elasticsearch|http|https)://(.*?)/?(\\?.*?)?".r
 
   implicit def stringtoUri(str: String): ElasticsearchClientUri = ElasticsearchClientUri(str)
 
@@ -30,7 +30,7 @@ object ElasticsearchClientUri {
           case _ => sys.error(s"Invalid query $query")
         }
         ElasticsearchClientUri(str, hosts.toList, options.toMap)
-      case _ => sys.error(s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr or http://host:port,host:port?querystr")
+      case _ => sys.error(s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr, http://host:port,host:port?querystr or https://host:port,host:port?querystr")
     }
   }
 }
