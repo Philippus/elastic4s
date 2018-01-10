@@ -16,7 +16,6 @@ case class CreateIndexDefinition(name: String,
                                  waitForActiveShards: Option[Int] = None,
                                  aliases: Set[IndexAliasDefinition] = Set.empty,
                                  settings: IndexSettings = new IndexSettings) {
-  require(!name.contains("/"), "Index should not contain / when creating mappings. Specify the type as the mapping")
 
   def alias(name: String): CreateIndexDefinition = alias(IndexAliasDefinition(name, None))
   def alias(name: String, filter: QueryDefinition): CreateIndexDefinition = alias(IndexAliasDefinition(name, Option(filter)))
