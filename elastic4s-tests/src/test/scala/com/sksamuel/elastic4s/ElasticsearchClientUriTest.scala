@@ -24,6 +24,10 @@ class ElasticsearchClientUriTest extends FlatSpec with Matchers {
     testString("elasticsearch://host1:1234/", List("host1" -> 1234))
   }
 
+  it should "parse single host/ports with auth" in {
+    testString("elasticsearch://user:pass@host1:1234", List("user:pass@host1" -> 1234))
+  }
+
   it should "errors on trailing commas" in {
     testString("elasticsearch://host1:1234,", List("host1" -> 1234))
   }

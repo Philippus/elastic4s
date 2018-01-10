@@ -19,7 +19,10 @@ object ElasticsearchClientUri {
     str match {
       case Regex(hoststr, query) =>
         val hosts = hoststr.split(',').map(_.split(':')).map {
-          case Array(host, port) => (host, port.toInt)
+          case hostAndPort if hostAndPort.length >= 2 =>
+            val host = hostAndPort.dropRight(1).mkString(":")
+            val port = hostAndPort.last.toInt
+            (host, port)
           case _ => sys.error(s"Invalid hosts/ports $hoststr")
         }
         val options = StringOption(query)
