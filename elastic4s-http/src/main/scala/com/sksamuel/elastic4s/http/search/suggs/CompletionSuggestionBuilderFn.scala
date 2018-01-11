@@ -13,7 +13,7 @@ object CompletionSuggestionBuilderFn {
     completion.text.foreach(builder.field("text", _))
     completion.prefix.foreach(builder.field("prefix", _))
 
-    completion.regex.foreach(builder.field("value", _))
+    completion.regex.foreach(builder.field("regex", _))
 
     builder.startObject("completion")
 
@@ -25,11 +25,12 @@ object CompletionSuggestionBuilderFn {
     completion.skipDuplicates.foreach(builder.field("skip_duplicates", _))
 
     completion.regex.foreach { regex =>
-      builder.field("regex", regex)
+      builder.startObject("regex")
       completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
       if(completion.regexFlags.nonEmpty) {
         builder.field("flags", completion.regexFlags.map(EnumConversions.regexpFlag).mkString("|"))
       }
+      builder.endObject()
     }
 
     if (completion.isFuzzy) {
