@@ -41,6 +41,8 @@ trait ClusterImplicits {
       request.waitForStatus.map(_.toString).foreach(params.put("wait_for_status", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForNodes.map(_.toString).foreach(params.put("wait_for_nodes", _))
+      request.waitForNoRelocatingShards.map(_.toString).foreach(params.put("wait_for_no_relocating_shards", _))
+      request.timeout.map(_.toString).foreach(params.put("timeout", _))
 
       client.async("GET", endpoint, params.toMap)
     }

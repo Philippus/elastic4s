@@ -42,7 +42,8 @@ case class ClusterHealthDefinition(indices: Seq[String],
                                    waitForActiveShards: Option[Int] = None,
                                    waitForEvents: Option[Priority] = None,
                                    waitForStatus: Option[HealthStatus] = None,
-                                   waitForNodes: Option[String] = None) {
+                                   waitForNodes: Option[String] = None,
+                                   waitForNoRelocatingShards: Option[Boolean] = None) {
 
   def timeout(value: String): ClusterHealthDefinition = copy(timeout = value.some)
 
@@ -55,4 +56,6 @@ case class ClusterHealthDefinition(indices: Seq[String],
     copy(waitForStatus = waitForStatus.some)
 
   def waitForNodes(waitForNodes: String): ClusterHealthDefinition = copy(waitForNodes = waitForNodes.some)
+
+  def waitForNoRelocatingShards(waitForNoRelocatingShards: Boolean): ClusterHealthDefinition = copy(waitForNoRelocatingShards = waitForNoRelocatingShards.some)
 }
