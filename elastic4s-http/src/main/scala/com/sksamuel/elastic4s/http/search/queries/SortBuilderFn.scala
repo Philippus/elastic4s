@@ -76,11 +76,8 @@ object ScriptSortBuilderFn {
     builder.startObject("script")
     builder.field(scriptSort.script.scriptType.toString.toLowerCase, scriptSort.script.script)
     builder.field("lang", scriptSort.script.lang.getOrElse("painless"))
-    if (scriptSort.script.params.nonEmpty) {
-      builder.startObject("params")
-      scriptSort.script.params.foreach(a => builder.field(a._1, a._2.toString))
-      builder.endObject()
-    }
+    if (scriptSort.script.params.nonEmpty)
+      builder.autofield("params", scriptSort.script.params)
     builder.endObject()
 
     builder.field("type", scriptSort.scriptSortType.toString.toLowerCase)
