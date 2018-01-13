@@ -31,6 +31,7 @@ trait ClusterExecutables {
       }.foreach(builder.setWaitForStatus)
       definition.waitForNodes.foreach(builder.setWaitForNodes)
       definition.waitForActiveShards.foreach(builder.setWaitForActiveShards)
+      definition.waitForNoRelocatingShards.foreach(builder.setWaitForNoRelocatingShards)
       definition.waitForEvents.map {
         case Priority.High => org.elasticsearch.common.Priority.HIGH
         case Priority.Immediate => org.elasticsearch.common.Priority.IMMEDIATE
