@@ -105,7 +105,7 @@ case class SearchResponse(took: Long,
   def aggs: Aggregations = aggregations
   def aggregations: Aggregations = Aggregations(aggregationsAsMap)
 
-  private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
+  private def suggestion(name: String): Map[String, SuggestionResult] = suggest.getOrElse(name, Nil).map { result => result.text -> result }.toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
   def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
