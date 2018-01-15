@@ -10,7 +10,7 @@ class CreateIndexTemplateDefinitionShowTest extends WordSpec with Matchers with 
   "CreateIndexTemplateDefinition" should {
     "have a show typeclass implementation" in {
       val req =
-        createTemplate("matchme.*").pattern("matchme.*").mappings(
+        createIndexTemplate("matchme.*", "matchme.*").mappings(
           mapping("characters").fields(
             textField("name"),
             textField("location")
@@ -25,7 +25,7 @@ class CreateIndexTemplateDefinitionShowTest extends WordSpec with Matchers with 
         .order(1)
         .settings(Map("number_of_shards" -> 4))
 
-      CreateIndexTemplateShow.show(req) should matchJson("""{"template":"matchme.*","order":1,"settings":{"number_of_shards":4,"analysis":{"analyzer":{"default":{"type":"custom","tokenizer":"keyword","filter":["lowercase"]}}}},"mappings":{"characters":{"properties":{"name":{"type":"text"},"location":{"type":"text"}}}}}""")
+      CreateIndexTemplateShow.show(req) should matchJson("""{"index_patterns":["matchme.*"],"order":1,"settings":{"number_of_shards":4,"analysis":{"analyzer":{"default":{"type":"custom","tokenizer":"keyword","filter":["lowercase"]}}}},"mappings":{"characters":{"properties":{"name":{"type":"text"},"location":{"type":"text"}}}}}""")
     }
   }
 }
