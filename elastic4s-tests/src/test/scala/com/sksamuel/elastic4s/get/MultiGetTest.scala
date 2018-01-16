@@ -1,23 +1,21 @@
 package com.sksamuel.elastic4s.get
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 
 import scala.util.Try
 
-class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with DiscoveryLocalNodeProvider {
+class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("coldplay")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("coldplay").shards(2).mappings(
       mapping("albums").fields(
         textField("name").stored(true),
@@ -26,7 +24,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with Disco
     )
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("coldplay" / "albums") id "1" fields("name" -> "parachutes", "year" -> 2000),
       indexInto("coldplay" / "albums") id "3" fields("name" -> "x&y", "year" -> 2005),
@@ -37,7 +35,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with Disco
 
   "a multiget request" should "retrieve documents by id" in {
 
-    val resp = http.execute(
+    val resp = client.execute(
       multiget(
         get("3").from("coldplay/albums"),
         get("5") from "coldplay/albums",
@@ -59,7 +57,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with Disco
 
   it should "set exists=false for missing documents" in {
 
-    val resp = http.execute(
+    val resp = client.execute(
       multiget(
         get("3").from("coldplay/albums"),
         get("711111") from "coldplay/albums"
@@ -73,7 +71,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with Disco
 
   it should "retrieve documents by id with selected fields" in {
 
-    val resp = http.execute(
+    val resp = client.execute(
       multiget(
         get("3") from "coldplay/albums" storedFields("name", "year"),
         get("5") from "coldplay/albums" storedFields "name"
@@ -87,7 +85,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with ElasticDsl with Disco
 
   it should "retrieve documents by id with fetchSourceContext" in {
 
-    val resp = http.execute(
+    val resp = client.execute(
       multiget(
         get("3") from "coldplay/albums" fetchSourceContext Seq("name", "year"),
         get("5") from "coldplay/albums" fetchSourceContext Seq("name")

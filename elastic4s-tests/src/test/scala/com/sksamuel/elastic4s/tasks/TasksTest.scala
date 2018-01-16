@@ -1,14 +1,13 @@
 package com.sksamuel.elastic4s.tasks
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
-class TasksTest extends FlatSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class TasksTest extends FlatSpec with DockerTests with Matchers {
 
   "list tasks" should "include all fields" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       listTasks()
     }.await.right.get.result
 

@@ -1,55 +1,56 @@
 package com.sksamuel.elastic4s.indexes
 
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class RolloverIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class RolloverIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("rolltest-001")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("rolltest-000002")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("rolltest-000003")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("rolltest-001").alias("roll_write")
   }.await
 
   "Rollover" should {
     "be created with padded index name" in {
-      http.execute {
+      client.execute {
         rolloverIndex("roll_write")
       }.await.right.get.result.newIndex shouldBe "rolltest-000002"
     }
     "support dry run" in {
-      val resp = http.execute {
+      val resp = client.execute {
         rolloverIndex("roll_write").maxAge("1d").dryRun(true)
       }.await.right.get.result
       resp.dryRun shouldBe true
       resp.rolledOver shouldBe false
     }
     "return conditions in response" in {
-      http.execute {
+      client.execute {
         rolloverIndex("roll_write").maxDocs(10).maxSize("5g")
       }.await.right.get.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
     }
     "support max docs" in {
-      http.execute {
+      client.execute {
         bulk(
           indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
           indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
@@ -63,11 +64,11 @@ class RolloverIndexTest extends WordSpec with Matchers with ElasticDsl with Disc
           indexInto("roll_write" / "wibble").fields("foo" -> "woo")
         ).refreshImmediately
       }.await
-      http.execute {
+      client.execute {
         search("rolltest-000002").limit(20)
       }.await.right.get.result.totalHits shouldBe 10
 
-      val resp = http.execute {
+      val resp = client.execute {
         rolloverIndex("roll_write").maxDocs(10)
       }.await.right.get.result
       resp.conditions shouldBe Map("[max_docs: 10]" -> true)

@@ -1,21 +1,20 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.index.{Field, Mapping}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class GetIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class GetIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("getindextest")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("getindextest").mappings(
       mapping("mytype").fields(
         textField("a"),
@@ -28,14 +27,14 @@ class GetIndexTest extends WordSpec with Matchers with ElasticDsl with Discovery
   "get index" should {
 
     "return mapping info" in {
-      val resp = http.execute {
+      val resp = client.execute {
         getIndex("getindextest")
       }.await.right.get.result
       resp("getindextest").mappings shouldBe Map("mytype" -> Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long"))))
     }
 
     "return settings" in {
-      val resp = http.execute {
+      val resp = client.execute {
         getIndex("getindextest")
       }.await.right.get.result
 
@@ -46,15 +45,15 @@ class GetIndexTest extends WordSpec with Matchers with ElasticDsl with Discovery
 
     "return aliases" in {
 
-      http.execute {
+      client.execute {
         addAlias("myalias1").on("getindextest")
       }.await
 
-      http.execute {
+      client.execute {
         addAlias("myalias2").on("getindextest")
       }.await
 
-      val resp = http.execute {
+      val resp = client.execute {
         getIndex("getindextest")
       }.await.right.get.result
 

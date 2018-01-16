@@ -1,21 +1,20 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 import scala.util.Try
 
-class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class RefreshIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("beaches")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("beaches").mappings(
       mapping("dday").fields(
         textField("name")
@@ -26,20 +25,20 @@ class RefreshIndexTest extends WordSpec with Matchers with ElasticDsl with Disco
   "refresh index request" should {
     "refresh pending docs" in {
 
-      http.execute {
+      client.execute {
         indexInto("beaches" / "dday").fields("name" -> "omaha")
       }.await
 
       // no data because the refresh is 10 minutes
-      http.execute {
+      client.execute {
         search("beaches" / "dday").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 0
 
-      http.execute {
+      client.execute {
         refreshIndex("beaches")
       }.await
 
-      http.execute {
+      client.execute {
         search("beaches" / "dday").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 1
     }

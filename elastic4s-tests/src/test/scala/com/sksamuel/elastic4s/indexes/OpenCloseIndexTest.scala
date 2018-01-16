@@ -1,20 +1,19 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class OpenCloseIndexTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class OpenCloseIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("pasta")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("pasta").mappings(
       mapping("types").fields(
         textField("name"),
@@ -25,7 +24,7 @@ class OpenCloseIndexTest extends WordSpec with Matchers with ElasticDsl with Dis
 
   "close index" should {
     "acknowledge" in {
-      http.execute {
+      client.execute {
         closeIndex("pasta")
       }.await.right.get.result.acknowledged shouldBe true
     }
@@ -33,7 +32,7 @@ class OpenCloseIndexTest extends WordSpec with Matchers with ElasticDsl with Dis
 
   "open index" should {
     "acknowledge" in {
-      http.execute {
+      client.execute {
         openIndex("pasta")
       }.await.right.get.result.acknowledged shouldBe true
     }

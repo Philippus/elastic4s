@@ -1,33 +1,32 @@
 package com.sksamuel.elastic4s.indexes
 
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.analyzers.PatternAnalyzer
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("foo")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("cuisine")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("landscape")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("foo").mappings(
       mapping("bar").fields(
         textField("baz").fields(
@@ -40,7 +39,7 @@ class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
 
   "CreateIndex Http Request" should {
     "return ack" in {
-      val resp = http.execute {
+      val resp = client.execute {
         createIndex("cuisine").mappings(
           mapping("food").fields(
             textField("name"),
@@ -54,7 +53,7 @@ class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
 
     "return error object when index already exists" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         createIndex("foo").mappings(
           mapping("a").fields(
             textField("b")
@@ -68,7 +67,7 @@ class CreateIndexTest extends WordSpec with Matchers with DiscoveryLocalNodeProv
 
     "create from raw source" in {
 
-      http.execute {
+      client.execute {
         createIndex("landscape").source(s"""
              {
               "mappings": {

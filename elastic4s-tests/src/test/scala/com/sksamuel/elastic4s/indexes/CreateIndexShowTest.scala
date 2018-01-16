@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.{DockerTests, JsonSugar}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
-class CreateIndexShowTest extends WordSpec with Matchers with JsonSugar with ElasticDsl {
+class CreateIndexShowTest extends WordSpec with Matchers with JsonSugar with DockerTests {
 
   "CreateIndex" should {
     "have a show typeclass implementation" in {

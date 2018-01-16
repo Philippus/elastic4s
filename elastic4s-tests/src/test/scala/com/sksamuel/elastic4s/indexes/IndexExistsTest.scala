@@ -1,20 +1,19 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class IndexExistsTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class IndexExistsTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("indexexists")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("indexexists").mappings {
       mapping("flowers") fields textField("name")
     }
@@ -22,12 +21,12 @@ class IndexExistsTest extends WordSpec with Matchers with ElasticDsl with Discov
 
   "an index exists request" should {
     "return true for an existing index" in {
-      http.execute {
+      client.execute {
         indexExists("indexexists")
       }.await.right.get.result.isExists shouldBe true
     }
     "return false for non existing index" in {
-      http.execute {
+      client.execute {
         indexExists("qweqwewqe")
       }.await.right.get.result.isExists shouldBe false
     }

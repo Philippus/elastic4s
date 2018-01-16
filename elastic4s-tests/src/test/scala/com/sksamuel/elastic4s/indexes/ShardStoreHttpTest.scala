@@ -1,21 +1,20 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.{IndexStoreStatus, ShardStoreStatus}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ShardStoreHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("beaches")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("beaches").mappings(
       mapping("dday").fields(
         textField("name")
@@ -26,7 +25,7 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeP
   "shard store request" should {
     "get green shards" in {
 
-      val indexInfo = http.execute {
+      val indexInfo = client.execute {
         indexShardStores("beaches") status "green"
       }.await.right.get.result.indices.getOrElse("beaches", IndexStoreStatus(Map.empty))
 
