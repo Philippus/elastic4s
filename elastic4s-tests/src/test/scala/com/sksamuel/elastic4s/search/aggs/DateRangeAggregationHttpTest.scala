@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.search.aggs
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
+import com.sksamuel.elastic4s.{DockerTests, ElasticDate, ElasticDateMath, Years}
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
 
-class DateRangeAggregationHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
     http.execute {

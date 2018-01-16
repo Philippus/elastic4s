@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.Aggregations
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
@@ -10,7 +10,7 @@ import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
 
-class BucketSortPipelineAggHttpTest extends FreeSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
     http.execute {

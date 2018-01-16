@@ -10,12 +10,12 @@ import scala.util.Try
 class GetTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("beer")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("beer").mappings {
       mapping("lager").fields(
         textField("name").stored(true),
@@ -25,7 +25,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
     }
   }.await
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("beer/lager") fields(
         "name" -> "coors light",
@@ -42,7 +42,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   "A Get request" should "retrieve a document by id" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer"
     }.await.right.get.result
 
@@ -52,7 +52,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "retrieve a document by id with source" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer"
     }.await.right.get.result
 
@@ -63,7 +63,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "retrieve a document by id without source" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer/lager" fetchSourceContext false
     }.await.right.get.result
 
@@ -75,7 +75,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support source includes" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer/lager" fetchSourceInclude "brand"
     }.await.right.get.result
 
@@ -86,7 +86,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support source excludes" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer/lager" fetchSourceExclude "brand"
     }.await.right.get.result
 
@@ -97,7 +97,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support source includes and excludes" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("8") from "beer/lager" fetchSourceContext(List("name"), List("brand"))
     }.await.right.get.result
 
@@ -108,7 +108,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "retrieve a document supporting stored fields" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("4") from "beer/lager" storedFields("name", "brand")
     }.await.right.get.result
 
@@ -120,7 +120,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   it should "retrieve multi value fields" in {
 
-    val resp = client.execute {
+    val resp = http.execute {
       get("4") from "beer/lager" storedFields "ingredients"
     }.await.right.get.result
 
@@ -129,13 +129,13 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "return Left[RequestFailure] when index does not exist" in {
-    client.execute {
+    http.execute {
       get("4") from "qqqqqqqqqq"
     }.await.left.get.error.`type` shouldBe "index_not_found_exception"
   }
 
   it should "return Right with exists=false when the doc does not exist" in {
-    client.execute {
+    http.execute {
       get("111111") from "beer"
     }.await.right.get.result.exists shouldBe false
   }

@@ -8,12 +8,12 @@ import scala.util.Try
 class TypeExistsTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("typeexists")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("typeexists").mappings {
       mapping("flowers") fields textField("name")
     }
@@ -21,12 +21,12 @@ class TypeExistsTest extends WordSpec with Matchers with DockerTests {
 
   "a type exists request" should {
     "return true for an existing type" in {
-      client.execute {
+      http.execute {
         typesExist("typeexists" / "flowers")
       }.await.right.get.result.isExists shouldBe true
     }
     "return false for non existing type" in {
-      client.execute {
+      http.execute {
         typesExist("typeexists" / "qeqweqew")
       }.await.right.get.result.isExists shouldBe false
     }

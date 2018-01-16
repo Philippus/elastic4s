@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class SearchHttpTest extends WordSpec with DiscoveryLocalNodeProvider with ElasticDsl with Matchers {
+class SearchHttpTest extends WordSpec with DockerTests with Matchers {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 

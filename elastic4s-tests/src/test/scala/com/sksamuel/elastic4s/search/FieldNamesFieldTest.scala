@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search
 
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class FieldNamesFieldTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
     http.execute {
@@ -31,13 +31,14 @@ class FieldNamesFieldTest extends FlatSpec with Matchers with DiscoveryLocalNode
   }.await
 
   // seems to be broken in 6.1.0
-  "_field_names" should "index the names of every field in a document that contains any value other than null" ignore {
+  "_field_names" should "index the names of every field in a document that contains any value other than null" in {
+
     http.execute {
-      search("space").query(termQuery("_field_names", "name"))
+      search("space").query(existsQuery("name"))
     }.await.right.get.result.totalHits shouldBe 2
 
     http.execute {
-      search("space").query(termQuery("_field_names", "location"))
+      search("space").query(existsQuery("location"))
     }.await.right.get.result.totalHits shouldBe 1
 
     http.execute {

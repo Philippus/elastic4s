@@ -10,12 +10,12 @@ import scala.util.Try
 class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("coldplay")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("coldplay").shards(2).mappings(
       mapping("albums").fields(
         textField("name").stored(true),
@@ -24,7 +24,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
     )
   }.await
 
-  client.execute(
+  http.execute(
     bulk(
       indexInto("coldplay" / "albums") id "1" fields("name" -> "parachutes", "year" -> 2000),
       indexInto("coldplay" / "albums") id "3" fields("name" -> "x&y", "year" -> 2005),
@@ -35,7 +35,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   "a multiget request" should "retrieve documents by id" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get("3").from("coldplay/albums"),
         get("5") from "coldplay/albums",
@@ -57,7 +57,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   it should "set exists=false for missing documents" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get("3").from("coldplay/albums"),
         get("711111") from "coldplay/albums"
@@ -71,7 +71,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   it should "retrieve documents by id with selected fields" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get("3") from "coldplay/albums" storedFields("name", "year"),
         get("5") from "coldplay/albums" storedFields "name"
@@ -85,7 +85,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   it should "retrieve documents by id with fetchSourceContext" in {
 
-    val resp = client.execute(
+    val resp = http.execute(
       multiget(
         get("3") from "coldplay/albums" fetchSourceContext Seq("name", "year"),
         get("5") from "coldplay/albums" fetchSourceContext Seq("name")

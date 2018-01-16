@@ -9,12 +9,12 @@ import scala.util.Try
 class RefreshIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("beaches")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("beaches").mappings(
       mapping("dday").fields(
         textField("name")
@@ -25,20 +25,20 @@ class RefreshIndexTest extends WordSpec with Matchers with DockerTests {
   "refresh index request" should {
     "refresh pending docs" in {
 
-      client.execute {
+      http.execute {
         indexInto("beaches" / "dday").fields("name" -> "omaha")
       }.await
 
       // no data because the refresh is 10 minutes
-      client.execute {
+      http.execute {
         search("beaches" / "dday").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 0
 
-      client.execute {
+      http.execute {
         refreshIndex("beaches")
       }.await
 
-      client.execute {
+      http.execute {
         search("beaches" / "dday").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 1
     }

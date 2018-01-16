@@ -8,36 +8,36 @@ import scala.util.Try
 class CountTest extends WordSpec with DockerTests with Matchers {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("stads")
     }.await
   }
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("stads2")
     }.await
   }
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("stads3")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("stads")
   }.await
 
-  client.execute {
+  http.execute {
     createIndex("stads2")
   }.await
 
-  client.execute {
+  http.execute {
     createIndex("stads3")
   }.await
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("stads/stads").fields("name" -> "riverside stadium"),
       indexInto("stads/stads").fields("name" -> "stadium of shite"),
@@ -55,25 +55,25 @@ class CountTest extends WordSpec with DockerTests with Matchers {
 
   "a count query" should {
     "count all docs in a specified index" in {
-      client.execute {
+      http.execute {
         count("stads")
       }.await.right.get.result.count shouldBe 9
     }
     "count all docs across multiple specified indexes" in {
-      client.execute {
+      http.execute {
         count(Seq("stads2", "stads3"))
       }.await.right.get.result.count shouldBe 2
     }
     "count with a filter" in {
-      client.execute {
+      http.execute {
         count("stads").filter(prefixQuery("name", "river"))
       }.await.right.get.result.count shouldBe 1
     }
     "count with type set" in {
-      client.execute {
+      http.execute {
         count("stads", "stads")
       }.await.right.get.result.count shouldBe 9
-      client.execute {
+      http.execute {
         count("stads", "nonexisting")
       }.await.right.get.result.count shouldBe 0
     }

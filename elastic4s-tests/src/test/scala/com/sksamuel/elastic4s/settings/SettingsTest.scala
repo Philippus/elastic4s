@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.settings
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class SettingsTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class SettingsTest extends WordSpec with Matchers with DockerTests {
 
   deleteIdx("settingsa")
   deleteIdx("settingsb")

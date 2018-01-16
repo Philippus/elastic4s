@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.DockerTests
+import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class ChildrenAggregationHttpTest extends FlatSpec with Matchers with ElasticDsl {
+class ChildrenAggregationHttpTest extends FlatSpec with Matchers with DockerTests {
 
   "child aggs" should "support sub aggs" ignore {
 

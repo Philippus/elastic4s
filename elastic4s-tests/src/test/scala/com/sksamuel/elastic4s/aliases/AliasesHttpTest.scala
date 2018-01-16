@@ -15,62 +15,62 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
   addIndex("beaches")
   addIndex("mountains")
 
-  client.execute {
+  http.execute {
     indexInto("beaches/a").fields("name" -> "gold").refreshImmediately
   }.await
 
-  client.execute {
+  http.execute {
     indexInto("beaches/a").fields("name" -> "sword").refreshImmediately
   }.await
 
   "alias actions" should {
     "support adding an alias" in {
-      client.execute {
+      http.execute {
         aliases(
           addAlias("beaches_alias", "beaches")
         )
       }.await.right.get.result shouldBe AliasActionResponse(true)
 
-      client.execute {
+      http.execute {
         getAliases(Nil, Seq("beaches_alias"))
       }.await.right.get.result shouldBe IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias"))))
     }
     "multiple operations" in {
-      client.execute {
+      http.execute {
         aliases(
           removeAlias("beaches_alias").on("beaches"),
           addAlias("mountains_alias").on("mountains")
         )
       }.await.right.get.result should be(AliasActionResponse(true))
 
-      client.execute {
+      http.execute {
         aliasExists("mountains_alias")
       }.await.right.get.result should be(AliasExistsResponse(true))
 
-      client.execute {
+      http.execute {
         aliasExists("beaches_alias")
       }.await.right.get.result should be(AliasExistsResponse(false))
 
-      client.execute {
+      http.execute {
         getAliases(Nil, Seq("mountains_alias"))
       }.await.right.get.result shouldBe IndexAliases(Map(Index("mountains") -> List(Alias("mountains_alias"))))
 
-      client.execute {
+      http.execute {
         getAliases(Nil, Seq("beaches_alias"))
       }.await.right.get.result shouldBe IndexAliases(Map.empty)
     }
     "support removing an alias" in {
-      client.execute {
+      http.execute {
         aliases(
           removeAlias("mountains_alias", "mountains")
         )
       }.await.right.get.result should be(AliasActionResponse(true))
 
-      client.execute {
+      http.execute {
         aliasExists("mountains_alias")
       }.await.right.get.result should be(AliasExistsResponse(false))
 
-      client.execute {
+      http.execute {
         getAliases(Nil, Seq("mountains_alias"))
       }.await.right.get.result shouldBe IndexAliases(Map.empty)
     }
@@ -78,36 +78,36 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
 
   "getAliases" should {
     "return empty response when the index is not found" in {
-      client.execute {
+      http.execute {
         getAliases("does_not_exist", Nil)
       }.await.right.get.result shouldBe IndexAliases(Map.empty)
     }
     "return empty response when no index of many is found" in {
-      client.execute {
+      http.execute {
         aliases(
           addAlias("beaches_alias", "beaches")
         )
       }.await.right.get.result shouldBe AliasActionResponse(true)
 
-      client.execute {
+      http.execute {
         getAliases(Seq("does_not_exist", "beaches"), Nil)
       }.await.right.get.result shouldBe IndexAliases(Map())
     }
     "support multiple indexes where many are found" in {
-      client.execute {
+      http.execute {
         getAliases(Seq("mountains", "beaches"), Nil)
       }.await.right.get.result shouldBe IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")), Index("mountains") -> Nil))
     }
     "return all aliases / all indexes when nothing is specified" in {
 
-      client.execute {
+      http.execute {
         aliases(
           addAlias("sandy_beaches", "beaches"),
           addAlias("big_mountains", "mountains")
         )
       }.await.right.get.result shouldBe AliasActionResponse(true)
 
-      val results = client.execute {
+      val results = http.execute {
         getAliases()
       }.await.right.get.result
 
@@ -119,13 +119,13 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
 
   "alias filters" should {
     "filter search results" in {
-      client.execute {
+      http.execute {
         aliases(
           addAlias("metal_beaches", "beaches").filter(prefixQuery("name", "g"))
         )
       }.await.right.get.result shouldBe AliasActionResponse(true)
 
-      val result = client.execute {
+      val result = http.execute {
         search("metal_beaches").matchAllQuery()
       }.await.right.get.result
       result.hits.hits.length shouldBe 1
@@ -135,14 +135,14 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
 
   private def removeIndex(name: String): Unit = {
     Try {
-      client.execute {
+      http.execute {
         deleteIndex(name)
       }.await
     }
   }
 
   private def addIndex(index: String): Unit = {
-    client.execute {
+    http.execute {
       createIndex(index).mappings(
         mapping("a").fields(
           textField("b")

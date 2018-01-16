@@ -8,13 +8,13 @@ import scala.util.Try
 class HttpClientTests extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("testindex")
     }.await
   }
 
   "DefaultHttpClient" should "support utf-8" in {
-    client.execute {
+    http.execute {
       indexInto("testindex" / "testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")
     }.await.right.get.result.result shouldBe "created"
   }

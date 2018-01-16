@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.validate
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ValidateTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class ValidateTest extends WordSpec with Matchers with DockerTests {
 
   Try {
     http.execute {

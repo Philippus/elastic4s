@@ -1,15 +1,14 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{FlatSpec, Matchers}
 
 class TermsQueryTest
   extends FlatSpec
-    with DiscoveryLocalNodeProvider
-    with Matchers
-    with ElasticDsl {
+    with DockerTests
+    with Matchers {
 
   http.execute {
     createIndex("lords").mappings(

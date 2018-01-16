@@ -9,12 +9,12 @@ import scala.util.Try
 class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("beaches")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("beaches").mappings(
       mapping("dday").fields(
         textField("name")
@@ -25,7 +25,7 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
   "shard store request" should {
     "get green shards" in {
 
-      val indexInfo = client.execute {
+      val indexInfo = http.execute {
         indexShardStores("beaches") status "green"
       }.await.right.get.result.indices.getOrElse("beaches", IndexStoreStatus(Map.empty))
 

@@ -1,34 +1,33 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
+import com.sksamuel.elastic4s.{DockerTests, ElasticApi, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class UpdateTest extends FlatSpec
-  with Matchers
-  with ElasticDsl
-  with DiscoveryLocalNodeProvider
-  with OptionValues {
+class UpdateTest
+  extends FlatSpec
+    with Matchers
+    with DockerTests
+    with OptionValues {
 
-  val createMapping = createIndex("hans").mappings(
+  private val createMapping = createIndex("hans").mappings(
     mapping("albums").fields(
       textField("name").stored(true)
     )
   )
-  val simpleIndex = indexInto("hans/albums") fields "name" -> "intersteller" id "5" refresh RefreshPolicy.Immediate
-  val nestedIndex = indexInto("hans/albums").fields(
+
+  private val simpleIndex = indexInto("hans/albums") fields "name" -> "intersteller" id "5" refresh RefreshPolicy.Immediate
+  private val nestedIndex = indexInto("hans/albums").fields(
     "recording_location" ->
       Map(
         "city" -> "London",
         "country" -> "United Kingdom",
-        "position" -> List(-0.127413,51.506907)
+        "position" -> List(-0.127413, 51.506907)
       )
   ) id "5" refresh RefreshPolicy.Immediate
 
-  val idxRequests = for {
+  private val idxRequests = for {
     _ <- http.execute(ElasticApi.deleteIndex("hans"))
     _ <- http.execute(createMapping)
     _ <- http.execute(simpleIndex)
@@ -55,7 +54,7 @@ class UpdateTest extends FlatSpec
         Map(
           "city" -> "London!",
           "country" -> "United Kingdom!",
-          "position" -> List(-0.110146,51.513176)
+          "position" -> List(-0.110146, 51.513176)
         )
     )
     http.execute {

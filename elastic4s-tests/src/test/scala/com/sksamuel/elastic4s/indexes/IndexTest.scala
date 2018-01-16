@@ -17,16 +17,16 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
   }
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("electronics")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("electronics").mappings(mapping("electronics"))
   }.await
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
       indexInto("electronics" / "electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
@@ -40,65 +40,65 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
 
   "an index request" should {
     "index fields" in {
-      client.execute {
+      http.execute {
         search("electronics").query(matchQuery("name", "galaxy"))
       }.await.right.get.result.totalHits shouldBe 1
     }
     "support index names with +" in {
-      client.execute {
+      http.execute {
         createIndex("hello+world").mappings(mapping("wobble"))
       }.await
-      client.execute {
+      http.execute {
         indexInto("hello+world/wobble").fields(Map("foo" -> "bar")).withId("a").refreshImmediately
       }.await
-      client.execute {
+      http.execute {
         search("hello+world").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 1
     }
     "support / in ids" in {
-      client.execute {
+      http.execute {
         createIndex("indexidtest").mappings(mapping("wobble"))
       }.await
-      client.execute {
+      http.execute {
         indexInto("indexidtest/wobble").fields(Map("foo" -> "bar")).withId("a/b").refreshImmediately
       }.await
-      client.execute {
+      http.execute {
         search("indexidtest").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 1
-      client.execute {
+      http.execute {
         get("indexidtest", "wobble", "a/b")
       }.await.right.get.result.exists shouldBe true
     }
     "support external versions" in {
-      val found = client.execute {
+      val found = http.execute {
         search("electronics").query(matchQuery("name", "galaxy"))
       }.await.right.get.result.hits.hits(0)
       found.id shouldBe "55A"
       found.version shouldBe 42l
     }
     "handle custom id" in {
-      client.execute {
+      http.execute {
         search("electronics").query(idsQuery("55A"))
       }.await.right.get.result.totalHits shouldBe 1
     }
     "handle numbers" in {
-      client.execute {
+      http.execute {
         search("electronics").query(termQuery("screensize", 5))
       }.await.right.get.result.totalHits shouldBe 1
     }
     "handle arrays" in {
-      client.execute {
+      http.execute {
         search("electronics").query(matchQuery("name", "razor"))
       }.await.right.get.result.hits.hits.head.sourceAsMap shouldBe Map("name" -> "razor", "colours" -> List("white", "blue"))
     }
     "handle nested arrays" in {
-      val hit = client.execute {
+      val hit = http.execute {
         search("electronics").query(matchQuery("name", "iphone2"))
       }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("models") shouldBe Map("5s" -> List("standard", "retina"))
     }
     "handle arrays of maps" in {
-      val hit = client.execute {
+      val hit = http.execute {
         search("electronics").query(matchQuery("name", "m9"))
       }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("locations") shouldBe
@@ -108,58 +108,58 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
         )
     }
     "handle null fields" in {
-      client.execute {
+      http.execute {
         search("electronics").query(matchQuery("name", "iphone"))
       }.await.right.get.result.hits.hits.head.sourceAsMap shouldBe Map("colour" -> null, "name" -> "iphone")
     }
     "handle nested null fields" in {
-      val hit = client.execute {
+      val hit = http.execute {
         search("electronics").query(matchQuery("name", "pixel"))
       }.await.right.get.result.hits.hits.head
       hit.sourceAsMap("apps") shouldBe Map("maps" -> "google maps", "email" -> null)
     }
     "index from indexable typeclass" in {
-      client.execute {
+      http.execute {
         search("electronics").query(termQuery("speed", "4g"))
       }.await.right.get.result.totalHits shouldBe 1
     }
     "create aliases with index" in {
       val id = UUID.randomUUID()
       val indexName = s"electronics-$id"
-      client.execute {
+      http.execute {
         createIndex(indexName).mappings(mapping("electronics"))
           .alias("alias_1")
           .alias("alias_2")
       }.await
-      val index = client.execute {
+      val index = http.execute {
         getIndex(indexName)
       }.await.right.get.result.apply(indexName)
       index.aliases should contain key "alias_1"
       index.aliases should contain key "alias_2"
 
-      client.execute {
+      http.execute {
         deleteIndex(indexName)
       }.await
     }
     "return created status" in {
-      val result = client.execute {
+      val result = http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
       result.right.get.result.result shouldBe "created"
     }
     "return OK status if the document already exists" in {
       val id = UUID.randomUUID().toString
-      client.execute {
+      http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
-      val result = client.execute {
+      val result = http.execute {
         indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
       result.right.get.result.result shouldBe "updated"
     }
     "handle update concurrency" in {
       val id = UUID.randomUUID.toString
-      client.execute {
+      http.execute {
         indexInto("electronics" / "electronics")
           .fields("name" -> "super phone")
           .withId(id)
@@ -167,7 +167,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      val result = client.execute {
+      val result = http.execute {
         indexInto("electronics" / "electronics")
           .fields("name" -> "super phone")
           .withId(id)
@@ -178,7 +178,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
       result.left.get.error.toString should include ("version_conflict_engine_exception")
     }
     "return Left when the request has an invalid index name" in {
-      val result = client.execute {
+      val result = http.execute {
         indexInto("**1w11oowo/!!!!o_$$$")
       }.await
       result.left.get.error should not be null

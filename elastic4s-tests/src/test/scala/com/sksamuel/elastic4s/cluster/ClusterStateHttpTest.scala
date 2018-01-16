@@ -11,12 +11,12 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DockerTests {
   private val indexname = "clusterstatetest"
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex(indexname)
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex(indexname)
       .shards(1)
       .replicas(0)
@@ -26,7 +26,7 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DockerTests {
   "cluster state request" should {
     "return cluster state information" in {
 
-      val state = client.execute {
+      val state = http.execute {
         clusterState()
       }.await.right.get.result
 

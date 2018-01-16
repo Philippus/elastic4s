@@ -8,12 +8,12 @@ import scala.util.Try
 class IndexExistsTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("indexexists")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("indexexists").mappings {
       mapping("flowers") fields textField("name")
     }
@@ -21,12 +21,12 @@ class IndexExistsTest extends WordSpec with Matchers with DockerTests {
 
   "an index exists request" should {
     "return true for an existing index" in {
-      client.execute {
+      http.execute {
         indexExists("indexexists")
       }.await.right.get.result.isExists shouldBe true
     }
     "return false for non existing index" in {
-      client.execute {
+      http.execute {
         indexExists("qweqwewqe")
       }.await.right.get.result.isExists shouldBe false
     }

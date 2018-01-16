@@ -9,12 +9,12 @@ import scala.util.Try
 class GetIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("getindextest")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("getindextest").mappings(
       mapping("mytype").fields(
         textField("a"),
@@ -27,14 +27,14 @@ class GetIndexTest extends WordSpec with Matchers with DockerTests {
   "get index" should {
 
     "return mapping info" in {
-      val resp = client.execute {
+      val resp = http.execute {
         getIndex("getindextest")
       }.await.right.get.result
       resp("getindextest").mappings shouldBe Map("mytype" -> Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long"))))
     }
 
     "return settings" in {
-      val resp = client.execute {
+      val resp = http.execute {
         getIndex("getindextest")
       }.await.right.get.result
 
@@ -45,15 +45,15 @@ class GetIndexTest extends WordSpec with Matchers with DockerTests {
 
     "return aliases" in {
 
-      client.execute {
+      http.execute {
         addAlias("myalias1").on("getindextest")
       }.await
 
-      client.execute {
+      http.execute {
         addAlias("myalias2").on("getindextest")
       }.await
 
-      val resp = client.execute {
+      val resp = http.execute {
         getIndex("getindextest")
       }.await.right.get.result
 

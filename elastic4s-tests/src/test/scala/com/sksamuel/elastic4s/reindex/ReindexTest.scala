@@ -16,18 +16,18 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
   create("reindextarget")
 
   def deleteIdx(name: String) = Try {
-    client.execute {
+    http.execute {
       deleteIndex(name)
     }.await
   }
 
   def create(name: String) = Try {
-    client.execute {
+    http.execute {
       createIndex(name)
     }.await
   }
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("reindex" / "a").fields(Map("foo" -> "far")),
       indexInto("reindex" / "a").fields(Map("moo" -> "mar")),
@@ -38,11 +38,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
   "a reindex request" should {
     "copy from one index to another" in {
-      client.execute {
+      http.execute {
         reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.right.get.result.created shouldBe 3
 
-      client.execute {
+      http.execute {
         search("reindextarget")
       }.await.right.get.result.size shouldBe 3
     }
@@ -51,11 +51,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       deleteIdx("reindextarget")
       create("reindextarget")
 
-      client.execute {
+      http.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
       }.await.right.get.result.created shouldBe 2
 
-      client.execute {
+      http.execute {
         search("reindextarget")
       }.await.right.get.result.size shouldBe 2
     }
@@ -64,16 +64,16 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       deleteIdx("reindextarget")
       create("reindextarget")
 
-      client.execute {
+      http.execute {
         reindex(Seq("reindex", "reindex2"), "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.right.get.result.created shouldBe 4
 
-      client.execute {
+      http.execute {
         search("reindextarget")
       }.await.right.get.result.size shouldBe 4
     }
     "return failure for index not found" in {
-      client.execute {
+      http.execute {
         reindex("wibble", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.left.get.error.`type` shouldBe "index_not_found_exception"
     }

@@ -39,15 +39,18 @@ trait QueryApi {
 
   def existsQuery(field: String) = ExistsQueryDefinition(field)
 
-  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
+  @deprecated("use existsQuery with _field_names", "6.1.2")
   def fieldNamesQuery(first: String, rest: String*)
-                     (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
+                     (implicit builder: BuildableTermsQuery[String]): QueryDefinition =
     fieldNamesQuery(first +: rest)
 
-  @deprecated("use termQuery or termsQuery with _field_names", "6.1.0")
+  @deprecated("use existsQuery with _field_names", "6.1.2")
   def fieldNamesQuery(names: Iterable[String])
-                     (implicit builder: BuildableTermsQuery[String]): TermsQueryDefinition[String] =
-    termsQuery("_field_names", names)
+                     (implicit builder: BuildableTermsQuery[String]): QueryDefinition = {
+    boolQuery().should(
+      names.map { name => existsQuery(name) }
+    )
+  }
 
   @deprecated("Use bool query directly", "5.3.3")
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)

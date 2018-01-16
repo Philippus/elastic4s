@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatAliasTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CatAliasTest extends FlatSpec with Matchers with DockerTests {
 
   http.execute {
     indexInto("catalias/landmarks").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)

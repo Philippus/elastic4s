@@ -10,47 +10,47 @@ import scala.util.Try
 class RolloverIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("rolltest-001")
     }.await
   }
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("rolltest-000002")
     }.await
   }
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("rolltest-000003")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("rolltest-001").alias("roll_write")
   }.await
 
   "Rollover" should {
     "be created with padded index name" in {
-      client.execute {
+      http.execute {
         rolloverIndex("roll_write")
       }.await.right.get.result.newIndex shouldBe "rolltest-000002"
     }
     "support dry run" in {
-      val resp = client.execute {
+      val resp = http.execute {
         rolloverIndex("roll_write").maxAge("1d").dryRun(true)
       }.await.right.get.result
       resp.dryRun shouldBe true
       resp.rolledOver shouldBe false
     }
     "return conditions in response" in {
-      client.execute {
+      http.execute {
         rolloverIndex("roll_write").maxDocs(10).maxSize("5g")
       }.await.right.get.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
     }
     "support max docs" in {
-      client.execute {
+      http.execute {
         bulk(
           indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
           indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
@@ -64,11 +64,11 @@ class RolloverIndexTest extends WordSpec with Matchers with DockerTests {
           indexInto("roll_write" / "wibble").fields("foo" -> "woo")
         ).refreshImmediately
       }.await
-      client.execute {
+      http.execute {
         search("rolltest-000002").limit(20)
       }.await.right.get.result.totalHits shouldBe 10
 
-      val resp = client.execute {
+      val resp = http.execute {
         rolloverIndex("roll_write").maxDocs(10)
       }.await.right.get.result
       resp.conditions shouldBe Map("[max_docs: 10]" -> true)

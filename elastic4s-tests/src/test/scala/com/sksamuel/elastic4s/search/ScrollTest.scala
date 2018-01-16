@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
 import org.scalatest.{Matchers, WordSpec}
@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 import scala.concurrent.duration._
 import scala.util.Try
 
-class ScrollTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class ScrollTest extends WordSpec with Matchers with DockerTests {
 
   Try {
     http.execute {

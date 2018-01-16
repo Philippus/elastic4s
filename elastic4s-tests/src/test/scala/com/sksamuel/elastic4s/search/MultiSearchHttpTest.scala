@@ -1,17 +1,14 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
 class MultiSearchHttpTest
   extends FlatSpec
-    with DiscoveryLocalNodeProvider
-    with Matchers
-    with ElasticDsl {
+    with DockerTests
+    with Matchers {
 
   Try {
     http.execute {
