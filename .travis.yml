@@ -1,18 +1,31 @@
+sudo: required
+
 language: scala
+
+services:
+  - docker
+
 cache:
   directories:
     - $HOME/.ivy2/cache
     - $HOME/.sbt
+
+before_install:
+- docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.2
+
 before_cache:
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
+
 before_script:
 - sudo chmod +x /usr/local/bin/sbt
+
 scala:
 - 2.11.12
 - 2.12.4
+
 script:
 - sbt clean test
+
 jdk:
 - oraclejdk8
-sudo: required
