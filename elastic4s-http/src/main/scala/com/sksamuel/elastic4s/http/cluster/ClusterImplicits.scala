@@ -67,6 +67,8 @@ object ClusterStateResponse {
 
 case class ClusterStateResponse(@JsonProperty("cluster_name") clusterName: String,
                                 @JsonProperty("master_node") masterNode: String,
+                                @JsonProperty("compressed_size_in_bytes") compressedSizeInBytes: Long,
+                                @JsonProperty("state_uuid") stateUuid: String,
                                 metadata: Option[ClusterStateResponse.Metadata])
 
 case class ClusterHealthResponse(@JsonProperty("cluster_name") clusterName: String,

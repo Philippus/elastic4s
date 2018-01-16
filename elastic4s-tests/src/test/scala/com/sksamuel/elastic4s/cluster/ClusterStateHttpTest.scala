@@ -1,23 +1,22 @@
 package com.sksamuel.elastic4s.cluster
 
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.cluster.ClusterStateResponse.Index
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ClusterStateHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class ClusterStateHttpTest extends WordSpec with Matchers with DockerTests {
 
   private val indexname = "clusterstatetest"
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex(indexname)
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex(indexname)
       .shards(1)
       .replicas(0)
@@ -25,13 +24,17 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DiscoveryLocalNod
   }.await
 
   "cluster state request" should {
-    "return cluster state information" ignore {
+    "return cluster state information" in {
 
-      val state = http.execute {
+      val state = client.execute {
         clusterState()
       }.await.right.get.result
 
-      state.clusterName should be("localnode-cluster")
+      state.clusterName shouldBe "docker-cluster"
+      state.compressedSizeInBytes > 0 shouldBe true
+      state.stateUuid should not be null
+      state.masterNode should not be null
+      state.metadata.get.clusterUuid should not be null
 
       val indexMetadata = state.metadata.flatMap(m => m.indices.headOption).map(_._2).getOrElse(Index("closed", Seq.empty))
 
