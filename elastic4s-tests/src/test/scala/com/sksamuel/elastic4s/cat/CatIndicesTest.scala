@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import com.sksamuel.elastic4s.{HealthStatus, RefreshPolicy}
+import com.sksamuel.elastic4s.{DockerTests, HealthStatus, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatIndicesTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
 
   http.execute {
     bulk(

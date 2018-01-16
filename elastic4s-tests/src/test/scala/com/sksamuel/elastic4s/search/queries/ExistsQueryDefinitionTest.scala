@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ExistsQueryDefinitionTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class ExistsQueryDefinitionTest extends WordSpec with DockerTests with Matchers {
 
   Try {
     http.execute {

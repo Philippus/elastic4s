@@ -1,18 +1,16 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.ElasticMatchers
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
 class RangeQueryHttpTest
   extends WordSpec
-    with HttpElasticSugar
-    with DiscoveryLocalNodeProvider
-    with ElasticMatchers
-    with ElasticDsl {
+    with DockerTests
+    with ElasticMatchers {
 
   Try {
     http.execute {

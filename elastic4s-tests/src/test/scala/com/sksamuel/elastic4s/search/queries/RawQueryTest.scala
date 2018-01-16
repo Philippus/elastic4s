@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class RawQueryTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class RawQueryTest extends WordSpec with Matchers with DockerTests {
 
   Try {
     http.execute {
@@ -18,7 +17,7 @@ class RawQueryTest extends WordSpec with Matchers with ElasticDsl with Discovery
     bulk(
       indexInto("rawquerytest/paris").fields("landmark" -> "montmarte", "arrondissement" -> "18"),
       indexInto("rawquerytest/paris").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7")
-    ).immediateRefresh()
+    ).refreshImmediately
   }.await
 
   "raw query" should {

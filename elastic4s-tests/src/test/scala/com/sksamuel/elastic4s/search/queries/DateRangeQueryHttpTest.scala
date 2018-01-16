@@ -1,17 +1,16 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers}
-import com.sksamuel.elastic4s.{ElasticDateMath, Years}
+import com.sksamuel.elastic4s.testkit.ElasticMatchers
+import com.sksamuel.elastic4s.{DockerTests, ElasticDateMath, Years}
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
 class DateRangeQueryHttpTest
   extends WordSpec
-    with DiscoveryLocalNodeProvider
-    with ElasticMatchers
-    with ElasticDsl {
+    with DockerTests
+    with ElasticMatchers {
 
   Try {
     http.execute {

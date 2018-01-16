@@ -1,13 +1,11 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class CatShardsTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CatShardsTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
     http.execute {

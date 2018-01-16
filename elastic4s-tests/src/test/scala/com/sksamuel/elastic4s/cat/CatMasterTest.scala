@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.cat
 
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
-class CatMasterTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class CatMasterTest extends FlatSpec with Matchers with DockerTests {
 
   http.execute {
     bulk(
@@ -15,9 +13,12 @@ class CatMasterTest extends FlatSpec with Matchers with DiscoveryLocalNodeProvid
 
 
   "cat master" should "return master node info" in {
-    http.execute {
+    val result = http.execute {
       catMaster()
-    }.await.right.get.result.host shouldBe "127.0.0.1"
+    }.await.right.get.result
+
+    result.host should not be null
+    result.id should not be null
   }
 
 }

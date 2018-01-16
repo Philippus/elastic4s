@@ -1,20 +1,16 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.{DocumentRef, ElasticsearchClientUri}
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar, HttpElasticSugar}
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.ElasticMatchers
+import com.sksamuel.elastic4s.{DockerTests, DocumentRef, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryHttpTest
   extends WordSpec
     with Matchers
-    with DiscoveryLocalNodeProvider
-    with HttpElasticSugar
-    with ElasticMatchers
-    with ElasticDsl {
+    with DockerTests
+    with ElasticMatchers {
 
   http.execute {
     createIndex("mltq").mappings {
