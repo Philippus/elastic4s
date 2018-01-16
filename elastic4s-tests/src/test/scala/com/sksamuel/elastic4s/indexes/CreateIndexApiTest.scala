@@ -31,6 +31,22 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_mappings.json")
   }
 
+
+  "the index dsl" should "allow provide mapping properties using rawSource" in {
+    val tweetRawSource = """{"_all": {"enabled": false},"numeric_detection": true,"_boost": {"name": "myboost","null_value": 1.2},"_size": {"enabled": true},"properties": {"name": {"type": "geo_point"},"content": {"type": "date","null_value": "no content"}},"_meta": {"class": "com.sksamuel.User"}}"""
+    val req = createIndex("users").mappings(
+      mapping("tweets").rawSource(tweetRawSource),
+      mapping("users").as(
+        ipField("name") nullValue "127.0.0.1" boost 1.0,
+        intField("location") nullValue 0,
+        binaryField("email"),
+        floatField("age"),
+        geoshapeField("area") tree PrefixTree.Quadtree precision "1m"
+      ) all true analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
+    )
+    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_mappings.json")
+  }
+
   it should "support override built in analyzers" in {
     val req = createIndex("users").analysis(
       StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),

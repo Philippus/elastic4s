@@ -21,6 +21,7 @@ trait MappingDefinitionLike {
   def meta: Map[String, Any]
   def routing: Option[RoutingDefinition]
   def templates: Seq[DynamicTemplateDefinition]
+  def rawSource: Option[String]
 }
 
 case class PutMappingDefinition(indexesAndType: IndexesAndType,

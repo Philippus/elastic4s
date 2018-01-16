@@ -6,18 +6,31 @@ import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicT
 object MappingBuilderFn {
 
   def build(d: MappingDefinitionLike): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    build(d, builder)
-    builder.endObject()
+    d.rawSource match {
+      //user raw source if provided, ignore other mapping settings
+      case Some(rs) => XContentFactory.parse(rs)
+      case None     =>
+        val builder = XContentFactory.jsonBuilder()
+        build(d, builder)
+        builder.endObject()
+    }
   }
 
   // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
   def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder
-    builder.startObject(tpe)
-    build(d, builder)
-    builder.endObject()
-    builder.endObject()
+    d.rawSource match {
+      //user raw source if provided, ignore other mapping settings
+      case Some(rs) =>
+        val builder = XContentFactory.jsonBuilder
+        builder.rawField(tpe, XContentFactory.parse(rs))
+        builder
+      case None     =>
+        val builder = XContentFactory.jsonBuilder
+        builder.startObject(tpe)
+        build(d, builder)
+        builder.endObject()
+        builder.endObject()
+    }
   }
 
   def build(d: MappingDefinitionLike, builder: XContentBuilder): Unit = {

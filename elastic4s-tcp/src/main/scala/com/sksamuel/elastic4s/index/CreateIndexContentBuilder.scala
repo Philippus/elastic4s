@@ -34,9 +34,7 @@ object CreateIndexContentBuilder {
       if (d.mappings.nonEmpty) {
         builder.startObject("mappings")
         for (mapping <- d.mappings) {
-          builder.startObject(mapping.`type`)
-          MappingBuilderFn.build(mapping, builder)
-          builder.endObject()
+          builder.rawField(mapping.`type`, MappingBuilderFn.build(mapping))
         }
         builder.endObject()
       }
