@@ -1,3 +1,4 @@
+import com.typesafe.sbt.SbtPgp
 import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.plugins.JvmPlugin
