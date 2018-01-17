@@ -47,6 +47,8 @@ object Build extends AutoPlugin {
     fork := false,
     parallelExecution := false,
     parallelExecution in ThisBuild := false,
+    SbtPgp.autoImport.useGpg := true,
+    SbtPgp.autoImport.useGpgAgent := true,
     concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
