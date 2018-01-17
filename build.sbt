@@ -184,8 +184,8 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
 
     ),
     fork in Test := true,
-    parallelExecution in Test := true,
-    testForkedParallel in Test := true
+    parallelExecution in Test := false,
+    testForkedParallel in Test := false
   )
   .dependsOn(tcp, http, jackson, circe, aws, testkit % "test")
 

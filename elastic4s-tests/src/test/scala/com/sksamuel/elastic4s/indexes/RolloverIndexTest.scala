@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -26,6 +25,46 @@ class RolloverIndexTest extends WordSpec with Matchers with DockerTests {
     }.await
   }
 
+  Try {
+    http.execute {
+      aliases(
+        removeAlias("roll_write", "rolltest-001")
+      )
+    }.await
+  }
+
+  Try {
+    http.execute {
+      aliases(
+        removeAlias("roll_write", "rolltest-000002")
+      )
+    }.await
+  }
+
+  Try {
+    http.execute {
+      aliases(
+        removeAlias("roll_write", "rolltest-000003")
+      )
+    }.await
+  }
+
+  Try {
+    http.execute {
+      aliases(
+        removeAlias("roll_write", "rolltest-000004")
+      )
+    }.await
+  }
+
+  Try {
+    http.execute {
+      aliases(
+        removeAlias("roll_write", "rolltest-000005")
+      )
+    }.await
+  }
+
   http.execute {
     createIndex("rolltest-001").alias("roll_write")
   }.await
@@ -39,9 +78,10 @@ class RolloverIndexTest extends WordSpec with Matchers with DockerTests {
     "support dry run" in {
       val resp = http.execute {
         rolloverIndex("roll_write").maxAge("1d").dryRun(true)
-      }.await.right.get.result
-      resp.dryRun shouldBe true
-      resp.rolledOver shouldBe false
+      }.await
+      val result = resp.right.get.result
+      result.dryRun shouldBe true
+      result.rolledOver shouldBe false
     }
     "return conditions in response" in {
       http.execute {

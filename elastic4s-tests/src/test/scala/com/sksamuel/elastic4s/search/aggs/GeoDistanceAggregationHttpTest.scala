@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.DistanceUnit
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.GeoDistanceBucket
 import com.sksamuel.elastic4s.searches.GeoPoint
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
