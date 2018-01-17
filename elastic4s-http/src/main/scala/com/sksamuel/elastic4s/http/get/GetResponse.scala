@@ -28,7 +28,7 @@ case class GetResponse(@JsonProperty("_id") id: String,
       }
       override def value: AnyRef = values.head
       override def name: String = fieldName
-      override def isMetadataField: Boolean = ???
+      override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
     }
   }
 

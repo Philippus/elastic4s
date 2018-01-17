@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.explain.Explanation
+import com.sksamuel.elastic4s.http.get.MetaDataFields
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{AggReader, Hit, HitReader}
 
@@ -32,7 +33,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
       }
       override def value: AnyRef = values.head
       override def name: String = fieldName
-      override def isMetadataField: Boolean = ???
+      override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
     }
   }
 

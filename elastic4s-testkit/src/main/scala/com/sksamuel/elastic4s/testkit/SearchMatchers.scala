@@ -32,8 +32,7 @@ trait SearchMatchers extends Matchers {
 
   def haveFieldValue(value: String)
                     (implicit client: TcpClient,
-                     timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new
-      Matcher[SearchDefinition] {
+                     timeout: FiniteDuration = 10.seconds): Matcher[SearchDefinition] = new Matcher[SearchDefinition] {
     override def apply(left: SearchDefinition): MatchResult = {
       val resp = client.execute(left).await(timeout)
       val exists = resp.hits.exists(_.fields.exists(_._2.values.contains(value)))
