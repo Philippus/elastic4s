@@ -183,9 +183,9 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
       "org.apache.logging.log4j" % "log4j-core" % "2.8.2" % "test"
 
     ),
-    fork in Test := false,
-    parallelExecution in Test := false,
-    testForkedParallel in Test := false
+    fork in Test := true,
+    parallelExecution in Test := true,
+    testForkedParallel in Test := true
   )
   .dependsOn(tcp, http, jackson, circe, aws, testkit % "test")
 
