@@ -82,6 +82,18 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with DockerTests wi
     }
   }
 
+  Try {
+    http.execute {
+      deleteIndex(indexName)
+    }.await
+  }
+
+  Try {
+    http.execute {
+      createIndex(indexName)
+    }.await
+  }
+
   "elastic-streams" should {
     "index all received data" in {
       ensureIndexExists(indexName)
