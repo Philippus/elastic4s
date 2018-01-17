@@ -16,7 +16,7 @@ class CatHealthTest extends FlatSpec with Matchers with DockerTests {
   "cat health" should "return cluster health" in {
     http.execute {
       catHealth()
-    }.await.right.get.result.cluster shouldBe "localnode-cluster"
+    }.await.right.get.result.cluster shouldBe "docker-cluster"
   }
 
 }

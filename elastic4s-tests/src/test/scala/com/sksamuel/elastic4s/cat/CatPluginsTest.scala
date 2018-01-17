@@ -6,8 +6,11 @@ import org.scalatest.{FlatSpec, Matchers}
 class CatPluginsTest extends FlatSpec with Matchers with DockerTests {
 
   "cats plugins" should "return all plugins" in {
-    http.execute {
+
+    val result = http.execute {
       catPlugins()
-    }.await.right.get.result.exists(_.component == "org.elasticsearch.index.reindex.ReindexPlugin") shouldBe true
+    }.await.right.get.result
+
+    result.map(_.component) shouldBe Seq("ingest-geoip", "ingest-user-agent")
   }
 }
