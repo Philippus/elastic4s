@@ -10,12 +10,12 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
 
   Try {
     http.execute {
-      deleteIndex("beaches")
+      deleteIndex("shardstoretest")
     }.await
   }
 
   http.execute {
-    createIndex("beaches").mappings(
+    createIndex("shardstoretest").mappings(
       mapping("dday").fields(
         textField("name")
       )
@@ -26,8 +26,8 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
     "get green shards" in {
 
       val indexInfo = http.execute {
-        indexShardStores("beaches") status "green"
-      }.await.right.get.result.indices.getOrElse("beaches", IndexStoreStatus(Map.empty))
+        indexShardStores("shardstoretest") status "green"
+      }.await.right.get.result.indices.getOrElse("shardstoretest", IndexStoreStatus(Map.empty))
 
       val shardInfo: ShardStoreStatus = indexInfo.shards.getOrElse("0", ShardStoreStatus(Seq.empty))
       shardInfo.stores.size should be(1)

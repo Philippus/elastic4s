@@ -11,12 +11,12 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
 
   Try {
     http.execute {
-      deleteIndex("rangeaggs")
+      deleteIndex("keyedrangeaggs")
     }.await
   }
 
   http.execute {
-    createIndex("rangeaggs") mappings {
+    createIndex("keyedrangeaggs") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
         intField("grade")
@@ -26,12 +26,12 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
 
   http.execute(
     bulk(
-      indexInto("rangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
-      indexInto("rangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
-      indexInto("rangeaggs/tv").fields("name" -> "Star Trek Discovery", "grade" -> 7),
-      indexInto("rangeaggs/tv").fields("name" -> "Game of Thrones", "grade" -> 8),
-      indexInto("rangeaggs/tv").fields("name" -> "Designated Survivor", "grade" -> 6),
-      indexInto("rangeaggs/tv").fields("name" -> "Walking Dead", "grade" -> 5)
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Star Trek Discovery", "grade" -> 7),
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Game of Thrones", "grade" -> 8),
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Designated Survivor", "grade" -> 6),
+      indexInto("keyedrangeaggs/tv").fields("name" -> "Walking Dead", "grade" -> 5)
     ).refreshImmediately
   ).await
 
@@ -39,7 +39,7 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
     "should aggregate ranges" in {
 
       val resp = http.execute {
-        search("rangeaggs").matchAllQuery().aggs {
+        search("keyedrangeaggs").matchAllQuery().aggs {
           rangeAgg("agg1", "grade")
               .unboundedTo("meh", to = 5.5)
               .range("cool", from = 5.5, to = 7.5)

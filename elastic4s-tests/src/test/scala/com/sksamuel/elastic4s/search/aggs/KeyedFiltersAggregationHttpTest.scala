@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -11,12 +10,12 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
 
   Try {
     http.execute {
-      deleteIndex("filtersagg")
+      deleteIndex("keyedfiltersagg")
     }.await
   }
 
   http.execute {
-    createIndex("filtersagg") mappings {
+    createIndex("keyedfiltersagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
         intField("height").stored(true)
@@ -26,10 +25,10 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
 
   http.execute(
     bulk(
-      indexInto("filtersagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("filtersagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("filtersagg/buildings") fields("name" -> "Tower of London", "height" -> 169),
-      indexInto("filtersagg/buildings") fields("name" -> "London Bridge", "height" -> 63)
+      indexInto("keyedfiltersagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
+      indexInto("keyedfiltersagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
+      indexInto("keyedfiltersagg/buildings") fields("name" -> "Tower of London", "height" -> 169),
+      indexInto("keyedfiltersagg/buildings") fields("name" -> "London Bridge", "height" -> 63)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -37,7 +36,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
     "should create buckets matching the query" in {
 
       val resp = http.execute {
-        search("filtersagg").matchAllQuery().aggs {
+        search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1").queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower"))).subaggs {
             sumAgg("agg2", "height")
           }
@@ -51,7 +50,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
     "should create other buckets with the default key" in {
 
       val resp = http.execute {
-        search("filtersagg").matchAllQuery().aggs {
+        search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1")
             .queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower")))
             .otherBucket(true)
@@ -68,7 +67,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
     "should create other buckets with a specified key" in {
 
       val resp = http.execute {
-        search("filtersagg").matchAllQuery().aggs {
+        search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1")
             .queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower")))
             .otherBucketKey("otherBuildings")

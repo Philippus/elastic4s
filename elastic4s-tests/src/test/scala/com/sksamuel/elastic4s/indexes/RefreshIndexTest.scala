@@ -10,12 +10,12 @@ class RefreshIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
     http.execute {
-      deleteIndex("beaches")
+      deleteIndex("refreshtest")
     }.await
   }
 
   http.execute {
-    createIndex("beaches").mappings(
+    createIndex("refreshtest").mappings(
       mapping("dday").fields(
         textField("name")
       )
@@ -26,20 +26,20 @@ class RefreshIndexTest extends WordSpec with Matchers with DockerTests {
     "refresh pending docs" in {
 
       http.execute {
-        indexInto("beaches" / "dday").fields("name" -> "omaha")
+        indexInto("refreshtest").fields("name" -> "omaha")
       }.await
 
       // no data because the refresh is 10 minutes
       http.execute {
-        search("beaches" / "dday").matchAllQuery()
+        search("refreshtest").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 0
 
       http.execute {
-        refreshIndex("beaches")
+        refreshIndex("refreshtest")
       }.await
 
       http.execute {
-        search("beaches" / "dday").matchAllQuery()
+        search("refreshtest").matchAllQuery()
       }.await.right.get.result.totalHits shouldBe 1
     }
   }
