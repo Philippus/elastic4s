@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.update
 
-import com.sksamuel.elastic4s.{DockerTests, ElasticApi, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.bulk
 
-import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try

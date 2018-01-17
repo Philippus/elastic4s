@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer, JsonMappingException, ObjectMapper}
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
-import org.scalatest.mockito.MockitoSugar
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
-class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl with MockitoSugar {
+class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTests {
 
   import ElasticJackson.Implicits._
 
@@ -28,7 +26,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
     "read a case class" in {
 
       val resp = http.execute {
-        search("jacksontest" / "characters").query("breaking")
+        search("jacksontest").query("breaking")
       }.await.right.get.result
       resp.to[Character] shouldBe List(Character("hank", "breaking bad"))
 
@@ -36,7 +34,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
     "populate special fields" in {
 
       val resp = http.execute {
-        search("jacksontest" / "characters").query("breaking")
+        search("jacksontest").query("breaking")
       }.await.right.get.result
 
       // should populate _id, _index and _type for us from the search result
@@ -54,7 +52,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DiscoveryL
       custom.registerModule(module)
 
       val resp = http.execute {
-        search("jacksontest" / "characters").query("breaking")
+        search("jacksontest").query("breaking")
       }.await.right.get.result
 
       // if our custom mapper has been picked up, then it should throw an exception when deserializing

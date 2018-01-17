@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
-import com.sksamuel.elastic4s.{DockerTests, Indexable, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {

@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
-import com.sksamuel.elastic4s.testkit.ElasticMatchers
-import com.sksamuel.elastic4s.{DockerTests, DocumentRef, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
+import com.sksamuel.elastic4s.{DocumentRef, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryHttpTest
@@ -34,7 +34,7 @@ class MoreLikeThisQueryHttpTest
 
     "find matches based on input text" in {
       val resp = http.execute {
-        search("mltq" / "alcohol") query {
+        search("mltq") query {
           moreLikeThisQuery("text")
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
         }
@@ -44,7 +44,7 @@ class MoreLikeThisQueryHttpTest
 
     "find matches based on doc refs" in {
       val resp = http.execute {
-        search("mltq" / "alcohol").query {
+        search("mltq").query {
           moreLikeThisQuery("text")
             .likeDocs(DocumentRef("mltq", "alcohol", "4")) minTermFreq 1 minDocFreq 1
         }
@@ -54,7 +54,7 @@ class MoreLikeThisQueryHttpTest
 
     "support artifical docs" in {
       val resp = http.execute {
-        search("mltq" / "alcohol").query {
+        search("mltq").query {
           moreLikeThisQuery("text")
             .artificialDocs(ArtificialDocument("mltq", "alcohol", """{ "text" : "gin" }""")) minTermFreq 1 minDocFreq 1
         }

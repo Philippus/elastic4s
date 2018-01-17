@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.search.SearchIterator
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticMatchers, ElasticSugar}
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests, ElasticMatchers, ElasticSugar}
 import org.scalatest.WordSpec
 
 import scala.concurrent.duration._
@@ -12,9 +11,8 @@ import scala.util.Try
 
 class SearchIteratorTest
   extends WordSpec
-    with DiscoveryLocalNodeProvider
     with ElasticMatchers
-    with ElasticDsl {
+    with DockerTests {
 
   implicit val duration: FiniteDuration = 10.seconds
 

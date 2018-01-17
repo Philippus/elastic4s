@@ -1,36 +1,33 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticApi
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
-class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticApi with DiscoveryLocalNodeProvider {
+class SearchMatchersTest extends WordSpec with SearchMatchers with DockerTests {
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"
 
-  import com.sksamuel.elastic4s.ElasticDsl._
-
   Try {
-    client.execute {
+    http.execute {
       deleteIndex(indexname)
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex(indexname).mappings(
       mapping(tubestops)
     )
   }
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto(indexname / "tubestops").fields("name" -> "south kensington", "line" -> "district"),
       indexInto(indexname / "tubestops").fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
       indexInto(indexname / "tubestops").fields("name" -> "cockfosters", "line" -> "picadilly").id("3"),
       indexInto(indexname / "tubestops").fields("name" -> "bank", "line" -> "northern")
-    ).immediateRefresh()
+    ).refreshImmediately
   }.await
 
   "search matchers" should {

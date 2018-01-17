@@ -45,6 +45,26 @@ object TermsAggResult {
 
 case class CardinalityAggResult(name: String, value: Double) extends MetricAggregation
 
+case class HistogramAggResult(name: String,
+                              buckets: Seq[HistogramBucket]) extends BucketAggregation
+
+object HistogramAggResult {
+  def apply(name: String, data: Map[String, Any]): HistogramAggResult = HistogramAggResult(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
+      HistogramBucket(
+        map("key").toString,
+        map("doc_count").toString.toInt,
+        map
+      )
+    }
+  )
+}
+
+case class HistogramBucket(date: String,
+                           override val docCount: Long,
+                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
+
 case class DateHistogramAggResult(name: String,
                                   buckets: Seq[DateHistogramBucket]) extends BucketAggregation
 
@@ -352,6 +372,7 @@ trait HasAggregations {
       agg(name)
     )
 
+  def histogram(name: String): HistogramAggResult = HistogramAggResult(name, agg(name))
   def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
   def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
   def keyedDateRange(name: String): KeyedDateRangeAggResult = KeyedDateRangeAggResult.fromData(name, agg(name))

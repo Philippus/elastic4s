@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class DeleteByQueryTest extends WordSpec with Matchers with DockerTests {
 
   private val indexname = "charles_dickens"
 

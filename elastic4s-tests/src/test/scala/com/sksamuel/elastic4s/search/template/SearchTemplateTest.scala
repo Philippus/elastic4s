@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.search.template
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class SearchTemplateTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvider with Matchers {
+class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
   Try {
     http.execute {

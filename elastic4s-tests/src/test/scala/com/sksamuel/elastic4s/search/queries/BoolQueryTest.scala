@@ -1,15 +1,12 @@
-package com.sksamuel.elastic4s.search
+package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DualClientTests}
-import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class BoolQueryTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
-
+class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
     http.execute {

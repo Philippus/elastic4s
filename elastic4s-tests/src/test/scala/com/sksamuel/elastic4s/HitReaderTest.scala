@@ -3,26 +3,25 @@ package com.sksamuel.elastic4s
 import java.util.UUID
 
 import com.sksamuel.elastic4s.indexes.IndexDefinition
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.exts.OptionImplicits._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
-import com.sksamuel.exts.OptionImplicits._
+
 import scala.util.Try
 
-class HitReaderTest extends FlatSpec with MockitoSugar with DiscoveryLocalNodeProvider with Matchers {
-
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Matchers {
 
   private val IndexName = "football"
 
   case class Team(name: String, stadium: String, founded: Int)
 
-  implicit val TeamIndexable = new Indexable[Team] {
+  implicit val TeamIndexable: Indexable[Team] = new Indexable[Team] {
     override def json(t: Team): String =
       s"""{ "name" : "${t.name}", "stadium" : "${t.stadium}", "founded" : ${t.founded} }"""
   }
 
-  implicit val HitReader = new HitReader[Team] {
+  implicit val HitReader: HitReader[Team] = new HitReader[Team] {
     override def read(hit: Hit): Either[Throwable, Team] =
       Right(Team(
         hit.sourceField("name").toString,

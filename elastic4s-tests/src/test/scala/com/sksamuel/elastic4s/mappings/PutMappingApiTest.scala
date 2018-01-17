@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class PutMappingApiTest extends FlatSpec with Matchers with ElasticDsl with DiscoveryLocalNodeProvider {
+class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
     http.execute {

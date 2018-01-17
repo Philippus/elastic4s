@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.delete
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
 
-class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvider with Matchers {
+class DeleteTest extends FlatSpec with DockerTests with Matchers {
 
   Try {
     http.execute {
@@ -30,7 +29,7 @@ class DeleteTest extends FlatSpec with ElasticDsl with DiscoveryLocalNodeProvide
         "country" -> "UK",
         "continent" -> "Europe"
       )
-    ).immediateRefresh()
+    ).refreshImmediately
   ).await
 
   "a delete by id query" should "return success but with result = not_found when a document does not exist" in {

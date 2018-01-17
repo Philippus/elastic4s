@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.DockerTests
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try

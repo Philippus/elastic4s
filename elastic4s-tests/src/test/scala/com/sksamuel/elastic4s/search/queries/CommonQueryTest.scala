@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.search.queries
 
+import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, ElasticSugar}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class CommonQueryTest extends WordSpec with Matchers with ElasticSugar with DiscoveryLocalNodeProvider with ElasticDsl {
+class CommonQueryTest extends WordSpec with Matchers with DockerTests with ElasticDsl {
 
   case class Condiment(name: String, desc: String)
   implicit object CondimentIndexable extends Indexable[Condiment] {
@@ -22,45 +22,42 @@ class CommonQueryTest extends WordSpec with Matchers with ElasticSugar with Disc
     "Ranch dressing is a type of salad dressing made of some combination of buttermilk, salt, garlic, onion, herbs")
 
   Try {
-    client.execute {
+    http.execute {
       ElasticDsl.deleteIndex("condiments")
     }.await
   }
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto("condiments" / "test") source ranch,
       indexInto("condiments" / "test") source ketchup,
       indexInto("condiments" / "test") source brownSauce
-    )
+    ).refreshImmediately
   }.await
-
-  refresh("condiments")
-  blockUntilCount(3, "condiments")
 
   "common query" should {
     "perform query" in {
-      val resp = client.execute {
-        search("condiments" / "test") query {
-          commonQuery("desc") text "catsup"
+      val resp = http.execute {
+        search("condiments") query {
+          commonTermsQuery("desc") text "catsup"
         }
-      }.await
+      }.await.right.get.result
       resp.totalHits shouldBe 1
     }
     "use operators" in {
-      val resp = client.execute {
-        search("condiments" / "test") query {
-          commonQuery("desc") text "buttermilk somethingnotindexed" lowFreqOperator "AND" highFreqOperator "AND"
+      val resp = http.execute {
+        search("condiments") query {
+          commonTermsQuery("desc") text "buttermilk somethingnotindexed" lowFreqOperator "AND" highFreqOperator "AND"
         }
-      }.await
+      }.await.right.get.result
       resp.totalHits shouldBe 0
     }
     "use lowFreqMinimumShouldMatch" in {
-      val resp = client.execute {
-        search("condiments" / "test") query {
-          commonQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
+      val resp = http.execute {
+        search("condiments") query {
+          commonTermsQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }
-      }.await
+      }.await.right.get.result
       resp.totalHits shouldBe 1
     }
   }

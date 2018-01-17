@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.ElasticMatchers
-import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
+import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
 
 import scala.util.Try

@@ -1,20 +1,20 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.{ElasticDsl, RefreshPolicy}
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class NestedQueryTest extends WordSpec with DockerTests with Matchers {
 
   Try {
-    client.execute {
+    http.execute {
       deleteIndex("nested")
     }.await
   }
 
-  client.execute {
+  http.execute {
     createIndex("nested").mappings(
       mapping("places").fields(
         keywordField("name"),
@@ -23,7 +23,7 @@ class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matc
     )
   }
 
-  client.execute(
+  http.execute(
     bulk(
       indexInto("nested" / "places") fields(
         "name" -> "usa",
@@ -58,8 +58,8 @@ class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matc
 
   "nested query" should {
     "match against nested objects" in {
-      client.execute {
-        search("nested" / "places") query {
+      http.execute {
+        search("nested") query {
           nestedQuery("states").query {
             boolQuery.must(
               matchQuery("states.name", "Montana"),
@@ -67,7 +67,7 @@ class NestedQueryTest extends WordSpec with DiscoveryLocalNodeProvider with Matc
             )
           }
         }
-      }.await.totalHits shouldBe 1
+      }.await.right.get.result.totalHits shouldBe 1
     }
   }
 }

@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
 import org.reactivestreams.{Subscriber, Subscription}
@@ -12,9 +11,9 @@ import org.scalatest.testng.TestNGSuiteLike
 
 class BulkIndexingSubscriberWhiteboxTest
   extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
-    with HttpElasticSugar with TestNGSuiteLike with DiscoveryLocalNodeProvider with ElasticDsl {
+    with TestNGSuiteLike with DockerTests {
 
-  implicit val system = ActorSystem()
+  implicit val system: ActorSystem = ActorSystem()
 
   try {
     http.execute {

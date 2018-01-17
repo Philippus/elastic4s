@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FunSuite, Matchers}
 
 import scala.util.Try
 
-class AggregationAsStringTest extends FunSuite with DiscoveryLocalNodeProvider with Matchers with ElasticDsl {
+class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
 
   Try {
     http.execute {

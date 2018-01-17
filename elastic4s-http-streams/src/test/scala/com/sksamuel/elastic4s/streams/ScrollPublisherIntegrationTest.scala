@@ -3,15 +3,16 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.indexes.IndexDefinition
 import com.sksamuel.elastic4s.searches.RichSearchHit
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
+import org.elasticsearch.ResourceAlreadyExistsException
+import org.elasticsearch.transport.RemoteTransportException
 import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
-class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with ElasticDsl with HttpElasticSugar {
+class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matchers  {
 
   import ReactiveElastic._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
@@ -19,7 +20,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodePro
   private val indexName = getClass.getSimpleName.toLowerCase
   private val indexType = "emperor"
 
-  implicit val system = ActorSystem()
+  private implicit val system: ActorSystem = ActorSystem()
 
   val emperors = Array(
     Item("Augustus"),
@@ -49,13 +50,18 @@ class ScrollPublisherIntegrationTest extends WordSpec with DiscoveryLocalNodePro
     }
   }
 
-  ensureIndexExists(indexName)
+  try {
+    http.execute {
+      createIndex(indexName)
+    }.await
+  } catch {
+    case _: ResourceAlreadyExistsException => // Ok, ignore.
+    case _: RemoteTransportException => // Ok, ignore.
+  }
 
   http.execute {
-    bulk(emperors.map(indexInto(indexName / indexType).source(_)))
+    bulk(emperors.map(indexInto(indexName / indexType).source(_))).refreshImmediately
   }.await
-
-  blockUntilCount(emperors.length, indexName)
 
   "elastic-streams" should {
     "publish all data from the index" in {

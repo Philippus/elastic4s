@@ -1,26 +1,36 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
 import org.scalatest.testng.TestNGSuiteLike
+
+import scala.util.Try
 
 class ScrollPublisherVerificationTest
   extends PublisherVerification[SearchHit](
     new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
     PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
-  ) with HttpElasticSugar with TestNGSuiteLike with DiscoveryLocalNodeProvider with ElasticDsl {
+  ) with TestNGSuiteLike with DockerTests {
 
   import ElasticJackson.Implicits._
 
-  implicit val system = ActorSystem()
+  implicit val system: ActorSystem = ActorSystem()
 
-  deleteIndex("scrollpubver")
-  ensureIndexExists("scrollpubver")
+  Try {
+    http.execute {
+      deleteIndex("scrollpubver")
+    }.await
+  }
+
+  Try {
+    http.execute {
+      createIndex("scrollpubver")
+    }.await
+  }
 
   http.execute {
     bulk(
@@ -37,10 +47,8 @@ class ScrollPublisherVerificationTest
       indexInto("scrollpubver" / "empires") source Empire("Cardassian", "Space", "Cardassia Prime"),
       indexInto("scrollpubver" / "empires") source Empire("Egyptian", "Egypt", "Memphis"),
       indexInto("scrollpubver" / "empires") source Empire("Babylonian", "Levant", "Babylon")
-    ).immediateRefresh()
-  }
-
-  blockUntilCount(13, "scrollpubver")
+    ).refreshImmediately
+  }.await
 
   private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2)
 

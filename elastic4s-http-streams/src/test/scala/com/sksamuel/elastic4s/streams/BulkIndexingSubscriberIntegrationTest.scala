@@ -3,36 +3,89 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
+import com.sksamuel.elastic4s.IndexAndTypes
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
-import scala.util.Random
+import scala.util.{Random, Try}
 
-class BulkIndexingSubscriberIntegrationTest extends WordSpec with DiscoveryLocalNodeProvider with Matchers with BeforeAndAfter with ElasticDsl with HttpElasticSugar {
+class BulkIndexingSubscriberIntegrationTest extends WordSpec with DockerTests with Matchers with BeforeAndAfter {
 
   import ReactiveElastic._
 
   import scala.concurrent.duration._
 
-  implicit val system = ActorSystem()
+  implicit val system: ActorSystem = ActorSystem()
 
   val indexName = "bulkindexsubint"
   val strictIndex = "bulkindexfail"
 
+  def deleteIndx(name: String): Unit = Try {
+    http.execute {
+      ElasticDsl.deleteIndex(name)
+    }.await
+  }
+
   after {
-    deleteIndex(indexName)
-    deleteIndex(strictIndex)
+    deleteIndx(indexName)
+    deleteIndx(strictIndex)
+  }
+
+  def blockUntilCount(expected: Long, index: String): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = http.execute {
+        search(index).matchAllQuery().size(0)
+      }.await.right.get
+      expected <= result.result.totalHits
+    }
+  }
+
+  @deprecated
+  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      val result = http.execute {
+        search(indexAndTypes).matchAllQuery().size(0)
+      }.await.right.get
+      expected <= result.result.totalHits
+    }
+  }
+
+  def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
+
+    var backoff = 0
+    var done = false
+
+    while (backoff <= 16 && !done) {
+      if (backoff > 0) Thread.sleep(200 * backoff)
+      backoff = backoff + 1
+      try {
+        done = predicate()
+      } catch {
+        case e: Throwable =>
+          logger.warn("problem while testing predicate", e)
+      }
+    }
+
+    require(done, s"Failed waiting on: $explain")
+  }
+
+  def ensureIndexExists(index: String): Unit = {
+    Try {
+      http.execute {
+        createIndex(index)
+      }.await
+    }
   }
 
   "elastic-streams" should {
     "index all received data" in {
       ensureIndexExists(indexName)
-      implicit val builder = new ShipRequestBuilder(indexName)
+      implicit val builder: ShipRequestBuilder = new ShipRequestBuilder(indexName)
 
       val completionLatch = new CountDownLatch(1)
       val subscriber = http.subscriber[Ship](10, 2, completionFn = () => completionLatch.countDown())
@@ -44,7 +97,7 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with DiscoveryLocal
 
     "index all received data even if the subscriber never completes" in {
       ensureIndexExists(indexName)
-      implicit val builder = new ShipRequestBuilder(indexName)
+      implicit val builder: ShipRequestBuilder = new ShipRequestBuilder(indexName)
 
       // The short interval is just for the sake of test execution time, it's not a recommendation
       val subscriber = http.subscriber[Ship](8, 2, flushInterval = Some(500.millis))
@@ -64,7 +117,8 @@ class BulkIndexingSubscriberIntegrationTest extends WordSpec with DiscoveryLocal
           ) dynamic Strict
         )
       }.await
-      implicit val builder = new ShipRequestBuilder(strictIndex)
+
+      implicit val builder: ShipRequestBuilder = new ShipRequestBuilder(strictIndex)
 
       val errorsExpected = 2
 

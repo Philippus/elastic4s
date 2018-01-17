@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.tasks
 
-import com.sksamuel.elastic4s.DockerTests
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 class TasksTest extends FlatSpec with DockerTests with Matchers {

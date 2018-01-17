@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.DockerTests
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.util.Try

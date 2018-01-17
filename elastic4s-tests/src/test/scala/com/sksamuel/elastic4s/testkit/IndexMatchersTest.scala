@@ -1,25 +1,23 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.{ElasticApi, RefreshPolicy}
+import com.sksamuel.elastic4s.RefreshPolicy
 import org.scalatest.WordSpec
 
 import scala.util.Try
 
-class IndexMatchersTest extends WordSpec with IndexMatchers with DiscoveryLocalNodeProvider with ElasticApi {
-
-  import com.sksamuel.elastic4s.ElasticDsl._
+class IndexMatchersTest extends WordSpec with IndexMatchers with DockerTests {
 
   private val indexname = "indexmatcherstest"
 
   Try {
-    client.execute(deleteIndex(indexname)).await
+    http.execute(deleteIndex(indexname)).await
   }
 
     Try {
-    client.execute(deleteIndex("sammy")).await
+    http.execute(deleteIndex("sammy")).await
   }
 
-  client.execute {
+  http.execute {
     bulk(
       indexInto(indexname / "tubestops") fields("name" -> "south kensington", "line" -> "district"),
       indexInto(indexname / "tubestops") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
@@ -28,7 +26,7 @@ class IndexMatchersTest extends WordSpec with IndexMatchers with DiscoveryLocalN
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-  client.execute {
+  http.execute {
     createIndex("sammy")
   }.await
 

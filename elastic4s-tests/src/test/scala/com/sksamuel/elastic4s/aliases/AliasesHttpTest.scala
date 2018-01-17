@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s.aliases
 
 import com.sksamuel.elastic4s.http.index.admin.{AliasActionResponse, AliasExistsResponse}
 import com.sksamuel.elastic4s.http.index.alias.{Alias, IndexAliases}
-import com.sksamuel.elastic4s.{DockerTests, Index}
+import com.sksamuel.elastic4s.Index
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try

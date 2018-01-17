@@ -3,19 +3,24 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
-class SubscriberListenerTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
+import scala.util.Try
+
+class SubscriberListenerTest extends WordSpec with Matchers with DockerTests {
 
   import ReactiveElastic._
 
-  implicit val system = ActorSystem()
-  implicit val builder = new ShipRequestBuilder()
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val builder: ShipRequestBuilder = new ShipRequestBuilder()
 
-  ensureIndexExists("subscriberlistenertest")
+  Try {
+    http.execute {
+      createIndex("subscriberlistenertest")
+    }.await
+  }
 
   "Reactive streams subscriber" should {
     "invoke listener for each confirmed doc" in {

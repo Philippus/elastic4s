@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.validate
 
-import com.sksamuel.elastic4s.{DockerTests, RefreshPolicy}
+import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try

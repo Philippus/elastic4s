@@ -3,26 +3,87 @@ package com.sksamuel.elastic4s.streams
 import java.util.concurrent.Executors
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, HttpElasticSugar}
+import com.sksamuel.elastic4s.testkit.DockerTests
+import org.elasticsearch.ResourceAlreadyExistsException
+import org.elasticsearch.transport.RemoteTransportException
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
+import scala.util.Try
 
-class SubscriberFlushAfterTest extends WordSpec with Matchers with HttpElasticSugar with ElasticDsl with DiscoveryLocalNodeProvider {
+class SubscriberFlushAfterTest extends WordSpec with Matchers with DockerTests {
 
   import ElasticJackson.Implicits._
   import ReactiveElastic._
 
-  implicit val system = ActorSystem()
+  implicit val system: ActorSystem = ActorSystem()
 
   implicit object SpaceshipRequestBuilder extends RequestBuilder[Spaceship] {
     override def request(ship: Spaceship): BulkCompatibleDefinition = {
       indexInto("subscriberflushaftertest" / "ships").source(ship)
+    }
+  }
+
+  def deleteIndx(name: String): Unit = Try {
+    http.execute {
+      ElasticDsl.deleteIndex(name)
+    }.await
+  }
+
+  def truncateIndex(index: String): Unit = {
+    deleteIndx(index)
+    ensureIndexExists(index)
+    blockUntilEmpty(index)
+  }
+
+  def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
+
+    var backoff = 0
+    var done = false
+
+    while (backoff <= 16 && !done) {
+      if (backoff > 0) Thread.sleep(200 * backoff)
+      backoff = backoff + 1
+      try {
+        done = predicate()
+      } catch {
+        case e: Throwable =>
+          logger.warn("problem while testing predicate", e)
+      }
+    }
+
+    require(done, s"Failed waiting on: $explain")
+  }
+
+  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
+    blockUntil(s"Expected count of $expected") { () =>
+      expected == http.execute {
+        search(index / types).size(0)
+      }.await.right.get.result.totalHits
+    }
+  }
+
+  def blockUntilEmpty(index: String): Unit = {
+    blockUntil(s"Expected empty index $index") { () =>
+      http.execute {
+        search(Indexes(index)).size(0)
+      }.await.right.get.result.totalHits == 0
+    }
+  }
+
+  def ensureIndexExists(index: String): Unit = {
+    try {
+      http.execute {
+        createIndex(index)
+      }.await
+    } catch {
+      case _: ResourceAlreadyExistsException => // Ok, ignore.
+      case _: RemoteTransportException => // Ok, ignore.
     }
   }
 

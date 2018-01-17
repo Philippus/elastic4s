@@ -1,15 +1,13 @@
-package com.sksamuel.elastic4s.search
+package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.{DocumentRef, RefreshPolicy}
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
-class TermsLookupQueryTest
+class TermsQueryTest
   extends FlatSpec
-    with DiscoveryLocalNodeProvider
-    with Matchers
-    with ElasticDsl {
+    with DockerTests
+    with Matchers {
 
   http.execute {
     createIndex("lords").mappings(
@@ -37,10 +35,20 @@ class TermsLookupQueryTest
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-  "a terms lookup query" should "lookup terms to search from a document in another index" in {
+  "a terms query" should "find multiple terms using 'or'" in {
+
     val resp = http.execute {
-      search("lords") query termsLookupQuery("name", "lordswelike",
-        DocumentRef("lordsfanclub", "fans", "lordsAppreciationFanClub"))
+      search("lords") query termsQuery("name", "nelson", "byron")
+    }.await.right.get.result
+
+    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"byron"}""")
+  }
+
+  it should "lookup terms to search from a document in another index" in {
+    val resp = http.execute {
+      search("lords") query termsQuery("name", List.empty[String])
+        .ref("lordsfanclub", "fans", "lordsAppreciationFanClub")
+        .path("lordswelike")
     }.await.right.get.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"edmure"}""")

@@ -2,12 +2,12 @@ package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.mappings.IndexMappings
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
 import org.scalatest.{FunSuite, Matchers}
 
 import scala.util.Try
 
-class PutMappingHttpTest extends FunSuite with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
 
   test("put mapping should add new field to an existing type") {
 

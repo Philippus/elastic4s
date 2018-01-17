@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.nodes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.DiscoveryLocalNodeProvider
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
-class NodesInfoHttpTest extends WordSpec with Matchers with DiscoveryLocalNodeProvider with ElasticDsl {
+class NodesInfoHttpTest extends WordSpec with Matchers with DockerTests {
 
   "node info request" should {
     "return node information" in {
@@ -12,7 +11,7 @@ class NodesInfoHttpTest extends WordSpec with Matchers with DiscoveryLocalNodePr
         nodeInfo()
       }.await.right.get.result
 
-      nodes.clusterName should be("localnode-cluster")
+      nodes.clusterName should be("docker-cluster")
       nodes.nodes.values.toSeq.head.os.availableProcessors > 0 shouldBe true
     }
   }
