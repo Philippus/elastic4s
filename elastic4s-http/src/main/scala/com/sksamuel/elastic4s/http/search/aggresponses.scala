@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.SourceAsContentBuilder
 import com.sksamuel.elastic4s.json.JacksonSupport
+import com.sksamuel.elastic4s.searches.GeoPoint
 import com.sksamuel.elastic4s.{AggReader, DocumentRef}
 
 trait AggBucket extends HasAggregations {
@@ -265,6 +266,15 @@ case class MinAggResult(name: String, value: Option[Double]) extends MetricAggre
 case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
 case class ValueCountResult(name: String, value: Double) extends MetricAggregation
 
+case class GeoBoundsAggResult(name: String,
+                              topLeft: Option[GeoPoint],
+                              bottomRight: Option[GeoPoint]) extends MetricAggregation
+
+case class GeoCentroidAggResult(name: String,
+                                centroid: Option[GeoPoint],
+                                count: Long
+                               ) extends MetricAggregation
+
 case class ExtendedStatsAggResult(name: String,
                                   count: Long,
                                   min: Double,
@@ -410,6 +420,31 @@ trait HasAggregations {
     val values = agg(name)("values").asInstanceOf[Map[String, Double]]
     PercentilesAggResult(name, values)
   }
+
+  def geoBounds(name: String): GeoBoundsAggResult = {
+    val boundsOpt = agg(name).get("bounds").map(_.asInstanceOf[Map[String,Map[String,Double]]])
+    boundsOpt match {
+      case None         => GeoBoundsAggResult(name, None, None)
+      case Some(bounds) =>
+        val topLeft     = bounds("top_left")
+        val bottomRight = bounds("bottom_right")
+        GeoBoundsAggResult(
+          name,
+          Some(GeoPoint(topLeft("lat"), topLeft("lon"))),
+          Some(GeoPoint(bottomRight("lat"), bottomRight("lon")))
+        )
+    }
+  }
+
+  def geoCentroid(name: String): GeoCentroidAggResult = {
+    val location = agg(name).get("location").map(_.asInstanceOf[Map[String, Double]])
+    val count    = agg(name)("count").toString.toLong
+      GeoCentroidAggResult(
+        name,
+        location.map(l => GeoPoint(l("lat"), l("lon"))),
+        count)
+  }
+
   def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
 
