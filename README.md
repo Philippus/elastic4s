@@ -850,17 +850,17 @@ Check for the latest released versions on [maven central](http://search.maven.or
 ## Building and Testing
 
 This project is built with SBT. So to build
-```
+```scala
 sbt compile
 ```
 
 And to test
-```
+```scala
 sbt test
 ```
 
-Integration tests run on a local elastic that is created and torn down as part of the tests inside your standard temp
-folder. There is no need to configure anything externally.
+For the tests to work you will need to run a local elastic instance on port 9200. One easy way of doing this is to use docker:
+`docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "path.repo=/tmp" docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.2` replacing that 6.1.2 with whatever version is current.
 
 ## Changelog
 
