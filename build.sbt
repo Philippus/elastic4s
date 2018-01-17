@@ -25,7 +25,6 @@ lazy val root = Project("elastic4s", file("."))
     aws,
     sttp,
     httpstreams,
-//    streams,
     xpacksecurity
   )
 
@@ -112,14 +111,6 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
     )
   )
   .dependsOn(core, embedded, http)
-
-//lazy val streams = Project("elastic4s-streams", file("elastic4s-streams"))
-//  .settings(
-//    name := "elastic4s-streams",
-//    libraryDependencies += "com.typesafe.akka"        %% "akka-actor"           % AkkaVersion,
-//    libraryDependencies += "org.reactivestreams"      % "reactive-streams"      % ReactiveStreamsVersion,
-//    libraryDependencies += "org.reactivestreams"      % "reactive-streams-tck"  % ReactiveStreamsVersion % "test"
-//  ).dependsOn(tcp, testkit % "test", jackson % "test")
 
 lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-streams"))
   .settings(
