@@ -28,7 +28,7 @@ case class JoinFieldDefinition(name: String,
   def dynamic(dynamic: String): T = copy(dynamic = dynamic.some)
   def dynamic(dynamic: Boolean): T = copy(dynamic = dynamic.toString.some)
 
-  def relations(map: Map[String, String]): T = copy(relations = relations)
+  def relations(map: Map[String, String]): T = copy(relations = map)
 
   override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
   override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
