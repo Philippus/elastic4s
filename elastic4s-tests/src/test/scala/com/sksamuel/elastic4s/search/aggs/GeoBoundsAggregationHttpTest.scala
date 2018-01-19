@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.searches.GeoPoint
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
