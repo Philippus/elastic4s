@@ -364,6 +364,8 @@ trait HasAggregations {
   def names: Iterable[String] = data.keys
 
   // bucket aggs
+  def global(name: String): GlobalAggregationResult = GlobalAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+
   def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
 
   def filters(name: String): FiltersAggregationResult =
@@ -495,6 +497,10 @@ trait BucketAggregation {
 trait PipelineAggregation {
   def name: String
 }
+
+case class GlobalAggregationResult(name: String,
+                                   docCount: Int,
+                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
 
 case class FilterAggregationResult(name: String,
                                    docCount: Int,
