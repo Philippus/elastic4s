@@ -34,23 +34,18 @@ object Build extends AutoPlugin {
 
   override def projectSettings = Seq(
     organization := org,
-    // a 'compileonly' configuation
-    ivyConfigurations += config("compileonly").hide,
-    // appending everything from 'compileonly' to unmanagedClasspath
-    unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12", "2.12.4"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
-    publishArtifact in Test := false,
+    Test / publishArtifact := false,
     fork := false,
-    parallelExecution := false,
-    parallelExecution in ThisBuild := false,
+    ThisBuild /parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
+    Global / concurrentRestrictions += Tags.limit(Tags.Test, 1),
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
