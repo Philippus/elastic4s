@@ -9,8 +9,7 @@ lazy val root = Project("elastic4s", file("."))
       val base = (Compile / sourceManaged).value
       val files = (Compile / managedSources).value
       files.map { f => (f, f.relativeTo(base).get.getPath) }
-    },
-    ThisBuild / scalariformAutoformat := false
+    }
   )
   .aggregate(
     core,

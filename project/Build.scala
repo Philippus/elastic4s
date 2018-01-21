@@ -34,10 +34,6 @@ object Build extends AutoPlugin {
 
   override def projectSettings = Seq(
     organization := org,
-    // a 'compileonly' configuation
-    ivyConfigurations += config("compileonly").hide,
-    // appending everything from 'compileonly' to unmanagedClasspath
-    unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12", "2.12.4"),
     publishMavenStyle := true,
@@ -70,6 +66,6 @@ object Build extends AutoPlugin {
     },
     scmInfo := Option(ScmInfo(url("https://github.com/sksamuel/elastic4s"), "https://github.com/sksamuel/elastic4s.git")),
     licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    developers := List(Developer(id = "sksamuel", name = "Samuel", email = "", url = url("http://github.com/sksamuel")))
+    developers := List(Developer(id = "sksamuel", name = "Stephen Samuel", email = "", url = url("http://github.com/sksamuel")))
   )
 }
