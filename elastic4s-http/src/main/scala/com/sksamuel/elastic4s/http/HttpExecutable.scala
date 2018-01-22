@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.exts.Logging
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -28,3 +29,22 @@ abstract class HttpExecutable[T, U: Manifest] extends Logging {
     */
   def execute(client: HttpRequestClient, request: T): Future[HttpResponse]
 }
+
+class MarshallableHttpExecutable[T: RequestMarshaller, U: Manifest] extends HttpExecutable[T, U] {
+  def execute(client: HttpRequestClient, request: T): Future[HttpResponse] = {
+    val marshalled: MarshalledRequest = implicitly[RequestMarshaller[T]].marshal(request)
+
+    marshalled.body match {
+      case Some(body) =>
+        client.async(marshalled.method, marshalled.endpoint, marshalled.params, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      case None =>
+        client.async(marshalled.method, marshalled.endpoint, marshalled.params)
+    }
+  }
+}
+
+trait RequestMarshaller[T] {
+  def marshal(t: T): MarshalledRequest
+}
+
+case class MarshalledRequest(method: String, endpoint: String, params: Map[String, String], body: Option[String])
