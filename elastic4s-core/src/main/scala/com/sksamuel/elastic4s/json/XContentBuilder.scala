@@ -172,6 +172,7 @@ class XContentBuilder(root: JsonNode) {
         startArray()
         values.foreach(autovalue)
         endArray()
+      case values: Array[_]                => autovalue(values.toSeq)
       case values: Iterator[_] => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
       case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
