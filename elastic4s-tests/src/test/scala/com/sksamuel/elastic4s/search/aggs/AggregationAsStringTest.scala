@@ -41,4 +41,18 @@ class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
     }.await.right.get.result.aggregationsAsString shouldBe
       """{"agg2":{"value":3869.0},"agg1":{"value":2456.0},"agg3":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":"tower","doc_count":2},{"key":"burj","doc_count":1},{"key":"kalifa","doc_count":1},{"key":"london","doc_count":1},{"key":"of","doc_count":1},{"key":"willis","doc_count":1}]}}"""
   }
+
+  test("agg as string should return empty json when no aggregations are present") {
+    http.execute {
+      search("aggstring").matchAllQuery()
+    }.await.right.get.result.aggregationsAsString shouldBe "{}"
+  }
+
+
+  test("contains for not existent aggregation should return false") {
+    http.execute {
+      search("aggstring").matchAllQuery()
+    }.await.right.get.result.aggregations.contains("no_agg") shouldBe false
+  }
+
 }
