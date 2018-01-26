@@ -34,6 +34,10 @@ object Build extends AutoPlugin {
 
   override def projectSettings = Seq(
     organization := org,
+    // a 'compileonly' configuation
+    ivyConfigurations += config("compileonly").hide,
+    // appending everything from 'compileonly' to unmanagedClasspath
+    unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12", "2.12.4"),
     publishMavenStyle := true,
