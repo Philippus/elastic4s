@@ -90,10 +90,11 @@ case class SearchResponse(took: Long,
                           private val suggest: Map[String, Seq[SuggestionResult]],
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
-                          @JsonProperty("aggregations") aggregationsAsMap: Map[String, Any],
+                          @JsonProperty("aggregations") private val _aggregationsAsMap: Map[String, Any],
                           hits: SearchHits
                          ) {
 
+  def aggregationsAsMap: Map[String, Any] = Option(_aggregationsAsMap).getOrElse(Map.empty)
   def totalHits: Long = hits.total
   def size: Long = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
