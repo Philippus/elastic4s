@@ -53,5 +53,6 @@ object AggregationBuilderFn {
     case p: PercentilesBucketDefinition => PercentilesBucketPipelineBuilder(p).asRight
     case p: StatsBucketDefinition => StatsBucketPipelineBuilder(p).asRight
     case p: SumBucketDefinition => SumBucketPipelineBuilder(p).asRight
+    case p: BucketScriptDefinition => BucketScriptPipelineAggregationBuilder(p).asRight
   }
 }
