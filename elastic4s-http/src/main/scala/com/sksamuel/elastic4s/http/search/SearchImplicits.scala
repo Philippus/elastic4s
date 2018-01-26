@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import java.net.URLEncoder
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
@@ -58,9 +58,8 @@ trait SearchImplicits {
     }
   }
 
-  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
-
-    override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
+  implicit object SearchRequestMarshaller$ extends RequestMarshaller[SearchDefinition] {
+    override def marshal(request: SearchDefinition): MarshalledRequest = {
 
       val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
         "/_search"
@@ -82,7 +81,10 @@ trait SearchImplicits {
       }
 
       val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
-      client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+
+      MarshalledRequest("POST", endpoint, params.toMap, Some(body))
     }
   }
+
+  implicit object SearchHttpExecutable extends MarshallableHttpExecutable[SearchDefinition, SearchResponse]
 }
