@@ -125,6 +125,7 @@ object ResponseConverterImplicits {
             None,
             None,
             None,
+            None,
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
