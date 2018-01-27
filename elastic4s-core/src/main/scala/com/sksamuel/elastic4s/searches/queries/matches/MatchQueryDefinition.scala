@@ -19,17 +19,18 @@ case class MatchQueryDefinition(field: String,
                                 operator: Option[Operator] = None,
                                 prefixLength: Option[Int] = None,
                                 queryName: Option[String] = None,
-                                zeroTerms: Option[String] = None) extends QueryDefinition {
+                                zeroTerms: Option[String] = None)
+    extends QueryDefinition {
 
-  def analyzer(an: String): MatchQueryDefinition = copy(analyzer = an.some)
+  def analyzer(an: String): MatchQueryDefinition   = copy(analyzer = an.some)
   def analyzer(an: Analyzer): MatchQueryDefinition = copy(analyzer = an.name.some)
 
-  def boost(boost: Double): MatchQueryDefinition = copy(boost = boost.some)
-  def cutoffFrequency(f: Double): MatchQueryDefinition = copy(cutoffFrequency = f.some)
-  def lenient(lenient: Boolean): MatchQueryDefinition = copy(lenient = lenient.some)
-  def fuzziness(fuzziness: String): MatchQueryDefinition = copy(fuzziness = fuzziness.some)
+  def boost(boost: Double): MatchQueryDefinition               = copy(boost = boost.some)
+  def cutoffFrequency(f: Double): MatchQueryDefinition         = copy(cutoffFrequency = f.some)
+  def lenient(lenient: Boolean): MatchQueryDefinition          = copy(lenient = lenient.some)
+  def fuzziness(fuzziness: String): MatchQueryDefinition       = copy(fuzziness = fuzziness.some)
   def fuzzyRewrite(fuzzyRewrite: String): MatchQueryDefinition = copy(fuzzyRewrite = fuzzyRewrite.some)
-  def prefixLength(prefixLength: Int): MatchQueryDefinition = copy(prefixLength = prefixLength.some)
+  def prefixLength(prefixLength: Int): MatchQueryDefinition    = copy(prefixLength = prefixLength.some)
 
   @deprecated("use lenient(Boolean)", "5.0.0")
   def setLenient(l: Boolean): MatchQueryDefinition = lenient(l)
@@ -41,9 +42,9 @@ case class MatchQueryDefinition(field: String,
 
   def minimumShouldMatch(min: String): MatchQueryDefinition = copy(minimumShouldMatch = min.some)
 
-  def withAndOperator(): MatchQueryDefinition = operator("AND")
-  def withOrOperator(): MatchQueryDefinition = operator("OR")
-  def operator(op: String): MatchQueryDefinition = copy(operator = Operator.valueOf(op.toUpperCase).some)
+  def withAndOperator(): MatchQueryDefinition      = operator("AND")
+  def withOrOperator(): MatchQueryDefinition       = operator("OR")
+  def operator(op: String): MatchQueryDefinition   = copy(operator = Operator.valueOf(op.toUpperCase).some)
   def operator(op: Operator): MatchQueryDefinition = copy(operator = op.some)
 
   def queryName(queryName: String): MatchQueryDefinition = copy(queryName = queryName.some)

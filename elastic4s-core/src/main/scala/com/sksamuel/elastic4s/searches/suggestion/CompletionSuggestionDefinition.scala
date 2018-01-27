@@ -13,8 +13,8 @@ object Fuzziness {
   }
 
   case object Zero extends Fuzziness
-  case object One extends Fuzziness
-  case object Two extends Fuzziness
+  case object One  extends Fuzziness
+  case object Two  extends Fuzziness
   case object Auto extends Fuzziness
 }
 
@@ -34,25 +34,28 @@ case class CompletionSuggestionDefinition(name: String,
                                           unicodeAware: Option[Boolean] = None,
                                           skipDuplicates: Option[Boolean] = None,
                                           text: Option[String] = None,
-                                          contexts: Map[String, Seq[CategoryContext]] = Map.empty) extends SuggestionDefinition {
+                                          contexts: Map[String, Seq[CategoryContext]] = Map.empty)
+    extends SuggestionDefinition {
 
-  def regex(regex: String): CompletionSuggestionDefinition = copy(regex = regex.some)
+  def regex(regex: String): CompletionSuggestionDefinition               = copy(regex = regex.some)
   def regexFlags(flags: Seq[RegexpFlag]): CompletionSuggestionDefinition = copy(regexFlags = flags)
-  def fuzzyMinLength(min: Int): CompletionSuggestionDefinition = copy(fuzzyMinLength = min.some)
+  def fuzzyMinLength(min: Int): CompletionSuggestionDefinition           = copy(fuzzyMinLength = min.some)
   def maxDeterminizedStates(states: Int): CompletionSuggestionDefinition = copy(maxDeterminizedStates = states.some)
-  def fuzziness(edits: Int): CompletionSuggestionDefinition = copy(fuzziness = Fuzziness.fromEdits(edits).some)
-  def fuzziness(fuzziness: Fuzziness): CompletionSuggestionDefinition = copy(fuzziness = fuzziness.some)
-  def transpositions(transpositions: Boolean): CompletionSuggestionDefinition = copy(transpositions = transpositions.some)
+  def fuzziness(edits: Int): CompletionSuggestionDefinition              = copy(fuzziness = Fuzziness.fromEdits(edits).some)
+  def fuzziness(fuzziness: Fuzziness): CompletionSuggestionDefinition    = copy(fuzziness = fuzziness.some)
+  def transpositions(transpositions: Boolean): CompletionSuggestionDefinition =
+    copy(transpositions = transpositions.some)
   def unicodeAware(unicodeAware: Boolean): CompletionSuggestionDefinition = copy(unicodeAware = unicodeAware.some)
-  def skipDuplicates(skipDuplicates: Boolean): CompletionSuggestionDefinition = copy(skipDuplicates = skipDuplicates.some)
+  def skipDuplicates(skipDuplicates: Boolean): CompletionSuggestionDefinition =
+    copy(skipDuplicates = skipDuplicates.some)
 
   def context(name: String, context: CategoryContext): CompletionSuggestionDefinition = contexts(name, Seq(context))
-  def contexts(name: String, contexts: Seq[CategoryContext]): CompletionSuggestionDefinition = {
+  def contexts(name: String, contexts: Seq[CategoryContext]): CompletionSuggestionDefinition =
     copy(contexts = this.contexts + (name -> contexts))
-  }
 
   // adds more contexts to this query
-  def contexts(map: Map[String, Seq[CategoryContext]]): CompletionSuggestionDefinition = copy(contexts = this.contexts ++ map)
+  def contexts(map: Map[String, Seq[CategoryContext]]): CompletionSuggestionDefinition =
+    copy(contexts = this.contexts ++ map)
 
   def prefix(prefix: String): CompletionSuggestionDefinition = copy(prefix = prefix.some)
   def prefix(prefix: String, fuzziness: Fuzziness): CompletionSuggestionDefinition =
@@ -60,17 +63,16 @@ case class CompletionSuggestionDefinition(name: String,
   def fuzzyPrefixLength(length: Int): CompletionSuggestionDefinition = copy(fuzzyPrefixLength = length.some)
 
   override def analyzer(analyzer: String): CompletionSuggestionDefinition = copy(analyzer = analyzer.some)
-  override def text(text: String): CompletionSuggestionDefinition = copy(text = text.some)
-  override def shardSize(shardSize: Int): CompletionSuggestionDefinition = copy(shardSize = shardSize.some)
-  override def size(size: Int): CompletionSuggestionDefinition = copy(size = size.some)
+  override def text(text: String): CompletionSuggestionDefinition         = copy(text = text.some)
+  override def shardSize(shardSize: Int): CompletionSuggestionDefinition  = copy(shardSize = shardSize.some)
+  override def size(size: Int): CompletionSuggestionDefinition            = copy(size = size.some)
 
-  def isFuzzy: Boolean = {
+  def isFuzzy: Boolean =
     fuzziness.isDefined ||
       fuzzyMinLength.isDefined ||
       fuzzyPrefixLength.isDefined ||
       transpositions.isDefined ||
       unicodeAware.isDefined
-  }
 }
 
 case class CategoryContext(name: String, boost: Double = 1, prefix: Boolean = false)

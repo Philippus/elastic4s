@@ -34,15 +34,15 @@ case class RichGetResponse(original: GetResponse) extends Hit {
 
   override def score: Float = 0
 
-  override def id: String = original.getId
-  override def index: String = original.getIndex
+  override def id: String     = original.getId
+  override def index: String  = original.getIndex
   override def `type`: String = original.getType
-  override def version: Long = original.getVersion
+  override def version: Long  = original.getVersion
 
   private def getFieldToHitField(f: DocumentField) = new HitField {
-    override def name: String = f.getName
-    override def value: AnyRef = f.getValue
-    override def values: Seq[AnyRef] = Option(f.getValues).map(_.asScala).getOrElse(Nil)
+    override def name: String             = f.getName
+    override def value: AnyRef            = f.getValue
+    override def values: Seq[AnyRef]      = Option(f.getValues).map(_.asScala).getOrElse(Nil)
     override def isMetadataField: Boolean = f.isMetadataField
   }
 
@@ -53,20 +53,17 @@ case class RichGetResponse(original: GetResponse) extends Hit {
   def fieldOpt(name: String): Option[HitField] = Option(original.getField(name)).map(getFieldToHitField)
 
   @deprecated("use sourceAsMap instead", "5.0.0")
-  def fields: Map[String, HitField] = {
+  def fields: Map[String, HitField] =
     Option(original.getFields).fold(Map.empty[String, HitField])(_.asScala.toMap.mapValues(getFieldToHitField))
-  }
 
   @deprecated("use .sourceAsMap", "5.0.0")
   def source: Map[String, AnyRef] = sourceAsMap
 
   override def sourceAsMap: Map[String, AnyRef] = Option(original.getSource).map(_.asScala.toMap).getOrElse(Map.empty)
-  override def sourceAsString: String = original.getSourceAsString
+  override def sourceAsString: String           = original.getSourceAsString
 
   override def exists: Boolean = original.isExists
 
   @deprecated("Use the source methods instead", "5.0.0")
   def iterator: Iterator[DocumentField] = original.iterator.asScala
 }
-
-

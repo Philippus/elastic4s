@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 trait ReindexExecutables {
   implicit object ReindexDefinitionExecutable
-    extends Executable[ReindexDefinition, BulkByScrollResponse, BulkByScrollResponse] {
+      extends Executable[ReindexDefinition, BulkByScrollResponse, BulkByScrollResponse] {
 
     def populate(builder: ReindexRequestBuilder, r: ReindexDefinition): Unit = {
       builder.source(r.sourceIndexes.values: _*)

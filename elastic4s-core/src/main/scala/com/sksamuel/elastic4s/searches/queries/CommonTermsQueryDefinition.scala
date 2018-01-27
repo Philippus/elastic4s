@@ -14,20 +14,23 @@ case class CommonTermsQueryDefinition(name: String,
                                       highFreqOperator: Option[String] = None,
                                       lowFreqOperator: Option[String] = None,
                                       analyzer: Option[String] = None)
-  extends QueryDefinition {
+    extends QueryDefinition {
 
-  def boost(boost: Double): CommonTermsQueryDefinition = copy(boost = Some(boost))
-  def queryName(queryName: String): CommonTermsQueryDefinition = copy(queryName = Some(queryName))
+  def boost(boost: Double): CommonTermsQueryDefinition          = copy(boost = Some(boost))
+  def queryName(queryName: String): CommonTermsQueryDefinition  = copy(queryName = Some(queryName))
   def cutoffFrequency(freq: Double): CommonTermsQueryDefinition = copy(cutoffFrequency = freq.some)
 
   def minimumShouldMatch(min: Int): CommonTermsQueryDefinition = copy(minimumShouldMatch = Some(min.toString))
-  def lowFreqMinimumShouldMatch(freq: Int): CommonTermsQueryDefinition = copy(lowFreqMinimumShouldMatch = Some(freq.toString))
-  def highFreqMinimumShouldMatch(freq: Int): CommonTermsQueryDefinition = copy(highFreqMinimumShouldMatch = Some(freq.toString))
-  def minimumShouldMatch(min: String): CommonTermsQueryDefinition = copy(minimumShouldMatch = Some(min))
+  def lowFreqMinimumShouldMatch(freq: Int): CommonTermsQueryDefinition =
+    copy(lowFreqMinimumShouldMatch = Some(freq.toString))
+  def highFreqMinimumShouldMatch(freq: Int): CommonTermsQueryDefinition =
+    copy(highFreqMinimumShouldMatch = Some(freq.toString))
+  def minimumShouldMatch(min: String): CommonTermsQueryDefinition         = copy(minimumShouldMatch = Some(min))
   def lowFreqMinimumShouldMatch(freq: String): CommonTermsQueryDefinition = copy(lowFreqMinimumShouldMatch = Some(freq))
-  def highFreqMinimumShouldMatch(freq: String): CommonTermsQueryDefinition = copy(highFreqMinimumShouldMatch = Some(freq))
+  def highFreqMinimumShouldMatch(freq: String): CommonTermsQueryDefinition =
+    copy(highFreqMinimumShouldMatch = Some(freq))
   def highFreqOperator(op: String): CommonTermsQueryDefinition = copy(highFreqOperator = Some(op))
-  def lowFreqOperator(op: String): CommonTermsQueryDefinition = copy(lowFreqOperator = Some(op))
-  def analyzer(a: Analyzer): CommonTermsQueryDefinition = analyzer(a.name)
-  def analyzer(name: String): CommonTermsQueryDefinition = copy(analyzer = name.some)
+  def lowFreqOperator(op: String): CommonTermsQueryDefinition  = copy(lowFreqOperator = Some(op))
+  def analyzer(a: Analyzer): CommonTermsQueryDefinition        = analyzer(a.name)
+  def analyzer(name: String): CommonTermsQueryDefinition       = copy(analyzer = name.some)
 }

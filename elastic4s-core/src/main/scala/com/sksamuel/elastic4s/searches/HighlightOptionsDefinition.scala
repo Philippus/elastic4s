@@ -23,22 +23,22 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
                                       postTags: Seq[String] = Nil,
                                       preTags: Seq[String] = Nil,
                                       requireFieldMatch: Option[Boolean] = None,
-                                      options: Option[Map[String, AnyRef]] = None
-                                     ) {
+                                      options: Option[Map[String, AnyRef]] = None) {
 
-  def boundaryChars(boundaryChars: String): HighlightOptionsDefinition = copy(boundaryChars = boundaryChars.some)
+  def boundaryChars(boundaryChars: String): HighlightOptionsDefinition  = copy(boundaryChars = boundaryChars.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightOptionsDefinition = copy(boundaryMaxScan = boundaryMaxScan.some)
-  def boundaryScanner(boundaryScanner: String): HighlightOptionsDefinition = copy(boundaryScanner = boundaryScanner.some)
+  def boundaryScanner(boundaryScanner: String): HighlightOptionsDefinition =
+    copy(boundaryScanner = boundaryScanner.some)
   def boundaryScannerLocale(locale: String): HighlightOptionsDefinition = copy(boundaryScannerLocale = locale.some)
 
-  def encoder(encoder: String): HighlightOptionsDefinition = copy(encoder = encoder.some)
+  def encoder(encoder: String): HighlightOptionsDefinition       = copy(encoder = encoder.some)
   def tagsSchema(tagsSchema: String): HighlightOptionsDefinition = copy(tagsSchema = tagsSchema.some)
 
   def useExplicitFieldOrder(useExplicitFieldOrder: Boolean): HighlightOptionsDefinition =
     copy(useExplicitFieldOrder = useExplicitFieldOrder.some)
 
-  def fragmenter(fragmenter: String): HighlightOptionsDefinition = copy(fragmenter = fragmenter.some)
-  def fragmentSize(fragmentSize: Int): HighlightOptionsDefinition = copy(fragmentSize = fragmentSize.some)
+  def fragmenter(fragmenter: String): HighlightOptionsDefinition    = copy(fragmenter = fragmenter.some)
+  def fragmentSize(fragmentSize: Int): HighlightOptionsDefinition   = copy(fragmentSize = fragmentSize.some)
   def forceSource(forceSource: Boolean): HighlightOptionsDefinition = copy(forceSource = forceSource.some)
 
   def highlighterType(highlighterType: String): HighlightOptionsDefinition =
@@ -50,16 +50,16 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
   def highlightQuery(highlightQuery: QueryDefinition): HighlightOptionsDefinition =
     copy(highlightQuery = highlightQuery.some)
 
-  def noMatchSize(noMatchSize: Int): HighlightOptionsDefinition = copy(noMatchSize = noMatchSize.some)
+  def noMatchSize(noMatchSize: Int): HighlightOptionsDefinition       = copy(noMatchSize = noMatchSize.some)
   def numOfFragments(numOfFragments: Int): HighlightOptionsDefinition = copy(numOfFragments = numOfFragments.some)
-  def order(order: String): HighlightOptionsDefinition = copy(order = order.some)
-  def phraseLimit(phraseLimit: Int): HighlightOptionsDefinition = copy(phraseLimit = phraseLimit.some)
+  def order(order: String): HighlightOptionsDefinition                = copy(order = order.some)
+  def phraseLimit(phraseLimit: Int): HighlightOptionsDefinition       = copy(phraseLimit = phraseLimit.some)
 
   def postTags(first: String, rest: String*): HighlightOptionsDefinition = postTags(first +: rest)
-  def preTags(first: String, rest: String*): HighlightOptionsDefinition = preTags(first +: rest)
+  def preTags(first: String, rest: String*): HighlightOptionsDefinition  = preTags(first +: rest)
 
   def postTags(postTags: Iterable[String]): HighlightOptionsDefinition = copy(postTags = postTags.toSeq)
-  def preTags(preTags: Iterable[String]): HighlightOptionsDefinition = copy(preTags = preTags.toSeq)
+  def preTags(preTags: Iterable[String]): HighlightOptionsDefinition   = copy(preTags = preTags.toSeq)
 
   def options(newOptions: Map[String, AnyRef]): HighlightOptionsDefinition = copy(options = newOptions.some)
 

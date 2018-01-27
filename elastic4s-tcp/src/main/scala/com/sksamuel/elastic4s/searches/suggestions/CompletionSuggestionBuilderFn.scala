@@ -27,8 +27,8 @@ object CompletionSuggestionBuilderFn {
         val options = new FuzzyOptions.Builder()
         options.setFuzziness(fuzz match {
           case Fuzziness.Zero => unit.Fuzziness.ZERO
-          case Fuzziness.One => unit.Fuzziness.ONE
-          case Fuzziness.Two => unit.Fuzziness.TWO
+          case Fuzziness.One  => unit.Fuzziness.ONE
+          case Fuzziness.Two  => unit.Fuzziness.TWO
           case Fuzziness.Auto => unit.Fuzziness.AUTO
         })
         sugg.unicodeAware.foreach(options.setUnicodeAware)
@@ -46,11 +46,16 @@ object CompletionSuggestionBuilderFn {
     }
 
     if (sugg.contexts.nonEmpty) {
-      val categoryContexts: Map[String, java.util.List[_ <: ToXContent]] = sugg.contexts.map { case (name, contexts) =>
-        val tocontents = contexts.map { context =>
-          CategoryQueryContext.builder.setCategory(context.name).setBoost(context.boost.toInt).setPrefix(context.prefix).build
-        }.toList: List[_ <: ToXContent]
-        name -> tocontents.asJava
+      val categoryContexts: Map[String, java.util.List[_ <: ToXContent]] = sugg.contexts.map {
+        case (name, contexts) =>
+          val tocontents = contexts.map { context =>
+            CategoryQueryContext.builder
+              .setCategory(context.name)
+              .setBoost(context.boost.toInt)
+              .setPrefix(context.prefix)
+              .build
+          }.toList: List[_ <: ToXContent]
+          name -> tocontents.asJava
       }
       builder.contexts(categoryContexts.asJava)
     }

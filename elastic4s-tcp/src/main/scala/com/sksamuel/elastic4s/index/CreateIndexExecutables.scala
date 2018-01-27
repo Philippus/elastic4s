@@ -10,7 +10,7 @@ import scala.concurrent.Future
 trait CreateIndexExecutables extends IndexShowImplicitsTcp {
 
   implicit object CreateIndexDefinitionExecutable
-    extends Executable[CreateIndexDefinition, CreateIndexResponse, CreateIndexResponse] {
+      extends Executable[CreateIndexDefinition, CreateIndexResponse, CreateIndexResponse] {
     override def apply(c: Client, t: CreateIndexDefinition): Future[CreateIndexResponse] = {
       val req = CreateIndexBuilder(t)
       injectFuture(c.admin.indices.create(req, _))

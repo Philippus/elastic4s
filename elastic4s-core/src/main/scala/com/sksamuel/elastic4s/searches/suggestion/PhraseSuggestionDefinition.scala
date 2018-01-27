@@ -21,25 +21,27 @@ case class PhraseSuggestionDefinition(name: String,
                                       tokenLimit: Option[Int] = None,
                                       size: Option[Int] = None,
                                       shardSize: Option[Int] = None,
-                                      text: Option[String] = None
-                                     ) extends SuggestionDefinition {
+                                      text: Option[String] = None)
+    extends SuggestionDefinition {
 
   override def analyzer(analyzer: String): PhraseSuggestionDefinition = copy(analyzer = analyzer.some)
-  override def text(text: String): PhraseSuggestionDefinition = copy(text = text.some)
-  override def size(size: Int): PhraseSuggestionDefinition = copy(size = size.some)
-  override def shardSize(shardSize: Int): PhraseSuggestionDefinition = copy(shardSize = shardSize.some)
+  override def text(text: String): PhraseSuggestionDefinition         = copy(text = text.some)
+  override def size(size: Int): PhraseSuggestionDefinition            = copy(size = size.some)
+  override def shardSize(shardSize: Int): PhraseSuggestionDefinition  = copy(shardSize = shardSize.some)
 
   //  def addCandidateGenerator(generator: CandidateGenerator): PhraseSuggestionDefinition =
   //    copy(candidateGenerator = generator.some)
 
-  def collateParams(collateParams: Map[String, AnyRef]): PhraseSuggestionDefinition = copy(collateParams = collateParams)
+  def collateParams(collateParams: Map[String, AnyRef]): PhraseSuggestionDefinition =
+    copy(collateParams = collateParams)
 
   def collatePrune(collatePrune: Boolean): PhraseSuggestionDefinition = copy(collatePrune = collatePrune.some)
 
   def collateQuery(collateQuery: ScriptDefinition): PhraseSuggestionDefinition = copy(collateQuery = collateQuery.some)
 
   def collateQuery(queryType: String, fieldVariable: String, suggestionVariable: String): PhraseSuggestionDefinition = {
-    val collateQueryAsJson = XContentFactory.jsonBuilder()
+    val collateQueryAsJson = XContentFactory
+      .jsonBuilder()
       .startObject()
       .startObject(queryType)
       .field(s"{{$fieldVariable}}", s"{{$suggestionVariable}}")
@@ -69,6 +71,5 @@ case class PhraseSuggestionDefinition(name: String,
   //    copy(smoothingModel = smoothingModel.some)
 
   def tokenLimit(tokenLimit: Int): PhraseSuggestionDefinition = copy(tokenLimit = tokenLimit.some)
-
 
 }

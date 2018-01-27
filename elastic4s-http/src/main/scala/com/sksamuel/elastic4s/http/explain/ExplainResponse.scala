@@ -3,9 +3,7 @@ package com.sksamuel.elastic4s.http.explain
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 
-case class Explanation(value: Double,
-                       description: String,
-                       details: Seq[Explanation])
+case class Explanation(value: Double, description: String, details: Seq[Explanation])
 
 case class ExplainResponse(@JsonProperty("_index") index: String,
                            @JsonProperty("_type") `type`: String,

@@ -36,7 +36,7 @@ trait GetExecutables {
   }
 
   implicit object MultiGetDefinitionExecutable
-    extends Executable[MultiGetDefinition, MultiGetResponse, RichMultiGetResponse] {
+      extends Executable[MultiGetDefinition, MultiGetResponse, RichMultiGetResponse] {
 
     override def apply(c: Client, t: MultiGetDefinition): Future[RichMultiGetResponse] = {
       val _builder = builder(c, t)
@@ -51,7 +51,6 @@ trait GetExecutables {
       t.realtime.foreach(builder.setRealtime)
       t.refresh.foreach(builder.setRefresh)
       t.gets foreach { get =>
-
         val item = new MultiGetRequest.Item(get.indexAndType.index, get.indexAndType.`type`, get.id)
 
         get.fetchSource.foreach { context =>

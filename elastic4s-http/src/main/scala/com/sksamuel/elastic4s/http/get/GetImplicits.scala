@@ -6,7 +6,16 @@ import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
-import com.sksamuel.elastic4s.http.{ElasticError, EnumConversions, FetchSourceContextQueryParameterFn, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{
+  ElasticError,
+  EnumConversions,
+  FetchSourceContextQueryParameterFn,
+  HttpEntity,
+  HttpExecutable,
+  HttpRequestClient,
+  HttpResponse,
+  ResponseHandler
+}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
@@ -14,9 +23,9 @@ import scala.concurrent.Future
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
-  def size: Int = docs.size
+  def size: Int               = docs.size
 
-  def to[T: HitReader]: IndexedSeq[T] = docs.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T]                        = docs.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
@@ -41,7 +50,7 @@ trait GetImplicits {
     }
 
     override def execute(client: HttpRequestClient, request: MultiGetDefinition): Future[HttpResponse] = {
-      val body = MultiGetBodyBuilder(request).string()
+      val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_mget", Map.empty, entity)
     }
@@ -76,7 +85,8 @@ trait GetImplicits {
 
     override def execute(client: HttpRequestClient, request: GetDefinition): Future[HttpResponse] = {
 
-      val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"
+      val endpoint =
+        s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>

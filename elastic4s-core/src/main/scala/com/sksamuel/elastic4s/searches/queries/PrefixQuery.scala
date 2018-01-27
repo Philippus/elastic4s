@@ -6,9 +6,10 @@ case class PrefixQuery(field: String,
                        prefix: Any,
                        boost: Option[Double] = None,
                        queryName: Option[String] = None,
-                       rewrite: Option[String] = None) extends MultiTermQueryDefinition {
+                       rewrite: Option[String] = None)
+    extends MultiTermQueryDefinition {
 
   def queryName(queryName: String): PrefixQuery = copy(queryName = queryName.some)
-  def boost(boost: Double): PrefixQuery = copy(boost = boost.some)
-  def rewrite(rewrite: String): PrefixQuery = copy(rewrite = rewrite.some)
+  def boost(boost: Double): PrefixQuery         = copy(boost = boost.some)
+  def rewrite(rewrite: String): PrefixQuery     = copy(rewrite = rewrite.some)
 }

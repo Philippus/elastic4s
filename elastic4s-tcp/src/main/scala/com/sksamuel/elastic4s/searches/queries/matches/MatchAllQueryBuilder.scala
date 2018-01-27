@@ -11,7 +11,6 @@ object MatchAllQueryBuilder {
   }
 }
 
-
 object MatchNoneQueryBuilder {
   def apply(q: MatchNoneQueryDefinition): MatchNoneQueryBuilder = {
     val builder = new MatchNoneQueryBuilder()

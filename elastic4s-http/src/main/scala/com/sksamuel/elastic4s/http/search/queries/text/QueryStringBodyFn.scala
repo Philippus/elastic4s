@@ -27,7 +27,7 @@ object QueryStringBodyFn {
 
     if (s.fields.nonEmpty) {
       val fields = s.fields.map {
-        case (name, 0.0D) => name
+        case (name, 0.0D)  => name
         case (name, boost) => s"$name^$boost"
       }.toArray
       builder.array("fields", fields)

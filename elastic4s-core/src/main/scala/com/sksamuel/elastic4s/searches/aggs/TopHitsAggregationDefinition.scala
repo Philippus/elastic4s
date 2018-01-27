@@ -16,7 +16,7 @@ case class TopHitsAggregationDefinition(name: String,
                                         storedFields: Seq[String] = Nil,
                                         subaggs: Seq[AbstractAggregation] = Nil,
                                         metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = TopHitsAggregationDefinition
 
@@ -31,17 +31,18 @@ case class TopHitsAggregationDefinition(name: String,
   def size(size: Int): TopHitsAggregationDefinition = copy(size = size.some)
 
   def sortBy(first: SortDefinition, rest: SortDefinition*): TopHitsAggregationDefinition = sortBy(first +: rest)
-  def sortBy(sorts: Iterable[SortDefinition]): TopHitsAggregationDefinition = copy(sorts = sorts.toSeq)
+  def sortBy(sorts: Iterable[SortDefinition]): TopHitsAggregationDefinition              = copy(sorts = sorts.toSeq)
 
-  def storedField(field: String): TopHitsAggregationDefinition = storedFields(field)
+  def storedField(field: String): TopHitsAggregationDefinition                 = storedFields(field)
   def storedFields(first: String, rest: String*): TopHitsAggregationDefinition = storedFields(first +: rest)
-  def storedFields(fields: Iterable[String]): TopHitsAggregationDefinition = copy(storedFields = fields.toSeq)
+  def storedFields(fields: Iterable[String]): TopHitsAggregationDefinition     = copy(storedFields = fields.toSeq)
 
-  def version(version: Boolean): TopHitsAggregationDefinition = copy(version = version.some)
+  def version(version: Boolean): TopHitsAggregationDefinition         = copy(version = version.some)
   def trackScores(trackScores: Boolean): TopHitsAggregationDefinition = copy(trackScores = trackScores.some)
 
   def script(name: String, script: ScriptDefinition): T = copy(scripts = scripts + (name -> script))
 
-  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = sys.error("Top Hits does not support sub aggregations")
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T =
+    sys.error("Top Hits does not support sub aggregations")
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }

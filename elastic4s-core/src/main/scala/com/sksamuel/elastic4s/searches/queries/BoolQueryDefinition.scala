@@ -9,8 +9,8 @@ case class BoolQueryDefinition(adjustPureNegative: Option[Boolean] = None,
                                filters: Seq[QueryDefinition] = Nil,
                                must: Seq[QueryDefinition] = Nil,
                                not: Seq[QueryDefinition] = Nil,
-                               should: Seq[QueryDefinition] = Nil
-                              ) extends QueryDefinition {
+                               should: Seq[QueryDefinition] = Nil)
+    extends QueryDefinition {
 
   def adjustPureNegative(adjustPureNegative: Boolean): BoolQueryDefinition =
     copy(adjustPureNegative = adjustPureNegative.some)
@@ -19,9 +19,9 @@ case class BoolQueryDefinition(adjustPureNegative: Option[Boolean] = None,
     copy(boost = boost.some)
 
   def filter(first: QueryDefinition, rest: QueryDefinition*): BoolQueryDefinition = filter(first +: rest)
-  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition = copy(filters = queries.toSeq)
+  def filter(queries: Iterable[QueryDefinition]): BoolQueryDefinition             = copy(filters = queries.toSeq)
 
-  def minimumShouldMatch(min: Int): BoolQueryDefinition = copy(minimumShouldMatch = min.toString.some)
+  def minimumShouldMatch(min: Int): BoolQueryDefinition    = copy(minimumShouldMatch = min.toString.some)
   def minimumShouldMatch(min: String): BoolQueryDefinition = copy(minimumShouldMatch = min.some)
 
   /**

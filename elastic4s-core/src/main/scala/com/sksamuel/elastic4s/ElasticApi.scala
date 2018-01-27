@@ -37,7 +37,7 @@ import scala.concurrent.{Await, Future}
 
 // contains all the syntactic definitions
 trait ElasticApi
-  extends ElasticImplicits
+    extends ElasticImplicits
     with AliasesApi
     with AggregationApi
     with AnalyzerApi

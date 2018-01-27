@@ -9,12 +9,12 @@ case class KeyedFiltersAggregationDefinition(name: String,
                                              otherBucketKey: Option[String] = None,
                                              subaggs: Seq[AbstractAggregation] = Nil,
                                              metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
   type T = KeyedFiltersAggregationDefinition
 
-  def otherBucket(otherBucket: Boolean): T = copy(otherBucket = otherBucket.some)
+  def otherBucket(otherBucket: Boolean): T      = copy(otherBucket = otherBucket.some)
   def otherBucketKey(otherBucketKey: String): T = copy(otherBucketKey = otherBucketKey.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }

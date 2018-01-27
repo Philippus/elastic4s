@@ -11,7 +11,7 @@ import scala.concurrent.Future
 
 trait TaskExecutables {
   implicit object ListTasksDefinitionExecutable
-    extends Executable[ListTasksDefinition, ListTasksResponse, ListTasksResponse] {
+      extends Executable[ListTasksDefinition, ListTasksResponse, ListTasksResponse] {
     override def apply(client: Client, d: ListTasksDefinition): Future[ListTasksResponse] = {
       val builder = client.admin().cluster().prepareListTasks(d.nodeIds: _*)
       d.waitForCompletion.foreach(builder.setWaitForCompletion)
@@ -23,7 +23,7 @@ trait TaskExecutables {
   }
 
   implicit object CancelTasksDefinitionExecutable
-    extends Executable[CancelTasksDefinition, CancelTasksResponse, CancelTasksResponse] {
+      extends Executable[CancelTasksDefinition, CancelTasksResponse, CancelTasksResponse] {
     override def apply(client: Client, d: CancelTasksDefinition): Future[CancelTasksResponse] = {
       val builder = client.admin().cluster().prepareCancelTasks(d.nodeIds: _*)
       d.timeout.foreach(duration => builder.setTimeout(TimeValue.timeValueNanos(duration.toNanos)))
@@ -33,7 +33,7 @@ trait TaskExecutables {
   }
 
   implicit object PendingClusterTasksDefinitionExecutable
-    extends Executable[PendingClusterTasksDefinition, PendingClusterTasksResponse, PendingClusterTasksResponse] {
+      extends Executable[PendingClusterTasksDefinition, PendingClusterTasksResponse, PendingClusterTasksResponse] {
     override def apply(client: Client, d: PendingClusterTasksDefinition): Future[PendingClusterTasksResponse] = {
       val builder = client.admin().cluster().preparePendingClusterTasks()
       builder.setLocal(d.local)

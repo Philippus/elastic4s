@@ -16,7 +16,7 @@ import scala.concurrent.Future
 trait UpdateExecutables {
 
   implicit object UpdateByQueryDefinitionExecutable
-    extends Executable[UpdateByQueryDefinition, BulkByScrollResponse, BulkByScrollResponse] {
+      extends Executable[UpdateByQueryDefinition, BulkByScrollResponse, BulkByScrollResponse] {
 
     override def apply(c: Client, t: UpdateByQueryDefinition): Future[BulkByScrollResponse] = {
       val builder = UpdateByQueryAction.INSTANCE.newRequestBuilder(c)
@@ -39,8 +39,7 @@ trait UpdateExecutables {
     }
   }
 
-  implicit object UpdateDefinitionExecutable
-    extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
+  implicit object UpdateDefinitionExecutable extends Executable[UpdateDefinition, UpdateResponse, RichUpdateResponse] {
 
     def fieldsAsXContent(fields: Iterable[FieldValue]): XContentBuilder = {
       val source = XContentFactory.jsonBuilder()

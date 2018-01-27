@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.search.queries.specialized
 
-
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}

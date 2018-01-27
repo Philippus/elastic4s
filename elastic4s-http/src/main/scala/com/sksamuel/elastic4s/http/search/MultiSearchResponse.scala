@@ -25,5 +25,6 @@ case class MultiSearchResponse(items: Seq[MultisearchResponseItem]) {
   }
 
   def to[T: HitReader]: IndexedSeq[T] = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] =
+    successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
 }

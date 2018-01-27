@@ -16,17 +16,20 @@ trait CountImplicits {
 
     override def execute(client: HttpRequestClient, request: CountDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexes.isEmpty && request.types.isEmpty)
-        "/_count"
-      else if (request.indexes.isEmpty)
-        "/_all/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
-      else if (request.types.isEmpty)
-        "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
-      else
-        "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
+      val endpoint =
+        if (request.indexes.isEmpty && request.types.isEmpty)
+          "/_count"
+        else if (request.indexes.isEmpty)
+          "/_all/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
+        else if (request.types.isEmpty)
+          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+        else
+          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types
+            .map(URLEncoder.encode)
+            .mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
-      val body = builder.string()
+      val body    = builder.string()
 
       client.async("GET", endpoint, Map.empty, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }

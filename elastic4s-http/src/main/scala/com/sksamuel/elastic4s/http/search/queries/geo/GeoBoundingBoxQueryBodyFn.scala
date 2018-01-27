@@ -21,10 +21,11 @@ object GeoBoundingBoxQueryBodyFn {
       builder.endObject()
     }
 
-    q.geohash.foreach { case (topleft, bottomright) =>
-      builder.field("top_left", topleft)
-      builder.field("bottom_right", bottomright)
-      builder.endObject()
+    q.geohash.foreach {
+      case (topleft, bottomright) =>
+        builder.field("top_left", topleft)
+        builder.field("bottom_right", bottomright)
+        builder.endObject()
     }
 
     q.geoExecType.map(EnumConversions.geoExecType).foreach(builder.field("type", _))

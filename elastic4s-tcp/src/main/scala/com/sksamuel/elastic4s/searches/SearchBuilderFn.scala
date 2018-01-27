@@ -19,7 +19,8 @@ object SearchBuilderFn {
 
   def apply(client: Client, search: SearchDefinition): SearchRequestBuilder = {
 
-    val builder = client.prepareSearch(search.indexesTypes.indexes: _*)
+    val builder = client
+      .prepareSearch(search.indexesTypes.indexes: _*)
       .setTypes(search.indexesTypes.types: _*)
 
     search.meta.explain.foreach(builder.setExplain)
@@ -59,7 +60,7 @@ object SearchBuilderFn {
 
     if (search.aggs.nonEmpty) {
       search.aggs.map(AggregationBuilderFn.apply).foreach {
-        case Left(agg) => builder.addAggregation(agg)
+        case Left(agg)   => builder.addAggregation(agg)
         case Right(pipe) => builder.addAggregation(pipe)
       }
     }
@@ -80,13 +81,17 @@ object SearchBuilderFn {
     if (search.fields.scriptFields.nonEmpty) {
       import scala.collection.JavaConverters._
       search.fields.scriptFields.foreach { scriptfield =>
-        builder.addScriptField(scriptfield.field,
+        builder.addScriptField(
+          scriptfield.field,
           new Script(
             EnumConversions.scriptType(scriptfield.script.scriptType),
             scriptfield.script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG): String,
             scriptfield.script.script: String,
             scriptfield.script.options.asJava: java.util.Map[String, String],
-            scriptfield.script.params.map { case (key, value) => key -> (value.toString: Object) }.asJava: java.util.Map[String, Object]
+            scriptfield.script.params.map { case (key, value) => key -> (value.toString: Object) }.asJava: java.util.Map[
+              String,
+              Object
+            ]
           )
         )
       }
@@ -95,7 +100,9 @@ object SearchBuilderFn {
     if (search.suggestions.suggs.nonEmpty) {
       val suggest = new SuggestBuilder()
       search.suggestions.globalSuggestionText.foreach(suggest.setGlobalText)
-      search.suggestions.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
+      search.suggestions.suggs.foreach { sugg =>
+        suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg))
+      }
       builder.suggest(suggest)
     }
 

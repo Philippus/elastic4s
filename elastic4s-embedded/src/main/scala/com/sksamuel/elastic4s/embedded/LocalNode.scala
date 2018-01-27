@@ -41,7 +41,8 @@ class RemoteLocalNode(val clusterName: String,
                       transportAddress: String,
                       val pathData: Path,
                       val pathHome: Path,
-                      pathRepo: Path) extends LocalNode {
+                      pathRepo: Path)
+    extends LocalNode {
   require(httpAddress != null, "httpAddress cannot be null")
   require(transportAddress != null, "transportAddress cannot be null")
 
@@ -51,14 +52,15 @@ class RemoteLocalNode(val clusterName: String,
     TcpClient.transport(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   }
 
-  override def http(shutdownNodeOnClose: Boolean): HttpClient = HttpClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
+  override def http(shutdownNodeOnClose: Boolean): HttpClient =
+    HttpClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   override def host: String = httpAddress.split(':').head
-  override def port: Int = httpAddress.split(':').last.toInt
+  override def port: Int    = httpAddress.split(':').last.toInt
 }
 
 // a new locally started internal node
 class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
-  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
+    extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
     with LocalNode
     with Logging {
   super.start()
@@ -80,16 +82,16 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   logger.info(s"LocalNode started @ $ipAndPort")
   logger.info(s"LocalNode data location ${settings.get("path.data")}")
 
-  override val ip: String = ipAndPort.takeWhile(_ != ':')
+  override val ip: String   = ipAndPort.takeWhile(_ != ':')
   override val host: String = ip
-  override val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
+  override val port: Int    = ipAndPort.dropWhile(_ != ':').drop(1).toInt
 
   def stop(removeData: Boolean = false): Any = {
     super.close()
 
     def deleteDir(dir: File): Unit = {
       dir.listFiles().foreach {
-        case file if file.isFile => file.delete()
+        case file if file.isFile      => file.delete()
         case file if file.isDirectory => deleteDir(file)
       }
       dir.delete()
@@ -131,12 +133,11 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
   override def http(shutdownNodeOnClose: Boolean): HttpClient = new HttpClient {
-    private val delegate = HttpClient(s"elasticsearch://$host:$port")
+    private val delegate                   = HttpClient(s"elasticsearch://$host:$port")
     override def client: HttpRequestClient = delegate.client
-    override def close(): Unit = {
+    override def close(): Unit =
       if (shutdownNodeOnClose)
         stop()
-    }
   }
 }
 
@@ -164,9 +165,12 @@ object LocalNode {
     require(settings.get("path.data") != null)
     require(settings.get("path.repo") != null)
 
-    val plugins = List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
+    val plugins =
+      List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
 
-    val mergedSettings = Settings.builder().put(settings)
+    val mergedSettings = Settings
+      .builder()
+      .put(settings)
       .put("http.type", "netty4")
       .put("http.enabled", "true")
       .put("node.max_local_storage_nodes", "10")
@@ -182,19 +186,18 @@ object LocalNode {
   }
 
   // returns the minimum required settings to create a local node
-  def requiredSettings(clusterName: String, homePath: String): Map[String, String] = {
+  def requiredSettings(clusterName: String, homePath: String): Map[String, String] =
     Map(
-      "cluster.name" -> clusterName,
-      "path.home" -> homePath,
+      "cluster.name"                 -> clusterName,
+      "path.home"                    -> homePath,
       "node.max_local_storage_nodes" -> "10",
-      "path.repo" -> Paths.get(homePath).resolve("repo").toString,
-      "path.data" -> Paths.get(homePath).resolve("data").toString
+      "path.repo"                    -> Paths.get(homePath).resolve("repo").toString,
+      "path.data"                    -> Paths.get(homePath).resolve("data").toString
     )
-  }
 
   /**
-  *   Creates a new LocalNode with default settings using the given cluster name and home path.
-  *   Other required directories are created inside the path home folder.
-  */
+    *   Creates a new LocalNode with default settings using the given cluster name and home path.
+    *   Other required directories are created inside the path home folder.
+    */
   def apply(clusterName: String, pathHome: String): InternalLocalNode = apply(requiredSettings(clusterName, pathHome))
 }

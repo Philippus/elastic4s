@@ -10,10 +10,13 @@ import scala.concurrent.Future
 trait ValidateExecutables {
 
   implicit object ValidateDefinitionExecutable
-    extends Executable[ValidateDefinition, ValidateQueryResponse, ValidateQueryResponse] {
+      extends Executable[ValidateDefinition, ValidateQueryResponse, ValidateQueryResponse] {
     override def apply(c: Client, v: ValidateDefinition): Future[ValidateQueryResponse] = {
 
-      val builder = c.admin().indices().prepareValidateQuery(v.indexesAndTypes.indexes: _*)
+      val builder = c
+        .admin()
+        .indices()
+        .prepareValidateQuery(v.indexesAndTypes.indexes: _*)
         .setTypes(v.indexesAndTypes.types: _*)
         .setQuery(QueryBuilderFn(v.query))
       v.rewrite.foreach(builder.setRewrite)

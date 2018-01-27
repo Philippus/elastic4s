@@ -8,8 +8,7 @@ import org.elasticsearch.search.suggest.term.TermSuggestion
 
 import scala.collection.JavaConverters._
 
-case class SuggestResult(suggestions: Seq[SuggestionResult],
-                         suggest: org.elasticsearch.search.suggest.Suggest) {
+case class SuggestResult(suggestions: Seq[SuggestionResult], suggest: org.elasticsearch.search.suggest.Suggest) {
   def suggestion(name: String): SuggestionResult = suggestions.find(_.name == name).get
 }
 
@@ -26,17 +25,17 @@ trait SuggestionResult {
   type E <: SuggestionEntry
   def suggestion: R
   def name: String = suggestion.getName
-  def size: Int = suggestion.getEntries.size
-  def `type`: Int = suggestion.getWriteableType
+  def size: Int    = suggestion.getEntries.size
+  def `type`: Int  = suggestion.getWriteableType
   def entries: Seq[E]
   def entry(term: String): SuggestionEntry = entries.find(_.term == term).get
-  def entryTerms: Seq[String] = entries.map(_.term)
+  def entryTerms: Seq[String]              = entries.map(_.term)
 }
 
 object SuggestionResult {
   def apply(suggestion: Suggest.Suggestion[_ <: Suggestion.Entry[_]]): SuggestionResult = suggestion match {
-    case t: TermSuggestion => TermSuggestionResult(t)
-    case p: PhraseSuggestion => PhraseSuggestionResult(p)
+    case t: TermSuggestion       => TermSuggestionResult(t)
+    case p: PhraseSuggestion     => PhraseSuggestionResult(p)
     case c: CompletionSuggestion => CompletionSuggestionResult(c)
   }
 }
@@ -63,16 +62,15 @@ case class CompletionSuggestionResult(suggestion: CompletionSuggestion) extends 
 trait SuggestionEntry {
   type R <: Suggestion.Entry[_]
   def entry: R
-  def length: Int = entry.getLength
-  def term: String = entry.getText.string
-  def offset: Int = entry.getOffset
-  def isEmpty: Boolean = options.isEmpty
-  def nonEmpty: Boolean = options.nonEmpty
+  def length: Int              = entry.getLength
+  def term: String             = entry.getText.string
+  def offset: Int              = entry.getOffset
+  def isEmpty: Boolean         = options.isEmpty
+  def nonEmpty: Boolean        = options.nonEmpty
   def optionsText: Seq[String] = options.map(_.text)
-  def options: Seq[SuggestionOption] = entry
-    .getOptions
-    .asScala
-    .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option]))
+  def options: Seq[SuggestionOption] =
+    entry.getOptions.asScala
+      .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option]))
 }
 
 case class TermSuggestionEntry(entry: TermSuggestion.Entry) extends SuggestionEntry {
@@ -92,12 +90,11 @@ case class CompletionSuggestionEntry(entry: CompletionSuggestion.Entry) extends 
 case class SuggestionOption(text: String, score: Double, highlighted: Option[String], collateMatch: Boolean)
 
 object SuggestionOption {
-  def apply(option: Suggestion.Entry.Option): SuggestionOption = {
+  def apply(option: Suggestion.Entry.Option): SuggestionOption =
     SuggestionOption(
       option.getText.string,
       option.getScore,
       Option(option.getHighlighted).map(_.string),
       option.collateMatch
     )
-  }
 }

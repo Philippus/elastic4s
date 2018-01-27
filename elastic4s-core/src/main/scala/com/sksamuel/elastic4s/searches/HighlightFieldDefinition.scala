@@ -21,26 +21,26 @@ case class HighlightFieldDefinition(field: String,
                                     requireFieldMatch: Option[Boolean] = None,
                                     matchedFields: Seq[String] = Nil,
                                     phraseLimit: Option[Int] = None,
-                                    options: Option[Map[String, AnyRef]] = None
-                                   ) {
+                                    options: Option[Map[String, AnyRef]] = None) {
 
-  def boundaryChars(chars: Array[Char]): HighlightFieldDefinition = copy(boundaryChars = chars.some)
-  def boundaryChars(chars: String): HighlightFieldDefinition = copy(boundaryChars = chars.toCharArray.some)
+  def boundaryChars(chars: Array[Char]): HighlightFieldDefinition     = copy(boundaryChars = chars.some)
+  def boundaryChars(chars: String): HighlightFieldDefinition          = copy(boundaryChars = chars.toCharArray.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightFieldDefinition = copy(boundaryMaxScan = boundaryMaxScan.some)
 
-  def fragmenter(fragmenter: String): HighlightFieldDefinition = copy(fragmenter = fragmenter.some)
+  def fragmenter(fragmenter: String): HighlightFieldDefinition      = copy(fragmenter = fragmenter.some)
   def fragmentOffset(fragmentOffset: Int): HighlightFieldDefinition = copy(fragmentOffset = fragmentOffset.some)
-  def fragmentSize(fragmentSize: Int): HighlightFieldDefinition = copy(fragmentSize = fragmentSize.some)
+  def fragmentSize(fragmentSize: Int): HighlightFieldDefinition     = copy(fragmentSize = fragmentSize.some)
 
-  def requireFieldMatch(requireFieldMatch: Boolean): HighlightFieldDefinition = copy(requireFieldMatch = requireFieldMatch.some)
+  def requireFieldMatch(requireFieldMatch: Boolean): HighlightFieldDefinition =
+    copy(requireFieldMatch = requireFieldMatch.some)
 
   def forceSource(forceSource: Boolean): HighlightFieldDefinition = copy(forceSource = forceSource.some)
 
   def highlightFilter(highlightFilter: Boolean): HighlightFieldDefinition = copy(highlightFilter = highlightFilter.some)
-  def highlighterType(highlighterType: String): HighlightFieldDefinition = copy(highlighterType = highlighterType.some)
+  def highlighterType(highlighterType: String): HighlightFieldDefinition  = copy(highlighterType = highlighterType.some)
 
   def matchedFields(first: String, rest: String*): HighlightFieldDefinition = matchedFields(first +: rest)
-  def matchedFields(fields: Iterable[String]): HighlightFieldDefinition = copy(matchedFields = fields.toSeq)
+  def matchedFields(fields: Iterable[String]): HighlightFieldDefinition     = copy(matchedFields = fields.toSeq)
 
   def noMatchSize(noMatchSize: Int): HighlightFieldDefinition = copy(noMatchSize = noMatchSize.some)
 
@@ -52,10 +52,10 @@ case class HighlightFieldDefinition(field: String,
 
   def phraseLimit(limit: Int): HighlightFieldDefinition = copy(phraseLimit = limit.some)
 
-  def preTag(tags: String*): HighlightFieldDefinition = preTag(tags)
+  def preTag(tags: String*): HighlightFieldDefinition          = preTag(tags)
   def preTag(tags: Iterable[String]): HighlightFieldDefinition = copy(preTags = tags.toSeq)
 
-  def postTag(tags: String*): HighlightFieldDefinition = postTag(tags)
+  def postTag(tags: String*): HighlightFieldDefinition          = postTag(tags)
   def postTag(tags: Iterable[String]): HighlightFieldDefinition = copy(postTags = tags.toSeq)
 
   def requireFieldMatchScan(req: Boolean): HighlightFieldDefinition = copy(requireFieldMatch = req.some)

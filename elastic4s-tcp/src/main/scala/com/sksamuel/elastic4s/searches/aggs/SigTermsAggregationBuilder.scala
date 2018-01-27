@@ -13,8 +13,12 @@ object SigTermsAggregationBuilder {
     agg.minDocCount.foreach(builder.minDocCount)
     agg.executionHint.foreach(builder.executionHint)
     agg.size.foreach(builder.size)
-    agg.includeExclude.foreach { it => builder.includeExclude(new IncludeExclude(it.include.toArray, it.exclude.toArray)) }
-    agg.includePartition.foreach { it => builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions)) }
+    agg.includeExclude.foreach { it =>
+      builder.includeExclude(new IncludeExclude(it.include.toArray, it.exclude.toArray))
+    }
+    agg.includePartition.foreach { it =>
+      builder.includeExclude(new IncludeExclude(it.partition, it.numPartitions))
+    }
     agg.field.foreach(builder.field)
     agg.shardMinDocCount.foreach(builder.shardMinDocCount)
     agg.shardSize.foreach(builder.shardSize)
@@ -22,7 +26,7 @@ object SigTermsAggregationBuilder {
 
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)
-   // agg.heuristic.foreach(builder.significanceHeuristic)
+    // agg.heuristic.foreach(builder.significanceHeuristic)
     builder
   }
 }

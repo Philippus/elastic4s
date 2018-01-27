@@ -11,30 +11,30 @@ object RangeQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("range").startObject(range.field)
 
     range.gte.foreach {
-      case x: Long => builder.field("gte", x)
-      case x: Double => builder.field("gte", x)
-      case x: String => builder.field("gte", x)
+      case x: Long           => builder.field("gte", x)
+      case x: Double         => builder.field("gte", x)
+      case x: String         => builder.field("gte", x)
       case date: ElasticDate => builder.field("gte", date.show)
     }
 
     range.lte.foreach {
-      case x: Long => builder.field("lte", x)
-      case x: Double => builder.field("lte", x)
-      case x: String => builder.field("lte", x)
+      case x: Long           => builder.field("lte", x)
+      case x: Double         => builder.field("lte", x)
+      case x: String         => builder.field("lte", x)
       case date: ElasticDate => builder.field("lte", date.show)
     }
 
     range.gt.foreach {
-      case x: Long => builder.field("gt", x)
-      case x: Double => builder.field("gt", x)
-      case x: String => builder.field("gt", x)
+      case x: Long           => builder.field("gt", x)
+      case x: Double         => builder.field("gt", x)
+      case x: String         => builder.field("gt", x)
       case date: ElasticDate => builder.field("gt", date.show)
     }
 
     range.lt.foreach {
-      case x: Long => builder.field("lt", x)
-      case x: Double => builder.field("lt", x)
-      case x: String => builder.field("lt", x)
+      case x: Long           => builder.field("lt", x)
+      case x: Double         => builder.field("lt", x)
+      case x: String         => builder.field("lt", x)
       case date: ElasticDate => builder.field("lt", date.show)
     }
 

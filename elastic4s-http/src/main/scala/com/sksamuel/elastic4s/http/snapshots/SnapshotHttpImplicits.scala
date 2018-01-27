@@ -3,7 +3,13 @@ package com.sksamuel.elastic4s.http.snapshots
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.snapshots.{CreateRepository, CreateSnapshot, DeleteSnapshot, GetSnapshots, RestoreSnapshot}
+import com.sksamuel.elastic4s.snapshots.{
+  CreateRepository,
+  CreateSnapshot,
+  DeleteSnapshot,
+  GetSnapshots,
+  RestoreSnapshot
+}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.duration._
@@ -43,8 +49,9 @@ trait SnapshotHttpImplicits {
       val body = XContentFactory.jsonBuilder()
       body.field("type", request.`type`)
       body.startObject("settings")
-      request.settings.foreach { case (key, value) =>
-        body.field(key, value.toString)
+      request.settings.foreach {
+        case (key, value) =>
+          body.field(key, value.toString)
       }
       body.endObject()
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
@@ -85,14 +92,15 @@ trait SnapshotHttpImplicits {
   implicit object GetSnapshotHttpExecutable extends HttpExecutable[GetSnapshots, GetSnapshotResponse] {
     override def execute(client: HttpRequestClient, request: GetSnapshots): Future[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params   = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
       request.verbose.map(_.toString).foreach(params.put("verbose", _))
       client.async("GET", endpoint, params.toMap)
     }
   }
 
-  implicit object RestoreSnapshotDefinitionHttpExecutable extends HttpExecutable[RestoreSnapshot, RestoreSnapshotResponse] {
+  implicit object RestoreSnapshotDefinitionHttpExecutable
+      extends HttpExecutable[RestoreSnapshot, RestoreSnapshotResponse] {
     override def execute(client: HttpRequestClient, request: RestoreSnapshot): Future[HttpResponse] = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 

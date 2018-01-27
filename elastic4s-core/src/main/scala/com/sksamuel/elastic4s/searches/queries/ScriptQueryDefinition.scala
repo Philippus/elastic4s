@@ -6,8 +6,8 @@ import com.sksamuel.exts.OptionImplicits._
 case class ScriptQueryDefinition(script: ScriptDefinition,
                                  boost: Option[Double] = None,
                                  queryName: Option[String] = None)
-  extends QueryDefinition {
+    extends QueryDefinition {
 
   def queryName(queryName: String): ScriptQueryDefinition = copy(queryName = queryName.some)
-  def boost(boost: Double): ScriptQueryDefinition = copy(boost = boost.some)
+  def boost(boost: Double): ScriptQueryDefinition         = copy(boost = boost.some)
 }

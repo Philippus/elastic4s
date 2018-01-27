@@ -10,18 +10,18 @@ import scala.collection.JavaConverters._
 
 case class RichSearchHit(java: SearchHit) extends Hit {
 
-  override def id: String = java.getId
-  override def index: String = java.getIndex
+  override def id: String     = java.getId
+  override def index: String  = java.getIndex
   override def `type`: String = java.getType
-  override def version: Long = java.getVersion
+  override def version: Long  = java.getVersion
 
-  override def score: Float = java.getScore
+  override def score: Float                    = java.getScore
   def nestedIdentity: SearchHit.NestedIdentity = java.getNestedIdentity
-  def shard: SearchShardTarget = java.getShard
+  def shard: SearchShardTarget                 = java.getShard
 
   override def exists = true
 
-  override def sourceAsString: String = StringOption(java.getSourceAsString).getOrElse("")
+  override def sourceAsString: String           = StringOption(java.getSourceAsString).getOrElse("")
   override def sourceAsMap: Map[String, AnyRef] = Option(java.getSourceAsMap).map(_.asScala.toMap).getOrElse(Map.empty)
 
   def explanation: Option[Explanation] = Option(java.getExplanation)
@@ -31,18 +31,19 @@ case class RichSearchHit(java: SearchHit) extends Hit {
 
   def stringValue(fieldName: String): String = field(fieldName).value.toString
 
-  def field(fieldName: String): RichSearchHitField = fields(fieldName)
+  def field(fieldName: String): RichSearchHitField            = fields(fieldName)
   def fieldOpt(fieldName: String): Option[RichSearchHitField] = fields.get(fieldName)
-  def fieldsSeq: Seq[RichSearchHitField] = fields.values.toSeq
+  def fieldsSeq: Seq[RichSearchHitField]                      = fields.values.toSeq
 
-  def fieldValue(fieldName: String): AnyRef = field(fieldName).value
+  def fieldValue(fieldName: String): AnyRef            = field(fieldName).value
   def fieldValueOpt(fieldName: String): Option[AnyRef] = fieldOpt(fieldName).map(_.value)
 
   def highlightFields: Map[String, HighlightField] =
     Option(java.getHighlightFields).map(_.asScala.toMap).getOrElse(Map.empty)
 
   def sortValues: IndexedSeq[AnyRef] = Option(java.getSortValues).map(_.toIndexedSeq).getOrElse(Array.empty[AnyRef])
-  def matchedQueries: IndexedSeq[String] = Option(java.getMatchedQueries).map(_.toIndexedSeq).getOrElse(Array.empty[String])
+  def matchedQueries: IndexedSeq[String] =
+    Option(java.getMatchedQueries).map(_.toIndexedSeq).getOrElse(Array.empty[String])
 
   def innerHits: Map[String, SearchHits] = Option(java.getInnerHits).map(_.asScala.toMap).getOrElse(Map.empty)
 

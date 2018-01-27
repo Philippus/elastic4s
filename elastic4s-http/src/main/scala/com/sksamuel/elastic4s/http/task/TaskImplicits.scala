@@ -23,7 +23,7 @@ case class Task(node: String,
                 private val start_time_in_millis: Long,
                 private val running_time_in_nanos: Long,
                 cancellable: Boolean) {
-  def startTime: FiniteDuration = start_time_in_millis.millis
+  def startTime: FiniteDuration   = start_time_in_millis.millis
   def runningTime: FiniteDuration = running_time_in_nanos.nanos
 }
 
@@ -56,8 +56,9 @@ trait TaskImplicits {
 
     override def execute(client: HttpRequestClient, request: CancelTasksDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.nodeIds.isEmpty) s"/_tasks/cancel"
-      else s"/_tasks/task_id:${request.nodeIds.mkString(",")}/_cancel"
+      val endpoint =
+        if (request.nodeIds.isEmpty) s"/_tasks/cancel"
+        else s"/_tasks/task_id:${request.nodeIds.mkString(",")}/_cancel"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)

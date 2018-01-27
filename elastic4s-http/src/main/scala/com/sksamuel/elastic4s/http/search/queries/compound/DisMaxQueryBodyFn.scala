@@ -15,7 +15,9 @@ object DisMaxQueryBodyFn {
 
     builder.startArray("queries")
     // Workaround for bug where separator is not added with rawValues
-    q.queries.map(QueryBuilderFn.apply).foreach { query => builder.rawValue(query) }
+    q.queries.map(QueryBuilderFn.apply).foreach { query =>
+      builder.rawValue(query)
+    }
     builder.endArray()
 
     builder.endObject()

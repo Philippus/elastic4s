@@ -32,34 +32,34 @@ abstract class AnalyzerDefinition(val name: String) {
   }
 }
 
-case class StopAnalyzerDefinition(override val name: String,
-                                  stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
+case class StopAnalyzerDefinition(override val name: String, stopwords: Iterable[String] = Nil)
+    extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "stop")
     source.array("stopwords", stopwords.toArray)
   }
 
-  def stopwords(stopwords: Iterable[String]): StopAnalyzerDefinition = copy(stopwords = stopwords)
+  def stopwords(stopwords: Iterable[String]): StopAnalyzerDefinition      = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StopAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
 case class StandardAnalyzerDefinition(override val name: String,
                                       stopwords: Iterable[String] = Nil,
-                                      maxTokenLength: Int = 255) extends AnalyzerDefinition(name) {
+                                      maxTokenLength: Int = 255)
+    extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
     source.array("stopwords", stopwords.toArray)
     source.field("max_token_length", maxTokenLength)
   }
 
-  def stopwords(stopwords: Iterable[String]): StandardAnalyzerDefinition = copy(stopwords = stopwords)
+  def stopwords(stopwords: Iterable[String]): StandardAnalyzerDefinition      = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StandardAnalyzerDefinition = copy(stopwords = stopwords +: rest)
-  def maxTokenLength(maxTokenLength: Int): StandardAnalyzerDefinition = copy(maxTokenLength = maxTokenLength)
+  def maxTokenLength(maxTokenLength: Int): StandardAnalyzerDefinition         = copy(maxTokenLength = maxTokenLength)
 }
 
-case class PatternAnalyzerDefinition(override val name: String,
-                                     regex: String,
-                                     lowercase: Boolean = true) extends AnalyzerDefinition(name) {
+case class PatternAnalyzerDefinition(override val name: String, regex: String, lowercase: Boolean = true)
+    extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "pattern")
     source.field("lowercase", lowercase)
@@ -71,7 +71,8 @@ case class PatternAnalyzerDefinition(override val name: String,
 
 case class SnowballAnalyzerDefinition(override val name: String,
                                       lang: String = "English",
-                                      stopwords: Iterable[String] = Nil) extends AnalyzerDefinition(name) {
+                                      stopwords: Iterable[String] = Nil)
+    extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "snowball")
     source.field("language", lang)
@@ -79,20 +80,19 @@ case class SnowballAnalyzerDefinition(override val name: String,
       source.array("stopwords", stopwords.toArray)
   }
 
-  def language(lang: String): SnowballAnalyzerDefinition = copy(lang = lang)
-  def stopwords(stopwords: Iterable[String]): SnowballAnalyzerDefinition = copy(stopwords = stopwords)
+  def language(lang: String): SnowballAnalyzerDefinition                      = copy(lang = lang)
+  def stopwords(stopwords: Iterable[String]): SnowballAnalyzerDefinition      = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): SnowballAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
-case class CustomAnalyzerDefinition(override val name: String,
-                                    tokenizer: Tokenizer,
-                                    filters: Seq[AnalyzerFilter] = Nil) extends AnalyzerDefinition(name) {
+case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokenizer, filters: Seq[AnalyzerFilter] = Nil)
+    extends AnalyzerDefinition(name) {
 
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
     val tokenFilters = filters.collect { case token: TokenFilter => token }
-    val charFilters = filters.collect { case char: CharFilter => char }
+    val charFilters  = filters.collect { case char: CharFilter   => char }
     if (tokenFilters.nonEmpty) {
       source.array("filter", tokenFilters.map(_.name).toArray)
     }
@@ -102,14 +102,13 @@ case class CustomAnalyzerDefinition(override val name: String,
   }
 
   def filters(filters: Seq[AnalyzerFilter]): CustomAnalyzerDefinition = copy(filters = filters)
-  def addFilter(filter: AnalyzerFilter): CustomAnalyzerDefinition = copy(filters = filters :+ filter)
+  def addFilter(filter: AnalyzerFilter): CustomAnalyzerDefinition     = copy(filters = filters :+ filter)
 }
 
 object CustomAnalyzerDefinition {
   def apply(name: String,
             tokenizer: Tokenizer,
             first: AnalyzerFilter,
-            rest: AnalyzerFilter*): CustomAnalyzerDefinition = {
+            rest: AnalyzerFilter*): CustomAnalyzerDefinition =
     CustomAnalyzerDefinition(name, tokenizer, first +: rest)
-  }
 }

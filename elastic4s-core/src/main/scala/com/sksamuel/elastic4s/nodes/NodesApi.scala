@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.nodes
 trait NodesApi {
 
   def nodeInfo(names: Iterable[String]) = NodeInfoDefinition(names.toSeq)
-  def nodeInfo(names: String*) = NodeInfoDefinition(names)
+  def nodeInfo(names: String*)          = NodeInfoDefinition(names)
 
-  def nodeStats(): NodeStatsDefinition = NodeStatsDefinition(Seq.empty)
+  def nodeStats(): NodeStatsDefinition                             = NodeStatsDefinition(Seq.empty)
   def nodeStats(first: String, rest: String*): NodeStatsDefinition = nodeStats(first +: rest)
-  def nodeStats(nodes: Iterable[String]): NodeStatsDefinition = NodeStatsDefinition(nodes.toSeq)
+  def nodeStats(nodes: Iterable[String]): NodeStatsDefinition      = NodeStatsDefinition(nodes.toSeq)
 
 }
 

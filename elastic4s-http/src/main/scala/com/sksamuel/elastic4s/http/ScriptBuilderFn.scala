@@ -23,8 +23,9 @@ object ScriptBuilderFn {
 
     if (script.options.nonEmpty) {
       builder.startObject("options")
-      script.params.foreach { case (key, value) =>
-        builder.field(key, value.toString)
+      script.params.foreach {
+        case (key, value) =>
+          builder.field(key, value.toString)
       }
       builder.endObject()
     }

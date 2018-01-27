@@ -1,7 +1,15 @@
 package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue, ResponseHandler}
+import com.sksamuel.elastic4s.http.{
+  ElasticError,
+  HttpEntity,
+  HttpExecutable,
+  HttpRequestClient,
+  HttpResponse,
+  RefreshPolicyHttpValue,
+  ResponseHandler
+}
 import com.sksamuel.elastic4s.reindex.ReindexDefinition
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
@@ -9,8 +17,7 @@ import org.apache.http.entity.ContentType
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-case class Retries(bulk: Long,
-                   search: Long)
+case class Retries(bulk: Long, search: Long)
 
 case class ReindexFailure()
 
@@ -28,7 +35,7 @@ case class ReindexResponse(took: Long,
                            @JsonProperty("requests_per_second") requestsPerSecond: Long,
                            @JsonProperty("throttled_until_millis") throttledUntilMillis: Long,
                            failures: Seq[ReindexFailure]) {
-  def throttled: Duration = throttledMillis.millis
+  def throttled: Duration      = throttledMillis.millis
   def throttledUntil: Duration = throttledUntilMillis.millis
 }
 
@@ -39,7 +46,7 @@ trait ReindexImplicits {
     override def responseHandler = new ResponseHandler[ReindexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[ReindexResponse](response))
-        case _ => Left(ElasticError.parse(response))
+        case _   => Left(ElasticError.parse(response))
       }
     }
 

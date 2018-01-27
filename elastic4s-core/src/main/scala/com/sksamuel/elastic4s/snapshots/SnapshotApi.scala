@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.snapshots
 trait SnapshotApi {
 
   def getSnapshot(snapshotName: String, repository: String): GetSnapshots = getSnapshots(Seq(snapshotName), repository)
-  def getSnapshots(snapshotNames: Seq[String], repository: String) = GetSnapshots(snapshotNames, repository)
+  def getSnapshots(snapshotNames: Seq[String], repository: String)        = GetSnapshots(snapshotNames, repository)
 
   @deprecated("use getSnapshot(name: String, repository: String)", "6.0.2")
   def getSnapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
@@ -11,7 +11,7 @@ trait SnapshotApi {
   def getSnapshot(names: Iterable[String]): GetSnapshotExpectsFrom = new GetSnapshotExpectsFrom(names)
   class GetSnapshotExpectsFrom(names: Iterable[String]) {
     @deprecated("use getSnapshot(name: String, repository: String)", "6.0.2")
-    def from(repo: String) =  GetSnapshots(names.toSeq, repo)
+    def from(repo: String) = GetSnapshots(names.toSeq, repo)
   }
 
   def createSnapshot(snapshotName: String, repository: String) = CreateSnapshot(snapshotName, repository)

@@ -12,13 +12,13 @@ case class HasChildQueryDefinition(`type`: String,
                                    minChildren: Option[Int] = None,
                                    maxChildren: Option[Int] = None,
                                    queryName: Option[String] = None)
-  extends QueryDefinition {
+    extends QueryDefinition {
 
-  def boost(boost: Double): HasChildQueryDefinition = copy(boost = Some(boost))
+  def boost(boost: Double): HasChildQueryDefinition                    = copy(boost = Some(boost))
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasChildQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def minMaxChildren(min: Int, max: Int): HasChildQueryDefinition = minChildren(min).maxChildren(max)
-  def minChildren(min: Int): HasChildQueryDefinition = copy(minChildren = min.some)
-  def maxChildren(max: Int): HasChildQueryDefinition = copy(maxChildren = max.some)
-  def innerHit(innerHit: InnerHitDefinition): HasChildQueryDefinition = copy(innerHit = Some(innerHit))
-  def queryName(queryName: String): HasChildQueryDefinition = copy(queryName = Some(queryName))
+  def minMaxChildren(min: Int, max: Int): HasChildQueryDefinition      = minChildren(min).maxChildren(max)
+  def minChildren(min: Int): HasChildQueryDefinition                   = copy(minChildren = min.some)
+  def maxChildren(max: Int): HasChildQueryDefinition                   = copy(maxChildren = max.some)
+  def innerHit(innerHit: InnerHitDefinition): HasChildQueryDefinition  = copy(innerHit = Some(innerHit))
+  def queryName(queryName: String): HasChildQueryDefinition            = copy(queryName = Some(queryName))
 }

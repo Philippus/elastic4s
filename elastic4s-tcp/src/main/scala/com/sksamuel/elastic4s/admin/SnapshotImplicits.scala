@@ -1,7 +1,13 @@
 package com.sksamuel.elastic4s.admin
 
 import com.sksamuel.elastic4s.Executable
-import com.sksamuel.elastic4s.snapshots.{CreateRepository, CreateSnapshot, DeleteSnapshot, GetSnapshots, RestoreSnapshot}
+import com.sksamuel.elastic4s.snapshots.{
+  CreateRepository,
+  CreateSnapshot,
+  DeleteSnapshot,
+  GetSnapshots,
+  RestoreSnapshot
+}
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryResponse
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse
 import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotResponse
@@ -15,7 +21,7 @@ import scala.concurrent.Future
 trait SnapshotImplicits {
 
   implicit object DeleteSnapshotDefinitionExecutable
-    extends Executable[DeleteSnapshot, DeleteSnapshotResponse, DeleteSnapshotResponse] {
+      extends Executable[DeleteSnapshot, DeleteSnapshotResponse, DeleteSnapshotResponse] {
     override def apply(c: Client, t: DeleteSnapshot): Future[DeleteSnapshotResponse] = {
       val builder = c.admin().cluster().prepareDeleteSnapshot(t.repositoryName, t.snapshotName)
       injectFuture(builder.execute(_))
@@ -23,7 +29,7 @@ trait SnapshotImplicits {
   }
 
   implicit object RestoreSnapshotDefinitionExecutable
-    extends Executable[RestoreSnapshot, RestoreSnapshotResponse, RestoreSnapshotResponse] {
+      extends Executable[RestoreSnapshot, RestoreSnapshotResponse, RestoreSnapshotResponse] {
     override def apply(c: Client, t: RestoreSnapshot): Future[RestoreSnapshotResponse] = {
       val builder = c.admin().cluster().prepareRestoreSnapshot(t.repositoryName, t.snapshotName)
       injectFuture(builder.execute(_))
@@ -31,7 +37,7 @@ trait SnapshotImplicits {
   }
 
   implicit object CreateSnapshotDefinitionExecutable
-    extends Executable[CreateSnapshot, CreateSnapshotResponse, CreateSnapshotResponse] {
+      extends Executable[CreateSnapshot, CreateSnapshotResponse, CreateSnapshotResponse] {
     override def apply(c: Client, t: CreateSnapshot): Future[CreateSnapshotResponse] = {
       val builder = c.admin().cluster().prepareCreateSnapshot(t.repositoryName, t.snapshotName)
       if (!t.indices.isAll)
@@ -45,7 +51,7 @@ trait SnapshotImplicits {
   }
 
   implicit object GetSnapshotsDefinitionExecutable
-    extends Executable[GetSnapshots, GetSnapshotsResponse, GetSnapshotsResponse] {
+      extends Executable[GetSnapshots, GetSnapshotsResponse, GetSnapshotsResponse] {
     override def apply(c: Client, t: GetSnapshots): Future[GetSnapshotsResponse] = {
       val builder = c.admin().cluster().prepareGetSnapshots(t.repositoryName)
       builder.setSnapshots(t.snapshotNames: _*)
@@ -56,7 +62,7 @@ trait SnapshotImplicits {
   }
 
   implicit object CreateRepositoryDefinitionExecutable
-    extends Executable[CreateRepository, PutRepositoryResponse, PutRepositoryResponse] {
+      extends Executable[CreateRepository, PutRepositoryResponse, PutRepositoryResponse] {
     override def apply(c: Client, t: CreateRepository): Future[PutRepositoryResponse] = {
       val builder = c.admin().cluster().preparePutRepository(t.name)
       builder.setType(t.`type`)

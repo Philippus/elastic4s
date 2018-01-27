@@ -7,7 +7,7 @@ trait AnalyzerFilter {
 }
 
 case class PredefinedTokenFilter(name: String) extends TokenFilter
-case class PredefinedCharFilter(name: String) extends CharFilter
+case class PredefinedCharFilter(name: String)  extends CharFilter
 
 trait AnalyzerFilterDefinition {
   def filterType: String
@@ -29,18 +29,15 @@ case object HtmlStripCharFilter extends CharFilter {
   val name = "html_strip"
 }
 
-case class MappingCharFilter(name: String, mappings: (String, String)*)
-    extends CharFilterDefinition {
+case class MappingCharFilter(name: String, mappings: (String, String)*) extends CharFilterDefinition {
 
   val filterType = "mapping"
 
-  def build(source: XContentBuilder): Unit = {
+  def build(source: XContentBuilder): Unit =
     source.array("mappings", mappings.map({ case (k, v) => s"$k=>$v" }).toArray)
-  }
 }
 
-case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)
-    extends CharFilterDefinition {
+case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String) extends CharFilterDefinition {
 
   val filterType = "pattern_replace"
 
@@ -49,4 +46,3 @@ case class PatternReplaceCharFilter(name: String, pattern: String, replacement: 
     source.field("replacement", replacement)
   }
 }
-

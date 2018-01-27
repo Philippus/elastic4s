@@ -26,4 +26,3 @@ object KeyedFiltersAggregationBuilder {
     builder
   }
 }
-

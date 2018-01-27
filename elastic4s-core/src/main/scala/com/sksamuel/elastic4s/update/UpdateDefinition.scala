@@ -25,7 +25,8 @@ case class UpdateDefinition(indexAndType: IndexAndType,
                             upsertSource: Option[String] = None,
                             upsertFields: Map[String, Any] = Map.empty,
                             documentFields: Map[String, Any] = Map.empty,
-                            documentSource: Option[String] = None) extends BulkCompatibleDefinition {
+                            documentSource: Option[String] = None)
+    extends BulkCompatibleDefinition {
   require(indexAndType != null, "indexAndTypes must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
@@ -34,7 +35,7 @@ case class UpdateDefinition(indexAndType: IndexAndType,
 
   // Sets the object to use for updates when a script is not specified.
   def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = doc(indexable.json(t))
-  def doc(doc: String): UpdateDefinition = copy(documentSource = doc.some)
+  def doc(doc: String): UpdateDefinition                               = copy(documentSource = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
   def doc(fields: (String, Any)*): UpdateDefinition = doc(fields.toMap)
@@ -67,8 +68,7 @@ case class UpdateDefinition(indexAndType: IndexAndType,
 
   def fetchSource(fetch: Boolean): UpdateDefinition = copy(fetchSource = FetchSourceContext(fetch).some)
 
-  def fetchSource(includes: Iterable[String],
-                  excludes: Iterable[String]): UpdateDefinition =
+  def fetchSource(includes: Iterable[String], excludes: Iterable[String]): UpdateDefinition =
     copy(fetchSource = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def parent(parent: String): UpdateDefinition = copy(parent = parent.some)
@@ -76,9 +76,9 @@ case class UpdateDefinition(indexAndType: IndexAndType,
   def routing(routing: String): UpdateDefinition = copy(routing = routing.some)
 
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
-  def refresh(refresh: String): UpdateDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
+  def refresh(refresh: String): UpdateDefinition        = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): UpdateDefinition = copy(refresh = refresh.some)
-  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately                                = refresh(RefreshPolicy.IMMEDIATE)
 
   def retryOnConflict(retryOnConflict: Int): UpdateDefinition = copy(retryOnConflict = retryOnConflict.some)
 
@@ -88,7 +88,7 @@ case class UpdateDefinition(indexAndType: IndexAndType,
   // If the document does not already exist, the script will be executed instead.
   def scriptedUpsert(upsert: Boolean): UpdateDefinition = copy(scriptedUpsert = upsert.some)
 
-  def source[T: Indexable](t: T): UpdateDefinition = doc(t)
+  def source[T: Indexable](t: T): UpdateDefinition         = doc(t)
   def sourceAsUpsert[T: Indexable](t: T): UpdateDefinition = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): UpdateDefinition = copy(timeout = duration.some)
@@ -103,10 +103,10 @@ case class UpdateDefinition(indexAndType: IndexAndType,
   def upsert(iterable: Iterable[(String, Any)]): UpdateDefinition = upsert(iterable.toMap)
 
   def upsert[T](t: T)(implicit indexable: Indexable[T]): UpdateDefinition = upsert(indexable.json(t))
-  def upsert(doc: String): UpdateDefinition = copy(upsertSource = doc.some)
+  def upsert(doc: String): UpdateDefinition                               = copy(upsertSource = doc.some)
 
   def versionType(versionType: String): UpdateDefinition = copy(versionType = versionType.some)
-  def version(version: Long): UpdateDefinition = copy(version = version.some)
+  def version(version: Long): UpdateDefinition           = copy(version = version.some)
   def waitForActiveShards(waitForActiveShards: Int): UpdateDefinition =
     copy(waitForActiveShards = waitForActiveShards.some)
 }

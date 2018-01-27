@@ -17,40 +17,41 @@ case class IndexDefinition(indexAndType: IndexAndType,
                            version: Option[Long] = None,
                            versionType: Option[VersionType] = None,
                            fields: Seq[FieldValue] = Nil,
-                           source: Option[String] = None) extends BulkCompatibleDefinition {
+                           source: Option[String] = None)
+    extends BulkCompatibleDefinition {
   require(indexAndType != null, "index must not be null or empty")
 
-  def doc(json: String): IndexDefinition = source(json)
+  def doc(json: String): IndexDefinition       = source(json)
   def doc[T: Indexable](t: T): IndexDefinition = source(t)
 
-  def source(json: String): IndexDefinition = copy(source = json.some)
+  def source(json: String): IndexDefinition                              = copy(source = json.some)
   def source[T](t: T)(implicit indexable: Indexable[T]): IndexDefinition = copy(source = indexable.json(t).some)
 
-  def id(id: String): IndexDefinition = withId(id)
+  def id(id: String): IndexDefinition     = withId(id)
   def withId(id: String): IndexDefinition = copy(id = id.some)
 
   def pipeline(pipeline: String): IndexDefinition = copy(pipeline = pipeline.some)
-  def parent(parent: String): IndexDefinition = copy(parent = parent.some)
+  def parent(parent: String): IndexDefinition     = copy(parent = parent.some)
 
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
-  def refresh(refresh: String): IndexDefinition = copy(refresh = RefreshPolicy.valueOf(refresh).some)
+  def refresh(refresh: String): IndexDefinition        = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): IndexDefinition = copy(refresh = refresh.some)
 
   def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
 
   def routing(routing: String): IndexDefinition = copy(routing = routing.some)
 
-  def version(version: Long): IndexDefinition = copy(version = version.some)
+  def version(version: Long): IndexDefinition                = copy(version = version.some)
   def versionType(versionType: VersionType): IndexDefinition = copy(versionType = versionType.some)
 
-  def timeout(timeout: String): IndexDefinition = copy(timeout = timeout.some)
+  def timeout(timeout: String): IndexDefinition          = copy(timeout = timeout.some)
   def timeout(duration: FiniteDuration): IndexDefinition = copy(timeout = (duration.toSeconds + "s").some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexDefinition = copy(createOnly = createOnly.some)
 
-  def fields(_fields: (String, Any)*): IndexDefinition = fields(_fields.toMap)
+  def fields(_fields: (String, Any)*): IndexDefinition          = fields(_fields.toMap)
   def fields(_fields: Iterable[(String, Any)]): IndexDefinition = fields(_fields.toMap)
-  def fields(fields: Map[String, Any]): IndexDefinition = copy(fields = FieldsMapper.mapFields(fields))
-  def fieldValues(fields: FieldValue*): IndexDefinition = copy(fields = fields)
+  def fields(fields: Map[String, Any]): IndexDefinition         = copy(fields = FieldsMapper.mapFields(fields))
+  def fieldValues(fields: FieldValue*): IndexDefinition         = copy(fields = fields)
 }

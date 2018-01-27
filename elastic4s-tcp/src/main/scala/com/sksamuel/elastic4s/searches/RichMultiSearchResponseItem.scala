@@ -8,15 +8,15 @@ case class RichMultiSearchResponseItem(item: MultiSearchResponse.Item) {
   def isFailure: Boolean = item.isFailure
   def isSuccess: Boolean = !isFailure
 
-  def failure: Throwable = item.getFailure
+  def failure: Throwable            = item.getFailure
   def failureOpt: Option[Throwable] = Option(item.getFailure)
 
-  def failureMessage: String = item.getFailureMessage
+  def failureMessage: String            = item.getFailureMessage
   def failureMessageOpt: Option[String] = Option(item.getFailureMessage)
 
-  def response: RichSearchResponse = RichSearchResponse(item.getResponse)
+  def response: RichSearchResponse            = RichSearchResponse(item.getResponse)
   def responseOpt: Option[RichSearchResponse] = Option(item.getResponse).map(RichSearchResponse.apply)
 
-  def to[T: HitReader]: IndexedSeq[T] = response.to[T]
+  def to[T: HitReader]: IndexedSeq[T]                        = response.to[T]
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = response.safeTo[T]
 }

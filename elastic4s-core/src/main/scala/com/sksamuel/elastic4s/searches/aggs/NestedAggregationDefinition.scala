@@ -4,11 +4,10 @@ case class NestedAggregationDefinition(name: String,
                                        path: String,
                                        subaggs: Seq[AbstractAggregation] = Nil,
                                        metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = NestedAggregationDefinition
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }
-

@@ -8,7 +8,7 @@ import com.sksamuel.exts.StringOption
 
 sealed trait SubAggCollectionMode
 object SubAggCollectionMode {
-  case object DepthFirst extends SubAggCollectionMode
+  case object DepthFirst   extends SubAggCollectionMode
   case object BreadthFirst extends SubAggCollectionMode
 }
 
@@ -29,23 +29,25 @@ case class TermsAggregationDefinition(name: String,
                                       includePartition: Option[IncludePartition] = None,
                                       subaggs: Seq[AbstractAggregation] = Nil,
                                       metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = TermsAggregationDefinition
 
-  def field(field: String): TermsAggregationDefinition = copy(field = field.some)
+  def field(field: String): TermsAggregationDefinition             = copy(field = field.some)
   def script(script: ScriptDefinition): TermsAggregationDefinition = copy(script = script.some)
-  def missing(missing: AnyRef): TermsAggregationDefinition = copy(missing = missing.some)
-  def size(size: Int): TermsAggregationDefinition = copy(size = size.some)
-  def minDocCount(min: Long): TermsAggregationDefinition = copy(minDocCount = min.some)
-  def showTermDocCountError(showError: Boolean): TermsAggregationDefinition = copy(showTermDocCountError = showError.some)
-  def valueType(valueType: ValueType): TermsAggregationDefinition = copy(valueType = valueType.some)
-  def executionHint(hint: String): TermsAggregationDefinition = copy(executionHint = hint.some)
-  def shardMinDocCount(min: Long): TermsAggregationDefinition = copy(shardMinDocCount = min.some)
+  def missing(missing: AnyRef): TermsAggregationDefinition         = copy(missing = missing.some)
+  def size(size: Int): TermsAggregationDefinition                  = copy(size = size.some)
+  def minDocCount(min: Long): TermsAggregationDefinition           = copy(minDocCount = min.some)
+  def showTermDocCountError(showError: Boolean): TermsAggregationDefinition =
+    copy(showTermDocCountError = showError.some)
+  def valueType(valueType: ValueType): TermsAggregationDefinition         = copy(valueType = valueType.some)
+  def executionHint(hint: String): TermsAggregationDefinition             = copy(executionHint = hint.some)
+  def shardMinDocCount(min: Long): TermsAggregationDefinition             = copy(shardMinDocCount = min.some)
   def collectMode(mode: SubAggCollectionMode): TermsAggregationDefinition = copy(collectMode = mode.some)
 
   def order(orders: Iterable[TermsOrder]): TermsAggregationDefinition = copy(orders = orders.toSeq)
-  def order(firstOrder: TermsOrder, restOrder: TermsOrder*): TermsAggregationDefinition = copy(orders = firstOrder +: restOrder)
+  def order(firstOrder: TermsOrder, restOrder: TermsOrder*): TermsAggregationDefinition =
+    copy(orders = firstOrder +: restOrder)
 
   def shardSize(shardSize: Int): TermsAggregationDefinition = copy(shardSize = shardSize.some)
 
@@ -61,16 +63,14 @@ case class TermsAggregationDefinition(name: String,
   def includeExclude(include: String, exclude: String): TermsAggregationDefinition =
     copy(includeExclude = IncludeExclude(StringOption(include).toSeq, StringOption(exclude).toSeq).some)
 
-  def includeExclude(include: Iterable[String], exclude: Iterable[String]): TermsAggregationDefinition = {
+  def includeExclude(include: Iterable[String], exclude: Iterable[String]): TermsAggregationDefinition =
     copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
-  }
 
-  def includePartition(partition: Int, numPartitions: Int): TermsAggregationDefinition = {
+  def includePartition(partition: Int, numPartitions: Int): TermsAggregationDefinition =
     copy(includePartition = IncludePartition(partition, numPartitions).some)
-  }
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }
 
 case class TermsOrder(name: String, asc: Boolean = true)

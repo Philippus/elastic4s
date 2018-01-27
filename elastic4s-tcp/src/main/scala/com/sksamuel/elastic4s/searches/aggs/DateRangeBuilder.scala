@@ -19,19 +19,18 @@ object DateRangeBuilder {
 
     agg.unboundedFrom.foreach {
       case (Some(key), date) => builder.addUnboundedFrom(key, date.show)
-      case (None, date) => builder.addUnboundedFrom(date.show)
+      case (None, date)      => builder.addUnboundedFrom(date.show)
     }
 
     agg.unboundedTo.foreach {
       case (Some(key), date) => builder.addUnboundedTo(key, date.show)
-      case (None, date) => builder.addUnboundedTo(date.show)
+      case (None, date)      => builder.addUnboundedTo(date.show)
     }
 
     agg.ranges.foreach {
       case (Some(key), from: ElasticDate, to: ElasticDate) => builder.addRange(key, from.show, to.show)
-      case (None, from: ElasticDate, to: ElasticDate) => builder.addRange(from.show, to.show)
+      case (None, from: ElasticDate, to: ElasticDate)      => builder.addRange(from.show, to.show)
     }
-
 
     SubAggsFn(builder, agg.subaggs)
     if (agg.metadata.nonEmpty) builder.setMetaData(agg.metadata.asJava)

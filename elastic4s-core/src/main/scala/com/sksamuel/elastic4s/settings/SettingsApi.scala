@@ -7,16 +7,16 @@ import com.sksamuel.exts.OptionImplicits._
 trait SettingsApi {
 
   def getSettings(index: String, indexes: String*): GetSettingsDefinition = getSettings(index +: indexes)
-  def getSettings(indexes: Indexes): GetSettingsDefinition = GetSettingsDefinition(indexes)
+  def getSettings(indexes: Indexes): GetSettingsDefinition                = GetSettingsDefinition(indexes)
 
   def updateSettings(index: String, indexes: String*): UpdateSettingsDefinition = updateSettings(index +: indexes)
-  def updateSettings(indexes: Indexes): UpdateSettingsDefinition = UpdateSettingsDefinition(indexes)
+  def updateSettings(indexes: Indexes): UpdateSettingsDefinition                = UpdateSettingsDefinition(indexes)
 
-  def updateSettings(indexes: Indexes, settings: Map[String, String]) = UpdateSettingsDefinition(indexes, settings = settings)
+  def updateSettings(indexes: Indexes, settings: Map[String, String]) =
+    UpdateSettingsDefinition(indexes, settings = settings)
 }
 
-case class GetSettingsDefinition(indexes: Indexes,
-                                 options: Option[IndicesOptions] = None) {
+case class GetSettingsDefinition(indexes: Indexes, options: Option[IndicesOptions] = None) {
   def options(options: IndicesOptions): GetSettingsDefinition = copy(options = options.some)
 }
 
@@ -43,7 +43,8 @@ case class UpdateSettingsDefinition(indices: Indexes,
   // replace the settings with this map
   def set(map: Map[String, String]): UpdateSettingsDefinition = copy(settings = map)
 
-  def preserveExisting(preserveExisting: Boolean): UpdateSettingsDefinition = copy(preserveExisting = preserveExisting.some)
+  def preserveExisting(preserveExisting: Boolean): UpdateSettingsDefinition =
+    copy(preserveExisting = preserveExisting.some)
 
   def options(options: IndicesOptions): UpdateSettingsDefinition = copy(options = options.some)
 }

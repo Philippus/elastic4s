@@ -22,10 +22,9 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-class ScrollPublisher private[streams](client: HttpClient,
-                                       search: SearchDefinition,
-                                       maxItems: Long)
-                                      (implicit actorRefFactory: ActorRefFactory) extends Publisher[SearchHit] {
+class ScrollPublisher private[streams] (client: HttpClient, search: SearchDefinition, maxItems: Long)(
+  implicit actorRefFactory: ActorRefFactory
+) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
   override def subscribe(s: Subscriber[_ >: SearchHit]): Unit = {
@@ -40,21 +39,20 @@ class ScrollPublisher private[streams](client: HttpClient,
   }
 }
 
-class ScrollSubscription(client: HttpClient, query: SearchDefinition, s: Subscriber[_ >: SearchHit], max: Long)
-                        (implicit actorRefFactory: ActorRefFactory) extends Subscription {
+class ScrollSubscription(client: HttpClient, query: SearchDefinition, s: Subscriber[_ >: SearchHit], max: Long)(
+  implicit actorRefFactory: ActorRefFactory
+) extends Subscription {
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
 
-  private[streams] def ready(): Unit = {
+  private[streams] def ready(): Unit =
     actor ! PublishActor.Ready
-  }
 
-  override def cancel(): Unit = {
+  override def cancel(): Unit =
     // Rule 3.5: this call is idempotent, is fast, and thread safe
     // Rule 3.7: after cancelling, further calls should be no-ops, which is handled by the actor
     // we don't mind the subscriber having any pending requests before cancellation is processed
     actor ! PoisonPill
-  }
 
   override def request(n: Long): Unit = {
     // Rule 3.9
@@ -69,16 +67,16 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: HttpClient,
-                   query: SearchDefinition,
-                   s: Subscriber[_ >: SearchHit],
-                   max: Long) extends Actor with Stash with Logging {
+class PublishActor(client: HttpClient, query: SearchDefinition, s: Subscriber[_ >: SearchHit], max: Long)
+    extends Actor
+    with Stash
+    with Logging {
 
   import com.sksamuel.elastic4s.http.ElasticDsl._
   import context.dispatcher
 
-  private var scrollId: String = _
-  private var processed: Long = 0
+  private var scrollId: String                = _
+  private var processed: Long                 = 0
   private val queue: mutable.Queue[SearchHit] = mutable.Queue.empty
 
   // Parse the keep alive setting out of the original query.
@@ -116,9 +114,11 @@ class PublishActor(client: HttpClient,
     // we will send a request for more while sending what we can now
     case PublishActor.Request(n) if n > queue.size =>
       val toRequest = n - queue.size
-      logger.debug(s"Request for $n items, but only ${queue.size} available; sending ${queue.size} now, requesting $toRequest from upstream")
+      logger.debug(
+        s"Request for $n items, but only ${queue.size} available; sending ${queue.size} now, requesting $toRequest from upstream"
+      )
       Option(scrollId) match {
-        case None => client.execute(query).onComplete(result => self ! result)
+        case None     => client.execute(query).onComplete(result => self ! result)
         case Some(id) => client.execute(searchScroll(id) keepAlive keepAlive).onComplete(result => self ! result)
       }
       // we switch state while we're waiting on elasticsearch, so we know not to send another request to ES

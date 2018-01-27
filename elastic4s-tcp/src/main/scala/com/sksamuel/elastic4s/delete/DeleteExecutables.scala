@@ -13,7 +13,7 @@ import scala.concurrent.Future
 trait DeleteExecutables {
 
   implicit object DeleteByIdDefinitionExecutable
-    extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
+      extends Executable[DeleteByIdDefinition, DeleteResponse, DeleteResponse] {
 
     def builder(c: Client, t: DeleteByIdDefinition): DeleteRequestBuilder = {
       val builder = c.prepareDelete().setIndex(t.indexType.index).setId(t.id.toString).setType(t.indexType.`type`)
@@ -26,13 +26,12 @@ trait DeleteExecutables {
       builder
     }
 
-    override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] = {
+    override def apply(c: Client, t: DeleteByIdDefinition): Future[DeleteResponse] =
       injectFuture(builder(c, t).execute(_))
-    }
   }
 
   implicit object DeleteByQueryDefinitionExecutable
-    extends Executable[DeleteByQueryDefinition, BulkByScrollResponse, BulkByScrollResponse] {
+      extends Executable[DeleteByQueryDefinition, BulkByScrollResponse, BulkByScrollResponse] {
 
     def populate(builder: DeleteByQueryRequestBuilder, d: DeleteByQueryDefinition): Unit = {
       builder.source(d.indexesAndTypes.indexes: _*)

@@ -10,7 +10,10 @@ case class DeleteResponse(@JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_id") id: String,
                           @JsonProperty("_version") version: Long,
                           result: String) {
-  @deprecated("this is no longer included in the json result from elasticsearch, use result which has values of not_found and deleted", "6.0.0")
+  @deprecated(
+    "this is no longer included in the json result from elasticsearch, use result which has values of not_found and deleted",
+    "6.0.0"
+  )
   def found: Boolean = result == "deleted"
-  def ref = DocumentRef(index, `type`, id)
+  def ref            = DocumentRef(index, `type`, id)
 }

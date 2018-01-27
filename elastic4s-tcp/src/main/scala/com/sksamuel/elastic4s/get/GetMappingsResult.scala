@@ -21,9 +21,10 @@ case class GetMappingsResult(original: GetMappingsResponse) {
     propertiesFor(indexAndType).get("field").asInstanceOf[util.Map[String, _]].asScala.toMap
 
   // returns mappings of index name to a map of types to mapping data
-  def mappings: Map[String, Map[String, MappingMetaData]] = {
+  def mappings: Map[String, Map[String, MappingMetaData]] =
     original.mappings.iterator.asScala.map { x =>
-      x.key -> x.value.iterator.asScala.map { y => y.key -> y.value }.toMap
+      x.key -> x.value.iterator.asScala.map { y =>
+        y.key -> y.value
+      }.toMap
     }.toMap
-  }
 }

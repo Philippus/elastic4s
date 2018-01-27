@@ -30,7 +30,7 @@ case class UpdateByQueryDefinition(indexesAndTypes: IndexesAndTypes,
     proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryDefinition = copy(refresh = refresh.some)
-  def refreshImmediately = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately                                       = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): UpdateByQueryDefinition = copy(scrollSize = scrollSize.some)
 
@@ -59,4 +59,3 @@ case class UpdateByQueryDefinition(indexesAndTypes: IndexesAndTypes,
 object UpdateByQueryDefinition {
   def apply(indexes: Indexes, query: QueryDefinition) = new UpdateByQueryDefinition(indexes.toIndexesAndTypes, query)
 }
-

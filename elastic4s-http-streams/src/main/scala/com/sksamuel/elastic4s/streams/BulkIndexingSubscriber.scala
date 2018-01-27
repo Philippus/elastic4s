@@ -23,10 +23,12 @@ import scala.util.{Failure, Success}
   * @param builder used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
-class BulkIndexingSubscriber[T] private[streams](client: HttpClient,
-                                                 builder: RequestBuilder[T],
-                                                 config: SubscriberConfig[T])
-                                                (implicit actorRefFactory: ActorRefFactory) extends Subscriber[T] {
+class BulkIndexingSubscriber[T] private[streams] (
+  client: HttpClient,
+  builder: RequestBuilder[T],
+  config: SubscriberConfig[T]
+)(implicit actorRefFactory: ActorRefFactory)
+    extends Subscriber[T] {
 
   private var actor: ActorRef = _
 
@@ -53,13 +55,11 @@ class BulkIndexingSubscriber[T] private[streams](client: HttpClient,
     actor ! t
   }
 
-  override def onComplete(): Unit = {
+  override def onComplete(): Unit =
     actor ! BulkActor.Completed
-  }
 
-  def close(): Unit = {
+  def close(): Unit =
     actor ! PoisonPill
-  }
 }
 
 object BulkActor {
@@ -82,7 +82,8 @@ object BulkActor {
 class BulkActor[T](client: HttpClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
-                   config: SubscriberConfig[T]) extends Actor {
+                   config: SubscriberConfig[T])
+    extends Actor {
 
   import com.sksamuel.elastic4s.http.ElasticDsl._
   import context.{dispatcher, system}
@@ -126,9 +127,8 @@ class BulkActor[T](client: HttpClient,
 
   // requests our initial starting batches, we can request them all at once, and then just request a new batch
   // each time we complete a batch
-  override def preStart(): Unit = {
+  override def preStart(): Unit =
     self ! BulkActor.Request(config.batchSize * config.concurrentRequests)
-  }
 
   def receive: PartialFunction[Any, Unit] = {
     case t: Throwable => handleError(t)
@@ -155,8 +155,9 @@ class BulkActor[T](client: HttpClient,
       confirmed = confirmed + msg.items.size
       msg.items
         .zip(msg.originals)
-        .foreach { case (item, original) =>
-          config.listener.onAck(item, original)
+        .foreach {
+          case (item, original) =>
+            config.listener.onAck(item, original)
         }
       checkCompleteOrRequestNext(msg.items.size)
 
@@ -164,8 +165,9 @@ class BulkActor[T](client: HttpClient,
       failed = failed + msg.items.size
       msg.items
         .zip(msg.originals)
-        .foreach { case (item, original) =>
-          config.listener.onFailure(item, original)
+        .foreach {
+          case (item, original) =>
+            config.listener.onFailure(item, original)
         }
       checkCompleteOrRequestNext(msg.items.size)
 
@@ -180,10 +182,9 @@ class BulkActor[T](client: HttpClient,
 
   // need to check if we're completed, because if we are then this might be the last pending conf
   // and if it is, we can shutdown.
-  private def checkCompleteOrRequestNext(n: Int): Unit = {
+  private def checkCompleteOrRequestNext(n: Int): Unit =
     if (completed) shutdownIfAllConfirmed()
     else self ! BulkActor.Request(n)
-  }
 
   // Stops the schedulers if they exist and invoke final functions
   override def postStop(): Unit = {
@@ -194,11 +195,10 @@ class BulkActor[T](client: HttpClient,
     config.completionFn()
   }
 
-  private def shutdownIfAllConfirmed(): Unit = {
+  private def shutdownIfAllConfirmed(): Unit =
     if (confirmed + failed == sent) {
       context.stop(self)
     }
-  }
 
   private def send(req: BulkDefinition, originals: Seq[T], attempts: Int): Unit = {
     require(req.requests.size == originals.size, "Requests size does not match originals size")
@@ -213,19 +213,18 @@ class BulkActor[T](client: HttpClient,
     def getRetryDef(resp: BulkResponse): (BulkDefinition, Seq[T]) = {
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
 
-      val failureIds = resp.failures.map(_.itemId).toSet
+      val failureIds     = resp.failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
-      val failedReqs = filterByIndexes(req.requests, failureIds)
+      val failedReqs     = filterByIndexes(req.requests, failureIds)
 
       (BulkDefinition(failedReqs).refresh(policy), retryOriginals)
     }
 
     val f = client.execute(req)
     f.onComplete {
-      case Failure(e) => self ! e
+      case Failure(e)             => self ! e
       case Success(Left(failure)) => self ! new RuntimeException(failure.toString)
       case Success(Right(success)) =>
-
         if (success.result.errors) {
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
@@ -254,7 +253,7 @@ class BulkActor[T](client: HttpClient,
   private def index(): Unit = {
 
     def bulkDef: BulkDefinition = {
-      val defs = buffer.map(t => builder.request(t))
+      val defs   = buffer.map(t => builder.request(t))
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
       BulkDefinition(defs).refresh(policy)
     }

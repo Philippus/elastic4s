@@ -7,7 +7,7 @@ case class MultiGetDefinition(gets: Seq[GetDefinition],
                               realtime: Option[Boolean] = None,
                               refresh: Option[Boolean] = None) {
 
-  def realtime(realtime: Boolean): MultiGetDefinition = copy(realtime = realtime.some)
-  def refresh(refresh: Boolean): MultiGetDefinition = copy(refresh = refresh.some)
+  def realtime(realtime: Boolean): MultiGetDefinition    = copy(realtime = realtime.some)
+  def refresh(refresh: Boolean): MultiGetDefinition      = copy(refresh = refresh.some)
   def preference(preference: String): MultiGetDefinition = copy(preference = preference.some)
 }

@@ -23,22 +23,26 @@ object GeoDistanceAggregationBuilder {
     agg.missing.foreach(builder.autofield("missing", _))
     agg.keyed.foreach(builder.field("keyed", _))
 
-    agg.distanceType.map {
-      case GeoDistance.Arc => "arc"
-      case GeoDistance.Plane => "plane"
-    }.foreach(builder.field("distance_type", _))
+    agg.distanceType
+      .map {
+        case GeoDistance.Arc   => "arc"
+        case GeoDistance.Plane => "plane"
+      }
+      .foreach(builder.field("distance_type", _))
 
-    agg.unit.map {
-      case INCH => "in"
-      case YARD => "yd"
-      case FEET => "ft"
-      case KILOMETERS => "km"
-      case NAUTICALMILES => "nmi"
-      case MILLIMETERS => "mm"
-      case CENTIMETERS => "cm"
-      case MILES => "mi"
-      case METERS => "m"
-    }.foreach(builder.field("unit", _))
+    agg.unit
+      .map {
+        case INCH          => "in"
+        case YARD          => "yd"
+        case FEET          => "ft"
+        case KILOMETERS    => "km"
+        case NAUTICALMILES => "nmi"
+        case MILLIMETERS   => "mm"
+        case CENTIMETERS   => "cm"
+        case MILES         => "mi"
+        case METERS        => "m"
+      }
+      .foreach(builder.field("unit", _))
 
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))

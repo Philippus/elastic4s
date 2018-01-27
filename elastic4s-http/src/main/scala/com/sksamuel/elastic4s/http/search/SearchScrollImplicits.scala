@@ -1,7 +1,14 @@
 package com.sksamuel.elastic4s.http.search
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{
+  ElasticError,
+  HttpEntity,
+  HttpExecutable,
+  HttpRequestClient,
+  HttpResponse,
+  ResponseHandler
+}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
 import com.sksamuel.exts.OptionImplicits._
@@ -20,12 +27,13 @@ trait SearchScrollImplicits {
   implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
 
     override def responseHandler = new ResponseHandler[ClearScrollResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, ClearScrollResponse] = response.statusCode match {
-        case 200 =>
-          Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
-        case _ =>
-          Left(ElasticError.parse(response))
-      }
+      override def handle(response: HttpResponse): Either[ElasticError, ClearScrollResponse] =
+        response.statusCode match {
+          case 200 =>
+            Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
+          case _ =>
+            Left(ElasticError.parse(response))
+        }
     }
 
     override def execute(client: HttpRequestClient, request: ClearScrollDefinition): Future[HttpResponse] = {
@@ -45,7 +53,7 @@ trait SearchScrollImplicits {
     override def responseHandler = new ResponseHandler[SearchResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, SearchResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[SearchResponse](response))
-        case _ => Left(ElasticError.parse(response))
+        case _   => Left(ElasticError.parse(response))
       }
     }
 

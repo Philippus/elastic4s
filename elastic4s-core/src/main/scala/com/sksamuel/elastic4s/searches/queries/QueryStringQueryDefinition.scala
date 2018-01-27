@@ -24,18 +24,17 @@ case class QueryStringQueryDefinition(query: String,
                                       queryName: Option[String] = None,
                                       rewrite: Option[String] = None,
                                       splitOnWhitespace: Option[Boolean] = None,
-                                      tieBreaker: Option[Double] = None
-                                     )
-  extends QueryDefinition {
+                                      tieBreaker: Option[Double] = None)
+    extends QueryDefinition {
 
   def rewrite(rewrite: String): QueryStringQueryDefinition = copy(rewrite = rewrite.some)
-  def boost(boost: Double): QueryStringQueryDefinition = copy(boost = boost.some)
+  def boost(boost: Double): QueryStringQueryDefinition     = copy(boost = boost.some)
 
-  def analyzer(a: String): QueryStringQueryDefinition = copy(analyzer = a.some)
+  def analyzer(a: String): QueryStringQueryDefinition   = copy(analyzer = a.some)
   def analyzer(a: Analyzer): QueryStringQueryDefinition = analyzer(a.name)
 
   def defaultOperator(op: String): QueryStringQueryDefinition = copy(defaultOperator = op.some)
-  def operator(op: String): QueryStringQueryDefinition = defaultOperator(op)
+  def operator(op: String): QueryStringQueryDefinition        = defaultOperator(op)
 
   def asfields(fields: String*): QueryStringQueryDefinition = copy(fields = fields.map(f => (f, -1D)))
 

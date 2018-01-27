@@ -43,8 +43,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
     override def execute(client: HttpRequestClient, request: IndexRecoveryDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indices == Seq("_all") || request.indices.isEmpty) "/_recovery"
-      else s"/${request.indices.mkString(",")}/_recovery"
+      val endpoint =
+        if (request.indices == Seq("_all") || request.indices.isEmpty) "/_recovery"
+        else s"/${request.indices.mkString(",")}/_recovery"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.detailed.foreach(params.put("detailed", _))
@@ -58,8 +59,9 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
     override def execute(client: HttpRequestClient, request: ForceMergeDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexes == Seq("_all") || request.indexes.isEmpty) "/_forcemerge"
-      else s"/${request.indexes.mkString(",")}/_forcemerge"
+      val endpoint =
+        if (request.indexes == Seq("_all") || request.indexes.isEmpty) "/_forcemerge"
+        else s"/${request.indexes.mkString(",")}/_forcemerge"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.onlyExpungeDeletes.foreach(params.put("only_expunge_deletes", _))
@@ -102,9 +104,8 @@ trait IndexAdminImplicits extends IndexShowImplicits {
   implicit object IndexExistsHttpExecutable extends HttpExecutable[IndicesExists, IndexExistsResponse] {
 
     override def responseHandler: ResponseHandler[IndexExistsResponse] = new ResponseHandler[IndexExistsResponse] {
-      override def handle(resp: HttpResponse) = {
+      override def handle(resp: HttpResponse) =
         Right(IndexExistsResponse(resp.statusCode == 200))
-      }
     }
 
     override def execute(client: HttpRequestClient, request: IndicesExists): Future[HttpResponse] = {
@@ -140,9 +141,8 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
 
     override def responseHandler: ResponseHandler[AliasExistsResponse] = new ResponseHandler[AliasExistsResponse] {
-      override def handle(resp: HttpResponse) = {
+      override def handle(resp: HttpResponse) =
         Right(AliasExistsResponse(resp.statusCode == 200))
-      }
     }
   }
 
@@ -170,11 +170,12 @@ trait IndexAdminImplicits extends IndexShowImplicits {
   implicit object CreateIndexHttpExecutable extends HttpExecutable[CreateIndexDefinition, CreateIndexResponse] {
 
     override def responseHandler = new ResponseHandler[CreateIndexResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, CreateIndexResponse] = response.statusCode match {
-        case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
-        case 400 | 500 => Left(ElasticError.parse(response))
-        case _ => sys.error(response.toString)
-      }
+      override def handle(response: HttpResponse): Either[ElasticError, CreateIndexResponse] =
+        response.statusCode match {
+          case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
+          case 400 | 500 => Left(ElasticError.parse(response))
+          case _         => sys.error(response.toString)
+        }
     }
 
     override def execute(client: HttpRequestClient, request: CreateIndexDefinition): Future[HttpResponse] = {
@@ -184,7 +185,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = CreateIndexContentBuilder(request).string()
+      val body   = CreateIndexContentBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("PUT", endpoint, params.toMap, entity)
@@ -199,12 +200,14 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  implicit object UpdateIndexLevelSettingsExecutable extends HttpExecutable[UpdateIndexLevelSettingsDefinition, UpdateIndexLevelSettingsResponse] {
-    override def execute(client: HttpRequestClient, request: UpdateIndexLevelSettingsDefinition): Future[HttpResponse] = {
+  implicit object UpdateIndexLevelSettingsExecutable
+      extends HttpExecutable[UpdateIndexLevelSettingsDefinition, UpdateIndexLevelSettingsResponse] {
+    override def execute(client: HttpRequestClient,
+                         request: UpdateIndexLevelSettingsDefinition): Future[HttpResponse] = {
 
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
-      val body = UpdateIndexLevelSettingsBuilder(request).string()
-      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
+      val body     = UpdateIndexLevelSettingsBuilder(request).string()
+      val entity   = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("PUT", endpoint, Map.empty, entity)
     }
@@ -215,7 +218,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     override def execute(client: HttpRequestClient, request: IndexShardStoreDefinition): Future[HttpResponse] = {
 
       val endpoint = "/" + request.indexes.values.mkString(",") + "/_shard_stores"
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params   = scala.collection.mutable.Map.empty[String, String]
       request.status.foreach(params.put("status", _))
 
       client.async("GET", endpoint, params.toMap)

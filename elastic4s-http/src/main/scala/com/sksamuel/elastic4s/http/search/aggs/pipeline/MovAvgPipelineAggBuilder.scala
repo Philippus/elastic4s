@@ -16,7 +16,7 @@ object MovAvgPipelineAggBuilder {
 
     if (agg.settings.nonEmpty) {
       builder.startObject("settings")
-      agg.settings.foreach { case (k,v) => builder.autofield(k, v) }
+      agg.settings.foreach { case (k, v) => builder.autofield(k, v) }
       builder.endObject()
     }
     agg.window.foreach(w => builder.field("window", w))

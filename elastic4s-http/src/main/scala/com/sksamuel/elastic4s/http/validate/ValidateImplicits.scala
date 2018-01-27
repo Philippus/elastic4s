@@ -10,15 +10,11 @@ import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
-case class ValidateResponse(valid: Boolean,
-                            @JsonProperty("_shards") shards: Shards,
-                            explanations: Seq[Explanation]) {
+case class ValidateResponse(valid: Boolean, @JsonProperty("_shards") shards: Shards, explanations: Seq[Explanation]) {
   def isValid: Boolean = valid
 }
 
-case class Explanation(index: String,
-                       valid: Boolean,
-                       error: String)
+case class Explanation(index: String, valid: Boolean, error: String)
 
 object ValidateBodyFn {
   def apply(v: ValidateDefinition): XContentBuilder = {
@@ -38,13 +34,14 @@ trait ValidateImplicits {
 
     override def execute(client: HttpRequestClient, request: ValidateDefinition): Future[HttpResponse] = {
 
-      val endpoint = s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
+      val endpoint =
+        s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.explain.map(_.toString).foreach(params.put("explain", _))
       request.rewrite.map(_.toString).foreach(params.put("rewrite", _))
 
-      val body = ValidateBodyFn(request).string()
+      val body   = ValidateBodyFn(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("GET", endpoint, params.toMap, entity)

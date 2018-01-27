@@ -23,11 +23,10 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           result: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
-                          private val get: Option[UpdateGet]
-                         ) {
-  def ref = DocumentRef(index, `type`, id)
+                          private val get: Option[UpdateGet]) {
+  def ref                      = DocumentRef(index, `type`, id)
   def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
-  def found: Boolean = get.forall(_.found)
+  def found: Boolean           = get.forall(_.found)
 }
 
 object UpdateByQueryBodyFn {
@@ -65,7 +64,8 @@ trait UpdateImplicits {
 
     override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
 
-      val endpoint = s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
+      val endpoint =
+        s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
@@ -79,7 +79,7 @@ trait UpdateImplicits {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateBuilderFn(request)
+      val body   = UpdateBuilderFn(request)
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("POST", endpoint, params.toMap, entity)
@@ -89,10 +89,11 @@ trait UpdateImplicits {
   implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryDefinition, UpdateByQueryResponse] {
     override def execute(client: HttpRequestClient, request: UpdateByQueryDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexesAndTypes.types.isEmpty)
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"
-      else
-        s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
+      val endpoint =
+        if (request.indexesAndTypes.types.isEmpty)
+          s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"
+        else
+          s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false)) {

@@ -4,10 +4,18 @@ import com.sksamuel.elastic4s.http.{EnumConversions, FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortBuilderFn}
-import com.sksamuel.elastic4s.http.search.suggs.{CompletionSuggestionBuilderFn, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
+import com.sksamuel.elastic4s.http.search.suggs.{
+  CompletionSuggestionBuilderFn,
+  PhraseSuggestionBuilderFn,
+  TermSuggestionBuilderFn
+}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, PhraseSuggestionDefinition, TermSuggestionDefinition}
+import com.sksamuel.elastic4s.searches.suggestion.{
+  CompletionSuggestionDefinition,
+  PhraseSuggestionDefinition,
+  TermSuggestionDefinition
+}
 
 object SearchBodyBuilderFn {
 
@@ -90,7 +98,8 @@ object SearchBodyBuilderFn {
       request.suggestions.globalSuggestionText.foreach(builder.field("text", _))
       request.suggestions.suggs.foreach {
         case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
-        case completion: CompletionSuggestionDefinition => builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
+        case completion: CompletionSuggestionDefinition =>
+          builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
         case phrase: PhraseSuggestionDefinition => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
       }
       builder.endObject()
@@ -102,10 +111,11 @@ object SearchBodyBuilderFn {
 
     if (request.indexBoosts.nonEmpty) {
       builder.startArray("indices_boost")
-      request.indexBoosts.foreach { case (name, double) =>
-        builder.startObject()
-        builder.field(name, double)
-        builder.endObject()
+      request.indexBoosts.foreach {
+        case (name, double) =>
+          builder.startObject()
+          builder.field(name, double)
+          builder.endObject()
       }
       builder.endArray()
     }

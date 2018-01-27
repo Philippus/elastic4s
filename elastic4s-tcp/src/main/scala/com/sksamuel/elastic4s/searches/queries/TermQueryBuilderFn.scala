@@ -6,9 +6,9 @@ import org.elasticsearch.index.query.{QueryBuilders, TermQueryBuilder}
 object TermQueryBuilderFn {
   def apply(q: TermQueryDefinition): TermQueryBuilder = {
     val builder = q.value match {
-      case str: String => QueryBuilders.termQuery(q.field, str)
+      case str: String         => QueryBuilders.termQuery(q.field, str)
       case iter: Iterable[Any] => QueryBuilders.termQuery(q.field, iter.toArray)
-      case other => QueryBuilders.termQuery(q.field, other)
+      case other               => QueryBuilders.termQuery(q.field, other)
     }
     q.boost.map(_.toFloat).foreach(builder.boost)
     q.queryName.foreach(builder.queryName)

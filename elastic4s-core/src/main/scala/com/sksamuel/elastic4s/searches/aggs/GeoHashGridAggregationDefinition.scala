@@ -9,15 +9,15 @@ case class GeoHashGridAggregationDefinition(name: String,
                                             precision: Option[Int] = None,
                                             subaggs: Seq[AbstractAggregation] = Nil,
                                             metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = GeoHashGridAggregationDefinition
 
-  def field(field: String): GeoHashGridAggregationDefinition = copy(field = field.some)
+  def field(field: String): GeoHashGridAggregationDefinition      = copy(field = field.some)
   def precision(precision: Int): GeoHashGridAggregationDefinition = copy(precision = precision.some)
   def shardSize(shardSize: Int): GeoHashGridAggregationDefinition = copy(shardSize = shardSize.some)
-  def size(size: Int): GeoHashGridAggregationDefinition = copy(size = size.some)
+  def size(size: Int): GeoHashGridAggregationDefinition           = copy(size = size.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }

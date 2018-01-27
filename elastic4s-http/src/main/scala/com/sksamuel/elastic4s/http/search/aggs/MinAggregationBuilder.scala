@@ -17,5 +17,3 @@ object MinAggregationBuilder {
     builder.endObject()
   }
 }
-
-

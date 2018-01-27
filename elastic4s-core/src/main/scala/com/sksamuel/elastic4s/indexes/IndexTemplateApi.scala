@@ -7,7 +7,8 @@ trait IndexTemplateApi {
 
   def deleteIndexTemplate(name: String): DeleteIndexTemplateDefinition = DeleteIndexTemplateDefinition(name)
 
-  def createIndexTemplate(name: String, pattern: String): CreateIndexTemplateDefinition = CreateIndexTemplateDefinition(name, pattern)
+  def createIndexTemplate(name: String, pattern: String): CreateIndexTemplateDefinition =
+    CreateIndexTemplateDefinition(name, pattern)
 
   @deprecated("use createIndexTemplate(name: String, pattern: String)", "6.0.0")
   def createTemplate(name: String, pattern: String): CreateIndexTemplateDefinition = createIndexTemplate(name, pattern)

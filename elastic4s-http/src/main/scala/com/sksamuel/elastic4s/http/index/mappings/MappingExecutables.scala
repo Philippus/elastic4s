@@ -17,11 +17,13 @@ trait MappingExecutables {
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
       override def handle(response: HttpResponse) = {
         val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
-        val raw2 = raw.map { case (index, types) =>
-          val mappings = types("mappings").map { case (tpe, properties) =>
-            tpe -> properties("properties").asInstanceOf[Map[String, Any]]
-          }
-          IndexMappings(index, mappings)
+        val raw2 = raw.map {
+          case (index, types) =>
+            val mappings = types("mappings").map {
+              case (tpe, properties) =>
+                tpe -> properties("properties").asInstanceOf[Map[String, Any]]
+            }
+            IndexMappings(index, mappings)
         }.toSeq
         Right(raw2)
       }
@@ -29,8 +31,8 @@ trait MappingExecutables {
 
     override def execute(client: HttpRequestClient, request: GetMappingDefinition): Future[HttpResponse] = {
       val endpoint = request.indexesAndTypes match {
-        case IndexesAndTypes(Nil, Nil) => "/_mapping"
-        case IndexesAndTypes(indexes, Nil) => s"/${indexes.mkString(",")}/_mapping"
+        case IndexesAndTypes(Nil, Nil)       => "/_mapping"
+        case IndexesAndTypes(indexes, Nil)   => s"/${indexes.mkString(",")}/_mapping"
         case IndexesAndTypes(indexes, types) => s"/${indexes.mkString(",")}/_mapping/${types.mkString(",")}"
       }
       client.async("GET", endpoint, Map.empty)
@@ -49,14 +51,13 @@ trait MappingExecutables {
       request.allowNoIndices.foreach(params.put("allow_no_indices", _))
       request.expandWildcards.foreach(params.put("expand_wildcards", _))
 
-      val body = PutMappingBuilderFn(request).string()
+      val body   = PutMappingBuilderFn(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("PUT", endpoint, params.toMap, entity)
     }
   }
 }
-
 
 case class PutMappingResponse(acknowledged: Boolean) {
   def success: Boolean = acknowledged

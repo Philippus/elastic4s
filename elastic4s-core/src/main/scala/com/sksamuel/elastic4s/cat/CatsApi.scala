@@ -5,15 +5,15 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait CatsApi {
 
-  def catAliases(): CatAliases = CatAliases()
+  def catAliases(): CatAliases       = CatAliases()
   def catAllocation(): CatAllocation = CatAllocation()
 
-  def catCount(): CatCount = CatCount()
+  def catCount(): CatCount                             = CatCount()
   def catCount(first: String, rest: String*): CatCount = CatCount(first +: rest)
 
   def catHealth(): CatHealth = CatHealth()
 
-  def catIndices(): CatIndexes = CatIndexes(None)
+  def catIndices(): CatIndexes                     = CatIndexes(None)
   def catIndices(health: HealthStatus): CatIndexes = CatIndexes(health.some)
 
   def catMaster(): CatMaster = CatMaster()
@@ -23,7 +23,7 @@ trait CatsApi {
   def catPlugins(): CatPlugins = CatPlugins()
 
   def catSegments(indices: Indexes = Indexes.All): CatSegments = CatSegments(indices)
-  def catShards(): CatShards = CatShards()
+  def catShards(): CatShards                                   = CatShards()
 
   def catThreadPool(): CatThreadPool = CatThreadPool()
 }

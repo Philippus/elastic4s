@@ -70,7 +70,8 @@ object ResponseConverterImplicits {
 
   implicit object CreateIndexResponseConverter extends ResponseConverter[TcpCreateIndexResponse, CreateIndexResponse] {
     override def convert(response: TcpCreateIndexResponse) = CreateIndexResponse(
-      response.isAcknowledged, response.isShardsAcked
+      response.isAcknowledged,
+      response.isShardsAcked
     )
   }
 
@@ -129,7 +130,7 @@ object ResponseConverterImplicits {
             x.sourceAsMap.asScalaNested,
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
-            inner_hits = Map.empty// TODO: Set properly
+            inner_hits = Map.empty // TODO: Set properly
           )
         }
       )
@@ -170,7 +171,8 @@ object ResponseConverterImplicits {
     )
   }
 
-  implicit object DeleteByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, DeleteByQueryResponse] {
+  implicit object DeleteByQueryResponseConverter
+      extends ResponseConverter[BulkByScrollResponse, DeleteByQueryResponse] {
     override def convert(response: BulkByScrollResponse): DeleteByQueryResponse = {
       val field = classOf[BulkByScrollResponse].getDeclaredField("status")
       field.setAccessible(true)
@@ -185,13 +187,14 @@ object ResponseConverterImplicits {
         response.getVersionConflicts,
         response.getNoops,
         status.getThrottled.millis,
-        if(status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
+        if (status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
         status.getThrottledUntil.millis
       )
     }
   }
 
-  implicit object UpdateByQueryResponseConverter extends ResponseConverter[BulkByScrollResponse, UpdateByQueryResponse] {
+  implicit object UpdateByQueryResponseConverter
+      extends ResponseConverter[BulkByScrollResponse, UpdateByQueryResponse] {
     override def convert(response: BulkByScrollResponse): UpdateByQueryResponse = {
       val field = classOf[BulkByScrollResponse].getDeclaredField("status")
       field.setAccessible(true)
@@ -207,7 +210,7 @@ object ResponseConverterImplicits {
         response.getVersionConflicts,
         response.getNoops,
         status.getThrottled.millis,
-        if(status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
+        if (status.getRequestsPerSecond == Float.PositiveInfinity) -1 else status.getRequestsPerSecond.toLong,
         status.getThrottledUntil.millis
       )
     }
@@ -242,9 +245,8 @@ object ResponseConverterImplicits {
       Option(response.getExplanation).map(convertExplanation).orNull
     )
 
-    private def convertExplanation(e: org.apache.lucene.search.Explanation): Explanation = {
+    private def convertExplanation(e: org.apache.lucene.search.Explanation): Explanation =
       Explanation(e.getValue, e.getDescription, e.getDetails.map(convertExplanation))
-    }
   }
 
   implicit object ValidateResponseConverter extends ResponseConverter[ValidateQueryResponse, ValidateResponse] {
@@ -278,7 +280,8 @@ object ResponseConverterImplicits {
     }
   }
 
-  implicit object ClusterHealthResponseConverter extends ResponseConverter[TcpClusterHealthResponse, ClusterHealthResponse] {
+  implicit object ClusterHealthResponseConverter
+      extends ResponseConverter[TcpClusterHealthResponse, ClusterHealthResponse] {
     override def convert(response: TcpClusterHealthResponse) = ClusterHealthResponse(
       response.getClusterName,
       response.getStatus.name.toLowerCase(Locale.ENGLISH),
@@ -298,7 +301,6 @@ object ResponseConverterImplicits {
     )
   }
 
-
   implicit object PutMappingResponseConverter extends ResponseConverter[TcpPutMappingResponse, PutMappingResponse] {
     override def convert(response: TcpPutMappingResponse) = PutMappingResponse(response.isAcknowledged)
   }
@@ -312,8 +314,8 @@ object ResponseConverterImplicits {
     def asScalaNested: Map[String, AnyRef] = {
       def toScala(a: AnyRef): AnyRef = a match {
         case i: java.lang.Iterable[AnyRef] => i.asScala.map(toScala)
-        case m: util.Map[AnyRef, AnyRef] => m.asScala.map { case (k, v) => (toScala(k), toScala(v)) }
-        case other => other
+        case m: util.Map[AnyRef, AnyRef]   => m.asScala.map { case (k, v) => (toScala(k), toScala(v)) }
+        case other                         => other
       }
 
       self.mapValues(toScala)

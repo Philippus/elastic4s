@@ -12,7 +12,7 @@ import scala.concurrent.Future
 trait TermVectorsExecutables {
 
   implicit object TermVectorExecutable
-    extends Executable[TermVectorsDefinition, TermVectorsResponse, TermVectorsResult] {
+      extends Executable[TermVectorsDefinition, TermVectorsResponse, TermVectorsResult] {
 
     def builder(client: Client, t: TermVectorsDefinition): TermVectorsRequestBuilder = {
       val builder = client.prepareTermVectors(t.indexAndType.index, t.indexAndType.`type`, t.id)

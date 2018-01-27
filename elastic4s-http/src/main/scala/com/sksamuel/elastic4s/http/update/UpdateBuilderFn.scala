@@ -20,8 +20,9 @@ object UpdateBuilderFn {
 
     if (request.documentFields.nonEmpty) {
       builder.startObject("doc")
-      request.documentFields.foreach { case (name, value) =>
-        builder.autofield(name, FieldsMapper.mapper(value))
+      request.documentFields.foreach {
+        case (name, value) =>
+          builder.autofield(name, FieldsMapper.mapper(value))
       }
       builder.endObject()
     }
@@ -32,8 +33,9 @@ object UpdateBuilderFn {
 
     if (request.upsertFields.nonEmpty) {
       builder.startObject("upsert")
-      request.upsertFields.foreach { case (name, value) =>
-        builder.autofield(name, FieldsMapper.mapper(value))
+      request.upsertFields.foreach {
+        case (name, value) =>
+          builder.autofield(name, FieldsMapper.mapper(value))
       }
       builder.endObject()
     }

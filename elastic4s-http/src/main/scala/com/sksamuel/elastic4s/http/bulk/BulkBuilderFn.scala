@@ -14,7 +14,6 @@ object BulkBuilderFn {
     val rows = List.newBuilder[String]
     bulk.requests.foreach {
       case index: IndexDefinition =>
-
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("index")
         builder.field("_index", index.indexAndType.index)
@@ -31,7 +30,6 @@ object BulkBuilderFn {
         rows += IndexContentBuilder(index).string()
 
       case delete: DeleteByIdDefinition =>
-
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("delete")
         builder.field("_index", delete.indexType.index)
@@ -45,7 +43,6 @@ object BulkBuilderFn {
         rows += builder.string
 
       case update: UpdateDefinition =>
-
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("update")
         builder.field("_index", update.indexAndType.index)

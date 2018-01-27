@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.searches.{HighlightFieldDefinition, HighlightOptio
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder
 import scala.collection.JavaConversions._
 
-
 object HighlightBuilderFn {
   def apply(options: HighlightOptionsDefinition, fields: Seq[HighlightFieldDefinition]): HighlightBuilder = {
     val builder = new HighlightBuilder()

@@ -34,7 +34,7 @@ object AliasActionBuilders {
 trait AliasExecutables {
 
   implicit object GetAliasDefinitionExecutable
-    extends Executable[GetAliasesDefinition, GetAliasesResponse, GetAliasesResponse] {
+      extends Executable[GetAliasesDefinition, GetAliasesResponse, GetAliasesResponse] {
     override def apply(c: Client, t: GetAliasesDefinition): Future[GetAliasesResponse] = {
       val _builder = c.admin().indices().prepareGetAliases(t.aliases: _*).addIndices(t.indices.values: _*)
       injectFuture(_builder.execute(_))
@@ -43,23 +43,25 @@ trait AliasExecutables {
 
   // executable for a bulk alias definition
   implicit object IndicesAliasesRequestDefinitionExecutable
-    extends Executable[IndicesAliasesRequestDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
+      extends Executable[IndicesAliasesRequestDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
 
     override def apply(c: Client, t: IndicesAliasesRequestDefinition): Future[IndicesAliasesResponse] = {
       val _builder = c.admin().indices().prepareAliases()
-      t.actions.map {
-        case remove: RemoveAliasActionDefinition => AliasActionBuilders.remove(remove)
-        case add: AddAliasActionDefinition => AliasActionBuilders.add(add)
-      }.foreach { action =>
-        _builder.addAliasAction(action)
-      }
+      t.actions
+        .map {
+          case remove: RemoveAliasActionDefinition => AliasActionBuilders.remove(remove)
+          case add: AddAliasActionDefinition       => AliasActionBuilders.add(add)
+        }
+        .foreach { action =>
+          _builder.addAliasAction(action)
+        }
       injectFuture(_builder.execute(_))
     }
   }
 
   // executable so we can use addAlias directly
   implicit object AddAliasActionDefinitionExecutable
-    extends Executable[AddAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
+      extends Executable[AddAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: AddAliasActionDefinition): Future[IndicesAliasesResponse] = {
       val _builder = c.admin.indices().prepareAliases().addAliasAction(AliasActionBuilders.add(t))
       injectFuture(_builder.execute(_))
@@ -68,7 +70,7 @@ trait AliasExecutables {
 
   // executable so we can use removeAlias directly
   implicit object RemoveAliasActionDefinitionExecutable
-    extends Executable[RemoveAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
+      extends Executable[RemoveAliasActionDefinition, IndicesAliasesResponse, IndicesAliasesResponse] {
     override def apply(c: Client, t: RemoveAliasActionDefinition): Future[IndicesAliasesResponse] = {
       val _builder = c.admin.indices().prepareAliases().addAliasAction(AliasActionBuilders.remove(t))
       injectFuture(_builder.execute(_))

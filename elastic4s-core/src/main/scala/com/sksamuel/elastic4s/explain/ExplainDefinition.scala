@@ -10,13 +10,14 @@ case class ExplainDefinition(indexAndType: IndexAndType,
                              parent: Option[String] = None,
                              lenient: Option[Boolean] = None,
                              preference: Option[String] = None,
-                             routing: Option[String] = None) extends Serializable {
+                             routing: Option[String] = None)
+    extends Serializable {
 
-  def query(string: String): ExplainDefinition = query(QueryStringQueryDefinition(string))
-  def query(block: => QueryDefinition): ExplainDefinition = copy(query = Option(block))
+  def query(string: String): ExplainDefinition             = query(QueryStringQueryDefinition(string))
+  def query(block: => QueryDefinition): ExplainDefinition  = copy(query = Option(block))
   def fetchSource(fetchSource: Boolean): ExplainDefinition = copy(fetchSource = Option(fetchSource))
-  def lenient(lenient: Boolean): ExplainDefinition = copy(lenient = Option(lenient))
-  def parent(parent: String): ExplainDefinition = copy(parent = Option(parent))
-  def preference(preference: String): ExplainDefinition = copy(preference = Option(preference))
-  def routing(routing: String): ExplainDefinition = copy(routing = Option(routing))
+  def lenient(lenient: Boolean): ExplainDefinition         = copy(lenient = Option(lenient))
+  def parent(parent: String): ExplainDefinition            = copy(parent = Option(parent))
+  def preference(preference: String): ExplainDefinition    = copy(preference = Option(preference))
+  def routing(routing: String): ExplainDefinition          = copy(routing = Option(routing))
 }

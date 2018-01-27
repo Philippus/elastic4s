@@ -8,5 +8,5 @@ trait BulkApi {
   this: IndexApi =>
 
   def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = BulkDefinition(requests.toSeq)
-  def bulk(requests: BulkCompatibleDefinition*): BulkDefinition = bulk(requests)
+  def bulk(requests: BulkCompatibleDefinition*): BulkDefinition          = bulk(requests)
 }

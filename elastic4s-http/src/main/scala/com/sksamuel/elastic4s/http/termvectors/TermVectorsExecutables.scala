@@ -43,7 +43,10 @@ trait TermVectorsExecutables {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.realtime.foreach(params.put("realtime", _))
 
-      client.async("GET", endpoint, params.toMap, HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
+      client.async("GET",
+                   endpoint,
+                   params.toMap,
+                   HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }
@@ -72,5 +75,4 @@ case class Token(@JsonProperty("position") position: Int,
                  @JsonProperty("start_offset") startOffset: Int,
                  @JsonProperty("end_offset") endOffset: Int)
 
-case class TermVectors(@JsonProperty("field_statistics") fieldStatistics: FieldStatistics,
-                       terms: Map[String, Terms])
+case class TermVectors(@JsonProperty("field_statistics") fieldStatistics: FieldStatistics, terms: Map[String, Terms])

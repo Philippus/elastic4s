@@ -30,11 +30,9 @@ case class NodeStats(name: String,
                      ip: Seq[String],
                      os: Option[OsStats])
 
-case class NodesStatsResponse(@JsonProperty("cluster_name") clusterName: String,
-                              nodes: Map[String, NodeStats])
+case class NodesStatsResponse(@JsonProperty("cluster_name") clusterName: String, nodes: Map[String, NodeStats])
 
-case class NodeInfoResponse(@JsonProperty("cluster_name") clusterName: String,
-                            nodes: Map[String, NodeInfo])
+case class NodeInfoResponse(@JsonProperty("cluster_name") clusterName: String, nodes: Map[String, NodeInfo])
 
 case class NodeInfo(name: String,
                     @JsonProperty("transport_address") transportAddress: String,

@@ -7,6 +7,6 @@ case class CollapseDefinition(field: String,
                               inner: Option[InnerHitDefinition] = None,
                               maxConcurrentGroupSearches: Option[Int] = None) {
 
-  def inner(inner: InnerHitDefinition): CollapseDefinition = copy(inner = inner.some)
+  def inner(inner: InnerHitDefinition): CollapseDefinition     = copy(inner = inner.some)
   def maxConcurrentGroupSearches(max: Int): CollapseDefinition = copy(maxConcurrentGroupSearches = max.some)
 }
