@@ -24,19 +24,15 @@ case class Control(pref: Option[String] = None,
                    terminateAfter: Option[Int] = None,
                    timeout: Option[Duration] = None)
 
-case class Windowing(from: Option[Int] = None,
-                     size: Option[Int] = None,
-                     slice: Option[(Int, Int)] = None)
+case class Windowing(from: Option[Int] = None, size: Option[Int] = None, slice: Option[(Int, Int)] = None)
 
 case class Fields(docValues: Seq[String] = Nil,
                   scriptFields: Seq[ScriptFieldDefinition] = Nil,
                   storedFields: Seq[String] = Nil)
 
-case class Suggestions(suggs: Seq[SuggestionDefinition] = Nil,
-                       globalSuggestionText: Option[String] = None)
+case class Suggestions(suggs: Seq[SuggestionDefinition] = Nil, globalSuggestionText: Option[String] = None)
 
-case class Meta(explain: Option[Boolean] = None,
-                stats: Seq[String] = Nil)
+case class Meta(explain: Option[Boolean] = None, stats: Seq[String] = Nil)
 
 case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             aggs: Seq[AbstractAggregation] = Nil,
@@ -101,7 +97,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def aggregations(aggs: Iterable[AbstractAggregation]): SearchDefinition = copy(aggs = aggs.toSeq)
 
-  def aggregations(first: AbstractAggregation, rest: AbstractAggregation*): SearchDefinition = aggregations(first +: rest)
+  def aggregations(first: AbstractAggregation, rest: AbstractAggregation*): SearchDefinition =
+    aggregations(first +: rest)
 
   @deprecated("use sortBy", "5.0.0")
   def sort(sorts: SortDefinition*): SearchDefinition = sortBy(sorts)
@@ -123,20 +120,23 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     */
   def scriptfields(fields: ScriptFieldDefinition*): SearchDefinition = scriptfields(fields)
 
-  def scriptfields(_fields: Iterable[ScriptFieldDefinition]): SearchDefinition = copy(fields = fields.copy(scriptFields = _fields.toSeq))
+  def scriptfields(_fields: Iterable[ScriptFieldDefinition]): SearchDefinition =
+    copy(fields = fields.copy(scriptFields = _fields.toSeq))
 
   /**
     * Adds a new suggestion to the search request, which can be looked up in the response
     * using the name provided.
     */
-  def suggestions(first: SuggestionDefinition,
-                  rest: SuggestionDefinition*): SearchDefinition = suggestions(first +: rest)
+  def suggestions(first: SuggestionDefinition, rest: SuggestionDefinition*): SearchDefinition =
+    suggestions(first +: rest)
 
-  def suggestions(suggs: Iterable[SuggestionDefinition]): SearchDefinition = copy(suggestions = suggestions.copy(suggs = suggs.toSeq))
+  def suggestions(suggs: Iterable[SuggestionDefinition]): SearchDefinition =
+    copy(suggestions = suggestions.copy(suggs = suggs.toSeq))
 
   def suggestion(sugg: SuggestionDefinition): SearchDefinition = suggestions(Seq(sugg))
 
-  def globalSuggestionText(text: String): SearchDefinition = copy(suggestions = suggestions.copy(globalSuggestionText = text.some))
+  def globalSuggestionText(text: String): SearchDefinition =
+    copy(suggestions = suggestions.copy(globalSuggestionText = text.some))
 
   // Adds a single prefix query to this search
   def prefix(name: String, value: Any): SearchDefinition = query(PrefixQuery(name, value))
@@ -206,8 +206,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def explain(enabled: Boolean): SearchDefinition = copy(meta = meta.copy(explain = enabled.some))
 
-  def highlighting(first: HighlightFieldDefinition,
-                   rest: HighlightFieldDefinition*): SearchDefinition =
+  def highlighting(first: HighlightFieldDefinition, rest: HighlightFieldDefinition*): SearchDefinition =
     highlighting(HighlightOptionsDefinition(), first +: rest)
 
   def highlighting(fields: Iterable[HighlightFieldDefinition]): SearchDefinition =
@@ -217,8 +216,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                    first: HighlightFieldDefinition,
                    rest: HighlightFieldDefinition*): SearchDefinition = highlighting(options, first +: rest)
 
-  def highlighting(options: HighlightOptionsDefinition,
-                   fields: Iterable[HighlightFieldDefinition]): SearchDefinition =
+  def highlighting(options: HighlightOptionsDefinition, fields: Iterable[HighlightFieldDefinition]): SearchDefinition =
     copy(highlight = Highlight(options, fields).some)
 
   def routing(r: String): SearchDefinition = copy(control = control.copy(routing = r.some))
@@ -239,7 +237,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def rescore(first: RescoreDefinition, rest: RescoreDefinition*): SearchDefinition = rescore(first +: rest)
 
-  def rescore(rescorers: Iterable[RescoreDefinition]): SearchDefinition = copy(scoring = scoring.copy(rescorers = rescorers.toSeq))
+  def rescore(rescorers: Iterable[RescoreDefinition]): SearchDefinition =
+    copy(scoring = scoring.copy(rescorers = rescorers.toSeq))
 
   // alias for scroll
   def keepAlive(keepAlive: String): SearchDefinition = scroll(keepAlive)
@@ -259,7 +258,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
     * to indicate whether the query execution has actually terminated
     * early. Defaults to no.
     */
-  def terminateAfter(terminateAfter: Int): SearchDefinition = copy(control = control.copy(terminateAfter = terminateAfter.some))
+  def terminateAfter(terminateAfter: Int): SearchDefinition =
+    copy(control = control.copy(terminateAfter = terminateAfter.some))
 
   // Allows to return the doc value representation of a field for each hit, for example:
   def docValues(first: String, rest: String*): SearchDefinition = docValues(first +: rest)
@@ -281,7 +281,8 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def storedFields(first: String, rest: String*): SearchDefinition = storedFields(first +: rest)
 
-  def storedFields(_fields: Iterable[String]): SearchDefinition = copy(fields = fields.copy(storedFields = _fields.toSeq))
+  def storedFields(_fields: Iterable[String]): SearchDefinition =
+    copy(fields = fields.copy(storedFields = _fields.toSeq))
 
   def fetchContext(context: FetchSourceContext): SearchDefinition = copy(fetchContext = context.some)
 

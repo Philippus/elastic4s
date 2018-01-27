@@ -15,7 +15,7 @@ trait ExistsImplicits {
 
     override def execute(client: HttpRequestClient, request: ExistsDefinition): Future[HttpResponse] = {
       val endpoint = "/" + request.index.name + "/" + request.`type` + "/" + request.id
-      val method = "HEAD"
+      val method   = "HEAD"
       client.async(method, endpoint, Map.empty)
     }
   }

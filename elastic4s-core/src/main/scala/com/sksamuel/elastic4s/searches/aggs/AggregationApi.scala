@@ -6,20 +6,22 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait AggregationApi {
 
-  def avgAgg(name: String, field:String): AvgAggregationDefinition = AvgAggregationDefinition(name).field(field)
-  def avgAggregation(name: String): AvgAggregationDefinition = AvgAggregationDefinition(name)
+  def avgAgg(name: String, field: String): AvgAggregationDefinition = AvgAggregationDefinition(name).field(field)
+  def avgAggregation(name: String): AvgAggregationDefinition        = AvgAggregationDefinition(name)
 
-  def cardinalityAgg(name: String, field: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name).field(field)
+  def cardinalityAgg(name: String, field: String): CardinalityAggregationDefinition =
+    CardinalityAggregationDefinition(name).field(field)
   def cardinalityAggregation(name: String): CardinalityAggregationDefinition = CardinalityAggregationDefinition(name)
 
   def childrenAggregation(name: String, childType: String): ChildrenAggregationDefinition =
     ChildrenAggregationDefinition(name, childType)
 
-  def dateHistogramAgg(name: String, field: String): DateHistogramAggregation = dateHistogramAggregation(name).field(field)
+  def dateHistogramAgg(name: String, field: String): DateHistogramAggregation =
+    dateHistogramAggregation(name).field(field)
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
 
   def dateRangeAgg(name: String, field: String): DateRangeAggregation = dateRangeAggregation(name).field(field)
-  def dateRangeAggregation(name: String): DateRangeAggregation = DateRangeAggregation(name)
+  def dateRangeAggregation(name: String): DateRangeAggregation        = DateRangeAggregation(name)
 
   def extendedStatsAggregation(name: String): ExtendedStatsAggregationDefinition =
     ExtendedStatsAggregationDefinition(name)
@@ -27,7 +29,7 @@ trait AggregationApi {
   def extendedStatsAgg(name: String, field: String) = ExtendedStatsAggregationDefinition(name, field = field.some)
 
   def filterAgg(name: String, query: QueryDefinition) = FilterAggregationDefinition(name, query)
-  def filterAggregation(name: String) = new FilterAggregationExpectsQuery(name)
+  def filterAggregation(name: String)                 = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
     def query(query: QueryDefinition) = FilterAggregationDefinition(name, query)
   }
@@ -37,7 +39,8 @@ trait AggregationApi {
     def queries(first: QueryDefinition, rest: QueryDefinition*): FiltersAggregationDefinition = queries(first +: rest)
     def queries(queries: Iterable[QueryDefinition]): FiltersAggregationDefinition =
       FiltersAggregationDefinition(name, queries)
-    def queries(first: (String, QueryDefinition), rest: (String, QueryDefinition)*): KeyedFiltersAggregationDefinition = queries(first +: rest)
+    def queries(first: (String, QueryDefinition), rest: (String, QueryDefinition)*): KeyedFiltersAggregationDefinition =
+      queries(first +: rest)
     def queries(queries: Iterable[(String, QueryDefinition)]): KeyedFiltersAggregationDefinition =
       KeyedFiltersAggregationDefinition(name, queries)
   }
@@ -46,35 +49,36 @@ trait AggregationApi {
   def geoDistanceAggregation(name: String) = new GeoDistanceAggregationExpectsOrigin(name)
   class GeoDistanceAggregationExpectsOrigin(name: String) {
     def origin(lat: Double, long: Double): GeoDistanceAggregationDefinition = origin(GeoPoint(lat, long))
-    def origin(origin: GeoPoint): GeoDistanceAggregationDefinition = GeoDistanceAggregationDefinition(name, origin)
+    def origin(origin: GeoPoint): GeoDistanceAggregationDefinition          = GeoDistanceAggregationDefinition(name, origin)
   }
 
   def geoHashGridAggregation(name: String): GeoHashGridAggregationDefinition = GeoHashGridAggregationDefinition(name)
   def geoCentroidAggregation(name: String): GeoCentroidAggregationDefinition = GeoCentroidAggregationDefinition(name)
-  def globalAggregation(name: String): GlobalAggregationDefinition = GlobalAggregationDefinition(name)
-  def histogramAggregation(name: String): HistogramAggregation = HistogramAggregation(name)
-  def ipRangeAggregation(name: String): IpRangeAggregationDefinition = IpRangeAggregationDefinition(name)
+  def globalAggregation(name: String): GlobalAggregationDefinition           = GlobalAggregationDefinition(name)
+  def histogramAggregation(name: String): HistogramAggregation               = HistogramAggregation(name)
+  def ipRangeAggregation(name: String): IpRangeAggregationDefinition         = IpRangeAggregationDefinition(name)
 
   def maxAgg(name: String, field: String): MaxAggregationDefinition = MaxAggregationDefinition(name).field(field)
-  def maxAggregation(name: String): MaxAggregationDefinition = MaxAggregationDefinition(name)
+  def maxAggregation(name: String): MaxAggregationDefinition        = MaxAggregationDefinition(name)
 
   def minAgg(name: String, field: String): MinAggregationDefinition = MinAggregationDefinition(name).field(field)
-  def minAggregation(name: String): MinAggregationDefinition = MinAggregationDefinition(name)
+  def minAggregation(name: String): MinAggregationDefinition        = MinAggregationDefinition(name)
 
-  def missingAgg(name: String, field: String): MissingAggregationDefinition = MissingAggregationDefinition(name).field(field)
+  def missingAgg(name: String, field: String): MissingAggregationDefinition =
+    MissingAggregationDefinition(name).field(field)
   def missingAggregation(name: String): MissingAggregationDefinition = MissingAggregationDefinition(name)
 
   def nestedAggregation(name: String, path: String): NestedAggregationDefinition =
     NestedAggregationDefinition(name, path)
 
   def percentilesAgg(name: String, field: String) = PercentilesAggregationDefinition(name).field(field)
-  def percentilesAggregation(name: String) = PercentilesAggregationDefinition(name)
+  def percentilesAggregation(name: String)        = PercentilesAggregationDefinition(name)
 
   def percentileRanksAggregation(name: String): PercentileRanksAggregationDefinition =
     PercentileRanksAggregationDefinition(name)
 
   def rangeAgg(name: String, field: String): RangeAggregationDefinition = RangeAggregationDefinition(name).field(field)
-  def rangeAggregation(name: String): RangeAggregationDefinition = RangeAggregationDefinition(name)
+  def rangeAggregation(name: String): RangeAggregationDefinition        = RangeAggregationDefinition(name)
 
   def reverseNestedAggregation(name: String): ReverseNestedAggregationDefinition =
     ReverseNestedAggregationDefinition(name)
@@ -83,20 +87,21 @@ trait AggregationApi {
     ScriptedMetricAggregationDefinition(name)
 
   def sigTermsAggregation(name: String): SigTermsAggregationDefinition = SigTermsAggregationDefinition(name)
-  def statsAggregation(name: String): StatsAggregationDefinition = StatsAggregationDefinition(name)
+  def statsAggregation(name: String): StatsAggregationDefinition       = StatsAggregationDefinition(name)
 
-  def sumAggregation(name: String): SumAggregationDefinition = SumAggregationDefinition(name)
+  def sumAggregation(name: String): SumAggregationDefinition        = SumAggregationDefinition(name)
   def sumAgg(name: String, field: String): SumAggregationDefinition = SumAggregationDefinition(name).field(field)
 
-  def termsAggregation(name: String): TermsAggregationDefinition = TermsAggregationDefinition(name)
+  def termsAggregation(name: String): TermsAggregationDefinition        = TermsAggregationDefinition(name)
   def termsAgg(name: String, field: String): TermsAggregationDefinition = TermsAggregationDefinition(name).field(field)
 
-  def topHitsAgg(name: String): TopHitsAggregationDefinition = TopHitsAggregationDefinition(name)
+  def topHitsAgg(name: String): TopHitsAggregationDefinition         = TopHitsAggregationDefinition(name)
   def topHitsAggregation(name: String): TopHitsAggregationDefinition = TopHitsAggregationDefinition(name)
 
-  def valueCountAgg(name: String, field: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name).field(field)
+  def valueCountAgg(name: String, field: String): ValueCountAggregationDefinition =
+    ValueCountAggregationDefinition(name).field(field)
   def valueCountAggregation(name: String): ValueCountAggregationDefinition = ValueCountAggregationDefinition(name)
 
-  def samplerAgg(name: String): SamplerAggregationDefinition = SamplerAggregationDefinition(name)
+  def samplerAgg(name: String): SamplerAggregationDefinition         = SamplerAggregationDefinition(name)
   def samplerAggregation(name: String): SamplerAggregationDefinition = SamplerAggregationDefinition(name)
 }

@@ -25,40 +25,40 @@ case class RichMultiGetItemResponse(original: MultiGetItemResponse) {
   @deprecated("use failure", "5.0.0")
   def getFailure: MultiGetResponse.Failure = original.getFailure
 
-  def index: String = original.getIndex
+  def index: String  = original.getIndex
   def `type`: String = original.getType
-  def id: String = original.getId
-  def ref = DocumentRef(index, `type`, id)
+  def id: String     = original.getId
+  def ref            = DocumentRef(index, `type`, id)
 
   def to[T: HitReader]: T = responseTry match {
     case Success(get) => get.to
-    case Failure(e) => throw e
+    case Failure(e)   => throw e
   }
 
   def safeTo[T: HitReader]: Either[Throwable, T] = responseTry match {
     case Success(get) => get.safeTo
-    case Failure(e) => Left(e)
+    case Failure(e)   => Left(e)
   }
 
   def toOpt[T: HitReader]: Option[T] = responseTry match {
     case Success(get) => response.toOpt[T]
-    case Failure(e) => throw e
+    case Failure(e)   => throw e
   }
 
   def safeToOpt[T: HitReader]: Option[Either[Throwable, T]] = responseTry match {
     case Success(get) => get.safeToOpt[T]
-    case Failure(e) => Option(Left(e))
+    case Failure(e)   => Option(Left(e))
   }
 
-  def response: RichGetResponse = responseOpt.get
+  def response: RichGetResponse            = responseOpt.get
   def responseOpt: Option[RichGetResponse] = Option(original.getResponse).map(RichGetResponse.apply)
   def responseTry: Try[RichGetResponse] =
     if (failed) Failure(original.getFailure.getFailure) else Success(RichGetResponse(original.getResponse))
 
-  def failure: MultiGetResponse.Failure = failureOpt.get
+  def failure: MultiGetResponse.Failure            = failureOpt.get
   def failureOpt: Option[MultiGetResponse.Failure] = Option(original.getFailure)
 
-  def exception : Exception = failure.getFailure
+  def exception: Exception            = failure.getFailure
   def exceptionOpt: Option[Exception] = failureOpt.map(_.getFailure)
 
   def failed: Boolean = original.isFailed

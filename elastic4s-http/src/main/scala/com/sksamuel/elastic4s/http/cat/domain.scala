@@ -6,21 +6,21 @@ case class CatAliasResponse(alias: String, index: String, filter: String, routin
 case class Routing(index: String, search: String)
 
 case class CatSegmentsResponse(
-                                index: String,
-                                shard: String,
-                                prirep: String,
-                                ip: String,
-                                segment: String,
-                                generation: String,
-                                @JsonProperty("docs.count") docsCount: Long,
-                                @JsonProperty("docs.deleted") docsDeleted: Long,
-                                size: Long,
-                                @JsonProperty("size.memory") sizeMemory: Long,
-                                committed: Boolean,
-                                searchable: Boolean,
-                                version: String,
-                                compound: Boolean
-                              )
+  index: String,
+  shard: String,
+  prirep: String,
+  ip: String,
+  segment: String,
+  generation: String,
+  @JsonProperty("docs.count") docsCount: Long,
+  @JsonProperty("docs.deleted") docsDeleted: Long,
+  size: Long,
+  @JsonProperty("size.memory") sizeMemory: Long,
+  committed: Boolean,
+  searchable: Boolean,
+  version: String,
+  compound: Boolean
+)
 
 case class CatShardsResponse(index: String,
                              shard: String,
@@ -31,10 +31,7 @@ case class CatShardsResponse(index: String,
                              ip: String,
                              node: String)
 
-case class CatMasterResponse(id: String,
-                             host: String,
-                             ip: String,
-                             node: String)
+case class CatMasterResponse(id: String, host: String, ip: String, node: String)
 
 case class CatIndicesResponse(health: String,
                               status: String,
@@ -89,8 +86,7 @@ case class CatHealthResponse(epoch: Long,
                              unassign: Int,
                              @JsonProperty("pending_tasks") pendingTasks: Int,
                              @JsonProperty("max_task_wait_time") maxTaskWaitTime: String,
-                             @JsonProperty("active_shards_percent") activeShardsPercent: String
-                    )
+                             @JsonProperty("active_shards_percent") activeShardsPercent: String)
 
 case class CatThreadPoolResponse(id: String,
                                  name: String,

@@ -5,41 +5,39 @@ import com.sksamuel.elastic4s.mappings.dynamictemplate.{DynamicMapping, DynamicT
 
 object MappingBuilderFn {
 
-  def build(d: MappingDefinitionLike): XContentBuilder = {
+  def build(d: MappingDefinitionLike): XContentBuilder =
     d.rawSource match {
       //user raw source if provided, ignore other mapping settings
       case Some(rs) => XContentFactory.parse(rs)
-      case None     =>
+      case None =>
         val builder = XContentFactory.jsonBuilder()
         build(d, builder)
         builder.endObject()
     }
-  }
 
   // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
-  def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder = {
+  def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder =
     d.rawSource match {
       //user raw source if provided, ignore other mapping settings
       case Some(rs) =>
         val builder = XContentFactory.jsonBuilder
         builder.rawField(tpe, XContentFactory.parse(rs))
         builder
-      case None     =>
+      case None =>
         val builder = XContentFactory.jsonBuilder
         builder.startObject(tpe)
         build(d, builder)
         builder.endObject()
         builder.endObject()
     }
-  }
 
   def build(d: MappingDefinitionLike, builder: XContentBuilder): Unit = {
 
     for (all <- d.all) builder.startObject("_all").field("enabled", all).endObject()
     (d.source, d.sourceExcludes) match {
       case (_, l) if l.nonEmpty => builder.startObject("_source").array("excludes", l.toArray).endObject()
-      case (Some(source), _) => builder.startObject("_source").field("enabled", source).endObject()
-      case _ =>
+      case (Some(source), _)    => builder.startObject("_source").field("enabled", source).endObject()
+      case _                    =>
     }
 
     if (d.dynamicDateFormats.nonEmpty)
@@ -51,12 +49,15 @@ object MappingBuilderFn {
     d.dynamic.foreach(dynamic => {
       builder.field("dynamic", dynamic match {
         case DynamicMapping.Strict => "strict"
-        case DynamicMapping.False => "false"
-        case _ => "dynamic"
+        case DynamicMapping.False  => "false"
+        case _                     => "dynamic"
       })
     })
 
-    d.boostName.foreach(x => builder.startObject("_boost").field("name", x).field("null_value", d.boostNullValue.getOrElse(0D)).endObject())
+    d.boostName.foreach(
+      x =>
+        builder.startObject("_boost").field("name", x).field("null_value", d.boostNullValue.getOrElse(0D)).endObject()
+    )
     d.analyzer.foreach(x => builder.startObject("_analyzer").field("path", x).endObject())
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())
     d.size.foreach(x => builder.startObject("_size").field("enabled", x).endObject())
@@ -73,12 +74,12 @@ object MappingBuilderFn {
       builder.startObject("_meta")
       for (meta <- d.meta) {
         meta match {
-          case (name, s: String) => builder.field(name, s)
-          case (name, s: Double) => builder.field(name, s)
+          case (name, s: String)  => builder.field(name, s)
+          case (name, s: Double)  => builder.field(name, s)
           case (name, s: Boolean) => builder.field(name, s)
-          case (name, s: Long) => builder.field(name, s)
-          case (name, s: Float) => builder.field(name, s)
-          case (name, s: Int) => builder.field(name, s)
+          case (name, s: Long)    => builder.field(name, s)
+          case (name, s: Float)   => builder.field(name, s)
+          case (name, s: Int)     => builder.field(name, s)
         }
       }
       builder.endObject()

@@ -8,14 +8,16 @@ case class RemoveAliasActionDefinition(alias: String,
                                        routing: Option[String] = None,
                                        indexRouting: Option[String] = None,
                                        searchRouting: Option[String] = None,
-                                       filter: Option[QueryDefinition] = None) extends AliasActionDefinition {
+                                       filter: Option[QueryDefinition] = None)
+    extends AliasActionDefinition {
   require(alias.nonEmpty, "alias must not be null or empty")
   require(index.nonEmpty, "index must not be null or empty")
 
   def withRouting(route: String): RemoveAliasActionDefinition = copy(routing = Option(route))
-  def withSearchRouting(searchRouting: String): RemoveAliasActionDefinition = copy(searchRouting = Option(searchRouting))
+  def withSearchRouting(searchRouting: String): RemoveAliasActionDefinition =
+    copy(searchRouting = Option(searchRouting))
   def withIndexRouting(indexRouting: String): RemoveAliasActionDefinition = copy(indexRouting = Option(indexRouting))
 
-  def filter(query: String): RemoveAliasActionDefinition = filter(QueryStringQueryDefinition(query))
+  def filter(query: String): RemoveAliasActionDefinition          = filter(QueryStringQueryDefinition(query))
   def filter(query: QueryDefinition): RemoveAliasActionDefinition = copy(filter = query.some)
 }

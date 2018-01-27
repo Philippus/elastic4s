@@ -24,12 +24,16 @@ object CreateIndexTemplateBuilder {
     }
 
     req.mappings.foreach { mapping =>
-      builder.addMapping(mapping.`type`, MappingBuilderFn.buildWithName(mapping, mapping.`type`).string, XContentType.JSON)
+      builder.addMapping(mapping.`type`,
+                         MappingBuilderFn.buildWithName(mapping, mapping.`type`).string,
+                         XContentType.JSON)
     }
 
     if (req.settings.nonEmpty || req.analysis.nonEmpty) {
       val source = XContentFactory.jsonBuilder()
-      req.settings.foreach { p => source.field(p._1, p._2.toString) }
+      req.settings.foreach { p =>
+        source.field(p._1, p._2.toString)
+      }
       req.analysis.foreach(AnalysisBuilderFn.build(_, source))
       source.endObject()
       builder.setSettings(source.string(), XContentType.JSON)

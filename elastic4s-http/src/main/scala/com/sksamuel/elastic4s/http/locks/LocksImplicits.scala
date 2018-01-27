@@ -15,9 +15,8 @@ trait LocksImplicits {
       override def handle(response: HttpResponse) = Right(response.statusCode == 201)
     }
 
-    override def execute(client: HttpRequestClient, request: AcquireGlobalLock): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: AcquireGlobalLock): Future[HttpResponse] =
       client.async("PUT", endpoint, Map.empty)
-    }
   }
 
   implicit object ReleaseGlobalLockHttpExecutable extends HttpExecutable[ReleaseGlobalLock, Boolean] {
@@ -26,8 +25,7 @@ trait LocksImplicits {
       override def handle(response: HttpResponse) = Right(response.statusCode == 200)
     }
 
-    override def execute(client: HttpRequestClient, request: ReleaseGlobalLock): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: ReleaseGlobalLock): Future[HttpResponse] =
       client.async("DELETE", "/fs/lock/global", Map.empty)
-    }
   }
 }

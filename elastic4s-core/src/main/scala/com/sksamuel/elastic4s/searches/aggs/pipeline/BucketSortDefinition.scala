@@ -7,7 +7,8 @@ case class BucketSortDefinition(name: String,
                                 from: Option[Int] = None,
                                 size: Option[Int] = None,
                                 gapPolicy: Option[GapPolicy] = None,
-                                metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
+                                metadata: Map[String, AnyRef] = Map.empty)
+    extends PipelineAggregationDefinition {
 
   type T = BucketSortDefinition
 
@@ -20,5 +21,5 @@ case class BucketSortDefinition(name: String,
   def size(size: Int): BucketSortDefinition = copy(size = Some(size))
 
   def sort(first: SortDefinition, rest: SortDefinition*): BucketSortDefinition = sort(first +: rest)
-  def sort(sorts: Iterable[SortDefinition]): BucketSortDefinition = copy(sort = sorts.toSeq)
+  def sort(sorts: Iterable[SortDefinition]): BucketSortDefinition              = copy(sort = sorts.toSeq)
 }

@@ -56,7 +56,7 @@ case class SynonymTokenFilter(name: String,
                               format: Option[String] = None,
                               expand: Option[Boolean] = None,
                               tokenizer: Option[Tokenizer] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
 
@@ -71,28 +71,26 @@ case class SynonymTokenFilter(name: String,
     tokenizer.foreach(t => source.field("tokenizer", t.name))
   }
 
-  def path(path: String): SynonymTokenFilter = copy(path = Some(path))
+  def path(path: String): SynonymTokenFilter                   = copy(path = Some(path))
   def synonyms(synonyms: Iterable[String]): SynonymTokenFilter = copy(synonyms = synonyms.toSet)
-  def tokenizer(tokenizer: Tokenizer): SynonymTokenFilter = copy(tokenizer = Some(tokenizer))
-  def format(format: String): SynonymTokenFilter = copy(format = Some(format))
-  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter = copy(ignoreCase = Some(ignoreCase))
-  def expand(expand: Boolean): SynonymTokenFilter = copy(expand = Some(expand))
+  def tokenizer(tokenizer: Tokenizer): SynonymTokenFilter      = copy(tokenizer = Some(tokenizer))
+  def format(format: String): SynonymTokenFilter               = copy(format = Some(format))
+  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter      = copy(ignoreCase = Some(ignoreCase))
+  def expand(expand: Boolean): SynonymTokenFilter              = copy(expand = Some(expand))
 }
 
-case class TruncateTokenFilter(name: String, length: Option[Int] = None)
-  extends TokenFilterDefinition {
+case class TruncateTokenFilter(name: String, length: Option[Int] = None) extends TokenFilterDefinition {
 
   val filterType = "truncate"
 
-  override def build(source: XContentBuilder): Unit = {
+  override def build(source: XContentBuilder): Unit =
     length.foreach(source.field("length", _))
-  }
 
   def length(length: Int): TruncateTokenFilter = copy(length = length.some)
 }
 
 case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[Int] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "length"
 
@@ -105,16 +103,15 @@ case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[
   def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
-case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] = None) extends TokenFilterDefinition {
 
   val filterType = "unique"
 
-  override def build(source: XContentBuilder): Unit = {
+  override def build(source: XContentBuilder): Unit =
     onlyOnSamePosition.foreach(source.field("only_on_same_position", _))
-  }
 
-  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter = copy(onlyOnSamePosition = onlyOnSamePosition.some)
+  def onlyOnSamePosition(onlyOnSamePosition: Boolean): UniqueTokenFilter =
+    copy(onlyOnSamePosition = onlyOnSamePosition.some)
 }
 
 case class KeywordMarkerTokenFilter(name: String,
@@ -122,7 +119,7 @@ case class KeywordMarkerTokenFilter(name: String,
                                     keywordsPath: Option[String] = None,
                                     keywordsPattern: Option[String] = None,
                                     ignoreCase: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "keyword_marker"
 
@@ -135,30 +132,28 @@ case class KeywordMarkerTokenFilter(name: String,
     ignoreCase.foreach(source.field("ignore_case", _))
   }
 
-  def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter = copy(keywords = keywords)
+  def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter        = copy(keywords = keywords)
   def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest)
-  def keywordsPath(path: String): KeywordMarkerTokenFilter = copy(keywordsPath = path.some)
-  def keywordsPattern(pattern: String): KeywordMarkerTokenFilter = copy(keywordsPattern = pattern.some)
-  def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter = copy(ignoreCase = ignoreCase.some)
+  def keywordsPath(path: String): KeywordMarkerTokenFilter             = copy(keywordsPath = path.some)
+  def keywordsPattern(pattern: String): KeywordMarkerTokenFilter       = copy(keywordsPattern = pattern.some)
+  def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter        = copy(ignoreCase = ignoreCase.some)
 }
 
-case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil)
-  extends TokenFilterDefinition {
+case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil) extends TokenFilterDefinition {
 
   val filterType = "elision"
 
-  override def build(source: XContentBuilder): Unit = {
+  override def build(source: XContentBuilder): Unit =
     source.array("articles", articles.toArray)
-  }
 
-  def articles(articles: Seq[String]): ElisionTokenFilter = copy(articles = articles)
+  def articles(articles: Seq[String]): ElisionTokenFilter        = copy(articles = articles)
   def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
 }
 
 case class LimitTokenCountTokenFilter(name: String,
                                       maxTokenCount: Option[Int] = None,
                                       consumeAllTokens: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "limit"
 
@@ -168,7 +163,8 @@ case class LimitTokenCountTokenFilter(name: String,
   }
 
   def maxTokenCount(maxTokenCount: Int): LimitTokenCountTokenFilter = copy(maxTokenCount = maxTokenCount.some)
-  def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenCountTokenFilter = copy(consumeAllTokens = consumeAllTokens.some)
+  def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenCountTokenFilter =
+    copy(consumeAllTokens = consumeAllTokens.some)
 }
 
 case class StopTokenFilter(name: String,
@@ -178,7 +174,7 @@ case class StopTokenFilter(name: String,
                            enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
                            removeTrailing: Option[Boolean] = None,
                            ignoreCase: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "stop"
 
@@ -192,49 +188,47 @@ case class StopTokenFilter(name: String,
     removeTrailing.foreach(source.field("remove_trailing", _))
   }
 
-  def ignoreCase(boolean: Boolean): StopTokenFilter = copy(ignoreCase = boolean.some)
-  def removeTrailing(boolean: Boolean): StopTokenFilter = copy(removeTrailing = boolean.some)
-  def enablePositionIncrements(boolean: Boolean): StopTokenFilter = copy(enablePositionIncrements = boolean.some)
-  def language(language: String): StopTokenFilter = copy(language = language.some)
-  def stopwords(stopwords: Iterable[String]): StopTokenFilter = copy(stopwords = stopwords)
+  def ignoreCase(boolean: Boolean): StopTokenFilter                = copy(ignoreCase = boolean.some)
+  def removeTrailing(boolean: Boolean): StopTokenFilter            = copy(removeTrailing = boolean.some)
+  def enablePositionIncrements(boolean: Boolean): StopTokenFilter  = copy(enablePositionIncrements = boolean.some)
+  def language(language: String): StopTokenFilter                  = copy(language = language.some)
+  def stopwords(stopwords: Iterable[String]): StopTokenFilter      = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
-  def stopwordsPath(path: String): StopTokenFilter = copy(stopwordsPath = path.some)
+  def stopwordsPath(path: String): StopTokenFilter                 = copy(stopwordsPath = path.some)
 }
 
 object NamedStopTokenFilter {
-  val Arabic = "_arabic_"
-  val Armenian = "_armenian_"
-  val Basque = "_basque_"
-  val Brazilian = "_brazilian_"
-  val Bulgarian = "_bulgarian_"
-  val Catalan = "_catalan_"
-  val Czech = "_czech_"
-  val Danish = "_danish_"
-  val Dutch = "_dutch_"
-  val English = "_english_"
-  val Finnish = "_finnish_"
-  val French = "_french_"
-  val Galician = "_galician_"
-  val German = "_german_"
-  val Greek = "_greek_"
-  val Hindi = "_hindi_"
-  val Hungarian = "_hungarian_"
+  val Arabic     = "_arabic_"
+  val Armenian   = "_armenian_"
+  val Basque     = "_basque_"
+  val Brazilian  = "_brazilian_"
+  val Bulgarian  = "_bulgarian_"
+  val Catalan    = "_catalan_"
+  val Czech      = "_czech_"
+  val Danish     = "_danish_"
+  val Dutch      = "_dutch_"
+  val English    = "_english_"
+  val Finnish    = "_finnish_"
+  val French     = "_french_"
+  val Galician   = "_galician_"
+  val German     = "_german_"
+  val Greek      = "_greek_"
+  val Hindi      = "_hindi_"
+  val Hungarian  = "_hungarian_"
   val Indonesian = "_indonesian_"
-  val Italian = "_italian_"
-  val Norwegian = "_norwegian_"
-  val Persian = "_persian_"
+  val Italian    = "_italian_"
+  val Norwegian  = "_norwegian_"
+  val Persian    = "_persian_"
   val Portuguese = "_portuguese_"
-  val Romanian = "_romanian_"
-  val Russian = "_russian_"
-  val Spanish = "_spanish_"
-  val Swedish = "_swedish_"
-  val Turkish = "_turkish_"
+  val Romanian   = "_romanian_"
+  val Russian    = "_russian_"
+  val Spanish    = "_spanish_"
+  val Swedish    = "_swedish_"
+  val Turkish    = "_turkish_"
 }
 
-case class PatternCaptureTokenFilter(name: String,
-                                     patterns: Seq[String] = Nil,
-                                     preserveOriginal: Boolean = true)
-  extends TokenFilterDefinition {
+case class PatternCaptureTokenFilter(name: String, patterns: Seq[String] = Nil, preserveOriginal: Boolean = true)
+    extends TokenFilterDefinition {
 
   val filterType = "pattern_capture"
 
@@ -244,13 +238,12 @@ case class PatternCaptureTokenFilter(name: String,
     source.field("preserve_original", preserveOriginal)
   }
 
-  def patterns(patterns: Seq[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
-  def patterns(first: String, rest: String*): PatternCaptureTokenFilter = copy(patterns = first +: rest)
+  def patterns(patterns: Seq[String]): PatternCaptureTokenFilter             = copy(patterns = patterns)
+  def patterns(first: String, rest: String*): PatternCaptureTokenFilter      = copy(patterns = first +: rest)
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
-case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String)
-  extends TokenFilterDefinition {
+case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String) extends TokenFilterDefinition {
 
   val filterType = "pattern_replace"
 
@@ -259,7 +252,7 @@ case class PatternReplaceTokenFilter(name: String, pattern: String, replacement:
     source.field("replacement", replacement)
   }
 
-  def pattern(p: String): PatternReplaceTokenFilter = copy(pattern = p)
+  def pattern(p: String): PatternReplaceTokenFilter     = copy(pattern = p)
   def replacement(r: String): PatternReplaceTokenFilter = copy(replacement = r)
 }
 
@@ -268,7 +261,7 @@ case class CommonGramsTokenFilter(name: String,
                                   commonWordsPath: Option[String] = None,
                                   ignoreCase: Option[Boolean] = None,
                                   queryMode: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "common_grams"
 
@@ -281,18 +274,18 @@ case class CommonGramsTokenFilter(name: String,
     queryMode.foreach(source.field("query_mode", _))
   }
 
-  def commonWords(words: Iterable[String]): CommonGramsTokenFilter = copy(commonWords = words)
+  def commonWords(words: Iterable[String]): CommonGramsTokenFilter      = copy(commonWords = words)
   def commonWords(first: String, rest: String*): CommonGramsTokenFilter = copy(commonWords = first +: rest)
-  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase.some)
-  def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode.some)
-  def commonWordsPath(path: String): CommonGramsTokenFilter = copy(commonWordsPath = path.some)
+  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter           = copy(ignoreCase = ignoreCase.some)
+  def queryMode(queryMode: Boolean): CommonGramsTokenFilter             = copy(queryMode = queryMode.some)
+  def commonWordsPath(path: String): CommonGramsTokenFilter             = copy(commonWordsPath = path.some)
 }
 
 case class EdgeNGramTokenFilter(name: String,
                                 minGram: Option[Int] = None,
                                 maxGram: Option[Int] = None,
                                 side: Option[String] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "edgeNGram"
 
@@ -303,13 +296,13 @@ case class EdgeNGramTokenFilter(name: String,
   }
 
   def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
-  def minGram(min: Int): EdgeNGramTokenFilter = copy(minGram = min.some)
-  def maxGram(max: Int): EdgeNGramTokenFilter = copy(maxGram = max.some)
-  def side(side: String): EdgeNGramTokenFilter = copy(side = side.some)
+  def minGram(min: Int): EdgeNGramTokenFilter               = copy(minGram = min.some)
+  def maxGram(max: Int): EdgeNGramTokenFilter               = copy(maxGram = max.some)
+  def side(side: String): EdgeNGramTokenFilter              = copy(side = side.some)
 }
 
 case class NGramTokenFilter(name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "nGram"
 
@@ -319,39 +312,32 @@ case class NGramTokenFilter(name: String, minGram: Option[Int] = None, maxGram: 
   }
 
   def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
-  def minGram(min: Int): NGramTokenFilter = copy(minGram = min.some)
-  def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max.some)
+  def minGram(min: Int): NGramTokenFilter               = copy(minGram = min.some)
+  def maxGram(max: Int): NGramTokenFilter               = copy(maxGram = max.some)
 }
 
-case class SnowballTokenFilter(name: String, language: String)
-  extends TokenFilterDefinition {
+case class SnowballTokenFilter(name: String, language: String) extends TokenFilterDefinition {
 
   val filterType = "snowball"
 
-  override def build(source: XContentBuilder): Unit = {
+  override def build(source: XContentBuilder): Unit =
     source.field("language", language)
-  }
 
   def lang(l: String): SnowballTokenFilter = copy(language = l)
 }
 
-case class StemmerTokenFilter(name: String, lang: String)
-  extends TokenFilterDefinition {
+case class StemmerTokenFilter(name: String, lang: String) extends TokenFilterDefinition {
 
   val filterType = "stemmer"
 
-  override def build(source: XContentBuilder): Unit = {
+  override def build(source: XContentBuilder): Unit =
     source.field("name", lang)
-  }
 
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
-case class StemmerOverrideTokenFilter(
-                                      name: String,
-                                      rules: Seq[String] = Nil,
-                                      rulesPath: Option[String] = None)
-  extends TokenFilterDefinition {
+case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil, rulesPath: Option[String] = None)
+    extends TokenFilterDefinition {
 
   val filterType = "stemmer_override"
 
@@ -363,7 +349,7 @@ case class StemmerOverrideTokenFilter(
   }
 
   def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)
-  def rulesPath(path: String): StemmerOverrideTokenFilter = copy(rulesPath = path.some)
+  def rulesPath(path: String): StemmerOverrideTokenFilter     = copy(rulesPath = path.some)
 }
 
 case class WordDelimiterTokenFilter(name: String,
@@ -376,7 +362,7 @@ case class WordDelimiterTokenFilter(name: String,
                                     preserveOriginal: Option[Boolean] = None,
                                     splitOnNumerics: Option[Boolean] = None,
                                     stemEnglishPossesive: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "word_delimiter"
 
@@ -392,14 +378,14 @@ case class WordDelimiterTokenFilter(name: String,
     stemEnglishPossesive.foreach(source.field("stem_english_possessive", _))
   }
 
-  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateWordParts = bool.some)
-  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateNumberParts = bool.some)
-  def catenateWords(bool: Boolean): WordDelimiterTokenFilter = copy(catenateWords = bool.some)
-  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter = copy(catenateNumbers = bool.some)
-  def catenateAll(bool: Boolean): WordDelimiterTokenFilter = copy(catenateAll = bool.some)
-  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnCaseChange = bool.some)
-  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter = copy(preserveOriginal = bool.some)
-  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnNumerics = bool.some)
+  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter    = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter  = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterTokenFilter        = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter      = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterTokenFilter          = copy(catenateAll = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter    = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter     = copy(preserveOriginal = bool.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter      = copy(splitOnNumerics = bool.some)
   def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
 }
 
@@ -410,8 +396,7 @@ case class ShingleTokenFilter(name: String,
                               outputUnigramsIfNoShingles: Option[Boolean] = None,
                               tokenSeparator: Option[String] = None,
                               fillerToken: Option[String] = None)
-
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = "shingle"
 
@@ -424,12 +409,12 @@ case class ShingleTokenFilter(name: String,
     fillerToken.foreach(source.field("filler_token", _))
   }
 
-  def maxShingleSize(max: Int): ShingleTokenFilter = copy(maxShingleSize = max.some)
-  def minShingleSize(min: Int): ShingleTokenFilter = copy(minShingleSize = min.some)
-  def outputUnigrams(b: Boolean): ShingleTokenFilter = copy(outputUnigrams = b.some)
+  def maxShingleSize(max: Int): ShingleTokenFilter               = copy(maxShingleSize = max.some)
+  def minShingleSize(min: Int): ShingleTokenFilter               = copy(minShingleSize = min.some)
+  def outputUnigrams(b: Boolean): ShingleTokenFilter             = copy(outputUnigrams = b.some)
   def outputUnigramsIfNoShingles(b: Boolean): ShingleTokenFilter = copy(outputUnigramsIfNoShingles = b.some)
-  def tokenSeparator(sep: String): ShingleTokenFilter = copy(tokenSeparator = sep.some)
-  def fillerToken(filler: String): ShingleTokenFilter = copy(fillerToken = filler.some)
+  def tokenSeparator(sep: String): ShingleTokenFilter            = copy(tokenSeparator = sep.some)
+  def fillerToken(filler: String): ShingleTokenFilter            = copy(fillerToken = filler.some)
 }
 
 sealed trait CompoundWordTokenFilterType {
@@ -443,7 +428,6 @@ case object DictionaryDecompounder extends CompoundWordTokenFilterType {
   override def name = "dictionary_decompounder"
 }
 
-
 case class CompoundWordTokenFilter(name: String,
                                    `type`: CompoundWordTokenFilterType,
                                    wordList: Iterable[String] = Nil,
@@ -453,7 +437,7 @@ case class CompoundWordTokenFilter(name: String,
                                    minSubwordSize: Option[Int] = None,
                                    maxSubwordSize: Option[Int] = None,
                                    onlyLongestMatch: Option[Boolean] = None)
-  extends TokenFilterDefinition {
+    extends TokenFilterDefinition {
 
   val filterType = `type`.name
 
@@ -486,4 +470,3 @@ case class CompoundWordTokenFilter(name: String,
   def onlyLongestMatch(onlyLongestMatch: Boolean): CompoundWordTokenFilter =
     copy(onlyLongestMatch = onlyLongestMatch.some)
 }
-

@@ -8,13 +8,13 @@ case class ValueCountAggregationDefinition(name: String,
                                            script: Option[ScriptDefinition] = None,
                                            subaggs: Seq[AbstractAggregation] = Nil,
                                            metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = ValueCountAggregationDefinition
 
-  def field(field: String): ValueCountAggregationDefinition = copy(field = field.some)
+  def field(field: String): ValueCountAggregationDefinition             = copy(field = field.some)
   def script(script: ScriptDefinition): ValueCountAggregationDefinition = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }

@@ -10,7 +10,7 @@ import scala.concurrent.Future
 trait ForceMergeExecutables {
 
   implicit object ForceMergeExecutable
-    extends Executable[ForceMergeDefinition, ForceMergeResponse, ForceMergeResponse] {
+      extends Executable[ForceMergeDefinition, ForceMergeResponse, ForceMergeResponse] {
     override def apply(c: Client, t: ForceMergeDefinition): Future[ForceMergeResponse] = {
       val builder = c.admin.indices.prepareForceMerge(t.indexes: _*)
       t.flush.foreach(builder.setFlush)

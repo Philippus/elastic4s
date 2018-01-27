@@ -12,9 +12,10 @@ case class ElasticError(`type`: String,
 
 object ElasticError {
 
-  def fromThrowable(t: Throwable) = ElasticError(t.getClass.getCanonicalName, t.getLocalizedMessage, None, None, None, Nil)
+  def fromThrowable(t: Throwable) =
+    ElasticError(t.getClass.getCanonicalName, t.getLocalizedMessage, None, None, None, Nil)
 
-  def parse(r: HttpResponse): ElasticError = {
+  def parse(r: HttpResponse): ElasticError =
     r.entity match {
       case Some(entity) =>
         val node = JacksonSupport.mapper.readTree(entity.content)
@@ -27,5 +28,4 @@ object ElasticError {
       case _ =>
         ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil)
     }
-  }
 }

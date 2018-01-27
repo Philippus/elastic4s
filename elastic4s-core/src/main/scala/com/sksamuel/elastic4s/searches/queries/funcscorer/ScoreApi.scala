@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.searches.queries.QueryDefinition
 
 trait ScoreApi {
 
-
   def randomScore(seed: Int) = RandomScoreFunctionDefinition(seed)
 
   def scriptScore(script: ScriptDefinition) = ScriptScoreDefinition(script)

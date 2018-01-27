@@ -24,5 +24,3 @@ object SpanNearQueryBodyFn {
     builder.endObject()
   }
 }
-
-

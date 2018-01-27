@@ -21,7 +21,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],
-                     private val inner_hits: Map[String, Map[String, Any]]) extends Hit {
+                     private val inner_hits: Map[String, Map[String, Any]])
+    extends Hit {
 
   def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
 
@@ -30,16 +31,16 @@ case class SearchHit(@JsonProperty("_id") id: String,
     new HitField {
       override def values: Seq[AnyRef] = v match {
         case values: Seq[AnyRef] => values
-        case value: AnyRef => Seq(value)
+        case value: AnyRef       => Seq(value)
       }
-      override def value: AnyRef = values.head
-      override def name: String = fieldName
+      override def value: AnyRef            = values.head
+      override def name: String             = fieldName
       override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
     }
   }
 
   override def sourceAsMap: Map[String, AnyRef] = _source
-  override def sourceAsString: String = SourceAsContentBuilder(_source).string()
+  override def sourceAsString: String           = SourceAsContentBuilder(_source).string()
 
   override def exists: Boolean = true
 
@@ -65,17 +66,13 @@ case class SearchHit(@JsonProperty("_id") id: String,
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
 
-case class SearchHits(total: Long,
-                      @JsonProperty("max_score") maxScore: Double,
-                      hits: Array[SearchHit]) {
-  def size: Long = hits.length
-  def isEmpty: Boolean = hits.isEmpty
+case class SearchHits(total: Long, @JsonProperty("max_score") maxScore: Double, hits: Array[SearchHit]) {
+  def size: Long        = hits.length
+  def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 }
 
-case class InnerHits(total: Long,
-                     max_score: Double,
-                     hits: Seq[InnerHit])
+case class InnerHits(total: Long, max_score: Double, hits: Seq[InnerHit])
 
 case class InnerHit(nested: Map[String, AnyRef],
                     score: Double,
@@ -91,29 +88,35 @@ case class SearchResponse(took: Long,
                           @JsonProperty("_shards") shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
                           @JsonProperty("aggregations") private val _aggregationsAsMap: Map[String, Any],
-                          hits: SearchHits
-                         ) {
+                          hits: SearchHits) {
 
   def aggregationsAsMap: Map[String, Any] = Option(_aggregationsAsMap).getOrElse(Map.empty)
-  def totalHits: Long = hits.total
-  def size: Long = hits.size
-  def ids: Seq[String] = hits.hits.map(_.id)
-  def maxScore: Double = hits.maxScore
+  def totalHits: Long                     = hits.total
+  def size: Long                          = hits.size
+  def ids: Seq[String]                    = hits.hits.map(_.id)
+  def maxScore: Double                    = hits.maxScore
 
-  def isEmpty: Boolean = hits.isEmpty
+  def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  lazy val aggsAsContentBuilder = SourceAsContentBuilder(aggregationsAsMap)
+  lazy val aggsAsContentBuilder         = SourceAsContentBuilder(aggregationsAsMap)
   lazy val aggregationsAsString: String = aggsAsContentBuilder.string()
-  def aggs: Aggregations = aggregations
-  def aggregations: Aggregations = Aggregations(aggregationsAsMap)
+  def aggs: Aggregations                = aggregations
+  def aggregations: Aggregations        = Aggregations(aggregationsAsMap)
 
-  private def suggestion(name: String): Map[String, SuggestionResult] = suggest.getOrElse(name, Nil).map { result => result.text -> result }.toMap
+  private def suggestion(name: String): Map[String, SuggestionResult] =
+    suggest
+      .getOrElse(name, Nil)
+      .map { result =>
+        result.text -> result
+      }
+      .toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] =
+    suggestion(name).mapValues(_.toCompletion)
   def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
 
-  def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T]                        = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }

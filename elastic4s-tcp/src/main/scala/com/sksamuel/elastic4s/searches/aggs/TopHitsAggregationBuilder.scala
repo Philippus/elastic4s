@@ -20,8 +20,9 @@ object TopHitsAggregationBuilder {
     agg.size.foreach(builder.size)
     agg.storedFields.foreach(builder.storedField)
 
-    agg.scripts.foreach { case (name, script) =>
-      builder.scriptField(name, ScriptBuilder(script))
+    agg.scripts.foreach {
+      case (name, script) =>
+        builder.scriptField(name, ScriptBuilder(script))
     }
 
     def addSort[T <: SortBuilder[T]](sort: SortDefinition) = builder.sort(SortBuilderFn(sort).asInstanceOf[T])

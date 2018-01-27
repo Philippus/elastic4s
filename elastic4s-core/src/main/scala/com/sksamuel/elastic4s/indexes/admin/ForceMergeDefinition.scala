@@ -7,7 +7,7 @@ case class ForceMergeDefinition(indexes: Seq[String],
                                 maxSegments: Option[Int] = None,
                                 onlyExpungeDeletes: Option[Boolean] = None) {
 
-  def flush(flush: Boolean): ForceMergeDefinition = copy(flush = flush.some)
+  def flush(flush: Boolean): ForceMergeDefinition         = copy(flush = flush.some)
   def maxSegments(maxSegments: Int): ForceMergeDefinition = copy(maxSegments = maxSegments.some)
 
   /**

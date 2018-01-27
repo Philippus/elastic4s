@@ -11,17 +11,19 @@ case class DeleteByIdDefinition(indexType: IndexAndType,
                                 refresh: Option[RefreshPolicy] = None,
                                 waitForActiveShards: Option[Int] = None,
                                 version: Option[Long] = None,
-                                versionType: Option[VersionType] = None) extends BulkCompatibleDefinition {
+                                versionType: Option[VersionType] = None)
+    extends BulkCompatibleDefinition {
 
-  def routing(routing: String): DeleteByIdDefinition = copy(routing = routing.some)
-  def parent(parent: String): DeleteByIdDefinition = copy(parent = parent.some)
-  def refresh(_refresh: String): DeleteByIdDefinition = refresh(RefreshPolicy.valueOf(_refresh))
+  def routing(routing: String): DeleteByIdDefinition        = copy(routing = routing.some)
+  def parent(parent: String): DeleteByIdDefinition          = copy(parent = parent.some)
+  def refresh(_refresh: String): DeleteByIdDefinition       = refresh(RefreshPolicy.valueOf(_refresh))
   def refresh(refresh: RefreshPolicy): DeleteByIdDefinition = copy(refresh = refresh.some)
 
   def refreshImmediately: DeleteByIdDefinition = refresh(RefreshPolicy.IMMEDIATE)
 
-  def waitForActiveShards(waitForActiveShards: Int): DeleteByIdDefinition = copy(waitForActiveShards = waitForActiveShards.some)
-  def version(version: Long): DeleteByIdDefinition = copy(version = version.some)
-  def versionType(versionType: String): DeleteByIdDefinition = copy(versionType = VersionType.valueOf(versionType).some)
+  def waitForActiveShards(waitForActiveShards: Int): DeleteByIdDefinition =
+    copy(waitForActiveShards = waitForActiveShards.some)
+  def version(version: Long): DeleteByIdDefinition                = copy(version = version.some)
+  def versionType(versionType: String): DeleteByIdDefinition      = copy(versionType = VersionType.valueOf(versionType).some)
   def versionType(versionType: VersionType): DeleteByIdDefinition = copy(versionType = versionType.some)
 }

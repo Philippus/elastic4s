@@ -6,8 +6,9 @@ import com.sksamuel.exts.OptionImplicits._
 case class SpanContainingQueryDefinition(little: SpanQueryDefinition,
                                          big: SpanQueryDefinition,
                                          boost: Option[Double] = None,
-                                         queryName: Option[String] = None) extends QueryDefinition {
+                                         queryName: Option[String] = None)
+    extends QueryDefinition {
 
-  def boost(boost: Double): SpanContainingQueryDefinition = copy(boost = boost.some)
+  def boost(boost: Double): SpanContainingQueryDefinition         = copy(boost = boost.some)
   def queryName(queryName: String): SpanContainingQueryDefinition = copy(queryName = queryName.some)
 }

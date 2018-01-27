@@ -27,7 +27,7 @@ import com.sksamuel.elastic4s.http.validate.ValidateImplicits
 import com.sksamuel.exts.Logging
 
 trait ElasticDsl
-  extends ElasticApi
+    extends ElasticApi
     with Logging
     with BulkImplicits
     with CatImplicits

@@ -27,45 +27,50 @@ case class GeoshapeFieldDefinition(name: String,
                                    similarity: Option[String] = None,
                                    store: Option[Boolean] = None,
                                    geoFields: GeoFields = GeoFields(),
-                                   termVector: Option[String] = None
-                                  ) extends FieldDefinition {
+                                   termVector: Option[String] = None)
+    extends FieldDefinition {
 
   type T = GeoshapeFieldDefinition
 
   def `type`: String = "geo_shape"
 
-  override def boost(boost: Double): T = copy(boost = boost.some)
+  override def boost(boost: Double): T          = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
 
-  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
-  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T   = copy(analysis = analysis.copy(normalizer = normalizer.some))
   override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
 
-  override def enabled(enabled: Boolean): T = copy(enabled = enabled.some)
+  override def enabled(enabled: Boolean): T                 = copy(enabled = enabled.some)
   override def fields(fields: Iterable[FieldDefinition]): T = copy(fields = fields.toSeq)
 
   override def copyTo(first: String, rest: String*): T = copyTo(first +: rest)
-  override def copyTo(copyTo: Iterable[String]): T = copy(copyTo = copyTo.toSeq)
+  override def copyTo(copyTo: Iterable[String]): T     = copy(copyTo = copyTo.toSeq)
 
   def format(format: String): T = copy(format = format.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
+  override def index(index: Boolean): T               = copy(index = index.toString.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def norms(norms: Boolean): T = copy(norms = norms.some)
+  override def norms(norms: Boolean): T       = copy(norms = norms.some)
   override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
-  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
+  override def nullValue(nullvalue: Any): T   = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
-  override def store(b: Boolean): T = copy(store = b.some)
-   def similarity(similarity: String): T = copy(similarity = similarity.some)
+  override def store(b: Boolean): T     = copy(store = b.some)
+  def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 
   def tree(tree: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(tree = tree.some))
-  def precision(precision: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(precision = precision.some))
+  def precision(precision: String): GeoshapeFieldDefinition =
+    copy(geoFields = geoFields.copy(precision = precision.some))
   def strategy(strategy: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(strategy = strategy.some))
-  def distanceErrorPct(distanceErrorPct: Double): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(distanceErrorPct = distanceErrorPct.some))
-  def orientation(orientation: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(orientation = orientation.some))
-  def pointsOnly(pointsOnly: Boolean): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(pointsOnly = pointsOnly.some))
-  def treeLevels(treeLevels: String): GeoshapeFieldDefinition = copy(geoFields = geoFields.copy(treeLevels = treeLevels.some))
+  def distanceErrorPct(distanceErrorPct: Double): GeoshapeFieldDefinition =
+    copy(geoFields = geoFields.copy(distanceErrorPct = distanceErrorPct.some))
+  def orientation(orientation: String): GeoshapeFieldDefinition =
+    copy(geoFields = geoFields.copy(orientation = orientation.some))
+  def pointsOnly(pointsOnly: Boolean): GeoshapeFieldDefinition =
+    copy(geoFields = geoFields.copy(pointsOnly = pointsOnly.some))
+  def treeLevels(treeLevels: String): GeoshapeFieldDefinition =
+    copy(geoFields = geoFields.copy(treeLevels = treeLevels.some))
 }

@@ -9,14 +9,14 @@ case class SumAggregationDefinition(name: String,
                                     script: Option[ScriptDefinition] = None,
                                     subaggs: Seq[AbstractAggregation] = Nil,
                                     metadata: Map[String, AnyRef] = Map.empty)
-  extends AggregationDefinition {
+    extends AggregationDefinition {
 
   type T = SumAggregationDefinition
 
-  def field(field: String): SumAggregationDefinition = copy(field = field.some)
-  def missing(missing: AnyRef): SumAggregationDefinition = copy(missing = missing.some)
+  def field(field: String): SumAggregationDefinition             = copy(field = field.some)
+  def missing(missing: AnyRef): SumAggregationDefinition         = copy(missing = missing.some)
   def script(script: ScriptDefinition): SumAggregationDefinition = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }

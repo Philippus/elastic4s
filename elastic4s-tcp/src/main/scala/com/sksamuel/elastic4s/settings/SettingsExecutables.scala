@@ -11,7 +11,7 @@ import scala.concurrent.Future
 trait SettingsExecutables {
 
   implicit object GetSettingsDefinitionExecutable
-    extends Executable[GetSettingsDefinition, GetSettingsResponse, GetSettingsResponse] {
+      extends Executable[GetSettingsDefinition, GetSettingsResponse, GetSettingsResponse] {
     override def apply(c: Client, t: GetSettingsDefinition): Future[GetSettingsResponse] = {
       val req = new GetSettingsRequest().indices(t.indexes.values: _*)
       t.options.map(EnumConversions.indicesopts).foreach(req.indicesOptions)
@@ -20,7 +20,7 @@ trait SettingsExecutables {
   }
 
   implicit object UpdateSettingsDefinitionExecutable
-    extends Executable[UpdateSettingsDefinition, UpdateSettingsResponse, UpdateSettingsResponse] {
+      extends Executable[UpdateSettingsDefinition, UpdateSettingsResponse, UpdateSettingsResponse] {
     override def apply(c: Client, t: UpdateSettingsDefinition): Future[UpdateSettingsResponse] = {
       val req = new UpdateSettingsRequest(t.indices.values: _*)
       req.settings(t.settings.asJava)

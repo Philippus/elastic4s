@@ -14,14 +14,14 @@ object SigTermsAggregationBuilder {
     agg.executionHint.foreach(builder.field("execution_hint", _))
     agg.includeExclude.foreach { incexc =>
       incexc.include.toList match {
-        case Nil =>
+        case Nil            =>
         case include :: Nil => builder.field("include", include)
-        case more => builder.array("include", more.toArray)
+        case more           => builder.array("include", more.toArray)
       }
       incexc.exclude.toList match {
-        case Nil =>
+        case Nil            =>
         case exclude :: Nil => builder.field("exclude", exclude)
-        case more => builder.array("exclude", more.toArray)
+        case more           => builder.array("exclude", more.toArray)
       }
     }
     agg.includePartition.foreach { incpart =>
@@ -31,7 +31,7 @@ object SigTermsAggregationBuilder {
       includeBuilder.endObject()
     }
     agg.heuristic.foreach(builder.field("", _))
-    agg.backgroundFilter.map(QueryBuilderFn.apply).foreach{ x =>
+    agg.backgroundFilter.map(QueryBuilderFn.apply).foreach { x =>
       builder.rawField("background_filter", x)
     }
     agg.size.foreach(builder.field("size", _))

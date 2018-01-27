@@ -26,7 +26,8 @@ object ResponseHandler extends Logging {
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
 
-  def fromResponse[U: Manifest](response: HttpResponse): U = fromEntity(response.entity.getOrError("No entity defined but was expected"))
+  def fromResponse[U: Manifest](response: HttpResponse): U =
+    fromEntity(response.entity.getOrError("No entity defined but was expected"))
 
   def fromEntity[U: Manifest](entity: HttpEntity.StringEntity): U = {
     logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
@@ -34,7 +35,7 @@ object ResponseHandler extends Logging {
     JacksonSupport.mapper.readValue[U](entity.content)
   }
 
-  def default[U: Manifest] = new DefaultResponseHandler[U]
+  def default[U: Manifest]    = new DefaultResponseHandler[U]
   def failure404[U: Manifest] = new NotFound404ResponseHandler[U]
 }
 
@@ -50,10 +51,9 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
 }
 
 class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
-  override def handle(response: HttpResponse): Either[ElasticError, U] = {
+  override def handle(response: HttpResponse): Either[ElasticError, U] =
     response.statusCode match {
       case 404 | 500 => sys.error(response.toString)
-      case _ => super.handle(response)
+      case _         => super.handle(response)
     }
-  }
 }

@@ -10,8 +10,8 @@ object MoreLikeThisQueryBuilderFn {
     val docs = q.likeDocs.map { item =>
       new MoreLikeThisQueryBuilder.Item(item.ref.index, item.ref.`type`, item.ref.id).routing(item.routing.orNull)
     } ++ q.artificialDocs.map { doc =>
-
-      val parser = XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
+      val parser =
+        XContentFactory.xContent(XContentType.JSON).createParser(NamedXContentRegistry.EMPTY, doc.doc.getBytes)
       parser.close()
       val builder = XContentFactory.jsonBuilder().copyCurrentStructure(parser)
 

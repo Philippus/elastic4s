@@ -26,7 +26,8 @@ case class ReindexDefinition(sourceIndexes: Indexes,
                              script: Option[ScriptDefinition] = None) {
 
   def remote(uri: String): ReindexDefinition = copy(remoteHost = Option(uri))
-  def remote(uri: String, user: String, pass: String): ReindexDefinition = copy(remoteHost = Option(uri), remoteUser = Option(user), remotePass = Option(pass))
+  def remote(uri: String, user: String, pass: String): ReindexDefinition =
+    copy(remoteHost = Option(uri), remoteUser = Option(user), remotePass = Option(pass))
 
   def timeout(timeout: FiniteDuration): ReindexDefinition = copy(timeout = timeout.some)
 

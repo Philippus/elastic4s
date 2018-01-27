@@ -7,10 +7,10 @@ case class HasParentQueryDefinition(`type`: String,
                                     ignoreUnmapped: Option[Boolean] = None,
                                     innerHit: Option[InnerHitDefinition] = None,
                                     queryName: Option[String] = None)
-  extends QueryDefinition {
+    extends QueryDefinition {
 
-  def boost(boost: Double): HasParentQueryDefinition = copy(boost = Some(boost))
+  def boost(boost: Double): HasParentQueryDefinition                    = copy(boost = Some(boost))
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasParentQueryDefinition = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def innerHit(innerHit: InnerHitDefinition): HasParentQueryDefinition = copy(innerHit = Some(innerHit))
-  def queryName(queryName: String): HasParentQueryDefinition = copy(queryName = Some(queryName))
+  def innerHit(innerHit: InnerHitDefinition): HasParentQueryDefinition  = copy(innerHit = Some(innerHit))
+  def queryName(queryName: String): HasParentQueryDefinition            = copy(queryName = Some(queryName))
 }

@@ -8,7 +8,8 @@ object FunctionScoreBuilderFn {
   def apply(q: FunctionScoreQueryDefinition): FunctionScoreQueryBuilder = {
 
     val builder = q.query match {
-      case Some(query) => new FunctionScoreQueryBuilder(QueryBuilderFn(query), q.functions.map(FilterFunctionBuilderFn.apply).toArray)
+      case Some(query) =>
+        new FunctionScoreQueryBuilder(QueryBuilderFn(query), q.functions.map(FilterFunctionBuilderFn.apply).toArray)
       case _ => new FunctionScoreQueryBuilder(q.functions.map(FilterFunctionBuilderFn.apply).toArray)
     }
 

@@ -6,7 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 sealed trait PercentilesMethod
 object PercentilesMethod {
   case object TDigest extends PercentilesMethod
-  case object HDR extends PercentilesMethod
+  case object HDR     extends PercentilesMethod
 }
 
 case class PercentileRanksAggregationDefinition(name: String,
@@ -20,23 +20,24 @@ case class PercentileRanksAggregationDefinition(name: String,
                                                 compression: Option[Double] = None,
                                                 script: Option[ScriptDefinition] = None,
                                                 subaggs: Seq[AbstractAggregation] = Nil,
-                                                metadata: Map[String, AnyRef] = Map.empty) extends AggregationDefinition {
+                                                metadata: Map[String, AnyRef] = Map.empty)
+    extends AggregationDefinition {
 
   type T = PercentileRanksAggregationDefinition
 
-  def field(field: String): T = copy(field = field.some)
-  def format(format: String): T = copy(format = format.some)
-  def missing(missing: AnyRef): T = copy(missing = missing.some)
-  def script(script: ScriptDefinition): T = copy(script = script.some)
-  def keyed(keyed: Boolean): T = copy(keyed = keyed.some)
+  def field(field: String): T                        = copy(field = field.some)
+  def format(format: String): T                      = copy(format = format.some)
+  def missing(missing: AnyRef): T                    = copy(missing = missing.some)
+  def script(script: ScriptDefinition): T            = copy(script = script.some)
+  def keyed(keyed: Boolean): T                       = copy(keyed = keyed.some)
   def numberOfSignificantValueDigits(digits: Int): T = copy(numberOfSignificantValueDigits = digits.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 
   def values(first: Double, rest: Double*): PercentileRanksAggregationDefinition = values(first +: rest)
-  def values(values: Iterable[Double]): PercentileRanksAggregationDefinition = copy(values = values.toSeq)
+  def values(values: Iterable[Double]): PercentileRanksAggregationDefinition     = copy(values = values.toSeq)
 
   def method(method: PercentilesMethod): PercentileRanksAggregationDefinition = copy(method = method.some)
-  def compression(compression: Double): PercentileRanksAggregationDefinition = copy(compression = compression.some)
+  def compression(compression: Double): PercentileRanksAggregationDefinition  = copy(compression = compression.some)
 }

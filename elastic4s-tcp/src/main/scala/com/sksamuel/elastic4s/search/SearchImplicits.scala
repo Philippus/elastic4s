@@ -20,8 +20,7 @@ import scala.concurrent.Future
 
 trait SearchImplicits {
 
-  implicit object SearchDefinitionExecutable
-    extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
+  implicit object SearchDefinitionExecutable extends Executable[SearchDefinition, SearchResponse, RichSearchResponse] {
     override def apply(c: Client, t: SearchDefinition): Future[RichSearchResponse] = {
       val builder = SearchBuilderFn(c, t)
       injectFutureAndMap(builder.execute)(RichSearchResponse.apply)
@@ -38,7 +37,7 @@ trait SearchImplicits {
   //  }
 
   implicit object MultiSearchDefinitionExecutable
-    extends Executable[MultiSearchDefinition, MultiSearchResponse, RichMultiSearchResponse] {
+      extends Executable[MultiSearchDefinition, MultiSearchResponse, RichMultiSearchResponse] {
     override def apply(c: Client, t: MultiSearchDefinition): Future[RichMultiSearchResponse] = {
       val builder = MultiSearchBuilderFn(c, t)
       injectFutureAndMap(builder.execute)(RichMultiSearchResponse.apply)
@@ -70,7 +69,7 @@ trait SearchImplicits {
 
       if (search.aggs.nonEmpty)
         search.aggs.map(AggregationBuilderFn.apply).map {
-          case Left(agg) => builder.aggregation(agg)
+          case Left(agg)   => builder.aggregation(agg)
           case Right(pipe) => builder.aggregation(pipe)
         }
 
@@ -90,13 +89,17 @@ trait SearchImplicits {
       if (search.fields.scriptFields.nonEmpty) {
         import scala.collection.JavaConverters._
         search.fields.scriptFields.foreach { scriptfield =>
-          builder.scriptField(scriptfield.field,
+          builder.scriptField(
+            scriptfield.field,
             new Script(
               EnumConversions.scriptType(scriptfield.script.scriptType): ScriptType,
               scriptfield.script.lang.getOrElse(Script.DEFAULT_SCRIPT_LANG): String,
               scriptfield.script.script: String,
               scriptfield.script.options.asJava: java.util.Map[String, String],
-              scriptfield.script.params.map { case (key, value) => key -> (value.toString: Object) }.asJava: java.util.Map[String, Object]
+              scriptfield.script.params.map { case (key, value) => key -> (value.toString: Object) }.asJava: java.util.Map[
+                String,
+                Object
+              ]
             )
           )
         }
@@ -105,7 +108,9 @@ trait SearchImplicits {
       if (search.suggestions.suggs.nonEmpty) {
         val suggest = new SuggestBuilder()
         search.suggestions.globalSuggestionText.foreach(suggest.setGlobalText)
-        search.suggestions.suggs.foreach { sugg => suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg)) }
+        search.suggestions.suggs.foreach { sugg =>
+          suggest.addSuggestion(sugg.name, SuggestionBuilderFn(sugg))
+        }
         builder.suggest(suggest)
       }
 

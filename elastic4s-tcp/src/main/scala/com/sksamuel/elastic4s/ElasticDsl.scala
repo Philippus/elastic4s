@@ -9,7 +9,12 @@ import com.sksamuel.elastic4s.delete.DeleteExecutables
 import com.sksamuel.elastic4s.explain.{ExplainDefinition, ExplainExecutables}
 import com.sksamuel.elastic4s.get.GetExecutables
 import com.sksamuel.elastic4s.index.admin.ForceMergeExecutables
-import com.sksamuel.elastic4s.index.{CreateIndexExecutables, DeleteIndexExecutables, IndexExecutables, IndexTemplateExecutables}
+import com.sksamuel.elastic4s.index.{
+  CreateIndexExecutables,
+  DeleteIndexExecutables,
+  IndexExecutables,
+  IndexTemplateExecutables
+}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.IndexRecoveryDefinition
 import com.sksamuel.elastic4s.mappings.FieldType._
@@ -34,7 +39,7 @@ import scala.language.implicitConversions
 // the entry point for TCP users. This is the trait that should be mixed in, or use the object
 // version and import it. The name ElasticDsl is kept for backwards compatibility.
 trait ElasticDsl
-  extends ElasticApi
+    extends ElasticApi
     with PercolateDsl
     with TokenFilterDsl
     with AliasExecutables
@@ -309,7 +314,8 @@ trait ElasticDsl
     def exists(index: String): IndicesExists = IndicesExists(index)
 
     @deprecated("use indexInto(index / type)", "5.0.0")
-    def into(indexType: IndexAndTypes): IndexDefinition = IndexDefinition(IndexAndType(indexType.index, indexType.types.head))
+    def into(indexType: IndexAndTypes): IndexDefinition =
+      IndexDefinition(IndexAndType(indexType.index, indexType.types.head))
 
     @deprecated("use indexStats(indexes)", "5.0.0")
     def stats(indexes: Indexes): IndexStats = indexStats(indexes)
@@ -385,15 +391,14 @@ trait ElasticDsl
   case object explain {
     @deprecated("Use explain(index, type, id", "5.0.0")
     def id(id: String) = new {
-      def in(indexAndTypes: IndexAndTypes): ExplainDefinition = {
+      def in(indexAndTypes: IndexAndTypes): ExplainDefinition =
         ExplainDefinition(IndexAndType(indexAndTypes.index, indexAndTypes.types.head), id)
-      }
     }
   }
 
   case object field {
 
-    def name(name:String) = new {
+    def name(name: String) = new {
       @deprecated("use binaryField(name)", "5.2.11")
       def withType(ft: BinaryType.type): BasicFieldDefinition = binaryField(name)
 

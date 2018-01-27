@@ -24,14 +24,14 @@ case class RichAggregations(aggregations: Aggregations) {
 
   def getAs[T](name: String): T = map(name).asInstanceOf[T]
 
-  def missingResult(name: String): InternalMissing = getAs[InternalMissing](name)
+  def missingResult(name: String): InternalMissing         = getAs[InternalMissing](name)
   def cardinalityResult(name: String): InternalCardinality = getAs[InternalCardinality](name)
-  def avgResult(name: String): InternalAvg = getAs[InternalAvg](name)
-  def maxResult(name: String): InternalMax = getAs[InternalMax](name)
-  def sumResult(name: String): InternalSum = getAs[InternalSum](name)
-  def minResult(name: String): InternalMin = getAs[InternalMin](name)
-  def histogramResult(name: String): Histogram = getAs[Histogram](name)
-  def termsResult(name: String): Terms = getAs[Terms](name)
-  def stringTermsResult(name: String): StringTerms = getAs[StringTerms](name)
-  def valueCountResult(name: String): InternalValueCount = getAs[InternalValueCount](name)
+  def avgResult(name: String): InternalAvg                 = getAs[InternalAvg](name)
+  def maxResult(name: String): InternalMax                 = getAs[InternalMax](name)
+  def sumResult(name: String): InternalSum                 = getAs[InternalSum](name)
+  def minResult(name: String): InternalMin                 = getAs[InternalMin](name)
+  def histogramResult(name: String): Histogram             = getAs[Histogram](name)
+  def termsResult(name: String): Terms                     = getAs[Terms](name)
+  def stringTermsResult(name: String): StringTerms         = getAs[StringTerms](name)
+  def valueCountResult(name: String): InternalValueCount   = getAs[InternalValueCount](name)
 }

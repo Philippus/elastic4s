@@ -15,40 +15,42 @@ import scala.concurrent.duration._
 
 case class RichSearchResponse(original: SearchResponse) {
 
-  def size: Int = original.getHits.getHits.length
+  def size: Int        = original.getHits.getHits.length
   def ids: Seq[String] = hits.map(_.id)
-  def totalHits: Long = original.getHits.getTotalHits
-  def maxScore: Float = original.getHits.getMaxScore
+  def totalHits: Long  = original.getHits.getTotalHits
+  def maxScore: Float  = original.getHits.getMaxScore
 
   def hits: Array[RichSearchHit] = original.getHits.getHits.map(RichSearchHit.apply)
 
-  def to[T: HitReader]: IndexedSeq[T] = hits.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T]                        = hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.map(_.safeTo[T]).toIndexedSeq
 
-  def scrollId: String = original.getScrollId
+  def scrollId: String            = original.getScrollId
   def scrollIdOpt: Option[String] = Option(scrollId)
 
-  def totalShards: Int = original.getTotalShards
-  def successfulShards: Int = original.getSuccessfulShards
+  def totalShards: Int                         = original.getTotalShards
+  def successfulShards: Int                    = original.getSuccessfulShards
   def shardFailures: Array[ShardSearchFailure] = Option(original.getShardFailures).getOrElse(Array.empty)
 
   def tookInMillis: Long = original.getTook.millis
-  def took: Duration = original.getTook.millis.millis
+  def took: Duration     = original.getTook.millis.millis
 
-  def aggregations: RichAggregations = RichAggregations(Option(original.getAggregations).getOrElse(new InternalAggregations(new util.ArrayList)))
+  def aggregations: RichAggregations =
+    RichAggregations(Option(original.getAggregations).getOrElse(new InternalAggregations(new util.ArrayList)))
 
-  def isEmpty: Boolean = hits.isEmpty
+  def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
-  def suggest: SuggestResult = SuggestResult(original.getSuggest)
-  def suggestions: Seq[SuggestionResult] = suggest.suggestions
+  def suggest: SuggestResult                     = SuggestResult(original.getSuggest)
+  def suggestions: Seq[SuggestionResult]         = suggest.suggestions
   def suggestion(name: String): SuggestionResult = suggest.suggestions.find(_.name == name).get
 
   def termSuggestion(name: String): TermSuggestionResult = suggestion(name).asInstanceOf[TermSuggestionResult]
-  def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
+  def completionSuggestion(name: String): CompletionSuggestionResult =
+    suggestion(name).asInstanceOf[CompletionSuggestionResult]
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
-  def isTimedOut: Boolean = original.isTimedOut
+  def isTimedOut: Boolean                = original.isTimedOut
   def isTerminatedEarly: Option[Boolean] = Option[java.lang.Boolean](original.isTerminatedEarly).map(_.booleanValue())
 
   @deprecated("use resp.aggregations, or resp.original.getAggregations", "2.0.0")

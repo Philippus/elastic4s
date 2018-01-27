@@ -8,14 +8,13 @@ import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
-case class RolloverResponse(
-                             @JsonProperty("old_index") oldIndex: String,
-                             @JsonProperty("new_index") newIndex: String,
-                             @JsonProperty("rolled_over") rolledOver: Boolean,
-                             @JsonProperty("dry_run") dryRun: Boolean,
-                             acknowledged: Boolean,
-                             @JsonProperty("shards_acknowledged") shardsAcknowledged: Boolean,
-                             conditions: Map[String, Boolean])
+case class RolloverResponse(@JsonProperty("old_index") oldIndex: String,
+                            @JsonProperty("new_index") newIndex: String,
+                            @JsonProperty("rolled_over") rolledOver: Boolean,
+                            @JsonProperty("dry_run") dryRun: Boolean,
+                            acknowledged: Boolean,
+                            @JsonProperty("shards_acknowledged") shardsAcknowledged: Boolean,
+                            conditions: Map[String, Boolean])
 
 trait RolloverImplicits {
 
@@ -23,7 +22,7 @@ trait RolloverImplicits {
 
     override def execute(client: HttpRequestClient, request: RolloverIndex): Future[HttpResponse] = {
 
-      val endpoint = s"/${request.sourceAlias}/_rollover"
+      val endpoint  = s"/${request.sourceAlias}/_rollover"
       val endpoint2 = request.newIndexName.fold(endpoint)(endpoint + "/" + _)
 
       val params = scala.collection.mutable.Map.empty[String, Any]

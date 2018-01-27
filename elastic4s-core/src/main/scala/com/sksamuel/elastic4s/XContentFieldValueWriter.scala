@@ -8,7 +8,7 @@ object XContentFieldValueWriter {
     case SimpleFieldValue(name, v) =>
       name match {
         case Some(n) => source.autofield(n, v)
-        case None => source.autovalue(v)
+        case None    => source.autovalue(v)
       }
     case ArrayFieldValue(name, values) =>
       source.startArray(name)
@@ -17,7 +17,7 @@ object XContentFieldValueWriter {
     case NestedFieldValue(name, values) =>
       name match {
         case Some(n) => source.startObject(n)
-        case None => source.startObject()
+        case None    => source.startObject()
       }
       values.foreach(apply(source, _))
       source.endObject()

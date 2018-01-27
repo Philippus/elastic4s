@@ -27,7 +27,7 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
     proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): DeleteByQueryDefinition = copy(refresh = refresh.some)
-  def refreshImmediately: DeleteByQueryDefinition = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: DeleteByQueryDefinition              = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): DeleteByQueryDefinition = copy(scrollSize = scrollSize.some)
 
@@ -50,4 +50,3 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
     copy(shouldStoreResult = shouldStoreResult.some)
 
 }
-

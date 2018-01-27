@@ -15,22 +15,23 @@ case class GeoDistanceSortDefinition(field: String,
                                      order: Option[SortOrder] = None,
                                      unit: Option[DistanceUnit] = None,
                                      validation: Option[GeoValidationMethod] = None,
-                                     geoDistance: Option[GeoDistance] = None) extends SortDefinition {
+                                     geoDistance: Option[GeoDistance] = None)
+    extends SortDefinition {
 
-  def mode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def mode(mode: String): GeoDistanceSortDefinition   = sortMode(SortMode.valueOf(mode.toUpperCase))
   def mode(mode: SortMode): GeoDistanceSortDefinition = copy(sortMode = mode.some)
 
-  def sortMode(mode: String): GeoDistanceSortDefinition = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: String): GeoDistanceSortDefinition   = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): GeoDistanceSortDefinition = copy(sortMode = mode.some)
 
-  def nestedPath(path: String): GeoDistanceSortDefinition = copy(nestedPath = path.some)
+  def nestedPath(path: String): GeoDistanceSortDefinition             = copy(nestedPath = path.some)
   def nestedFilter(query: QueryDefinition): GeoDistanceSortDefinition = copy(nestedFilter = query.some)
 
-  def order(order: SortOrder): GeoDistanceSortDefinition = copy(order = order.some)
+  def order(order: SortOrder): GeoDistanceSortDefinition     = copy(order = order.some)
   def sortOrder(order: SortOrder): GeoDistanceSortDefinition = copy(order = order.some)
 
   def validation(validation: GeoValidationMethod): GeoDistanceSortDefinition = copy(validation = validation.some)
 
-  def unit(unit: DistanceUnit): GeoDistanceSortDefinition = copy(unit = unit.some)
+  def unit(unit: DistanceUnit): GeoDistanceSortDefinition           = copy(unit = unit.some)
   def geoDistance(distance: GeoDistance): GeoDistanceSortDefinition = copy(geoDistance = distance.some)
 }

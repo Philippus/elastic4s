@@ -23,10 +23,8 @@ case class ClearCache(indexes: Seq[String],
                       queryCache: Option[Boolean] = None,
                       fields: Seq[String] = Nil)
 
-case class FlushIndex(indexes: Seq[String],
-                      waitIfOngoing: Option[Boolean] = None,
-                      force: Option[Boolean] = None) {
-  def force(force: Boolean): FlushIndex = copy(force = force.some)
+case class FlushIndex(indexes: Seq[String], waitIfOngoing: Option[Boolean] = None, force: Option[Boolean] = None) {
+  def force(force: Boolean): FlushIndex                 = copy(force = force.some)
   def waitIfOngoing(waitIfOngoing: Boolean): FlushIndex = copy(waitIfOngoing = waitIfOngoing.some)
 }
 
@@ -38,10 +36,14 @@ case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
                                               refreshInterval: Option[String] = None,
                                               maxResultWindow: Option[Int] = None) {
 
-  def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsDefinition = copy(numberOfReplicas = numberOfReplicas.some)
-  def autoExpandReplicas(autoExpandReplicas: String): UpdateIndexLevelSettingsDefinition = copy(autoExpandReplicas = autoExpandReplicas.some)
-  def refreshInterval(refreshInterval: String): UpdateIndexLevelSettingsDefinition = copy(refreshInterval = refreshInterval.some)
-  def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsDefinition = copy(maxResultWindow = maxResultWindow.some)
+  def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsDefinition =
+    copy(numberOfReplicas = numberOfReplicas.some)
+  def autoExpandReplicas(autoExpandReplicas: String): UpdateIndexLevelSettingsDefinition =
+    copy(autoExpandReplicas = autoExpandReplicas.some)
+  def refreshInterval(refreshInterval: String): UpdateIndexLevelSettingsDefinition =
+    copy(refreshInterval = refreshInterval.some)
+  def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsDefinition =
+    copy(maxResultWindow = maxResultWindow.some)
 
 }
 

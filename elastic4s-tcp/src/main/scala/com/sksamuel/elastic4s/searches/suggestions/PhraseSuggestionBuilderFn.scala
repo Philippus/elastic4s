@@ -26,7 +26,7 @@ object PhraseSuggestionBuilderFn {
     sugg.gramSize.foreach(builder.gramSize)
     (sugg.preTag, sugg.postTag) match {
       case (Some(pre), Some(post)) => builder.highlight(pre, post)
-      case _ =>
+      case _                       =>
     }
     sugg.maxErrors.foreach(builder.maxErrors)
     sugg.realWordErrorLikelihood.foreach(builder.realWordErrorLikelihood)

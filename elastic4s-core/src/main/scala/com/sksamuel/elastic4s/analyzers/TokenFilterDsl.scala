@@ -16,9 +16,8 @@ trait TokenFilterDsl {
 
   def patternCaptureTokenFilter(name: String): PatternCaptureTokenFilter = PatternCaptureTokenFilter(name)
 
-  def patternReplaceTokenFilter(name: String, pattern: String, replacement: String): PatternReplaceTokenFilter = {
+  def patternReplaceTokenFilter(name: String, pattern: String, replacement: String): PatternReplaceTokenFilter =
     PatternReplaceTokenFilter(name, pattern, replacement)
-  }
 
   def ngramTokenFilter(name: String): NGramTokenFilter = NGramTokenFilter(name)
 
@@ -34,9 +33,8 @@ trait TokenFilterDsl {
 
   def synonymTokenFilter(name: String): SynonymTokenFilter = SynonymTokenFilter(name)
 
-  def synonymTokenFilter(name: String, synonyms: Iterable[String]): SynonymTokenFilter = {
+  def synonymTokenFilter(name: String, synonyms: Iterable[String]): SynonymTokenFilter =
     SynonymTokenFilter(name).synonyms(synonyms)
-  }
 
   def truncateTokenFilter(name: String): TruncateTokenFilter = TruncateTokenFilter(name)
 

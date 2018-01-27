@@ -11,7 +11,7 @@ object MultiMatchBodyFn {
     builder.field("query", q.text)
     builder.array("fields", q.fields.map {
       case FieldWithOptionalBoost(field, Some(boost)) => s"$field^$boost"
-      case FieldWithOptionalBoost(field, _) => field
+      case FieldWithOptionalBoost(field, _)           => field
     }.toArray)
     q.`type`.map(EnumConversions.multiMatchQueryBuilderType).foreach(builder.field("type", _))
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))

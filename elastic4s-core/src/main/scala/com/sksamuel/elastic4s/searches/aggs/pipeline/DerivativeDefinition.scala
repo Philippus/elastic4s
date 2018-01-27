@@ -8,7 +8,8 @@ case class DerivativeDefinition(name: String,
                                 gapPolicy: Option[GapPolicy] = None,
                                 unit: Option[FiniteDuration] = None,
                                 unitString: Option[String] = None,
-                                metadata: Map[String, AnyRef] = Map.empty) extends PipelineAggregationDefinition {
+                                metadata: Map[String, AnyRef] = Map.empty)
+    extends PipelineAggregationDefinition {
 
   type T = DerivativeDefinition
 
@@ -17,7 +18,7 @@ case class DerivativeDefinition(name: String,
   @deprecated("use unit(duration)", "6.0.0")
   def unit(unit: String): DerivativeDefinition = copy(unitString = Some(unit))
 
-  def format(format: String): DerivativeDefinition = copy(format = Some(format))
-  def gapPolicy(gapPolicy: GapPolicy): DerivativeDefinition = copy(gapPolicy = Some(gapPolicy))
+  def format(format: String): DerivativeDefinition                  = copy(format = Some(format))
+  def gapPolicy(gapPolicy: GapPolicy): DerivativeDefinition         = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): DerivativeDefinition = copy(metadata = metadata)
 }

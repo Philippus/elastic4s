@@ -23,4 +23,3 @@ object FiltersAggregationBuilder {
     builder
   }
 }
-

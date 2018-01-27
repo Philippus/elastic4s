@@ -10,18 +10,18 @@ import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient
 
 object XPackElasticClient {
 
-  def apply(settings: Settings,
-            uri: ElasticsearchClientUri,
-            plugins: Class[_ <: Plugin]*): TcpClient = {
+  def apply(settings: Settings, uri: ElasticsearchClientUri, plugins: Class[_ <: Plugin]*): TcpClient = {
 
-    val combinedSettings = uri.options.foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
-      if (builder.get(kv._1) == null)
-        builder.put(kv._1, kv._2)
-      builder
-    }.build()
+    val combinedSettings = uri.options
+      .foldLeft(Settings.builder().put(settings)) { (builder, kv) =>
+        if (builder.get(kv._1) == null)
+          builder.put(kv._1, kv._2)
+        builder
+      }
+      .build()
 
     val client = new PreBuiltXPackTransportClient(combinedSettings, plugins: _*)
-    for ( (host, port) <- uri.hosts ) {
+    for ((host, port) <- uri.hosts) {
       client.addTransportAddress(new TransportAddress(new InetSocketAddress(host, port)))
     }
     TcpClient.fromClient(client)

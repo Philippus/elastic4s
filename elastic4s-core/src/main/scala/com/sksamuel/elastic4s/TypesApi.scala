@@ -8,17 +8,17 @@ trait TypesApi {
 
   // string datatypes
   def keywordField(name: String): KeywordFieldDefinition = KeywordFieldDefinition(name)
-  def textField(name: String): TextFieldDefinition = TextFieldDefinition(name)
+  def textField(name: String): TextFieldDefinition       = TextFieldDefinition(name)
 
   // numeric datatypes
-  def byteField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "byte")
-  def doubleField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "double")
-  def floatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "float")
-  def halfFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "half_float")
-  def intField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "integer")
-  def longField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "long")
+  def byteField(name: String): BasicFieldDefinition        = BasicFieldDefinition(name, "byte")
+  def doubleField(name: String): BasicFieldDefinition      = BasicFieldDefinition(name, "double")
+  def floatField(name: String): BasicFieldDefinition       = BasicFieldDefinition(name, "float")
+  def halfFloatField(name: String): BasicFieldDefinition   = BasicFieldDefinition(name, "half_float")
+  def intField(name: String): BasicFieldDefinition         = BasicFieldDefinition(name, "integer")
+  def longField(name: String): BasicFieldDefinition        = BasicFieldDefinition(name, "long")
   def scaledFloatField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "scaled_float")
-  def shortField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "short")
+  def shortField(name: String): BasicFieldDefinition       = BasicFieldDefinition(name, "short")
 
   // booleans
   def booleanField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "boolean")
@@ -30,16 +30,16 @@ trait TypesApi {
   def dateField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "date")
 
   // geo
-  def geopointField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "geo_point")
+  def geopointField(name: String): BasicFieldDefinition    = BasicFieldDefinition(name, "geo_point")
   def geoshapeField(name: String): GeoshapeFieldDefinition = GeoshapeFieldDefinition(name)
 
   // range
   def integerRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "integer_range")
-  def floatRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "float_range")
-  def longRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "long_range")
-  def doubleRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "double_range")
-  def dateRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "date_range")
-  def ipRangeField(name: String): RangeFieldDefinition = RangeFieldDefinition(name, "ip_range")
+  def floatRangeField(name: String): RangeFieldDefinition   = RangeFieldDefinition(name, "float_range")
+  def longRangeField(name: String): RangeFieldDefinition    = RangeFieldDefinition(name, "long_range")
+  def doubleRangeField(name: String): RangeFieldDefinition  = RangeFieldDefinition(name, "double_range")
+  def dateRangeField(name: String): RangeFieldDefinition    = RangeFieldDefinition(name, "date_range")
+  def ipRangeField(name: String): RangeFieldDefinition      = RangeFieldDefinition(name, "ip_range")
 
   // complex datatypes
   def nestedField(name: String): NestedFieldDefinition = NestedFieldDefinition(name)
@@ -47,16 +47,16 @@ trait TypesApi {
 
   // specialized
   def completionField(name: String): CompletionFieldDefinition = CompletionFieldDefinition(name)
-  def ipField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "ip")
-  def tokenCountField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "token_count")
-  def percolatorField(name: String): BasicFieldDefinition = BasicFieldDefinition(name, "percolator")
-  def joinField(name: String): JoinFieldDefinition = JoinFieldDefinition(name)
+  def ipField(name: String): BasicFieldDefinition              = BasicFieldDefinition(name, "ip")
+  def tokenCountField(name: String): BasicFieldDefinition      = BasicFieldDefinition(name, "token_count")
+  def percolatorField(name: String): BasicFieldDefinition      = BasicFieldDefinition(name, "percolator")
+  def joinField(name: String): JoinFieldDefinition             = JoinFieldDefinition(name)
 
-  def scriptField(name: String, script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
+  def scriptField(name: String, script: String): ScriptFieldDefinition           = ScriptFieldDefinition(name, script)
   def scriptField(name: String, script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
-  def scriptField(name: String): ExpectsScript = ExpectsScript(name)
+  def scriptField(name: String): ExpectsScript                                   = ExpectsScript(name)
   case class ExpectsScript(name: String) {
-    def script(script: String): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
+    def script(script: String): ScriptFieldDefinition           = ScriptFieldDefinition(name, script)
     def script(script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
   }
 

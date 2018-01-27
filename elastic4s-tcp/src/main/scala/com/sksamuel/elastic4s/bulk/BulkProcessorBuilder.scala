@@ -19,18 +19,17 @@ case class BulkProcessorBuilder(count: Option[Int] = None,
                                 size: Option[ByteSizeValue] = None) {
 
   def build(client: TcpClient): BulkProcessor = {
-    val builder = org.elasticsearch.action.bulk.BulkProcessor.builder(client.java, new Listener {
+    val builder = org.elasticsearch.action.bulk.BulkProcessor.builder(
+      client.java,
+      new Listener {
 
-      override def beforeBulk(executionId: Long, request: BulkRequest): Unit = ()
+        override def beforeBulk(executionId: Long, request: BulkRequest): Unit = ()
 
-      override def afterBulk(executionId: Long,
-                             request: BulkRequest,
-                             response: BulkResponse): Unit = ()
+        override def afterBulk(executionId: Long, request: BulkRequest, response: BulkResponse): Unit = ()
 
-      override def afterBulk(executionId: Long,
-                             request: BulkRequest,
-                             failure: Throwable): Unit = ()
-    })
+        override def afterBulk(executionId: Long, request: BulkRequest, failure: Throwable): Unit = ()
+      }
+    )
 
     backoffPolicy.foreach(builder.setBackoffPolicy)
     concurrentRequests.foreach(builder.setConcurrentRequests)
@@ -47,10 +46,8 @@ case class BulkProcessorBuilder(count: Option[Int] = None,
     copy(concurrentRequests = concurrentRequests.some)
 
   def flushInterval(flushInterval: FiniteDuration): BulkProcessorBuilder = copy(flushInterval = flushInterval.some)
-  def actionCount(count: Int): BulkProcessorBuilder = copy(count = count.some)
+  def actionCount(count: Int): BulkProcessorBuilder                      = copy(count = count.some)
 
   def actionSize(units: Int, unit: ByteSizeUnit): BulkProcessorBuilder =
     copy(size = new ByteSizeValue(units, unit).some)
 }
-
-

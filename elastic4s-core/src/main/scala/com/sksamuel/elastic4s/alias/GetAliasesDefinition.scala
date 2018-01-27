@@ -8,4 +8,3 @@ case class GetAliasesDefinition(indices: Indexes,
                                 ignoreUnavailable: Option[Boolean] = None) {
   def ignoreUnavailable(ignore: Boolean): GetAliasesDefinition = copy(ignoreUnavailable = ignore.some)
 }
-

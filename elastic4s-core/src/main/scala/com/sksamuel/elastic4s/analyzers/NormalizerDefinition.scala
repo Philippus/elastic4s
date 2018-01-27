@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.analyzers
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 // Base class for normalizers that have custom parameters set.
-abstract class NormalizerDefinition (val name: String) {
+abstract class NormalizerDefinition(val name: String) {
 
   def buildWithName(source: XContentBuilder): Unit = {
     source.startObject(name)
@@ -32,13 +32,13 @@ abstract class NormalizerDefinition (val name: String) {
   }
 }
 
-case class CustomNormalizerDefinition(override val name: String,
-                                    filters: Seq[AnalyzerFilter] = Nil) extends NormalizerDefinition(name) {
+case class CustomNormalizerDefinition(override val name: String, filters: Seq[AnalyzerFilter] = Nil)
+    extends NormalizerDefinition(name) {
 
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     val tokenFilters = filters.collect { case token: TokenFilter => token }
-    val charFilters = filters.collect { case char: CharFilter => char }
+    val charFilters  = filters.collect { case char: CharFilter   => char }
     if (tokenFilters.nonEmpty) {
       source.array("filter", tokenFilters.map(_.name).toArray)
     }
@@ -48,13 +48,10 @@ case class CustomNormalizerDefinition(override val name: String,
   }
 
   def filters(filters: Seq[AnalyzerFilter]): CustomNormalizerDefinition = copy(filters = filters)
-  def addFilter(filter: AnalyzerFilter): CustomNormalizerDefinition = copy(filters = filters :+ filter)
+  def addFilter(filter: AnalyzerFilter): CustomNormalizerDefinition     = copy(filters = filters :+ filter)
 }
 
 object CustomNormalizerDefinition {
-  def apply(name: String,
-            first: AnalyzerFilter,
-            rest: AnalyzerFilter*): CustomNormalizerDefinition = {
+  def apply(name: String, first: AnalyzerFilter, rest: AnalyzerFilter*): CustomNormalizerDefinition =
     CustomNormalizerDefinition(name, first +: rest)
-  }
 }

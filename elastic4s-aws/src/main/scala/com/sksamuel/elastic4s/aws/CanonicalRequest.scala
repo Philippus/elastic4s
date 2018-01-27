@@ -10,7 +10,6 @@ import org.apache.http.util.EntityUtils
 
 import scala.collection.JavaConverters._
 
-
 /**
   * Canonical Request is described as the first task when signing aws requests (version 4)
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html">canonical request documentation</a>
@@ -31,11 +30,11 @@ object CanonicalRequest {
   private val ignoredHeaders = List("connection", "content-length")
 
   def apply(httpRequest: HttpRequest): CanonicalRequest = {
-    val method = httpRequest.getRequestLine.getMethod
-    val uri = canonicalUri(httpRequest)
-    val query = canonicalQueryString(httpRequest)
+    val method  = httpRequest.getRequestLine.getMethod
+    val uri     = canonicalUri(httpRequest)
+    val query   = canonicalQueryString(httpRequest)
     val headers = canonicalHeaders(httpRequest)
-    val signed = signedHeaders(httpRequest)
+    val signed  = signedHeaders(httpRequest)
     val payload = hashedPayload(httpRequest)
     CanonicalRequest(method, uri, query, headers, signed, payload)
   }
@@ -48,29 +47,29 @@ object CanonicalRequest {
       .getPath
 
     val path = uri.split("\\?")(0) //using URIBuilder to normalize uri but need to split manually
-    path.split("(?<!/)/(?!/)", -1)
+    path
+      .split("(?<!/)/(?!/)", -1)
       .map(URLEncoder.encode(_, "utf-8"))
       .mkString(start = "", sep = "/", end = "")
       .replace("*", "%2A")
   }
 
   private def canonicalQueryString(httpRequest: HttpRequest): String = {
-    val uri = new URI(httpRequest.getRequestLine.getUri)
+    val uri        = new URI(httpRequest.getRequestLine.getUri)
     val parameters = URLEncodedUtils.parse(uri, "utf-8")
     parameters.asScala.map(h ⇒ s"${h.getName}=${h.getValue}").mkString("&")
   }
 
   private def canonicalHeaders(httpRequest: HttpRequest): String =
-    httpRequest.getAllHeaders().
-      sortBy(_.getName.toLowerCase).
-      filterNot(h ⇒ ignoredHeaders.contains(h.getName.toLowerCase)).
-      map(h ⇒ s"${h.getName.toLowerCase}:${h.getValue.trim}").mkString("\n")
+    httpRequest
+      .getAllHeaders()
+      .sortBy(_.getName.toLowerCase)
+      .filterNot(h ⇒ ignoredHeaders.contains(h.getName.toLowerCase))
+      .map(h ⇒ s"${h.getName.toLowerCase}:${h.getValue.trim}")
+      .mkString("\n")
 
   private def signedHeaders(httpRequest: HttpRequest): String =
-    httpRequest.getAllHeaders.
-      map(_.getName.toLowerCase).
-      filterNot(ignoredHeaders.contains(_)).
-      sorted.mkString(";")
+    httpRequest.getAllHeaders.map(_.getName.toLowerCase).filterNot(ignoredHeaders.contains(_)).sorted.mkString(";")
 
   private def hashedPayload(httpRequest: HttpRequest): String = {
     def hashPayloadString(str: String) = {
@@ -80,14 +79,14 @@ object CanonicalRequest {
 
     getPayload(httpRequest) match {
       case Some(payload) ⇒ hashPayloadString(payload)
-      case None ⇒ hashPayloadString("")
+      case None          ⇒ hashPayloadString("")
     }
   }
 
   private def getPayload(httpRequest: HttpRequest): Option[String] = {
 
     lazy val entity = httpRequest.asInstanceOf[HttpEntityEnclosingRequest].getEntity
-    val request = HttpRequestWrapper.wrap(httpRequest)
+    val request     = HttpRequestWrapper.wrap(httpRequest)
 
     if (!classOf[HttpEntityEnclosingRequest].isAssignableFrom(request.getClass) || entity == null) None
     else Option(EntityUtils.toString(entity))
@@ -101,7 +100,6 @@ case class CanonicalRequest(method: String,
                             signedHeaders: String,
                             hashedPayload: String) {
 
-
   override def toString() =
     s"""$method
        |$canonicalUri
@@ -110,7 +108,6 @@ case class CanonicalRequest(method: String,
        |
        |$signedHeaders
        |$hashedPayload""".stripMargin
-
 
   def toHashString() = {
     val canonicalRequestHash = hash(toString)

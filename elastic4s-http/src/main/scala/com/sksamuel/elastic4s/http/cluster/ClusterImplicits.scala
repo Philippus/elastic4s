@@ -15,21 +15,19 @@ trait ClusterImplicits {
       client.async("GET", endpoint, Map.empty)
     }
 
-    private def buildMetricsString(metrics: Seq[String]): String = {
+    private def buildMetricsString(metrics: Seq[String]): String =
       if (metrics.isEmpty) {
         "/_all"
       } else {
         "/" + metrics.mkString(",")
       }
-    }
 
-    private def buildIndexString(indices: Seq[String]): String = {
+    private def buildIndexString(indices: Seq[String]): String =
       if (indices.isEmpty) {
         ""
       } else {
         "/" + indices.mkString(",")
       }
-    }
   }
 
   implicit object ClusterHealthHttpExecutable extends HttpExecutable[ClusterHealthDefinition, ClusterHealthResponse] {
@@ -47,13 +45,12 @@ trait ClusterImplicits {
       client.async("GET", endpoint, params.toMap)
     }
 
-    private def indicesUrl(indices: Seq[String]): String = {
+    private def indicesUrl(indices: Seq[String]): String =
       if (indices.isEmpty) {
         ""
       } else {
         "/" + indices.mkString(",")
       }
-    }
   }
 }
 
@@ -61,8 +58,7 @@ object ClusterStateResponse {
 
   case class Index(state: String, aliases: Seq[String])
 
-  case class Metadata(@JsonProperty("cluster_uuid") clusterUuid: String,
-                      indices: Map[String, Index])
+  case class Metadata(@JsonProperty("cluster_uuid") clusterUuid: String, indices: Map[String, Index])
 }
 
 case class ClusterStateResponse(@JsonProperty("cluster_name") clusterName: String,

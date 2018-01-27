@@ -1,9 +1,21 @@
 package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.alias.{AddAliasActionDefinition, GetAliasesDefinition, IndicesAliasesRequestDefinition, RemoveAliasActionDefinition}
+import com.sksamuel.elastic4s.alias.{
+  AddAliasActionDefinition,
+  GetAliasesDefinition,
+  IndicesAliasesRequestDefinition,
+  RemoveAliasActionDefinition
+}
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
-import com.sksamuel.elastic4s.http.{ElasticError, HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{
+  ElasticError,
+  HttpEntity,
+  HttpExecutable,
+  HttpRequestClient,
+  HttpResponse,
+  ResponseHandler
+}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -23,13 +35,15 @@ trait IndexAliasImplicits {
           }.toMap
           Right(IndexAliases(map))
         case 404 => Right(IndexAliases(Map.empty))
-        case _ => Left(ElasticError.parse(response))
+        case _   => Left(ElasticError.parse(response))
       }
     }
 
     override def execute(client: HttpRequestClient, request: GetAliasesDefinition): Future[HttpResponse] = {
       val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
-      val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore => Map("ignore_unavailable" -> ignore) }
+      val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
+        Map("ignore_unavailable" -> ignore)
+      }
       client.async("GET", endpoint, params)
     }
   }
@@ -50,7 +64,7 @@ trait IndexAliasImplicits {
 
   implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequestDefinition, AliasActionResponse] {
     override def execute(client: HttpRequestClient, request: IndicesAliasesRequestDefinition): Future[HttpResponse] = {
-      val body = AliasActionBuilder(request).string()
+      val body   = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_aliases", Map.empty, entity)
     }
@@ -59,7 +73,7 @@ trait IndexAliasImplicits {
 
 case class IndexAliases(mappings: Map[Index, Seq[Alias]]) {
   def aliasesForIndex(index: String): Seq[Alias] = aliasesForIndex(Index(index))
-  def aliasesForIndex(index: Index): Seq[Alias] = mappings.getOrElse(index, Nil)
+  def aliasesForIndex(index: Index): Seq[Alias]  = mappings.getOrElse(index, Nil)
 }
 
 case class Alias(name: String)

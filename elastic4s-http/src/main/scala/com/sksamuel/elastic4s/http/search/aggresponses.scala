@@ -10,14 +10,11 @@ trait AggBucket extends HasAggregations {
   def docCount: Long
 }
 
-case class TermBucket(key: String,
-                      override val docCount: Long,
-                      private[elastic4s] val data: Map[String, Any]) extends AggBucket
+case class TermBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
-case class TermsAggResult(name: String,
-                          buckets: Seq[TermBucket],
-                          docCountErrorUpperBound: Int,
-                          otherDocCount: Int) extends BucketAggregation {
+case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Int, otherDocCount: Int)
+    extends BucketAggregation {
 
   @deprecated("use buckets", "5.2.9")
   def getBuckets: Seq[TermBucket] = buckets
@@ -25,7 +22,7 @@ case class TermsAggResult(name: String,
   @deprecated("use bucket", "5.2.9")
   def getBucketByKey(key: String): TermBucket = bucket(key)
 
-  def bucket(key: String): TermBucket = bucketOpt(key).get
+  def bucket(key: String): TermBucket            = bucketOpt(key).get
   def bucketOpt(key: String): Option[TermBucket] = buckets.find(_.key == key)
 }
 
@@ -46,8 +43,7 @@ object TermsAggResult {
 
 case class CardinalityAggResult(name: String, value: Double) extends MetricAggregation
 
-case class HistogramAggResult(name: String,
-                              buckets: Seq[HistogramBucket]) extends BucketAggregation
+case class HistogramAggResult(name: String, buckets: Seq[HistogramBucket]) extends BucketAggregation
 
 object HistogramAggResult {
   def apply(name: String, data: Map[String, Any]): HistogramAggResult = HistogramAggResult(
@@ -62,12 +58,10 @@ object HistogramAggResult {
   )
 }
 
-case class HistogramBucket(date: String,
-                           override val docCount: Long,
-                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
+case class HistogramBucket(date: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
-case class DateHistogramAggResult(name: String,
-                                  buckets: Seq[DateHistogramBucket]) extends BucketAggregation
+case class DateHistogramAggResult(name: String, buckets: Seq[DateHistogramBucket]) extends BucketAggregation
 
 object DateHistogramAggResult {
   def apply(name: String, data: Map[String, Any]): DateHistogramAggResult = DateHistogramAggResult(
@@ -86,29 +80,28 @@ object DateHistogramAggResult {
 case class DateHistogramBucket(date: String,
                                timestamp: Long,
                                override val docCount: Long,
-                               private[elastic4s] val data: Map[String, Any]) extends AggBucket
+                               private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
-case class DateRangeAggResult(name: String,
-                              buckets: Seq[DateRangeBucket]) extends BucketAggregation
+case class DateRangeAggResult(name: String, buckets: Seq[DateRangeBucket]) extends BucketAggregation
 
 object DateRangeAggResult {
-   private[elastic4s]  def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
+  private[elastic4s] def apply(name: String, data: Map[String, Any]): DateRangeAggResult = DateRangeAggResult(
     name,
     data("buckets").asInstanceOf[Seq[Map[String, Any]]].map(DateRangeBucket(_))
   )
 }
 
-case class KeyedDateRangeAggResult(name: String,
-                              buckets: Map[String, DateRangeBucket]) extends BucketAggregation
+case class KeyedDateRangeAggResult(name: String, buckets: Map[String, DateRangeBucket]) extends BucketAggregation
 
 object KeyedDateRangeAggResult {
   // type clash with `buckets` on apply method
-  private[elastic4s] def fromData(name: String, data: Map[String, Any]): KeyedDateRangeAggResult = KeyedDateRangeAggResult(
-    name,
-    data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(DateRangeBucket(_))
-  )
+  private[elastic4s] def fromData(name: String, data: Map[String, Any]): KeyedDateRangeAggResult =
+    KeyedDateRangeAggResult(
+      name,
+      data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(DateRangeBucket(_))
+    )
 }
-
 
 case class DateRangeBucket(from: Option[String],
                            fromAsString: Option[String],
@@ -116,7 +109,8 @@ case class DateRangeBucket(from: Option[String],
                            toAsString: Option[String],
                            key: Option[String],
                            override val docCount: Long,
-                           private[elastic4s] val data: Map[String, Any]) extends AggBucket
+                           private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
 object DateRangeBucket {
   private[elastic4s] def apply(map: Map[String, Any]): DateRangeBucket = DateRangeBucket(
@@ -130,10 +124,9 @@ object DateRangeBucket {
   )
 }
 
-case class RangeAggResult(
-  name: String,
-  buckets: Seq[RangeBucket],
-  private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class RangeAggResult(name: String, buckets: Seq[RangeBucket], private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations
 
 object RangeAggResult {
   def apply(name: String, data: Map[String, Any]): RangeAggResult = RangeAggResult(
@@ -143,10 +136,11 @@ object RangeAggResult {
   )
 }
 
-case class KeyedRangeAggResult(
-  name: String,
-  buckets: Map[String, RangeBucket],
-  private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class KeyedRangeAggResult(name: String,
+                               buckets: Map[String, RangeBucket],
+                               private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations
 
 object KeyedRangeAggResult {
   def apply(name: String, data: Map[String, Any]): KeyedRangeAggResult = KeyedRangeAggResult(
@@ -160,43 +154,50 @@ case class RangeBucket(key: Option[String],
                        from: Option[Double],
                        to: Option[Double],
                        override val docCount: Long,
-                       private[elastic4s] val data: Map[String, Any]) extends AggBucket
+                       private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
 object RangeBucket {
   private[elastic4s] def apply(data: Map[String, Any]): RangeBucket = RangeBucket(
-      data.get("key").map(_.toString),
-      data.get("from").map(_.asInstanceOf[java.lang.Number].doubleValue()),
-      data.get("to").map(_.asInstanceOf[java.lang.Number].doubleValue()),
-      data("doc_count").asInstanceOf[java.lang.Number].longValue(),
-      data
-    )
+    data.get("key").map(_.toString),
+    data.get("from").map(_.asInstanceOf[java.lang.Number].doubleValue()),
+    data.get("to").map(_.asInstanceOf[java.lang.Number].doubleValue()),
+    data("doc_count").asInstanceOf[java.lang.Number].longValue(),
+    data
+  )
 }
 
-case class GeoDistanceAggResult(name: String,
-                                buckets: Seq[GeoDistanceBucket]) extends BucketAggregation
+case class GeoDistanceAggResult(name: String, buckets: Seq[GeoDistanceBucket]) extends BucketAggregation
 
 case class GeoDistanceBucket(key: String,
                              override val docCount: Long,
                              from: Option[Double],
                              to: Option[Double],
-                             private[elastic4s] val data: Map[String, Any]) extends AggBucket
+                             private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
 object GeoDistanceAggResult {
   def apply(name: String, data: Map[String, Any]): GeoDistanceAggResult = GeoDistanceAggResult(
     name,
     data("buckets") match {
-      case buckets: Seq[_] => buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
-        mkBucket(map("key").toString, map)
-      }
+      case buckets: Seq[_] =>
+        buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
+          mkBucket(map("key").toString, map)
+        }
 
       //keyed results
-      case buckets: Map[_,_] => buckets.asInstanceOf[Map[String, Any]].map { case (key,values) =>
-        mkBucket(key, values.asInstanceOf[Map[String,Any]])
-      }.toSeq
+      case buckets: Map[_, _] =>
+        buckets
+          .asInstanceOf[Map[String, Any]]
+          .map {
+            case (key, values) =>
+              mkBucket(key, values.asInstanceOf[Map[String, Any]])
+          }
+          .toSeq
     }
   )
 
-  private def mkBucket(key: String, map: Map[String,Any]) : GeoDistanceBucket =
+  private def mkBucket(key: String, map: Map[String, Any]): GeoDistanceBucket =
     GeoDistanceBucket(
       key,
       map("doc_count").toString.toLong,
@@ -206,12 +207,10 @@ object GeoDistanceAggResult {
     )
 }
 
-case class GeoHashGridAggResult(name: String,
-                                buckets: Seq[GeoHashGridBucket]) extends BucketAggregation
+case class GeoHashGridAggResult(name: String, buckets: Seq[GeoHashGridBucket]) extends BucketAggregation
 
-case class GeoHashGridBucket(key: String,
-                             override val docCount: Long,
-                             private[elastic4s] val data: Map[String, Any]) extends AggBucket
+case class GeoHashGridBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
 object GeoHashGridAggResult {
   def apply(name: String, data: Map[String, Any]): GeoHashGridAggResult = GeoHashGridAggResult(
@@ -226,31 +225,37 @@ object GeoHashGridAggResult {
   )
 }
 
-case class IpRangeAggResult(name: String,
-                            buckets: Seq[IpRangeBucket]) extends BucketAggregation
+case class IpRangeAggResult(name: String, buckets: Seq[IpRangeBucket]) extends BucketAggregation
 
 case class IpRangeBucket(key: Option[String],
                          override val docCount: Long,
                          from: Option[String],
                          to: Option[String],
-                         private[elastic4s] val data: Map[String, Any]) extends AggBucket
+                         private[elastic4s] val data: Map[String, Any])
+    extends AggBucket
 
 object IpRangeAggResult {
   def apply(name: String, data: Map[String, Any]): IpRangeAggResult = IpRangeAggResult(
     name,
     data("buckets") match {
-      case buckets: Seq[_] => buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
-        mkBucket(map.get("key").map(_.toString), map)
-      }
+      case buckets: Seq[_] =>
+        buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
+          mkBucket(map.get("key").map(_.toString), map)
+        }
 
       //keyed results
-      case buckets: Map[_,_] => buckets.asInstanceOf[Map[String, Any]].map { case (key,values) =>
-        mkBucket(Some(key), values.asInstanceOf[Map[String,Any]])
-      }.toSeq
+      case buckets: Map[_, _] =>
+        buckets
+          .asInstanceOf[Map[String, Any]]
+          .map {
+            case (key, values) =>
+              mkBucket(Some(key), values.asInstanceOf[Map[String, Any]])
+          }
+          .toSeq
     }
   )
 
-  private def mkBucket(key: Option[String], map: Map[String,Any]) : IpRangeBucket =
+  private def mkBucket(key: Option[String], map: Map[String, Any]): IpRangeBucket =
     IpRangeBucket(
       key,
       map("doc_count").toString.toLong,
@@ -260,20 +265,16 @@ object IpRangeAggResult {
     )
 }
 
-case class AvgAggResult(name: String, value: Double) extends MetricAggregation
-case class SumAggResult(name: String, value: Double) extends MetricAggregation
+case class AvgAggResult(name: String, value: Double)         extends MetricAggregation
+case class SumAggResult(name: String, value: Double)         extends MetricAggregation
 case class MinAggResult(name: String, value: Option[Double]) extends MetricAggregation
 case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
-case class ValueCountResult(name: String, value: Double) extends MetricAggregation
+case class ValueCountResult(name: String, value: Double)     extends MetricAggregation
 
-case class GeoBoundsAggResult(name: String,
-                              topLeft: Option[GeoPoint],
-                              bottomRight: Option[GeoPoint]) extends MetricAggregation
+case class GeoBoundsAggResult(name: String, topLeft: Option[GeoPoint], bottomRight: Option[GeoPoint])
+    extends MetricAggregation
 
-case class GeoCentroidAggResult(name: String,
-                                centroid: Option[GeoPoint],
-                                count: Long
-                               ) extends MetricAggregation
+case class GeoCentroidAggResult(name: String, centroid: Option[GeoPoint], count: Long) extends MetricAggregation
 
 case class ExtendedStatsAggResult(name: String,
                                   count: Long,
@@ -285,8 +286,7 @@ case class ExtendedStatsAggResult(name: String,
                                   variance: Double,
                                   stdDeviation: Double)
 
-case class PercentilesAggResult(name: String,
-                                values: Map[String, Double]) extends MetricAggregation
+case class PercentilesAggResult(name: String, values: Map[String, Double]) extends MetricAggregation
 
 case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_type") `type`: String,
@@ -300,19 +300,19 @@ case class TopHit(@JsonProperty("_index") index: String,
 case class TopHitsResult(name: String,
                          total: Long,
                          @JsonProperty("max_score") maxScore: Option[Double],
-                         hits: Seq[TopHit]) extends MetricAggregation
+                         hits: Seq[TopHit])
+    extends MetricAggregation
 
 object TopHitsResult {
   def apply(name: String, data: Map[String, Any]): TopHitsResult = {
-    val hits = data("hits").asInstanceOf[Map[String, Any]]
+    val hits   = data("hits").asInstanceOf[Map[String, Any]]
     val result = JacksonSupport.mapper.readValue[TopHitsResult](JacksonSupport.mapper.writeValueAsBytes(hits))
     result.copy(name = name)
   }
 }
 
-case class ChildrenAggResult(name: String,
-                             docCount: Long,
-                             private[elastic4s] val data: Map[String, Any]) extends HasAggregations
+case class ChildrenAggResult(name: String, docCount: Long, private[elastic4s] val data: Map[String, Any])
+    extends HasAggregations
 
 object ChildrenAggResult {
   def apply(name: String, data: Map[String, Any]): ChildrenAggResult = ChildrenAggResult(
@@ -333,17 +333,14 @@ case class ExtendedStatsBucketAggResult(name: String,
                                         variance: Double,
                                         stdDeviation: Double,
                                         stdDeviationBoundsUpper: Double,
-                                        stdDeviationBoundsLower: Double) extends PipelineAggregation
-case class MinBucketAggResult(name: String, value: Double) extends PipelineAggregation
-case class MovAvgAggResult(name: String, value: Double) extends PipelineAggregation
-case class PercentilesBucketAggResult(name: String, values: Map[String,Double]) extends PipelineAggregation
-case class SerialDiffAggResult(name: String, value: Double) extends PipelineAggregation
-case class StatsBucketAggResult(name: String,
-                                count: Long,
-                                min: Double,
-                                max: Double,
-                                avg: Double,
-                                sum: Double) extends PipelineAggregation
+                                        stdDeviationBoundsLower: Double)
+    extends PipelineAggregation
+case class MinBucketAggResult(name: String, value: Double)                       extends PipelineAggregation
+case class MovAvgAggResult(name: String, value: Double)                          extends PipelineAggregation
+case class PercentilesBucketAggResult(name: String, values: Map[String, Double]) extends PipelineAggregation
+case class SerialDiffAggResult(name: String, value: Double)                      extends PipelineAggregation
+case class StatsBucketAggResult(name: String, count: Long, min: Double, max: Double, avg: Double, sum: Double)
+    extends PipelineAggregation
 
 case class NestedAggResult(name: String, private[elastic4s] val data: Map[String, Any]) extends HasAggregations
 
@@ -363,19 +360,23 @@ trait HasAggregations {
   }
 
   def contains(name: String): Boolean = data.contains(name)
-  def names: Iterable[String] = data.keys
+  def names: Iterable[String]         = data.keys
 
   // bucket aggs
-  def global(name: String): GlobalAggregationResult = GlobalAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+  def global(name: String): GlobalAggregationResult =
+    GlobalAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
 
-  def filter(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+  def filter(name: String): FilterAggregationResult =
+    FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
 
   def filters(name: String): FiltersAggregationResult =
     FiltersAggregationResult(
       name,
-      agg(name)("buckets").asInstanceOf[Seq[Map[String, Any]]].map(m => UnnamedFilterAggregationResult(m("doc_count").toString.toLong, data = m)),
+      agg(name)("buckets")
+        .asInstanceOf[Seq[Map[String, Any]]]
+        .map(m => UnnamedFilterAggregationResult(m("doc_count").toString.toLong, data = m)),
       agg(name)
-  )
+    )
 
   def keyedFilters(name: String): KeyedFiltersAggregationResult =
     KeyedFiltersAggregationResult(
@@ -386,24 +387,24 @@ trait HasAggregations {
       agg(name)
     )
 
-  def histogram(name: String): HistogramAggResult = HistogramAggResult(name, agg(name))
-  def dateHistogram(name: String): DateHistogramAggResult = DateHistogramAggResult(name, agg(name))
-  def dateRange(name: String): DateRangeAggResult = DateRangeAggResult(name, agg(name))
+  def histogram(name: String): HistogramAggResult           = HistogramAggResult(name, agg(name))
+  def dateHistogram(name: String): DateHistogramAggResult   = DateHistogramAggResult(name, agg(name))
+  def dateRange(name: String): DateRangeAggResult           = DateRangeAggResult(name, agg(name))
   def keyedDateRange(name: String): KeyedDateRangeAggResult = KeyedDateRangeAggResult.fromData(name, agg(name))
-  def terms(name: String): TermsAggResult = TermsAggResult(name, agg(name))
-  def children(name: String): ChildrenAggResult = ChildrenAggResult(name, agg(name))
-  def geoDistance(name: String): GeoDistanceAggResult = GeoDistanceAggResult(name, agg(name))
-  def geoHashGrid(name: String): GeoHashGridAggResult = GeoHashGridAggResult(name, agg(name))
-  def ipRange(name: String): IpRangeAggResult = IpRangeAggResult(name, agg(name))
+  def terms(name: String): TermsAggResult                   = TermsAggResult(name, agg(name))
+  def children(name: String): ChildrenAggResult             = ChildrenAggResult(name, agg(name))
+  def geoDistance(name: String): GeoDistanceAggResult       = GeoDistanceAggResult(name, agg(name))
+  def geoHashGrid(name: String): GeoHashGridAggResult       = GeoHashGridAggResult(name, agg(name))
+  def ipRange(name: String): IpRangeAggResult               = IpRangeAggResult(name, agg(name))
 
-  def range(name: String): RangeAggResult = RangeAggResult(name, agg(name))
-  def keyedRange(name: String): KeyedRangeAggResult  = KeyedRangeAggResult(name, agg(name))
-  def nested(name: String): NestedAggResult = NestedAggResult(name, agg(name))
+  def range(name: String): RangeAggResult           = RangeAggResult(name, agg(name))
+  def keyedRange(name: String): KeyedRangeAggResult = KeyedRangeAggResult(name, agg(name))
+  def nested(name: String): NestedAggResult         = NestedAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, agg(name)("value").toString.toDouble)
 
-  def extendedStats(name: String): ExtendedStatsAggResult = {
+  def extendedStats(name: String): ExtendedStatsAggResult =
     ExtendedStatsAggResult(
       name,
       count = agg(name)("count").toString.toLong,
@@ -415,21 +416,20 @@ trait HasAggregations {
       variance = agg(name)("variance").toString.toDouble,
       stdDeviation = agg(name)("std_deviation").toString.toDouble
     )
-  }
 
   def cardinality(name: String): CardinalityAggResult = CardinalityAggResult(name, agg(name)("value").toString.toDouble)
-  def sum(name: String): SumAggResult = SumAggResult(name, agg(name)("value").toString.toDouble)
-  def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
-  def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def sum(name: String): SumAggResult                 = SumAggResult(name, agg(name)("value").toString.toDouble)
+  def min(name: String): MinAggResult                 = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def max(name: String): MaxAggResult                 = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
   def percentiles(name: String): PercentilesAggResult = {
     val values = agg(name)("values").asInstanceOf[Map[String, Double]]
     PercentilesAggResult(name, values)
   }
 
   def geoBounds(name: String): GeoBoundsAggResult = {
-    val boundsOpt = agg(name).get("bounds").map(_.asInstanceOf[Map[String,Map[String,Double]]])
+    val boundsOpt = agg(name).get("bounds").map(_.asInstanceOf[Map[String, Map[String, Double]]])
     boundsOpt match {
-      case None         => GeoBoundsAggResult(name, None, None)
+      case None => GeoBoundsAggResult(name, None, None)
       case Some(bounds) =>
         val topLeft     = bounds("top_left")
         val bottomRight = bounds("bottom_right")
@@ -444,19 +444,16 @@ trait HasAggregations {
   def geoCentroid(name: String): GeoCentroidAggResult = {
     val location = agg(name).get("location").map(_.asInstanceOf[Map[String, Double]])
     val count    = agg(name)("count").toString.toLong
-      GeoCentroidAggResult(
-        name,
-        location.map(l => GeoPoint(l("lat"), l("lon"))),
-        count)
+    GeoCentroidAggResult(name, location.map(l => GeoPoint(l("lat"), l("lon"))), count)
   }
 
-  def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
+  def tophits(name: String): TopHitsResult       = TopHitsResult(name, agg(name))
   def valueCount(name: String): ValueCountResult = ValueCountResult(name, agg(name)("value").toString.toDouble)
 
   // pipeline aggs
   def avgBucket(name: String): AvgBucketAggResult = AvgBucketAggResult(name, agg(name)("value").toString.toDouble)
   def extendedStatsBucket(name: String): ExtendedStatsBucketAggResult = {
-    val stdDevBounds = agg(name)("std_deviation_bounds").asInstanceOf[Map[String,Double]]
+    val stdDevBounds = agg(name)("std_deviation_bounds").asInstanceOf[Map[String, Double]]
     ExtendedStatsBucketAggResult(
       name,
       count = agg(name)("count").toString.toLong,
@@ -472,12 +469,11 @@ trait HasAggregations {
     )
   }
   def minBucket(name: String): MinBucketAggResult = MinBucketAggResult(name, agg(name)("value").toString.toDouble)
-  def movAvg(name: String): MovAvgAggResult = MovAvgAggResult(name, agg(name)("value").toString.toDouble)
-  def percentilesBucket(name: String): PercentilesBucketAggResult = {
-    PercentilesBucketAggResult(name, agg(name)("values").asInstanceOf[Map[String,Double]])
-  }
+  def movAvg(name: String): MovAvgAggResult       = MovAvgAggResult(name, agg(name)("value").toString.toDouble)
+  def percentilesBucket(name: String): PercentilesBucketAggResult =
+    PercentilesBucketAggResult(name, agg(name)("values").asInstanceOf[Map[String, Double]])
   def serialDiff(name: String): SerialDiffAggResult = SerialDiffAggResult(name, agg(name)("value").toString.toDouble)
-  def statsBucket(name: String): StatsBucketAggResult = {
+  def statsBucket(name: String): StatsBucketAggResult =
     StatsBucketAggResult(
       name,
       count = agg(name)("count").toString.toLong,
@@ -486,7 +482,6 @@ trait HasAggregations {
       avg = agg(name)("avg").toString.toDouble,
       sum = agg(name)("sum").toString.toDouble
     )
-  }
 }
 
 trait MetricAggregation {
@@ -501,23 +496,25 @@ trait PipelineAggregation {
   def name: String
 }
 
-case class GlobalAggregationResult(name: String,
-                                   docCount: Int,
-                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class GlobalAggregationResult(name: String, docCount: Int, private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations
 
-case class FilterAggregationResult(name: String,
-                                   docCount: Int,
-                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class FilterAggregationResult(name: String, docCount: Int, private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations
 
-case class UnnamedFilterAggregationResult(docCount: Long,
-                                          private[elastic4s] val data: Map[String, Any]) extends HasAggregations
+case class UnnamedFilterAggregationResult(docCount: Long, private[elastic4s] val data: Map[String, Any])
+    extends HasAggregations
 
-case class FiltersAggregationResult(
-                                   name: String,
-                                   aggResults: Seq[UnnamedFilterAggregationResult],
-                                   private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class FiltersAggregationResult(name: String,
+                                    aggResults: Seq[UnnamedFilterAggregationResult],
+                                    private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations
 
-case class KeyedFiltersAggregationResult(
-  name: String,
-  aggResults: Map[String, UnnamedFilterAggregationResult],
-  private[elastic4s] val data: Map[String, Any]) extends BucketAggregation with HasAggregations
+case class KeyedFiltersAggregationResult(name: String,
+                                         aggResults: Map[String, UnnamedFilterAggregationResult],
+                                         private[elastic4s] val data: Map[String, Any])
+    extends BucketAggregation
+    with HasAggregations

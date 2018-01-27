@@ -19,7 +19,7 @@ object CommonFieldBuilder {
       field match {
         case _: NestedFieldDefinition => builder.startObject("properties")
         case _: ObjectFieldDefinition => builder.startObject("properties")
-        case _ => builder.startObject("fields")
+        case _                        => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
         builder.rawField(subfield.name, FieldBuilderFn(subfield))
@@ -33,12 +33,12 @@ object CommonFieldBuilder {
     field.normalizer.foreach(builder.field("normalizer", _))
     field.norms.foreach(builder.field("norms", _))
     field.nullValue.foreach {
-      case v: String => builder.field("null_value", v)
+      case v: String  => builder.field("null_value", v)
       case v: Boolean => builder.field("null_value", v)
-      case v: Float => builder.field("null_value", v)
-      case v: Long => builder.field("null_value", v)
-      case v: Double => builder.field("null_value", v)
-      case v: Int => builder.field("null_value", v)
+      case v: Float   => builder.field("null_value", v)
+      case v: Long    => builder.field("null_value", v)
+      case v: Double  => builder.field("null_value", v)
+      case v: Int     => builder.field("null_value", v)
     }
     field.searchAnalyzer.foreach(builder.field("search_analyzer", _))
     field.store.foreach(builder.field("store", _))
@@ -70,7 +70,7 @@ object FieldBuilderFn {
         comp.indexOptions.foreach(builder.field("index_options", _))
         comp.maxInputLength.foreach(builder.field("max_input_length", _))
         comp.coerce.foreach(builder.field("coerce", _))
-        if(comp.contexts.nonEmpty) {
+        if (comp.contexts.nonEmpty) {
           builder.startArray("contexts")
           comp.contexts.foreach { context =>
             builder.startObject()
@@ -97,8 +97,9 @@ object FieldBuilderFn {
 
       case join: JoinFieldDefinition =>
         builder.startObject("relations")
-        join.relations.foreach { case (parent, child) =>
-          builder.field(parent, child)
+        join.relations.foreach {
+          case (parent, child) =>
+            builder.field(parent, child)
         }
         builder.endObject()
 

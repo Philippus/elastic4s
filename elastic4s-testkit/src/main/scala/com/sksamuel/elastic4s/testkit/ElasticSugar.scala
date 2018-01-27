@@ -24,24 +24,25 @@ trait ElasticSugar extends ElasticDsl {
   def refreshAll(): RefreshResponse = refresh(Indexes.All)
 
   // refreshes all specified indexes
-  def refresh(indexes: Indexes): RefreshResponse = {
+  def refresh(indexes: Indexes): RefreshResponse =
     client.execute {
       refreshIndex(indexes)
     }.await
-  }
 
-  def blockUntilGreen(): Unit = {
+  def blockUntilGreen(): Unit =
     blockUntil("Expected cluster to have green status") { () =>
-      client.execute {
-        clusterHealth()
-      }.await.getStatus == ClusterHealthStatus.GREEN
+      client
+        .execute {
+          clusterHealth()
+        }
+        .await
+        .getStatus == ClusterHealthStatus.GREEN
     }
-  }
 
   def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
 
     var backoff = 0
-    var done = false
+    var done    = false
 
     while (backoff <= 16 && !done) {
       if (backoff > 0) Thread.sleep(200 * backoff)
@@ -57,30 +58,30 @@ trait ElasticSugar extends ElasticDsl {
     require(done, s"Failed waiting on: $explain")
   }
 
-  def ensureIndexExists(index: String): Unit = {
+  def ensureIndexExists(index: String): Unit =
     try {
       client.execute {
         createIndex(index)
       }.await
     } catch {
       case _: ResourceAlreadyExistsException => // Ok, ignore.
-      case _: RemoteTransportException => // Ok, ignore.
+      case _: RemoteTransportException       => // Ok, ignore.
     }
-  }
 
-  def doesIndexExists(name: String): Boolean = {
-    client.execute {
-      indexExists(name)
-    }.await.isExists
-  }
+  def doesIndexExists(name: String): Boolean =
+    client
+      .execute {
+        indexExists(name)
+      }
+      .await
+      .isExists
 
-  def deleteIndex(name: String): Unit = {
+  def deleteIndex(name: String): Unit =
     Try {
       client.execute {
         ElasticDsl.deleteIndex(name)
       }.await
     }
-  }
 
   def truncateIndex(index: String): Unit = {
     deleteIndex(index)
@@ -88,77 +89,80 @@ trait ElasticSugar extends ElasticDsl {
     blockUntilEmpty(index)
   }
 
-  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit = {
+  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit =
     blockUntil(s"Expected to find document $id") { () =>
-      client.execute {
-        get(id).from(index / `type`)
-      }.await.exists
+      client
+        .execute {
+          get(id).from(index / `type`)
+        }
+        .await
+        .exists
     }
-  }
 
-  def blockUntilCount(expected: Long, index: String): Unit = {
+  def blockUntilCount(expected: Long, index: String): Unit =
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(index).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
-  }
 
-  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit = {
+  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit =
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(indexAndTypes).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
-  }
 
   /**
     * Will block until the given index and optional types have at least the given number of documents.
     */
-  def blockUntilCount(expected: Long, index: String, types: String*): Unit = {
+  def blockUntilCount(expected: Long, index: String, types: String*): Unit =
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(index / types).matchAllQuery().size(0)
       }.await
       expected <= result.totalHits
     }
-  }
 
-  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit = {
+  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit =
     blockUntil(s"Expected count of $expected") { () =>
-      expected == client.execute {
-        search(index / types).size(0)
-      }.await.totalHits
+      expected == client
+        .execute {
+          search(index / types).size(0)
+        }
+        .await
+        .totalHits
     }
-  }
 
-  def blockUntilEmpty(index: String): Unit = {
+  def blockUntilEmpty(index: String): Unit =
     blockUntil(s"Expected empty index $index") { () =>
-      client.execute {
-        search(Indexes(index)).size(0)
-      }.await.totalHits == 0
+      client
+        .execute {
+          search(Indexes(index)).size(0)
+        }
+        .await
+        .totalHits == 0
     }
-  }
 
-  def blockUntilIndexExists(index: String): Unit = {
+  def blockUntilIndexExists(index: String): Unit =
     blockUntil(s"Expected exists index $index") { () ⇒
       doesIndexExists(index)
     }
-  }
 
-  def blockUntilIndexNotExists(index: String): Unit = {
+  def blockUntilIndexNotExists(index: String): Unit =
     blockUntil(s"Expected not exists index $index") { () ⇒
       !doesIndexExists(index)
     }
-  }
 
-  def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit = {
+  def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit =
     blockUntil(s"Expected document $id to have version $version") { () =>
-      client.execute {
-        get(id).from(index / `type`)
-      }.await.version == version
+      client
+        .execute {
+          get(id).from(index / `type`)
+        }
+        .await
+        .version == version
     }
-  }
 }

@@ -11,8 +11,7 @@ import scala.concurrent.Future
 
 trait IndexExecutables extends IndexShowImplicitsTcp {
 
-  implicit object IndexDefinitionExecutable
-    extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
+  implicit object IndexDefinitionExecutable extends Executable[IndexDefinition, IndexResponse, RichIndexResponse] {
 
     def builder(c: Client, t: IndexDefinition): IndexRequestBuilder = {
       val builder = c.prepareIndex(t.indexAndType.index, t.indexAndType.`type`)
@@ -35,8 +34,7 @@ trait IndexExecutables extends IndexShowImplicitsTcp {
       builder
     }
 
-    override def apply(c: Client,
-                       t: IndexDefinition): Future[RichIndexResponse] = {
+    override def apply(c: Client, t: IndexDefinition): Future[RichIndexResponse] = {
       val req = builder(c, t)
       injectFutureAndMap(req.execute)(RichIndexResponse.apply)
     }

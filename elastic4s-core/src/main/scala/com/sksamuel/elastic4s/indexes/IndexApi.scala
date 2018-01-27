@@ -15,5 +15,5 @@ trait IndexApi {
   def index(kv: (String, String)): IndexDefinition = IndexDefinition(IndexAndType(kv._1, kv._2))
 
   def getIndex(index: String, others: String*): GetIndex = getIndex(index +: others)
-  def getIndex(indexes: Seq[String]): GetIndex = GetIndex(indexes.mkString(","))
+  def getIndex(indexes: Seq[String]): GetIndex           = GetIndex(indexes.mkString(","))
 }

@@ -6,11 +6,9 @@ case class Analysis(analyzer: Option[String] = None,
                     searchAnalyzer: Option[String] = None,
                     normalizer: Option[String] = None)
 
-case class Ignores(ignoreAbove: Option[Int] = None,
-                   ignoreMalformed: Option[Boolean] = None)
+case class Ignores(ignoreAbove: Option[Int] = None, ignoreMalformed: Option[Boolean] = None)
 
-case class Nulls(nullable: Option[Boolean] = None,
-                 nullValue: Option[Any] = None)
+case class Nulls(nullable: Option[Boolean] = None, nullValue: Option[Any] = None)
 
 case class CompletionFieldDefinition(name: String,
                                      analysis: Analysis = Analysis(),
@@ -33,56 +31,55 @@ case class CompletionFieldDefinition(name: String,
                                      similarity: Option[String] = None,
                                      store: Option[Boolean] = None,
                                      termVector: Option[String] = None,
-                                     contexts: Seq[ContextField] = Nil
-                                    ) extends FieldDefinition {
+                                     contexts: Seq[ContextField] = Nil)
+    extends FieldDefinition {
 
   type T = CompletionFieldDefinition
   override def `type` = "completion"
 
-  override def analyzer(analyzer: String): T = copy(analysis = analysis.copy(analyzer = analyzer.some))
-  override def normalizer(normalizer: String): T = copy(analysis = analysis.copy(normalizer = normalizer.some))
+  override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
+  override def normalizer(normalizer: String): T   = copy(analysis = analysis.copy(normalizer = normalizer.some))
   override def searchAnalyzer(analyzer: String): T = copy(analysis = analysis.copy(searchAnalyzer = analyzer.some))
 
-  override def boost(boost: Double): T = copy(boost = boost.some)
+  override def boost(boost: Double): T          = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
 
   override def fields(fields: Iterable[FieldDefinition]): T = copy(fields = fields.toSeq)
 
-  def coerce(coerce: Boolean): T = copy(coerce = coerce.some)
+  def coerce(coerce: Boolean): T                       = copy(coerce = coerce.some)
   override def copyTo(first: String, rest: String*): T = copyTo(first +: rest)
-  override def copyTo(copyTo: Iterable[String]): T = copy(copyTo = copyTo.toSeq)
+  override def copyTo(copyTo: Iterable[String]): T     = copy(copyTo = copyTo.toSeq)
 
   override def enabled(enabled: Boolean): T = copy(enabled = enabled.some)
 
   def similarity(similarity: String): T = copy(similarity = similarity.some)
 
   def ignoreAbove(ignoreAbove: Int): T = copy(ignores = ignores.copy(ignoreAbove = ignoreAbove.some))
-  def ignoreMalformed(ignoreMalformed: Boolean): T = copy(ignores = ignores.copy(ignoreMalformed = ignoreMalformed.some))
+  def ignoreMalformed(ignoreMalformed: Boolean): T =
+    copy(ignores = ignores.copy(ignoreMalformed = ignoreMalformed.some))
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
-  override def index(index: Boolean): T = copy(index = index.toString.some)
+  override def index(index: Boolean): T               = copy(index = index.toString.some)
 
-  override def norms(norms: Boolean): T = copy(norms = norms.some)
+  override def norms(norms: Boolean): T       = copy(norms = norms.some)
   override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
-  override def nullValue(nullvalue: Any): T = copy(nulls = nulls.copy(nullValue = nullvalue.some))
+  override def nullValue(nullvalue: Any): T   = copy(nulls = nulls.copy(nullValue = nullvalue.some))
 
   override def store(b: Boolean): T = copy(store = b.some)
 
   override def termVector(t: String): T = copy(termVector = t.some)
 
-  def preserveSeparators(preserve: Boolean): T = copy(preserveSeparators = preserve.some)
+  def preserveSeparators(preserve: Boolean): T         = copy(preserveSeparators = preserve.some)
   def preservePositionIncrements(preserve: Boolean): T = copy(preservePositionIncrements = preserve.some)
-  def maxInputLength(maxInputLength: Int): T = copy(maxInputLength = maxInputLength.some)
+  def maxInputLength(maxInputLength: Int): T           = copy(maxInputLength = maxInputLength.some)
 
   def contexts(first: ContextField, rest: ContextField*): CompletionFieldDefinition = contexts(first +: rest)
-  def contexts(contexts: Iterable[ContextField]): CompletionFieldDefinition = copy(contexts = this.contexts ++ contexts)
+  def contexts(contexts: Iterable[ContextField]): CompletionFieldDefinition         = copy(contexts = this.contexts ++ contexts)
 }
 
 case class ContextField(name: String, `type`: String, path: Option[String] = None, precision: Option[Int] = None) {
-  def path(path: String): ContextField = {
+  def path(path: String): ContextField =
     copy(path = path.some)
-  }
 
-  def precision(precision: Int): ContextField = {
+  def precision(precision: Int): ContextField =
     copy(precision = precision.some)
-  }
 }

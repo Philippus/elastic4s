@@ -10,14 +10,14 @@ case class FuzzyQueryDefinition(field: String,
                                 maxExpansions: Option[Int] = None,
                                 prefixLength: Option[Int] = None,
                                 queryName: Option[String] = None,
-                                rewrite: Option[String] = None
-                               ) extends MultiTermQueryDefinition {
+                                rewrite: Option[String] = None)
+    extends MultiTermQueryDefinition {
 
-  def fuzziness(fuzziness: String): FuzzyQueryDefinition = copy(fuzziness = fuzziness.some)
-  def boost(boost: Double): FuzzyQueryDefinition = copy(boost = boost.some)
+  def fuzziness(fuzziness: String): FuzzyQueryDefinition            = copy(fuzziness = fuzziness.some)
+  def boost(boost: Double): FuzzyQueryDefinition                    = copy(boost = boost.some)
   def transpositions(transpositions: Boolean): FuzzyQueryDefinition = copy(transpositions = transpositions.some)
-  def maxExpansions(maxExpansions: Int): FuzzyQueryDefinition = copy(maxExpansions = maxExpansions.some)
-  def prefixLength(prefixLength: Int): FuzzyQueryDefinition = copy(prefixLength = prefixLength.some)
-  def queryName(queryName: String): FuzzyQueryDefinition = copy(queryName = queryName.some)
-  def rewrite(rewrite: String): FuzzyQueryDefinition = copy(rewrite = rewrite.some)
+  def maxExpansions(maxExpansions: Int): FuzzyQueryDefinition       = copy(maxExpansions = maxExpansions.some)
+  def prefixLength(prefixLength: Int): FuzzyQueryDefinition         = copy(prefixLength = prefixLength.some)
+  def queryName(queryName: String): FuzzyQueryDefinition            = copy(queryName = queryName.some)
+  def rewrite(rewrite: String): FuzzyQueryDefinition                = copy(rewrite = rewrite.some)
 }

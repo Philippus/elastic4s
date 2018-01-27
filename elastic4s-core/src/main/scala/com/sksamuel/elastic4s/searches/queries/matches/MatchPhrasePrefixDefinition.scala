@@ -11,12 +11,12 @@ case class MatchPhrasePrefixDefinition(field: String,
                                        boost: Option[Double] = None,
                                        maxExpansions: Option[Int] = None,
                                        slop: Option[Int] = None)
-  extends QueryDefinition {
+    extends QueryDefinition {
 
-  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition = analyzer(a.name)
-  def analyzer(name: String): MatchPhrasePrefixDefinition = copy(analyzer = name.some)
+  def analyzer(a: Analyzer): MatchPhrasePrefixDefinition        = analyzer(a.name)
+  def analyzer(name: String): MatchPhrasePrefixDefinition       = copy(analyzer = name.some)
   def queryName(queryName: String): MatchPhrasePrefixDefinition = copy(queryName = queryName.some)
-  def boost(boost: Double): MatchPhrasePrefixDefinition = copy(boost = boost.some)
-  def maxExpansions(max: Int): MatchPhrasePrefixDefinition = copy(maxExpansions = max.some)
-  def slop(slop: Int): MatchPhrasePrefixDefinition = copy(slop = slop.some)
+  def boost(boost: Double): MatchPhrasePrefixDefinition         = copy(boost = boost.some)
+  def maxExpansions(max: Int): MatchPhrasePrefixDefinition      = copy(maxExpansions = max.some)
+  def slop(slop: Int): MatchPhrasePrefixDefinition              = copy(slop = slop.some)
 }

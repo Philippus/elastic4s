@@ -29,18 +29,20 @@ trait DeleteImplicits {
   implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] = response.statusCode match {
-        case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
-        case _ => Left(ElasticError.parse(response))
-      }
+      override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
+        response.statusCode match {
+          case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
+          case _         => Left(ElasticError.parse(response))
+        }
     }
 
     override def execute(client: HttpRequestClient, request: DeleteByQueryDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexesAndTypes.types.isEmpty)
-        s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_all/_delete_by_query"
-      else
-        s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
+      val endpoint =
+        if (request.indexesAndTypes.types.isEmpty)
+          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_all/_delete_by_query"
+        else
+          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false)) {
@@ -83,7 +85,8 @@ trait DeleteImplicits {
     override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
 
       val method = "DELETE"
-      val endpoint = s"/${URLEncoder.encode(request.indexType.index)}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString)}"
+      val endpoint =
+        s"/${URLEncoder.encode(request.indexType.index)}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))

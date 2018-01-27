@@ -21,5 +21,3 @@ object SpanOrQueryBodyFn {
     builder.endObject()
   }
 }
-
-

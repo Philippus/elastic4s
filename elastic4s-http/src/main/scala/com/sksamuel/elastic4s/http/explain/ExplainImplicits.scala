@@ -11,16 +11,14 @@ trait ExplainImplicits {
   implicit object ExplainHttpExec extends HttpExecutable[ExplainDefinition, ExplainResponse] {
 
     override def responseHandler: ResponseHandler[ExplainResponse] = new ResponseHandler[ExplainResponse] {
-      override def handle(response: HttpResponse) = {
+      override def handle(response: HttpResponse) =
         response.statusCode match {
           case 404 | 200 => Right(ResponseHandler.fromResponse[ExplainResponse](response))
-          case _ => sys.error("Invalid response")
+          case _         => sys.error("Invalid response")
         }
-      }
     }
 
-    override def execute(client: HttpRequestClient,
-                         request: ExplainDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpRequestClient, request: ExplainDefinition): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
 
@@ -30,7 +28,7 @@ trait ExplainImplicits {
       request.preference.map(_.toString).foreach(params.put("preference", _))
       request.lenient.map(_.toString).foreach(params.put("lenient", _))
 
-      val body = ExplainBodyFn(request).string()
+      val body   = ExplainBodyFn(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       client.async("GET", endpoint, params.toMap, entity)

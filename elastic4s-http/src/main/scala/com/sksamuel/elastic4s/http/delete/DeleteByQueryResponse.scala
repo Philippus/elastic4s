@@ -11,5 +11,4 @@ case class DeleteByQueryResponse(took: Long,
                                  noops: Long,
                                  @JsonProperty("throttled_millis") throttledMillis: Long,
                                  @JsonProperty("requests_per_second") requestsPerSecond: Long,
-                                 @JsonProperty("throttled_until_millis") throttledUntilMillis: Long
-                                )
+                                 @JsonProperty("throttled_until_millis") throttledUntilMillis: Long)

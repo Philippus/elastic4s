@@ -16,23 +16,27 @@ trait IndexImplicits extends IndexShowImplicits {
 
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
-        case 201 | 200 => Right(ResponseHandler.fromResponse[IndexResponse](response))
+        case 201 | 200       => Right(ResponseHandler.fromResponse[IndexResponse](response))
         case 400 | 409 | 500 => Left(ElasticError.parse(response))
-        case _ => sys.error(response.toString)
+        case _               => sys.error(response.toString)
       }
     }
 
     override def execute(client: HttpRequestClient, request: IndexDefinition): Future[HttpResponse] = {
 
       val (method, endpoint) = request.id match {
-        case Some(id) => "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/${URLEncoder.encode(id.toString)}"
-        case None => "POST" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}"
+        case Some(id) =>
+          "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}/${URLEncoder
+            .encode(id.toString)}"
+        case None =>
+          "POST" -> s"/${URLEncoder.encode(request.indexAndType.index)}/${URLEncoder.encode(request.indexAndType.`type`)}"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.createOnly.foreach(createOnly =>
-        if(createOnly) {
-          params.put("op_type", "create")
+      request.createOnly.foreach(
+        createOnly =>
+          if (createOnly) {
+            params.put("op_type", "create")
         }
       )
       request.routing.foreach(params.put("routing", _))
@@ -43,7 +47,7 @@ trait IndexImplicits extends IndexShowImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
-      val body = IndexContentBuilder(request)
+      val body   = IndexContentBuilder(request)
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       logger.debug(s"Endpoint=$endpoint")
@@ -55,7 +59,7 @@ trait IndexImplicits extends IndexShowImplicits {
 
     override def execute(client: HttpRequestClient, request: GetIndex): Future[HttpResponse] = {
       val endpoint = "/" + request.index
-      val method = "GET"
+      val method   = "GET"
       client.async(method, endpoint, Map.empty)
     }
   }

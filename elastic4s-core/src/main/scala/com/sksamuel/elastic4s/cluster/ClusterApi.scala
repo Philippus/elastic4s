@@ -6,28 +6,25 @@ import com.sksamuel.exts.OptionImplicits._
 trait ClusterApi {
 
   def clusterState(): ClusterStateDefinition = ClusterStateDefinition()
-  def clusterStats() = new ClusterStatsDefinition
+  def clusterStats()                         = new ClusterStatsDefinition
 
   def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsDefinition(settings, Map.empty)
-  def clusterTransientSettings(settings: Map[String, String]) = ClusterSettingsDefinition(Map.empty, settings)
+  def clusterTransientSettings(settings: Map[String, String])  = ClusterSettingsDefinition(Map.empty, settings)
 
-  def clusterHealth(): ClusterHealthDefinition = clusterHealth("_all")
+  def clusterHealth(): ClusterHealthDefinition                             = clusterHealth("_all")
   def clusterHealth(first: String, rest: String*): ClusterHealthDefinition = ClusterHealthDefinition(first +: rest)
-  def clusterHealth(indices: Iterable[String]): ClusterHealthDefinition = ClusterHealthDefinition(indices.toIndexedSeq)
+  def clusterHealth(indices: Iterable[String]): ClusterHealthDefinition    = ClusterHealthDefinition(indices.toIndexedSeq)
 }
 
 case class ClusterStatsDefinition()
 
-case class ClusterSettingsDefinition(persistentSettings: Map[String, String],
-                                     transientSettings: Map[String, String]) {
+case class ClusterSettingsDefinition(persistentSettings: Map[String, String], transientSettings: Map[String, String]) {
 
-  def persistentSettings(settings: Map[String, String]): ClusterSettingsDefinition = {
+  def persistentSettings(settings: Map[String, String]): ClusterSettingsDefinition =
     copy(persistentSettings = settings)
-  }
 
-  def transientSettings(settings: Map[String, String]): ClusterSettingsDefinition = {
+  def transientSettings(settings: Map[String, String]): ClusterSettingsDefinition =
     copy(transientSettings = settings)
-  }
 }
 
 case class ClusterStateDefinition(metrics: Seq[String] = Seq.empty, indices: Seq[String] = Seq.empty) {
@@ -57,5 +54,6 @@ case class ClusterHealthDefinition(indices: Seq[String],
 
   def waitForNodes(waitForNodes: String): ClusterHealthDefinition = copy(waitForNodes = waitForNodes.some)
 
-  def waitForNoRelocatingShards(waitForNoRelocatingShards: Boolean): ClusterHealthDefinition = copy(waitForNoRelocatingShards = waitForNoRelocatingShards.some)
+  def waitForNoRelocatingShards(waitForNoRelocatingShards: Boolean): ClusterHealthDefinition =
+    copy(waitForNoRelocatingShards = waitForNoRelocatingShards.some)
 }

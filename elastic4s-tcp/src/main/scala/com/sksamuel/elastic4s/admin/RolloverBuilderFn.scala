@@ -14,7 +14,9 @@ object RolloverBuilderFn {
     req.maxAge.map(TimeValue.parseTimeValue(_, "maxAge")).foreach(builder.addMaxIndexAgeCondition)
     req.maxDocs.foreach(builder.addMaxIndexDocsCondition)
     req.dryRun.foreach(builder.dryRun)
-    req.mappings.foreach { mapping => builder.mapping(mapping.`type`, MappingBuilderFn.buildWithName(mapping, mapping.`type`).string) }
+    req.mappings.foreach { mapping =>
+      builder.mapping(mapping.`type`, MappingBuilderFn.buildWithName(mapping, mapping.`type`).string)
+    }
     req.newIndexName.foreach(builder.setNewIndexName)
     if (req.settings.nonEmpty)
       builder.settings(req.settings)

@@ -12,7 +12,7 @@ import scala.concurrent.Future
 trait MappingExecutables {
 
   implicit object GetMappingDefinitionExecutable
-    extends Executable[GetMappingDefinition, GetMappingsResponse, GetMappingsResult] {
+      extends Executable[GetMappingDefinition, GetMappingsResponse, GetMappingsResult] {
     override def apply(c: Client, t: GetMappingDefinition): Future[GetMappingsResult] = {
       val req = c.admin.indices.prepareGetMappings(t.indexesAndTypes.indexes: _*)
       req.setTypes(t.indexesAndTypes.types: _*)
@@ -22,9 +22,12 @@ trait MappingExecutables {
   }
 
   implicit object PutMappingDefinitionExecutable
-    extends Executable[PutMappingDefinition, PutMappingResponse, PutMappingResponse] {
+      extends Executable[PutMappingDefinition, PutMappingResponse, PutMappingResponse] {
     override def apply(c: Client, t: PutMappingDefinition): Future[PutMappingResponse] = {
-      val listener: ActionListener[PutMappingResponse] => Unit = c.admin().indices().preparePutMapping(t.indexesAndType.indexes: _*)
+      val listener: ActionListener[PutMappingResponse] => Unit = c
+        .admin()
+        .indices()
+        .preparePutMapping(t.indexesAndType.indexes: _*)
         .setType(t.indexesAndType.`type`)
         .setSource(MappingBuilderFn.build(t).string, XContentType.JSON)
         .execute(_)

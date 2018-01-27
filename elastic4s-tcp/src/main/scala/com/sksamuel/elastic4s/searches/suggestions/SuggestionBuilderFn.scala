@@ -6,7 +6,7 @@ import org.elasticsearch.search.suggest.SuggestionBuilder
 object SuggestionBuilderFn {
   def apply(sugg: SuggestionDefinition): SuggestionBuilder[_ <: SuggestionBuilder[_]] = sugg match {
     case comp: CompletionSuggestionDefinition => CompletionSuggestionBuilderFn(comp)
-    case phrase: PhraseSuggestionDefinition => PhraseSuggestionBuilderFn(phrase)
-    case term: TermSuggestionDefinition => TermSuggestionBuilderFn(term)
+    case phrase: PhraseSuggestionDefinition   => PhraseSuggestionBuilderFn(phrase)
+    case term: TermSuggestionDefinition       => TermSuggestionBuilderFn(term)
   }
 }

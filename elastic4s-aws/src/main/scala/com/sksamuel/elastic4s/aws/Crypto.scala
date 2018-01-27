@@ -7,8 +7,8 @@ import javax.crypto.spec.SecretKeySpec
 object Crypto {
 
   private[aws] val Algorithm = "AWS4-HMAC-SHA256"
-  private val signAlgorithm = "HmacSHA256"
-  private val hashAlgorithm = "SHA-256"
+  private val signAlgorithm  = "HmacSHA256"
+  private val hashAlgorithm  = "SHA-256"
 
   private[aws] def hash(data: Array[Byte]): Array[Byte] = {
     val md = MessageDigest.getInstance(hashAlgorithm)

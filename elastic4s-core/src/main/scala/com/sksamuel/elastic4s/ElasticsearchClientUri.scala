@@ -15,7 +15,7 @@ object ElasticsearchClientUri {
     */
   def apply(host: String, port: Int): ElasticsearchClientUri = apply(s"elasticsearch://$host:$port")
 
-  def apply(str: String): ElasticsearchClientUri = {
+  def apply(str: String): ElasticsearchClientUri =
     str match {
       case Regex(hoststr, query) =>
         val hosts = hoststr.split(',').map(_.split(':')).map {
@@ -27,15 +27,19 @@ object ElasticsearchClientUri {
         }
         val options = StringOption(query)
           .map(_.drop(1))
-          .map(_.split('&')).getOrElse(Array.empty)
-          .map(_.split('=')).collect {
-          case Array(key, value) => (key, value)
-          case _ => sys.error(s"Invalid query $query")
-        }
+          .map(_.split('&'))
+          .getOrElse(Array.empty)
+          .map(_.split('='))
+          .collect {
+            case Array(key, value) => (key, value)
+            case _                 => sys.error(s"Invalid query $query")
+          }
         ElasticsearchClientUri(str, hosts.toList, options.toMap)
-      case _ => sys.error(s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr, http://host:port,host:port?querystr or https://host:port,host:port?querystr")
+      case _ =>
+        sys.error(
+          s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr, http://host:port,host:port?querystr or https://host:port,host:port?querystr"
+        )
     }
-  }
 }
 
 /**

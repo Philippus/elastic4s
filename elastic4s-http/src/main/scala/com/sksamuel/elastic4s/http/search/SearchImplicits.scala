@@ -3,15 +3,20 @@ package com.sksamuel.elastic4s.http.search
 import java.net.URLEncoder
 
 import cats.Show
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, IndicesOptionsParams, ResponseHandler}
+import com.sksamuel.elastic4s.http.{
+  HttpEntity,
+  HttpExecutable,
+  HttpRequestClient,
+  HttpResponse,
+  IndicesOptionsParams,
+  ResponseHandler
+}
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
-
-
 
 trait SearchImplicits {
 
@@ -34,14 +39,22 @@ trait SearchImplicits {
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
       override def handle(response: HttpResponse) = {
         val json = JacksonSupport.mapper.readTree(response.entity.get.content)
-        val items = json.get("responses").elements.asScala.zipWithIndex.map { case (element, index) =>
-          val status = element.get("status").intValue()
-          val either = if (element.has("error"))
-            Left(JacksonSupport.mapper.treeToValue[SearchError](element))
-          else
-            Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
-          MultisearchResponseItem(index, status, either)
-        }.toSeq
+        val items = json
+          .get("responses")
+          .elements
+          .asScala
+          .zipWithIndex
+          .map {
+            case (element, index) =>
+              val status = element.get("status").intValue()
+              val either =
+                if (element.has("error"))
+                  Left(JacksonSupport.mapper.treeToValue[SearchError](element))
+                else
+                  Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
+              MultisearchResponseItem(index, status, either)
+          }
+          .toSeq
         Right(MultiSearchResponse(items))
       }
     }
@@ -62,18 +75,26 @@ trait SearchImplicits {
 
     override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
 
-      val endpoint = if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
-        "/_search"
-      else if (request.indexesTypes.indexes.isEmpty)
-        "/_all/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
-      else if (request.indexesTypes.types.isEmpty)
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
-      else
-        "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
+      val endpoint =
+        if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
+          "/_search"
+        else if (request.indexesTypes.indexes.isEmpty)
+          "/_all/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
+        else if (request.indexesTypes.types.isEmpty)
+          "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
+        else
+          "/" + request.indexesTypes.indexes
+            .map(URLEncoder.encode(_, "UTF-8"))
+            .mkString(",") + "/" + request.indexesTypes.types
+            .map(URLEncoder.encode(_, "UTF-8"))
+            .mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
-      request.searchType.filter(_ != SearchType.DEFAULT).map(SearchTypeHttpParameters.convert).foreach(params.put("search_type", _))
+      request.searchType
+        .filter(_ != SearchType.DEFAULT)
+        .map(SearchTypeHttpParameters.convert)
+        .foreach(params.put("search_type", _))
       request.control.routing.map(_.toString).foreach(params.put("routing", _))
       request.keepAlive.foreach(params.put("scroll", _))
 

@@ -18,7 +18,7 @@ trait LocalNodeProvider {
   def node: LocalNode = getNode
 
   implicit lazy val client: TcpClient = getNode.tcp(false)
-  implicit lazy val http: HttpClient = getNode.http(false)
+  implicit lazy val http: HttpClient  = getNode.http(false)
 }
 
 // implementation of LocalNodeProvider that uses a single
@@ -44,35 +44,40 @@ trait ClassloaderLocalNodeProvider extends LocalNodeProvider {
 // and then connects to that, or creates a new one if one cannot be found
 trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
 
-  override def getNode: LocalNode = {
-
+  override def getNode: LocalNode =
     try {
 
       // assume the local node is running on 9200
       val client = HttpClient("elasticsearch://localhost:9200")
       import com.sksamuel.elastic4s.http.ElasticDsl._
-      val nodeinfo = client.execute(nodeInfo()).await.right.get.result
+      val nodeinfo   = client.execute(nodeInfo()).await.right.get.result
       val (id, node) = nodeinfo.nodes.head
       println(s"Found local node $id")
 
-      val paths = node.settingsAsMap("path").asInstanceOf[Map[String, AnyRef]]
+      val paths    = node.settingsAsMap("path").asInstanceOf[Map[String, AnyRef]]
       val pathData = Paths get paths("data").toString
       val pathHome = Paths get paths("home").toString
       val pathRepo = Paths get paths("repo").toString
-      new RemoteLocalNode(nodeinfo.clusterName, id, node.ip, node.http.publishAddress, node.transport.publishAddress, pathData, pathHome, pathRepo)
+      new RemoteLocalNode(nodeinfo.clusterName,
+                          id,
+                          node.ip,
+                          node.http.publishAddress,
+                          node.transport.publishAddress,
+                          pathData,
+                          pathHome,
+                          pathRepo)
 
     } catch {
       case NonFatal(e) =>
-
         def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
-        def pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
+        def pathHome: Path          = tempDirectoryPath resolve UUID.randomUUID().toString
 
         def createLocalNode(timesTried: Int): LocalNode = {
           println(s"Creating new local node")
           Try(LocalNode("localnode-cluster", pathHome.toAbsolutePath.toString)) match {
             case Failure(_: IllegalStateException) if timesTried < 5 => createLocalNode(timesTried + 1)
-            case Success(okNode) => okNode
-            case Failure(other) => throw other
+            case Success(okNode)                                     => okNode
+            case Failure(other)                                      => throw other
           }
         }
 
@@ -81,7 +86,6 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
         Thread.sleep(3000)
         node
     }
-  }
 }
 
 // implementation of LocalNodeProvider that uses a single
@@ -89,7 +93,7 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
 trait ClassLocalNodeProvider extends LocalNodeProvider {
 
   private lazy val tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
-  private lazy val pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
+  private lazy val pathHome: Path          = tempDirectoryPath resolve UUID.randomUUID().toString
 
   override lazy val getNode = LocalNode(
     "node_" + ClassLocalNodeProvider.counter.getAndIncrement(),
@@ -104,12 +108,11 @@ object ClassLocalNodeProvider {
 trait AlwaysNewLocalNodeProvider extends LocalNodeProvider {
 
   private def tempDirectoryPath: Path = Paths get System.getProperty("java.io.tmpdir")
-  private def pathHome: Path = tempDirectoryPath resolve UUID.randomUUID().toString
+  private def pathHome: Path          = tempDirectoryPath resolve UUID.randomUUID().toString
 
-  override def getNode: LocalNode = {
+  override def getNode: LocalNode =
     LocalNode(
       "node_" + Random.nextInt(),
       pathHome.toAbsolutePath.toString
     )
-  }
 }

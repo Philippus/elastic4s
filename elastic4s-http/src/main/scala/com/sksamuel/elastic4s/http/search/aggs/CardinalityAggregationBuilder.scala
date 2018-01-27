@@ -16,5 +16,3 @@ object CardinalityAggregationBuilder {
     builder.endObject().endObject()
   }
 }
-
-

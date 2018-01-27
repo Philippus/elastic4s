@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 
 object CreateIndexContentBuilder {
 
-  def apply(d: CreateIndexDefinition): XContentBuilder = {
+  def apply(d: CreateIndexDefinition): XContentBuilder =
     if (d.rawSource.isDefined) {
       XContentFactory.parse(d.rawSource.get)
     } else {
@@ -54,5 +54,4 @@ object CreateIndexContentBuilder {
       builder.endObject()
       builder
     }
-  }
 }
