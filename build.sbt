@@ -1,15 +1,17 @@
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 import microsites.ExtraMdFileConfig
 
 lazy val root = Project("elastic4s", file("."))
-  .settings(publish := {})
-  .settings(publishArtifact := false)
-  .settings(name := "elastic4s")
-  .settings(mappings in(Compile, packageSrc) ++= {
-    val base = (sourceManaged in Compile).value
-    val files = (managedSources in Compile).value
-    files.map { f => (f, f.relativeTo(base).get.getPath) }
-  })
+  .settings(
+    publish := {},
+    publishArtifact := false,
+    name := "elastic4s",
+    mappings in(Compile, packageSrc) ++= {
+      val base = (Compile / sourceManaged).value
+      val files = (Compile / managedSources).value
+      files.map { f => (f, f.relativeTo(base).get.getPath) }
+    },
+    ThisBuild / scalariformAutoformat := false
+  )
   .aggregate(
     core,
     tcp,
@@ -29,17 +31,20 @@ lazy val root = Project("elastic4s", file("."))
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
-  .settings(name := "elastic4s-core")
-  .settings(libraryDependencies ++= Seq(
-    "joda-time"                     % "joda-time"               % "2.9.9",
-    "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
-    "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
-    "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion
-  ))
+  .settings(
+    name := "elastic4s-core",
+    libraryDependencies ++= Seq(
+      "joda-time"                     % "joda-time"               % "2.9.9",
+      "com.fasterxml.jackson.core"    % "jackson-core"            % JacksonVersion,
+      "com.fasterxml.jackson.core"    % "jackson-databind"        % JacksonVersion,
+      "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % JacksonVersion
+    )
+  )
 
 lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
-  .settings(name := "elastic4s-tcp")
-    .settings(libraryDependencies ++= Seq(
+  .settings(
+    name := "elastic4s-tcp",
+    libraryDependencies ++= Seq(
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "org.locationtech.spatial4j"            % "spatial4j"                 % "0.6",
       "com.vividsolutions"                    % "jts"                       % "1.13",
@@ -69,7 +74,8 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "joda-time"                             % "joda-time"                 % "2.9.9",
       "com.fasterxml.jackson.core"            % "jackson-core"              % JacksonVersion,
       "com.tdunning"                          % "t-digest"                  % "3.1"
-    ))
+    )
+  )
   .dependsOn(core)
 
 lazy val http = Project("elastic4s-http", file("elastic4s-http"))
@@ -183,9 +189,9 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
       "org.apache.logging.log4j" % "log4j-core" % "2.8.2" % "test"
 
     ),
-    fork in Test := true,
-    parallelExecution in Test := false,
-    testForkedParallel in Test := false
+    Test / fork := true,
+    Test / parallelExecution := false,
+    Test / testForkedParallel := false
   )
   .dependsOn(tcp, http, jackson, circe, aws, testkit % "test")
 
@@ -194,7 +200,6 @@ lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site t
 lazy val docs = project
   .in(file("docs"))
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin)
-  .settings(ghpages.settings)
   .settings(noPublishSettings)
   .settings(
     micrositeName := "Elastic4s",
@@ -221,17 +226,17 @@ lazy val docs = project
     git.remoteRepo := "git@github.com:sksamuel/elastic4s.git",
     autoAPIMappings := true,
     docsMappingsAPIDir := "api",
-    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
+    addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
     ghpagesNoJekyll := false,
-    fork in tut := false,
-    fork in (ScalaUnidoc, unidoc) := false,
-    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
+    tut / fork := false,
+    ScalaUnidoc / unidoc / fork := false,
+    makeSite / includeFilter := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
     // push microsite on release
     releaseProcess += releaseStepTask(publishMicrosite)
   ).dependsOn(core, embedded, http, circe, aws)
 
 lazy val noPublishSettings = Seq(
-  publish := (),
-  publishLocal := (),
+  publish := {},
+  publishLocal := {},
   publishArtifact := false
 )

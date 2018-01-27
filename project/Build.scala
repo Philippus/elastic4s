@@ -44,13 +44,12 @@ object Build extends AutoPlugin {
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
-    publishArtifact in Test := false,
+    Test / publishArtifact := false,
     fork := false,
-    parallelExecution := false,
-    parallelExecution in ThisBuild := false,
+    ThisBuild /parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
+    Global / concurrentRestrictions += Tags.limit(Tags.Test, 1),
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
@@ -69,26 +68,8 @@ object Build extends AutoPlugin {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    pomExtra := {
-      <url>https://github.com/sksamuel/elastic4s</url>
-        <licenses>
-          <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-          </license>
-        </licenses>
-        <scm>
-          <url>git@github.com:sksamuel/elastic4s.git</url>
-          <connection>scm:git@github.com:sksamuel/elastic4s.git</connection>
-        </scm>
-        <developers>
-          <developer>
-            <id>sksamuel</id>
-            <name>sksamuel</name>
-            <url>http://github.com/sksamuel</url>
-          </developer>
-        </developers>
-    }
+    scmInfo := Option(ScmInfo(url("https://github.com/sksamuel/elastic4s"), "https://github.com/sksamuel/elastic4s.git")),
+    licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers := List(Developer(id = "sksamuel", name = "Samuel", email = "", url = url("http://github.com/sksamuel")))
   )
 }
