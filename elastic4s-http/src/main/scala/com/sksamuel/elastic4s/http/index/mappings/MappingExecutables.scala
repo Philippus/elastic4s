@@ -21,7 +21,7 @@ trait MappingExecutables {
           case (index, types) =>
             val mappings = types("mappings").map {
               case (tpe, properties) =>
-                tpe -> properties("properties").asInstanceOf[Map[String, Any]]
+                tpe -> properties.get("properties").map(_.asInstanceOf[Map[String, Any]]).getOrElse(Map.empty)
             }
             IndexMappings(index, mappings)
         }.toSeq
