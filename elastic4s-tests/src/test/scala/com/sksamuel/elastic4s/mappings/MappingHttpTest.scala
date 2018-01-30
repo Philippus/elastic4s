@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
 import com.sksamuel.elastic4s.analyzers._
+import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
@@ -11,6 +12,10 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
   Try {
     http.execute {
       deleteIndex("index")
+    }.await
+
+    http.execute {
+      deleteIndex("indexnoprops")
     }.await
   }
 
@@ -25,6 +30,13 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
     } normalizers {
       CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
     }
+  }.await
+
+
+  http.execute {
+    createIndex("indexnoprops").mappings(
+      mapping("mapping2").dynamic(DynamicMapping.Strict)
+    )
   }.await
 
   "mapping get" should {
@@ -43,6 +55,17 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
       val b = properties("b").asInstanceOf[Map[String, Any]]
       b("type") shouldBe "keyword"
       b("normalizer") shouldBe "my_normalizer"
+    }
+
+    "handle properly mapping without properties" in {
+
+      val mappings = http.execute {
+        getMapping("indexnoprops" / "mapping2")
+      }.await.right.get.result
+
+      val properties = mappings.find(_.index == "indexnoprops").get.mappings("mapping2")
+
+      properties shouldBe Map.empty
     }
   }
 }
