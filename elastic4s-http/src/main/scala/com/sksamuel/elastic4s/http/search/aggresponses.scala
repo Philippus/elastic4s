@@ -271,8 +271,8 @@ case class AvgAggResult(name: String, valueOpt: Option[Double]) extends MetricAg
 case class SumAggResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
-case class MinAggResult(name: String, value: Option[Double])        extends MetricAggregation
-case class MaxAggResult(name: String, value: Option[Double])        extends MetricAggregation
+case class MinAggResult(name: String, value: Option[Double]) extends MetricAggregation
+case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
 case class ValueCountResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
@@ -453,8 +453,9 @@ trait HasAggregations {
     GeoCentroidAggResult(name, location.map(l => GeoPoint(l("lat"), l("lon"))), count)
   }
 
-  def tophits(name: String): TopHitsResult       = TopHitsResult(name, agg(name))
-  def valueCount(name: String): ValueCountResult = ValueCountResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def tophits(name: String): TopHitsResult = TopHitsResult(name, agg(name))
+  def valueCount(name: String): ValueCountResult =
+    ValueCountResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
 
   // pipeline aggs
   def avgBucket(name: String): AvgBucketAggResult = AvgBucketAggResult(name, agg(name)("value").toString.toDouble)
