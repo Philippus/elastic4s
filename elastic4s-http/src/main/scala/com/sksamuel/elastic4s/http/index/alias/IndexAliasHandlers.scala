@@ -1,28 +1,14 @@
 package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.alias.{
-  AddAliasActionRequest,
-  GetAliasesRequest,
-  IndicesAliasesRequest,
-  RemoveAliasAction
-}
+import com.sksamuel.elastic4s.alias.{AddAliasActionRequest, GetAliasesRequest, IndicesAliasesRequest, RemoveAliasAction}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.index.admin.AliasActionResponse
-import com.sksamuel.elastic4s.http.{
-  ElasticError,
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  ResponseHandler
-}
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
+trait IndexAliasHandlers {
 
-trait IndexAliasImplicits {
-
-  implicit object GetAliasHttpExecutable extends HttpExecutable[GetAliasesRequest, IndexAliases] {
+  implicit object GetAliasHandler extends Handler[GetAliasesRequest, IndexAliases] {
 
     import scala.collection.JavaConverters._
 
@@ -39,34 +25,34 @@ trait IndexAliasImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: GetAliasesRequest): Future[HttpResponse] = {
+    override def requestHandler(request: GetAliasesRequest): ElasticRequest = {
       val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
         Map("ignore_unavailable" -> ignore)
       }
-      client.async("GET", endpoint, params)
+      ElasticRequest("GET", endpoint, params)
     }
   }
 
-  implicit object RemoveAliasActionExecutable extends HttpExecutable[RemoveAliasAction, AliasActionResponse] {
-    override def execute(client: HttpClient, request: RemoveAliasAction): Future[HttpResponse] = {
+  implicit object RemoveAliasActionExecutable extends Handler[RemoveAliasAction, AliasActionResponse] {
+    override def requestHandler(request: RemoveAliasAction): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesExecutable.execute(client, container)
+      IndexAliasesExecutable.requestHandler(container)
     }
   }
 
-  implicit object AddAliasActionExecutable extends HttpExecutable[AddAliasActionRequest, AliasActionResponse] {
-    override def execute(client: HttpClient, request: AddAliasActionRequest): Future[HttpResponse] = {
+  implicit object AddAliasActionExecutable extends Handler[AddAliasActionRequest, AliasActionResponse] {
+    override def requestHandler(request: AddAliasActionRequest): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesExecutable.execute(client, container)
+      IndexAliasesExecutable.requestHandler(container)
     }
   }
 
-  implicit object IndexAliasesExecutable extends HttpExecutable[IndicesAliasesRequest, AliasActionResponse] {
-    override def execute(client: HttpClient, request: IndicesAliasesRequest): Future[HttpResponse] = {
+  implicit object IndexAliasesExecutable extends Handler[IndicesAliasesRequest, AliasActionResponse] {
+    override def requestHandler(request: IndicesAliasesRequest): ElasticRequest = {
       val body   = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
-      client.async("POST", "/_aliases", Map.empty, entity)
+      ElasticRequest("POST", "/_aliases", entity)
     }
   }
 }

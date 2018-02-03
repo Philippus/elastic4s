@@ -2,14 +2,12 @@ package com.sksamuel.elastic4s.http.delete
 
 import java.net.URLEncoder
 
-import cats.Show
+import com.sksamuel.elastic4s.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdRequest, DeleteByQueryRequest}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {
@@ -20,29 +18,29 @@ object DeleteByQueryBodyFn {
   }
 }
 
-trait DeleteImplicits {
+trait DeleteHandlers {
 
   implicit object DeleteByQueryShow extends Show[DeleteByQueryRequest] {
     override def show(req: DeleteByQueryRequest): String = DeleteByQueryBodyFn(req).string()
   }
 
-  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryRequest, DeleteByQueryResponse] {
+  implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, DeleteByQueryResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
-          case _         => Left(ElasticError.parse(response))
+          case _ => Left(ElasticError.parse(response))
         }
     }
 
-    override def execute(client: HttpClient, request: DeleteByQueryRequest): Future[HttpResponse] = {
+    override def requestHandler(request: DeleteByQueryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)
-          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_all/_delete_by_query"
+          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_all/_delete_by_query"
         else
-          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
+          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false)) {
@@ -58,11 +56,11 @@ trait DeleteImplicits {
       logger.debug(s"Delete by query ${body.string}")
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("POST", endpoint, params.toMap, entity)
+      ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
 
-  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdRequest, DeleteResponse] {
+  implicit object DeleteByIdHandler extends Handler[DeleteByIdRequest, DeleteResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteResponse] {
 
@@ -71,6 +69,7 @@ trait DeleteImplicits {
         def right = Right(ResponseHandler.fromResponse[DeleteResponse](response))
 
         def left = Left(ElasticError.parse(response))
+
         response.statusCode match {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete
@@ -82,11 +81,10 @@ trait DeleteImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: DeleteByIdRequest): Future[HttpResponse] = {
+    override def requestHandler(request: DeleteByIdRequest): ElasticRequest = {
 
-      val method = "DELETE"
       val endpoint =
-        s"/${URLEncoder.encode(request.indexType.index)}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString)}"
+        s"/${URLEncoder.encode(request.indexType.index, "UTF-8")}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString, "UTF-8")}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))
@@ -96,7 +94,7 @@ trait DeleteImplicits {
       request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
-      client.async(method, endpoint, params.toMap)
+      ElasticRequest("DELETE", endpoint, params.toMap)
     }
   }
 }

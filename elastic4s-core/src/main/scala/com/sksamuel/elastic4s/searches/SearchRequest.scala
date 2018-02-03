@@ -206,17 +206,17 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
 
   def explain(enabled: Boolean): SearchRequest = copy(meta = meta.copy(explain = enabled.some))
 
-  def highlighting(first: HighlightFieldDefinition, rest: HighlightFieldDefinition*): SearchRequest =
-    highlighting(HighlightOptionsDefinition(), first +: rest)
+  def highlighting(first: HighlightField, rest: HighlightField*): SearchRequest =
+    highlighting(HighlightOptions(), first +: rest)
 
-  def highlighting(fields: Iterable[HighlightFieldDefinition]): SearchRequest =
-    highlighting(HighlightOptionsDefinition(), fields)
+  def highlighting(fields: Iterable[HighlightField]): SearchRequest =
+    highlighting(HighlightOptions(), fields)
 
-  def highlighting(options: HighlightOptionsDefinition,
-                   first: HighlightFieldDefinition,
-                   rest: HighlightFieldDefinition*): SearchRequest = highlighting(options, first +: rest)
+  def highlighting(options: HighlightOptions,
+                   first: HighlightField,
+                   rest: HighlightField*): SearchRequest = highlighting(options, first +: rest)
 
-  def highlighting(options: HighlightOptionsDefinition, fields: Iterable[HighlightFieldDefinition]): SearchRequest =
+  def highlighting(options: HighlightOptions, fields: Iterable[HighlightField]): SearchRequest =
     copy(highlight = Highlight(options, fields).some)
 
   def routing(r: String): SearchRequest = copy(control = control.copy(routing = r.some))

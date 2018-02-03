@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.searches.SearchRequest
 
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.language.higherKinds
 
 /**
   * A SearchIterator is used to create standard library iterator's from a search request.
@@ -14,19 +14,23 @@ import scala.concurrent.duration.Duration
   * Each time the iterator needs to request more data, the iterator will block until the request
   * returns. If you require a completely lazy style iterator, consider using reactive streams.
   */
+trait Awaitable[F[_]] {
+  def result[U](f: F[U], timeout: Duration): U
+}
+
 object SearchIterator {
 
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: ElasticClient, searchdef: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
+  def hits[F[_] : Awaitable](client: ElasticClient[F], searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
-      require(searchdef.keepAlive.isDefined, "Search request must define keep alive value")
+      require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
       import com.sksamuel.elastic4s.http.ElasticDsl._
 
       private var iterator: Iterator[SearchHit] = Iterator.empty
-      private var scrollId: Option[String]      = None
+      private var scrollId: Option[String] = None
 
       override def hasNext: Boolean = iterator.hasNext || {
         iterator = fetchNext()
@@ -38,15 +42,17 @@ object SearchIterator {
       def fetchNext(): Iterator[SearchHit] = {
 
         // we're either advancing a scroll id or issuing the first query w/ the keep alive set
-        val resp = scrollId match {
-          case Some(id) => Await.result(client.execute(searchScroll(id, searchdef.keepAlive.get)), timeout)
-          case None     => Await.result(client.execute(searchdef), timeout)
+        val f = scrollId match {
+          case Some(id) => client.execute(searchScroll(id, searchreq.keepAlive.get))
+          case None => client.execute(searchreq)
         }
+
+        val resp = implicitly[Awaitable[F]].result(f, timeout)
 
         // in a search scroll we must always use the last returned scrollId
         val response = resp match {
-          case Right(success) => success.result
-          case Left(failure)  => sys.error(failure.toString)
+          case RequestSuccess(_, _, _, result) => result
+          case failure: RequestFailure => sys.error(failure.toString)
         }
 
         scrollId = response.scrollId
@@ -59,7 +65,9 @@ object SearchIterator {
     * A typeclass HitReader[T] must be provided for marshalling of the search
     * responses into instances of type T.
     */
-  def iterate[T](client: ElasticClient, search: SearchRequest)(implicit reader: HitReader[T],
-                                                               timeout: Duration): Iterator[T] =
-    hits(client, search)(timeout).map(_.to[T])
+  def iterate[T, F[_] : Awaitable](client: ElasticClient[F], searchreq: SearchRequest)
+                                  (implicit reader: HitReader[T],
+                                   timeout: Duration): Iterator[T] = {
+    hits(client, searchreq).map(_.to[T])
+  }
 }

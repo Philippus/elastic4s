@@ -1,20 +1,10 @@
 package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{
-  ElasticError,
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  RefreshPolicyHttpValue,
-  ResponseHandler
-}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.reindex.ReindexRequest
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 case class Retries(bulk: Long, search: Long)
@@ -39,9 +29,9 @@ case class ReindexResponse(took: Long,
   def throttledUntil: Duration = throttledUntilMillis.millis
 }
 
-trait ReindexImplicits {
+trait ReindexHandlers {
 
-  implicit object ReindexHttpExecutable extends HttpExecutable[ReindexRequest, ReindexResponse] {
+  implicit object ReindexHandler extends Handler[ReindexRequest, ReindexResponse] {
 
     override def responseHandler = new ResponseHandler[ReindexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
@@ -50,7 +40,7 @@ trait ReindexImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: ReindexRequest): Future[HttpResponse] = {
+    override def requestHandler(request: ReindexRequest): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
@@ -63,7 +53,7 @@ trait ReindexImplicits {
 
       val body = ReindexBuilderFn(request).string()
 
-      client.async("POST", "_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      ElasticRequest("POST", "_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

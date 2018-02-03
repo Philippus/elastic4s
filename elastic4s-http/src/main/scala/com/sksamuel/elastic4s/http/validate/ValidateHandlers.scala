@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s.http.validate
 
-import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.Show
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.validate.ValidateRequest
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class ValidateResponse(valid: Boolean, @JsonProperty("_shards") shards: Shards, explanations: Seq[Explanation]) {
   def isValid: Boolean = valid
@@ -24,15 +22,15 @@ object ValidateBodyFn {
   }
 }
 
-trait ValidateImplicits {
+trait ValidateHandlers {
 
   implicit object ValidateShow extends Show[ValidateRequest] {
     override def show(v: ValidateRequest): String = ValidateBodyFn(v).string()
   }
 
-  implicit object ValidateHttpExecutable extends HttpExecutable[ValidateRequest, ValidateResponse] {
+  implicit object ValidateHandler extends Handler[ValidateRequest, ValidateResponse] {
 
-    override def execute(client: HttpClient, request: ValidateRequest): Future[HttpResponse] = {
+    override def requestHandler(request: ValidateRequest): ElasticRequest = {
 
       val endpoint =
         s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
@@ -44,7 +42,7 @@ trait ValidateImplicits {
       val body   = ValidateBodyFn(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("GET", endpoint, params.toMap, entity)
+      ElasticRequest("GET", endpoint, params.toMap, entity)
     }
   }
 }

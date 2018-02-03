@@ -2,17 +2,15 @@ package com.sksamuel.elastic4s.http.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.cluster.{ClusterHealthRequest, ClusterStateRequest}
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{ElasticRequest, Handler}
 
-import scala.concurrent.Future
+trait ClusterHandlers {
 
-trait ClusterImplicits {
+  implicit object ClusterStateHandler extends Handler[ClusterStateRequest, ClusterStateResponse] {
 
-  implicit object ClusterStateHttpExecutable extends HttpExecutable[ClusterStateRequest, ClusterStateResponse] {
-
-    override def execute(client: HttpClient, request: ClusterStateRequest): Future[HttpResponse] = {
+    override def requestHandler(request: ClusterStateRequest): ElasticRequest = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
-      client.async("GET", endpoint, Map.empty)
+      ElasticRequest("GET", endpoint)
     }
 
     private def buildMetricsString(metrics: Seq[String]): String =
@@ -30,9 +28,9 @@ trait ClusterImplicits {
       }
   }
 
-  implicit object ClusterHealthHttpExecutable extends HttpExecutable[ClusterHealthRequest, ClusterHealthResponse] {
+  implicit object ClusterHealthHandler extends Handler[ClusterHealthRequest, ClusterHealthResponse] {
 
-    override def execute(client: HttpClient, request: ClusterHealthRequest): Future[HttpResponse] = {
+    override def requestHandler(request: ClusterHealthRequest): ElasticRequest = {
       val endpoint = "/_cluster/health" + indicesUrl(request.indices)
 
       val params = scala.collection.mutable.Map.empty[String, String]
@@ -42,7 +40,7 @@ trait ClusterImplicits {
       request.waitForNoRelocatingShards.map(_.toString).foreach(params.put("wait_for_no_relocating_shards", _))
       request.timeout.map(_.toString).foreach(params.put("timeout", _))
 
-      client.async("GET", endpoint, params.toMap)
+      ElasticRequest("GET", endpoint, params.toMap)
     }
 
     private def indicesUrl(indices: Seq[String]): String =

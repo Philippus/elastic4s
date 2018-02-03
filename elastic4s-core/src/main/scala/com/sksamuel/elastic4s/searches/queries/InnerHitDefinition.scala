@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.FetchSourceContext
-import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
+import com.sksamuel.elastic4s.searches.HighlightField
 import com.sksamuel.elastic4s.searches.sort.Sort
 import com.sksamuel.exts.OptionImplicits._
 
@@ -15,13 +15,13 @@ case class InnerHitDefinition(name: String,
                               docValueFields: Seq[String] = Nil,
                               sorts: Seq[Sort] = Nil,
                               from: Option[Int] = None,
-                              highlights: Seq[HighlightFieldDefinition] = Nil) {
+                              highlights: Seq[HighlightField] = Nil) {
 
   def sortBy(sorts: Sort*): InnerHitDefinition          = sortBy(sorts)
   def sortBy(sorts: Iterable[Sort]): InnerHitDefinition = copy(sorts = sorts.toSeq)
 
-  def highlighting(highlights: HighlightFieldDefinition*): InnerHitDefinition = highlighting(highlights)
-  def highlighting(highlights: Iterable[HighlightFieldDefinition]): InnerHitDefinition =
+  def highlighting(highlights: HighlightField*): InnerHitDefinition = highlighting(highlights)
+  def highlighting(highlights: Iterable[HighlightField]): InnerHitDefinition =
     copy(highlights = highlights.toSeq)
 
   def trackScores(trackScores: Boolean): InnerHitDefinition            = copy(trackScores = trackScores.some)

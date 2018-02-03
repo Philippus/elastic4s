@@ -3,18 +3,16 @@ package com.sksamuel.elastic4s.http.count
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.count.CountRequest
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.http._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class CountResponse(count: Long)
 
-trait CountImplicits {
+trait CountHandlers {
 
-  implicit object CountHttpExecutable extends HttpExecutable[CountRequest, CountResponse] {
+  implicit object CountHandler extends Handler[CountRequest, CountResponse] {
 
-    override def execute(client: HttpClient, request: CountRequest): Future[HttpResponse] = {
+    override def requestHandler(request: CountRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexes.isEmpty && request.types.isEmpty)
@@ -31,7 +29,7 @@ trait CountImplicits {
       val builder = CountBodyBuilderFn(request)
       val body    = builder.string()
 
-      client.async("GET", endpoint, Map.empty, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      ElasticRequest("GET", endpoint, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

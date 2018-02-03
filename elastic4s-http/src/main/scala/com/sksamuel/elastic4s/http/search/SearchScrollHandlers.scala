@@ -1,30 +1,20 @@
 package com.sksamuel.elastic4s.http.search
 
-import cats.Show
-import com.sksamuel.elastic4s.http.{
-  ElasticError,
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  ResponseHandler
-}
+import com.sksamuel.elastic4s.Show
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
-import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 
-trait SearchScrollImplicits {
+trait SearchScrollHandlers {
 
   implicit object SearchScrollShow extends Show[SearchScrollDefinition] {
     override def show(req: SearchScrollDefinition): String = SearchScrollBuilderFn(req).string
   }
 
-  implicit object ClearScrollHttpExec extends HttpExecutable[ClearScrollDefinition, ClearScrollResponse] {
+  implicit object ClearScrollHandler extends Handler[ClearScrollDefinition, ClearScrollResponse] {
 
     override def responseHandler = new ResponseHandler[ClearScrollResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ClearScrollResponse] =
@@ -36,7 +26,7 @@ trait SearchScrollImplicits {
         }
     }
 
-    override def execute(client: HttpClient, request: ClearScrollDefinition): Future[HttpResponse] = {
+    override def requestHandler(request: ClearScrollDefinition): ElasticRequest = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -44,11 +34,11 @@ trait SearchScrollImplicits {
       logger.debug("Executing clear scroll: " + body)
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async(method, endpoint, Map.empty, entity)
+      ElasticRequest(method, endpoint, entity)
     }
   }
 
-  implicit object SearchScrollHttpExecutable extends HttpExecutable[SearchScrollDefinition, SearchResponse] {
+  implicit object SearchScrollHandler extends Handler[SearchScrollDefinition, SearchResponse] {
 
     override def responseHandler = new ResponseHandler[SearchResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, SearchResponse] = response.statusCode match {
@@ -57,13 +47,13 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute(client: HttpClient, req: SearchScrollDefinition): Future[HttpResponse] = {
+    override def requestHandler(req: SearchScrollDefinition): ElasticRequest = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("POST", "/_search/scroll", Map.empty, entity)
+      ElasticRequest("POST", "/_search/scroll", entity)
     }
   }
 }

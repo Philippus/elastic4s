@@ -2,23 +2,14 @@ package com.sksamuel.elastic4s.http.search
 
 import java.net.URLEncoder
 
-import cats.Show
-import com.sksamuel.elastic4s.http.{
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  IndicesOptionsParams,
-  ResponseHandler
-}
+import com.sksamuel.elastic4s.Show
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQuery}
 import com.sksamuel.elastic4s.searches.{MultiSearchRequest, SearchRequest, SearchType}
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
-
-trait SearchImplicits {
+trait SearchHandlers {
 
   implicit def BuildableTermsNoOp[T]: BuildableTermsQuery[T] = new BuildableTermsQuery[T] {
     override def build(q: TermsQuery[T]): Any = null // not used by the http builders
@@ -32,7 +23,7 @@ trait SearchImplicits {
     override def show(req: MultiSearchRequest): String = MultiSearchBuilderFn(req)
   }
 
-  implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchRequest, MultiSearchResponse] {
+  implicit object MultiSearchHandler extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._
 
@@ -59,7 +50,7 @@ trait SearchImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: MultiSearchRequest): Future[HttpResponse] = {
+    override def requestHandler(request: MultiSearchRequest): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -67,13 +58,13 @@ trait SearchImplicits {
       val body = MultiSearchBuilderFn(request)
       logger.debug("Executing msearch: " + body)
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
-      client.async("POST", "/_msearch", params.toMap, entity)
+      ElasticRequest("POST", "/_msearch", params.toMap, entity)
     }
   }
 
-  implicit object SearchHttpExecutable extends HttpExecutable[SearchRequest, SearchResponse] {
+  implicit object SearchHandler extends Handler[SearchRequest, SearchResponse] {
 
-    override def execute(client: HttpClient, request: SearchRequest): Future[HttpResponse] = {
+    override def requestHandler(request: SearchRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
@@ -103,7 +94,7 @@ trait SearchImplicits {
       }
 
       val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
-      client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      ElasticRequest("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

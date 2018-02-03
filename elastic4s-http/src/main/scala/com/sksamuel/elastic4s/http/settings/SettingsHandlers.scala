@@ -1,28 +1,20 @@
 package com.sksamuel.elastic4s.http.settings
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.http.{
-  ElasticError,
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  ResponseHandler
-}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
 import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
 import com.sksamuel.exts.collection.Maps
 
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
 
 case class IndexSettingsResponse(settings: Map[Index, Map[String, String]]) {
   def settingsForIndex(index: Index) = settings(index)
 }
 
-trait SettingsImplicits {
+trait SettingsHandlers {
 
-  implicit object GetSettingsHttpExecutable extends HttpExecutable[GetSettingsDefinition, IndexSettingsResponse] {
+  implicit object GetSettingsHandler extends Handler[GetSettingsDefinition, IndexSettingsResponse] {
 
     override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
 
@@ -45,13 +37,13 @@ trait SettingsImplicits {
         }
     }
 
-    override def execute(client: HttpClient, request: GetSettingsDefinition): Future[HttpResponse] = {
+    override def requestHandler(request: GetSettingsDefinition): ElasticRequest = {
       val endpoint = "/" + request.indexes.string + "/_settings"
-      client.async("GET", endpoint, Map.empty)
+      ElasticRequest("GET", endpoint)
     }
   }
 
-  implicit object UpdateSettingsHttpExecutable extends HttpExecutable[UpdateSettingsDefinition, IndexSettingsResponse] {
+  implicit object UpdateSettingsHandler extends Handler[UpdateSettingsDefinition, IndexSettingsResponse] {
 
     override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] =
@@ -63,10 +55,10 @@ trait SettingsImplicits {
         }
     }
 
-    override def execute(client: HttpClient, request: UpdateSettingsDefinition): Future[HttpResponse] = {
+    override def requestHandler(request: UpdateSettingsDefinition): ElasticRequest = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body     = JacksonSupport.mapper.writeValueAsString(request.settings)
-      client.async("PUT", endpoint, Map.empty, HttpEntity(body))
+      ElasticRequest("PUT", endpoint,  HttpEntity(body))
     }
   }
 }

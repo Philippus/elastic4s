@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.searches
 
 import scala.language.implicitConversions
 
-case class Highlight(options: HighlightOptionsDefinition, fields: Iterable[HighlightFieldDefinition])
+case class Highlight(options: HighlightOptions, fields: Iterable[HighlightField])
 
 trait HighlightApi {
-  def highlightOptions()       = HighlightOptionsDefinition()
-  def highlight(field: String) = HighlightFieldDefinition(field)
+  def highlightOptions()       = HighlightOptions()
+  def highlight(field: String) = HighlightField(field)
 }

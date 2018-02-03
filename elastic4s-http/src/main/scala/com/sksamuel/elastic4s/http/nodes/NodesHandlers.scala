@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.http.nodes
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{ElasticRequest, Handler}
 import com.sksamuel.elastic4s.nodes.{NodeInfoRequest, NodeStatsDefinition}
 import com.sksamuel.exts.collection.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 case class SwapStats(@JsonProperty("total_in_bytes") totalInBytes: Long,
@@ -79,27 +78,27 @@ case class OsInfo(@JsonProperty("refresh_interval_in_millis") refreshIntervalInM
   def refreshInterval: Duration = refreshIntervalInMillis.millis
 }
 
-trait NodesImplicits {
+trait NodesHandlers {
 
-  implicit object NodeInfoExecutable extends HttpExecutable[NodeInfoRequest, NodeInfoResponse] {
-    override def execute(client: HttpClient, request: NodeInfoRequest): Future[HttpResponse] = {
+  implicit object NodeInfoExecutable extends Handler[NodeInfoRequest, NodeInfoResponse] {
+    override def requestHandler(request: NodeInfoRequest): ElasticRequest = {
       val endpoint = if (request.nodes.isEmpty) {
         "/_nodes/"
       } else {
         "/_nodes/" + request.nodes.mkString(",")
       }
-      client.async("GET", endpoint, Map.empty)
+      ElasticRequest("GET", endpoint)
     }
   }
 
-  implicit object NodeStatsExecutable extends HttpExecutable[NodeStatsDefinition, NodesStatsResponse] {
-    override def execute(client: HttpClient, request: NodeStatsDefinition): Future[HttpResponse] = {
+  implicit object NodeStatsExecutable extends Handler[NodeStatsDefinition, NodesStatsResponse] {
+    override def requestHandler(request: NodeStatsDefinition): ElasticRequest = {
       val endpoint = if (request.nodes.nonEmpty) {
         "/_nodes/" + request.nodes.mkString(",") + "/stats/" + request.stats.mkString(",")
       } else {
         "/_nodes/stats/" + request.stats.mkString(",")
       }
-      client.async("GET", endpoint, Map.empty)
+      ElasticRequest("GET", endpoint)
     }
   }
 }

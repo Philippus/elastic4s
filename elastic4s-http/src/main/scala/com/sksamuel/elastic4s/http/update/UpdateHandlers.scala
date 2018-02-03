@@ -2,17 +2,14 @@ package com.sksamuel.elastic4s.http.update
 
 import java.net.URLEncoder
 
-import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.DocumentRef
+import com.sksamuel.elastic4s.{DocumentRef, Show}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.update.{UpdateByQueryRequest, UpdateRequest}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
 
@@ -24,9 +21,9 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
                           private val get: Option[UpdateGet]) {
-  def ref                      = DocumentRef(index, `type`, id)
+  def ref = DocumentRef(index, `type`, id)
   def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
-  def found: Boolean           = get.forall(_.found)
+  def found: Boolean = get.forall(_.found)
 }
 
 object UpdateByQueryBodyFn {
@@ -39,9 +36,9 @@ object UpdateByQueryBodyFn {
   }
 }
 
-object UpdateImplicits extends UpdateImplicits
+object UpdateHandlers extends UpdateHandlers
 
-trait UpdateImplicits {
+trait UpdateHandlers {
 
   implicit object UpdateShow extends Show[UpdateRequest] {
     override def show(f: UpdateRequest): String = UpdateBuilderFn(f).string()
@@ -51,10 +48,10 @@ trait UpdateImplicits {
     override def show(req: UpdateByQueryRequest): String = UpdateByQueryBodyFn(req).string()
   }
 
-  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateRequest, UpdateResponse] {
+  implicit object UpdateHandler extends Handler[UpdateRequest, UpdateResponse] {
 
-    override def responseHandler = new ResponseHandler[UpdateResponse] {
-      override def handle(response: HttpResponse) = response.statusCode match {
+    override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {
+      override def handle(response: HttpResponse): Either[ElasticError, UpdateResponse] = response.statusCode match {
         case 200 | 201 =>
           val json = response.entity.getOrError("Update responses must include a body")
           Right(ResponseHandler.fromEntity[UpdateResponse](json))
@@ -62,10 +59,10 @@ trait UpdateImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: UpdateRequest): Future[HttpResponse] = {
+    override def requestHandler(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
+        s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
@@ -79,15 +76,15 @@ trait UpdateImplicits {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body   = UpdateBuilderFn(request)
+      val body = UpdateBuilderFn(request)
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("POST", endpoint, params.toMap, entity)
+      ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
 
-  implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryRequest, UpdateByQueryResponse] {
-    override def execute(client: HttpClient, request: UpdateByQueryRequest): Future[HttpResponse] = {
+  implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
+    override def requestHandler(request: UpdateByQueryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)
@@ -109,7 +106,7 @@ trait UpdateImplicits {
       logger.debug(s"Delete by query ${body.string}")
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("POST", endpoint, params.toMap, entity)
+      ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
 }

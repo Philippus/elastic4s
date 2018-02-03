@@ -8,11 +8,9 @@ import com.sksamuel.elastic4s.indexes.{GetIndex, IndexContentBuilder, IndexReque
 import com.sksamuel.exts.collection.Maps
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
-
 trait IndexImplicits extends IndexShowImplicits {
 
-  implicit object IndexHttpExecutable extends HttpExecutable[IndexRequest, IndexResponse] {
+  implicit object IndexHandler extends Handler[IndexRequest, IndexResponse] {
 
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
@@ -22,7 +20,7 @@ trait IndexImplicits extends IndexShowImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: IndexRequest): Future[HttpResponse] = {
+    override def requestHandler(request: IndexRequest): ElasticRequest = {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
@@ -51,16 +49,16 @@ trait IndexImplicits extends IndexShowImplicits {
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       logger.debug(s"Endpoint=$endpoint")
-      client.async(method, endpoint, params.toMap, entity)
+      ElasticRequest(method, endpoint, params.toMap, entity)
     }
   }
 
-  implicit object GetIndexHttpExecutable extends HttpExecutable[GetIndex, Map[String, GetIndexResponse]] {
+  implicit object GetIndexHandler extends Handler[GetIndex, Map[String, GetIndexResponse]] {
 
-    override def execute(client: HttpClient, request: GetIndex): Future[HttpResponse] = {
+    override def requestHandler(request: GetIndex): ElasticRequest = {
       val endpoint = "/" + request.index
       val method   = "GET"
-      client.async(method, endpoint, Map.empty)
+      ElasticRequest(method, endpoint)
     }
   }
 }

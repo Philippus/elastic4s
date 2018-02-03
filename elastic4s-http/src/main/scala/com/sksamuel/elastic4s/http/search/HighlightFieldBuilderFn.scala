@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
+import com.sksamuel.elastic4s.searches.HighlightField
 
 object HighlightFieldBuilderFn {
 
-  def apply(field: HighlightFieldDefinition): XContentBuilder = {
+  def apply(field: HighlightField): XContentBuilder = {
 
     val builder = XContentFactory.obj()
 

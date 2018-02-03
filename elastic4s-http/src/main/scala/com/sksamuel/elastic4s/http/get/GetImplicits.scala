@@ -2,30 +2,18 @@ package com.sksamuel.elastic4s.http.get
 
 import java.net.URLEncoder
 
-import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
-import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.get.{GetRequest, MultiGetRequest}
-import com.sksamuel.elastic4s.http.{
-  ElasticError,
-  EnumConversions,
-  FetchSourceContextQueryParameterFn,
-  HttpEntity,
-  HttpExecutable,
-  HttpClient,
-  HttpResponse,
-  ResponseHandler
-}
+import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.{HitReader, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
-
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
-  def size: Int               = docs.size
+  def size: Int = docs.size
 
-  def to[T: HitReader]: IndexedSeq[T]                        = docs.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T] = docs.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
@@ -35,7 +23,7 @@ trait GetImplicits {
     override def show(f: MultiGetRequest): String = MultiGetBodyBuilder(f).string()
   }
 
-  implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetRequest, MultiGetResponse] with Logging {
+  implicit object MultiGetHandler extends Handler[MultiGetRequest, MultiGetResponse] with Logging {
 
     override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
@@ -49,14 +37,14 @@ trait GetImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: MultiGetRequest): Future[HttpResponse] = {
-      val body   = MultiGetBodyBuilder(request).string()
+    override def requestHandler(request: MultiGetRequest): ElasticRequest = {
+      val body = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
-      client.async("POST", "/_mget", Map.empty, entity)
+      ElasticRequest("POST", "/_mget", entity)
     }
   }
 
-  implicit object GetHttpExecutable extends HttpExecutable[GetRequest, GetResponse] with Logging {
+  implicit object GetHandler extends Handler[GetRequest, GetResponse] with Logging {
 
     override def responseHandler = new ResponseHandler[GetResponse] {
 
@@ -83,10 +71,10 @@ trait GetImplicits {
       }
     }
 
-    override def execute(client: HttpClient, request: GetRequest): Future[HttpResponse] = {
+    override def requestHandler(request: GetRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"
+        s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>
@@ -103,7 +91,7 @@ trait GetImplicits {
       request.version.map(_.toString).foreach(params.put("version", _))
       request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
 
-      client.async("GET", endpoint, params.toMap)
+      ElasticRequest("GET", endpoint, params.toMap)
     }
   }
 }

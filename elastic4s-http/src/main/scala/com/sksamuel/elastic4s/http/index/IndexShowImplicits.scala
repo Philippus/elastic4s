@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.index
 
-import cats.Show
+import com.sksamuel.elastic4s.Show
 import com.sksamuel.elastic4s.indexes.{CreateIndexRequest, IndexContentBuilder, IndexRequest}
 
 trait IndexShowImplicits {

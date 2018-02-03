@@ -1,57 +1,18 @@
 package com.sksamuel.elastic4s.http
 
-import java.util.concurrent.Executor
-
-import cats.{Invariant, Show}
-import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.language.higherKinds
-
-sealed trait Response[+U] {
-  def status: Int // the http status code of the response
-  def body: Option[String] // the http response body if the response included one
-  def headers: Map[String, String] // any http headers included in the response
-  def result: U // returns the marshalled response U or throws an exception
-  def error: ElasticError // returns the error or throw an exception
-  def isError: Boolean // returns true if this is an error response
-  final def isSuccess: Boolean = !isError // returns true if this is a success
-  final def map[V](f: U => V): Option[V] = if (isError) None else Some(f(result))
-  final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(result)
-  final def foreach[V](f: U => V): Unit = if (!isError) f(result)
-}
-
-case class RequestSuccess[U](override val status: Int, // the http status code of the response
-                             override val body: Option[String], // the http response body if the response included one
-                             override val headers: Map[String, String], // any http headers included in the response
-                             override val result: U)
-  extends Response[U] {
-  override def isError = false
-  override def error = throw new NoSuchElementException(s"Request success $result")
-}
-
-case class RequestFailure(override val status: Int, // the http status code of the response
-                          override val body: Option[String], // the http response body if the response included one
-                          override val headers: Map[String, String], // any http headers included in the response
-                          override val error: ElasticError)
-  extends Response[Nothing] {
-  override def result = throw new NoSuchElementException(s"Request Failure $error")
-  override def isError = true
-}
-
-trait Show[-T] extends Serializable {
-  def show(t: T): String
-}
 
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(f: A => B): F[B]
 }
 
-trait ElasticClient[F[_] : Functor] extends Logging {
+abstract class ElasticClient[F[_] : Functor : Executor] extends Logging {
 
   // the underlying client that performs the requests
   def client: HttpClient
@@ -64,33 +25,21 @@ trait ElasticClient[F[_] : Functor] extends Logging {
     */
   def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
 
-  // Executes the given request T, and returns an effect of Response[U] where U is particular to the request type.
+  // Executes the given request type T, and returns an effect of Response[U]
+  // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
-  def execute[T, U](request: T)(
-    implicit exec: HttpExecutable[T, U],
-    executionContext: ExecutionContext = ExecutionContext.Implicits.global
-  ): F[Either[RequestFailure, RequestSuccess[U]]] =
-    exec
-      .execute(client, request)
-      .map(
-        r =>
-          exec.responseHandler.handle(r) match {
-            case Right(u) =>
-              Right(RequestSuccess(r.statusCode, r.entity.map(_.content), r.headers, u))
-            case Left(error) =>
-              Left(RequestFailure(r.statusCode, r.entity.map(_.content), r.headers, error))
-          }
-      )
+  def execute[T, U](t: T)(implicit handler: Handler[T, U]): F[Response[U]] = {
+    val request = handler.requestHandler(t)
+    val f = implicitly[Executor[F]].exec(client, request)
+    implicitly[Functor[F]].map(f) { resp =>
+      handler.responseHandler.handle(resp) match {
+        case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
+        case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
+      }
+    }
+  }
 
   def close(): Unit
-}
-
-// models everything needed to send the request to elasticsearch
-// all request types, like SearchRequest, UpdateRequest
-case class ElasticRequest(method: String, url: String, headers: Map[String, String], body: Option[HttpEntity])
-
-trait Executor[F[_]] {
-  def exec(request: ElasticRequest)
 }
 
 object ElasticClient extends Logging {
@@ -102,7 +51,7 @@ object ElasticClient extends Logging {
     * of the HttpClient typeclass wrapping the underlying library and
     * then creating the ElasticClient using this method.
     */
-  def apply[F[_] : Executor[F]](hc: HttpClient): ElasticClient[F] = new ElasticClient[F] {
+  def apply[F[_] : Functor : Executor](hc: HttpClient): ElasticClient[F] = new ElasticClient[F] {
     override def client: HttpClient = hc
     override def close(): Unit = hc.close()
   }
@@ -113,7 +62,7 @@ object ElasticClient extends Logging {
     * @param client the Java client to wrap
     * @return newly created Scala client
     */
-  def fromRestClient[F[_] : Executor[F]](client: RestClient): ElasticClient[F] =
+  def fromRestClient[F[_] : Functor : Executor](client: RestClient): ElasticClient[F] =
     apply(new ElasticsearchJavaRestClient(client))
 
   /**
@@ -122,9 +71,9 @@ object ElasticClient extends Logging {
     *
     * Alternatively, create a RestClient manually and invoke fromRestClient(RestClient).
     */
-  def apply[F[_] : Executor[F]](uri: ElasticsearchClientUri,
-                                requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-                                httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback): ElasticClient[F] = {
+  def apply[F[_] : Functor : Executor](uri: ElasticsearchClientUri,
+                                             requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+                                             httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback): ElasticClient[F] = {
     val hosts = uri.hosts.map {
       case (host, port) =>
         new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")

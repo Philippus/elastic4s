@@ -2,11 +2,9 @@ package com.sksamuel.elastic4s.http.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.admin.RolloverIndexRequest
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.XContentFactory
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class RolloverResponse(@JsonProperty("old_index") oldIndex: String,
                             @JsonProperty("new_index") newIndex: String,
@@ -16,11 +14,11 @@ case class RolloverResponse(@JsonProperty("old_index") oldIndex: String,
                             @JsonProperty("shards_acknowledged") shardsAcknowledged: Boolean,
                             conditions: Map[String, Boolean])
 
-trait RolloverImplicits {
+trait RolloverHandlers {
 
-  implicit object RolloverHttpExecutable extends HttpExecutable[RolloverIndexRequest, RolloverResponse] {
+  implicit object RolloverHandler extends Handler[RolloverIndexRequest, RolloverResponse] {
 
-    override def execute(client: HttpClient, request: RolloverIndexRequest): Future[HttpResponse] = {
+    override def requestHandler(request: RolloverIndexRequest): ElasticRequest = {
 
       val endpoint  = s"/${request.sourceAlias}/_rollover"
       val endpoint2 = request.newIndexName.fold(endpoint)(endpoint + "/" + _)
@@ -36,7 +34,7 @@ trait RolloverImplicits {
       builder.endObject()
 
       val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
-      client.async("POST", endpoint2, params.toMap, entity)
+      ElasticRequest("POST", endpoint2, params.toMap, entity)
     }
   }
 }

@@ -1,18 +1,16 @@
 package com.sksamuel.elastic4s.http.index.mappings
 
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.indexes.PutMappingBuilderFn
 import com.sksamuel.elastic4s.mappings.{GetMappingDefinition, PutMappingDefinition}
 import org.apache.http.entity.ContentType
-
-import scala.concurrent.Future
 
 case class IndexMappings(index: String, mappings: Map[String, Map[String, Any]])
 
 trait MappingExecutables {
 
-  implicit object GetMappingHttpExecutable extends HttpExecutable[GetMappingDefinition, Seq[IndexMappings]] {
+  implicit object GetMappingHandler extends Handler[GetMappingDefinition, Seq[IndexMappings]] {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
       override def handle(response: HttpResponse) = {
@@ -29,19 +27,19 @@ trait MappingExecutables {
       }
     }
 
-    override def execute(client: HttpClient, request: GetMappingDefinition): Future[HttpResponse] = {
+    override def requestHandler(request: GetMappingDefinition): ElasticRequest = {
       val endpoint = request.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil)       => "/_mapping"
         case IndexesAndTypes(indexes, Nil)   => s"/${indexes.mkString(",")}/_mapping"
         case IndexesAndTypes(indexes, types) => s"/${indexes.mkString(",")}/_mapping/${types.mkString(",")}"
       }
-      client.async("GET", endpoint, Map.empty)
+      ElasticRequest("GET", endpoint)
     }
   }
 
-  implicit object PutMappingHttpExecutable extends HttpExecutable[PutMappingDefinition, PutMappingResponse] {
+  implicit object PutMappingHandler extends Handler[PutMappingDefinition, PutMappingResponse] {
 
-    override def execute(client: HttpClient, request: PutMappingDefinition): Future[HttpResponse] = {
+    override def requestHandler(request: PutMappingDefinition): ElasticRequest = {
 
       val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
 
@@ -54,7 +52,7 @@ trait MappingExecutables {
       val body   = PutMappingBuilderFn(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      client.async("PUT", endpoint, params.toMap, entity)
+      ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
   }
 }

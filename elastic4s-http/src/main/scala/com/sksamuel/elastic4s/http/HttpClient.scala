@@ -18,7 +18,7 @@ trait HttpClient extends Logging {
     * a response, including 4xx and 5xx responses. The callback function should only be invoked
     * with an exception if the client failed.
     */
-  def send(request: ElasticRequest, callback: Either[Exception, HttpResponse] => Unit): Unit
+  def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit
 
   /**
     * Closes the underlying http client. Can be a no-op if the underlying client does not have

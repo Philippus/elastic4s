@@ -2,18 +2,16 @@ package com.sksamuel.elastic4s.http.termvectors
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.termvectors.TermVectorsRequest
 import org.apache.http.entity.ContentType
 
-import scala.concurrent.Future
+trait TermVectorHandlers {
 
-trait TermVectorsExecutables {
+  implicit object TermVectorHandler extends Handler[TermVectorsRequest, TermVectorsResponse] {
 
-  implicit object TermVectorHttpExecutable extends HttpExecutable[TermVectorsRequest, TermVectorsResponse] {
-
-    override def execute(client: HttpClient, request: TermVectorsRequest): Future[HttpResponse] = {
+    override def requestHandler(request: TermVectorsRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 
@@ -43,10 +41,10 @@ trait TermVectorsExecutables {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.realtime.foreach(params.put("realtime", _))
 
-      client.async("GET",
-                   endpoint,
-                   params.toMap,
-                   HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
+      ElasticRequest("GET",
+        endpoint,
+        params.toMap,
+        HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

@@ -1,36 +1,36 @@
 package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
-import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
+import com.sksamuel.elastic4s.searches.HighlightField
 import org.scalatest.{FunSuite, Matchers}
 import com.sksamuel.elastic4s.http.ElasticDsl._
 
 class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
 
   test("'boundaryChars' generates 'boundary_chars' field.") {
-    val highlight = HighlightFieldDefinition("text").boundaryChars("test")
+    val highlight = HighlightField("text").boundaryChars("test")
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"boundary_chars":"test"}"""
   }
   test("'boundaryMaxScan' generates 'boundary_max_scan' field.") {
-    val highlight = HighlightFieldDefinition("text").boundaryMaxScan(20)
+    val highlight = HighlightField("text").boundaryMaxScan(20)
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"boundary_max_scan":20}"""
   }
   test("'forceSource' generates 'force_source' field.") {
-    val highlight = HighlightFieldDefinition("text").forceSource(true)
+    val highlight = HighlightField("text").forceSource(true)
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"force_source":true}"""
   }
   test("'fragmentOffset' generates 'fragment_offset' field.") {
-    val highlight = HighlightFieldDefinition("text").fragmentOffset(100)
+    val highlight = HighlightField("text").fragmentOffset(100)
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"fragment_offset":100}"""
   }
   test("'fragmentSize' generates 'fragment_size' field.") {
-    val highlight = HighlightFieldDefinition("text").fragmentSize(108)
+    val highlight = HighlightField("text").fragmentSize(108)
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"fragment_size":108}"""
   }
   test("'query' generates 'highlight_query' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .query(matchQuery("body", "foo"))
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -39,7 +39,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'matchedFields' generates proper 'matched_fields' field as array field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .matchedFields("text", "text.ngram", "text.japanese")
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -48,7 +48,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'highlighterType' generates 'type' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .highlighterType("fvh")
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -57,7 +57,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'noMatchSize' generates 'no_match_size' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .noMatchSize(33)
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -66,7 +66,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'numberOfFragments' generates 'number_of_fragments' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .numberOfFragments(12)
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -75,7 +75,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'order' generates 'order' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .order("asc")
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -84,7 +84,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("'phraseLimit' generates 'phrase_limit' field.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .phraseLimit(99)
     // Then
     HighlightFieldBuilderFn(highlight).string() shouldBe
@@ -94,7 +94,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("not generates post & pre tags if they are not specified.") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .preTag(Nil)
         .postTag(Nil)
     // Then
@@ -104,7 +104,7 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
   test("em tag will be generated as post tag if specified pre tag only") {
     // Given
     val highlight =
-      HighlightFieldDefinition("text")
+      HighlightField("text")
         .preTag("<p>", "<b>")
         .postTag(Nil)
     // Then
@@ -112,16 +112,16 @@ class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
       """{"post_tags":["</em>"],"pre_tags":["<p>","<b>"]}"""
   }
   test("em tag will be generated as pre tag if specified post tag only") {
-    val highlight = HighlightFieldDefinition("text").preTag(Nil).postTag("<p>", "<b>")
+    val highlight = HighlightField("text").preTag(Nil).postTag("<p>", "<b>")
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"post_tags":["<p>","<b>"],"pre_tags":["<em>"]}"""
   }
   test("specified post & pre tags will be generated") {
-    val highlight = HighlightFieldDefinition("text").preTag("<a>", "<b>").postTag("<c>", "<d>")
+    val highlight = HighlightField("text").preTag("<a>", "<b>").postTag("<c>", "<d>")
     HighlightFieldBuilderFn(highlight).string() shouldBe
       """{"post_tags":["<c>","<d>"],"pre_tags":["<a>","<b>"]}"""
   }
   test("'requiredFieldMatch' generates 'require_field_match' field.") {
-    val highlight = HighlightFieldDefinition("text").requireFieldMatch(false)
+    val highlight = HighlightField("text").requireFieldMatch(false)
     HighlightFieldBuilderFn(highlight).string() shouldBe """{"require_field_match":false}"""
   }
 }
