@@ -5,12 +5,13 @@ import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.searches.SearchRequest
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 object ReactiveElastic {
 
-  implicit class ReactiveElastic(client: ElasticClient) {
+  implicit class ReactiveElastic(client: ElasticClient[Future]) {
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
 
@@ -53,6 +54,7 @@ object ReactiveElastic {
 
     def publisher(q: SearchRequest)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
       publisher(q, Long.MaxValue)
+
     def publisher(q: SearchRequest, elements: Long)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
       new ScrollPublisher(client, q, elements)
   }
