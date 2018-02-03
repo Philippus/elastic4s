@@ -45,7 +45,7 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
             .range(ElasticDateMath("15/12/2017").minus(10, Years), ElasticDate("15/12/2017").minus(5, Years))
             .range(ElasticDateMath("15/12/2017").minus(5, Years), ElasticDate("15/12/2017"))
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -63,7 +63,7 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
             .range("15/12/2017||-10y", "15/12/2017||-5y")
             .range("15/12/2017||-5y", "15/12/2017||")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

@@ -26,7 +26,7 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
     "acknowledge" in {
       http.execute {
         closeIndex("pasta")
-      }.await.right.get.result.acknowledged shouldBe true
+      }.await.result.acknowledged shouldBe true
     }
   }
 
@@ -34,7 +34,7 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
     "acknowledge" in {
       http.execute {
         openIndex("pasta")
-      }.await.right.get.result.acknowledged shouldBe true
+      }.await.result.acknowledged shouldBe true
     }
   }
 }

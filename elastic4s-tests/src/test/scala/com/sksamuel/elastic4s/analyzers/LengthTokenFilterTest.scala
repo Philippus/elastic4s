@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class LengthTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class LengthTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "LengthTokenFilter builder" should {
     "not set defaults" in {

@@ -51,7 +51,7 @@ class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests wit
           percentilesBucketAggregation("percentiles_monthly_sales", "sales_per_month>sales")
             .percents(Seq(25.0, 50.0, 75.0))
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 8
 

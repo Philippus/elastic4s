@@ -39,7 +39,7 @@ class TermsQueryTest
 
     val resp = http.execute {
       search("lords") query termsQuery("name", "nelson", "byron")
-    }.await.right.get.result
+    }.await.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"byron"}""")
   }
@@ -49,7 +49,7 @@ class TermsQueryTest
       search("lords") query termsQuery("name", List.empty[String])
         .ref("lordsfanclub", "fans", "lordsAppreciationFanClub")
         .path("lordswelike")
-    }.await.right.get.result
+    }.await.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"edmure"}""")
   }

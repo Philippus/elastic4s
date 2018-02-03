@@ -31,7 +31,7 @@ class MatchQueryTest
 
     val resp = http.execute {
       search("units") query matchQuery("name", "candela") sourceInclude "scientist.name"
-    }.await.right.get.result
+    }.await.result
 
     resp.hits.hits.head.sourceAsMap shouldBe Map("scientist.name" -> "Jules Violle")
   }

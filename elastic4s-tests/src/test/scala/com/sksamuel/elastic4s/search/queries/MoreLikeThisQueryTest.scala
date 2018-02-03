@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.searches.queries.{ArtificialDocument, MoreLikeThisItem}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.{DocumentRef, ElasticDsl, RefreshPolicy}
+import com.sksamuel.elastic4s.{DocumentRef, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -42,7 +43,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
           moreLikeThisQuery("text")
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("4", "8")
     }
 
@@ -53,7 +54,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
           moreLikeThisQuery("text")
             .likeItems(MoreLikeThisItem(ref, Some("2"))) minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp1.hits.hits.map(_.id).toSet shouldBe Set()
 
       val resp2 = http.execute {
@@ -61,7 +62,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
           moreLikeThisQuery("text")
             .likeItems(MoreLikeThisItem(ref, Some("1"))) minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp2.hits.hits.map(_.id).toSet shouldBe Set("8")
     }
 
@@ -73,7 +74,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
               ArtificialDocument("drinks", "drink", """{ "text" : "gin" }""", Some("1"))
             ) minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("7", "9")
     }
   }

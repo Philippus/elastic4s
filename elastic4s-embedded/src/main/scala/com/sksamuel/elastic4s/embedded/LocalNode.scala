@@ -22,7 +22,7 @@ trait LocalNode {
   def ip: String
   def host: String
   def port: Int
-  def http(shutdownNodeOnClose: Boolean): ElasticClient[Future]
+  def client(shutdownNodeOnClose: Boolean): ElasticClient
   def clusterName: String
   def pathData: Path
   def pathHome: Path
@@ -44,7 +44,7 @@ class RemoteLocalNode(val clusterName: String,
   require(httpAddress != null, "httpAddress cannot be null")
   require(transportAddress != null, "transportAddress cannot be null")
 
-  override def http(shutdownNodeOnClose: Boolean): ElasticClient[Future] =
+  override def client(shutdownNodeOnClose: Boolean): ElasticClient =
     ElasticClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   override def host: String = httpAddress.split(':').head
   override def port: Int = httpAddress.split(':').last.toInt
@@ -119,7 +119,7 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * If shutdownNodeOnClose is true, then the local node will be shutdown once this
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
-  override def http(shutdownNodeOnClose: Boolean): ElasticClient[Future] = new ElasticClient[Future] {
+  override def client(shutdownNodeOnClose: Boolean): ElasticClient = new ElasticClient {
     private val delegate = ElasticClient(s"elasticsearch://$host:$port")
     override def client: HttpClient = delegate.client
     override def close(): Unit =

@@ -26,7 +26,7 @@ class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
   "term vectors" should "return full stats" in {
     val response = http.execute {
       termVectors("hansz", "albums", "1")
-    }.await.right.get.result
+    }.await.result
 
     response.index shouldBe "hansz"
     response.`type` shouldBe "albums"

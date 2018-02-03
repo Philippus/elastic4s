@@ -42,7 +42,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
         get("5") from "coldplay/albums",
         get("7") from "coldplay/albums"
       )
-    ).await.right.get.result
+    ).await.result
 
     resp.size shouldBe 3
 
@@ -63,7 +63,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
         get("3").from("coldplay/albums"),
         get("711111") from "coldplay/albums"
       )
-    ).await.right.get.result
+    ).await.result
 
     resp.size shouldBe 2
     resp.items.head.exists shouldBe true
@@ -77,7 +77,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
         get("3") from "coldplay/albums" storedFields("name", "year"),
         get("5") from "coldplay/albums" storedFields "name"
       )
-    ).await.right.get.result
+    ).await.result
 
     resp.size shouldBe 2
     resp.items.head.fields shouldBe Map("year" -> List(2005), "name" -> List("x&y"))
@@ -91,7 +91,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
         get("3") from "coldplay/albums" fetchSourceContext Seq("name", "year"),
         get("5") from "coldplay/albums" fetchSourceContext Seq("name")
       )
-    ).await.right.get.result
+    ).await.result
     resp.size shouldBe 2
     resp.items.head.source shouldBe Map("year" -> 2005, "name" -> "x&y")
     resp.items.last.source shouldBe Map("name" -> "mylo xyloto")

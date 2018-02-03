@@ -27,12 +27,12 @@ class ExistsTest extends WordSpec with Matchers with DockerTests {
     "return true for an existing doc" in {
       http.execute {
         exists("a", "exists", "flowers")
-      }.await.right.get.result shouldBe true
+      }.await.result shouldBe true
     }
     "return false for non existing doc" in {
       http.execute {
         exists("b", "exists", "flowers")
-      }.await.right.get.result shouldBe false
+      }.await.result shouldBe false
     }
   }
 }

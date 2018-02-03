@@ -53,7 +53,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
         search("valuecount").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.valueCount("agg1")
       agg.value shouldBe 7
@@ -63,7 +63,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
         search("valuecount2").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 0
       val agg = resp.aggs.valueCount("agg1")
       agg.value shouldBe 0

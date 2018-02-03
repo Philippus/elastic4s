@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class CompoundWordTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class CompoundWordTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "CompoundWordTokenFilter builder" should {
     "set type" in {

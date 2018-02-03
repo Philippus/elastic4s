@@ -48,7 +48,7 @@ class StatsBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matc
 
           statsBucketAggregation("stats_monthly_sales", "sales_per_month>sales")
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

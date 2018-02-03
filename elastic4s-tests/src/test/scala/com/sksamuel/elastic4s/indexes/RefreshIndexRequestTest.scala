@@ -32,7 +32,7 @@ class RefreshIndexRequestTest extends WordSpec with Matchers with DockerTests {
       // no data because the refresh is 10 minutes
       http.execute {
         search("refreshtest").matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 0
+      }.await.result.totalHits shouldBe 0
 
       http.execute {
         refreshIndex("refreshtest")
@@ -40,7 +40,7 @@ class RefreshIndexRequestTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         search("refreshtest").matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
     }
   }
 }

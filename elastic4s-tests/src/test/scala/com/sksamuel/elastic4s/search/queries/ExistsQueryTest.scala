@@ -23,7 +23,7 @@ class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
         "name" -> "finch",
         "weapon" -> "computer"
       )
-    ).immediateRefresh()
+    ).refreshImmediately
   ).await
 
   "exists query" should {
@@ -32,14 +32,14 @@ class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
         search("person" / "interest") postFilter {
           existsQuery("name")
         }
-      }.await.right.get.result.totalHits shouldBe 2
+      }.await.result.totalHits shouldBe 2
     }
     "not match null fields" in {
       http.execute {
         search("person" / "interest") postFilter {
           existsQuery("place")
         }
-      }.await.right.get.result.totalHits shouldBe 0
+      }.await.result.totalHits shouldBe 0
     }
   }
 }

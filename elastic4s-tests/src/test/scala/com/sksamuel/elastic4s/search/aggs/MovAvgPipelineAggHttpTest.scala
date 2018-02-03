@@ -49,7 +49,7 @@ class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers 
               movingAverageAggregation("the_movavg", "the_sum")
             )
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

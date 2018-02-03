@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class PatternCaptureTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class PatternCaptureTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "PatternAnalyzer builder" should {
     "set patterns" in {

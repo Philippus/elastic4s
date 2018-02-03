@@ -1,26 +1,28 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.TcpClient
+import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.searches.SearchRequest
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 import scala.concurrent.duration._
+import scala.language.higherKinds
 
 trait SearchMatchers extends Matchers {
 
+  import com.sksamuel.elastic4s.http.ElasticDsl._
+
   @deprecated("use containId(id)", "5.0.0")
-  def containResult(expectedId: Any)(implicit client: TcpClient,
+  def containResult(expectedId: Any)(implicit client: ElasticClient,
                                      timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     containId(expectedId)
 
-  def containId(expectedId: Any)(implicit client: TcpClient,
-                                 timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def containId[F[_]](expectedId: Any)(implicit client: ElasticClient,
+                                       timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp   = client.execute(left).await(timeout)
-        val exists = resp.hits.exists(_.id == expectedId.toString)
+        val resp = client.execute(left).await(timeout).result
+        val exists = resp.hits.hits.exists(_.id == expectedId.toString)
         MatchResult(
           exists,
           s"Search $left did not find document $expectedId",
@@ -29,12 +31,12 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveFieldValue(value: String)(implicit client: TcpClient,
-                                    timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def haveFieldValue[F[_]](value: String)(implicit client: ElasticClient,
+                                          timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp   = client.execute(left).await(timeout)
-        val exists = resp.hits.exists(_.fields.exists(_._2.values.contains(value)))
+        val resp = client.execute(left).await(timeout).result
+        val exists = resp.hits.hits.flatMap(_.fields).toMap.contains(value)
         MatchResult(
           exists,
           s"Search ${left.indexesTypes.indexes.mkString(",")}/${left.indexesTypes.types.mkString(",")} did not contain field value '$value'",
@@ -43,12 +45,12 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveSourceField(value: String)(implicit client: TcpClient,
+  def haveSourceField(value: String)(implicit client: ElasticClient,
                                      timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp   = client.execute(left).await(timeout)
-        val exists = resp.hits.exists(_.sourceAsMap.contains(value))
+        val resp = client.execute(left).await(timeout).result
+        val exists = resp.hits.hits.exists(_.sourceAsMap.contains(value))
         MatchResult(
           exists,
           s"Search $left contained unwanted source field $value",
@@ -58,12 +60,12 @@ trait SearchMatchers extends Matchers {
     }
 
   def haveSourceFieldValue(field: String, value: String)(
-    implicit client: TcpClient,
+    implicit client: ElasticClient,
     timeout: FiniteDuration = 10.seconds
   ): Matcher[SearchRequest] = new Matcher[SearchRequest] {
     override def apply(left: SearchRequest): MatchResult = {
-      val resp   = client.execute(left).await(timeout)
-      val exists = resp.hits.flatMap(_.sourceAsMap.get(field)).contains(value)
+      val resp = client.execute(left).await(timeout).result
+      val exists = resp.hits.hits.flatMap(_.sourceAsMap.get(field)).contains(value)
       MatchResult(
         exists,
         s"Search $left contained unwanted source field value $value",
@@ -72,11 +74,11 @@ trait SearchMatchers extends Matchers {
     }
   }
 
-  def haveTotalHits(expectedCount: Int)(implicit client: TcpClient,
+  def haveTotalHits(expectedCount: Int)(implicit client: ElasticClient,
                                         timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp  = client.execute(left).await(timeout)
+        val resp = client.execute(left).await(timeout).result
         val count = resp.totalHits
         MatchResult(
           count == expectedCount,
@@ -86,12 +88,12 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveHits(expectedCount: Int)(implicit client: TcpClient,
+  def haveHits(expectedCount: Int)(implicit client: ElasticClient,
                                    timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp  = client.execute(left).await(timeout)
-        val count = resp.hits.length
+        val resp = client.execute(left).await(timeout).result
+        val count = resp.hits.hits.length
         MatchResult(
           count == expectedCount,
           s"Search $left found $count hits",
@@ -100,11 +102,11 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveNoHits(implicit client: TcpClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def haveNoHits(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp  = client.execute(left).await(timeout)
-        val count = resp.hits.length
+        val resp = client.execute(left).await(timeout).result
+        val count = resp.hits.hits.length
         MatchResult(
           count == 0,
           s"Search $left found $count hits",

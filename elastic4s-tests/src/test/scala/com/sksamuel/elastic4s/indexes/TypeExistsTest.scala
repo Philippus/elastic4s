@@ -23,12 +23,12 @@ class TypeExistsTest extends WordSpec with Matchers with DockerTests {
     "return true for an existing type" in {
       http.execute {
         typesExist("typeexists" / "flowers")
-      }.await.right.get.result.isExists shouldBe true
+      }.await.result.isExists shouldBe true
     }
     "return false for non existing type" in {
       http.execute {
         typesExist("typeexists" / "qeqweqew")
-      }.await.right.get.result.isExists shouldBe false
+      }.await.result.isExists shouldBe false
     }
   }
 }

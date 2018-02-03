@@ -44,7 +44,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
       val mappings = http.execute {
         getMapping("index" / "mapping1")
-      }.await.right.get.result
+      }.await.result
 
       val properties = mappings.find(_.index == "index").get.mappings("mapping1")
       val a = properties("a").asInstanceOf[Map[String, Any]]
@@ -61,7 +61,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
       val mappings = http.execute {
         getMapping("indexnoprops" / "mapping2")
-      }.await.right.get.result
+      }.await.result
 
       val properties = mappings.find(_.index == "indexnoprops").get.mappings("mapping2")
 

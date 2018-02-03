@@ -45,7 +45,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
               .range(from = 100000.0, to = 300000.0)
               .unboundedFrom(from = 300000.0)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -68,7 +68,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
               .range(from = 100.0, to = 300.0)
               .unboundedFrom(from = 300.0)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -91,7 +91,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
               .unboundedFrom(from = 300000.0)
               .keyed(true)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

@@ -32,8 +32,8 @@ class CatShardsTest extends FlatSpec with Matchers with DockerTests {
     val result = http.execute {
       catShards()
     }.await
-    result.right.get.result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
-    result.right.get.result.map(_.index).contains("catshards1") shouldBe true
-    result.right.get.result.map(_.index).contains("catshards2") shouldBe true
+    result.result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")
+    result.result.map(_.index).contains("catshards1") shouldBe true
+    result.result.map(_.index).contains("catshards2") shouldBe true
   }
 }

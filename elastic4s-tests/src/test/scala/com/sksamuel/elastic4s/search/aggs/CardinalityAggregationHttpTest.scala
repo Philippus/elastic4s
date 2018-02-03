@@ -53,7 +53,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
         search("cardagg").matchAllQuery().aggs {
           cardinalityAgg("agg1", "name")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 3
 
@@ -67,7 +67,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
         search("cardagg2").matchAllQuery().aggs {
           cardinalityAgg("agg1", "name")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 0
 

@@ -57,25 +57,25 @@ class CountTest extends WordSpec with DockerTests with Matchers {
     "count all docs in a specified index" in {
       http.execute {
         count("stads")
-      }.await.right.get.result.count shouldBe 9
+      }.await.result.count shouldBe 9
     }
     "count all docs across multiple specified indexes" in {
       http.execute {
         count(Seq("stads2", "stads3"))
-      }.await.right.get.result.count shouldBe 2
+      }.await.result.count shouldBe 2
     }
     "count with a filter" in {
       http.execute {
         count("stads").filter(prefixQuery("name", "river"))
-      }.await.right.get.result.count shouldBe 1
+      }.await.result.count shouldBe 1
     }
     "count with type set" in {
       http.execute {
         count("stads", "stads")
-      }.await.right.get.result.count shouldBe 9
+      }.await.result.count shouldBe 9
       http.execute {
         count("stads", "nonexisting")
-      }.await.right.get.result.count shouldBe 0
+      }.await.result.count shouldBe 0
     }
   }
 }

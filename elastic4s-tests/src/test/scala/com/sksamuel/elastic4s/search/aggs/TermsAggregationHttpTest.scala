@@ -43,7 +43,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
@@ -56,7 +56,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").matchQuery("name", "masala").aggregations {
           termsAgg("agg1", "strength")
         }
-      }.await.right.get.result
+      }.await.result
       resp.size shouldBe 2
 
       val agg = resp.aggregations.terms("agg1")
@@ -69,7 +69,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "origin" missing "unknown"
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -82,7 +82,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" minDocCount 2
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -95,7 +95,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" size 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
@@ -110,7 +110,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
             termsAgg("agg2", "origin")
           )
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
@@ -122,7 +122,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", false))
         }
-      }.await.right.get.result
+      }.await.result
 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("hot", "medium", "mild")
@@ -133,7 +133,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", true))
         }
-      }.await.right.get.result
+      }.await.result
 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")
@@ -144,7 +144,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", true), TermsOrder("_key", false))
         }
-      }.await.right.get.result
+      }.await.result
 
       val agg = resp.aggregations.terms("agg1")
       agg.buckets.map(_.key) shouldBe List("mild", "medium", "hot")
@@ -157,7 +157,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
           search("termsagg/curry").matchAllQuery().aggs {
             termsAgg("agg1", "strength").includePartition(i, numPartitions)
           }
-        }.await.right.get.result
+        }.await.result
       }
       responses.map(_.totalHits) should contain only (4)
 

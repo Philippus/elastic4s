@@ -38,7 +38,7 @@ class MoreLikeThisQueryHttpTest
           moreLikeThisQuery("text")
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("4", "8")
     }
 
@@ -48,7 +48,7 @@ class MoreLikeThisQueryHttpTest
           moreLikeThisQuery("text")
             .likeDocs(DocumentRef("mltq", "alcohol", "4")) minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("8")
     }
 
@@ -58,7 +58,7 @@ class MoreLikeThisQueryHttpTest
           moreLikeThisQuery("text")
             .artificialDocs(ArtificialDocument("mltq", "alcohol", """{ "text" : "gin" }""")) minTermFreq 1 minDocFreq 1
         }
-      }.await.right.get.result
+      }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("7", "9")
     }
   }

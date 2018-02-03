@@ -41,7 +41,7 @@ class FiltersAggregationHttpTest extends FreeSpec with DockerTests with Matchers
             sumAgg("agg2", "height")
           }
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
       resp.aggs.filters("agg1").aggResults.map(_.docCount).sum shouldBe 4
       resp.aggs.filters("agg1").aggResults.head.sum("agg2").value shouldBe 232

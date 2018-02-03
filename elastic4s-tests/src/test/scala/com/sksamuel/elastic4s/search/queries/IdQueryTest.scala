@@ -22,7 +22,7 @@ class IdQueryTest extends FlatSpec with Matchers with DockerTests {
       search("sodas/zero").query {
         idsQuery(5)
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 1
     resp.hits.hits.head.sourceField("name") shouldBe "sprite zero"
@@ -33,7 +33,7 @@ class IdQueryTest extends FlatSpec with Matchers with DockerTests {
       search("sodas/zero").query {
         idsQuery(5, 9)
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 2
     resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("sprite zero", "coke zero")

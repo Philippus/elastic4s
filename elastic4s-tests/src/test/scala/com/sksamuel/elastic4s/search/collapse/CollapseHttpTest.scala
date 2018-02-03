@@ -41,7 +41,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with DockerTests with Befo
         search("collapse" / "hotels") collapse {
           collapseField("board")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 3
       resp.hits.size shouldBe 2

@@ -49,7 +49,7 @@ class SerialDiffPipelineAggHttpTest extends FreeSpec with DockerTests with Match
                 .lag(1)
             )
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

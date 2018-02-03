@@ -13,7 +13,7 @@ object Test extends App {
   val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
   localNode.start()
 
-  val client = localNode.http(true)
+  val client = localNode.client(true)
   val resp = client.execute {
     createIndex("trial")
   }.await

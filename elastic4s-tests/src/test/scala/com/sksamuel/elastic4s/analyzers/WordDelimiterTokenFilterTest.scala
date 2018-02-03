@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class WordDelimiterTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class WordDelimiterTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "WordDelimiterTokenFilter builder" should {
     "set generateNumberParts" in {

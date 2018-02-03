@@ -44,7 +44,7 @@ class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
               .range("cool", from = 5.5, to = 7.5)
               .unboundedFrom("awesome", from = 7.5)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

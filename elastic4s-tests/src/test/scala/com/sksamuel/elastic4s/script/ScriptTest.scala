@@ -37,7 +37,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
         search("script").matchQuery("name", "cockfosters").scriptfields(
           scriptField("a", "doc['line'].value")
         )
-      }.await.right.get.result
+      }.await.result
       result.hits.hits.head.storedField("a").value shouldBe "picadilly"
     }
     "can use params" in {
@@ -47,7 +47,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
             script("doc['zone'].value * params.fare") params Map("fare" -> 4.50)
             )
           )
-      }.await.right.get.result
+      }.await.result
       result.hits.hits.head.storedField("a").value shouldBe 9.0
     }
   }

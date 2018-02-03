@@ -16,7 +16,7 @@ class CatMasterTest extends FlatSpec with Matchers with DockerTests {
   "cat master" should "return master node info" in {
     val result = http.execute {
       catMaster()
-    }.await.right.get.result
+    }.await.result
 
     result.host should not be null
     result.id should not be null

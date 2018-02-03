@@ -18,7 +18,7 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
   "catIndices" should "return all indexes" in {
     val indexes = http.execute {
       catIndices()
-    }.await.right.get.result.map(_.index).toSet
+    }.await.result.map(_.index).toSet
     indexes.contains("catindex1") shouldBe true
     indexes.contains("catindex2") shouldBe true
     indexes.contains("catindex3") shouldBe true
@@ -27,13 +27,13 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
   it should "use health param" in {
     http.execute {
       catIndices(HealthStatus.Red)
-    }.await.right.get.result.isEmpty shouldBe true
+    }.await.result.isEmpty shouldBe true
   }
 
   it should "include pri.store.size" in {
     http.execute {
       catIndices()
-    }.await.right.get.result.head.priStoreSize > 0 shouldBe true
+    }.await.result.head.priStoreSize > 0 shouldBe true
   }
 
 }

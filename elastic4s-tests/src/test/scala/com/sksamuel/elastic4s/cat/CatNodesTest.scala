@@ -16,7 +16,7 @@ class CatNodesTest extends FlatSpec with Matchers with DockerTests {
   "cats nodes" should "return all nodes" in {
     val result = http.execute {
       catNodes()
-    }.await.right.get.result.head
+    }.await.result.head
     result.load_1m > 0 shouldBe true
     result.cpu > 0 shouldBe true
     result.heapPercent > 0 shouldBe true

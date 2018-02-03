@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.analyzers
 
-trait TokenFilterDsl {
+trait TokenFilterApi {
 
   def commonGramsTokenFilter(name: String): CommonGramsTokenFilter = CommonGramsTokenFilter(name)
 

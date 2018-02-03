@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.indexes
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.Stats
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Inspectors, Matchers}
 
 class IndexStatsRequestTest
@@ -23,7 +22,7 @@ class IndexStatsRequestTest
   "index stats" should "return all indexes" in {
     val stats = http.execute {
       indexStats()
-    }.await.right.get.result
+    }.await.result
 
     def testStats(stats: Seq[Stats]): Unit = {
       stats.map(_.docs.count).sum > 0 shouldBe true

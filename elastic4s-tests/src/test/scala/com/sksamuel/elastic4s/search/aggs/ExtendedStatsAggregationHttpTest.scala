@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -40,7 +39,7 @@ class ExtendedStatsAggregationHttpTest extends FreeSpec with DockerTests with Ma
         search("extendedstatsagg").matchAllQuery().aggs {
           extendedStatsAgg("agg1", "sales")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.extendedStats("agg1")
       agg.count shouldBe 3

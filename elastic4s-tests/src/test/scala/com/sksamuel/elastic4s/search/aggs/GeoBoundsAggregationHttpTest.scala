@@ -38,7 +38,7 @@ class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matche
           geoBoundsAggregation("museums_region")
               .field("location")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -55,7 +55,7 @@ class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matche
           geoBoundsAggregation("museums_region")
             .field("location")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 0
 

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class ShingleTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class ShingleTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "ShingleTokenFilter builder" should {
     "not set any defaults" in {

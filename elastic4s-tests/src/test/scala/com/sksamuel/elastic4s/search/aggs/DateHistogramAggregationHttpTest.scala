@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.DateHistogramBucket
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs.ExtendedBounds
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -46,7 +45,7 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Ma
           dateHistogramAgg("agg1", "premiere_date").interval(DateHistogramInterval.Month)
             .extendedBounds(ExtendedBounds("01/12/2007", "01/07/2008"))
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

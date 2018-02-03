@@ -68,7 +68,7 @@ class RangeQueryHttpTest
           // bishop, rook, castle, queen
           rangeQuery("value").gte("3")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
     }
     "support lte" in {
@@ -77,7 +77,7 @@ class RangeQueryHttpTest
           // pawns, king, bisho
           rangeQuery("value").lte("3")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
     }
     "support using both lte & gte" in {
@@ -85,7 +85,7 @@ class RangeQueryHttpTest
         search("rangequeryhttptest") query {
           rangeQuery("value").gte("5").lte("7")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 1
     }
     "support integers" in {
@@ -93,7 +93,7 @@ class RangeQueryHttpTest
         search("rangequeryhttptest") query {
           rangeQuery("value").gte(5).lte(7)
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 1
     }
     "support doubles" in {
@@ -101,7 +101,7 @@ class RangeQueryHttpTest
         search("rangequeryhttptest") query {
           rangeQuery("value").gte(5.0).lte(7.0)
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 1
     }
     "support boost" in {
@@ -109,7 +109,7 @@ class RangeQueryHttpTest
         search("rangequeryhttptest") query {
           rangeQuery("value").lte("3").boost(14.5)
         }
-      }.await.right.get.result
+      }.await.result
       resp.maxScore shouldBe 14.5
     }
   }

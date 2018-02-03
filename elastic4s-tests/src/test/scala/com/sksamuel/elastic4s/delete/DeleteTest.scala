@@ -36,31 +36,31 @@ class DeleteTest extends FlatSpec with DockerTests with Matchers {
 
     http.execute {
       delete("141212") from "places" / "cities" refresh RefreshPolicy.Immediate
-    }.await.right.get.result.result shouldBe "not_found"
+    }.await.result.result shouldBe "not_found"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.right.get.result.totalHits shouldBe 3
+    }.await.result.totalHits shouldBe 3
   }
 
   it should "return an error when the index does not exist" in {
 
     http.execute {
       delete("141212") from "wooop/la" refresh RefreshPolicy.Immediate
-    }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+    }.await.error.`type` shouldBe "index_not_found_exception"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.right.get.result.totalHits shouldBe 3
+    }.await.result.totalHits shouldBe 3
   }
 
   it should "remove a document when deleting by id" in {
     http.execute {
       delete("99") from "places/cities" refresh RefreshPolicy.Immediate
-    }.await.right.get.result.result shouldBe "deleted"
+    }.await.result.result shouldBe "deleted"
 
     http.execute {
       searchWithType("places" / "cities").limit(0)
-    }.await.right.get.result.totalHits shouldBe 2
+    }.await.result.totalHits shouldBe 2
   }
 }

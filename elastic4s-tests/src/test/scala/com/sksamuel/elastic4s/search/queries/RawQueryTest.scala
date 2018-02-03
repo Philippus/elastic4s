@@ -26,7 +26,7 @@ class RawQueryTest extends WordSpec with Matchers with DockerTests {
         search("*").types("paris") limit 5 rawQuery {
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
     }
   }
 }

@@ -19,15 +19,15 @@ class DeleteIndexTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         indexExists("languages")
-      }.await.right.get.result.exists shouldBe true
+      }.await.result.exists shouldBe true
 
       http.execute {
         ElasticDsl.deleteIndex("languages")
-      }.await.right.get.result.acknowledged shouldBe true
+      }.await.result.acknowledged shouldBe true
 
       http.execute {
         indexExists("languages")
-      }.await.right.get.result.exists shouldBe false
+      }.await.result.exists shouldBe false
     }
 
     "support multiple indexes" in {
@@ -49,23 +49,23 @@ class DeleteIndexTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         indexExists("languages1")
-      }.await.right.get.result.exists shouldBe true
+      }.await.result.exists shouldBe true
 
       http.execute {
         indexExists("languages2")
-      }.await.right.get.result.exists shouldBe true
+      }.await.result.exists shouldBe true
 
       http.execute {
         ElasticDsl.deleteIndex("languages1", "languages2")
-      }.await.right.get.result.acknowledged shouldBe true
+      }.await.result.acknowledged shouldBe true
 
       http.execute {
         indexExists("languages1")
-      }.await.right.get.result.exists shouldBe false
+      }.await.result.exists shouldBe false
 
       http.execute {
         indexExists("languages2")
-      }.await.right.get.result.exists shouldBe false
+      }.await.result.exists shouldBe false
     }
   }
 }

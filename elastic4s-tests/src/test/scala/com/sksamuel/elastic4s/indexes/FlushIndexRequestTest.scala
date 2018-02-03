@@ -27,7 +27,7 @@ class FlushIndexRequestTest extends WordSpec with Matchers with DockerTests {
     "acknowledge" in {
       http.execute {
         flushIndex(indexname)
-      }.await.right.get.result.shards.successful > 0 shouldBe true
+      }.await.result.shards.successful > 0 shouldBe true
     }
   }
 }

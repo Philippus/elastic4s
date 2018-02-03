@@ -18,7 +18,7 @@ class GetSegmentTest extends FlatSpec with Matchers with DockerTests {
     val resp = http.execute {
       getSegments("segments_1", "segments_2", "segments_3")
     }.await
-    val shards = resp.right.get.result.indices("segments_1")
+    val shards = resp.result.indices("segments_1")
     val segments = shards.shards.values.flatten.flatMap(_.segments.values).flatten
     segments.exists(_.search) shouldBe true
     segments.exists(_.sizeInBytes > 0) shouldBe true

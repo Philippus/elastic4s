@@ -44,7 +44,7 @@ class DateRangeQueryHttpTest
         search("daterange") query {
           rangeQuery("premiere_date").gte(ElasticDateMath("now").minus(5, Years))
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 3
     }
     "support date math for lte" in {
@@ -52,7 +52,7 @@ class DateRangeQueryHttpTest
         search("daterange") query {
           rangeQuery("premiere_date").lte(ElasticDateMath("now"))
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 6
     }
   }

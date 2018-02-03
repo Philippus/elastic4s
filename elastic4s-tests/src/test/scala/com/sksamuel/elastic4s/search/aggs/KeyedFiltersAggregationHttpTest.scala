@@ -41,7 +41,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
             sumAgg("agg2", "height")
           }
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
       resp.aggs.keyedFilters("agg1").aggResults("first").docCount shouldBe 2
       resp.aggs.keyedFilters("agg1").aggResults("first").sum("agg2").value shouldBe 232
@@ -58,7 +58,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
               sumAgg("agg2", "height")
             }
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
       resp.aggs.keyedFilters("agg1").aggResults("_other_").docCount shouldBe 1
       resp.aggs.keyedFilters("agg1").aggResults("_other_").sum("agg2").value shouldBe 2456
@@ -75,7 +75,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
               sumAgg("agg2", "height")
             }
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
       resp.aggs.keyedFilters("agg1").aggResults("otherBuildings").docCount shouldBe 1
       resp.aggs.keyedFilters("agg1").aggResults("otherBuildings").sum("agg2").value shouldBe 2456

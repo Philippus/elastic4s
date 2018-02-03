@@ -37,7 +37,7 @@ class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
         search("globalagg").termQuery("name", "black").aggs {
           globalAggregation("global")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 2
       resp.aggs.global("global").docCount shouldBe 5
@@ -51,7 +51,7 @@ class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
             filterAgg("blackAgg", termQuery("name", "black"))
           }
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 1
       resp.aggs.global("global").docCount shouldBe 5

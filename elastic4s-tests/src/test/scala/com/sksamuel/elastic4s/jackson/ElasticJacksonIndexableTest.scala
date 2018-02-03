@@ -27,7 +27,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       val resp = http.execute {
         search("jacksontest").query("breaking")
-      }.await.right.get.result
+      }.await.result
       resp.to[Character] shouldBe List(Character("hank", "breaking bad"))
 
     }
@@ -35,7 +35,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       val resp = http.execute {
         search("jacksontest").query("breaking")
-      }.await.right.get.result
+      }.await.result
 
       // should populate _id, _index and _type for us from the search result
       resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
@@ -53,7 +53,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       val resp = http.execute {
         search("jacksontest").query("breaking")
-      }.await.right.get.result
+      }.await.result
 
       // if our custom mapper has been picked up, then it should throw an exception when deserializing
       intercept[JsonMappingException] {

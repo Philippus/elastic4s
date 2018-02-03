@@ -39,7 +39,7 @@ class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
             script(""" doc['name'].value.length() """)
           ) typed ScriptSortType.NUMBER
         }
-      }.await.right.get.result
+      }.await.result
       sorted.hits.hits(0).sourceAsMap("name") shouldBe "bank"
       sorted.hits.hits(1).sourceAsMap("name") shouldBe "earls court"
       sorted.hits.hits(2).sourceAsMap("name") shouldBe "south kensington"

@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -42,7 +41,7 @@ class FilterAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
             sumAgg("agg2", "height")
           }
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 4
       resp.aggs.filter("agg1").docCount shouldBe 2
       resp.aggs.filter("agg1").sum("agg2").value shouldBe 232

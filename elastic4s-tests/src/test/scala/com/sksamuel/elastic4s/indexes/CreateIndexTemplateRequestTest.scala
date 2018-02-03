@@ -38,7 +38,7 @@ class CreateIndexTemplateRequestTest
 
       val resp = http.execute {
         getMapping("matchme.template")
-      }.await.right.get.result
+      }.await.result
 
       resp.map(_.index) shouldBe Seq("matchme.template")
       resp.head.mappings.keySet shouldBe Set("sometype1")

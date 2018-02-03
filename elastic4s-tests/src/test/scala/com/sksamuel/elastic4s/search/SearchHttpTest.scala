@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -65,48 +65,48 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
     "find an indexed document that matches a term query" in {
       http.execute {
         search("chess") query termQuery("name", "pawn")
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
     }
     "find an indexed document in the given type only" in {
       http.execute {
         search("chess") query matchQuery("name", "queen")
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
     }
     "support match all query" in {
       http.execute {
         search("chess") query matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 6
+      }.await.result.totalHits shouldBe 6
     }
     "support sorting in a single type" in {
       http.execute {
         search("chess") query matchAllQuery() sortBy fieldSort("name")
-      }.await.right.get.result.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
+      }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
     }
     "support explain" in {
       http.execute {
         search("chess").explain(true).matchAllQuery().limit(2)
-      }.await.right.get.result.hits.hits.head.explanation.isDefined shouldBe true
+      }.await.result.hits.hits.head.explanation.isDefined shouldBe true
     }
     "support limits" in {
       http.execute {
         search("chess").matchAllQuery().limit(2)
-      }.await.right.get.result.size shouldBe 2
+      }.await.result.size shouldBe 2
     }
     "support unmarshalling through a HitReader" in {
       implicit val reader = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
       http.execute {
         search("chess") query matchAllQuery() sortBy fieldSort("name") size 3
-      }.await.right.get.result.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
+      }.await.result.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
     }
     "support source includes" in {
       http.execute {
         search("chess") query matchAllQuery() sourceInclude "count"
-      }.await.right.get.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
     }
     "support source excludes" in {
       http.execute {
         search("chess") query matchAllQuery() sourceExclude "count"
-      }.await.right.get.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
     }
     "support constantScoreQuery" should {
       "work with termQuery" in {
@@ -116,7 +116,7 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
               termQuery("name", "pawn")
             }
           }
-        }.await.right.get.result.totalHits shouldBe 1
+        }.await.result.totalHits shouldBe 1
       }
       "work with termsQuery" in {
         http.execute {
@@ -125,7 +125,7 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
               termsQuery("name", List("pawn", "king"))
             }
           }
-        }.await.right.get.result.totalHits shouldBe 2
+        }.await.result.totalHits shouldBe 2
       }
       "support boost and queryName" in {
         val resp = http.execute {
@@ -134,7 +134,7 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
               termQuery("name", "pawn")
             } boost 14.5 queryName "namey"
           }
-        }.await.right.get.result
+        }.await.result
         resp.totalHits shouldBe 1
         resp.maxScore shouldBe 14.5
       }
@@ -143,39 +143,39 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
           search("chess") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.right.get.result.safeTo[Piece].size shouldBe 0
+        }.await.result.safeTo[Piece].size shouldBe 0
       }
       "support search hits without null on no hits" in {
         http.execute {
           search("chess") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.right.get.result.hits.hits.isEmpty shouldBe true
+        }.await.result.hits.hits.isEmpty shouldBe true
       }
       "return Left[RequestFailure] when searching an unknown index" in {
         http.execute {
           search("qweqweqwe") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+        }.await.error.`type` shouldBe "index_not_found_exception"
       }
       "return Left[RequestFailure] when the search is invalid" in {
         http.execute {
           search("qweqweqwe").rawQuery("""{"unknown" : "unk" } """)
-        }.await.left.get.error.`type` shouldBe "parsing_exception"
+        }.await.error.`type` shouldBe "parsing_exception"
       }
       "not throw npe for max score on empty hits" in {
         http.execute {
           search("chess") query {
             matchQuery("name", "werwerewrewrewr")
           }
-        }.await.right.get.result.maxScore shouldBe 0
+        }.await.result.maxScore shouldBe 0
       }
     }
     "include _routing in response" in {
       val resp = http.execute {
         search("chess").termQuery("name", "queen").limit(1).routing("wibble")
-      }.await.right.get
+      }.await
       resp.result.hits.hits.forall(_.routing.contains("wibble")) shouldBe true
     }
   }

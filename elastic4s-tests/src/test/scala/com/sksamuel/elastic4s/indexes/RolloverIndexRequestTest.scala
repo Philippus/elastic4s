@@ -73,20 +73,20 @@ class RolloverIndexRequestTest extends WordSpec with Matchers with DockerTests {
     "be created with padded index name" in {
       http.execute {
         rolloverIndex("roll_write")
-      }.await.right.get.result.newIndex shouldBe "rolltest-000002"
+      }.await.result.newIndex shouldBe "rolltest-000002"
     }
     "support dry run" in {
       val resp = http.execute {
         rolloverIndex("roll_write").maxAge("1d").dryRun(true)
       }.await
-      val result = resp.right.get.result
+      val result = resp.result
       result.dryRun shouldBe true
       result.rolledOver shouldBe false
     }
     "return conditions in response" in {
       http.execute {
         rolloverIndex("roll_write").maxDocs(10).maxSize("5g")
-      }.await.right.get.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
+      }.await.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
     }
     "support max docs" in {
       http.execute {
@@ -105,11 +105,11 @@ class RolloverIndexRequestTest extends WordSpec with Matchers with DockerTests {
       }.await
       http.execute {
         search("rolltest-000002").limit(20)
-      }.await.right.get.result.totalHits shouldBe 10
+      }.await.result.totalHits shouldBe 10
 
       val resp = http.execute {
         rolloverIndex("roll_write").maxDocs(10)
-      }.await.right.get.result
+      }.await.result
       resp.conditions shouldBe Map("[max_docs: 10]" -> true)
       resp.rolledOver shouldBe true
       resp.newIndex shouldBe "rolltest-000003"

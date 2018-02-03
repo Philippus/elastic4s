@@ -5,7 +5,7 @@ import org.scalatest.mockito.MockitoSugar
 
 class ValidateDslTest extends FlatSpec with MockitoSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.http.ElasticDsl._
 
   "a validate request" should "accept tuple for index type" in {
     validateIn("places" -> "cities") query regexQuery("name", "col.pla.")

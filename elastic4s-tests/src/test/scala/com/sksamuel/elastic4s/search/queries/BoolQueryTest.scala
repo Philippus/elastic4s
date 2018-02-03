@@ -35,7 +35,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
       search("fonts/family").query {
         boolQuery().must("helvetica").not("serif")
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 1
     resp.hits.hits.head.sourceField("style") shouldBe "sans"
@@ -46,7 +46,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
       search("fonts/family").query {
         boolQuery().must("times", "new")
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 1
     resp.hits.hits.head.sourceField("name") shouldBe "times new roman"
@@ -57,7 +57,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
       search("fonts/family").query {
         boolQuery().not("sans")
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 5
     resp.hits.hits.map(_.sourceField("style")).toSet shouldBe Set("comic", "serif")
@@ -68,7 +68,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
       search("fonts/family").query {
         boolQuery().must("roman")
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 2
     resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "roman comic")
@@ -82,7 +82,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
           matchPhraseQuery("name", "comic sans")
         )
       }
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 2
     resp.hits.hits.map(_.sourceField("name")).toSet shouldBe Set("times new roman", "comic sans")

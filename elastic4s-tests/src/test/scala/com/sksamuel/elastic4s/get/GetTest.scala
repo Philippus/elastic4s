@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.get
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
@@ -44,7 +43,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer"
-    }.await.right.get.result
+    }.await.result
 
     resp.exists shouldBe true
     resp.id shouldBe "8"
@@ -54,7 +53,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer"
-    }.await.right.get.result
+    }.await.result
 
     resp.exists shouldBe true
     resp.id shouldBe "8"
@@ -65,7 +64,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer/lager" fetchSourceContext false
-    }.await.right.get.result
+    }.await.result
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -77,7 +76,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer/lager" fetchSourceInclude "brand"
-    }.await.right.get.result
+    }.await.result
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -88,7 +87,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer/lager" fetchSourceExclude "brand"
-    }.await.right.get.result
+    }.await.result
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -99,7 +98,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("8") from "beer/lager" fetchSourceContext(List("name"), List("brand"))
-    }.await.right.get.result
+    }.await.result
 
     resp.exists should be(true)
     resp.id shouldBe "8"
@@ -110,7 +109,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("4") from "beer/lager" storedFields("name", "brand")
-    }.await.right.get.result
+    }.await.result
 
     resp.exists should be(true)
     resp.id shouldBe "4"
@@ -122,7 +121,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
     val resp = http.execute {
       get("4") from "beer/lager" storedFields "ingredients"
-    }.await.right.get.result
+    }.await.result
 
     val field = resp.storedField("ingredients")
     field.values shouldBe Seq("hops", "barley", "water", "yeast")
@@ -131,12 +130,12 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "return Left[RequestFailure] when index does not exist" in {
     http.execute {
       get("4") from "qqqqqqqqqq"
-    }.await.left.get.error.`type` shouldBe "index_not_found_exception"
+    }.await.error.`type` shouldBe "index_not_found_exception"
   }
 
   it should "return Right with exists=false when the doc does not exist" in {
     http.execute {
       get("111111") from "beer"
-    }.await.right.get.result.exists shouldBe false
+    }.await.result.exists shouldBe false
   }
 }

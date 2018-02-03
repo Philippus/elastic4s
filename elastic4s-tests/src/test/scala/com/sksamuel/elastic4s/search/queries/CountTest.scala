@@ -23,21 +23,21 @@ class CountTest extends FlatSpec with DockerTests {
   "a search request of size 0" should "return total count when no query is specified" in {
     val resp = http.execute {
       search("london").size(0)
-    }.await.right.get.result
+    }.await.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count for the correct type" in {
     val resp = http.execute {
       search("london").size(0)
-    }.await.right.get.result
+    }.await.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count based on the specified query" in {
     val resp = http.execute {
       search("london").size(0).query("tower")
-    }.await.right.get.result
+    }.await.result
     assert(1 === resp.totalHits)
   }
 }

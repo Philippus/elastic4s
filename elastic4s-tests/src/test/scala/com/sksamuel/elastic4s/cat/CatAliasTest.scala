@@ -17,12 +17,11 @@ class CatAliasTest extends FlatSpec with Matchers with DockerTests {
     )
   }.await
 
-
   "cats aliases" should "return all aliases" in {
     val result = http.execute {
       catAliases()
     }.await
-    result.right.get.result.map(_.alias).toSet.contains("ally1") shouldBe true
-    result.right.get.result.map(_.alias).toSet.contains("ally2") shouldBe true
+    result.result.map(_.alias).toSet.contains("ally1") shouldBe true
+    result.result.map(_.alias).toSet.contains("ally2") shouldBe true
   }
 }

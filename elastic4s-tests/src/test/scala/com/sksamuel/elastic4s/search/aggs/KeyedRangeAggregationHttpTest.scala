@@ -46,7 +46,7 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
               .unboundedFrom("awesome", from = 7.5)
               .keyed(true)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

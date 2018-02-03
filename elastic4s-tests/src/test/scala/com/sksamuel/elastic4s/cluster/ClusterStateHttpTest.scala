@@ -28,7 +28,7 @@ class ClusterStateHttpTest extends WordSpec with Matchers with DockerTests {
 
       val state = http.execute {
         clusterState()
-      }.await.right.get.result
+      }.await.result
 
       state.clusterName shouldBe "docker-cluster"
       state.compressedSizeInBytes > 0 shouldBe true

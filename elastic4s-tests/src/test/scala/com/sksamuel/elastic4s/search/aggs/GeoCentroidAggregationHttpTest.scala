@@ -38,7 +38,7 @@ class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matc
           geoCentroidAggregation("museums_center")
               .field("location")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -54,7 +54,7 @@ class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matc
           geoCentroidAggregation("museums_center")
             .field("location")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 0
 

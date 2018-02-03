@@ -25,7 +25,7 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DockerTest
   "an explain request" should "explain a matching document" in {
     val resp = http.execute {
       explain("explain", "kings", "4") query termQuery("name", "richard")
-    }.await.right.get.result
+    }.await.result
 
     resp.isMatch shouldBe true
   }
@@ -33,6 +33,6 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DockerTest
   it should "not explain a not found document" in {
     http.execute {
       explain("explain", "kings", "24") query termQuery("name", "edward")
-    }.await.right.get.result.isMatch shouldBe false
+    }.await.result.isMatch shouldBe false
   }
 }

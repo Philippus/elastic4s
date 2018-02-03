@@ -67,7 +67,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
             )
           }
         }
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
     }
   }
 }

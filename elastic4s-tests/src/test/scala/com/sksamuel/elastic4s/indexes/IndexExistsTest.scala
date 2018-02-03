@@ -23,12 +23,12 @@ class IndexExistsTest extends WordSpec with Matchers with DockerTests {
     "return true for an existing index" in {
       http.execute {
         indexExists("indexexists")
-      }.await.right.get.result.isExists shouldBe true
+      }.await.result.isExists shouldBe true
     }
     "return false for non existing index" in {
       http.execute {
         indexExists("qweqwewqe")
-      }.await.right.get.result.isExists shouldBe false
+      }.await.result.isExists shouldBe false
     }
   }
 }

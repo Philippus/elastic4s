@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class ElisionTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class ElisionTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "ElisionTokenFilter builder" should {
     "set articles" in {

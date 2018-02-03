@@ -5,13 +5,12 @@ import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.searches.SearchRequest
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 object ReactiveElastic {
 
-  implicit class ReactiveElastic(client: ElasticClient[Future]) {
+  implicit class ReactiveElastic(client: ElasticClient) {
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
 

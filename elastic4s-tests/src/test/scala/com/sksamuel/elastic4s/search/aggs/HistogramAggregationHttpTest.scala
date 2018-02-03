@@ -45,7 +45,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
         search("histogram") aggregations {
           histogramAggregation("h") field "age" interval 10
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 10
 
@@ -64,7 +64,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
         search("histogram") aggregations {
           histogramAggregation("agg1") field "age" interval 10 minDocCount 2
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 10
 
@@ -81,7 +81,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
         search("histogram") aggregations {
           histogramAggregation("agg1") field "age" interval 10 order HistogramOrder.COUNT_ASC
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 10
 

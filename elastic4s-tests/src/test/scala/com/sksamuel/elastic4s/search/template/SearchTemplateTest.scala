@@ -27,17 +27,17 @@ class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
     http.execute {
       putSearchTemplate("testy", matchQuery("{{field}}", "{{text}}"))
-    }.await.right.get.result.acknowledged shouldBe true
+    }.await.result.acknowledged shouldBe true
 
     http.execute {
       getSearchTemplate("testy")
-    }.await.right.get.result.get.id shouldBe "testy"
+    }.await.result.get.id shouldBe "testy"
   }
 
   it should "be usable in a search" in {
     val result = http.execute {
       templateSearch("searchtemplate").name("testy").params(Map("field" -> "name", "text" -> "tower"))
-    }.await.right.get.result
+    }.await.result
     result.totalHits shouldBe 2
     result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
       """{"name":"tower bridge"}""",
@@ -49,10 +49,10 @@ class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
     http.execute {
       removeSearchTemplate("testy")
-    }.await.right.get.result.acknowledged shouldBe true
+    }.await.result.acknowledged shouldBe true
 
     http.execute {
       getSearchTemplate("testy")
-    }.await.right.get.result shouldBe None
+    }.await.result shouldBe None
   }
 }

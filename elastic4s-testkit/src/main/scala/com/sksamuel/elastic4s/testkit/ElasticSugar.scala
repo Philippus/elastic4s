@@ -1,12 +1,11 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
+import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.http.index.admin.RefreshIndexResponse
+import com.sksamuel.elastic4s.{IndexAndTypes, Indexes}
 import org.elasticsearch.ResourceAlreadyExistsException
-import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
-import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
-import org.slf4j.LoggerFactory
 
 import scala.util.Try
 
@@ -18,16 +17,14 @@ import scala.util.Try
 trait ElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
 
-  val logger = LoggerFactory.getLogger(getClass)
-
   // refresh all indexes
-  def refreshAll(): RefreshResponse = refresh(Indexes.All)
+  def refreshAll(): RefreshIndexResponse = refresh(Indexes.All)
 
   // refreshes all specified indexes
-  def refresh(indexes: Indexes): RefreshResponse =
+  def refresh(indexes: Indexes): RefreshIndexResponse =
     client.execute {
       refreshIndex(indexes)
-    }.await
+    }.await.result
 
   def blockUntilGreen(): Unit =
     blockUntil("Expected cluster to have green status") { () =>
@@ -36,7 +33,7 @@ trait ElasticSugar extends ElasticDsl {
           clusterHealth()
         }
         .await
-        .getStatus == ClusterHealthStatus.GREEN
+        .result.status.toUpperCase == "GREEN"
     }
 
   def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
@@ -73,7 +70,7 @@ trait ElasticSugar extends ElasticDsl {
       .execute {
         indexExists(name)
       }
-      .await
+      .await.result
       .isExists
 
   def deleteIndex(name: String): Unit =
@@ -95,7 +92,7 @@ trait ElasticSugar extends ElasticDsl {
         .execute {
           get(id).from(index / `type`)
         }
-        .await
+        .await.result
         .exists
     }
 
@@ -103,7 +100,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(index).matchAllQuery().size(0)
-      }.await
+      }.await.result
       expected <= result.totalHits
     }
 
@@ -111,7 +108,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(indexAndTypes).matchAllQuery().size(0)
-      }.await
+      }.await.result
       expected <= result.totalHits
     }
 
@@ -122,7 +119,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client.execute {
         search(index / types).matchAllQuery().size(0)
-      }.await
+      }.await.result
       expected <= result.totalHits
     }
 
@@ -132,7 +129,7 @@ trait ElasticSugar extends ElasticDsl {
         .execute {
           search(index / types).size(0)
         }
-        .await
+        .await.result
         .totalHits
     }
 
@@ -142,7 +139,7 @@ trait ElasticSugar extends ElasticDsl {
         .execute {
           search(Indexes(index)).size(0)
         }
-        .await
+        .await.result
         .totalHits == 0
     }
 
@@ -162,7 +159,7 @@ trait ElasticSugar extends ElasticDsl {
         .execute {
           get(id).from(index / `type`)
         }
-        .await
+        .await.result
         .version == version
     }
 }

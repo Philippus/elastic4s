@@ -9,7 +9,7 @@ class NodesInfoHttpTest extends WordSpec with Matchers with DockerTests {
     "return node information" in {
       val nodes = http.execute {
         nodeInfo()
-      }.await.right.get.result
+      }.await.result
 
       nodes.clusterName should be("docker-cluster")
       nodes.nodes.values.toSeq.head.os.availableProcessors > 0 shouldBe true

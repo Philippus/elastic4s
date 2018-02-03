@@ -40,7 +40,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
         search(indexType).suggestions {
           termSuggestion("a").on("artist").text("taylor swuft")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.termSuggestion("a")("taylor").options.isEmpty shouldBe true
       resp.termSuggestion("a")("swuft").optionsText shouldBe Seq("swift")
@@ -50,7 +50,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
       val suggestionA = termSuggestion("a").on("artist") text "Razzle Kacks" mode SuggestMode.ALWAYS
       val resp = http.execute {
         search(indexType).suggestions(suggestionA)
-      }.await.right.get.result
+      }.await.result
 
       resp.termSuggestion("a")("razzle").optionsText shouldBe Seq("rizzle")
       resp.termSuggestion("a")("kacks").optionsText shouldBe Seq("kicks")
@@ -61,7 +61,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
         search(indexType).suggestions {
           termSuggestion("a", "artist", "Quoon") mode SuggestMode.POPULAR
         }
-      }.await.right.get.result
+      }.await.result
       resp.termSuggestion("a")("quoon").optionsText shouldBe Seq("queen")
 
     }
@@ -71,7 +71,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
         search(indexType).suggestions {
           termSuggestion("a") on "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
-      }.await.right.get.result
+      }.await.result
       resp.termSuggestion("a")("quean").optionsText shouldBe Seq("queen")
     }
     "allow us to set min word length to be suggested for" in {
@@ -79,7 +79,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
         search(indexType).suggestions {
           termSuggestion("a", "artist", "joan") minWordLength 5
         }
-      }.await.right.get.result
+      }.await.result
       // we set min word to 5 so the only possible suggestion of John should not be included
       resp.termSuggestion("a")("joan").options.size shouldBe 0
     }

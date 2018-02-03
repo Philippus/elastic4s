@@ -48,7 +48,7 @@ class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
 
           avgBucketAgg("avg_monthly_sales", "sales_per_month>sales")
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

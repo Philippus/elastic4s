@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.analyzers._
 import com.sksamuel.elastic4s.http.index.CreateIndexContentBuilder

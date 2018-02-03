@@ -33,7 +33,7 @@ class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
 
     http.execute {
       getMapping("putmaptest" / "a")
-    }.await.right.get.result shouldBe Seq(IndexMappings("putmaptest", Map("a" -> Map("foo" -> Map("type" -> "keyword"), "moo" -> Map("type" -> "keyword")))))
+    }.await.result shouldBe Seq(IndexMappings("putmaptest", Map("a" -> Map("foo" -> Map("type" -> "keyword"), "moo" -> Map("type" -> "keyword")))))
   }
 
   test("put mapping should support raw source") {
@@ -60,6 +60,6 @@ class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
 
     http.execute {
       getMapping("putrawtest" / "a")
-    }.await.right.get.result shouldBe List(IndexMappings("putrawtest", Map("a" -> Map("foo" -> Map("type" -> "keyword")))))
+    }.await.result shouldBe List(IndexMappings("putrawtest", Map("a" -> Map("foo" -> Map("type" -> "keyword")))))
   }
 }

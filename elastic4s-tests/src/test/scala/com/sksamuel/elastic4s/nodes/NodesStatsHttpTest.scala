@@ -11,8 +11,8 @@ class NodesStatsHttpTest extends WordSpec with Matchers with DockerTests {
         nodeStats()
       }.await
 
-      stats.right.get.result.clusterName should be("docker-cluster")
-      stats.right.get.result.nodes.nonEmpty shouldBe true
+      stats.result.clusterName should be("docker-cluster")
+      stats.result.nodes.nonEmpty shouldBe true
     }
   }
 }

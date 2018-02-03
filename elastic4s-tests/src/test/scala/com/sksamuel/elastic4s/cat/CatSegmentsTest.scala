@@ -21,7 +21,7 @@ class CatSegmentsTest
   "cats segments" should "return all segments" in {
     val segments = http.execute {
       catSegments()
-    }.await.right.get.result
+    }.await.result
 
     forAll(segments) { segment =>
       segment.ip should not be null

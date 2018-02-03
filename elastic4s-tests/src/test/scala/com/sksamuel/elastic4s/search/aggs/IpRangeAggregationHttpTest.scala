@@ -41,7 +41,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
             .unboundedTo(to = "10.0.0.5")
             .unboundedFrom(from = "10.0.0.5")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 5
 
@@ -61,7 +61,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
             .maskRange("10.0.0.127/25")
             .maskRange("10.0.0.128/25")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 5
 
@@ -82,7 +82,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
             .unboundedTo(to = "10.0.0.5")
             .unboundedFrom(from = "10.0.0.5")
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 5
 

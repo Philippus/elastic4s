@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class StemmerTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class StemmerTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "StemmerTokenFilter builder" should {
     "set language" in {

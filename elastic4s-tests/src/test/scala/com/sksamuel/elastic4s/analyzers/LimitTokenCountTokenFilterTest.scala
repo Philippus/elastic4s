@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class LimitTokenCountTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class LimitTokenCountTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "LimitTokenCountTokenFilter builder" should {
     "not set any defaults" in {

@@ -34,7 +34,7 @@ class TermVectorTest
       }
 
       whenReady(f) { resp =>
-        val result = resp.right.get.result
+        val result = resp.result
         result.index shouldBe "termvectortest"
         result.`type` shouldBe "startrek"
         result.id shouldBe "5"

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class EdgeNGramTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class EdgeNGramTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "EdgeNGramTokenFilter builder" should {
     "not set any defaults" in {

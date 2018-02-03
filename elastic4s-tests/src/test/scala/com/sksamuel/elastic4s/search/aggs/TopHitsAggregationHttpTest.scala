@@ -43,7 +43,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
             topHitsAgg("agg2").sortBy(fieldSort("name"))
           )
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 5
 
       val agg = resp.aggs.terms("agg1")

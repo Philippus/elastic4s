@@ -9,7 +9,7 @@ class CatPluginsTest extends FlatSpec with Matchers with DockerTests {
 
     val result = http.execute {
       catPlugins()
-    }.await.right.get.result
+    }.await.result
 
     result.map(_.component) shouldBe Seq("ingest-geoip", "ingest-user-agent")
   }

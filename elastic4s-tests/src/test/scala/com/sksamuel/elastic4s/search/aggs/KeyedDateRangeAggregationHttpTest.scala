@@ -46,7 +46,7 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
             .range("new", ElasticDateMath("15/12/2017").minus(5, Years), ElasticDate("15/12/2017"))
             .keyed(true)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -65,7 +65,7 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
             .range("new", "15/12/2017||-5y", "15/12/2017||")
             .keyed(true)
         }
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 

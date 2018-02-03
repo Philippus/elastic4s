@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.admin.IndexAdminApi
 import com.sksamuel.elastic4s.alias.AliasesApi
-import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, NormalizerApi, TokenizerApi}
+import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, NormalizerApi, TokenFilterApi, TokenizerApi}
 import com.sksamuel.elastic4s.bulk.BulkApi
 import com.sksamuel.elastic4s.cat.CatsApi
 import com.sksamuel.elastic4s.cluster.ClusterApi
@@ -78,6 +78,7 @@ trait ElasticApi
     with TaskApi
     with TermVectorApi
     with TokenizerApi
+    with TokenFilterApi
     with TypesApi
     with UpdateApi
     with ValidateApi {

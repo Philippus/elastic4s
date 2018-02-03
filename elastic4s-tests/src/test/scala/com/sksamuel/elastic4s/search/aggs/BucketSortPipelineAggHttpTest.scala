@@ -50,7 +50,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
                 Seq(FieldSort("sales").order(SortOrder.DESC)))
             )
         )
-      }.await.right.get.result
+      }.await.result
 
       resp.totalHits shouldBe 6
 
@@ -77,7 +77,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
               .from(1)
           )
       )
-    }.await.right.get.result
+    }.await.result
 
     resp.totalHits shouldBe 6
 

@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.search.queries
 
+import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -41,7 +42,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
         search("condiments") query {
           commonTermsQuery("desc") text "catsup"
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 1
     }
     "use operators" in {
@@ -49,7 +50,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
         search("condiments") query {
           commonTermsQuery("desc") text "buttermilk somethingnotindexed" lowFreqOperator "AND" highFreqOperator "AND"
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 0
     }
     "use lowFreqMinimumShouldMatch" in {
@@ -57,7 +58,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
         search("condiments") query {
           commonTermsQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 1
     }
   }

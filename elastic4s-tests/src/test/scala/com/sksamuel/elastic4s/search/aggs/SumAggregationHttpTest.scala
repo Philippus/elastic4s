@@ -22,7 +22,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         intField("age").stored(true)
       )
     }
-  }.await.right.get.result.acknowledged shouldBe true
+  }.await.result.acknowledged shouldBe true
 
 
   Try {
@@ -38,7 +38,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         intField("age").stored(true)
       )
     }
-  }.await.right.get.result.acknowledged shouldBe true
+  }.await.result.acknowledged shouldBe true
 
   http.execute(
     bulk(
@@ -58,7 +58,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.sum("agg1")
@@ -69,7 +69,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.sum("agg1")
@@ -80,7 +80,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("sumagg2").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 0
 
       val agg = resp.aggs.sum("agg1")

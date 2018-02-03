@@ -35,7 +35,7 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 2
+      }.await.result.totalHits shouldBe 2
 
       http.execute {
         delete("2").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
@@ -43,7 +43,7 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 1
 
       http.execute {
         delete("4").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
@@ -51,7 +51,7 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
 
       http.execute {
         search("lecarre" / "characters").matchAllQuery()
-      }.await.right.get.result.totalHits shouldBe 0
+      }.await.result.totalHits shouldBe 0
     }
   }
 }

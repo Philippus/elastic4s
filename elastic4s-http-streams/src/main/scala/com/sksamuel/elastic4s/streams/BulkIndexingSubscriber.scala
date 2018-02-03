@@ -3,12 +3,11 @@ package com.sksamuel.elastic4s.streams
 import akka.actor._
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.bulk.{BulkCompatibleRequest, BulkRequest}
-import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem}
+import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.higherKinds
 import scala.util.{Failure, Success}
@@ -26,7 +25,7 @@ import scala.util.{Failure, Success}
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
 class BulkIndexingSubscriber[T] private[streams](
-                                                  client: ElasticClient[Future],
+                                                  client: ElasticClient,
                                                   builder: RequestBuilder[T],
                                                   config: SubscriberConfig[T]
                                                 )(implicit actorRefFactory: ActorRefFactory)
@@ -81,7 +80,7 @@ object BulkActor {
 
 }
 
-class BulkActor[T](client: ElasticClient[Future],
+class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
                    config: SubscriberConfig[T])

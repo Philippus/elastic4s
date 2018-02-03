@@ -30,7 +30,7 @@ class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
 
     http.execute {
       search("cars").matchAllQuery().limit(1)
-    }.await.right.get.result.safeTo[Car] shouldBe Seq(Right(focus))
+    }.await.result.safeTo[Car] shouldBe Seq(Right(focus))
   }
 }
 

@@ -32,15 +32,15 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
         indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id "2",
         indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
-    }.await.right.get.result.errors shouldBe false
+    }.await.result.errors shouldBe false
 
     http.execute {
       get("2").from(indexname)
-    }.await.right.get.result.found shouldBe true
+    }.await.result.found shouldBe true
 
     http.execute {
       get("4").from(indexname)
-    }.await.right.get.result.found shouldBe true
+    }.await.result.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
@@ -51,7 +51,7 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
         update("6").in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
         delete("10").from(indexname / "elements")
       ).refresh(RefreshPolicy.Immediate)
-    }.await.right.get.result
+    }.await.result
 
     result.hasFailures shouldBe true
     result.hasSuccesses shouldBe true
@@ -68,15 +68,15 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
         update("2").in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
         update("4").in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
-    }.await.right.get.result.errors shouldBe false
+    }.await.result.errors shouldBe false
 
     http.execute {
       get("2").from(indexname).storedFields("name")
-    }.await.right.get.result.storedField("name").value shouldBe "carbon"
+    }.await.result.storedField("name").value shouldBe "carbon"
 
     http.execute {
       get("4").from(indexname).storedFields("name")
-    }.await.right.get.result.storedField("name").value shouldBe "oxygen"
+    }.await.result.storedField("name").value shouldBe "oxygen"
   }
 
   it should "handle multiple delete operations" in {
@@ -86,15 +86,15 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
         deleteById(indexname, "elements", "2"),
         deleteById(indexname, "elements", "4")
       ).refresh(RefreshPolicy.Immediate)
-    }.await.right.get.result.errors shouldBe false
+    }.await.result.errors shouldBe false
 
     http.execute {
       get(indexname, "elements", "2")
-    }.await.right.get.result.found shouldBe false
+    }.await.result.found shouldBe false
 
     http.execute {
       get(indexname, "elements", "4")
       get("4").from(indexname)
-    }.await.right.get.result.found shouldBe false
+    }.await.result.found shouldBe false
   }
 }

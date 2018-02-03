@@ -38,7 +38,7 @@ class AvgAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
         search("avgagg").matchAllQuery().aggs {
           avgAgg("agg1", "height")
         }
-      }.await.right.get.result
+      }.await.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.avg("agg1")
       agg.value > 1289 shouldBe true

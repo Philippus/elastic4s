@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.analyzers
 
 import org.scalatest.{Matchers, WordSpec}
 
-class StopTokenFilterTest extends WordSpec with TokenFilterDsl with Matchers {
+class StopTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
 
   "StopTokenFilter builder" should {
     "set stop words" in {

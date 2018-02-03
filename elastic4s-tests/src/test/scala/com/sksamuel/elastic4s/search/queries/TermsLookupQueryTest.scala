@@ -39,7 +39,7 @@ class TermsLookupQueryTest
     val resp = http.execute {
       search("lords") query termsLookupQuery("name", "lordswelike",
         DocumentRef("lordsfanclub", "fans", "lordsAppreciationFanClub"))
-    }.await.right.get.result
+    }.await.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"edmure"}""")
   }

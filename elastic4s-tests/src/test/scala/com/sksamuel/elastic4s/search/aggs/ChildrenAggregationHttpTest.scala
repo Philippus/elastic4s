@@ -55,7 +55,7 @@ class ChildrenAggregationHttpTest extends FlatSpec with Matchers with DockerTest
           )
         )
       )
-    }.await.right.get.result
+    }.await.result
 
     val september = resp.aggs.dateHistogram("agg1").buckets.find(_.date == "01/09/2017").get
     val sept_answers = september.children("agg2")

@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.searches.SearchRequest
 
+import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.language.higherKinds
 
@@ -23,7 +24,9 @@ object SearchIterator {
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits[F[_] : Awaitable](client: ElasticClient[F], searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
+  def hits(client: ElasticClient,
+           searchreq: SearchRequest)
+          (implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
@@ -47,7 +50,7 @@ object SearchIterator {
           case None => client.execute(searchreq)
         }
 
-        val resp = implicitly[Awaitable[F]].result(f, timeout)
+        val resp = Await.result(f, timeout)
 
         // in a search scroll we must always use the last returned scrollId
         val response = resp match {
@@ -65,9 +68,10 @@ object SearchIterator {
     * A typeclass HitReader[T] must be provided for marshalling of the search
     * responses into instances of type T.
     */
-  def iterate[T, F[_] : Awaitable](client: ElasticClient[F], searchreq: SearchRequest)
-                                  (implicit reader: HitReader[T],
-                                   timeout: Duration): Iterator[T] = {
+  def iterate[T](client: ElasticClient, searchreq: SearchRequest)
+                (implicit
+                 reader: HitReader[T],
+                 timeout: Duration): Iterator[T] = {
     hits(client, searchreq).map(_.to[T])
   }
 }

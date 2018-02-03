@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -41,14 +40,14 @@ class ClearCacheRequestTest extends WordSpec with Matchers with DockerTests {
       val resp = http.execute {
         clearCache("clearcache1")
       }.await
-      resp.right.get.result.shards.successful should be > 0
+      resp.result.shards.successful should be > 0
     }
 
     "support multiple types" in {
       val resp = http.execute {
         clearCache("clearcache1", "clearcache2")
       }.await
-      resp.right.get.result.shards.successful should be > 0
+      resp.result.shards.successful should be > 0
     }
   }
 }
