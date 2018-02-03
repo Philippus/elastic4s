@@ -8,10 +8,6 @@ import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, Req
 
 import scala.language.higherKinds
 
-trait Functor[F[_]] {
-  def map[A, B](fa: F[A])(f: A => B): F[B]
-}
-
 abstract class ElasticClient[F[_] : Functor : Executor] extends Logging {
 
   // the underlying client that performs the requests
@@ -30,8 +26,8 @@ abstract class ElasticClient[F[_] : Functor : Executor] extends Logging {
   // For example a search request will return a Response[SearchResponse].
   def execute[T, U](t: T)(implicit handler: Handler[T, U]): F[Response[U]] = {
     val request = handler.requestHandler(t)
-    val f = implicitly[Executor[F]].exec(client, request)
-    implicitly[Functor[F]].map(f) { resp =>
+    val f = Executor().exec(client, request)
+    Functor().map(f) { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
@@ -72,8 +68,8 @@ object ElasticClient extends Logging {
     * Alternatively, create a RestClient manually and invoke fromRestClient(RestClient).
     */
   def apply[F[_] : Functor : Executor](uri: ElasticsearchClientUri,
-                                             requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-                                             httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback): ElasticClient[F] = {
+                                       requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+                                       httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback): ElasticClient[F] = {
     val hosts = uri.hosts.map {
       case (host, port) =>
         new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")

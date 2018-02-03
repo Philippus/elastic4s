@@ -7,12 +7,15 @@ import scala.concurrent.duration.Duration
 
 class ElasticClientTest extends FlatSpec with Matchers with ElasticDsl {
 
+  import scala.concurrent.ExecutionContext.Implicits.global
+
   "HttpClient" should "throw an error when it cannot connect" in {
     intercept[JavaClientExceptionWrapper] {
       val client = ElasticClient(ElasticsearchClientUri("123", 1))
-      client.execute {
+      val f = client.execute {
         indexInto("a-index" / "a-type") id "a-id" fields Map("wibble" -> "foo")
-      }.await(Duration.Inf)
+      }
+      f.await(Duration.Inf)
     }
   }
 }

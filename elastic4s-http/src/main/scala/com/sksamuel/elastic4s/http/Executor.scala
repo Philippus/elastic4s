@@ -9,7 +9,7 @@ trait Executor[F[_]] {
 
 object Executor {
 
-  def apply[F[_] : Executor]: Executor[F] = implicitly[Executor[F]]
+  def apply[F[_] : Executor](): Executor[F] = implicitly[Executor[F]]
 
   implicit def FutureExecutor(implicit ec: ExecutionContext) = new Executor[Future] {
     override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
